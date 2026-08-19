@@ -1,0 +1,331 @@
+# Solution Whiteboard Template
+
+Use this document to turn a requirement, issue, defect, or architectural concern
+into an evidence-backed solution before generating an implementation plan. It is
+a structured discussion surface, not a system contract and not a chat
+transcript.
+
+Copy the template for each topic. Never reset a concluded whiteboard; archive it
+and start the next topic from a fresh copy. Replace every `<placeholder>` and
+remove this introduction from the instantiated whiteboard.
+
+## 0. Whiteboard control
+
+| Field | Value |
+| --- | --- |
+| Topic | `<short name>` |
+| State | `OPEN` |
+| Facilitator/owner | `<role/person>` |
+| Participants/reviewers | `<roles>` |
+| Created | `<date/timezone>` |
+| Last summarized | `<date/timezone>` |
+| Origin | `<requirement/issue/defect/incident link>` |
+| Development policy | `<link>` |
+| Resulting implementation plan | `Not generated` |
+| Archive/record | `Not archived` |
+
+Lifecycle:
+
+```text
+OPEN -> EXPLORING -> CONVERGING -> CONCLUDED -> ARCHIVED
+           |              |
+           +-> BLOCKED <---+
+```
+
+- `OPEN`: intake exists; facts and questions are not yet structured.
+- `EXPLORING`: requirements, gaps, alternatives, evidence, and experiments are
+  being developed.
+- `CONVERGING`: one candidate is preferred; contracts, trade-offs, and remaining
+  questions are under final review.
+- `CONCLUDED`: the convergence gate passed and the plan-generation handoff is
+  frozen.
+- `BLOCKED`: a named missing decision/evidence source prevents safe progress.
+- `ARCHIVED`: the whiteboard is immutable dated context for a plan or record.
+
+## 1. How the AI and contributors use this whiteboard
+
+After each meaningful discussion round:
+
+1. Update the current snapshot first.
+2. Separate new facts, assumptions, questions, proposals, and decisions.
+3. Update existing entries by stable ID; do not duplicate the same point.
+4. Mark incorrect or abandoned proposals `REJECTED` or `SUPERSEDED` with a
+   concise reason; do not erase them.
+5. Link evidence rather than copying large logs, code, documents, or chat.
+6. Record contradictions and resolve them at the authority that owns them.
+7. Add only the discussion delta to the round summary.
+8. Do not promote candidate behavior to a system contract before convergence.
+9. Stop and request a decision when an unresolved choice would materially
+   change requirements, risk, or scope.
+10. Generate an implementation plan only after Section 13 passes.
+
+Never include secrets, credentials, private signed URLs, customer data, or raw
+sensitive payloads. Summaries must be short enough for a new contributor to
+understand without replaying the conversation, but complete enough to preserve
+material rationale.
+
+## 2. Current snapshot
+
+| Field | Current conclusion |
+| --- | --- |
+| Problem | `<one paragraph>` |
+| Required outcome | `<one paragraph>` |
+| Current candidate | `<proposal ID or None>` |
+| Confidence | `<Low/Medium/High and reason>` |
+| Material open questions | `<IDs or None>` |
+| Active policy gaps | `<IDs or None>` |
+| Active blocker | `<ID or None>` |
+| Next discussion/experiment | `<one concrete action>` |
+
+## 3. Intake: requirement, issue, or defect
+
+### 3.1 Observed need/problem
+
+`<Describe observable current behavior and impact without assuming a cause or
+solution.>`
+
+### 3.2 Expected outcome
+
+`<Describe what users/operators/systems must be able to observe.>`
+
+### 3.3 Actors and critical journeys
+
+| Actor | Journey | Current result | Required result | Priority |
+| --- | --- | --- | --- | --- |
+| `<actor>` | `<journey>` | `<current>` | `<required>` | `<Must/Should/Could>` |
+
+### 3.4 Initial scope
+
+In:
+
+- `<boundary>`
+
+Out or deferred:
+
+- `<boundary, reason, and follow-up if durable>`
+
+## 4. Authority and context
+
+| Source | Authority | Relevant content | Freshness/verification |
+| --- | --- | --- | --- |
+| `<link>` | `<normative/informative/pseudocode/dated evidence>` | `<summary>` | `<rule>` |
+
+State which issue text, comments, user clarifications, public contracts,
+existing policies, code, and prior delivery records are authoritative. A draft
+or prototype may guide structure without being engineering-complete.
+
+## 5. Facts, assumptions, and unknowns
+
+### Facts
+
+| ID | Fact | Evidence | Verified date |
+| --- | --- | --- | --- |
+| `F-01` | `<statement>` | `<source/reproducer>` | `<date>` |
+
+### Assumptions
+
+| ID | Assumption | Why needed | Failure impact | Validation | State |
+| --- | --- | --- | --- | --- | --- |
+| `A-01` | `<statement>` | `<reason>` | `<worst case>` | `<proof>` | `OPEN` |
+
+### Unknowns and questions
+
+| ID | Question | Why it matters | Owner/source | Required by | State/resolution |
+| --- | --- | --- | --- | --- | --- |
+| `Q-01` | `<question>` | `<affected decision>` | `<owner>` | `<gate/date>` | `OPEN` |
+
+States: `OPEN`, `ANSWERED`, `ACCEPTED_RISK`, `DEFERRED`, `BLOCKED`. Deferred
+items require a reason, owner, and durable destination when they remain relevant.
+
+## 6. Needs and candidate requirements
+
+Requirements here are candidates until conclusion. Use stable IDs so the
+accepted set can be promoted into the implementation plan.
+
+| ID | Need/requirement | Priority | Acceptance signal | Source | State |
+| --- | --- | --- | --- | --- | --- |
+| `REQ-01` | `<observable requirement>` | `MUST` | `<how demonstrated>` | `<source>` | `CANDIDATE` |
+
+States: `CANDIDATE`, `ACCEPTED`, `REJECTED`, `DEFERRED`, `SUPERSEDED`.
+
+### YAGNI audit
+
+| Item | Current requirement that needs it | Simplest alternative | Cost/risk now | Cost if deferred | Decision |
+| --- | --- | --- | --- | --- | --- |
+| `<abstraction/status/config/dependency/etc.>` | `<REQ-ID/None>` | `<alternative>` | `<cost>` | `<cost>` | `<KEEP_NOW/EXTENSION_POINT_ONLY/DEFER/REMOVE>` |
+
+## 7. Current system and gap analysis
+
+### Current behavior/design
+
+`<Describe only the relevant current architecture, states, data, interfaces,
+operations, and constraints.>`
+
+### Gap matrix
+
+| Gap ID | Required outcome | Current behavior | Gap | Risk if unchanged | Evidence | Candidate owner |
+| --- | --- | --- | --- | --- | --- | --- |
+| `G-01` | `<requirement>` | `<current>` | `<missing/change>` | `<impact>` | `<source>` | `<component/task>` |
+
+Include applicable product, API, state, data, concurrency, provider, storage,
+security, performance, test, observability, deployment, and documentation gaps.
+
+## 8. Candidate solutions
+
+### Option comparison
+
+| ID | Proposal | State | Benefits | Costs/cons | Risks | Requirements met | Evidence needed |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `OPT-01` | `<solution>` | `PROPOSED` | `<benefits>` | `<costs>` | `<risks>` | `<REQ-IDs>` | `<proof>` |
+
+States: `PROPOSED`, `INVESTIGATING`, `PREFERRED`, `REJECTED`, `SUPERSEDED`,
+`ACCEPTED`.
+
+### Detailed notes by option
+
+For each material option, cover:
+
+- Component and responsibility boundaries
+- State/data/API changes
+- Technologies and dependencies
+- Error/retry/recovery behavior
+- Performance and scalability
+- Security/privacy
+- Evolvability and likely extension points
+- Operational and migration impact
+- Testability
+- Reversibility
+
+Avoid false precision before evidence exists.
+
+## 9. Proofs of concept and experiments
+
+Use a PoC only to answer a named uncertainty. It is disposable evidence unless
+separately reviewed as production code.
+
+| PoC ID | Question/hypothesis | Success/failure criteria set before work | Bounded scope | Result/evidence | Decision impact |
+| --- | --- | --- | --- | --- | --- |
+| `POC-01` | `<question>` | `<criteria>` | `<time/code/environment boundary>` | `<result>` | `<option/requirement impact>` |
+
+Record inconclusive results honestly. Do not convert a demonstration into a
+production commitment without the normal plan, tests, security, and review.
+
+## 10. Policy applicability and policy gaps
+
+| Domain | Applicable? | Existing authority | Gap | Action/state |
+| --- | --- | --- | --- | --- |
+| Testing | `<Yes/No>` | `<policy>` | `<gap/None>` | `<state>` |
+| Shared-state concurrency | `<Yes/No>` | `<policy>` | `<gap/None>` | `<state>` |
+| Security/privacy/abuse | `<Yes/No>` | `<policy>` | `<gap/None>` | `<state>` |
+| API/compatibility | `<Yes/No>` | `<policy>` | `<gap/None>` | `<state>` |
+| Storage/retention | `<Yes/No>` | `<policy>` | `<gap/None>` | `<state>` |
+| Provider/retry/idempotency | `<Yes/No>` | `<policy>` | `<gap/None>` | `<state>` |
+| Billing/exactly-once effects | `<Yes/No>` | `<policy>` | `<gap/None>` | `<state>` |
+| Performance/capacity | `<Yes/No>` | `<policy>` | `<gap/None>` | `<state>` |
+| Deployment/recovery | `<Yes/No>` | `<policy>` | `<gap/None>` | `<state>` |
+
+Register a `POLICY_GAP` when a required cross-cutting rule has no authority.
+Use the specialized-policy workflow instead of inventing an informal convention
+inside implementation code.
+
+## 11. Risk and consequence review
+
+| Risk ID | Scenario/worst case | Likelihood | Impact | Prevention | Detection/recovery | Residual risk | Owner |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `R-01` | `<risk>` | `<L/M/H>` | `<L/M/H>` | `<control>` | `<control>` | `<accepted remainder>` | `<owner>` |
+
+Explicitly review data integrity, authorization, secrets, billing, concurrency,
+external side effects, availability, capacity, migration, rollback, and
+operational recovery when applicable.
+
+## 12. Discussion and decision history
+
+### Discussion-round summaries
+
+Summarize only durable deltas.
+
+| Round/time | New information | Corrections/rejections | Decisions | Remaining questions | Updated by |
+| --- | --- | --- | --- | --- | --- |
+| `<value>` | `<delta>` | `<delta>` | `<IDs>` | `<IDs>` | `<owner>` |
+
+### Decision log
+
+| Decision ID | State | Decision | Alternatives | Rationale/trade-offs | Evidence/confidence | Supersedes |
+| --- | --- | --- | --- | --- | --- | --- |
+| `D-01` | `PROPOSED` | `<decision>` | `<OPT-IDs>` | `<why/consequences>` | `<evidence/confidence>` | `None` |
+
+States: `PROPOSED`, `ACCEPTED`, `REJECTED`, `SUPERSEDED`. Accepted entries are
+append-only; add a superseding decision rather than rewriting the rationale.
+
+## 13. Convergence gate
+
+The whiteboard may become `CONCLUDED` only when:
+
+- [ ] The problem, actors, required outcomes, scope, and non-scope are clear.
+- [ ] Every `MUST` requirement is observable and unambiguous.
+- [ ] Material facts are evidenced; assumptions are proven or explicitly
+      accepted with risk.
+- [ ] Current-state and implementation gaps are understood.
+- [ ] At least one viable solution was evaluated against requirements.
+- [ ] Rejected alternatives retain concise reasons.
+- [ ] Necessary PoCs/experiments have decisive results.
+- [ ] YAGNI audit removes speculative scope.
+- [ ] Security, data, concurrency, failure, performance, operations, migration,
+      and testability were considered where applicable.
+- [ ] High-risk policy gaps are resolved or explicitly block conclusion.
+- [ ] The preferred solution, trade-offs, residual risks, and confidence are
+      accepted.
+- [ ] Remaining deferred items have owners and durable destinations.
+
+Conclusion approval: `<reviewers/date>`.
+
+## 14. Plan-generation handoff
+
+Freeze this section at conclusion. The implementation plan must derive from it,
+not reinterpret earlier discussion.
+
+### Accepted problem and outcome
+
+`<concise statement>`
+
+### Accepted requirements
+
+- `<REQ-IDs and summaries>`
+
+### Accepted solution
+
+`<concise end-to-end solution>`
+
+### Candidate system contracts to formalize
+
+- `<state/API/data/locking/retry/failure/security/performance/operations/test contract>`
+
+### Required delivery boundaries
+
+- `<dependency, component boundary, migration sequence, rollout constraint>`
+
+### Required evidence
+
+- `<tests, PoCs to productionize, performance, smoke, E2E, operational proof>`
+
+### Deferred work and residual risk
+
+- `<item, owner, destination>`
+
+### Plan-generation instruction
+
+Create the implementation plan from the accepted content above using
+`<implementation-plan-template-link>`. Re-run requirement/design/task
+consistency analysis before implementation. If plan generation exposes a
+material unresolved design question, return this whiteboard to `EXPLORING` or
+`CONVERGING` rather than inventing the answer in the plan.
+
+## 15. Archive instruction
+
+At delivery closure:
+
+- mark this whiteboard `ARCHIVED`;
+- link the final implementation/delivery record;
+- preserve facts, rejected options, accepted decisions, and PoC evidence;
+- remove or redact transient sensitive material according to policy; and
+- never reset this file for another topic.
