@@ -9,13 +9,22 @@ or test evidence.
 | Field | Value |
 | --- | --- |
 | Plan state | `CONTRACT_REVIEW` |
+| Review state | `IN_REVIEW` |
+| Review owner | Project-specific product, engineering, QA, and operations reviewers |
 | Mode | `FULL` |
 | Whiteboard | [Concluded](01-solution-whiteboard.md) |
+| Approved handoff | [Worked-example input](01a-whiteboard-handoff.md) |
 | Workflow | [Artifact manifest](02-delivery-workflow.md) |
 | ADR | [EX-001](03-adr-queue-per-submission.md) |
 | Current task | `None` |
 | Next task | `S00` — project instantiation and discovery |
 | Implementation authorized | No; S00–S02 and project approval required |
+
+Review record:
+
+| Round | Reviewer | Type | Result | Next action |
+| --- | --- | --- | --- | --- |
+| 1 | Project-specific reviewers required | Human and/or independent agent | `IN_REVIEW` | Complete repository discovery and resolve comments before `READY` |
 
 ## 1. Outcome and scope
 

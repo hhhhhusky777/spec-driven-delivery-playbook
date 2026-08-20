@@ -19,12 +19,24 @@ instantiated strategy.
 | Version | `<version>` |
 | Owner | `<QA/engineering role>` |
 | Approvers | `<roles>` |
+| Review state | `NOT_STARTED` |
 | Applies to | `<repositories/services/environments>` |
 | Effective date | `<date or Not active>` |
 | Last reviewed | `<date>` |
 | Next review | `<date/event>` |
 | Development policy | `<link>` |
 | PR policy | `<link>` |
+
+### 1.1 Artifact review gate
+
+Submit each draft or update for human or independent-agent review. The author
+or generating runner must not self-approve unless a documented project rule
+allows a low-risk exception. Resolve `CHANGES_REQUESTED` and repeat review
+before activating the strategy.
+
+| Round | Reviewer | Type | Result | Comments/link | Resolved version |
+| --- | --- | --- | --- | --- | --- |
+| `1` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
 
 ## 2. Quality objectives and claims
 

@@ -21,41 +21,57 @@ the distinction between stable policies and feature delivery records.
 
 ## The core idea
 
-Always begin with a solution whiteboard. Once discussion converges, its
-structured conclusion becomes input to the delivery workflow. The workflow
-classifies the change, selects the smallest safe route, reuses active project
-policies, and generates only the artifacts the delivery needs.
+Always begin with a solution whiteboard. Once discussion converges, generate a
+small handoff document from its structured conclusion and review it. Approval
+of that version triggers the delivery workflow automatically or through an
+explicit case-by-case invocation. The workflow classifies the change, selects
+the smallest safe route, reuses active project policies, and generates only the
+artifacts the delivery needs. Each generated artifact is reviewed before a
+dependent artifact proceeds.
 
 ```mermaid
 flowchart TD
     N["Need / Requirement / Issue / Defect"] --> W["Solution Whiteboard"]
     W --> C{"Convergence gate passed?"}
     C -->|"No"| W
-    C -->|"Yes"| R["SDD Delivery Workflow Router"]
-    R --> M["Delivery Manifest"]
+    C -->|"Yes"| H["Generate Whiteboard Handoff"]
+    H --> HR{"Handoff review approved?"}
+    HR -->|"Changes requested"| H
+    HR -->|"Yes: automatic or manual trigger"| R["SDD Delivery Workflow Router"]
+    R --> M["Generate Delivery Manifest"]
+    M --> MR{"Manifest review approved?"}
+    MR -->|"Changes requested"| R
 
-    M --> P{"Systemic policy gap?"}
-    P -->|"Yes"| SP["Specialized Policy + Existing-System Audit"]
+    MR -->|"Yes"| P{"Systemic policy gap?"}
+    P -->|"Yes"| SP["Select Specialized Policy + Existing-System Audit"]
     P -->|"No"| A{"Significant architecture decision?"}
     SP --> A
-    A -->|"Yes"| ADR["Architecture Decision Record"]
-    A -->|"No"| I["Compact or Full Implementation Plan"]
-    ADR --> I
+    A -->|"Yes"| AS["Select Architecture Decision Record"]
+    A -->|"No"| G
+    AS --> G["Generate Next Selected Artifact"]
+    G --> AR{"Independent artifact review approved?"}
+    AR -->|"Document comments"| G
+    AR -->|"Manifest or routing problem"| R
+    AR -->|"Requirement or solution problem"| W
+    AR -->|"Yes, more artifacts"| G
+    AR -->|"Yes, all artifacts"| PG["Planning, Policy, and Decision Gates Ready"]
 
-    I --> T["Dependency-Ordered Agile Tasks"]
+    PG --> T["Dependency-Ordered Agile Tasks or Scoped Change"]
     T --> D["TDD + Small Self-Contained PR"]
     D --> V{"Required evidence passes?"}
     V -->|"Failure"| F["Failure Justification and Classification"]
     F -->|"Requirement/design gap"| W
-    F -->|"Plan/task gap"| I
+    F -->|"Plan/artifact/task gap"| G
     F -->|"Product/test/config/environment"| D
     V -->|"More tasks"| T
     V -->|"All tasks complete"| X["Plan-Level Validation + Retrospective"]
-    X --> H["Delivery Record + Archived Whiteboard"]
+    X --> DR["Delivery Record + Archived Whiteboard"]
 ```
 
-The workflow is intentionally not a one-way waterfall. Evidence can return work
-to the upstream artifact that owns the problem.
+The workflow is intentionally not a one-way waterfall. Review and delivery
+evidence can return work to the upstream artifact that owns the problem. The
+diagram abbreviates selected policy, audit, ADR, contract, plan, and runbook
+documents as one-at-a-time artifacts in the generation/review loop.
 
 ## Three kinds of artifacts
 
@@ -72,6 +88,7 @@ for every feature.
 ### 2. Feature artifacts — create per non-trivial need
 
 - Solution whiteboard
+- Reviewed whiteboard-to-workflow handoff
 - Delivery workflow and artifact manifest
 - Compact or full implementation plan
 - Optional ADRs and specialized-policy adoption work
@@ -111,14 +128,18 @@ link prior records when later work depends on them.
    trade-offs, YAGNI, risks, and possible policy gaps.
 3. Mark incorrect proposals `REJECTED` with a concise reason rather than
    deleting them.
-4. Pass the convergence gate and freeze the plan-generation handoff.
-5. Copy the
+4. Pass the convergence gate and freeze the handoff source in the whiteboard.
+5. Generate and review the
+   [whiteboard-to-workflow handoff](templates/handoffs/whiteboard-to-workflow.md).
+6. After explicit handoff approval, automatically trigger routing or invoke it
+   manually for the case, then copy the
    [SDD delivery workflow](templates/workflows/sdd-delivery-workflow.md).
-6. Use the whiteboard handoff to classify the delivery and produce its artifact
+7. Use the approved handoff to classify the delivery and produce its artifact
    manifest.
-7. Instantiate only the selected templates in manifest order.
-8. Implement dependency-ready tasks under the project test and PR policies.
-9. Reconcile evidence, run the retrospective, and archive the delivery packet.
+8. Review the manifest, then instantiate and independently review one selected
+   artifact at a time in dependency order.
+9. Implement dependency-ready tasks under the project test and PR policies.
+10. Reconcile evidence, run the retrospective, and archive the delivery packet.
 
 ## Delivery routes
 
@@ -156,6 +177,7 @@ This prevents document inflation while making omissions reviewable.
 | [PR and branch policy](templates/policies/pull-request-policy.md) | Branch models, review readiness, PR evidence, merge, emergency, and post-merge rules |
 | [Test strategy](templates/testing/test-strategy.md) | TDD, risk/contract traceability, environments, bug-finding methods, performance, and failure triage |
 | [Solution whiteboard](templates/discovery/solution-whiteboard.md) | Needs, facts, assumptions, options, PoCs, policy gaps, decisions, and convergence |
+| [Whiteboard-to-workflow handoff](templates/handoffs/whiteboard-to-workflow.md) | Reviewed data contract and automatic/manual trigger between concluded discovery and delivery routing |
 | [Delivery workflow](templates/workflows/sdd-delivery-workflow.md) | Whiteboard-input routing, artifact selection, gates, feedback loops, and completion packet |
 | [Implementation plan](templates/delivery/implementation-plan.md) | Approved feature contracts, design, incremental tasks, tracking, evidence, and closure |
 | [Architecture decision record](templates/decisions/architecture-decision-record.md) | Durable rationale and consequences for a significant architectural choice |
@@ -168,11 +190,13 @@ starts with a need to remove sequential provider execution. It demonstrates:
 1. several rounds of whiteboard discussion;
 2. corrections and rejected approaches;
 3. a concluded requirements/solution handoff;
-4. Route 3 artifact selection;
-5. an ADR for queue-per-submission topology;
-6. reuse—not regeneration—of project test, PR, and locking policies;
-7. a full implementation plan with small dependency-ordered tasks; and
-8. the exact gate that marks the example ready for implementation.
+4. generation, review, and approval of the workflow-input connector;
+5. Route 3 manifest generation and review;
+6. one-at-a-time artifact review before dependent generation;
+7. an ADR for queue-per-submission topology;
+8. reuse—not regeneration—of project test, PR, and locking policies;
+9. a full implementation plan with small dependency-ordered tasks; and
+10. the exact gate that marks the example ready for implementation.
 
 The example stops at the `READY` gate and lists the project-specific evidence
 still required to pass it; it does not fabricate implementation or passing test

@@ -37,10 +37,12 @@ section.
 | Blockers | `None` |
 | Owner | `<person or team>` |
 | Reviewers | `<product, engineering, QA, security, operations as applicable>` |
+| Review state | `NOT_STARTED` |
 | Created | `<YYYY-MM-DD and timezone>` |
 | Last updated | `<YYYY-MM-DD HH:MM and timezone>` |
 | Primary issue | `<canonical URL>` |
 | Concluded whiteboard | `<canonical path/URL>` |
+| Approved workflow handoff | `<canonical path/URL and version>` |
 | Development policy | `<canonical path/URL>` |
 | Test strategy | `<canonical path/URL>` |
 | PR/branch policy | `<canonical path/URL>` |
@@ -70,7 +72,20 @@ DRAFT -> CONTRACT_REVIEW -> READY -> IMPLEMENTING -> VALIDATING -> COMPLETE
 Do not advance a lifecycle state merely because code exists. Record the gate
 that permits every transition in Section 10.
 
-### 0.2 How to use this document
+### 0.2 Artifact review gate
+
+Submit the plan for human or independent-agent review before `READY`. The
+author or generating runner must not self-approve unless a documented project
+rule allows a low-risk exception. Resolve `CHANGES_REQUESTED`, update affected
+contracts/tasks, and repeat review. If comments invalidate the accepted
+solution or manifest, return to the owning upstream artifact instead of fixing
+the contradiction only in this plan.
+
+| Round | Reviewer | Type | Result | Comments/link | Resolved version |
+| --- | --- | --- | --- | --- | --- |
+| `1` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
+
+### 0.3 How to use this document
 
 1. Specify observable outcomes and system contracts before implementation.
 2. Resolve or explicitly defer every clarification in Section 3.
@@ -87,10 +102,11 @@ that permits every transition in Section 10.
 
 ### 1.1 Source hierarchy
 
-List governing sources from highest to lowest authority. The concluded
-whiteboard supplies the accepted discovery handoff; this plan turns it into
-normative feature contracts and executable delivery tasks. Resolve conflicts
-before implementation.
+List governing sources from highest to lowest authority. The approved workflow
+handoff supplies the reviewed discovery input; this plan turns it into normative
+feature contracts and executable delivery tasks. Resolve conflicts before
+implementation and use the concluded whiteboard for its supporting discussion
+history.
 
 1. `<external/public contract or approved product requirement>`
 2. `<this plan's approved feature-specific system contracts>`

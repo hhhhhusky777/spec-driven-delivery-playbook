@@ -14,9 +14,13 @@ a systemic policy gap is discovered.
 ## Per-need templates
 
 1. Always begin with a [solution whiteboard](discovery/solution-whiteboard.md).
-2. After convergence, instantiate the
+2. After convergence, generate and approve the
+   [whiteboard-to-workflow handoff](handoffs/whiteboard-to-workflow.md).
+3. Approval may trigger routing automatically or a human/agent may invoke it
+   for the case. Instantiate the
    [SDD delivery workflow](workflows/sdd-delivery-workflow.md).
-3. Follow its manifest to generate, reuse, update, skip, defer, or block:
+4. Review its manifest, then follow it to generate, reuse, update, skip, defer,
+   or block:
    - [implementation plan](delivery/implementation-plan.md);
    - [architecture decision record](decisions/architecture-decision-record.md);
    - specialized policy and audit; and
@@ -24,6 +28,16 @@ a systemic policy gap is discovered.
 
 Do not copy every template for every feature. The workflow manifest records why
 each artifact is or is not required.
+
+## Review rule
+
+Generate or update one selected artifact, then move it through
+`IN_REVIEW -> CHANGES_REQUESTED -> IN_REVIEW` until it is `APPROVED`. Do not
+generate a dependent artifact from an unapproved draft. The author or
+generating runner must not self-approve unless an active project policy grants
+a documented low-risk exception. A reviewer may be a human or an independent
+review agent; high-risk or externally accountable decisions require a human
+when project policy says so.
 
 ## Instantiation rules
 
@@ -34,4 +48,6 @@ each artifact is or is not required.
 - Keep rejected discovery in the whiteboard, accepted contracts in the plan,
   and durable architectural rationale in ADRs.
 - Reuse project policies rather than embedding copies in feature documents.
+- Record review owner, state, rounds, comments, and approval in each
+  instantiated artifact.
 - Preserve completed artifacts as records; start later work from fresh copies.

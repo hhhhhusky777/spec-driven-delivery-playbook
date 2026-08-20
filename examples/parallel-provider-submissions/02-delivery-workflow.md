@@ -4,12 +4,15 @@
 
 | Field | Value |
 | --- | --- |
-| State | `ARTIFACTS_SELECTED` |
-| Input | [Concluded whiteboard](01-solution-whiteboard.md) |
+| State | `ARTIFACT_IN_REVIEW` |
+| Input | [Approved handoff](01a-whiteboard-handoff.md) |
+| Consumed handoff version | Worked-example version dated 2026-08-20 |
+| Trigger | `MANUAL_INVOCATION`; run ID `parallel-submissions-example-v1` |
 | Selected route | Route 3 — Systemic design |
 | Reason | Cross-component schema, queue, locking, provider side-effect, billing, recovery, API, and deployment change |
-| Current artifact | ADR and full implementation plan generated for example |
-| Next action | Instantiate against a real project, complete code/schema discovery, then approve `READY` |
+| Manifest review | `APPROVED` for worked-example consistency |
+| Current artifact | Full implementation plan in `CONTRACT_REVIEW` |
+| Next action | Resolve project-specific discovery, review the plan, then approve `READY` |
 
 ## 2. Classification
 
@@ -27,7 +30,8 @@
 
 | Order | Artifact | Decision | Reason | Template/authority | State/link |
 | --- | --- | --- | --- | --- | --- |
-| 0 | Solution whiteboard | `REUSE` | Concluded workflow input | Discovery template | [Concluded](01-solution-whiteboard.md) |
+| 0 | Whiteboard handoff | `REUSE` | Approved workflow input | Handoff template | [Approved](01a-whiteboard-handoff.md) |
+| 0 | Solution whiteboard | `REUSE` | Source discovery record | Discovery template | [Concluded](01-solution-whiteboard.md) |
 | 0 | Development policy | `REUSE` | Existing project-wide authority | Project instance of development-policy template | Assumed active |
 | 0 | Test strategy | `REUSE` | Existing project-wide quality gates | Project instance of test-strategy template | Assumed active |
 | 0 | PR/branch policy | `REUSE` | Existing integration/review rules | Project instance of PR template | Assumed active |
@@ -42,14 +46,25 @@
 | — | Dedicated performance plan | `SKIP` | Named overlap/load assertions fit plan and active test strategy | Test strategy | Justified |
 | — | Provider-resilience policy | `DEFER` | One provider-specific contract does not yet justify cross-feature policy | Policy registry | Reassess if repeated |
 
+### Manifest and artifact review ledger
+
+| Artifact | Round | Reviewer | Type | Result | Next action |
+| --- | --- | --- | --- | --- | --- |
+| Delivery manifest | 1 | Playbook example reviewer | Independent documentation review | `APPROVED` | Generate the first dependency-ready selected artifact |
+| Queue-topology ADR | 1 | Playbook example architecture reviewer | Independent documentation review | `APPROVED` for example scope | Generate the dependent implementation plan |
+| Implementation plan | 1 | Project-specific reviewers required | Human and/or independent agent | `IN_REVIEW` | Complete S00–S02 discovery and resolve review comments |
+| API/admin documentation | — | Project-specific reviewer | Human and/or independent agent | `NOT_STARTED` | Wait for approved plan and delivery task |
+| Worker/recovery runbook | — | Project-specific reviewer | Human and/or independent agent | `NOT_STARTED` | Wait for approved plan and delivery task |
+
 ## 4. Generation and gate order
 
 ```text
-whiteboard conclusion
+approved whiteboard handoff
+    -> generate/review/approve delivery manifest
     -> reuse active project policies
-    -> generate/accept queue-topology ADR
+    -> generate/review/approve queue-topology ADR
     -> complete repository discovery and lock audit
-    -> freeze full implementation plan/contracts/tasks
+    -> generate/review/approve full implementation plan/contracts/tasks
     -> Definition of Ready
     -> dependency-ordered TDD task PRs
     -> full validation and operational drain evidence
@@ -58,6 +73,8 @@ whiteboard conclusion
 
 | Stage | Gate | Return path |
 | --- | --- | --- |
+| Handoff | Approved version and explicit trigger | Whiteboard/handoff refinement |
+| Manifest | Route and every artifact decision independently approved | Router or handoff |
 | ADR | Decision/options/consequences accepted | Whiteboard if topology changes |
 | Discovery | Schema, locks, queues, API/admin, retry and billing facts verified | Whiteboard for design contradiction; plan for scope correction |
 | Plan | Contracts unambiguous; tasks bounded/dependency-ready | Whiteboard or policy gap workflow |
@@ -81,8 +98,9 @@ whiteboard conclusion
 
 | Field | Value |
 | --- | --- |
-| Workflow state | `ARTIFACTS_SELECTED` |
-| Completed artifacts | Whiteboard, manifest, example ADR, example plan |
-| Next ready action | Apply S00/S01 discovery to the target repository |
+| Workflow state | `ARTIFACT_IN_REVIEW` |
+| Approved artifacts | Whiteboard handoff, manifest, example ADR |
+| Current artifact | Example implementation plan in `CONTRACT_REVIEW` |
+| Next ready action | Apply S00/S01 discovery, then submit the plan for project review |
 | Active blocker | Real repository evidence is intentionally absent from this reusable example |
 | Implementation authorized | No; project instantiation and review required |

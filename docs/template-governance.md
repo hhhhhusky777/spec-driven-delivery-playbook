@@ -15,6 +15,8 @@ project development policy; projects instantiate and approve their own policies.
 - Examples demonstrate the templates and must not claim evidence that was not
   produced.
 - Concision matters: reference canonical content instead of duplicating it.
+- Generated artifacts are independently reviewed one at a time before dependent
+  artifacts proceed; review metadata belongs in each instantiated artifact.
 
 ## Change categories
 
@@ -37,6 +39,8 @@ project development policy; projects instantiate and approve their own policies.
 7. Update at least one worked example when behavior changes.
 8. Validate Markdown, relative links, Mermaid, placeholders, and terminology.
 9. Record migration guidance for existing instantiated documents when needed.
+10. When review states or dependencies change, verify the handoff trigger,
+    manifest review, per-artifact review loop, and return paths together.
 
 ## Periodic review
 
@@ -67,6 +71,8 @@ Until a formal release process is adopted:
 - [ ] Primary purpose remains clear.
 - [ ] No project-specific secret, endpoint, credential, or private data exists.
 - [ ] Cross-template references and routing are consistent.
+- [ ] Review owner, state, comments, and approval remain explicit and no
+      dependent artifact relies on an unapproved draft.
 - [ ] Affected examples and README guidance are updated.
 - [ ] Required/conditional fields are understandable.
 - [ ] External claims have primary-source links.

@@ -6,8 +6,10 @@
 | --- | --- |
 | Topic | Shared parallel submission topology for design jobs |
 | State | `CONCLUDED` |
+| Conclusion review state | `APPROVED` for worked-example consistency |
 | Origin | Need: remove sequential provider submission and simplify ordinary/report lifecycle |
 | Evidence type | Multi-round design discussion plus provider retry reference |
+| Generated handoff | [Approved example handoff](01a-whiteboard-handoff.md) |
 | Resulting workflow | [Delivery workflow](02-delivery-workflow.md) |
 | Scope warning | Worked example; not runtime evidence for a specific repository |
 
@@ -20,7 +22,7 @@
 | Accepted option | `OPT-03` — queue one durable processing task per submission plus one database-observing job poller |
 | Confidence | High for topology; project-specific schema/timeouts require implementation discovery |
 | Open design blockers | None for example convergence |
-| Next action | Route artifacts and generate the implementation plan |
+| Next action | Generate and review the handoff before routing artifacts |
 
 ## 2. Need and requirements
 
