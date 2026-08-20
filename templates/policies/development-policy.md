@@ -17,6 +17,7 @@ policy.
 | Version | `<version>` |
 | Owner | `<role/team>` |
 | Approvers | `<roles>` |
+| Review state | `NOT_STARTED` |
 | Effective date | `<date or Not active>` |
 | Last reviewed | `<date>` |
 | Next review | `<date or event>` |
@@ -34,6 +35,17 @@ DRAFT -> PROPOSED -> ACTIVE -> SUPERSEDED
 
 An `ACTIVE` policy is normative. Change it through review; do not silently
 rewrite obligations during active delivery.
+
+### 1.1 Artifact review gate
+
+Submit each draft or update for human or independent-agent review. The author
+or generating runner must not self-approve unless a documented project rule
+allows a low-risk exception. Resolve `CHANGES_REQUESTED` and repeat review
+before changing the policy to `ACTIVE`.
+
+| Round | Reviewer | Type | Result | Comments/link | Resolved version |
+| --- | --- | --- | --- | --- | --- |
+| `1` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
 
 ## 2. Purpose, scope, and authority
 

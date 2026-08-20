@@ -18,6 +18,7 @@ instantiated policy.
 | Version | `<version>` |
 | Owner | `<role/team>` |
 | Reviewers | `<roles>` |
+| Review state | `NOT_STARTED` |
 | Policy-gap ID | `<ID>` |
 | Originating issue/record | `<link>` |
 | Effective date | `<date or Not active>` |
@@ -36,6 +37,17 @@ DRAFT -> PROPOSED -> ACTIVE -> SUPERSEDED
 New and changed code may be required to follow a `PROPOSED` safety rule before
 the existing-system audit is complete. State that adoption boundary explicitly;
 do not describe the policy as fully `ACTIVE` until its activation gate passes.
+
+### 1.1 Artifact review gate
+
+Submit each draft or update for human or independent-agent review. The author
+or generating runner must not self-approve unless a documented project rule
+allows a low-risk exception. Resolve `CHANGES_REQUESTED` and repeat review
+before changing the policy to `ACTIVE`.
+
+| Round | Reviewer | Type | Result | Comments/link | Resolved version |
+| --- | --- | --- | --- | --- | --- |
+| `1` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
 
 ## 2. Policy-gap justification
 

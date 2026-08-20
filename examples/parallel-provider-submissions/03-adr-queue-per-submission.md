@@ -5,11 +5,20 @@
 | Field | Value |
 | --- | --- |
 | Status | `ACCEPTED_FOR_EXAMPLE` |
+| Review state | `APPROVED` for worked-example consistency |
+| Review owner | Playbook example architecture reviewer |
 | Context | [Concluded whiteboard](01-solution-whiteboard.md) |
+| Approved handoff | [Worked-example input](01a-whiteboard-handoff.md) |
 | Plan | [Implementation plan](04-implementation-plan.md) |
 | Decision IDs | `D-01`, requirements `REQ-02`–`REQ-08`, `REQ-12` |
 | Supersedes | Sequential parent-worker submission design |
 | Scope warning | Teaching example; a real project must approve its own ADR |
+
+Review record:
+
+| Round | Reviewer | Type | Result | Scope |
+| --- | --- | --- | --- | --- |
+| 1 | Playbook example architecture reviewer | Independent documentation review | `APPROVED` | Internal example consistency only |
 
 ## Context
 

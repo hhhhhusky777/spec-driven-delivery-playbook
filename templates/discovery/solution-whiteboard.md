@@ -17,10 +17,12 @@ remove this introduction from the instantiated whiteboard.
 | State | `OPEN` |
 | Facilitator/owner | `<role/person>` |
 | Participants/reviewers | `<roles>` |
+| Conclusion review state | `NOT_STARTED` |
 | Created | `<date/timezone>` |
 | Last summarized | `<date/timezone>` |
 | Origin | `<requirement/issue/defect/incident link>` |
 | Development policy | `<link>` |
+| Generated workflow handoff | `Not generated` |
 | Resulting implementation plan | `Not generated` |
 | Archive/record | `Not archived` |
 
@@ -37,10 +39,21 @@ OPEN -> EXPLORING -> CONVERGING -> CONCLUDED -> ARCHIVED
   being developed.
 - `CONVERGING`: one candidate is preferred; contracts, trade-offs, and remaining
   questions are under final review.
-- `CONCLUDED`: the convergence gate passed and the plan-generation handoff is
-  frozen.
+- `CONCLUDED`: the convergence gate passed and the source content for the
+  workflow handoff is frozen.
 - `BLOCKED`: a named missing decision/evidence source prevents safe progress.
 - `ARCHIVED`: the whiteboard is immutable dated context for a plan or record.
+
+### 0.1 Conclusion review gate
+
+The whiteboard owner may facilitate discussion but must not alone approve the
+conclusion. Record human or independent-agent review of the convergence gate.
+Resolve `CHANGES_REQUESTED` in the whiteboard and repeat review before setting
+the state to `CONCLUDED`.
+
+| Round | Reviewer | Type | Result | Comments/link | Resolved version |
+| --- | --- | --- | --- | --- | --- |
+| `1` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
 
 ## 1. How the AI and contributors use this whiteboard
 
@@ -279,6 +292,10 @@ The whiteboard may become `CONCLUDED` only when:
 
 Conclusion approval: `<reviewers/date>`.
 
+After conclusion, generate the
+[whiteboard-to-workflow handoff](../handoffs/whiteboard-to-workflow.md) from
+Section 14 and submit that small connector artifact to its own review gate.
+
 ## 14. Plan-generation handoff
 
 Freeze this section at conclusion. The implementation plan must derive from it,
@@ -312,13 +329,14 @@ not reinterpret earlier discussion.
 
 - `<item, owner, destination>`
 
-### Plan-generation instruction
+### Handoff-generation instruction
 
-Create the implementation plan from the accepted content above using
-`<implementation-plan-template-link>`. Re-run requirement/design/task
-consistency analysis before implementation. If plan generation exposes a
-material unresolved design question, return this whiteboard to `EXPLORING` or
-`CONVERGING` rather than inventing the answer in the plan.
+Generate `<handoff-link>` from the accepted content above using the
+[whiteboard-to-workflow handoff template](../handoffs/whiteboard-to-workflow.md).
+The approved handoff—not this full discussion record—is the delivery router's
+input. If handoff generation or review exposes a material unresolved design
+question, return this whiteboard to `EXPLORING` or `CONVERGING` rather than
+inventing the answer downstream.
 
 ## 15. Archive instruction
 

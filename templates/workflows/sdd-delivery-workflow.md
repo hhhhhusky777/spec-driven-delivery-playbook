@@ -1,9 +1,9 @@
 # SDD Delivery Workflow Template
 
-Use this template after a solution whiteboard reaches `CONCLUDED`. It consumes
-the whiteboard handoff, selects the smallest safe delivery route, determines
-which existing policies to reuse and which artifacts to generate, and records
-the gates through implementation and archive.
+Use this template after a generated whiteboard handoff is reviewed and reaches
+`APPROVED`. It consumes that exact handoff version, selects the smallest safe
+delivery route, determines which existing policies to reuse and which artifacts
+to generate, and records each review gate through implementation and archive.
 
 The workflow is an artifact router. It does not recreate every policy for every
 feature. Replace all `<placeholders>` and remove instructional text from an
@@ -14,22 +14,62 @@ instantiated workflow record.
 | Field | Value |
 | --- | --- |
 | Delivery | `<short requirement/feature name>` |
-| State | `AWAITING_WHITEBOARD` |
+| State | `AWAITING_HANDOFF` |
 | Owner | `<role/person>` |
 | Concluded whiteboard | `<canonical link>` |
+| Approved workflow handoff | `<canonical link>` |
+| Consumed handoff version | `<commit/version>` |
 | Whiteboard conclusion version/date | `<value>` |
+| Trigger mode | `<AUTOMATIC_ON_APPROVAL / MANUAL_INVOCATION>` |
+| Trigger identity/run ID | `<value>` |
 | Selected route | `Not selected` |
+| Manifest review state | `NOT_STARTED` |
 | Current artifact/gate | `<value>` |
+| Current artifact review state | `<value>` |
 | Next action | `<value>` |
 | Last routed | `<date/timezone>` |
 
 ```text
-AWAITING_WHITEBOARD -> ROUTING -> ARTIFACTS_SELECTED -> ARTIFACTS_GENERATING
-    -> GATES_READY -> DELIVERY_ACTIVE -> VALIDATING -> COMPLETE -> ARCHIVED
+AWAITING_HANDOFF -> ROUTING -> MANIFEST_IN_REVIEW -> ARTIFACTS_SELECTED
+    -> ARTIFACT_GENERATING -> ARTIFACT_IN_REVIEW -> GATES_READY
+    -> DELIVERY_ACTIVE -> VALIDATING -> COMPLETE -> ARCHIVED
 
-ROUTING / ARTIFACTS_GENERATING / DELIVERY_ACTIVE / VALIDATING -> BLOCKED
-material upstream change -> RETURN_TO_WHITEBOARD -> ROUTING
+MANIFEST_IN_REVIEW -> CHANGES_REQUESTED -> ROUTING
+ARTIFACT_IN_REVIEW -> CHANGES_REQUESTED -> ARTIFACT_GENERATING
+ROUTING / ARTIFACT_GENERATING / ARTIFACT_IN_REVIEW / DELIVERY_ACTIVE / VALIDATING -> BLOCKED
+material upstream change -> RETURN_TO_WHITEBOARD -> AWAITING_HANDOFF -> ROUTING
 ```
+
+### 1.1 Handoff trigger contract
+
+Routing starts only from an explicitly `APPROVED` handoff version. The handoff
+may trigger this workflow automatically on approval or a human/agent may invoke
+it for a specific case. A prompt or UI action is transport, not authority: it
+must reference the approved handoff and must not redefine its content or this
+workflow. Record an idempotency/run ID so automation does not create duplicate
+workflow records for one approval event.
+
+### 1.2 Review protocol
+
+The manifest and every generated or updated artifact require a review gate.
+Generate one artifact at a time in dependency order. Do not generate a
+dependent artifact until its input artifacts are `APPROVED`.
+
+- The author or generating runner must not self-approve unless an active project
+  policy grants a documented low-risk exception.
+- Review may be performed by a human or an independent review agent. Human
+  approval is required when project policy, risk, or external accountability
+  requires it.
+- `CHANGES_REQUESTED` returns to the same artifact for refinement and another
+  review round.
+- A local documentation problem returns to the current artifact; an incorrect
+  manifest decision returns to routing; a requirement or solution problem
+  returns to the handoff/whiteboard owner.
+- Record reviewer identity, review type, comments, resolution, version, and
+  approval. Silence or elapsed time is never approval.
+
+Standard review states are `NOT_STARTED`, `IN_REVIEW`, `CHANGES_REQUESTED`,
+`APPROVED`, and `STALE`.
 
 ## 2. Governing project registry
 
@@ -45,11 +85,12 @@ not permission to invent an implicit rule.
 | Specialized-policy registry | `<link>` | `<value>` | `<role>` |
 | Operations/runbooks | `<links>` | `<value>` | `<role>` |
 
-## 3. Whiteboard input contract
+## 3. Approved handoff input contract
 
-Do not route until the whiteboard convergence gate passes and supplies:
+Do not route until the handoff review gate passes and the approved handoff
+supplies:
 
-| Field | Whiteboard conclusion |
+| Field | Approved handoff value |
 | --- | --- |
 | Change type | `<documentation/defect/feature/refactor/migration/policy gap/incident>` |
 | Delivery size | `<small/medium/large>` |
@@ -69,7 +110,9 @@ Do not route until the whiteboard convergence gate passes and supplies:
 | Required evidence | `<boundaries>` |
 | Deferred work/residual risk | `<items>` |
 
-If required input is ambiguous, return to the whiteboard rather than guessing.
+If required input is ambiguous, request a handoff change. Return to the
+whiteboard when the ambiguity comes from the accepted requirements or solution
+rather than guessing downstream.
 
 ## 4. Classification and risk escalation
 
@@ -96,7 +139,7 @@ Use when no product behavior/risk changes and the applicable documentation
 validation is sufficient.
 
 ```text
-whiteboard -> manifest -> scoped change -> documentation validation -> PR -> close
+approved handoff -> manifest -> scoped change -> documentation validation -> PR -> close
 ```
 
 ### Route 1 — Small production change
@@ -104,27 +147,27 @@ whiteboard -> manifest -> scoped change -> documentation validation -> PR -> clo
 Use for one coherent, low-risk production task with settled contracts.
 
 ```text
-whiteboard -> manifest -> COMPACT implementation plan -> TDD/gates -> PR -> record
+approved handoff -> manifest -> COMPACT implementation plan -> TDD/gates -> PR -> record
 ```
 
 ### Route 2 — Multi-task feature or refactor
 
 ```text
-whiteboard -> manifest -> FULL implementation plan -> dependency tasks
+approved handoff -> manifest -> FULL implementation plan -> dependency tasks
     -> TDD/PR per increment -> plan validation -> retrospective -> record
 ```
 
 ### Route 3 — Systemic design or policy gap
 
 ```text
-whiteboard -> manifest -> specialized policy and/or ADR -> existing-system audit
+approved handoff -> manifest -> specialized policy and/or ADR -> existing-system audit
     -> FULL plan -> remediation/feature tasks -> activation/validation -> record
 ```
 
 ### Route 4 — Incident or emergency
 
 ```text
-incident whiteboard -> emergency manifest -> bounded mitigation -> evidence
+approved emergency handoff -> emergency manifest -> bounded mitigation -> evidence
     -> retrospective -> normal workflow for permanent remediation
 ```
 
@@ -151,7 +194,7 @@ Justification: `<why this is the smallest safe route>`.
 | Test strategy | Project bootstrap or accepted quality-policy change | Reuse; generate feature matrix in the plan |
 | PR/branch policy | Project bootstrap or accepted integration-policy change | Reuse for every PR |
 | Solution whiteboard | Always, under this workflow's project convention | Never skipped |
-| Delivery workflow record | Always after whiteboard conclusion | Never skipped |
+| Delivery workflow record | Always after handoff approval and trigger | Never skipped |
 | Implementation plan | Product behavior/risk changes or multi-step delivery needs tracking | Skip only for justified Route 0 |
 | Specialized policy | A systemic cross-feature policy gap satisfies the development-policy trigger | Keep local decisions in plan/ADR |
 | Existing-system audit | A new policy or invariant may affect existing behavior | Skip when evidence proves no existing scope |
@@ -165,23 +208,30 @@ Justification: `<why this is the smallest safe route>`.
 
 This is the workflow's primary output and the entry point for continuation.
 
-| Order | Artifact | Decision | Reason/trigger | Template or authority | Owner | State/link |
-| --- | --- | --- | --- | --- | --- | --- |
-| `0` | Concluded whiteboard | `REUSE` | Accepted input | `<link>` | `<owner>` | `<link>` |
-| `1` | `<artifact>` | `<decision>` | `<reason>` | `<template/link>` | `<owner>` | `<state/link>` |
+| Order | Artifact | Decision | Reason/trigger | Template or authority | Owner | Review owner | Review state/link |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `0` | Approved handoff | `REUSE` | Reviewed workflow input | `<link>` | `<owner>` | `<reviewer>` | `APPROVED / <link>` |
+| `1` | `<artifact>` | `<decision>` | `<reason>` | `<template/link>` | `<owner>` | `<reviewer>` | `<state/link>` |
 
 Every `SKIP`, `DEFER`, and `BLOCKED` decision must be justified. Missing rows do
-not mean not applicable.
+not mean not applicable. Review and approve the manifest itself before
+generating the first selected artifact.
 
-## 9. Generation and gate order
+## 9. Generation and review-gate order
 
-| Stage | Input | Generated/updated output | Gate | Failure/return path |
-| --- | --- | --- | --- | --- |
-| Policy/decision | `<input>` | `<policy/ADR>` | `<approval/audit>` | `<whiteboard/policy gap>` |
-| Planning | `<handoff/policies>` | `<plan/contracts/tasks>` | `<Ready>` | `<whiteboard/plan>` |
-| Delivery | `<ready task>` | `<code/tests/docs/PR>` | `<task DOD>` | `<failure triage/upstream>` |
-| Validation | `<all tasks>` | `<evidence/retrospective>` | `<plan DOD>` | `<responsible artifact>` |
-| Archive | `<reconciled packet>` | `<delivery record>` | `<link/integrity check>` | `<closure>` |
+| Order | Input | Generate/update exactly one output | Review gate | Approved next action | Failure/return path |
+| --- | --- | --- | --- | --- | --- |
+| `0` | Approved handoff | Delivery manifest | Independent manifest review | Select first dependency-ready artifact | Routing or handoff |
+| `1..N` | Approved dependencies | `<one policy/ADR/audit/contract/plan/runbook>` | Independent artifact review | Select next dependency-ready artifact | Current artifact, manifest, handoff, or whiteboard |
+| `N+1` | Approved plan and authorities | `<one task: code/tests/docs/PR>` | PR policy and task DOD | Select next ready task | Failure triage/responsible artifact |
+| `N+2` | All approved task evidence | Validation/retrospective | Plan DOD review | Generate delivery record | Responsible artifact |
+| `N+3` | Reconciled approved packet | Delivery record | Closure review | Archive | Closure correction |
+
+### 9.1 Artifact review ledger
+
+| Artifact | Version | Round | Reviewer | Type | Result | Comments/resolution | Next action |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `<link>` | `<version>` | `1` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<summary/link>` | `<value>` |
 
 ## 10. Feedback and rerouting rules
 
@@ -197,6 +247,12 @@ not mean not applicable.
   artifact decisions change.
 - Whiteboard conclusion change -> mark downstream routing stale and rerun this
   workflow before implementation continues.
+- Handoff change after approval -> mark the manifest and dependent artifacts
+  `STALE`; consume the newly approved version and reroute.
+- Review comment limited to the current artifact -> refine that artifact and
+  request another independent review before continuing.
+- Review exposes an incorrect artifact decision -> return to routing and mark
+  affected downstream artifacts `STALE`.
 
 ## 11. Delivery state and handoff
 
@@ -204,6 +260,8 @@ not mean not applicable.
 | --- | --- |
 | Workflow state | `<state>` |
 | Current artifact/task | `<value>` |
+| Current artifact review | `<state, reviewer, round>` |
+| Last approved artifact | `<link/version>` |
 | Next ready action | `<value>` |
 | Active blockers | `<IDs/None>` |
 | Stale artifacts | `<links/None>` |
@@ -234,6 +292,10 @@ originating need/requirement/issue
 Closure checklist:
 
 - [ ] Manifest decisions match actual artifacts.
+- [ ] The handoff, manifest, and every generated/updated artifact have explicit
+      approval records.
+- [ ] No dependent artifact was generated from a draft, rejected, or stale
+      input without documented reconciliation.
 - [ ] Required gates pass or have explicit approved exceptions.
 - [ ] Contracts, implementation, tests, and operational documentation agree.
 - [ ] Deferred work/residual risk has an owner and durable location.

@@ -13,12 +13,16 @@ mixing parent-job and submission responsibilities.
 1. [Solution whiteboard](01-solution-whiteboard.md)
    - Captures requirements, corrections, alternatives, provider retry evidence,
      rejected ideas, and the accepted handoff.
-2. [Delivery workflow and manifest](02-delivery-workflow.md)
+2. [Approved whiteboard handoff](01a-whiteboard-handoff.md)
+   - Normalizes the concluded whiteboard into a small reviewed data contract and
+     records the manual example trigger.
+3. [Delivery workflow and manifest](02-delivery-workflow.md)
    - Selects Route 3, reuses project policies, generates one ADR and a full
-     implementation plan, and explains skipped artifacts.
-3. [ADR: queue per submission](03-adr-queue-per-submission.md)
+     implementation plan, explains skipped artifacts, and reviews each selected
+     document before proceeding.
+4. [ADR: queue per submission](03-adr-queue-per-submission.md)
    - Preserves the significant topology decision and alternatives.
-4. [Implementation plan](04-implementation-plan.md)
+5. [Implementation plan](04-implementation-plan.md)
    - Defines system contracts, responsibilities, dependencies, small tasks,
      test intent, and the implementation readiness gate.
 
@@ -36,6 +40,14 @@ mixing parent-job and submission responsibilities.
 | Dedicated performance plan | `SKIP` | Bounded concurrency evidence fits the implementation plan |
 | API documentation update | `GENERATE` | Parent provider identity and admin search behavior change |
 | Runbook update | `GENERATE` | Worker drain and stale-work recovery change |
+
+## Review progression
+
+The example uses a manual trigger after handoff approval. The manifest is then
+approved, the ADR is generated and approved, and only then is the implementation
+plan generated. The plan remains in `CONTRACT_REVIEW`, so implementation is not
+authorized. A real project may use automatic triggering, but it follows the
+same approval states and one-artifact-at-a-time gates.
 
 ## Evidence status
 
