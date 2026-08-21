@@ -6,10 +6,10 @@
 | --- | --- |
 | Topic | Shared parallel submission topology for design jobs |
 | State | `CONCLUDED` |
-| Conclusion review state | `APPROVED` for worked-example consistency |
+| Conclusion review state | `APPROVED` |
 | Origin | Need: remove sequential provider submission and simplify ordinary/report lifecycle |
 | Evidence type | Multi-round design discussion plus provider retry reference |
-| Generated handoff | [Approved example handoff](01a-whiteboard-handoff.md) |
+| Generated handoff | [Approved and consumed example handoff](01a-whiteboard-handoff.md) |
 | Resulting workflow | [Delivery workflow](02-delivery-workflow.md) |
 | Scope warning | Worked example; not runtime evidence for a specific repository |
 
@@ -20,9 +20,10 @@
 | Problem | A parent job can own multiple submissions, but synchronous provider requests execute sequentially and parent/submission responsibilities are mixed. |
 | Required outcome | One shared submission lifecycle, independent queued execution, submission polling for async providers, job polling for sibling aggregation, and centralized job finalization. |
 | Accepted option | `OPT-03` — queue one durable processing task per submission plus one database-observing job poller |
+| Accepted decision | `D-01` — adopt `OPT-03`; preserve its architectural rationale in the linked ADR |
 | Confidence | High for topology; project-specific schema/timeouts require implementation discovery |
 | Open design blockers | None for example convergence |
-| Next action | Generate and review the handoff before routing artifacts |
+| Conclusion next action | Generate and review the handoff before routing artifacts; completed by the linked example handoff |
 
 ## 2. Need and requirements
 
@@ -50,6 +51,7 @@ shared domain model.
 | `REQ-10` | Provider identity belongs to the submission. Admin search resolves the parent through matching submissions. |
 | `REQ-11` | Provider/result asset work belongs to submissions; parent billing, terminal state, and job-type output assembly belong to centralized job finalization. |
 | `REQ-12` | Stale jobs/submissions and lost queue handoffs are recoverable from durable state. |
+| `REQ-13` | Rolling deployment preserves graceful worker drain, and reconciliation safely resumes durable work after interruption. |
 
 ### Non-requirements/YAGNI
 
@@ -195,7 +197,8 @@ finalize_design_job(job_id)
 | Deployment/operations affected | Yes: worker entry points, drain, reconciliation |
 | Specialized-policy gaps | None |
 | Architectural decision | Significant: queue-per-submission topology |
-| Expected task count | 7–9 |
+| Expected task count | 7–9 production increments plus project discovery and validation gates |
 | Required evidence | Unit/contract/race/fault/regression/smoke/E2E plus bounded concurrency and drain evidence |
 
-Convergence gate: `PASSED_FOR_EXAMPLE`.
+Convergence gate: `PASSED`; the scope warning limits this approval to internal
+worked-example consistency.

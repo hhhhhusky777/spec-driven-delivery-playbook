@@ -1,9 +1,9 @@
 # Solution Whiteboard Template
 
 Use this document to turn a requirement, issue, defect, or architectural concern
-into an evidence-backed solution before generating an implementation plan. It is
-a structured discussion surface, not a system contract and not a chat
-transcript.
+into an evidence-backed solution before generating the reviewed workflow
+handoff. It is a structured discussion surface, not a system contract and not a
+chat transcript.
 
 Copy the template for each topic. Never reset a concluded whiteboard; archive it
 and start the next topic from a fresh copy. Replace every `<placeholder>` and
@@ -23,6 +23,7 @@ remove this introduction from the instantiated whiteboard.
 | Origin | `<requirement/issue/defect/incident link>` |
 | Development policy | `<link>` |
 | Generated workflow handoff | `Not generated` |
+| Resulting delivery workflow | `Not generated` |
 | Resulting implementation plan | `Not generated` |
 | Archive/record | `Not archived` |
 
@@ -70,7 +71,9 @@ After each meaningful discussion round:
 8. Do not promote candidate behavior to a system contract before convergence.
 9. Stop and request a decision when an unresolved choice would materially
    change requirements, risk, or scope.
-10. Generate an implementation plan only after Section 13 passes.
+10. Generate the workflow handoff only after Section 13 passes. Generate no
+    implementation plan unless the reviewed manifest selects it and its
+    dependency artifacts are approved.
 
 Never include secrets, credentials, private signed URLs, customer data, or raw
 sensitive payloads. Summaries must be short enough for a new contributor to
@@ -285,7 +288,9 @@ The whiteboard may become `CONCLUDED` only when:
 - [ ] YAGNI audit removes speculative scope.
 - [ ] Security, data, concurrency, failure, performance, operations, migration,
       and testability were considered where applicable.
-- [ ] High-risk policy gaps are resolved or explicitly block conclusion.
+- [ ] High-risk policy gaps have an owner and explicit policy/audit routing and
+      block implementation readiness; any ambiguity they create in the
+      requirements or accepted solution blocks conclusion.
 - [ ] The preferred solution, trade-offs, residual risks, and confidence are
       accepted.
 - [ ] Remaining deferred items have owners and durable destinations.
@@ -296,10 +301,11 @@ After conclusion, generate the
 [whiteboard-to-workflow handoff](../handoffs/whiteboard-to-workflow.md) from
 Section 14 and submit that small connector artifact to its own review gate.
 
-## 14. Plan-generation handoff
+## 14. Workflow-handoff source
 
-Freeze this section at conclusion. The implementation plan must derive from it,
-not reinterpret earlier discussion.
+Freeze this section at conclusion. The reviewed handoff must derive from it,
+not reinterpret earlier discussion. Any later implementation plan derives from
+the approved handoff plus the reviewed manifest and approved dependencies.
 
 ### Accepted problem and outcome
 

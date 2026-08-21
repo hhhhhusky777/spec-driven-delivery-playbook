@@ -1,8 +1,10 @@
 # Specialized Engineering Policy Template
 
-Use this template when a discovered problem requires a durable cross-feature or
-cross-component rule. Do not create a specialized policy for a one-time local
-implementation choice; keep that decision in its feature plan or ADR.
+Use this template when a discovered problem requires a new or updated durable
+cross-feature or cross-component rule. Update the canonical existing authority
+instead of creating a duplicate policy. Do not create a specialized policy for
+a one-time local implementation choice; keep that decision in its feature plan
+or ADR.
 
 Replace every `<placeholder>`. Write `Not applicable — <reason>` rather than
 silently removing a required section. Remove this introduction from the
@@ -49,7 +51,8 @@ manifest and tracker before affected implementation resumes.
 Submit each draft or update for human or independent-agent review. The author
 or generating runner must not self-approve unless a documented project rule
 allows a low-risk exception. Resolve `CHANGES_REQUESTED` and repeat review
-before changing the policy to `ACTIVE`.
+before a `PROPOSED` rule governs new/changed work and again before changing the
+policy to `ACTIVE` when the activation evidence differs.
 
 | Round | Reviewer | Type | Result | Comments/link | Resolved version |
 | --- | --- | --- | --- | --- | --- |
@@ -105,7 +108,7 @@ This policy is required when:
 | Repeated review/defect pattern | `<evidence>` | `<Yes/No>` |
 | Needs automated enforcement | `<evidence>` | `<Yes/No>` |
 
-Decision: `<Create policy / retain local decision>`.
+Decision: `<Create policy / update existing policy / retain local decision>`.
 
 ## 4. Authority and related contracts
 

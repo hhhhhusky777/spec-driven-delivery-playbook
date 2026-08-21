@@ -11,13 +11,13 @@ or test evidence.
 | Plan state | `CONTRACT_REVIEW` |
 | Review state | `IN_REVIEW` |
 | Review owner | Project-specific product, engineering, QA, and operations reviewers |
-| Mode | `FULL` |
+| Plan mode | `FULL` |
 | Whiteboard | [Concluded](01-solution-whiteboard.md) |
 | Approved handoff | [Worked-example input](01a-whiteboard-handoff.md) |
 | Workflow | [Artifact manifest](02-delivery-workflow.md) |
 | ADR | [EX-001](03-adr-queue-per-submission.md) |
 | Current task | `None` |
-| Next task | `S00` — project instantiation and discovery |
+| Next ready task(s) | `S00` — project instantiation and discovery |
 | Implementation authorized | No; S00–S02 and project approval required |
 
 Review record:
@@ -91,9 +91,9 @@ if the existing concurrency policy cannot govern all affected locks.
 ### State contract
 
 ```text
-Parent:     PENDING -> RUNNING -> COMPLETED
-                          |          ^
-                          +-> FAILED-+ selective retry of original parent
+Parent: PENDING -> RUNNING -> COMPLETED
+                       |
+                       +-> FAILED -- explicit original-job retry --> RUNNING
 
 Submission: PENDING -> RUNNING -> COMPLETED
                  |          |
@@ -211,19 +211,19 @@ Each production task targets the project's small-change budget (for example,
 approximately 300 changed production LOC excluding tests/docs). Final boundaries
 are frozen after S01.
 
-| ID | State | Depends | Outcome | Product scope estimate |
-| --- | --- | --- | --- | --- |
-| `S00` | `NEXT` | None | Instantiate this packet with canonical policies, paths, issue, owners, branch model, and test environments. | Docs only |
-| `S01` | `PLANNED` | S00 | Inventory schema/constraints, provider adapters, locks/transactions, queue entry points, reconciliation, billing, API/admin reads, and drain behavior; classify policy compliance. | Discovery/docs/tests only |
-| `S02` | `PLANNED` | S01 | Resolve discoveries, accept project ADR/contracts, freeze task scopes/LOC/tests, and pass Definition of Ready. | Docs only |
-| `T01` | `PLANNED` | S02 | Make submission the provider-ID source of truth; migrate constraints and API/admin search while keeping the integration target working. | ~300 + migration |
-| `T02` | `PLANNED` | T01 | Add durable child processing, child exclusion, exact request snapshots, sync/async state transitions, and bounded provider retry. | ~300 |
-| `T03` | `PLANNED` | T02 | Refactor parent coordination into prepare/fan-out/parent RUNNING/initial job poll without holding the job lock during provider work. | ~300 |
-| `T04` | `PLANNED` | T03 | Add async child polling and child stale-work reconciliation. | ~300 |
-| `T05` | `PLANNED` | T04 | Add database-observing job polling and centralized idempotent job finalization for ordinary/report outcomes. | ~300 |
-| `T06` | `PLANNED` | T05 | Add original-job selective retry, expired-key/new-attempt handling, and exactly-once billing race coverage. | ~300 |
-| `T07` | `PLANNED` | T06 | Add observability, queue-age/retry signals, graceful drain, legacy-task removal gate, and runbook/API updates. | ~300 |
-| `T08` | `PLANNED` | T01–T07 | Run complete project quality gates, reconcile contract evidence, retrospective, and archive record. | Tests/docs/config |
+| ID | State | Next | Depends | Outcome | Product scope estimate |
+| --- | --- | --- | --- | --- | --- |
+| `S00` | `PLANNED` | `NEXT` | None | Instantiate this packet with canonical policies, paths, issue, owners, branch model, and test environments. | Docs only |
+| `S01` | `PLANNED` | | S00 | Inventory schema/constraints, provider adapters, locks/transactions, queue entry points, reconciliation, billing, API/admin reads, and drain behavior; classify policy compliance. | Discovery/docs/tests only |
+| `S02` | `PLANNED` | | S01 | Resolve discoveries, accept project ADR/contracts, freeze task scopes/LOC/tests, and pass Definition of Ready. | Docs only |
+| `T01` | `PLANNED` | | S02 | Make submission the provider-ID source of truth; migrate constraints and API/admin search while keeping the integration target working. | ~300 + migration |
+| `T02` | `PLANNED` | | T01 | Add durable child processing, child exclusion, exact request snapshots, sync/async state transitions, and bounded provider retry. | ~300 |
+| `T03` | `PLANNED` | | T02 | Refactor parent coordination into prepare/fan-out/parent RUNNING/initial job poll without holding the job lock during provider work. | ~300 |
+| `T04` | `PLANNED` | | T03 | Add async child polling and child stale-work reconciliation. | ~300 |
+| `T05` | `PLANNED` | | T04 | Add database-observing job polling and centralized idempotent job finalization for ordinary/report outcomes. | ~300 |
+| `T06` | `PLANNED` | | T05 | Add original-job selective retry, expired-key/new-attempt handling, and exactly-once billing race coverage. | ~300 |
+| `T07` | `PLANNED` | | T06 | Add observability, queue-age/retry signals, graceful drain, legacy-task removal gate, and runbook/API updates. | ~300 |
+| `T08` | `PLANNED` | | T01–T07 | Run complete project quality gates, reconcile contract evidence, retrospective, and archive record. | Tests/docs/config |
 
 ## 7. Task-level SDD example: T02
 
@@ -273,7 +273,7 @@ repository's S00/S01 evidence.
 | --- | --- |
 | Plan state | `CONTRACT_REVIEW` |
 | Current task | None |
-| Next task | S00 |
+| Next ready task(s) | S00 |
 | Blocker | Project-specific facts/evidence not supplied in reusable example |
 | Next action | Copy packet into target project and complete S00/S01 |
 | Implementation/test evidence | None claimed |

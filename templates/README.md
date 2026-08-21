@@ -11,7 +11,7 @@ Instantiate once and maintain through review:
 Create [specialized policies](policies/specialized-policy.md) progressively when
 a systemic policy gap is discovered. When discovery happens during active
 implementation, follow the
-[mid-delivery policy-gap rerouting guide](../docs/mid-delivery-policy-gap-rerouting.md)
+[mid-delivery policy-gap rerouting workflow](../README.md#mid-delivery-policy-gap-rerouting)
 and update the active workflow manifest instead of bypassing its review gates.
 
 ## Per-need templates

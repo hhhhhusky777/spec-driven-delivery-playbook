@@ -21,7 +21,11 @@ adopted.
 - Added explicit mid-delivery policy-gap rerouting: local-versus-systemic and
   same-delivery-versus-independent classification, affected-task pause/stale
   rules, manifest rerouting, proposed-policy adoption, audit/remediation, and
-  separate delivery-resume and policy-activation gates.
+  separate delivery-resume and policy-activation gates. README owns the
+  canonical diagram; templates own normative steps and tracking fields.
+- Reconciled authority precedence, whiteboard/handoff consumption, compact/full
+  plan modes, task states, emergency routing, and worked-example IDs and states
+  through a repository-wide consistency audit.
 
 Migration guidance: active deliveries that have not started implementation
 should generate and approve a handoff, review their manifest, and add review
