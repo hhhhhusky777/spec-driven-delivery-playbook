@@ -58,10 +58,14 @@ flowchart TD
 
     PG --> T["Dependency-Ordered Agile Tasks or Scoped Change"]
     T --> D["TDD + Small Self-Contained PR"]
-    D --> V{"Required evidence passes?"}
+    D --> MP{"Mid-delivery issue reveals a systemic rule?"}
+    MP -->|"No"| V{"Required evidence passes?"}
+    MP -->|"Yes"| RP["Register POLICY_GAP + Reroute Manifest"]
+    RP --> R
     V -->|"Failure"| F["Failure Justification and Classification"]
     F -->|"Requirement/design gap"| W
     F -->|"Plan/artifact/task gap"| G
+    F -->|"New systemic rule"| RP
     F -->|"Product/test/config/environment"| D
     V -->|"More tasks"| T
     V -->|"All tasks complete"| X["Plan-Level Validation + Retrospective"]
@@ -72,6 +76,75 @@ The workflow is intentionally not a one-way waterfall. Review and delivery
 evidence can return work to the upstream artifact that owns the problem. The
 diagram abbreviates selected policy, audit, ADR, contract, plan, and runbook
 documents as one-at-a-time artifacts in the generation/review loop.
+
+## Mid-delivery policy-gap rerouting
+
+A policy gap can be discovered after implementation starts. Do not quietly add
+a feature-local rule, discard valid work, or automatically open an unrelated
+delivery. Classify the problem first:
+
+- keep a local or one-time decision in the owning plan, contract, task, or ADR;
+- reroute the active manifest when the systemic rule is part of the current
+  delivery; or
+- start and link a separate standard workflow when the issue is materially
+  independent, recording whether it blocks the current delivery.
+
+Only affected work pauses. A reviewed `PROPOSED` safety rule may govern new and
+changed code while the existing-system audit and remediation continue, but the
+policy becomes `ACTIVE` only after its activation gate passes.
+
+This is the canonical visual explanation of the rerouting path:
+
+```mermaid
+flowchart TD
+    I["Issue discovered during implementation or validation"] --> J["Failure/problem justification"]
+    J --> C{"Local decision or systemic invariant?"}
+
+    C -->|"Local / experimental / one-time"| O["Update owning plan, contract, task, or ADR"]
+    O --> OR{"Review approved?"}
+    OR -->|"Changes requested"| O
+    OR -->|"Yes"| RESUME["Resume affected delivery tasks"]
+
+    C -->|"Cross-feature / repeated / severe / enforceable"| P["Register POLICY_GAP with evidence and owner"]
+    P --> R{"Does it belong to the current delivery?"}
+
+    R -->|"No: materially independent"| W["Start linked standard workflow: whiteboard -> handoff -> manifest"]
+    W --> DEP["Record dependency/blocker in both workflows"]
+    DEP --> IB{"Blocks current delivery?"}
+    IB -->|"No"| RESUME
+    IB -->|"Yes"| BT["Mark affected tasks BLOCKED until linked unblock gate passes"]
+    BT -->|"Unblock evidence approved"| RESUME
+
+    R -->|"Yes"| S["Pause only affected tasks; preserve valid evidence and independent work"]
+    S --> ST["Mark only invalid dependent artifacts STALE"]
+    ST --> M["Return active manifest to ROUTING"]
+    M --> ADD["Select GENERATE or UPDATE_EXISTING policy + audit + remediation"]
+    ADD --> MR{"Revised manifest approved?"}
+    MR -->|"Changes requested"| M
+    MR -->|"Yes"| D["Draft policy or policy update"]
+    D --> PV{"Policy review approved as PROPOSED?"}
+    PV -->|"Changes requested"| D
+    PV -->|"Yes"| B["Apply declared safety boundary to new and changed work"]
+    B --> A["Audit existing behavior"]
+    A --> V["Classify COMPLIANT / VIOLATION / UNKNOWN / EXCEPTION"]
+    V --> X["Fix critical/high; assign lower-risk remediation"]
+    X --> U["Update and review plan, contracts, ADRs, tests, and runbooks"]
+    U --> G{"Delivery resume gate passed?"}
+    G -->|"No"| X
+    G -->|"Yes"| RESUME
+    X --> ACT{"Policy activation gate passed?"}
+    ACT -->|"No"| X
+    ACT -->|"Yes"| ACTIVE["Policy ACTIVE and periodically reviewed"]
+```
+
+For example, if a feature review discovers object-storage I/O while database
+rows are locked, first record the observed and expected transaction boundary.
+Because the rule protects multiple callers against deadlock and availability
+risk, register a systemic policy gap in the active delivery. Pause only tasks
+that use the unsafe helper, reroute and review the manifest, propose the locking
+policy update, audit existing callers, and add risk-ordered remediation. Resume the
+affected feature after its explicit gate passes; activate the policy only after
+its separate activation gate passes.
 
 ## Three kinds of artifacts
 
@@ -149,7 +222,7 @@ link prior records when later work depends on them.
 | Route 1 — Small production change | One coherent, low-risk production task | Compact plan, TDD evidence, PR, compact record |
 | Route 2 — Multi-task feature/refactor | Several dependency-ordered increments | Full plan/contracts, task PRs, full validation/record |
 | Route 3 — Systemic design/policy gap | Cross-feature invariant, hard-to-reverse architecture, or existing-system audit | Specialized policy and/or ADR, audit, full plan, remediation tasks |
-| Route 4 — Incident/emergency | Urgent bounded mitigation | Emergency manifest/evidence, retrospective, permanent-remediation workflow |
+| Route 4 — Incident/emergency | Urgent bounded mitigation | Compact emergency whiteboard/handoff, emergency manifest/evidence, retrospective, permanent-remediation workflow |
 
 Line count alone never selects a route. A small change to billing, locking,
 authorization, or external side effects may require Route 3.
@@ -178,7 +251,7 @@ This prevents document inflation while making omissions reviewable.
 | [Test strategy](templates/testing/test-strategy.md) | TDD, risk/contract traceability, environments, bug-finding methods, performance, and failure triage |
 | [Solution whiteboard](templates/discovery/solution-whiteboard.md) | Needs, facts, assumptions, options, PoCs, policy gaps, decisions, and convergence |
 | [Whiteboard-to-workflow handoff](templates/handoffs/whiteboard-to-workflow.md) | Reviewed data contract and automatic/manual trigger between concluded discovery and delivery routing |
-| [Delivery workflow](templates/workflows/sdd-delivery-workflow.md) | Whiteboard-input routing, artifact selection, gates, feedback loops, and completion packet |
+| [Delivery workflow](templates/workflows/sdd-delivery-workflow.md) | Approved-handoff-input routing, artifact selection, gates, feedback loops, and completion packet |
 | [Implementation plan](templates/delivery/implementation-plan.md) | Approved feature contracts, design, incremental tasks, tracking, evidence, and closure |
 | [Architecture decision record](templates/decisions/architecture-decision-record.md) | Durable rationale and consequences for a significant architectural choice |
 
@@ -238,16 +311,19 @@ and plan performs an applicability scan. A systemic gap follows this flow:
 ```text
 problem discovered
     -> local-versus-systemic classification
-    -> POLICY_GAP
-    -> specialized-policy draft
-    -> existing-system audit
-    -> risk-ordered remediation
-    -> enforce for new/changed work
-    -> activation and periodic review
+    -> local: update and review the owning feature artifact
+    -> systemic: register POLICY_GAP
+        -> reroute the current manifest or start a linked independent workflow
+        -> review a new or updated specialized policy as PROPOSED
+        -> enforce its declared boundary for new/changed work
+        -> existing-system audit and risk-ordered remediation
+        -> delivery resume gate and policy activation gate
 ```
 
 A local decision stays in the plan or ADR. A durable cross-feature rule becomes
-a policy. This applies YAGNI to governance itself.
+a policy. During active delivery, pause only affected tasks and preserve valid
+evidence. This applies YAGNI to governance itself; see
+[Mid-delivery policy-gap rerouting](#mid-delivery-policy-gap-rerouting).
 
 ## Keeping templates current
 

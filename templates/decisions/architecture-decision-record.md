@@ -1,13 +1,10 @@
-# Architecture Decision Record Template
-
-Use an ADR for an architecturally significant or difficult-to-reverse decision.
-An ADR records context, options, the accepted decision, and consequences. It is
-not a design guide, task plan, policy, or chronological discussion transcript.
-
-Replace all `<placeholders>` and remove instructional text from an instantiated
-record.
-
 # ADR `<number>`: `<decision title>`
+
+> **Template instructions:** Use an ADR for an architecturally significant or
+> difficult-to-reverse decision. An ADR records context, options, the accepted
+> decision, and consequences; it is not a design guide, task plan, policy, or
+> chronological discussion transcript. Replace all `<placeholders>` and remove
+> this instructional blockquote from an instantiated record.
 
 ## Status and ownership
 
@@ -20,7 +17,8 @@ record.
 | Review state | `NOT_STARTED` |
 | Whiteboard | `<link>` |
 | Approved workflow handoff | `<link and version>` |
-| Implementation plan | `<link>` |
+| Delivery workflow/manifest | `<link and version>` |
+| Implementation plan | `<link or Not generated>` |
 | Decision IDs/contracts | `<IDs>` |
 | Supersedes | `<ADR/None>` |
 | Superseded by | `None` |

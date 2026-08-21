@@ -5,12 +5,12 @@
 | Field | Value |
 | --- | --- |
 | State | `ARTIFACT_IN_REVIEW` |
-| Input | [Approved handoff](01a-whiteboard-handoff.md) |
+| Input | [Approved and consumed handoff](01a-whiteboard-handoff.md) |
 | Consumed handoff version | Worked-example version dated 2026-08-20 |
 | Trigger | `MANUAL_INVOCATION`; run ID `parallel-submissions-example-v1` |
-| Selected route | Route 3 — Systemic design |
+| Selected route | Route 3 — Systemic design or policy gap |
 | Reason | Cross-component schema, queue, locking, provider side-effect, billing, recovery, API, and deployment change |
-| Manifest review | `APPROVED` for worked-example consistency |
+| Manifest review | `APPROVED` |
 | Current artifact | Full implementation plan in `CONTRACT_REVIEW` |
 | Next action | Resolve project-specific discovery, review the plan, then approve `READY` |
 
@@ -30,16 +30,16 @@
 
 | Order | Artifact | Decision | Reason | Template/authority | State/link |
 | --- | --- | --- | --- | --- | --- |
-| 0 | Whiteboard handoff | `REUSE` | Approved workflow input | Handoff template | [Approved](01a-whiteboard-handoff.md) |
+| 0 | Whiteboard handoff | `REUSE` | Approved workflow input | Handoff template | [Consumed](01a-whiteboard-handoff.md) |
 | 0 | Solution whiteboard | `REUSE` | Source discovery record | Discovery template | [Concluded](01-solution-whiteboard.md) |
 | 0 | Development policy | `REUSE` | Existing project-wide authority | Project instance of development-policy template | Assumed active |
 | 0 | Test strategy | `REUSE` | Existing project-wide quality gates | Project instance of test-strategy template | Assumed active |
 | 0 | PR/branch policy | `REUSE` | Existing integration/review rules | Project instance of PR template | Assumed active |
 | 0 | Database concurrency policy | `REUSE` | Existing lock ordering applies | Active project specialized policy | Audit required in plan |
 | 1 | New specialized policy | `SKIP` | No uncovered reusable invariant; provider details remain feature-specific | Specialized-policy trigger | Justified |
-| 1 | Existing-system lock audit | `GENERATE` | New topology touches job/submission locks and transactions | Implementation-plan discovery task | Selected |
 | 2 | Queue topology ADR | `GENERATE` | Significant difficult-to-reverse architectural choice | ADR template | [Generated](03-adr-queue-per-submission.md) |
 | 3 | Implementation plan | `GENERATE_FULL` | Seven-plus dependent production increments | SDD implementation-plan template | [Generated](04-implementation-plan.md) |
+| 3 | Affected-code lock audit | `GENERATE` | New topology touches job/submission locks and transactions under an already active policy | S01 inside the reviewed implementation plan | `NOT_STARTED`; project instantiation required |
 | 3 | Feature test matrix | `GENERATE` | High-risk state/race/provider/billing behavior | Plan system contracts | Included in plan |
 | 4 | API/admin documentation | `UPDATE_EXISTING` | Parent provider identity/search changes | Project API/admin docs | Final task |
 | 4 | Worker/recovery runbook | `UPDATE_EXISTING` | Task entry points, drain, and reconciliation change | Project runbook | Final task |
@@ -51,7 +51,7 @@
 | Artifact | Round | Reviewer | Type | Result | Next action |
 | --- | --- | --- | --- | --- | --- |
 | Delivery manifest | 1 | Playbook example reviewer | Independent documentation review | `APPROVED` | Generate the first dependency-ready selected artifact |
-| Queue-topology ADR | 1 | Playbook example architecture reviewer | Independent documentation review | `APPROVED` for example scope | Generate the dependent implementation plan |
+| Queue-topology ADR | 1 | Playbook example architecture reviewer | Independent documentation review | `APPROVED` | Generate the dependent implementation plan |
 | Implementation plan | 1 | Project-specific reviewers required | Human and/or independent agent | `IN_REVIEW` | Complete S00–S02 discovery and resolve review comments |
 | API/admin documentation | — | Project-specific reviewer | Human and/or independent agent | `NOT_STARTED` | Wait for approved plan and delivery task |
 | Worker/recovery runbook | — | Project-specific reviewer | Human and/or independent agent | `NOT_STARTED` | Wait for approved plan and delivery task |
@@ -63,8 +63,9 @@ approved whiteboard handoff
     -> generate/review/approve delivery manifest
     -> reuse active project policies
     -> generate/review/approve queue-topology ADR
-    -> complete repository discovery and lock audit
-    -> generate/review/approve full implementation plan/contracts/tasks
+    -> generate full implementation plan in CONTRACT_REVIEW
+    -> instantiate project and execute S00/S01 repository discovery + lock audit
+    -> revise/review/approve plan contracts and tasks as READY
     -> Definition of Ready
     -> dependency-ordered TDD task PRs
     -> full validation and operational drain evidence
@@ -76,8 +77,8 @@ approved whiteboard handoff
 | Handoff | Approved version and explicit trigger | Whiteboard/handoff refinement |
 | Manifest | Route and every artifact decision independently approved | Router or handoff |
 | ADR | Decision/options/consequences accepted | Whiteboard if topology changes |
-| Discovery | Schema, locks, queues, API/admin, retry and billing facts verified | Whiteboard for design contradiction; plan for scope correction |
-| Plan | Contracts unambiguous; tasks bounded/dependency-ready | Whiteboard or policy gap workflow |
+| Discovery | S00/S01 verify schema, locks, queues, API/admin, retry and billing facts within the plan review cycle | Whiteboard for design contradiction; plan for scope correction |
+| Plan | Discovery reconciled, contracts unambiguous, and tasks bounded/dependency-ready | Whiteboard or policy gap workflow |
 | Delivery | Per-task DOD and active test/PR policies | Failure triage to responsible layer |
 | Validation | All contract/risk evidence and graceful-drain proof | Responsible task/contract |
 | Archive | Manifest, evidence, retrospective, and links reconcile | Closure correction |

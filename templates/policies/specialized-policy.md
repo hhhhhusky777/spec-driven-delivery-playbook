@@ -1,8 +1,10 @@
 # Specialized Engineering Policy Template
 
-Use this template when a discovered problem requires a durable cross-feature or
-cross-component rule. Do not create a specialized policy for a one-time local
-implementation choice; keep that decision in its feature plan or ADR.
+Use this template when a discovered problem requires a new or updated durable
+cross-feature or cross-component rule. Update the canonical existing authority
+instead of creating a duplicate policy. Do not create a specialized policy for
+a one-time local implementation choice; keep that decision in its feature plan
+or ADR.
 
 Replace every `<placeholder>`. Write `Not applicable — <reason>` rather than
 silently removing a required section. Remove this introduction from the
@@ -21,6 +23,10 @@ instantiated policy.
 | Review state | `NOT_STARTED` |
 | Policy-gap ID | `<ID>` |
 | Originating issue/record | `<link>` |
+| Originating delivery/workflow | `<link or None>` |
+| Discovery phase/task | `<active task/gate or project review>` |
+| Affected active artifacts/tasks | `<links/IDs/None>` |
+| New/changed-code adoption boundary | `<when PROPOSED rules begin to govern>` |
 | Effective date | `<date or Not active>` |
 | Last reviewed | `<date>` |
 | Next review | `<date/event>` |
@@ -37,13 +43,16 @@ DRAFT -> PROPOSED -> ACTIVE -> SUPERSEDED
 New and changed code may be required to follow a `PROPOSED` safety rule before
 the existing-system audit is complete. State that adoption boundary explicitly;
 do not describe the policy as fully `ACTIVE` until its activation gate passes.
+When this policy is discovered during active delivery, update that delivery's
+manifest and tracker before affected implementation resumes.
 
 ### 1.1 Artifact review gate
 
 Submit each draft or update for human or independent-agent review. The author
 or generating runner must not self-approve unless a documented project rule
 allows a low-risk exception. Resolve `CHANGES_REQUESTED` and repeat review
-before changing the policy to `ACTIVE`.
+before a `PROPOSED` rule governs new/changed work and again before changing the
+policy to `ACTIVE` when the activation evidence differs.
 
 | Round | Reviewer | Type | Result | Comments/link | Resolved version |
 | --- | --- | --- | --- | --- | --- |
@@ -99,7 +108,7 @@ This policy is required when:
 | Repeated review/defect pattern | `<evidence>` | `<Yes/No>` |
 | Needs automated enforcement | `<evidence>` | `<Yes/No>` |
 
-Decision: `<Create policy / retain local decision>`.
+Decision: `<Create policy / update existing policy / retain local decision>`.
 
 ## 4. Authority and related contracts
 
@@ -208,11 +217,15 @@ Classifications: `COMPLIANT`, `VIOLATION`, `UNKNOWN`, `NOT_APPLICABLE`,
 ## 12. Adoption and remediation plan
 
 - New/changed-code enforcement begins: `<date/state>`.
+- Originating workflow reroute and manifest version: `<link/version or None>`.
+- Paused affected tasks: `<IDs and reason or None>`.
+- Artifacts marked `STALE`: `<links and regeneration owner or None>`.
 - Critical/high violations: `<blocking rule>`.
 - Medium/low violations: `<tracking and deadline rule>`.
 - Unknown areas: `<investigation owner/date>`.
 - Migration/compatibility: `<sequence>`.
 - Backout/forward-fix: `<strategy>`.
+- Resume gate for affected delivery work: `<approved policy/plan/audit conditions>`.
 
 Use small, self-contained remediation tasks. Do not combine unrelated violations
 only because they share this policy.

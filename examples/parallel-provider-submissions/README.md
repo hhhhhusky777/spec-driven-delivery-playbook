@@ -38,8 +38,8 @@ mixing parent-job and submission responsibilities.
 | ADR | `GENERATE` | Queue topology is significant and difficult to reverse |
 | Implementation plan | `GENERATE_FULL` | Cross-component schema, worker, retry, reconciliation, and finalization work |
 | Dedicated performance plan | `SKIP` | Bounded concurrency evidence fits the implementation plan |
-| API documentation update | `GENERATE` | Parent provider identity and admin search behavior change |
-| Runbook update | `GENERATE` | Worker drain and stale-work recovery change |
+| API documentation update | `UPDATE_EXISTING` | Parent provider identity and admin search behavior change |
+| Runbook update | `UPDATE_EXISTING` | Worker drain and stale-work recovery change |
 
 ## Review progression
 

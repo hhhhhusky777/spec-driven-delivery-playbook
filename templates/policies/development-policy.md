@@ -65,13 +65,19 @@ before changing the policy to `ACTIVE`.
 
 1. `<law, regulation, or external contractual obligation>`
 2. `<public product/system contract>`
-3. `<this development policy>`
+3. `<this development policy and other active project-wide policies>`
 4. `<active specialized policies>`
-5. `<approved feature implementation plan>`
-6. `<issues, discussions, prototypes, and implementation details>`
+5. `<accepted architecture decision records>`
+6. `<approved feature implementation plan>`
+7. `<issues, discussions, prototypes, and implementation details>`
 
 Resolve conflicts before implementation. Record which source supersedes the
 other and update stale references.
+
+A reviewed `PROPOSED` specialized policy is authoritative only inside its
+explicit new/changed-code adoption boundary while activation work continues.
+It must not conflict with higher active authorities, and it must not be cited
+as generally `ACTIVE` outside that boundary.
 
 ## 3. Core development principles
 
@@ -107,6 +113,11 @@ State how risk may upgrade a change to a stricter workflow. Documentation-only
 work must not be forced through irrelevant runtime gates unless the project
 records a reason.
 
+Under this playbook, every change begins with a solution whiteboard and reviewed
+handoff. Low-risk documentation and emergency records may be compact, and an
+authorized emergency may complete them concurrently with bounded mitigation,
+but the durable discovery/decision record and follow-up review are not erased.
+
 ## 5. Spec-driven development workflow
 
 Use separate artifacts with one primary purpose:
@@ -115,7 +126,10 @@ Use separate artifacts with one primary purpose:
 Requirement / issue / defect
     -> solution whiteboard
     -> convergence review
-    -> approved implementation plan and system contracts
+    -> reviewed whiteboard handoff
+    -> delivery router and reviewed artifact manifest
+    -> one-at-a-time policy / ADR / audit / contract artifacts as selected
+    -> approved implementation plan and system contracts when selected
     -> dependency-ordered tasks
     -> implementation and test evidence
     -> validation and retrospective
@@ -127,6 +141,8 @@ Define required templates and canonical locations:
 | Artifact | Template | Active location | Archive location | Owner |
 | --- | --- | --- | --- | --- |
 | Solution whiteboard | `<link>` | `<path>` | `<path>` | `<role>` |
+| Whiteboard handoff | `<link>` | `<path>` | `<path>` | `<role>` |
+| Delivery workflow/manifest | `<link>` | `<path>` | `<path>` | `<role>` |
 | Implementation plan | `<link>` | `<path>` | `<path>` | `<role>` |
 | Test strategy | `<link>` | `<path>` | `<path>` | `<role>` |
 | PR/branch policy | `<link>` | `<path>` | `<path>` | `<role>` |
@@ -234,18 +250,30 @@ one-time, or already covered by an existing authority.
 ```text
 Problem discovered
     -> classify local versus systemic
-    -> register POLICY_GAP
-    -> investigate and gather evidence
-    -> draft specialized policy
-    -> review and approve
-    -> audit affected existing behavior
-    -> remediate by risk in small increments
-    -> enforce for all new and changed work
-    -> activate and periodically review
+    -> local: update the owning plan/contract/task/ADR and review it
+    -> systemic: register POLICY_GAP
+        -> classify current-delivery versus independent scope
+        -> update/reroute the active manifest, or start a linked workflow
+        -> pause only affected tasks and mark invalid dependents STALE
+        -> investigate and gather evidence
+        -> generate or update the applicable specialized policy as PROPOSED
+        -> define the new/changed-code adoption boundary
+        -> audit affected existing behavior
+        -> remediate by risk in small increments
+        -> reconcile the implementation plan and dependent artifacts
+        -> pass resume and policy-activation gates
+        -> activate and periodically review
 ```
 
 An unresolved high-risk policy gap blocks implementation readiness. Define how
 medium/low-risk adoption work is owned, dated, and tracked.
+
+When a gap appears after implementation starts, do not restart or duplicate the
+entire delivery by default. Reroute its existing manifest when the rule belongs
+to the same accepted outcome. Start a separate whiteboard/handoff/workflow only
+when the issue is materially independent, and record the dependency or blocker
+in both workflows. Follow the
+[mid-delivery rerouting workflow](../../README.md#mid-delivery-policy-gap-rerouting).
 
 ## 9. Dependencies, gates, and task state
 
@@ -253,8 +281,10 @@ Define the repository's canonical task states or reference the plan template:
 
 ```text
 PLANNED -> READY -> IN_PROGRESS -> VERIFYING -> DONE
-               |         |             |
-               +------> BLOCKED <-------+
+   |          |          |             |
+   +----------+----------+-----------> BLOCKED
+
+Any non-DONE task -> CANCELLED
 ```
 
 Required rules:
@@ -264,7 +294,11 @@ Required rules:
 - `DONE` requires implementation, applicable validation, review, evidence, and
   tracker updates.
 - Blockers record observed evidence, impact, owner, and unblock condition.
+- A `BLOCKED` task preserves its prior state and returns to that state, or to a
+  newly recomputed safe state, after the unblock condition is evidenced.
 - Added, removed, split, or reordered tasks retain history; IDs are not reused.
+- `CANCELLED` requires a reason and dependency/contract impact; a `DONE` task
+  is never rewritten as cancelled.
 - State changes are recorded before another contributor relies on them.
 
 ## 10. Testing, defects, and quality evidence
@@ -303,7 +337,7 @@ This policy defines only integration with development:
 Every active plan exposes a compact current snapshot containing:
 
 - current state and task;
-- next ready task;
+- next ready task or tasks within the active WIP limit;
 - branch/PR/base;
 - blockers and unblocking conditions;
 - decisions made since the last checkpoint;

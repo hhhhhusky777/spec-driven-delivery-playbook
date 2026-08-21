@@ -11,6 +11,10 @@ This template is part of a suite:
   repository-wide development rules.
 - [Solution Whiteboard Template](../discovery/solution-whiteboard.md) governs
   discovery, discussion, alternatives, and convergence before planning.
+- [Whiteboard-to-Workflow Handoff Template](../handoffs/whiteboard-to-workflow.md)
+  defines the reviewed discovery input consumed by routing.
+- [Delivery Workflow Template](../workflows/sdd-delivery-workflow.md) selects
+  the route and dependency-ordered artifact manifest.
 - [Specialized Policy Template](../policies/specialized-policy.md) governs a
   cross-cutting policy discovered during development.
 - [Test Strategy Template](../testing/test-strategy.md) defines
@@ -31,9 +35,10 @@ section.
 | --- | --- |
 | Plan | `<short descriptive name>` |
 | Status | `DRAFT` |
+| Plan mode | `<COMPACT / FULL>` |
 | Current phase | `SPECIFY` |
 | Current task | `None` |
-| Next ready task | `<task ID or None>` |
+| Next ready task(s) | `<task IDs or None>` |
 | Blockers | `None` |
 | Owner | `<person or team>` |
 | Reviewers | `<product, engineering, QA, security, operations as applicable>` |
@@ -43,6 +48,7 @@ section.
 | Primary issue | `<canonical URL>` |
 | Concluded whiteboard | `<canonical path/URL>` |
 | Approved workflow handoff | `<canonical path/URL and version>` |
+| Delivery workflow/manifest | `<canonical path/URL and version>` |
 | Development policy | `<canonical path/URL>` |
 | Test strategy | `<canonical path/URL>` |
 | PR/branch policy | `<canonical path/URL>` |
@@ -87,6 +93,17 @@ the contradiction only in this plan.
 
 ### 0.3 How to use this document
 
+`COMPACT` is permitted only when the approved manifest selects
+`GENERATE_COMPACT` for one coherent low-risk production task. It still retains
+document control/review, governing inputs, problem/scope, every applicable
+system contract and risk, the single task's DoR/DOD and execution record, live
+state, evidence, validation, retrospective, and archive handoff. Mark an
+inapplicable section with a reason rather than hiding the boundary.
+
+`FULL` is required for multi-task, systemic, policy-gap, high-risk, or otherwise
+escalated delivery. Complete every applicable section and preserve dependency
+ordering across all selected artifacts and tasks.
+
 1. Specify observable outcomes and system contracts before implementation.
 2. Resolve or explicitly defer every clarification in Section 3.
 3. Review significant decisions before marking the plan `READY`.
@@ -108,10 +125,11 @@ feature contracts and executable delivery tasks. Resolve conflicts before
 implementation and use the concluded whiteboard for its supporting discussion
 history.
 
-1. `<external/public contract or approved product requirement>`
-2. `<this plan's approved feature-specific system contracts>`
-3. `<active repository-wide policies and interfaces>`
-4. `<accepted architecture decision records>`
+1. `<law, regulation, external obligation, or public product/system contract>`
+2. `<active repository-wide policies and any reviewed PROPOSED specialized
+   rule within its explicit adoption boundary>`
+3. `<accepted architecture decision records selected by the manifest>`
+4. `<this plan's approved feature-specific system contracts>`
 5. `<issue discussion, prototypes, and pseudocode>`
 6. `<implementation details>`
 
@@ -349,8 +367,10 @@ increments and how every increment leaves its integration target working:
 
 ```text
 PLANNED -> READY -> IN_PROGRESS -> VERIFYING -> DONE
-               |         |             |
-               +------> BLOCKED <-------+
+   |          |          |             |
+   +----------+----------+-----------> BLOCKED
+
+Any non-DONE task -> CANCELLED
 ```
 
 Use the exact state meanings, WIP limit, blocker rules, and transition gates from
@@ -361,8 +381,8 @@ tasks, record the owners, boundaries, and reason here: `<value or None>`.
 
 - [ ] Dependencies are `DONE` or their required artifacts are available.
 - [ ] Referenced contracts are approved and testable.
-- [ ] Scope, non-scope, expected production files, and approximately 300-LOC
-      budget are recorded.
+- [ ] Scope, non-scope, expected production files, and the policy-defined
+      production-LOC budget are recorded.
 - [ ] Acceptance criteria and task-specific tests are defined.
 - [ ] Data, security, concurrency, failure, compatibility, and operational
       impacts are understood or explicitly not applicable.
@@ -387,19 +407,22 @@ tasks, record the owners, boundaries, and reason here: `<value or None>`.
 
 ## 7. Dependency-ordered task ledger
 
-`NEXT` identifies the single next task that may start. Expected product LOC
-excludes tests and documentation.
+`NEXT` identifies dependency-ready tasks permitted to start within the active
+WIP policy. Use exactly one marker when the project requires a single-next-task
+model. Expected product LOC excludes tests and documentation.
 
 | ID | State | Next | Depends on | Outcome / vertical slice | Contract IDs | Expected product LOC | PR |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `T00` | `PLANNED` |  | `None` | `<task outcome>` | `<IDs>` | `Docs only` | `—` |
-| `T01` | `PLANNED` | `NEXT` | `T00` | `<task outcome>` | `<IDs>` | `~300` | `—` |
+| `T00` | `PLANNED` | `NEXT` | `None` | `<task outcome>` | `<IDs>` | `Docs only` | `—` |
+| `T01` | `PLANNED` | | `T00` | `<task outcome>` | `<IDs>` | `<policy target>` | `—` |
 
 Task-ledger evolution rules:
 
 - Add, split, reorder, block, or cancel tasks only with a change-log entry and
   dependency/contract impact assessment.
 - Never reuse an ID or erase a completed/cancelled task.
+- `CANCELLED` is terminal for an uncompleted task and records why its outcome is
+  no longer required; never relabel a `DONE` task as cancelled.
 - Recompute `NEXT` after every material change.
 - A newly discovered design-level ambiguity returns to the linked whiteboard;
   do not hide solution discovery inside an implementation task.
@@ -475,7 +498,7 @@ changes.
 | --- | --- |
 | Plan state | `<state>` |
 | Current task | `<ID or None>` |
-| Next ready task | `<ID or None>` |
+| Next ready task(s) | `<IDs or None>` |
 | Active branch / PR | `<value>` |
 | Last completed task | `<ID or None>` |
 | Active blocker | `<ID or None>` |

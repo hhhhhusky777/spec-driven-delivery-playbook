@@ -22,6 +22,9 @@ introduction from the instantiated policy.
 | Development policy | `<link>` |
 | Test strategy | `<link>` |
 
+Status lifecycle: `DRAFT -> PROPOSED -> ACTIVE -> SUPERSEDED / RETIRED`.
+Only `ACTIVE` versions govern pull requests.
+
 ### 1.1 Artifact review gate
 
 Submit each draft or update for human or independent-agent review. The author

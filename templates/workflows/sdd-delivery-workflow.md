@@ -171,6 +171,11 @@ approved emergency handoff -> emergency manifest -> bounded mitigation -> eviden
     -> retrospective -> normal workflow for permanent remediation
 ```
 
+The active emergency policy may compress or run the compact whiteboard,
+handoff, and review concurrently with bounded mitigation. It must not fabricate
+approval, erase the durable decision/evidence record, or skip the retrospective
+and permanent-remediation routing.
+
 Selected route: `<Route N>`.
 
 Justification: `<why this is the smallest safe route>`.
@@ -253,6 +258,55 @@ generating the first selected artifact.
   request another independent review before continuing.
 - Review exposes an incorrect artifact decision -> return to routing and mark
   affected downstream artifacts `STALE`.
+
+### 10.1 Mid-delivery policy-gap rerouting
+
+Use this path when an issue discovered during `DELIVERY_ACTIVE` or `VALIDATING`
+may require a specialized policy. The problem report is evidence, not automatic
+proof that a new policy is needed. README owns the canonical
+[workflow diagram](../../README.md#mid-delivery-policy-gap-rerouting); this
+template owns the normative procedure and required record.
+
+Required procedure:
+
+1. Record what is wrong, what was expected, what evidence exists, and the
+   concrete worst case before editing policy, product, configuration, or tests.
+2. Apply the specialized-policy template's local-versus-systemic assessment.
+   A local implementation choice stays in its owning feature artifact.
+3. If systemic, assign a policy-gap ID and classify whether it belongs to this
+   delivery. Reroute this manifest for same-delivery scope; create a linked
+   standard workflow only for a materially independent issue, and record its
+   dependency and precise unblock condition when it blocks current work.
+4. Pause only tasks whose assumptions or safety depend on the missing rule.
+   Preserve valid completed evidence and independent work. Mark an artifact
+   `STALE` only when the new rule invalidates its content.
+5. Use the registry to select `GENERATE` when no authority exists or
+   `UPDATE_EXISTING` when an active policy is incomplete. Add that decision and
+   the existing-system audit to the manifest, record dependencies/review
+   owners, and approve the revised manifest before drafting the policy change.
+6. Review the new or updated policy as `PROPOSED`, including its
+   new/changed-code adoption boundary. Audit existing behavior and create
+   risk-ordered remediation tasks.
+7. Reconcile and review the implementation plan, contracts, ADRs, tests, and
+   runbooks affected by the rule.
+8. Resume affected delivery work only after its explicit resume gate passes.
+   Activate the policy only after the separate activation gate passes.
+
+Record the reroute in the workflow change history and current-state table:
+
+| Field | Required value |
+| --- | --- |
+| Discovery issue/evidence | `<link and concise justification>` |
+| Policy-gap ID and classification | `<ID; local/systemic; risk>` |
+| Relationship to delivery | `<same delivery/materially independent>` |
+| Linked workflow dependency/blocker | `<link and unblock condition/None>` |
+| Paused and independent tasks | `<IDs and reasons>` |
+| Stale artifacts | `<links/None and reason>` |
+| Revised manifest version/review | `<version/state/reviewer>` |
+| Proposed adoption boundary | `<new/changed work governed when>` |
+| Existing-system audit/remediation | `<links and state>` |
+| Delivery resume gate | `<conditions/state/approver>` |
+| Policy activation gate | `<conditions/state/approver>` |
 
 ## 11. Delivery state and handoff
 

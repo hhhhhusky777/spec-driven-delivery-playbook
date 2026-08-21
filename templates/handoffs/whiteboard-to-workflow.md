@@ -128,6 +128,11 @@ Record the consumed handoff version in the workflow. If the handoff later
 becomes `STALE`, stop dependent generation and reroute from the new approved
 version.
 
+After the exactly-once trigger succeeds, change only the control/trigger record:
+set the handoff state to `CONSUMED`, link the generated workflow, and set the
+next action to manifest review. Preserve the approved normalized conclusion
+unchanged so the workflow can identify the exact version it consumed.
+
 | Trigger field | Value |
 | --- | --- |
 | Approved handoff version | `<commit/version>` |
