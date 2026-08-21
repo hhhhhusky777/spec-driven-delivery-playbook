@@ -254,6 +254,86 @@ generating the first selected artifact.
 - Review exposes an incorrect artifact decision -> return to routing and mark
   affected downstream artifacts `STALE`.
 
+### 10.1 Mid-delivery policy-gap rerouting
+
+Use this path when an issue discovered during `DELIVERY_ACTIVE` or `VALIDATING`
+may require a specialized policy. The problem report is evidence, not automatic
+proof that a new policy is needed.
+
+```mermaid
+flowchart TD
+    I["Issue discovered during delivery"] --> J["Record justification: observed, expected, impact, evidence"]
+    J --> C{"Local decision or systemic invariant?"}
+    C -->|"Local / one-time"| L["Update owning plan, contract, task, or ADR"]
+    L --> LR{"Artifact review approved?"}
+    LR -->|"No"| L
+    LR -->|"Yes"| RS["Resume affected tasks"]
+
+    C -->|"Systemic"| PG["Register POLICY_GAP"]
+    PG --> S{"Part of current delivery?"}
+    S -->|"No, materially independent"| NW["Start linked whiteboard -> handoff -> workflow"]
+    NW --> BL["Record cross-workflow dependency or blocker"]
+    S -->|"Yes"| PA["Pause affected tasks; preserve independent work"]
+    PA --> ST["Mark only invalid dependent artifacts STALE"]
+    ST --> RM["Return manifest to ROUTING and add policy + audit"]
+    RM --> MR{"Revised manifest approved?"}
+    MR -->|"No"| RM
+    MR -->|"Yes"| DP["Draft and review policy as PROPOSED"]
+    DP --> PR{"Policy review approved?"}
+    PR -->|"No"| DP
+    PR -->|"Yes"| AB["Apply declared safety boundary to new/changed work"]
+    AB --> AU["Audit existing system and classify violations"]
+    AU --> FX["Remediate critical/high; track lower risk"]
+    FX --> UP["Update and review plan/dependent artifacts"]
+    UP --> RG{"Delivery resume gate passed?"}
+    RG -->|"No"| FX
+    RG -->|"Yes"| RS
+    FX --> AG{"Policy activation gate passed?"}
+    AG -->|"No"| FX
+    AG -->|"Yes"| AC["Policy ACTIVE + periodic review"]
+```
+
+Required procedure:
+
+1. Record what is wrong, what was expected, what evidence exists, and the
+   concrete worst case before editing policy, product, configuration, or tests.
+2. Apply the specialized-policy template's local-versus-systemic assessment.
+   A local implementation choice stays in its owning feature artifact.
+3. If systemic, assign a policy-gap ID and classify whether it belongs to this
+   delivery. Reroute this manifest for same-delivery scope; create a linked
+   standard workflow only for a materially independent issue.
+4. Pause only tasks whose assumptions or safety depend on the missing rule.
+   Preserve valid completed evidence and independent work. Mark an artifact
+   `STALE` only when the new rule invalidates its content.
+5. Add the specialized policy and existing-system audit to the manifest, record
+   dependencies and review owners, and approve the revised manifest before
+   generating the policy.
+6. Review the policy as `PROPOSED`, including its new/changed-code adoption
+   boundary. Audit existing behavior and create risk-ordered remediation tasks.
+7. Reconcile and review the implementation plan, contracts, ADRs, tests, and
+   runbooks affected by the rule.
+8. Resume affected delivery work only after its explicit resume gate passes.
+   Activate the policy only after the separate activation gate passes.
+
+Record the reroute in the workflow change history and current-state table:
+
+| Field | Required value |
+| --- | --- |
+| Discovery issue/evidence | `<link and concise justification>` |
+| Policy-gap ID and classification | `<ID; local/systemic; risk>` |
+| Relationship to delivery | `<same delivery/materially independent>` |
+| Paused and independent tasks | `<IDs and reasons>` |
+| Stale artifacts | `<links/None and reason>` |
+| Revised manifest version/review | `<version/state/reviewer>` |
+| Proposed adoption boundary | `<new/changed work governed when>` |
+| Existing-system audit/remediation | `<links and state>` |
+| Delivery resume gate | `<conditions/state/approver>` |
+| Policy activation gate | `<conditions/state/approver>` |
+
+The focused
+[mid-delivery policy-gap rerouting guide](../../docs/mid-delivery-policy-gap-rerouting.md)
+provides the same procedure as a standalone teaching reference.
+
 ## 11. Delivery state and handoff
 
 | Field | Current value |

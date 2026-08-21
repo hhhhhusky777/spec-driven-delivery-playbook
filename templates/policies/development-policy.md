@@ -234,18 +234,30 @@ one-time, or already covered by an existing authority.
 ```text
 Problem discovered
     -> classify local versus systemic
-    -> register POLICY_GAP
-    -> investigate and gather evidence
-    -> draft specialized policy
-    -> review and approve
-    -> audit affected existing behavior
-    -> remediate by risk in small increments
-    -> enforce for all new and changed work
-    -> activate and periodically review
+    -> local: update the owning plan/contract/task/ADR and review it
+    -> systemic: register POLICY_GAP
+        -> classify current-delivery versus independent scope
+        -> update/reroute the active manifest, or start a linked workflow
+        -> pause only affected tasks and mark invalid dependents STALE
+        -> investigate and gather evidence
+        -> draft and review specialized policy as PROPOSED
+        -> define the new/changed-code adoption boundary
+        -> audit affected existing behavior
+        -> remediate by risk in small increments
+        -> reconcile the implementation plan and dependent artifacts
+        -> pass resume and policy-activation gates
+        -> activate and periodically review
 ```
 
 An unresolved high-risk policy gap blocks implementation readiness. Define how
 medium/low-risk adoption work is owned, dated, and tracked.
+
+When a gap appears after implementation starts, do not restart or duplicate the
+entire delivery by default. Reroute its existing manifest when the rule belongs
+to the same accepted outcome. Start a separate whiteboard/handoff/workflow only
+when the issue is materially independent, and record the dependency or blocker
+in both workflows. Follow the
+[mid-delivery rerouting guide](../../docs/mid-delivery-policy-gap-rerouting.md).
 
 ## 9. Dependencies, gates, and task state
 

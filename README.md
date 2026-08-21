@@ -57,11 +57,15 @@ flowchart TD
     AR -->|"Yes, all artifacts"| PG["Planning, Policy, and Decision Gates Ready"]
 
     PG --> T["Dependency-Ordered Agile Tasks or Scoped Change"]
-    T --> D["TDD + Small Self-Contained PR"]
+    T --> MP{"Mid-delivery issue reveals a systemic rule?"}
+    MP -->|"No"| D["TDD + Small Self-Contained PR"]
+    MP -->|"Yes"| RP["Register POLICY_GAP + Reroute Manifest"]
+    RP --> R
     D --> V{"Required evidence passes?"}
     V -->|"Failure"| F["Failure Justification and Classification"]
     F -->|"Requirement/design gap"| W
     F -->|"Plan/artifact/task gap"| G
+    F -->|"New systemic rule"| RP
     F -->|"Product/test/config/environment"| D
     V -->|"More tasks"| T
     V -->|"All tasks complete"| X["Plan-Level Validation + Retrospective"]
@@ -72,6 +76,27 @@ The workflow is intentionally not a one-way waterfall. Review and delivery
 evidence can return work to the upstream artifact that owns the problem. The
 diagram abbreviates selected policy, audit, ADR, contract, plan, and runbook
 documents as one-at-a-time artifacts in the generation/review loop.
+
+## Mid-delivery policy-gap rerouting
+
+A policy gap can be discovered after implementation starts. Do not quietly add
+a feature-local rule, discard valid work, or automatically open an unrelated
+delivery. Classify the problem first:
+
+- keep a local or one-time decision in the owning plan, contract, task, or ADR;
+- reroute the active manifest when the systemic rule is part of the current
+  delivery; or
+- start and link a separate standard workflow when the issue is materially
+  independent.
+
+Only affected work pauses. A reviewed `PROPOSED` safety rule may govern new and
+changed code while the existing-system audit and remediation continue, but the
+policy becomes `ACTIVE` only after its activation gate passes.
+
+The focused
+[mid-delivery policy-gap rerouting guide](docs/mid-delivery-policy-gap-rerouting.md)
+contains the complete workflow diagram, decision table, required records,
+resume gates, and an example.
 
 ## Three kinds of artifacts
 
@@ -238,16 +263,19 @@ and plan performs an applicability scan. A systemic gap follows this flow:
 ```text
 problem discovered
     -> local-versus-systemic classification
-    -> POLICY_GAP
-    -> specialized-policy draft
-    -> existing-system audit
-    -> risk-ordered remediation
-    -> enforce for new/changed work
-    -> activation and periodic review
+    -> local: update and review the owning feature artifact
+    -> systemic: register POLICY_GAP
+        -> reroute the current manifest or start a linked independent workflow
+        -> review specialized policy as PROPOSED
+        -> enforce its declared boundary for new/changed work
+        -> existing-system audit and risk-ordered remediation
+        -> delivery resume gate and policy activation gate
 ```
 
 A local decision stays in the plan or ADR. A durable cross-feature rule becomes
-a policy. This applies YAGNI to governance itself.
+a policy. During active delivery, pause only affected tasks and preserve valid
+evidence. This applies YAGNI to governance itself; see the
+[mid-delivery rerouting guide](docs/mid-delivery-policy-gap-rerouting.md).
 
 ## Keeping templates current
 

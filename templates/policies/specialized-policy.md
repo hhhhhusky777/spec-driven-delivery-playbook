@@ -21,6 +21,10 @@ instantiated policy.
 | Review state | `NOT_STARTED` |
 | Policy-gap ID | `<ID>` |
 | Originating issue/record | `<link>` |
+| Originating delivery/workflow | `<link or None>` |
+| Discovery phase/task | `<active task/gate or project review>` |
+| Affected active artifacts/tasks | `<links/IDs/None>` |
+| New/changed-code adoption boundary | `<when PROPOSED rules begin to govern>` |
 | Effective date | `<date or Not active>` |
 | Last reviewed | `<date>` |
 | Next review | `<date/event>` |
@@ -37,6 +41,8 @@ DRAFT -> PROPOSED -> ACTIVE -> SUPERSEDED
 New and changed code may be required to follow a `PROPOSED` safety rule before
 the existing-system audit is complete. State that adoption boundary explicitly;
 do not describe the policy as fully `ACTIVE` until its activation gate passes.
+When this policy is discovered during active delivery, update that delivery's
+manifest and tracker before affected implementation resumes.
 
 ### 1.1 Artifact review gate
 
@@ -208,11 +214,15 @@ Classifications: `COMPLIANT`, `VIOLATION`, `UNKNOWN`, `NOT_APPLICABLE`,
 ## 12. Adoption and remediation plan
 
 - New/changed-code enforcement begins: `<date/state>`.
+- Originating workflow reroute and manifest version: `<link/version or None>`.
+- Paused affected tasks: `<IDs and reason or None>`.
+- Artifacts marked `STALE`: `<links and regeneration owner or None>`.
 - Critical/high violations: `<blocking rule>`.
 - Medium/low violations: `<tracking and deadline rule>`.
 - Unknown areas: `<investigation owner/date>`.
 - Migration/compatibility: `<sequence>`.
 - Backout/forward-fix: `<strategy>`.
+- Resume gate for affected delivery work: `<approved policy/plan/audit conditions>`.
 
 Use small, self-contained remediation tasks. Do not combine unrelated violations
 only because they share this policy.
