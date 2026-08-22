@@ -7,7 +7,9 @@ Before instantiating project policies, follow the
 [project adoption manifest](adoption/project-adoption-manifest.md). Inventory
 the project's existing authorities first. Reuse them when they already satisfy
 the need; do not create a parallel development, test, or PR policy merely
-because a template exists.
+because a template exists. Use the
+[agent adoption trigger](adoption/agent-adoption-trigger.md) to perform one
+manifest action at a time and stop at every review gate.
 
 ## Project-level templates
 

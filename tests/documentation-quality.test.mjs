@@ -225,6 +225,15 @@ test("project adoption architecture remains connected to runbook and manifest", 
     ),
     "utf8",
   );
+  const agentTrigger = await readFile(
+    path.join(
+      REPOSITORY_ROOT,
+      "templates",
+      "adoption",
+      "agent-adoption-trigger.md",
+    ),
+    "utf8",
+  );
   const templateCatalog = await readFile(
     path.join(REPOSITORY_ROOT, "templates", "README.md"),
     "utf8",
@@ -235,15 +244,68 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(readme, /templates\/adoption\/project-adoption-manifest\.md/);
   assert.match(runbook, /^## 2\. Authority and conflict gate$/m);
   assert.match(runbook, /Upstream playbook changes never overwrite/);
-  assert.match(runbook, /^## 7\. Pilot one real delivery$/m);
-  assert.match(runbook, /^## 10\. Playbook updates and drift$/m);
-  assert.match(runbook, /`EXAMPLE_REVIEWED` is the terminal\s+state/);
+  assert.match(runbook, /^## 5\. Executable integration sequence$/m);
+  assert.match(runbook, /project-adoption-manifest\.md/);
+  assert.match(runbook, /^## 8\. Pilot one real delivery$/m);
+  assert.match(runbook, /^## 11\. Playbook updates and drift$/m);
+  assert.match(runbook, /`EXAMPLE_REVIEWED` is the\s+terminal state/);
   assert.match(manifest, /\| Playbook revision \| `<immutable commit or release>` \|/);
   assert.match(manifest, /^## 5\. Adoption routing manifest$/m);
   assert.match(manifest, /^## 9\. Pilot delivery$/m);
   assert.match(manifest, /^## 10\. Adoption review$/m);
   assert.match(manifest, /BLOCKED \/ EXAMPLE_REVIEWED/);
+  assert.match(manifest, /\| Allowed write scope \|/);
+  assert.match(manifest, /\| Required documentation checks \|/);
+  assert.match(agentTrigger, /^## Prompt A — Bootstrap discovery$/m);
+  assert.match(agentTrigger, /^## Prompt B — Continue one adoption action$/m);
+  assert.match(agentTrigger, /^## Prompt C — Start the first need$/m);
+  assert.match(agentTrigger, /Do not advance Adoption state/);
   assert.match(templateCatalog, /adoption\/project-adoption-manifest\.md/);
+});
+
+test("SGLang example demonstrates bounded adoption through first whiteboard", async () => {
+  const exampleRoot = path.join(
+    REPOSITORY_ROOT,
+    "examples",
+    "project-adoption",
+    "sglang",
+  );
+  const walkthrough = await readFile(path.join(exampleRoot, "README.md"), "utf8");
+  const bootstrap = await readFile(
+    path.join(exampleRoot, "00-bootstrap-prompt.md"),
+    "utf8",
+  );
+  const manifest = await readFile(
+    path.join(exampleRoot, "01-project-adoption-manifest.md"),
+    "utf8",
+  );
+  const entrypoint = await readFile(
+    path.join(exampleRoot, "02-project-entrypoint.md"),
+    "utf8",
+  );
+  const firstNeed = await readFile(
+    path.join(exampleRoot, "06-first-need-prompt.md"),
+    "utf8",
+  );
+  const installationPrompt = await readFile(
+    path.join(exampleRoot, "05-installation-prompt.md"),
+    "utf8",
+  );
+
+  assert.match(walkthrough, /d315eb725044e435b146c85488b7c6d9222f7fec/);
+  assert.match(walkthrough, /git -C spec-driven-delivery-playbook rev-parse HEAD/);
+  assert.match(walkthrough, /\.github\/spec-driven-delivery\/project-adoption-manifest\.md/);
+  assert.match(walkthrough, /changes no SGLang\s+repository/);
+  assert.match(bootstrap, /update only\s+\.github\/spec-driven-delivery\/project-adoption-manifest\.md/);
+  assert.match(bootstrap, /keep Adoption state as DISCOVERY/);
+  assert.match(manifest, /\| Adoption state \| `REVIEW` \|/);
+  assert.match(manifest, /`ACTIVE` is prohibited/);
+  assert.match(entrypoint, /^## Start a need$/m);
+  assert.match(installationPrompt, /Perform exactly one Next action/);
+  assert.match(installationPrompt, /Do not advance the Adoption state/);
+  assert.match(firstNeed, /Create only:\s+\.github\/spec-driven-delivery\/deliveries/);
+  assert.match(firstNeed, /Do not decide the solution/);
+  assert.match(walkthrough, /do not start a real need without a separate\s+authorized adoption/);
 });
 
 test("external-link checks dispose response bodies before returning status", async () => {

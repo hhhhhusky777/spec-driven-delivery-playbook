@@ -206,6 +206,7 @@ flowchart LR
         D["Repository discovery and authority map"]
         C["Approved project-local contracts"]
         G["Local documentation, test, and PR gates"]
+        I["Integration INSTALLED"]
         X["One bounded real pilot delivery"]
         A{"Adoption review approved?"}
         V["Adoption ACTIVE"]
@@ -218,7 +219,8 @@ flowchart LR
     M --> D
     D --> C
     C --> G
-    G --> X
+    G --> I
+    I --> X
     X --> A
     A -->|"Changes requested"| D
     A -->|"Yes"| V
@@ -233,10 +235,12 @@ playbook revision is assessed through a new manifest review and never silently
 overwrites active project contracts.
 
 Adoption is complete only when project-owned navigation and gates are active
-and one real bounded delivery supplies honest evidence. An external-project
-teaching example pins public revisions, separates facts from hypothetical
-additions, and never implies affiliation, endorsement, unobserved testing, or
-authority to change that project. It ends as `EXAMPLE_REVIEWED`, not `ACTIVE`.
+at `INSTALLED`; the project can then start its first need in a whiteboard. One
+real bounded delivery supplies the additional evidence for `ACTIVE`. An
+external-project teaching example pins public revisions, separates facts from
+hypothetical additions, and never implies affiliation, endorsement, unobserved
+testing, or authority to change that project. It ends as `EXAMPLE_REVIEWED`,
+not `ACTIVE`.
 
 ## Start here
 
@@ -252,8 +256,9 @@ authority to change that project. It ends as `EXAMPLE_REVIEWED`, not `ACTIVE`.
    `DEFER`, or `BLOCKED`.
 5. Install and review only the selected project-local contracts, navigation,
    and gates.
-6. Pilot one bounded real delivery, review the evidence, and activate the
-   adoption only through project authority.
+6. At `INSTALLED`, use the approved agent trigger to create the first
+   whiteboard; pilot one bounded real delivery and activate only through project
+   authority.
 
 ### Start a need or requirement
 
@@ -308,6 +313,7 @@ This prevents document inflation while making omissions reviewable.
 | Template | Purpose |
 | --- | --- |
 | [Project adoption manifest](templates/adoption/project-adoption-manifest.md) | Pinned playbook-to-project authority mapping, routing, state, enforcement, pilot evidence, activation, and drift history |
+| [Agent adoption trigger](templates/adoption/agent-adoption-trigger.md) | Bounded bootstrap, one-action continuation, and first-need prompts driven by the reviewed adoption manifest |
 | [Development policy](templates/policies/development-policy.md) | Project-wide delivery, dependency/data sequencing, YAGNI, state, pre-start context receipt, policy discovery, handoff, retrospective, and archive rules |
 | [Specialized policy](templates/policies/specialized-policy.md) | Standardized creation, audit, adoption, enforcement, and review of a mid-project systemic policy |
 | [PR and branch policy](templates/policies/pull-request-policy.md) | Branch models, review readiness, PR evidence, merge, emergency, and post-merge rules |
@@ -318,7 +324,7 @@ This prevents document inflation while making omissions reviewable.
 | [Implementation plan](templates/delivery/implementation-plan.md) | Approved feature contracts, dependency/data phases, incremental tasks, tracking, evidence, and closure |
 | [Architecture decision record](templates/decisions/architecture-decision-record.md) | Durable rationale and consequences for a significant architectural choice |
 
-## Worked example
+## Worked examples
 
 The [parallel provider submissions example](examples/parallel-provider-submissions/README.md)
 starts with a need to remove sequential provider execution. It demonstrates:
@@ -337,6 +343,14 @@ starts with a need to remove sequential provider execution. It demonstrates:
 The example stops at the `READY` gate and lists the project-specific evidence
 still required to pass it; it does not fabricate implementation or passing test
 evidence.
+
+The [SGLang project-adoption example](examples/project-adoption/sglang/README.md)
+starts from pinned public repository and playbook revisions. It demonstrates the
+exact first manifest path, bootstrap prompt, authority inventory, reuse versus
+generation decisions, proposed project entry point and SDD overlay, thin agent
+adapters, review stops, and the prompt that creates only the first whiteboard.
+It changes no SGLang file and remains `REVIEW` until independently reviewed;
+even after approval it can become only `EXAMPLE_REVIEWED`, never `ACTIVE`.
 
 ## Small, self-contained delivery
 

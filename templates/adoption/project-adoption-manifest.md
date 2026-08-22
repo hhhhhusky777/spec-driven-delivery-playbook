@@ -21,7 +21,11 @@ evidence; it does not replace the project authorities to which it links.
 | Required reviewers | `<policy/test/PR/security/other owners>` |
 | Project contract registry | `<canonical link>` |
 | Project adoption root | `<canonical path>` |
+| Template delivery mode | `<pinned local checkout / vendored selected templates / immutable remote>` |
+| Agent adoption trigger | `<canonical path>` |
 | Branch / PR | `<value>` |
+| Allowed write scope | `<exact paths; update before every agent action>` |
+| Required documentation checks | `<commands or reviewed Not applicable reason>` |
 | Current blocker | `None` |
 | Next action | `<one concrete action>` |
 
@@ -103,6 +107,7 @@ Use only `REUSE`, `UPDATE_EXISTING`, `GENERATE`, `SKIP`, `DEFER`, or `BLOCKED`.
 | `5` | Per-need delivery artifacts | `<decision>` | `<link/path>` | `<reason>` | `<IDs>` | `<review>` |
 | `6` | Documentation/test/PR enforcement | `<decision>` | `<link/path>` | `<reason>` | `<IDs>` | `<review>` |
 | `7` | Adoption archive and updates | `<decision>` | `<link/path>` | `<reason>` | `<IDs>` | `<review>` |
+| `8` | Human/agent entry-point adapters | `<decision>` | `<link/path>` | `<reason>` | `<IDs>` | `<review>` |
 
 ## 6. Gap, deviation, and YAGNI register
 
@@ -186,7 +191,7 @@ which reasoning is reconstructed>`
 | --- | --- | --- | --- | --- | --- |
 | `1` | `<identity/type>` | `<items>` | `IN_REVIEW` | `<links or None>` | `<value>` |
 
-### Activation checklist
+### Installation checklist
 
 - [ ] Source and target revisions are pinned.
 - [ ] Repository inventory and authority mapping are verified.
@@ -194,6 +199,12 @@ which reasoning is reconstructed>`
 - [ ] Gaps, deviations, exclusions, and conflicts have dispositions.
 - [ ] Project-local navigation exposes canonical contracts without duplication.
 - [ ] Required project gates pass with linked evidence.
+- [ ] Prompt C can create the first whiteboard using only repository-visible
+      context.
+- [ ] Authorized project reviewers approve `MAPPED -> INSTALLED`.
+
+### Activation checklist
+
 - [ ] A real adoption has real pilot evidence; an external case labels its
       historical replay and reconstructed reasoning.
 - [ ] Rollback, update owner, and next review trigger are recorded.

@@ -18,7 +18,7 @@ documents, enforcement, and pilot evidence.
 | Owner | Playbook maintainers |
 | Applies to | Initial project adoption and later playbook-version updates |
 | Project record | One reviewed adoption manifest in the adopting repository |
-| Completion | Project adoption state is `ACTIVE` with evidence |
+| Completion | Real adoption is `ACTIVE`; external case study is `EXAMPLE_REVIEWED` |
 | Last source review | 2026-08-22 |
 
 The outcome is a project-local delivery system that:
@@ -57,7 +57,9 @@ Required rules:
 stateDiagram-v2
     [*] --> DISCOVERY
     DISCOVERY --> MAPPED: facts and authority inventory approved
-    MAPPED --> PILOT: selected artifacts and local gates approved
+    MAPPED --> INSTALLED: selected artifacts and local gates approved
+    INSTALLED --> PILOT: real project's first whiteboard starts
+    INSTALLED --> REVIEW: external case package complete
     PILOT --> REVIEW: real delivery evidence complete
     REVIEW --> ACTIVE: adoption approved
     REVIEW --> EXAMPLE_REVIEWED: external case study approved
@@ -70,22 +72,26 @@ stateDiagram-v2
 
     DISCOVERY --> BLOCKED
     MAPPED --> BLOCKED
+    INSTALLED --> BLOCKED
     PILOT --> BLOCKED
     REVIEW --> BLOCKED
     UPDATING --> BLOCKED
     BLOCKED --> DISCOVERY: recomputed safe state
     BLOCKED --> MAPPED: recomputed safe state
+    BLOCKED --> INSTALLED: recomputed safe state
     BLOCKED --> PILOT: recomputed safe state
     BLOCKED --> REVIEW: recomputed safe state
     BLOCKED --> UPDATING: recomputed safe state
 ```
 
 `BLOCKED` preserves the prior state, evidence, owner, and explicit unblock
-condition. `ACTIVE` means only that the adopting project approved its local
-integration; it does not imply endorsement by the playbook maintainers or by
-any third-party project used in an example. `EXAMPLE_REVIEWED` is the terminal
-state for a non-authoritative external-project case study; it never means that
-the external project adopted the playbook.
+condition. `INSTALLED` means the project-local entry point, selected contracts,
+artifact locations, and gates are approved; a contributor can now start the
+first need in a whiteboard. `ACTIVE` additionally requires evidence from that
+first real delivery. It does not imply endorsement by the playbook maintainers
+or by any third-party project used in an example. `EXAMPLE_REVIEWED` is the
+terminal state for a non-authoritative external-project case study; it never
+means that the external project adopted the playbook.
 
 ## 4. Inputs and preflight
 
@@ -107,7 +113,89 @@ editing project documents, record:
 If a fact cannot be verified, record it as `UNKNOWN`. Do not turn an assumption
 into a project rule.
 
-## 5. Discovery and authority mapping
+## 5. Executable integration sequence
+
+The adoption manifest is the state and data connector. The
+[Agent Adoption Trigger Template](../templates/adoption/agent-adoption-trigger.md)
+is the repeatable trigger. A human or automation invokes the agent for one
+manifest action, reviews the result, records the disposition, and only then
+allows the next action.
+
+### Step 1 — Pin both repositories
+
+Use a dedicated checkout or worktree. Record the exact playbook revision and
+target-project base revision before generation. Never use a moving branch name
+as evidence.
+
+### Step 2 — Place the first project document
+
+Choose one project-owned adoption root. The first file is always the manifest:
+
+```text
+<project-adoption-root>/project-adoption-manifest.md
+```
+
+With dedicated local checkouts, create it from the pinned template:
+
+```bash
+mkdir -p "${PROJECT_CHECKOUT}/${ADOPTION_ROOT}"
+cp "${PLAYBOOK_CHECKOUT}/templates/adoption/project-adoption-manifest.md" \
+  "${PROJECT_CHECKOUT}/${ADOPTION_ROOT}/project-adoption-manifest.md"
+```
+
+Fill only the source/target revisions, project path, adoption type, owner,
+branch, and next action. Leave the state `DISCOVERY`. Do not copy another
+policy yet.
+
+### Step 3 — Run the bootstrap prompt
+
+Fill and submit Prompt A from the agent-trigger template. The agent reads the
+runbook, the new manifest, project instructions, and the pinned repository. It
+updates only repository discovery, unknowns, and the proposed routing map. It
+must not create downstream policies or mark its own work approved.
+
+**Review stop A:** an authorized reviewer verifies facts and authority links.
+On approval, the reviewer records the review and moves `DISCOVERY -> MAPPED`.
+Comments keep the manifest in `DISCOVERY`.
+
+### Step 4 — Install one selected artifact at a time
+
+Invoke Prompt B. It reads the manifest's current state and performs exactly one
+dependency-ready `GENERATE` or `UPDATE_EXISTING` action. `REUSE`, `SKIP`, and
+`DEFER` decisions create no copied artifact.
+
+**Review stop B:** review that artifact against the complete mapped project
+authority. Keep the manifest `MAPPED` while selected artifacts remain. Repeat
+Prompt B only after the previous artifact is approved.
+
+### Step 5 — Verify the installed integration
+
+After every selected artifact is approved, Prompt B performs one final
+installation verification:
+
+- a human entry point links the project contract registry and start procedure;
+- each supported agent entry point links the same canonical procedure;
+- whiteboard, handoff, workflow, plan, evidence, and archive locations exist;
+- documentation, test, and PR gates are project-owned and executable; and
+- the next-need prompt can resolve every source without hidden chat context.
+
+**Review stop C:** independently follow the entry point as a new contributor.
+If it works and the manifest has no unresolved adoption blocker, record
+`MAPPED -> INSTALLED`. Integration is now complete and the first need may begin.
+
+### Step 6 — Start the first need in a whiteboard
+
+Fill Prompt C from the agent-trigger template with the need, issue, or defect.
+The agent creates only the solution whiteboard under the installed project path,
+links the active manifest and project authorities, records unknowns, and stops
+for whiteboard discussion. It does not generate the handoff or plan.
+
+For a real project, record `INSTALLED -> PILOT` when that first workflow starts.
+After it delivers and its evidence is reviewed, complete adoption review and
+move to `ACTIVE`. A non-authoritative external-project example instead stops at
+`EXAMPLE_REVIEWED` and cannot activate the external project.
+
+## 6. Discovery and authority mapping
 
 Inspect the repository before copying a template. Map every applicable
 playbook capability to an existing project authority or a demonstrated gap.
@@ -134,7 +222,7 @@ The manifest review gate passes only when:
 - deviations from the playbook are explicit and owned; and
 - the smallest safe adoption scope is selected.
 
-## 6. Install the project-local integration
+## 7. Install the project-local integration
 
 Generate or update one selected artifact at a time. Independently review it
 before a dependent artifact proceeds.
@@ -160,7 +248,7 @@ dependency and security policy. Pin mutable workflow dependencies to an
 immutable revision when the platform supports it, and record who reviews
 updates.
 
-## 7. Pilot one real delivery
+## 8. Pilot one real delivery
 
 Select one bounded, representative need that the project is already authorized
 to deliver. Prefer a change that exercises normal review and test routing
@@ -183,7 +271,7 @@ replay is permitted only for a non-authoritative teaching case. It labels
 reconstructed reasoning and must not claim that the historical authors
 followed this playbook or ran new tests.
 
-## 8. Adoption review and activation
+## 9. Adoption review and activation
 
 The adoption reviewer independently checks:
 
@@ -202,7 +290,7 @@ unresolved conflict or fabricated evidence remains. An external-project case
 study instead enters `EXAMPLE_REVIEWED` and records why real project activation
 is outside its authority.
 
-## 9. Failure handling and rollback
+## 10. Failure handling and rollback
 
 Before changing a document, test, configuration, or workflow after a failure,
 record what happened, what was expected, the relevant authority, and whether
@@ -222,7 +310,7 @@ gate:
 Do not delete historical adoption evidence merely because the project rolls
 back or supersedes the integration.
 
-## 10. Playbook updates and drift
+## 11. Playbook updates and drift
 
 An active project consumes no playbook update automatically. At the project's
 review cadence or an event trigger:
@@ -240,11 +328,14 @@ GitHub states that repositories created from a template have unrelated
 histories. Reusable workflow references can reduce duplicated CI, but GitHub
 recommends a commit SHA when consumers require an immutable workflow version.
 
-## 11. External-project example rules
+## 12. External-project example rules
 
 A public project used as a teaching example requires:
 
 - an exact public repository commit and inspection date;
+- an immutable playbook checkout; an example stored in that checkout may record
+  its own source as the output of `git rev-parse HEAD` instead of embedding an
+  impossible self-referential commit hash;
 - links to upstream authorities instead of copied normative text;
 - a clear no-affiliation/no-endorsement statement;
 - separation of verified facts, interpretations, and hypothetical additions;
@@ -252,7 +343,7 @@ A public project used as a teaching example requires:
 - no upstream change or message without explicit authorization; and
 - a drift warning that requires revalidation before reuse.
 
-## 12. Definition of Done
+## 13. Definition of Done
 
 - [ ] Source and target revisions are immutable and recorded.
 - [ ] Existing project authorities and owners are verified.
@@ -260,14 +351,17 @@ A public project used as a teaching example requires:
 - [ ] Conflicts, deviations, gaps, and deferred work are explicit.
 - [ ] Project-local contracts and the contributor/agent entry point are linked.
 - [ ] Documentation, PR, and test enforcement passes in the adopting project.
+- [ ] The manifest is `INSTALLED`, and the next-need prompt creates only the
+      first whiteboard without hidden context.
 - [ ] A real adoption completed one bounded real delivery; an external teaching
-      case completed a clearly labeled historical replay.
+      case completed its declared evidence without claiming project adoption.
+- [ ] Any historical replay labels reconstructed reasoning and unrun evidence.
 - [ ] Adoption review, rollback, update ownership, and next review are recorded.
 - [ ] A real adoption is `ACTIVE` through project authority, or a
       non-authoritative external case is `EXAMPLE_REVIEWED` without an adoption
       claim.
 
-## 13. References
+## 14. References
 
 - [GitHub — Creating a repository from a template](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template): template-derived repositories have unrelated histories.
 - [GitHub — Reusing workflow configurations](https://docs.github.com/en/actions/concepts/workflows-and-actions/reusing-workflow-configurations): immutable SHA references and reusable-workflow trade-offs.

@@ -43,7 +43,11 @@ adopted.
   adoption-manifest template. Adoption now begins with repository discovery and
   authority mapping, reuses existing project rules by default, requires local
   enforcement plus one bounded pilot before activation, and assesses later
-  playbook revisions without automatic overwrite.
+  playbook revisions without automatic overwrite. Added bounded agent triggers
+  for bootstrap, one-action continuation, and first-whiteboard creation, plus a
+  pinned non-authoritative SGLang walk-through that shows the exact first file,
+  proposed project overlay, review stops, and automation inputs without
+  claiming upstream adoption.
 
 Migration guidance: active deliveries that have not started implementation
 should generate and approve a handoff, review their manifest, and add review
