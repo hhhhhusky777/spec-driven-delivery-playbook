@@ -1,0 +1,23 @@
+{
+  "name": "spec-driven-delivery-playbook-docs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pinned documentation quality checks for the playbook repository",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "docs:lint": "markdownlint-cli2",
+    "docs:structure": "node scripts/documentation-quality.mjs check",
+    "docs:mermaid": "node scripts/check-mermaid.mjs",
+    "docs:check": "npm run docs:lint && npm run docs:structure && npm run docs:mermaid",
+    "docs:test": "node --test tests/*.test.mjs",
+    "docs:links:external": "node scripts/documentation-quality.mjs external",
+    "docs:all": "npm run docs:check && npm run docs:test"
+  },
+  "devDependencies": {
+    "jsdom": "30.0.1",
+    "markdownlint-cli2": "0.23.2",
+    "mermaid": "11.17.0"
+  }
+}

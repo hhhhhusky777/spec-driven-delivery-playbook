@@ -26,6 +26,7 @@ instantiated strategy.
 | Next review | `<date/event>` |
 | Development policy | `<link>` |
 | PR policy | `<link>` |
+| Documentation quality authority | `<this strategy §4.1 or separate policy link>` |
 
 Status lifecycle: `DRAFT -> PROPOSED -> ACTIVE -> SUPERSEDED / RETIRED`.
 Only `ACTIVE` versions define required quality gates.
@@ -100,6 +101,29 @@ the strictest applicable row.
 
 Reduced diagnostic runs do not replace required gates. State the approval and
 evidence required for exceptions in Section 18.
+
+### 4.1 Documentation and generated-artifact quality
+
+Define the project's canonical documentation-quality rules here, or link a
+separate specialized policy when the scope warrants one. Record reproducible
+commands. Documentation-only changes may skip irrelevant product-code tests,
+but they must not skip applicable documentation gates.
+
+At minimum, require:
+
+- automated Markdown, relative-link/anchor, code-fence, diagram, placeholder,
+  likely-secret, and local-path checks appropriate to the repository;
+- semantic review for correctness, clarity, concision, ambiguity,
+  cross-document consistency, canonical ownership, and freshness;
+- primary-source traceability for external methodology and tooling claims;
+- negative regression evidence for every new blocking documentation rule; and
+- advisory treatment of external-link failures until remote behavior is proven
+  sufficiently reliable for a blocking gate.
+
+Instantiated and generated project documents follow the same rules. They must
+replace applicable placeholders, remove template instructions, use verified
+project facts/contracts/owners, and claim only evidence that was actually
+produced. Automation does not self-approve semantic correctness.
 
 ## 5. Contract and risk traceability
 
@@ -420,6 +444,8 @@ applicable before adopting it.
 - [ ] Define failure, defect, flaky-test, and exception workflows.
 - [ ] Define performance workloads, metrics, environments, and thresholds.
 - [ ] Link development, PR, API, security, and specialized policies.
+- [ ] Link the documentation-quality policy and define documentation-only and
+      generated-artifact gates.
 - [ ] Assign owners, review cadence, evidence location, and retention.
 
 ## 21. Change history

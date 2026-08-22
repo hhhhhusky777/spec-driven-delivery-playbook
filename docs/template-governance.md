@@ -2,6 +2,8 @@
 
 This document governs the reusable templates in this repository. It is not a
 project development policy; projects instantiate and approve their own policies.
+All repository changes also follow the
+[Documentation Quality and Testing Policy](documentation-quality-policy.md).
 
 ## Principles
 
@@ -37,7 +39,7 @@ project development policy; projects instantiate and approve their own policies.
 5. Check for duplicated authority and move content to its canonical template.
 6. Update workflow routing when artifact triggers change.
 7. Update at least one worked example when behavior changes.
-8. Validate Markdown, relative links, Mermaid, placeholders, and terminology.
+8. Run the documentation policy's automated suite and semantic review.
 9. Record migration guidance for existing instantiated documents when needed.
 10. When review states or dependencies change, verify the handoff trigger,
     manifest review, per-artifact review loop, and return paths together.
@@ -76,5 +78,5 @@ Until a formal release process is adopted:
 - [ ] Affected examples and README guidance are updated.
 - [ ] Required/conditional fields are understandable.
 - [ ] External claims have primary-source links.
-- [ ] Markdown and local links validate.
+- [ ] Documentation policy semantic review and automated gates pass.
 - [ ] Migration or compatibility impact is recorded.

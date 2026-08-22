@@ -358,6 +358,29 @@ examples through review.
 See [Template Governance](docs/template-governance.md) and
 [Contributing](CONTRIBUTING.md).
 
+## Documentation quality and tests
+
+Every playbook change follows the
+[Documentation Quality and Testing Policy](docs/documentation-quality-policy.md).
+Automated checks cover Markdown, relative links and headings, fences, Mermaid
+syntax, placeholders, likely secrets, and private/local paths. Runtime negative
+tests prove each blocking rule can fail. External links remain advisory because
+remote availability is not controlled by this repository.
+
+Semantic review separately verifies correctness, clarity, concision,
+cross-document consistency, canonical ownership, generated project content, and
+source freshness. CI cannot approve those judgments.
+
+Run the same blocking checks locally:
+
+```bash
+npm ci --ignore-scripts
+npm run docs:all
+```
+
+Then review advisory external-link evidence with
+`npm run docs:links:external`.
+
 ## Methodology references
 
 These sources inform the playbook but do not override an instantiated project's
