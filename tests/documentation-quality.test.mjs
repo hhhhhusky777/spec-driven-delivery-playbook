@@ -210,6 +210,42 @@ test("task context receipt remains a READY-to-IN_PROGRESS gate", async () => {
   assert.match(workedExample, /All task context receipts remain `NOT_STARTED`\./);
 });
 
+test("project adoption architecture remains connected to runbook and manifest", async () => {
+  const readme = await readFile(path.join(REPOSITORY_ROOT, "README.md"), "utf8");
+  const runbook = await readFile(
+    path.join(REPOSITORY_ROOT, "docs", "project-adoption-runbook.md"),
+    "utf8",
+  );
+  const manifest = await readFile(
+    path.join(
+      REPOSITORY_ROOT,
+      "templates",
+      "adoption",
+      "project-adoption-manifest.md",
+    ),
+    "utf8",
+  );
+  const templateCatalog = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "README.md"),
+    "utf8",
+  );
+
+  assert.match(readme, /^## Project adoption architecture$/m);
+  assert.match(readme, /docs\/project-adoption-runbook\.md/);
+  assert.match(readme, /templates\/adoption\/project-adoption-manifest\.md/);
+  assert.match(runbook, /^## 2\. Authority and conflict gate$/m);
+  assert.match(runbook, /Upstream playbook changes never overwrite/);
+  assert.match(runbook, /^## 7\. Pilot one real delivery$/m);
+  assert.match(runbook, /^## 10\. Playbook updates and drift$/m);
+  assert.match(runbook, /`EXAMPLE_REVIEWED` is the terminal\s+state/);
+  assert.match(manifest, /\| Playbook revision \| `<immutable commit or release>` \|/);
+  assert.match(manifest, /^## 5\. Adoption routing manifest$/m);
+  assert.match(manifest, /^## 9\. Pilot delivery$/m);
+  assert.match(manifest, /^## 10\. Adoption review$/m);
+  assert.match(manifest, /BLOCKED \/ EXAMPLE_REVIEWED/);
+  assert.match(templateCatalog, /adoption\/project-adoption-manifest\.md/);
+});
+
 test("external-link checks dispose response bodies before returning status", async () => {
   let cancelCalls = 0;
   const result = await fetchWithRetry(

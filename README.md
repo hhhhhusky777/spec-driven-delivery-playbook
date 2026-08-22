@@ -148,15 +148,17 @@ its separate activation gate passes.
 
 ## Three kinds of artifacts
 
-### 1. Project policies — instantiate once, reuse continuously
+### 1. Project governance — establish once, maintain continuously
 
+- Project adoption manifest and contract registry
 - Development policy
 - Test strategy
 - Pull-request and branch policy
 - Active specialized policies
 
-These are inputs to feature delivery. Do not generate slightly different copies
-for every feature.
+These are inputs to feature delivery. The adoption manifest maps the playbook
+to project authority; it is not itself a replacement for the linked contracts.
+Do not generate slightly different policy copies for every feature.
 
 ### 2. Feature artifacts — create per non-trivial need
 
@@ -176,22 +178,82 @@ for every feature.
 - Failure justifications
 - Delivery retrospective
 - Final delivery record
+- Superseded adoption manifests and update assessments
 
 Historical artifacts are not reset for reuse. Start from a fresh template and
 link prior records when later work depends on them.
+
+## Project adoption architecture
+
+An established project adopts the playbook by reconciling it with existing
+authority, not by copying every template. The
+[Project Adoption Runbook](docs/project-adoption-runbook.md) owns the reusable
+procedure. A reviewed
+[project adoption manifest](templates/adoption/project-adoption-manifest.md)
+records the project's pinned playbook revision, existing authorities, selected
+artifacts, local gates, pilot evidence, deviations, and current state.
+
+```mermaid
+flowchart LR
+    subgraph PLAYBOOK["Versioned playbook"]
+        P["Pinned commit or release"]
+        R["Adoption runbook"]
+        T["Reusable templates"]
+    end
+
+    subgraph PROJECT["Adopting project"]
+        M["Reviewed adoption manifest"]
+        D["Repository discovery and authority map"]
+        C["Approved project-local contracts"]
+        G["Local documentation, test, and PR gates"]
+        X["One bounded real pilot delivery"]
+        A{"Adoption review approved?"}
+        V["Adoption ACTIVE"]
+        U["Version and drift assessment"]
+    end
+
+    P --> M
+    R --> M
+    T --> M
+    M --> D
+    D --> C
+    C --> G
+    G --> X
+    X --> A
+    A -->|"Changes requested"| D
+    A -->|"Yes"| V
+    V --> U
+    U -->|"Accepted project update"| M
+```
+
+The project remains the authority for its own behavior and process. Existing
+documents are `REUSE` candidates by default; generate or update an artifact
+only after discovery proves a gap and the project approves the route. A later
+playbook revision is assessed through a new manifest review and never silently
+overwrites active project contracts.
+
+Adoption is complete only when project-owned navigation and gates are active
+and one real bounded delivery supplies honest evidence. An external-project
+teaching example pins public revisions, separates facts from hypothetical
+additions, and never implies affiliation, endorsement, unobserved testing, or
+authority to change that project. It ends as `EXAMPLE_REVIEWED`, not `ACTIVE`.
 
 ## Start here
 
 ### Bootstrap a project
 
-1. Instantiate the
-   [development policy](templates/policies/development-policy.md).
-2. Instantiate the [test strategy](templates/testing/test-strategy.md).
-3. Instantiate the
-   [PR and branch policy](templates/policies/pull-request-policy.md).
-4. Create the project's specialized-policy registry. Do not create policies for
-   domains that are not yet applicable.
-5. Record canonical locations, owners, review dates, and change authority.
+1. Pin the playbook revision and follow the
+   [project adoption runbook](docs/project-adoption-runbook.md).
+2. Create a
+   [project adoption manifest](templates/adoption/project-adoption-manifest.md).
+3. Inventory and review existing project authorities before generating any
+   policy.
+4. Classify each capability as `REUSE`, `UPDATE_EXISTING`, `GENERATE`, `SKIP`,
+   `DEFER`, or `BLOCKED`.
+5. Install and review only the selected project-local contracts, navigation,
+   and gates.
+6. Pilot one bounded real delivery, review the evidence, and activate the
+   adoption only through project authority.
 
 ### Start a need or requirement
 
@@ -245,6 +307,7 @@ This prevents document inflation while making omissions reviewable.
 
 | Template | Purpose |
 | --- | --- |
+| [Project adoption manifest](templates/adoption/project-adoption-manifest.md) | Pinned playbook-to-project authority mapping, routing, state, enforcement, pilot evidence, activation, and drift history |
 | [Development policy](templates/policies/development-policy.md) | Project-wide delivery, dependency/data sequencing, YAGNI, state, pre-start context receipt, policy discovery, handoff, retrospective, and archive rules |
 | [Specialized policy](templates/policies/specialized-policy.md) | Standardized creation, audit, adoption, enforcement, and review of a mid-project systemic policy |
 | [PR and branch policy](templates/policies/pull-request-policy.md) | Branch models, review readiness, PR evidence, merge, emergency, and post-merge rules |

@@ -68,6 +68,15 @@ Until a formal release process is adopted:
 - add migration notes when instantiated documents need manual updates; and
 - avoid modifying an example's historical evidence to match a newer template.
 
+## Project adoption and updates
+
+The [Project Adoption Runbook](project-adoption-runbook.md) owns how a project
+maps, instantiates, pilots, activates, and later updates this playbook. Template
+governance owns the upstream change; it does not grant that change authority in
+an adopting project. Migration guidance identifies possible impact, while each
+project's reviewed adoption manifest decides whether to accept, adapt, reject,
+or defer the update.
+
 ## Definition of Done for a template change
 
 - [ ] Primary purpose remains clear.

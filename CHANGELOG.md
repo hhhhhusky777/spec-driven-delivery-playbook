@@ -39,6 +39,11 @@ adopted.
   visible without duplicating their canonical text. Added a reviewed pre-start
   task context receipt so implementers reconcile the approved source revision,
   critical constraints, boundaries, and evidence before `READY -> IN_PROGRESS`.
+- Added the project-adoption architecture, canonical runbook, and stateful
+  adoption-manifest template. Adoption now begins with repository discovery and
+  authority mapping, reuses existing project rules by default, requires local
+  enforcement plus one bounded pilot before activation, and assesses later
+  playbook revisions without automatic overwrite.
 
 Migration guidance: active deliveries that have not started implementation
 should generate and approve a handoff, review their manifest, and add review
@@ -59,3 +64,9 @@ documentation-quality authority and define documentation-only/generated-output
 gates. Existing strategies remain valid until their next reviewed update; do
 not claim the playbook repository's commands as project evidence unless that
 project adopts and runs equivalent checks.
+
+Projects that already use earlier playbook templates do not need to rewrite
+approved documents or replay completed deliveries. At the next safe governance
+review, pin the currently consumed playbook revision, create an adoption
+manifest, map existing documents to `REUSE` or another reviewed decision, and
+use the next bounded real delivery as adoption-pilot evidence.
