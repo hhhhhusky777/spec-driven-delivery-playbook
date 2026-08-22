@@ -6,11 +6,18 @@ is the state/data connector; these prompts trigger one bounded action. Replace
 all placeholders. The agent never approves its own artifact or advances an
 adoption state without recorded reviewer authority.
 
+Run every prompt with the target project root as the working directory. The
+playbook runtime locator is a read-only per-invocation input; the manifest
+stores the expected repository, revision, and materialization mode, never a
+machine-specific absolute path.
+
 ## Required inputs
 
 | Input | Value |
 | --- | --- |
-| Playbook checkout or immutable URL | `<value>` |
+| Execution working directory | `<absolute target project root>` |
+| Read-only playbook runtime locator | `<absolute checkout root or immutable URL base>` |
+| Playbook source repository | `<canonical repository URL>` |
 | Playbook revision | `<commit/release>` |
 | Target project checkout | `<value>` |
 | Target base revision | `<commit>` |
@@ -25,6 +32,16 @@ adoption state without recorded reviewer authority.
 ```text
 Integrate the Spec-Driven Delivery Playbook revision <PLAYBOOK_REVISION> into
 the project pinned at <TARGET_REVISION>.
+
+Execution contract:
+- run with working directory <TARGET_PROJECT_CHECKOUT>;
+- treat <PLAYBOOK_RUNTIME_LOCATOR> as read-only;
+- verify that the working directory is the target project root; and
+- read only the manifest control fields, then verify that
+  <PLAYBOOK_RUNTIME_LOCATOR> resolves their playbook repository and revision.
+
+If any execution-contract check fails, make no edit and report `BLOCKED` with
+the failed check and required correction.
 
 Read in this order:
 1. <PLAYBOOK_RUNBOOK>
@@ -61,6 +78,14 @@ reporting:
 ```text
 Continue the project adoption recorded in <ADOPTION_MANIFEST> using playbook
 revision <PLAYBOOK_REVISION>.
+
+Run with working directory <TARGET_PROJECT_CHECKOUT>. Treat
+<PLAYBOOK_RUNTIME_LOCATOR> as read-only. Read only the manifest control fields,
+then verify that the locator resolves their playbook repository and revision
+before reading any playbook artifact.
+
+If the working directory or playbook binding cannot be verified, make no edit
+and report `BLOCKED`.
 
 Read the manifest, its current state, approved review records, Next action,
 project instructions, and every authority linked by the selected action.
@@ -99,9 +124,13 @@ Need/issue/defect:
 
 Preconditions:
 - the manifest state is INSTALLED or ACTIVE;
+- the working directory is <TARGET_PROJECT_CHECKOUT> and
+  <PLAYBOOK_RUNTIME_LOCATOR> has been verified against the manifest;
 - the project entry point, development policy, artifact paths, and required
   templates are approved and resolvable;
 - the working branch and allowed write path follow project policy.
+
+If a precondition fails, make no edit and report `BLOCKED`.
 
 Read the manifest, project entry point, active project authorities, and the
 pinned solution-whiteboard template. Create only the first solution whiteboard

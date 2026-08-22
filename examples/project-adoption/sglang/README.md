@@ -19,6 +19,7 @@ or maintainer approval.
 | Inspection date | 2026-08-22 |
 | Example state | `REVIEW` — awaiting independent review in the playbook PR |
 | Proposed SGLang adoption root | `.github/spec-driven-delivery/` |
+| Runtime execution | Agent working directory is SGLang; playbook root is an explicit read-only input |
 
 The source inspection used the pinned Git tree and selected public blobs. It
 verified named files and their content but did not prove that no related rule
@@ -92,14 +93,22 @@ git -C spec-driven-delivery-playbook rev-parse HEAD
 git clone https://github.com/sgl-project/sglang.git
 git -C sglang checkout --detach d315eb725044e435b146c85488b7c6d9222f7fec
 git -C sglang switch -c example/spec-driven-delivery-adoption
+
+PLAYBOOK_ROOT="$(git -C spec-driven-delivery-playbook rev-parse --show-toplevel)"
+PROJECT_ROOT="$(git -C sglang rev-parse --show-toplevel)"
 ```
+
+Run the agent with `PROJECT_ROOT` as its working directory. Supply
+`PLAYBOOK_ROOT` as a read-only runtime input to every adoption prompt. These
+machine-specific paths are not committed; the manifest stores the playbook
+repository, immutable revision, and materialization mode.
 
 ### Step 2 — Place the first document
 
 ```bash
-mkdir -p sglang/.github/spec-driven-delivery
-cp spec-driven-delivery-playbook/templates/adoption/project-adoption-manifest.md \
-  sglang/.github/spec-driven-delivery/project-adoption-manifest.md
+mkdir -p "$PROJECT_ROOT/.github/spec-driven-delivery"
+cp "$PLAYBOOK_ROOT/templates/adoption/project-adoption-manifest.md" \
+  "$PROJECT_ROOT/.github/spec-driven-delivery/project-adoption-manifest.md"
 ```
 
 Fill the pinned revisions and paths only. Keep the manifest `DISCOVERY`.
@@ -111,6 +120,10 @@ brace-delimited value above is an invocation input, not a literal revision.
 Use the exact [filled bootstrap prompt](00-bootstrap-prompt.md). The permitted
 write scope contains only the manifest. The agent inventories repository facts,
 records unknowns, proposes routing decisions, and stops.
+
+Before submitting it, replace `PROJECT_ROOT_FROM_STEP_1` and
+`PLAYBOOK_ROOT_FROM_STEP_1` with the two resolved runtime values. Do not place
+those absolute paths in the committed manifest.
 
 ### Step 4 — Review discovery and mapping
 
@@ -143,6 +156,7 @@ confirm that it resolves:
 - existing SGLang authorities and reviewers;
 - the adoption manifest and current state;
 - per-need artifact paths and pinned templates;
+- the caller-supplied playbook root and its revision-verification rule;
 - project test and PR gates; and
 - the exact next-need prompt.
 
@@ -166,12 +180,14 @@ until the whiteboard reaches its reviewed convergence state.
 Future automation needs only these stable inputs:
 
 1. immutable playbook and target revisions;
-2. target adoption root and manifest path;
-3. target project instruction paths;
-4. exact allowed write scope;
-5. one manifest `Next action`;
-6. applicable project checks; and
-7. reviewer identity/disposition before another invocation.
+2. target project root as the execution working directory;
+3. a read-only playbook root or immutable URL base supplied at runtime;
+4. target adoption root and manifest path;
+5. target project instruction paths;
+6. exact allowed write scope;
+7. one manifest `Next action`;
+8. applicable project checks; and
+9. reviewer identity/disposition before another invocation.
 
 The automation must not run all steps in one agent call. It invokes one prompt,
 waits for review, then reads the approved manifest state to determine the next

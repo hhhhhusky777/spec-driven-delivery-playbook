@@ -3,7 +3,8 @@
 This is Prompt B filled for the pinned SGLang example. It shows the exact
 repeatable invocation for integration. Do not run it against SGLang unless an
 authorized SGLang adoption has approved the manifest, branch, action, and write
-scope.
+scope. Replace `PROJECT_ROOT_FROM_STEP_1` and `PLAYBOOK_ROOT_FROM_STEP_1` with
+the absolute runtime values resolved in walkthrough Step 1.
 
 ```text
 Continue the project adoption recorded in
@@ -11,16 +12,27 @@ Continue the project adoption recorded in
 verify that the local playbook and SGLang revisions equal the immutable values
 recorded in that manifest.
 
+Execution working directory: PROJECT_ROOT_FROM_STEP_1
+Read-only playbook root: PLAYBOOK_ROOT_FROM_STEP_1
+
+Read only the manifest control fields. Verify the working directory equals
+PROJECT_ROOT_FROM_STEP_1. Verify the Git repository and HEAD under
+PLAYBOOK_ROOT_FROM_STEP_1 match the recorded playbook source and revision.
+Treat that root as read-only.
+If verification fails, make no edit and report `BLOCKED`; do not search for or
+guess another playbook checkout.
+
 Read in this order:
-1. .github/spec-driven-delivery/project-adoption-manifest.md;
-2. its current review records, Next action, Allowed write scope, and Required
+1. PLAYBOOK_ROOT_FROM_STEP_1/docs/project-adoption-runbook.md;
+2. the complete .github/spec-driven-delivery/project-adoption-manifest.md;
+3. its current review records, Next action, Allowed write scope, and Required
    documentation checks;
-3. .github/spec-driven-delivery/README.md when it exists;
-4. docs/docs/developer_guide/contribution_guide.mdx;
-5. .github/MAINTAINER.md, .github/CODEOWNERS, and
+4. .github/spec-driven-delivery/README.md when it exists;
+5. docs/docs/developer_guide/contribution_guide.mdx;
+6. .github/MAINTAINER.md, .github/CODEOWNERS, and
    .github/pull_request_template.md;
-6. test/README.md and applicable registered-test guidance; and
-7. every scoped AGENTS.md, .claude/rules, and .claude/skills file applicable to
+7. test/README.md and applicable registered-test guidance; and
+8. every scoped AGENTS.md, .claude/rules, and .claude/skills file applicable to
    the selected action.
 
 Verify that the manifest is MAPPED and that the previous action has an

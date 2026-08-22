@@ -13,16 +13,18 @@ evidence; it does not replace the project authorities to which it links.
 | Project / repository | `<canonical name and link>` |
 | Adoption scope | `<repositories/components/teams>` |
 | Adoption state | `DISCOVERY` |
-| Playbook source | `<repository link>` |
+| Playbook source repository | `<canonical repository URL>` |
 | Playbook revision | `<immutable commit or release>` |
+| Playbook materialization mode | `<pinned local checkout / vendored selected artifacts / immutable remote>` |
+| Runtime playbook locator contract | `<caller-supplied variable/input name; never a committed machine-local path>` |
 | Target base revision | `<immutable commit>` |
 | Inspection date | `<date>` |
 | Adoption owner | `<role/person>` |
 | Required reviewers | `<policy/test/PR/security/other owners>` |
 | Project contract registry | `<canonical link>` |
 | Project adoption root | `<canonical path>` |
-| Template delivery mode | `<pinned local checkout / vendored selected templates / immutable remote>` |
-| Agent adoption trigger | `<canonical path>` |
+| Bootstrap trigger source | `<path inside the verified playbook revision>` |
+| Installed project trigger | `<project-local canonical path or reviewed Not installed>` |
 | Branch / PR | `<value>` |
 | Allowed write scope | `<exact paths; update before every agent action>` |
 | Required documentation checks | `<commands or reviewed Not applicable reason>` |

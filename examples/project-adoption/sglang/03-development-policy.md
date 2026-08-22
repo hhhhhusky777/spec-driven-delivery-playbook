@@ -66,6 +66,8 @@ flaky-test/CI rules permit it and the underlying result is understood.
 
 - Read the project entry point, scoped agent instructions, active manifest, and
   approved feature artifacts before editing.
+- Run from the SGLang root and verify the caller-supplied read-only playbook
+  locator against the manifest before reading a playbook artifact.
 - Perform one manifest `Next action` and stop at its review gate.
 - Preserve unrelated changes and report exactly which evidence ran.
 - Keep live state, next action, blockers, source revisions, and evidence in the

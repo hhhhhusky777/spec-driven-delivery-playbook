@@ -99,6 +99,8 @@ Create an adoption branch under the project's normal branch policy. Before
 editing project documents, record:
 
 - the exact playbook repository and immutable commit or release;
+- how each invocation receives a read-only playbook checkout root or immutable
+  URL base without committing a machine-specific absolute path;
 - the target repository, base commit, and adoption scope;
 - authorized policy, test, documentation, CI, and code-review owners;
 - existing dirty or user-owned changes that must be preserved;
@@ -112,6 +114,15 @@ editing project documents, record:
 
 If a fact cannot be verified, record it as `UNKNOWN`. Do not turn an assumption
 into a project rule.
+
+Every adoption agent runs with the target project root as its working directory
+and write boundary. The playbook is a separate read-only source dependency. The
+manifest stores its durable repository, revision, and materialization mode; the
+human or automation supplies the machine-specific playbook locator at runtime.
+The agent verifies that binding before reading a playbook artifact.
+Neither the manifest nor agent searches the filesystem or guesses a locator.
+A missing locator, wrong working directory, or source/revision mismatch is
+`BLOCKED` before any project edit.
 
 ## 5. Executable integration sequence
 
@@ -127,6 +138,20 @@ Use a dedicated checkout or worktree. Record the exact playbook revision and
 target-project base revision before generation. Never use a moving branch name
 as evidence.
 
+Resolve both roots before prompting an agent:
+
+```bash
+PLAYBOOK_ROOT="$(git -C spec-driven-delivery-playbook rev-parse --show-toplevel)"
+PROJECT_ROOT="$(git -C target-project rev-parse --show-toplevel)"
+git -C "$PLAYBOOK_ROOT" rev-parse HEAD
+git -C "$PROJECT_ROOT" rev-parse HEAD
+```
+
+`PROJECT_ROOT` is the agent working directory and write root. `PLAYBOOK_ROOT`
+is a read-only runtime input. Do not commit either machine-specific value.
+Commit only the canonical playbook repository, immutable revision, and selected
+materialization mode in the manifest.
+
 ### Step 2 — Place the first project document
 
 Choose one project-owned adoption root. The first file is always the manifest:
@@ -138,21 +163,24 @@ Choose one project-owned adoption root. The first file is always the manifest:
 With dedicated local checkouts, create it from the pinned template:
 
 ```bash
-mkdir -p "${PROJECT_CHECKOUT}/${ADOPTION_ROOT}"
-cp "${PLAYBOOK_CHECKOUT}/templates/adoption/project-adoption-manifest.md" \
-  "${PROJECT_CHECKOUT}/${ADOPTION_ROOT}/project-adoption-manifest.md"
+mkdir -p "${PROJECT_ROOT}/${ADOPTION_ROOT}"
+cp "${PLAYBOOK_ROOT}/templates/adoption/project-adoption-manifest.md" \
+  "${PROJECT_ROOT}/${ADOPTION_ROOT}/project-adoption-manifest.md"
 ```
 
-Fill only the source/target revisions, project path, adoption type, owner,
-branch, and next action. Leave the state `DISCOVERY`. Do not copy another
-policy yet.
+Fill only the playbook repository/revision/materialization mode, runtime locator
+contract, target revision, project path, adoption type, owner, branch, and next
+action. Leave the state `DISCOVERY`. Do not copy another policy yet.
 
 ### Step 3 — Run the bootstrap prompt
 
-Fill and submit Prompt A from the agent-trigger template. The agent reads the
-runbook, the new manifest, project instructions, and the pinned repository. It
-updates only repository discovery, unknowns, and the proposed routing map. It
-must not create downstream policies or mark its own work approved.
+Fill and submit Prompt A from the agent-trigger template. Explicitly bind its
+execution working directory to `PROJECT_ROOT` and its read-only playbook
+runtime locator to `PLAYBOOK_ROOT` or an immutable URL base. The agent verifies
+both revisions, then reads the runbook, new manifest, project instructions, and
+pinned repository. It updates only repository discovery, unknowns, and the
+proposed routing map. It must not create downstream policies or mark its own
+work approved.
 
 **Review stop A:** an authorized reviewer verifies facts and authority links.
 On approval, the reviewer records the review and moves `DISCOVERY -> MAPPED`.
@@ -160,9 +188,11 @@ Comments keep the manifest in `DISCOVERY`.
 
 ### Step 4 — Install one selected artifact at a time
 
-Invoke Prompt B. It reads the manifest's current state and performs exactly one
-dependency-ready `GENERATE` or `UPDATE_EXISTING` action. `REUSE`, `SKIP`, and
-`DEFER` decisions create no copied artifact.
+Invoke Prompt B from the target project root and supply the playbook runtime
+locator again. It verifies that the locator matches the manifest, reads the
+manifest's current state, and performs exactly one dependency-ready `GENERATE`
+or `UPDATE_EXISTING` action. `REUSE`, `SKIP`, and `DEFER` decisions create no
+copied artifact.
 
 **Review stop B:** review that artifact against the complete mapped project
 authority. Keep the manifest `MAPPED` while selected artifacts remain. Repeat
@@ -177,7 +207,10 @@ installation verification:
 - each supported agent entry point links the same canonical procedure;
 - whiteboard, handoff, workflow, plan, evidence, and archive locations exist;
 - documentation, test, and PR gates are project-owned and executable; and
-- the next-need prompt can resolve every source without hidden chat context.
+- the next-need prompt can resolve every source without hidden chat context;
+  and
+- the installed project trigger declares how callers supply and verify its
+  runtime playbook locator.
 
 **Review stop C:** independently follow the entry point as a new contributor.
 If it works and the manifest has no unresolved adoption blocker, record

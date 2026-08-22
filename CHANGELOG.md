@@ -47,7 +47,10 @@ adopted.
   for bootstrap, one-action continuation, and first-whiteboard creation, plus a
   pinned non-authoritative SGLang walk-through that shows the exact first file,
   proposed project overlay, review stops, and automation inputs without
-  claiming upstream adoption.
+  claiming upstream adoption. Clarified that adoption agents execute from the
+  target project root while a caller supplies and verifies the playbook as a
+  separate read-only runtime dependency; manifests keep durable source identity
+  without committing machine-specific paths.
 
 Migration guidance: active deliveries that have not started implementation
 should generate and approve a handoff, review their manifest, and add review

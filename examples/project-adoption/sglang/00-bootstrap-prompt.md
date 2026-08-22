@@ -1,16 +1,33 @@
 # SGLang Bootstrap Prompt
 
 This is Prompt A filled for the pinned SGLang example. In a real fork, give it
-to an agent whose working directory is the SGLang checkout.
+to an agent whose working directory is the SGLang checkout. Replace
+`PROJECT_ROOT_FROM_STEP_1` and `PLAYBOOK_ROOT_FROM_STEP_1` with the absolute
+values resolved in walkthrough Step 1; they are runtime inputs, not manifest
+content.
 
 ```text
-Integrate the Spec-Driven Delivery Playbook revision returned by `git rev-parse
-HEAD` in the approved playbook checkout into SGLang pinned at
+Integrate the Spec-Driven Delivery Playbook revision returned by `git -C
+PLAYBOOK_ROOT_FROM_STEP_1 rev-parse HEAD` into SGLang pinned at
 d315eb725044e435b146c85488b7c6d9222f7fec.
 
+Execution working directory: PROJECT_ROOT_FROM_STEP_1
+Read-only playbook root: PLAYBOOK_ROOT_FROM_STEP_1
+
+Before reading playbook content or writing project files:
+- read only the manifest control fields;
+- verify the working directory equals PROJECT_ROOT_FROM_STEP_1;
+- verify `git -C PLAYBOOK_ROOT_FROM_STEP_1 rev-parse HEAD` equals the immutable
+  playbook revision recorded in the manifest; and
+- verify `git -C PROJECT_ROOT_FROM_STEP_1 rev-parse HEAD` equals
+  d315eb725044e435b146c85488b7c6d9222f7fec.
+
+If a verification fails, make no edit and report `BLOCKED` with the failed
+check. Do not search for or guess another playbook checkout.
+
 Read in this order:
-1. docs/project-adoption-runbook.md in that immutable playbook checkout;
-2. .github/spec-driven-delivery/project-adoption-manifest.md;
+1. PLAYBOOK_ROOT_FROM_STEP_1/docs/project-adoption-runbook.md;
+2. the complete .github/spec-driven-delivery/project-adoption-manifest.md;
 3. all applicable repository agent instructions, including docs/AGENTS.md only
    for documentation scope and .claude/rules for their declared scope;
 4. README.md, docs/docs/developer_guide/contribution_guide.mdx,
@@ -20,7 +37,7 @@ Read in this order:
    test/registered/unit/README.md, and other files needed to verify a claim.
 
 Perform only the DISCOVERY action:
-- confirm HEAD equals d315eb725044e435b146c85488b7c6d9222f7fec;
+- treat PLAYBOOK_ROOT_FROM_STEP_1 as read-only;
 - inventory existing project authorities, owners, contributor and agent entry
   points, test/CI gates, artifact locations, and restricted hardware;
 - distinguish repository-wide rules from scoped documentation or component

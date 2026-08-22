@@ -234,6 +234,12 @@ only after discovery proves a gap and the project approves the route. A later
 playbook revision is assessed through a new manifest review and never silently
 overwrites active project contracts.
 
+Adoption agents run from the target project root. The playbook is a separate,
+read-only dependency: the manifest records its canonical repository, immutable
+revision, and materialization mode, while each invocation supplies and verifies
+the machine-specific checkout root or immutable URL base. Local absolute paths
+are runtime inputs and are never committed as project contracts.
+
 Adoption is complete only when project-owned navigation and gates are active
 at `INSTALLED`; the project can then start its first need in a whiteboard. One
 real bounded delivery supplies the additional evidence for `ACTIVE`. An
@@ -248,15 +254,17 @@ not `ACTIVE`.
 
 1. Pin the playbook revision and follow the
    [project adoption runbook](docs/project-adoption-runbook.md).
-2. Create a
+2. Run the adoption agent from the target project root and supply the pinned
+   playbook root or immutable URL base as a read-only runtime input.
+3. Create a
    [project adoption manifest](templates/adoption/project-adoption-manifest.md).
-3. Inventory and review existing project authorities before generating any
+4. Inventory and review existing project authorities before generating any
    policy.
-4. Classify each capability as `REUSE`, `UPDATE_EXISTING`, `GENERATE`, `SKIP`,
+5. Classify each capability as `REUSE`, `UPDATE_EXISTING`, `GENERATE`, `SKIP`,
    `DEFER`, or `BLOCKED`.
-5. Install and review only the selected project-local contracts, navigation,
+6. Install and review only the selected project-local contracts, navigation,
    and gates.
-6. At `INSTALLED`, use the approved agent trigger to create the first
+7. At `INSTALLED`, use the approved agent trigger to create the first
    whiteboard; pilot one bounded real delivery and activate only through project
    authority.
 

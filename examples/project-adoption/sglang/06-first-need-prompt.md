@@ -1,11 +1,22 @@
 # SGLang First-Need Prompt
 
 Use this only after an authorized project adoption reaches `INSTALLED` or
-`ACTIVE`. Replace `NEED_TEXT_OR_ISSUE_URL` with one real, authorized need.
+`ACTIVE`. Replace `NEED_TEXT_OR_ISSUE_URL`, `PROJECT_ROOT_FROM_STEP_1`, and
+`PLAYBOOK_ROOT_FROM_STEP_1` with current runtime values.
 
 ```text
 Start a new SGLang need under the installed adoption recorded at
 .github/spec-driven-delivery/project-adoption-manifest.md.
+
+Execution working directory: PROJECT_ROOT_FROM_STEP_1
+Read-only playbook root: PLAYBOOK_ROOT_FROM_STEP_1
+
+Before reading playbook content or writing project files, read only the
+manifest control fields. Verify that the working directory equals
+PROJECT_ROOT_FROM_STEP_1 and that the Git repository and HEAD under
+PLAYBOOK_ROOT_FROM_STEP_1 match the recorded playbook source and revision.
+Treat the playbook root as read-only. If verification fails, make no edit and
+report `BLOCKED`; do not search for or guess another checkout.
 
 Need/issue/defect:
 NEED_TEXT_OR_ISSUE_URL
@@ -20,8 +31,9 @@ Read in this order:
 6. test/README.md and applicable registered-test guidance;
 7. every scoped AGENTS.md, .claude/rules, and .claude/skills file applicable to
    the likely change area; and
-8. the solution-whiteboard template from the playbook revision recorded in the
-   adoption manifest.
+8. PLAYBOOK_ROOT_FROM_STEP_1/templates/discovery/solution-whiteboard.md after
+   verifying that the playbook repository and revision match the adoption
+   manifest.
 
 Verify that the adoption state is INSTALLED or ACTIVE. Create only:
 .github/spec-driven-delivery/deliveries/{need-id}-{slug}/01-solution-whiteboard.md

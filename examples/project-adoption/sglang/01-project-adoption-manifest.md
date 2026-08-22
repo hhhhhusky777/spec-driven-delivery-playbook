@@ -7,16 +7,18 @@
 | Project / repository | [sgl-project/sglang](https://github.com/sgl-project/sglang) |
 | Adoption scope | Non-authoritative repository-wide integration simulation |
 | Adoption state | `REVIEW` |
-| Playbook source | [This playbook repository](../../../README.md) |
+| Playbook source repository | `https://github.com/Orientation-CD/spec-driven-delivery-playbook.git` |
 | Playbook revision | Immutable revision containing this example; resolve with `git rev-parse HEAD` before use |
+| Playbook materialization mode | Pinned local read-only checkout |
+| Runtime playbook locator contract | Caller supplies `PLAYBOOK_ROOT`; never committed as an absolute path |
 | Target base revision | [`d315eb725044e435b146c85488b7c6d9222f7fec`](https://github.com/sgl-project/sglang/commit/d315eb725044e435b146c85488b7c6d9222f7fec) |
 | Inspection date | 2026-08-22 |
 | Adoption owner | Playbook example author; no SGLang authority |
 | Required reviewers | Independent playbook reviewer; SGLang owners required only for a real adoption |
 | Project contract registry | Proposed `.github/spec-driven-delivery/README.md` |
 | Project adoption root | Proposed `.github/spec-driven-delivery/` |
-| Template delivery mode | Pinned local playbook checkout at the revision recorded above |
-| Agent adoption trigger | Pinned `templates/adoption/agent-adoption-trigger.md` |
+| Bootstrap trigger source | `$PLAYBOOK_ROOT/templates/adoption/agent-adoption-trigger.md` after revision verification |
+| Installed project trigger | Proposed `.github/spec-driven-delivery/agent-adoption-trigger.md` |
 | Branch / PR | Playbook PR #7 only; no SGLang branch or PR |
 | Allowed write scope | These playbook example files only; no SGLang path |
 | Required documentation checks | `npm run docs:all` in this playbook |
