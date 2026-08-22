@@ -371,6 +371,11 @@ Semantic review separately verifies correctness, clarity, concision,
 cross-document consistency, canonical ownership, generated project content, and
 source freshness. CI cannot approve those judgments.
 
+Long or multi-focus artifacts use the policy's attention and reviewability gate:
+a concise map routes reviewers to changed obligations, blockers, risks,
+exceptions, owners, and evidence. Reviewers reconcile it against the complete
+artifact; the map never replaces full review or canonical text.
+
 Run the same blocking checks locally:
 
 ```bash

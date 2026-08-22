@@ -34,7 +34,9 @@ adopted.
   Markdown/Mermaid tooling, relative-link/anchor, fence, placeholder,
   likely-secret and local-path checks, intentional-failure regression tests,
   advisory external links, least-privilege workflows, and owned dependency and
-  methodology freshness reviews.
+  methodology freshness reviews. Added an attention-map gate for long or
+  multi-focus artifacts so material decisions, risks, and reviewer actions stay
+  visible without duplicating their canonical text.
 
 Migration guidance: active deliveries that have not started implementation
 should generate and approve a handoff, review their manifest, and add review

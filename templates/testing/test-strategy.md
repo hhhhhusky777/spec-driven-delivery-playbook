@@ -125,6 +125,28 @@ replace applicable placeholders, remove template instructions, use verified
 project facts/contracts/owners, and claim only evidence that was actually
 produced. Automation does not self-approve semantic correctness.
 
+#### Attention and reviewability gate
+
+Define a project trigger for documents or changes with multiple material
+decisions, obligations, risks, exceptions, states, open questions, or reviewer
+specialties. Do not use document length alone.
+
+When triggered, require a concise attention map near the beginning:
+
+| Focus | Required entry |
+| --- | --- |
+| Outcome and scope | `<one coherent outcome and explicit boundary>` |
+| Changed decisions/obligations | `<stable IDs and canonical section links>` |
+| Blockers/questions/risks/exceptions | `<IDs, state, owner, and section links>` |
+| Review routing | `<item -> required human/specialty/independent agent>` |
+| Reading order | `<dependency-ordered section/evidence links>` |
+
+The reviewer first inventories material items from the complete artifact or
+diff and reconciles them with the map. The reviewer then records
+`APPROVED`, `CHANGES_REQUESTED`, or `NOT_APPLICABLE` for every material item.
+The map is navigation, not authority, and cannot replace full-document review.
+Split an artifact or change that still cannot be reviewed as one coherent unit.
+
 ## 5. Contract and risk traceability
 
 ### Contract coverage
@@ -446,6 +468,8 @@ applicable before adopting it.
 - [ ] Link development, PR, API, security, and specialized policies.
 - [ ] Link the documentation-quality policy and define documentation-only and
       generated-artifact gates.
+- [ ] Define the attention-gate trigger, attention-map fields, two-pass review,
+      per-item disposition, and split rule.
 - [ ] Assign owners, review cadence, evidence location, and retention.
 
 ## 21. Change history

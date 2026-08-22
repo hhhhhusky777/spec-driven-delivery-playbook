@@ -403,11 +403,11 @@ export async function collectExternalLinks(root = REPOSITORY_ROOT, config) {
   return links;
 }
 
-async function fetchWithRetry(url, options) {
+export async function fetchWithRetry(url, options, fetchImplementation = fetch) {
   let lastResult = null;
   for (let attempt = 0; attempt <= options.retries; attempt += 1) {
     try {
-      const response = await fetch(url, {
+      const response = await fetchImplementation(url, {
         method: "GET",
         redirect: "follow",
         headers: {
@@ -416,6 +416,11 @@ async function fetchWithRetry(url, options) {
         },
         signal: AbortSignal.timeout(options.timeoutMs),
       });
+      try {
+        await response.body?.cancel();
+      } catch {
+        // The status is still valid evidence when a remote stream cannot be cancelled cleanly.
+      }
       lastResult = { ok: response.status >= 200 && response.status < 400, status: response.status };
       if (lastResult.ok || ![408, 425, 429, 500, 502, 503, 504].includes(response.status)) {
         return lastResult;
