@@ -174,6 +174,49 @@ Each increment must:
 - avoid unused APIs or incomplete invariants unless safely gated; and
 - remain independently reviewable and reversible or forward-fixable.
 
+### Dependency and data sequencing
+
+Plan tasks by real prerequisites, not by presentation order or a universal
+layer-first preference. Define observable contracts and state invariants before
+freezing task order.
+
+For every delivery, classify its durable-data impact as `NONE`, `ADDITIVE`,
+`TRANSITIONAL`, or `DESTRUCTIVE` and state the compatibility boundary. When the
+classification is not `NONE`:
+
+1. Implement and validate the minimum schema, migration, constraints, and
+   data-access foundation before a task whose business behavior depends on it.
+2. Introduce consumers and perform required data transitions while the
+   integration target remains working.
+3. Remove obsolete fields, indexes, paths, or compatibility behavior only after
+   every consumer has moved and the cleanup gate has evidence.
+
+Tag applicable plan tasks as `FOUNDATION`, `CONSUMER`, `MIGRATION`, or `CLEANUP`;
+use `NONE` when no durable-data dependency exists:
+
+- `FOUNDATION` creates the minimum compatible durable shape, constraints,
+  migration, and access primitives.
+- `CONSUMER` introduces behavior that depends on that foundation.
+- `MIGRATION` moves stored data, traffic, or read/write ownership to the target.
+- `CLEANUP` removes obsolete schema or compatibility paths after migration.
+
+A foundation increment may be non-user-facing when it is independently
+verifiable, required by an approved consumer, and safe while dormant. It must
+not introduce speculative schema.
+
+This is dependency-first sequencing, not an instruction to finish an entire
+data layer before delivering behavior or to move business logic into the
+database. Record an exception when:
+
+- a PoC or unresolved business contract must determine the data shape first; or
+- the data and behavior cannot be separated without leaving an unsafe or broken
+  integration target, so they must ship as one bounded vertical increment.
+
+Plan implementation/merge dependencies separately from deployment order.
+Projects with live data or mixed application versions should normally use an
+expand -> consume/migrate -> contract rollout; project-specific migration,
+backup, and recovery policies remain authoritative.
+
 ### Work-in-progress policy
 
 - Default implementation WIP limit: `<number>`.

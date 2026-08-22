@@ -245,14 +245,14 @@ This prevents document inflation while making omissions reviewable.
 
 | Template | Purpose |
 | --- | --- |
-| [Development policy](templates/policies/development-policy.md) | Project-wide delivery, YAGNI, state, policy discovery, handoff, retrospective, and archive rules |
+| [Development policy](templates/policies/development-policy.md) | Project-wide delivery, dependency/data sequencing, YAGNI, state, policy discovery, handoff, retrospective, and archive rules |
 | [Specialized policy](templates/policies/specialized-policy.md) | Standardized creation, audit, adoption, enforcement, and review of a mid-project systemic policy |
 | [PR and branch policy](templates/policies/pull-request-policy.md) | Branch models, review readiness, PR evidence, merge, emergency, and post-merge rules |
 | [Test strategy](templates/testing/test-strategy.md) | TDD, risk/contract traceability, environments, bug-finding methods, performance, and failure triage |
 | [Solution whiteboard](templates/discovery/solution-whiteboard.md) | Needs, facts, assumptions, options, PoCs, policy gaps, decisions, and convergence |
 | [Whiteboard-to-workflow handoff](templates/handoffs/whiteboard-to-workflow.md) | Reviewed data contract and automatic/manual trigger between concluded discovery and delivery routing |
 | [Delivery workflow](templates/workflows/sdd-delivery-workflow.md) | Approved-handoff-input routing, artifact selection, gates, feedback loops, and completion packet |
-| [Implementation plan](templates/delivery/implementation-plan.md) | Approved feature contracts, design, incremental tasks, tracking, evidence, and closure |
+| [Implementation plan](templates/delivery/implementation-plan.md) | Approved feature contracts, dependency/data phases, incremental tasks, tracking, evidence, and closure |
 | [Architecture decision record](templates/decisions/architecture-decision-record.md) | Durable rationale and consequences for a significant architectural choice |
 
 ## Worked example
@@ -286,6 +286,29 @@ documentation, and it must leave the integration target working.
 Google's published engineering guidance similarly emphasizes one
 self-contained change, related tests, and a working system rather than a
 universal hard line count: [Small CLs](https://google.github.io/eng-practices/review/developer/small-cls.html).
+
+## Dependency-first data sequencing
+
+Do not translate “dependency-ordered” into a universal rule to complete an
+entire data layer before business behavior. When approved behavior depends on a
+durable-data change, plan the minimum verified foundation before its consumers:
+
+```text
+contracts and state invariants
+    -> additive schema / migration / constraints / data-access foundation
+    -> dependent behavior and required data transition
+    -> destructive cleanup after every consumer has moved
+```
+
+The development policy owns this reusable rule. The implementation plan
+references the active project policy, classifies the change, and records each
+task's `FOUNDATION`, `CONSUMER`, `MIGRATION`, `CLEANUP`, or `NONE` phase. A PoC
+may precede the data shape, and inseparable data/behavior may remain one bounded
+vertical increment when splitting it would break the integration target.
+
+For systems with live data or mixed versions, additive changes before consumers
+and destructive changes after migration preserve compatibility; see
+[AWS guidance on decoupling schema and code changes](https://docs.aws.amazon.com/whitepapers/latest/blue-green-deployments/best-practices-for-managing-data-synchronization-and-schema-changes.html).
 
 ## Test evidence, not test theater
 
@@ -347,6 +370,7 @@ contracts:
 - [Microsoft — Architecture Decision Records](https://learn.microsoft.com/en-us/azure/well-architected/architect-role/architecture-decision-record)
 - [Microsoft — How Microsoft Develops with DevOps](https://learn.microsoft.com/en-us/devops/develop/how-microsoft-develops-devops)
 - [AWS Prescriptive Guidance — ADR Process](https://docs.aws.amazon.com/prescriptive-guidance/latest/architectural-decision-records/adr-process.html)
+- [AWS — Managing Data Synchronization and Schema Changes](https://docs.aws.amazon.com/whitepapers/latest/blue-green-deployments/best-practices-for-managing-data-synchronization-and-schema-changes.html)
 - [The Scrum Guide](https://scrumguides.org/scrum-guide.html)
 
 ## License

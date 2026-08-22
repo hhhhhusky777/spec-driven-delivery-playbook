@@ -8,6 +8,11 @@ Instantiate once and maintain through review:
 - [Test strategy](testing/test-strategy.md)
 - [PR and branch policy](policies/pull-request-policy.md)
 
+The development policy is the canonical owner of dependency-first task and
+durable-data sequencing. Implementation plans reference the project's active
+policy, classify their data changes, and enforce foundation/consumer/migration/
+cleanup prerequisites instead of copying the rule into each feature.
+
 Create [specialized policies](policies/specialized-policy.md) progressively when
 a systemic policy gap is discovered. When discovery happens during active
 implementation, follow the

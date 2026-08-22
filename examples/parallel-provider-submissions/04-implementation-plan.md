@@ -61,7 +61,7 @@ Real instantiation must replace these assumed authorities with canonical links:
 
 | Authority | Plan use |
 | --- | --- |
-| Development policy | Increment size, state, YAGNI, handoff, archive |
+| Development policy | Increment size, dependency/data sequencing, state, YAGNI, handoff, archive |
 | Test strategy | TDD, coverage, regression, live environments, failure triage |
 | PR/branch policy | Task branches, review, merge, evidence |
 | Database concurrency policy | Job/submission lock order, transactions, non-5xx race behavior |
@@ -209,21 +209,25 @@ before product, configuration, or test remediation.
 
 Each production task targets the project's small-change budget (for example,
 approximately 300 changed production LOC excluding tests/docs). Final boundaries
-are frozen after S01.
+are frozen after S01. This example uses a compatible foundation before its
+consumers and defers destructive parent-field cleanup until every reader/writer
+has moved.
 
-| ID | State | Next | Depends | Outcome | Product scope estimate |
-| --- | --- | --- | --- | --- | --- |
-| `S00` | `PLANNED` | `NEXT` | None | Instantiate this packet with canonical policies, paths, issue, owners, branch model, and test environments. | Docs only |
-| `S01` | `PLANNED` | | S00 | Inventory schema/constraints, provider adapters, locks/transactions, queue entry points, reconciliation, billing, API/admin reads, and drain behavior; classify policy compliance. | Discovery/docs/tests only |
-| `S02` | `PLANNED` | | S01 | Resolve discoveries, accept project ADR/contracts, freeze task scopes/LOC/tests, and pass Definition of Ready. | Docs only |
-| `T01` | `PLANNED` | | S02 | Make submission the provider-ID source of truth; migrate constraints and API/admin search while keeping the integration target working. | ~300 + migration |
-| `T02` | `PLANNED` | | T01 | Add durable child processing, child exclusion, exact request snapshots, sync/async state transitions, and bounded provider retry. | ~300 |
-| `T03` | `PLANNED` | | T02 | Refactor parent coordination into prepare/fan-out/parent RUNNING/initial job poll without holding the job lock during provider work. | ~300 |
-| `T04` | `PLANNED` | | T03 | Add async child polling and child stale-work reconciliation. | ~300 |
-| `T05` | `PLANNED` | | T04 | Add database-observing job polling and centralized idempotent job finalization for ordinary/report outcomes. | ~300 |
-| `T06` | `PLANNED` | | T05 | Add original-job selective retry, expired-key/new-attempt handling, and exactly-once billing race coverage. | ~300 |
-| `T07` | `PLANNED` | | T06 | Add observability, queue-age/retry signals, graceful drain, legacy-task removal gate, and runbook/API updates. | ~300 |
-| `T08` | `PLANNED` | | T01–T07 | Run complete project quality gates, reconcile contract evidence, retrospective, and archive record. | Tests/docs/config |
+| ID | State | Next | Depends | Data phase | Outcome | Product scope estimate |
+| --- | --- | --- | --- | --- | --- | --- |
+| `S00` | `PLANNED` | `NEXT` | None | `NONE` | Instantiate this packet with canonical policies, paths, issue, owners, branch model, and test environments. | Docs only |
+| `S01` | `PLANNED` | | S00 | `NONE` | Inventory schema/constraints, provider adapters, locks/transactions, queue entry points, reconciliation, billing, API/admin reads, and drain behavior; classify policy compliance. | Discovery/docs/tests only |
+| `S02` | `PLANNED` | | S01 | `NONE` | Resolve discoveries, accept project ADR/contracts, freeze task scopes/LOC/tests, and pass Definition of Ready. | Docs only |
+| `T01` | `PLANNED` | | S02 | `FOUNDATION` | Add the minimum submission-owned provider/attempt schema, constraints, migration, and data-access primitives while existing behavior remains valid. | ~300 + migration |
+| `T02` | `PLANNED` | | T01 | `CONSUMER` | Add durable child processing, child exclusion, exact request snapshots, sync/async state transitions, and bounded provider retry. | ~300 |
+| `T03` | `PLANNED` | | T02 | `CONSUMER` | Refactor parent coordination into prepare/fan-out/parent RUNNING/initial job poll without holding the job lock during provider work. | ~300 |
+| `T04` | `PLANNED` | | T03 | `CONSUMER` | Add async child polling and child stale-work reconciliation. | ~300 |
+| `T05` | `PLANNED` | | T04 | `CONSUMER` | Add database-observing job polling and centralized idempotent job finalization for ordinary/report outcomes. | ~300 |
+| `T06` | `PLANNED` | | T05 | `CONSUMER` | Add original-job selective retry, expired-key/new-attempt handling, and exactly-once billing race coverage. | ~300 |
+| `T07` | `PLANNED` | | T06 | `MIGRATION` | Move API/admin reads and all writers to submission-owned provider identity, update the canonical API contract, and retain the deprecated parent field. | ~300 |
+| `T08` | `PLANNED` | | T07 | `CLEANUP` | Prove no remaining consumer/legacy task uses the parent provider field, then remove its field/index and obsolete entry path. | ~300 + migration |
+| `T09` | `PLANNED` | | T08 | `NONE` | Add observability, queue-age/retry signals, graceful drain, and runbook updates. | ~300 |
+| `T10` | `PLANNED` | | T01–T09 | `NONE` | Run complete project quality gates, reconcile contract evidence, retrospective, and archive record. | Tests/docs/config |
 
 ## 7. Task-level SDD example: T02
 
@@ -260,6 +264,8 @@ evidence.
 - [ ] ADR is accepted by project owners.
 - [ ] State, retry, failure, billing, migration, and deployment contracts are
       unambiguous and testable.
+- [ ] Data changes are classified and every foundation, consumer/migration, and
+      cleanup dependency preserves a working integration target.
 - [ ] Task scopes, dependencies, expected product LOC, owners, and gates are
       frozen.
 - [ ] Existing dirty/user-owned files are attributed and preserved.
