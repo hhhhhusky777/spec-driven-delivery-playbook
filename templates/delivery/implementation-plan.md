@@ -331,6 +331,7 @@ append a superseding entry rather than editing its meaning.
 ### 5.4 Compatibility, migration, and rollout
 
 - Compatibility promise: `<public/internal/unreleased>`
+- Durable-data change class: `<NONE / ADDITIVE / TRANSITIONAL / DESTRUCTIVE>`
 - Migration sequence: `<schema/data/code order>`
 - Mixed-version behavior: `<supported or controlled downtime>`
 - Deployment gates: `<preflight and evidence>`
@@ -363,6 +364,21 @@ increments and how every increment leaves its integration target working:
 
 - `<delivery slicing rationale>`
 
+Apply the active development policy's dependency and data-sequencing rule.
+Do not interpret vertical delivery to mean that every foundation task must be
+user-facing: a minimum additive schema/migration increment is valid when it is
+independently verified, safe while dormant, and required by a named consumer.
+Do not create speculative data structures merely to make a separate task.
+
+Use `FOUNDATION` for the compatible durable shape, `CONSUMER` for dependent
+behavior, `MIGRATION` for stored-data or read/write-ownership movement, and
+`CLEANUP` for obsolete schema/path removal. Use `NONE` when a task has no
+durable-data dependency.
+
+| Data change | Class | Foundation task(s) | Consumer/migration task(s) | Cleanup task(s) | Compatibility evidence |
+| --- | --- | --- | --- | --- | --- |
+| `<entity/contract or None>` | `<NONE/ADDITIVE/TRANSITIONAL/DESTRUCTIVE>` | `<IDs/None>` | `<IDs/None>` | `<IDs/None>` | `<test/gate/reason>` |
+
 ### 6.2 Task state application
 
 ```text
@@ -386,6 +402,8 @@ tasks, record the owners, boundaries, and reason here: `<value or None>`.
 - [ ] Acceptance criteria and task-specific tests are defined.
 - [ ] Data, security, concurrency, failure, compatibility, and operational
       impacts are understood or explicitly not applicable.
+- [ ] The task's data phase is recorded; every required foundation predecessor
+      is `DONE`, or inseparable data/behavior scope has an approved exception.
 - [ ] Existing dirty worktree files are attributed and preserved.
 - [ ] No unresolved clarification makes the implementation ambiguous.
 
@@ -397,6 +415,7 @@ tasks, record the owners, boundaries, and reason here: `<value or None>`.
 - [ ] Applicable full regression, smoke, and E2E gates pass under the test
       policy.
 - [ ] Failure triage exists for every encountered failure before remediation.
+- [ ] Data-phase migration and compatibility evidence passes where applicable.
 - [ ] Schema, API, security, observability, operations, and documentation are
       updated where applicable.
 - [ ] Diff contains no unrelated changes, secrets, debug artifacts, or
@@ -409,12 +428,14 @@ tasks, record the owners, boundaries, and reason here: `<value or None>`.
 
 `NEXT` identifies dependency-ready tasks permitted to start within the active
 WIP policy. Use exactly one marker when the project requires a single-next-task
-model. Expected product LOC excludes tests and documentation.
+model. Expected product LOC excludes tests and documentation. `Data phase` is
+`NONE`, `FOUNDATION`, `CONSUMER`, `MIGRATION`, or `CLEANUP` under the active
+development policy.
 
-| ID | State | Next | Depends on | Outcome / vertical slice | Contract IDs | Expected product LOC | PR |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `T00` | `PLANNED` | `NEXT` | `None` | `<task outcome>` | `<IDs>` | `Docs only` | `—` |
-| `T01` | `PLANNED` | | `T00` | `<task outcome>` | `<IDs>` | `<policy target>` | `—` |
+| ID | State | Next | Depends on | Data phase | Outcome / vertical slice | Contract IDs | Expected product LOC | PR |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `T00` | `PLANNED` | `NEXT` | `None` | `NONE` | `<task outcome>` | `<IDs>` | `Docs only` | `—` |
+| `T01` | `PLANNED` | | `T00` | `<phase>` | `<task outcome>` | `<IDs>` | `<policy target>` | `—` |
 
 Task-ledger evolution rules:
 
@@ -438,6 +459,8 @@ append execution evidence rather than replacing the original contract.
 | --- | --- |
 | State | `PLANNED` |
 | Depends on | `<IDs>` |
+| Data phase | `<NONE/FOUNDATION/CONSUMER/MIGRATION/CLEANUP>` |
+| Compatibility before/after | `<schema/application compatibility boundary or Not applicable>` |
 | Contract IDs | `<IDs>` |
 | Owner | `<owner>` |
 | Branch / PR | `<value>` |

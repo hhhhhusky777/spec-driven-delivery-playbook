@@ -4,7 +4,7 @@ This project has not published a formal versioned release. Significant template
 and workflow changes are recorded here until a release/versioning policy is
 adopted.
 
-## Unreleased — 2026-08-21
+## Unreleased — updated 2026-08-22
 
 - Renamed the repository to `spec-driven-delivery-playbook`.
 - Added reusable development, specialized-policy, test, PR/branch, whiteboard,
@@ -26,6 +26,10 @@ adopted.
 - Reconciled authority precedence, whiteboard/handoff consumption, compact/full
   plan modes, task states, emergency routing, and worked-example IDs and states
   through a repository-wide consistency audit.
+- Added dependency-first durable-data sequencing to the development-policy
+  template, enforced data classification and task phases in implementation
+  plans, and updated the worked example to use foundation -> consumer/migration
+  -> cleanup ordering without imposing a universal database-first rule.
 
 Migration guidance: active deliveries that have not started implementation
 should generate and approve a handoff, review their manifest, and add review
@@ -34,3 +38,9 @@ artifacts at the next safe gate rather than discarding valid evidence. If a
 systemic policy gap is already known, register it, pause only affected work,
 reroute the active manifest, and preserve valid evidence. Preserve completed
 historical records unchanged and apply this workflow to new work.
+
+For existing active plans, do not rewrite completed task history. At the next
+planning or replanning gate, classify not-started durable-data work, record its
+foundation/consumer/migration/cleanup dependencies and compatibility evidence,
+and reorder only work that has not begun. Existing project migration and
+production-data policies remain authoritative.

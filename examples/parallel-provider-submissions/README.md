@@ -74,4 +74,6 @@ This is a documentation example, not a completed product delivery:
 - Retrying the original job can preserve completed submissions and requeue only
   failed work.
 - Provider idempotency has an expiry boundary that recovery must respect.
+- Data-dependent tasks establish a minimum compatible foundation before worker
+  consumers and postpone destructive parent-field cleanup until all users move.
 - Policies are reused; they are not regenerated for each feature.
