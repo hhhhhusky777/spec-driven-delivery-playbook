@@ -30,6 +30,11 @@ adopted.
   template, enforced data classification and task phases in implementation
   plans, and updated the worked example to use foundation -> consumer/migration
   -> cleanup ordering without imposing a universal database-first rule.
+- Added the repository documentation-quality policy and Issue #1 CI: pinned
+  Markdown/Mermaid tooling, relative-link/anchor, fence, placeholder,
+  likely-secret and local-path checks, intentional-failure regression tests,
+  advisory external links, least-privilege workflows, and owned dependency and
+  methodology freshness reviews.
 
 Migration guidance: active deliveries that have not started implementation
 should generate and approve a handoff, review their manifest, and add review
@@ -44,3 +49,9 @@ planning or replanning gate, classify not-started durable-data work, record its
 foundation/consumer/migration/cleanup dependencies and compatibility evidence,
 and reorder only work that has not begun. Existing project migration and
 production-data policies remain authoritative.
+
+Projects instantiating the updated test-strategy template should link their
+documentation-quality authority and define documentation-only/generated-output
+gates. Existing strategies remain valid until their next reviewed update; do
+not claim the playbook repository's commands as project evidence unless that
+project adopts and runs equivalent checks.

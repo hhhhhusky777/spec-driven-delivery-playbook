@@ -10,6 +10,8 @@ evidence-driven, or less burdensome without weakening necessary controls.
 - Confirm that the need is reusable rather than project-specific.
 - Identify the one canonical template that owns the rule.
 - Check [Template Governance](docs/template-governance.md).
+- Check the
+  [Documentation Quality and Testing Policy](docs/documentation-quality-policy.md).
 - Preserve accepted decision and example history.
 
 ## Pull request expectations
@@ -42,11 +44,23 @@ included here only as clearly labeled, sanitized examples with permission.
 
 ## Validation
 
-At minimum:
+Install the exact locked dependencies and run every blocking check and its
+negative regression suite:
 
-- inspect the complete diff;
-- verify relative links;
-- verify balanced Markdown fences and valid Mermaid syntax by rendering;
-- search for unresolved accidental placeholders outside templates;
-- confirm examples use only intentional example values; and
-- confirm template responsibilities do not conflict.
+```bash
+npm ci --ignore-scripts
+npm run docs:all
+```
+
+Review external links separately. Remote failures are advisory but must be
+classified when they affect a changed claim:
+
+```bash
+npm run docs:links:external
+```
+
+Automated checks do not replace semantic review. Complete
+[the policy checklist](docs/documentation-quality-policy.md#9-review-checklist),
+inspect the complete diff, and record the governing source, reviewer, material
+comments, and resolution in the pull request. Examples must use only intentional
+example values, and template responsibilities must not conflict.

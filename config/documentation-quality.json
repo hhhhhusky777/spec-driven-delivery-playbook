@@ -1,0 +1,14 @@
+{
+  "templateRoots": [
+    "templates"
+  ],
+  "placeholderAllowlist": [],
+  "localPathAllowlist": [],
+  "externalLinkExclusions": [],
+  "externalLinks": {
+    "concurrency": 8,
+    "timeoutMs": 10000,
+    "retries": 2,
+    "userAgent": "spec-driven-delivery-playbook-doc-check/1.0"
+  }
+}
