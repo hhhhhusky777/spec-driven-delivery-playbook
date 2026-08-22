@@ -146,6 +146,9 @@ diff and reconciles them with the map. The reviewer then records
 `APPROVED`, `CHANGES_REQUESTED`, or `NOT_APPLICABLE` for every material item.
 The map is navigation, not authority, and cannot replace full-document review.
 Split an artifact or change that still cannot be reviewed as one coherent unit.
+Before implementation, the active development policy turns applicable map and
+source obligations into a reviewed task context receipt. Evidence named in the
+receipt must agree with this strategy's task-specific gates.
 
 ## 5. Contract and risk traceability
 
@@ -470,6 +473,8 @@ applicable before adopting it.
       generated-artifact gates.
 - [ ] Define the attention-gate trigger, attention-map fields, two-pass review,
       per-item disposition, and split rule.
+- [ ] Link the development policy's pre-start task context receipt gate and
+      require its evidence to agree with this strategy.
 - [ ] Assign owners, review cadence, evidence location, and retention.
 
 ## 21. Change history

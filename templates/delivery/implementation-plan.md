@@ -400,6 +400,8 @@ tasks, record the owners, boundaries, and reason here: `<value or None>`.
 - [ ] Scope, non-scope, expected production files, and the policy-defined
       production-LOC budget are recorded.
 - [ ] Acceptance criteria and task-specific tests are defined.
+- [ ] The approved source set, immutable revision, and attention-map
+      applicability are identified for the pre-start context receipt.
 - [ ] Data, security, concurrency, failure, compatibility, and operational
       impacts are understood or explicitly not applicable.
 - [ ] The task's data phase is recorded; every required foundation predecessor
@@ -407,9 +409,24 @@ tasks, record the owners, boundaries, and reason here: `<value or None>`.
 - [ ] Existing dirty worktree files are attributed and preserved.
 - [ ] No unresolved clarification makes the implementation ambiguous.
 
-### 6.4 Definition of Done for a task
+### 6.4 Pre-start task context receipt gate
+
+Apply the active development policy's task context receipt after a task becomes
+`READY` and before it enters `IN_PROGRESS`. The receipt is per task and does not
+add a workflow state. Complete the receipt in that task's execution record;
+reference stable IDs and canonical links instead of duplicating policy text.
+
+An independent reviewer reconciles the receipt against the complete approved
+source set and records a disposition. If a governing source revision changes,
+mark the receipt `STALE`, pause affected work at the next safe boundary, and
+refresh it before continuing. `READY -> IN_PROGRESS` is permitted only when the
+receipt is `APPROVED`, or `NOT_APPLICABLE` with a policy-valid reason.
+
+### 6.5 Definition of Done for a task
 
 - [ ] Acceptance criteria and referenced contracts are implemented.
+- [ ] The task context receipt was approved before implementation and remained
+      current, or every later source change was reconciled and reapproved.
 - [ ] Required Red-Green-Refactor evidence is recorded.
 - [ ] Applicable focused tests and changed-file coverage pass.
 - [ ] Applicable full regression, smoke, and E2E gates pass under the test
@@ -464,6 +481,8 @@ append execution evidence rather than replacing the original contract.
 | Contract IDs | `<IDs>` |
 | Owner | `<owner>` |
 | Branch / PR | `<value>` |
+| Context receipt | `NOT_STARTED` |
+| Context source revision | `Not recorded` |
 | Expected product LOC | `<value>` |
 | Actual product LOC | `Not measured` |
 
@@ -492,6 +511,21 @@ Not in scope:
 Dependencies and gates:
 
 - `<predecessors, artifacts, migrations, environments, policy gates>`
+
+Task context receipt (complete after `READY` and before `IN_PROGRESS`):
+
+| Receipt field | Recorded value |
+| --- | --- |
+| Implementer / type / timestamp | `<human or agent identity; type; timestamp>` |
+| Approved source set / revision | `<links and immutable commit/version>` |
+| Outcome / non-scope | `<concise reconciliation>` |
+| Contracts / decisions | `<stable IDs and canonical links>` |
+| Critical obligations / prohibitions | `<IDs, links, and local consequence>` |
+| Risks / exceptions / boundaries | `<IDs and links, or None>` |
+| Dependencies / data phase | `<predecessors and phase>` |
+| Required completion evidence | `<acceptance, tests, and other gates>` |
+| Ambiguities / conflicts / map omissions | `<None or blocking details>` |
+| Review disposition | `<APPROVED/CHANGES_REQUESTED/NOT_APPLICABLE; reviewer; reason>` |
 
 Delivery guide:
 

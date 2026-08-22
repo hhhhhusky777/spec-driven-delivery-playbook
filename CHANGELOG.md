@@ -36,7 +36,9 @@ adopted.
   advisory external links, least-privilege workflows, and owned dependency and
   methodology freshness reviews. Added an attention-map gate for long or
   multi-focus artifacts so material decisions, risks, and reviewer actions stay
-  visible without duplicating their canonical text.
+  visible without duplicating their canonical text. Added a reviewed pre-start
+  task context receipt so implementers reconcile the approved source revision,
+  critical constraints, boundaries, and evidence before `READY -> IN_PROGRESS`.
 
 Migration guidance: active deliveries that have not started implementation
 should generate and approve a handoff, review their manifest, and add review

@@ -245,7 +245,7 @@ This prevents document inflation while making omissions reviewable.
 
 | Template | Purpose |
 | --- | --- |
-| [Development policy](templates/policies/development-policy.md) | Project-wide delivery, dependency/data sequencing, YAGNI, state, policy discovery, handoff, retrospective, and archive rules |
+| [Development policy](templates/policies/development-policy.md) | Project-wide delivery, dependency/data sequencing, YAGNI, state, pre-start context receipt, policy discovery, handoff, retrospective, and archive rules |
 | [Specialized policy](templates/policies/specialized-policy.md) | Standardized creation, audit, adoption, enforcement, and review of a mid-project systemic policy |
 | [PR and branch policy](templates/policies/pull-request-policy.md) | Branch models, review readiness, PR evidence, merge, emergency, and post-merge rules |
 | [Test strategy](templates/testing/test-strategy.md) | TDD, risk/contract traceability, environments, bug-finding methods, performance, and failure triage |
@@ -375,6 +375,12 @@ Long or multi-focus artifacts use the policy's attention and reviewability gate:
 a concise map routes reviewers to changed obligations, blockers, risks,
 exceptions, owners, and evidence. Reviewers reconcile it against the complete
 artifact; the map never replaces full review or canonical text.
+
+Before an implementation task moves from `READY` to `IN_PROGRESS`, its
+implementer converts the applicable approved sources and attention-map items
+into the development policy's reviewed task context receipt. This pre-start
+gate makes the task's obligations, prohibitions, boundaries, and required
+evidence explicit without adding another workflow state.
 
 Run the same blocking checks locally:
 

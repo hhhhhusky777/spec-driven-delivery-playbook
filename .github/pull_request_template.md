@@ -30,6 +30,9 @@
 
 ## Validation
 
+- [ ] Applicable implementation tasks had an approved, current pre-start
+      context receipt before `IN_PROGRESS`, or the recorded policy exception
+      was reviewed.
 - [ ] `npm ci --ignore-scripts`
 - [ ] `npm run docs:all`
 - [ ] `npm run docs:links:external` reviewed as advisory evidence.

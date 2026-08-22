@@ -177,6 +177,39 @@ test("attention gate remains connected to policy, project template, and PR revie
   assert.match(pullRequest, /independent\s+inventory of the complete diff/);
 });
 
+test("task context receipt remains a READY-to-IN_PROGRESS gate", async () => {
+  const developmentPolicy = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "policies", "development-policy.md"),
+    "utf8",
+  );
+  const implementationPlan = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "delivery", "implementation-plan.md"),
+    "utf8",
+  );
+  const pullRequest = await readFile(
+    path.join(REPOSITORY_ROOT, ".github", "pull_request_template.md"),
+    "utf8",
+  );
+  const workedExample = await readFile(
+    path.join(
+      REPOSITORY_ROOT,
+      "examples",
+      "parallel-provider-submissions",
+      "04-implementation-plan.md",
+    ),
+    "utf8",
+  );
+
+  assert.match(developmentPolicy, /^### 9\.1 Pre-start task context receipt$/m);
+  assert.match(developmentPolicy, /`READY -> IN_PROGRESS` is prohibited/);
+  assert.match(developmentPolicy, /mark the receipt `STALE`/);
+  assert.match(implementationPlan, /^### 6\.4 Pre-start task context receipt gate$/m);
+  assert.match(implementationPlan, /\| Context source revision \|/);
+  assert.match(implementationPlan, /\| Review disposition \|/);
+  assert.match(pullRequest, /approved, current pre-start\s+context receipt/);
+  assert.match(workedExample, /All task context receipts remain `NOT_STARTED`\./);
+});
+
 test("external-link checks dispose response bodies before returning status", async () => {
   let cancelCalls = 0;
   const result = await fetchWithRetry(

@@ -344,6 +344,43 @@ Required rules:
   is never rewritten as cancelled.
 - State changes are recorded before another contributor relies on them.
 
+### 9.1 Pre-start task context receipt
+
+Before a task that changes product, data, runtime configuration, or delivery
+behavior moves from `READY` to `IN_PROGRESS`, its implementer must complete an
+approved task context receipt. This is a transition gate, not another task
+state. A project may apply the gate to additional task classes; an excluded
+task records `NOT_APPLICABLE` and the reason.
+
+The receipt demonstrates reconciliation of the complete approved source set
+for that task. It does not prove human or AI comprehension, and an attention
+map does not replace reading the governing sources. Record, without copying
+their canonical text:
+
+- implementer identity or agent, timestamp, task ID, and immutable source
+  revision;
+- intended outcome, non-scope, and governing contract and decision IDs;
+- critical obligations and prohibitions, with their local consequence and
+  canonical links;
+- material risks, exceptions, dependencies, data phase, and operational or
+  compatibility boundaries;
+- required acceptance, test, and other completion evidence;
+- unresolved ambiguity or conflict, including attention-map omissions; and
+- independent review disposition, reviewer, and required specialty.
+
+The reviewer reconciles the receipt with the approved source set and records
+`APPROVED` or `CHANGES_REQUESTED`. The receipt author cannot satisfy an
+independent-review requirement. Configure qualified human or specialist review
+for security, privacy, billing, destructive data, concurrency, or other
+project-defined high-risk work; an independent agent may review lower-risk work
+when project policy permits it.
+
+If a governing source changes after approval, mark the receipt `STALE` and
+pause affected work at the next safe boundary. Refresh and reapprove it before
+continuing; use `BLOCKED` only when the change cannot be reconciled safely.
+`READY -> IN_PROGRESS` is prohibited while the receipt is `NOT_STARTED`,
+`CHANGES_REQUESTED`, or `STALE`.
+
 ## 10. Testing, defects, and quality evidence
 
 Canonical test strategy: `<link>`
