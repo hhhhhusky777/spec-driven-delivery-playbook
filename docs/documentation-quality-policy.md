@@ -107,6 +107,41 @@ Content created from a template must pass the same review as a template change:
 Generation is not review. A producing agent or automation does not approve its
 own artifact unless an active project policy explicitly permits that risk level.
 
+### 2.6 Attention and reviewability gate
+
+Use this gate when a document or change contains multiple material decisions,
+normative obligations, risks, exceptions, lifecycle states, open questions, or
+reviewer specialties. Do not use a fixed line, word, or page count as the
+trigger; generated text, tables, diagrams, and short high-risk contracts have
+different review costs.
+
+Place a concise attention map near the beginning of the artifact or pull-request
+description. It must identify:
+
+- the outcome and scope;
+- new or changed decisions and obligations, using stable IDs when available;
+- blockers, unresolved questions, material risks, and exceptions;
+- the required reviewer or specialty for each material item; and
+- a recommended reading order with links to the canonical sections and evidence.
+
+The map is navigation, not a substitute authority. It must not paraphrase a rule
+in a way that can compete with the canonical text, omit a material item merely
+to stay short, or claim approval/evidence that does not exist.
+
+The reviewer performs two passes:
+
+1. Independently inventory material decisions, obligations, risks, exceptions,
+   and blockers from the complete artifact/diff; reconcile that inventory with
+   the attention map.
+2. Review the mapped source sections and evidence in the stated dependency
+   order, recording `APPROVED`, `CHANGES_REQUESTED`, or `NOT_APPLICABLE` for
+   every material item.
+
+A reviewer must not approve from the map alone. If the full artifact or change
+still cannot be reviewed as one coherent unit, split it into dependency-ordered,
+independently reviewable artifacts or pull requests and record their links and
+gates.
+
 ## 3. Automated blocking checks
 
 Every relevant pull request and push to `main` runs the following gates:
@@ -242,6 +277,8 @@ classification belongs in review evidence when they affect a changed source.
 - [ ] Normative content has one owner; summaries link rather than compete.
 - [ ] Instantiated/generated content is project-specific and claims only real
       evidence.
+- [ ] When the attention gate applies, its map matches an independent inventory
+      of material items and every item has a recorded reviewer disposition.
 - [ ] Freshness, compatibility, adoption, and historical-record impact are
       addressed.
 - [ ] Every new blocking rule has an intentional failure regression test.
@@ -254,6 +291,9 @@ These sources inform this repository policy but do not override it:
 - [Google developer documentation style guide](https://developers.google.com/style)
 - [Google guidance for accessible documentation](https://developers.google.com/style/accessibility)
 - [Microsoft guidance for simple words and concise sentences](https://learn.microsoft.com/en-us/style-guide/word-choice/use-simple-words-concise-sentences)
+- [Microsoft guidance for scannable content](https://learn.microsoft.com/en-us/style-guide/scannable-content/)
+- [Google guidance for paragraph structure and critical information](https://developers.google.com/style/paragraph-structure)
+- [Google guidance for navigating a change in review](https://google.github.io/eng-practices/review/reviewer/navigate.html)
 - [GitHub Actions secure-use reference](https://docs.github.com/en/actions/reference/security/secure-use)
 - [Mermaid syntax validation API](https://mermaid.js.org/config/usage.html#syntax-validation-without-rendering)
 - [npm package-lock documentation](https://docs.npmjs.com/cli/configuring-npm/package-lock-json)
