@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import os from "node:os";
 import path from "node:path";
@@ -11,6 +11,7 @@ import {
   checkMarkdownContent,
   checkSensitiveContent,
   extractMarkdownLinks,
+  fetchWithRetry,
   parseFencedBlocks,
 } from "../scripts/documentation-quality.mjs";
 import { validateMermaidBlocks } from "../scripts/check-mermaid.mjs";
@@ -152,4 +153,78 @@ test("valid fenced blocks preserve language, content, and source line", () => {
   assert.equal(blocks[0]?.language, "mermaid");
   assert.equal(blocks[0]?.startLine, 3);
   assert.match(blocks[0]?.content || "", /A --> B/);
+});
+
+test("attention gate remains connected to policy, project template, and PR review", async () => {
+  const policy = await readFile(
+    path.join(REPOSITORY_ROOT, "docs", "documentation-quality-policy.md"),
+    "utf8",
+  );
+  const strategy = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "testing", "test-strategy.md"),
+    "utf8",
+  );
+  const pullRequest = await readFile(
+    path.join(REPOSITORY_ROOT, ".github", "pull_request_template.md"),
+    "utf8",
+  );
+
+  assert.match(policy, /^### 2\.6 Attention and reviewability gate$/m);
+  assert.match(policy, /A reviewer must not approve from the map alone\./);
+  assert.match(strategy, /^#### Attention and reviewability gate$/m);
+  assert.match(strategy, /Split an artifact or change/);
+  assert.match(pullRequest, /^## Reviewer attention map$/m);
+  assert.match(pullRequest, /independent\s+inventory of the complete diff/);
+});
+
+test("task context receipt remains a READY-to-IN_PROGRESS gate", async () => {
+  const developmentPolicy = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "policies", "development-policy.md"),
+    "utf8",
+  );
+  const implementationPlan = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "delivery", "implementation-plan.md"),
+    "utf8",
+  );
+  const pullRequest = await readFile(
+    path.join(REPOSITORY_ROOT, ".github", "pull_request_template.md"),
+    "utf8",
+  );
+  const workedExample = await readFile(
+    path.join(
+      REPOSITORY_ROOT,
+      "examples",
+      "parallel-provider-submissions",
+      "04-implementation-plan.md",
+    ),
+    "utf8",
+  );
+
+  assert.match(developmentPolicy, /^### 9\.1 Pre-start task context receipt$/m);
+  assert.match(developmentPolicy, /`READY -> IN_PROGRESS` is prohibited/);
+  assert.match(developmentPolicy, /mark the receipt `STALE`/);
+  assert.match(implementationPlan, /^### 6\.4 Pre-start task context receipt gate$/m);
+  assert.match(implementationPlan, /\| Context source revision \|/);
+  assert.match(implementationPlan, /\| Review disposition \|/);
+  assert.match(pullRequest, /approved, current pre-start\s+context receipt/);
+  assert.match(workedExample, /All task context receipts remain `NOT_STARTED`\./);
+});
+
+test("external-link checks dispose response bodies before returning status", async () => {
+  let cancelCalls = 0;
+  const result = await fetchWithRetry(
+    "https://example.test/reference",
+    CONFIG.externalLinks,
+    async () => ({
+      status: 204,
+      body: {
+        cancel: async () => {
+          cancelCalls += 1;
+        },
+      },
+    }),
+  );
+
+  assert.deepEqual(result, { ok: true, status: 204 });
+  assert.equal(cancelCalls, 1);
 });

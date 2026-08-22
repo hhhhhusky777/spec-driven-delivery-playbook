@@ -6,6 +6,14 @@
 - Affected canonical documents/templates:
 - Out of scope:
 
+## Reviewer attention map
+
+- Gate: Required / Not applicable — single-focus reason
+- Changed decisions/obligations and canonical sections:
+- Blockers, questions, risks, and exceptions:
+- Required reviewers or specialties:
+- Recommended reading order and evidence:
+
 ## Documentation review
 
 - [ ] Statements were checked against their governing contracts or primary sources.
@@ -17,9 +25,14 @@
 - [ ] Source freshness and compatibility impact were assessed; relevant review
       dates or event triggers were updated.
 - [ ] Important rules use a heading, concise bold label, or supported callout rather than repetition.
+- [ ] When required, the attention map was reconciled against an independent
+      inventory of the complete diff; every material item has a disposition.
 
 ## Validation
 
+- [ ] Applicable implementation tasks had an approved, current pre-start
+      context receipt before `IN_PROGRESS`, or the recorded policy exception
+      was reviewed.
 - [ ] `npm ci --ignore-scripts`
 - [ ] `npm run docs:all`
 - [ ] `npm run docs:links:external` reviewed as advisory evidence.

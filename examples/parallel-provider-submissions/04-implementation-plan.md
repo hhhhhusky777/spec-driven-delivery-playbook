@@ -268,10 +268,17 @@ evidence.
       cleanup dependency preserves a working integration target.
 - [ ] Task scopes, dependencies, expected product LOC, owners, and gates are
       frozen.
+- [ ] Each implementation task identifies its approved source set and immutable
+      revision for the pre-start task context receipt.
 - [ ] Existing dirty/user-owned files are attributed and preserved.
 
 Example status: `NOT YET READY` because it deliberately lacks a target
 repository's S00/S01 evidence.
+
+All task context receipts remain `NOT_STARTED`. A project instantiation must
+complete and independently approve each applicable receipt after its task is
+`READY` and before moving it to `IN_PROGRESS`; this example claims no such
+review.
 
 ## 9. Live handoff
 
