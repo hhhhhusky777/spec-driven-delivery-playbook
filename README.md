@@ -27,6 +27,7 @@ the distinction between stable policies and feature delivery records.
 - [Project adoption architecture](#project-adoption-architecture)
 - [How to use](#how-to-use)
   - [First-time project adoption](#first-time-project-adoption)
+  - [Review and resume adoption](#review-and-resume-adoption)
   - [Discuss a need](#discuss-a-need)
   - [Deliver future needs](#deliver-future-needs)
   - [Use this playbook for this repository](#use-this-playbook-for-this-repository)
@@ -288,22 +289,53 @@ not `ACTIVE`.
    generated `.sdd-runtime/agent-guide.md` exactly. The guide records the
    verified playbook checkout, revision, selected skill, and cleanup metadata.
 3. Let the selected skill create or resume the
-   [project adoption manifest](templates/adoption/project-adoption-manifest.md).
-4. Inventory and independently review existing project authorities before generating any
-   policy.
-5. Classify each capability as `REUSE`, `UPDATE_EXISTING`, `GENERATE`, `SKIP`,
+   [project adoption manifest](templates/adoption/project-adoption-manifest.md),
+   then stop for independent bootstrap review.
+4. After bootstrap approval, keep the manifest in `DISCOVERY` and follow the
+   same guide for one bounded inventory of existing project authorities.
+5. Independently review the inventory. Approval records
+   `DISCOVERY -> MAPPED`; comments keep the manifest in `DISCOVERY`.
+6. Classify each capability as `REUSE`, `UPDATE_EXISTING`, `GENERATE`, `SKIP`,
    `DEFER`, or `BLOCKED`.
-6. Install and review only the selected project-local contracts, navigation,
-   and gates.
-7. After recorded authority reaches `INSTALLED`, let the skill generate the
-   empty project solution whiteboard. The installer and guide do not collect a
-   need.
+7. Generate or update one selected project-local contract, navigation entry,
+   or gate at a time. Independently review each artifact before continuing.
+8. After all selected artifacts and installation evidence are approved, record
+   `MAPPED -> INSTALLED`.
+9. Follow the same guide once more to generate and review the empty project
+   solution whiteboard. The installer and guide do not collect a need.
 
 The generated guide and temporary checkout are machine-local runtime inputs,
 not project contracts. The skill copies only the canonical repository,
 immutable revision, and materialization mode into the durable manifest. An
 existing manifest remains authoritative for its pinned revision; upgrading to
 a later playbook revision is a separate reviewed operation.
+
+### Review and resume adoption
+
+Each agent invocation performs at most one dependency-ready adoption action and
+stops at the next review gate. After an authorized human or independent agent
+has reviewed the complete changed artifact and its governing sources, the
+reviewer may use this prompt to record approval and resume:
+
+```text
+Independent review is complete for <ARTIFACT_PATH> at <VERSION_OR_COMMIT>.
+Disposition: APPROVED.
+Reviewer/authority: <IDENTITY_OR_REVIEW_ROLE>.
+Evidence/comments: <LINK_OR_NONE>.
+Approved state transition: <NONE_OR_EXPLICIT_TRANSITION>.
+
+Record only this supplied review disposition and state transition in the
+adoption manifest. Then follow `.sdd-runtime/agent-guide.md` exactly and
+perform exactly one dependency-ready Next action. Stop at the next review gate.
+Do not approve the result of that next action.
+```
+
+For the initial bootstrap-manifest approval, use `NONE` for the transition,
+keep the state `DISCOVERY`, and make bounded bootstrap discovery the next
+action. Use `DISCOVERY -> MAPPED` only after the completed discovery inventory
+is independently approved. If review comments remain, record
+`CHANGES_REQUESTED` and resolve only those comments before another independent
+review; do not use the approval-and-resume prompt.
 
 ### Discuss a need
 
