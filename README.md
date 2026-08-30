@@ -303,6 +303,35 @@ a later playbook revision is a separate reviewed operation.
 9. Implement dependency-ready tasks under the project test and PR policies.
 10. Reconcile evidence, run the retrospective, and archive the delivery packet.
 
+### Deliver future needs in an adopted project
+
+Only one need may occupy the stable working-whiteboard path. The normal SDD
+delivery workflow archives the concluded whiteboard with its delivery record,
+verifies both links, and then creates a fresh `EMPTY` working whiteboard. It
+never overwrites an active, blocked, or concluded-but-unarchived need.
+
+If the archive removed the temporary playbook checkout, run `install-sdd.sh`
+again before the next delivery and give the agent the generated-guide prompt.
+The installer detects the existing manifest, reuses its pinned playbook
+revision, and installs `sdd-project-workflow`. The next need then enters the
+fresh whiteboard and follows the same whiteboard -> handoff -> workflow ->
+delivery record cycle.
+
+### Use this playbook for this repository
+
+This repository can use its own SDD delivery workflow for future needs. After
+the installer and skills are merged to `main`, run `./install-sdd.sh` from this
+repository root and follow `.sdd-runtime/agent-guide.md`. Because this
+repository does not yet have an approved adoption manifest, that first run is a
+reviewed project-adoption delivery; it is not permission to self-approve or
+claim `ACTIVE`. Once its project-local manifest and empty whiteboard are
+approved, later needs use the recurring workflow above.
+
+The existing `CONTRIBUTING.md`, documentation-quality policy, template
+governance, pull-request template, and CI remain authoritative during
+self-adoption. The adoption must map them to `REUSE` or a reviewed disposition
+rather than generating competing copies.
+
 ## Delivery routes
 
 | Route | Use when | Typical generated artifacts |

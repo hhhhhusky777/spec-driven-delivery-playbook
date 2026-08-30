@@ -12,6 +12,12 @@ adopted.
   and safe-cleanup metadata. Adoption now creates an empty project solution
   whiteboard after `INSTALLED`; needs enter only inside that whiteboard, never
   through the installer or generated guide.
+- Defined the recurring adopted-project cycle for future needs: one active need
+  per stable working-whiteboard path, immutable archive and delivery-record
+  verification before replacement, fresh `EMPTY` initialization, and
+  guide-driven re-entry using the manifest's pinned playbook revision. Added
+  explicit self-adoption guidance for this repository after the installer
+  reaches `main`.
 
 - Renamed the repository to `spec-driven-delivery-playbook`.
 - Added reusable development, specialized-policy, test, PR/branch, whiteboard,

@@ -105,29 +105,31 @@ test("installer resolves latest main, installs adoption skill, and emits one gui
   assert.equal(repeatedCleanup.status, 0, repeatedCleanup.stderr);
 });
 
-test("existing installed manifest selects workflow skill and preserves its pinned revision", async (t) => {
+test("installed and active manifests select workflow skill and preserve their pinned revision", async (t) => {
   const source = await createPlaybookFixture(t);
-  const project = await createTargetProject(t);
-  const manifest = path.join(
-    project,
-    ".github",
-    "spec-driven-delivery",
-    "project-adoption-manifest.md",
-  );
-  await mkdir(path.dirname(manifest), { recursive: true });
-  await writeFile(
-    manifest,
-    `# Manifest\n\n| Field | Value |\n| --- | --- |\n| Adoption state | \`INSTALLED\` |\n| Playbook revision | \`${source.firstRevision}\` |\n`,
-    "utf8",
-  );
+  for (const state of ["INSTALLED", "ACTIVE"]) {
+    const project = await createTargetProject(t);
+    const manifest = path.join(
+      project,
+      ".github",
+      "spec-driven-delivery",
+      "project-adoption-manifest.md",
+    );
+    await mkdir(path.dirname(manifest), { recursive: true });
+    await writeFile(
+      manifest,
+      `# Manifest\n\n| Field | Value |\n| --- | --- |\n| Adoption state | \`${state}\` |\n| Playbook revision | \`${source.firstRevision}\` |\n`,
+      "utf8",
+    );
 
-  const result = runInstaller(project, ["--repository", source.repository]);
-  assert.equal(result.status, 0, result.stderr);
-  const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
-  assert.equal(guideValue(guide, "Required skill"), "sdd-project-workflow");
-  assert.equal(guideValue(guide, "Requested revision"), source.firstRevision);
-  assert.equal(guideValue(guide, "Resolved revision"), source.firstRevision);
-  await access(path.join(project, ".agents", "skills", "sdd-project-workflow", "SKILL.md"));
+    const result = runInstaller(project, ["--repository", source.repository]);
+    assert.equal(result.status, 0, result.stderr);
+    const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
+    assert.equal(guideValue(guide, "Required skill"), "sdd-project-workflow");
+    assert.equal(guideValue(guide, "Requested revision"), source.firstRevision);
+    assert.equal(guideValue(guide, "Resolved revision"), source.firstRevision);
+    await access(path.join(project, ".agents", "skills", "sdd-project-workflow", "SKILL.md"));
+  }
 });
 
 test("cleanup rejects a guide whose checkout is outside the owned temporary boundary", async (t) => {

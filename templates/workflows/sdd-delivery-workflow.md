@@ -353,6 +353,11 @@ Closure checklist:
 - [ ] Required gates pass or have explicit approved exceptions.
 - [ ] Contracts, implementation, tests, and operational documentation agree.
 - [ ] Deferred work/residual risk has an owner and durable location.
+- [ ] The concluded whiteboard is preserved at its immutable archive path and
+      linked bidirectionally with the delivery record.
+- [ ] The stable project working-whiteboard path is replaced with a fresh
+      `EMPTY` instance only after archive verification; no active or blocked
+      need was overwritten.
 - [ ] Retrospective improvements are routed separately.
 - [ ] Archive links resolve and contain no secrets/sensitive evidence.
 

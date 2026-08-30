@@ -244,10 +244,13 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(readme, /generated `\.sdd-runtime\/agent-guide\.md` exactly/);
   assert.match(readme, /docs\/project-adoption-runbook\.md/);
   assert.match(readme, /templates\/adoption\/project-adoption-manifest\.md/);
+  assert.match(readme, /^### Deliver future needs in an adopted project$/m);
+  assert.match(readme, /^### Use this playbook for this repository$/m);
   assert.match(runbook, /^## 2\. Authority and conflict gate$/m);
   assert.match(runbook, /Upstream playbook changes never overwrite/);
   assert.match(runbook, /^## 5\. Executable integration sequence$/m);
   assert.match(runbook, /\.sdd-runtime\/agent-guide\.md/);
+  assert.match(runbook, /^### Step 7 — Re-enter for future deliveries$/m);
   assert.match(runbook, /project-adoption-manifest\.md/);
   assert.match(runbook, /target project root as its working directory/);
   assert.match(runbook, /machine-specific playbook locator at runtime/);
@@ -290,6 +293,14 @@ test("installer guide and repository skills preserve the adoption boundary", asy
     path.join(REPOSITORY_ROOT, "templates", "discovery", "solution-whiteboard.md"),
     "utf8",
   );
+  const developmentPolicy = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "policies", "development-policy.md"),
+    "utf8",
+  );
+  const deliveryWorkflow = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "workflows", "sdd-delivery-workflow.md"),
+    "utf8",
+  );
 
   assert.match(installer, /Required skill/);
   assert.match(installer, /Resolved revision/);
@@ -299,7 +310,14 @@ test("installer guide and repository skills preserve the adoption boundary", asy
   assert.match(adoptionSkill, /After recorded authority moves the manifest to `INSTALLED`/);
   assert.match(adoptionSkill, /do not\s+infer a need/);
   assert.match(workflowSkill, /project-owned solution whiteboard/);
+  assert.match(workflowSkill, /\*\*`EMPTY`:\*\*/);
+  assert.match(workflowSkill, /\*\*`CONCLUDED`:\*\*/);
+  assert.match(workflowSkill, /\*\*`ARCHIVED`:\*\*/);
+  assert.match(workflowSkill, /Do not\s+overwrite it or admit a second need/);
   assert.match(whiteboard, /`EMPTY`: installation is ready/);
+  assert.match(whiteboard, /Only one need may own a stable working-whiteboard path/);
+  assert.match(developmentPolicy, /Permit only one need in each stable working-whiteboard path/);
+  assert.match(deliveryWorkflow, /stable project working-whiteboard path is replaced/);
 });
 
 test("SGLang example demonstrates automated adoption through an empty whiteboard", async () => {

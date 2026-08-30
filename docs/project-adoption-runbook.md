@@ -246,6 +246,22 @@ After it delivers and its evidence is reviewed, complete adoption review and
 move to `ACTIVE`. A non-authoritative external-project example instead stops at
 `EXAMPLE_REVIEWED` and cannot activate the external project.
 
+### Step 7 — Re-enter for future deliveries
+
+At delivery closure, the project's normal SDD delivery workflow preserves the
+concluded whiteboard in its immutable archive, verifies its bidirectional link
+to the delivery record, and replaces the stable working path with a fresh
+`EMPTY` whiteboard. It must not overwrite an active, concluded-but-unarchived,
+or blocked need.
+
+After the archive and fresh-whiteboard checks pass, the archive step may run
+`./install-sdd.sh --cleanup` as its final runtime action to remove the
+installer-owned temporary checkout. For a later need, run `./install-sdd.sh`
+again. An `INSTALLED` or `ACTIVE` manifest selects `sdd-project-workflow`, and
+the manifest's immutable playbook revision is reused unless a separate reviewed
+playbook update explicitly changes it. Give the agent the same generated-guide
+prompt; record the later need only inside the fresh whiteboard.
+
 ## 6. Discovery and authority mapping
 
 Inspect the repository before copying a template. Map every applicable

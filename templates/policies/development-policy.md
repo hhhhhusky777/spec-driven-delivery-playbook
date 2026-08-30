@@ -469,6 +469,9 @@ an active policy from a retrospective.
 - Preserve accepted/superseded architecture decisions.
 - Do not reset or resume archived feature artifacts; start a new whiteboard and
   plan that reference the prior record.
+- Permit only one need in each stable working-whiteboard path. After closure,
+  verify the immutable archived copy and delivery-record links before replacing
+  that working path with a fresh `EMPTY` whiteboard.
 - Define archive paths, naming, retention, sensitive-data restrictions, and
   broken-link prevention: `<rules>`.
 
