@@ -4,7 +4,14 @@ This project has not published a formal versioned release. Significant template
 and workflow changes are recorded here until a release/versioning policy is
 adopted.
 
-## Unreleased — updated 2026-08-22
+## Unreleased — updated 2026-08-30
+
+- Added a project-root installer that resolves the requested playbook reference
+  to an immutable revision, installs the manifest-appropriate repository skill,
+  and generates a locally ignored Markdown guide containing verified runtime
+  and safe-cleanup metadata. Adoption now creates an empty project solution
+  whiteboard after `INSTALLED`; needs enter only inside that whiteboard, never
+  through the installer or generated guide.
 
 - Renamed the repository to `spec-driven-delivery-playbook`.
 - Added reusable development, specialized-policy, test, PR/branch, whiteboard,
@@ -77,3 +84,9 @@ approved documents or replay completed deliveries. At the next safe governance
 review, pin the currently consumed playbook revision, create an adoption
 manifest, map existing documents to `REUSE` or another reviewed decision, and
 use the next bounded real delivery as adoption-pilot evidence.
+
+Projects using the earlier first-need prompt may preserve every concluded
+whiteboard and delivery record unchanged. At the next safe adoption review,
+select and document one project working-whiteboard path, instantiate an empty
+copy after `INSTALLED`, and archive each concluded copy before replacing that
+working path for later discussion.

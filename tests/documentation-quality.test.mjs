@@ -240,11 +240,14 @@ test("project adoption architecture remains connected to runbook and manifest", 
   );
 
   assert.match(readme, /^## Project adoption architecture$/m);
+  assert.match(readme, /\[`install-sdd\.sh`\]\(install-sdd\.sh\)/);
+  assert.match(readme, /generated `\.sdd-runtime\/agent-guide\.md` exactly/);
   assert.match(readme, /docs\/project-adoption-runbook\.md/);
   assert.match(readme, /templates\/adoption\/project-adoption-manifest\.md/);
   assert.match(runbook, /^## 2\. Authority and conflict gate$/m);
   assert.match(runbook, /Upstream playbook changes never overwrite/);
   assert.match(runbook, /^## 5\. Executable integration sequence$/m);
+  assert.match(runbook, /\.sdd-runtime\/agent-guide\.md/);
   assert.match(runbook, /project-adoption-manifest\.md/);
   assert.match(runbook, /target project root as its working directory/);
   assert.match(runbook, /machine-specific playbook locator at runtime/);
@@ -263,15 +266,43 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(manifest, /\| Required documentation checks \|/);
   assert.match(agentTrigger, /^## Prompt A — Bootstrap discovery$/m);
   assert.match(agentTrigger, /^## Prompt B — Continue one adoption action$/m);
-  assert.match(agentTrigger, /^## Prompt C — Start the first need$/m);
+  assert.match(agentTrigger, /^## Prompt C — Initialize the empty solution whiteboard$/m);
+  assert.match(agentTrigger, /Do not request, infer, or record a need/);
   assert.match(agentTrigger, /\| Execution working directory \|/);
   assert.match(agentTrigger, /<PLAYBOOK_RUNTIME_LOCATOR>/);
   assert.match(agentTrigger, /make no edit and report `BLOCKED`/);
   assert.match(agentTrigger, /Do not advance Adoption state/);
   assert.match(templateCatalog, /adoption\/project-adoption-manifest\.md/);
+  assert.match(templateCatalog, /\[`install-sdd\.sh`\]\(\.\.\/install-sdd\.sh\)/);
 });
 
-test("SGLang example demonstrates bounded adoption through first whiteboard", async () => {
+test("installer guide and repository skills preserve the adoption boundary", async () => {
+  const installer = await readFile(path.join(REPOSITORY_ROOT, "install-sdd.sh"), "utf8");
+  const adoptionSkill = await readFile(
+    path.join(REPOSITORY_ROOT, "skills", "sdd-project-adoption", "SKILL.md"),
+    "utf8",
+  );
+  const workflowSkill = await readFile(
+    path.join(REPOSITORY_ROOT, "skills", "sdd-project-workflow", "SKILL.md"),
+    "utf8",
+  );
+  const whiteboard = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "discovery", "solution-whiteboard.md"),
+    "utf8",
+  );
+
+  assert.match(installer, /Required skill/);
+  assert.match(installer, /Resolved revision/);
+  assert.match(installer, /Ownership marker/);
+  assert.match(installer, /Follow %s exactly/);
+  assert.doesNotMatch(installer, /^\s*- Next action:/m);
+  assert.match(adoptionSkill, /After recorded authority moves the manifest to `INSTALLED`/);
+  assert.match(adoptionSkill, /do not\s+infer a need/);
+  assert.match(workflowSkill, /project-owned solution whiteboard/);
+  assert.match(whiteboard, /`EMPTY`: installation is ready/);
+});
+
+test("SGLang example demonstrates automated adoption through an empty whiteboard", async () => {
   const exampleRoot = path.join(
     REPOSITORY_ROOT,
     "examples",
@@ -291,8 +322,8 @@ test("SGLang example demonstrates bounded adoption through first whiteboard", as
     path.join(exampleRoot, "02-project-entrypoint.md"),
     "utf8",
   );
-  const firstNeed = await readFile(
-    path.join(exampleRoot, "06-first-need-prompt.md"),
+  const generatedGuide = await readFile(
+    path.join(exampleRoot, "06-generated-agent-guide.md"),
     "utf8",
   );
   const installationPrompt = await readFile(
@@ -301,9 +332,9 @@ test("SGLang example demonstrates bounded adoption through first whiteboard", as
   );
 
   assert.match(walkthrough, /d315eb725044e435b146c85488b7c6d9222f7fec/);
-  assert.match(walkthrough, /git -C spec-driven-delivery-playbook rev-parse HEAD/);
-  assert.match(walkthrough, /Run the agent with `PROJECT_ROOT` as its working directory/);
-  assert.match(walkthrough, /`PLAYBOOK_ROOT` as a read-only runtime input/);
+  assert.match(walkthrough, /\.\/install-sdd\.sh --revision/);
+  assert.match(walkthrough, /Follow \.sdd-runtime\/agent-guide\.md exactly/);
+  assert.match(walkthrough, /generated guide is the only prompt/);
   assert.match(walkthrough, /\.github\/spec-driven-delivery\/project-adoption-manifest\.md/);
   assert.match(walkthrough, /changes no SGLang\s+repository/);
   assert.match(bootstrap, /update only\s+\.github\/spec-driven-delivery\/project-adoption-manifest\.md/);
@@ -315,16 +346,15 @@ test("SGLang example demonstrates bounded adoption through first whiteboard", as
   assert.match(manifest, /\| Runtime playbook locator contract \|/);
   assert.match(manifest, /Orientation-CD\/spec-driven-delivery-playbook\.git/);
   assert.match(manifest, /`ACTIVE` is prohibited/);
-  assert.match(entrypoint, /^## Start a need$/m);
+  assert.match(entrypoint, /^## Use the solution whiteboard$/m);
   assert.match(entrypoint, /^## Runtime source binding$/m);
   assert.match(installationPrompt, /Perform exactly one Next action/);
   assert.match(installationPrompt, /PLAYBOOK_ROOT_FROM_STEP_1\/docs\/project-adoption-runbook\.md/);
   assert.match(installationPrompt, /Do not advance the Adoption state/);
-  assert.match(firstNeed, /Create only:\s+\.github\/spec-driven-delivery\/deliveries/);
-  assert.match(firstNeed, /PLAYBOOK_ROOT_FROM_STEP_1\/templates\/discovery\/solution-whiteboard\.md/);
-  assert.match(firstNeed, /make no edit and\s+report `BLOCKED`/);
-  assert.match(firstNeed, /Do not decide the solution/);
-  assert.match(walkthrough, /do not start a real need without a separate\s+authorized adoption/);
+  assert.match(generatedGuide, /Required skill.*`sdd-project-adoption`/s);
+  assert.match(generatedGuide, /Do not request or infer a product need/);
+  assert.match(generatedGuide, /solution-whiteboard\.md/);
+  assert.match(walkthrough, /grants no authority to install or discuss a real SGLang need/);
 });
 
 test("external-link checks dispose response bodies before returning status", async () => {

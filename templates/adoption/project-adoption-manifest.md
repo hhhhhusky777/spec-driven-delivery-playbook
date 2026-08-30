@@ -136,7 +136,7 @@ Use only `REUSE`, `UPDATE_EXISTING`, `GENERATE`, `SKIP`, `DEFER`, or `BLOCKED`.
 | Reader need | Canonical project entry/link | Required reading order |
 | --- | --- | --- |
 | Start contributing | `<link>` | `<ordered links>` |
-| Start a need/defect | `<link>` | `<ordered links>` |
+| Use the solution whiteboard | `<link>` | `<ordered links>` |
 | Start implementation | `<link>` | `<plan -> context receipt -> code/tests>` |
 | Review a PR | `<link>` | `<PR policy -> contracts -> diff -> evidence>` |
 | Operate/respond | `<link>` | `<runbook/incident links>` |
@@ -201,8 +201,8 @@ which reasoning is reconstructed>`
 - [ ] Gaps, deviations, exclusions, and conflicts have dispositions.
 - [ ] Project-local navigation exposes canonical contracts without duplication.
 - [ ] Required project gates pass with linked evidence.
-- [ ] Prompt C can create the first whiteboard using only repository-visible
-      context.
+- [ ] Prompt C can create the empty solution whiteboard using only
+      repository-visible context and without an inferred need.
 - [ ] Authorized project reviewers approve `MAPPED -> INSTALLED`.
 
 ### Activation checklist

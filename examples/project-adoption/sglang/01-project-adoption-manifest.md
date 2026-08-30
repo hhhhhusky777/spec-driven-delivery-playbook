@@ -33,8 +33,8 @@ SGLang. It grants no authority and makes no upstream change.
 ## 2. Outcome, scope, and non-scope
 
 Outcome: demonstrate an executable, agent-assisted playbook integration that
-preserves SGLang's existing governance and becomes ready to create the first
-solution whiteboard.
+preserves SGLang's existing governance and produces an empty solution
+whiteboard without collecting a need during installation.
 
 In scope:
 
@@ -92,7 +92,7 @@ Unknowns requiring SGLang authority in a real adoption:
 | `3` | Test strategy | `REUSE` | Existing contribution and test guides | Strong project-specific system exists | Mapped |
 | `4` | PR/branch policy | `REUSE` | Maintainer model, CODEOWNERS, PR template | Existing authority is stronger | Mapped |
 | `5` | Specialized-policy registry | `DEFER` | Future manifest entry | No observed current need | Trigger recorded |
-| `6` | Per-need templates | `REUSE` | Pinned playbook checkout recorded above | Immutable source without copied policy | Mapped |
+| `6` | Whiteboard and delivery templates | `REUSE` | Pinned playbook checkout recorded above | Immutable source without copied policy | Mapped |
 | `7` | Documentation enforcement | `UPDATE_EXISTING` | Pre-commit/link-check scope | New `.github` Markdown lacks full link coverage | Proposed only |
 | `8` | Agent entry-point adapters | `UPDATE_EXISTING` / `GENERATE` | Root `AGENTS.md`, `.claude/rules`, contribution guide link | Discoverability without duplicate rules | Demonstrated |
 
@@ -125,9 +125,9 @@ and agent adapters contain links only; they do not repeat policy.
 
 ## 8. First delivery and review
 
-Pilot result: `NOT_STARTED`. The example provides the exact
-[first-need prompt](06-first-need-prompt.md) but intentionally creates no
-whiteboard for an unselected need.
+Pilot result: `NOT_STARTED`. The example provides a
+[generated agent guide representation](06-generated-agent-guide.md) but makes
+no SGLang edit and records no unselected need.
 
 | Review item | Required reviewer | Current disposition |
 | --- | --- | --- |

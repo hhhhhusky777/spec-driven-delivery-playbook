@@ -114,13 +114,11 @@ external project. Stop after reporting:
 - required reviewer and next action.
 ```
 
-## Prompt C — Start the first need
+## Prompt C — Initialize the empty solution whiteboard
 
 ```text
-Start a new need under the installed project adoption at <ADOPTION_MANIFEST>.
-
-Need/issue/defect:
-<NEED_TEXT_OR_LINK>
+Initialize the project solution whiteboard under the installed project adoption
+at <ADOPTION_MANIFEST>.
 
 Preconditions:
 - the manifest state is INSTALLED or ACTIVE;
@@ -133,17 +131,17 @@ Preconditions:
 If a precondition fails, make no edit and report `BLOCKED`.
 
 Read the manifest, project entry point, active project authorities, and the
-pinned solution-whiteboard template. Create only the first solution whiteboard
-at <DELIVERY_ROOT>/<NEED_ID>-<SLUG>/01-solution-whiteboard.md.
+pinned solution-whiteboard template. Create only the empty solution whiteboard
+at <PROJECT_ADOPTION_ROOT>/solution-whiteboard.md.
 
-Record the need, verified facts, assumptions, unknowns, initial requirements,
-scope/non-scope, affected authorities, and discussion questions. Keep the
-whiteboard in DRAFT. Link it from the manifest's pilot section when this is the
-first delivery.
+Set its state to EMPTY, link the reviewed manifest and project authorities, and
+use neutral values such as Not recorded or None for topic-specific content.
+Do not request, infer, or record a need during this action.
 
 Do not decide the solution, conclude the whiteboard, generate a handoff,
 workflow, policy, ADR, plan, code, test, issue, message, or PR. Run applicable
-documentation checks and stop for whiteboard discussion and review.
+documentation checks and stop after reporting that the installation boundary
+is ready.
 ```
 
 ## Reviewer action after every prompt

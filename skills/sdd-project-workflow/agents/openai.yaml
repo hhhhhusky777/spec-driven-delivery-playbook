@@ -1,0 +1,3 @@
+interface:
+  display_name: "SDD Project Workflow"
+  short_description: "Use an installed project through its whiteboard"

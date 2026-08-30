@@ -5,16 +5,19 @@ into an evidence-backed solution before generating the reviewed workflow
 handoff. It is a structured discussion surface, not a system contract and not a
 chat transcript.
 
-Copy the template for each topic. Never reset a concluded whiteboard; archive it
-and start the next topic from a fresh copy. Replace every `<placeholder>` and
-remove this introduction from the instantiated whiteboard.
+An adoption may instantiate one empty project working copy before a need is
+known. Enter the need inside that whiteboard and move it from `EMPTY` to `OPEN`.
+Before reusing the stable working path, archive the concluded whiteboard and
+replace it with a fresh empty instance; never erase or reset concluded history.
+Replace every `<placeholder>` with a neutral or verified value and remove this
+introduction from the instantiated whiteboard.
 
 ## 0. Whiteboard control
 
 | Field | Value |
 | --- | --- |
 | Topic | `<short name>` |
-| State | `OPEN` |
+| State | `EMPTY` |
 | Facilitator/owner | `<role/person>` |
 | Participants/reviewers | `<roles>` |
 | Conclusion review state | `NOT_STARTED` |
@@ -30,11 +33,12 @@ remove this introduction from the instantiated whiteboard.
 Lifecycle:
 
 ```text
-OPEN -> EXPLORING -> CONVERGING -> CONCLUDED -> ARCHIVED
+EMPTY -> OPEN -> EXPLORING -> CONVERGING -> CONCLUDED -> ARCHIVED
            |              |
            +-> BLOCKED <---+
 ```
 
+- `EMPTY`: installation is ready, but no need or topic has been recorded.
 - `OPEN`: intake exists; facts and questions are not yet structured.
 - `EXPLORING`: requirements, gaps, alternatives, evidence, and experiments are
   being developed.

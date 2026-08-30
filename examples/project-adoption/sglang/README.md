@@ -4,7 +4,7 @@ This is a non-authoritative integration example for the public
 [SGLang repository](https://github.com/sgl-project/sglang). It demonstrates
 exactly where the first adoption document goes, how an agent is prompted, what
 is reused versus proposed, where review stops occur, and how an installed
-integration starts its first solution whiteboard.
+integration produces its empty solution whiteboard.
 
 The example is not affiliated with or endorsed by SGLang. It changes no SGLang
 repository, opens no upstream issue or pull request, and claims no SGLang test
@@ -45,7 +45,7 @@ The pinned project already has substantial governance:
 
 The integration therefore proposes only the missing routing layer: adoption
 state, whiteboard-first discovery, dependency-ordered artifact review, task
-context receipts, and stable per-need locations.
+context receipts, and stable working and archive locations.
 
 ## 3. Proposed target tree
 
@@ -61,10 +61,11 @@ sglang/
     ├── README.md                              # human/agent development entry point
     ├── project-adoption-manifest.md           # first document and state connector
     ├── development-policy.md                  # SDD overlay; links existing rules
+    ├── solution-whiteboard.md                 # empty after installation
     ├── agent-adoption-trigger.md              # pinned bounded prompts
     └── deliveries/
         └── {need-id}-{slug}/
-            └── 01-solution-whiteboard.md      # first per-need artifact
+            └── 01-solution-whiteboard.md      # archived concluded discovery
 ```
 
 The example representations are:
@@ -76,54 +77,42 @@ The example representations are:
 | `.github/spec-driven-delivery/development-policy.md` | [SDD overlay](03-development-policy.md) |
 | Root and Claude pointers | [Agent adapters](04-agent-entrypoint-adapters.md) |
 | Repeated installation invocation | [Filled Prompt B](05-installation-prompt.md) |
-| First-need invocation | [Whiteboard trigger](06-first-need-prompt.md) |
+| Generated runtime connector | [Agent guide representation](06-generated-agent-guide.md) |
 
 ## 4. Step-by-step execution
 
-### Step 1 — Create isolated, pinned checkouts
+### Step 1 — Run the installer from the project root
 
-Use a fork or authorized worktree for SGLang. Do not write to the upstream
-checkout or `main`.
-
-```bash
-git clone https://github.com/Orientation-CD/spec-driven-delivery-playbook.git
-git -C spec-driven-delivery-playbook checkout --detach {approved-playbook-commit}
-git -C spec-driven-delivery-playbook rev-parse HEAD
-
-git clone https://github.com/sgl-project/sglang.git
-git -C sglang checkout --detach d315eb725044e435b146c85488b7c6d9222f7fec
-git -C sglang switch -c example/spec-driven-delivery-adoption
-
-PLAYBOOK_ROOT="$(git -C spec-driven-delivery-playbook rev-parse --show-toplevel)"
-PROJECT_ROOT="$(git -C sglang rev-parse --show-toplevel)"
-```
-
-Run the agent with `PROJECT_ROOT` as its working directory. Supply
-`PLAYBOOK_ROOT` as a read-only runtime input to every adoption prompt. These
-machine-specific paths are not committed; the manifest stores the playbook
-repository, immutable revision, and materialization mode.
-
-### Step 2 — Place the first document
+Use a fork or authorized worktree for SGLang. Obtain `install-sdd.sh` from the
+approved playbook revision, copy it to the SGLang root, and run it there. Do not
+write to the upstream checkout or `main`.
 
 ```bash
-mkdir -p "$PROJECT_ROOT/.github/spec-driven-delivery"
-cp "$PLAYBOOK_ROOT/templates/adoption/project-adoption-manifest.md" \
-  "$PROJECT_ROOT/.github/spec-driven-delivery/project-adoption-manifest.md"
+./install-sdd.sh --revision {approved-playbook-commit}
 ```
 
-Fill the pinned revisions and paths only. Keep the manifest `DISCOVERY`.
-Record the exact `git rev-parse HEAD` result as the playbook revision; the
-brace-delimited value above is an invocation input, not a literal revision.
+With no `--revision`, the installer resolves the latest playbook `main` to an
+immutable commit. It writes the requested and resolved revisions, read-only
+temporary checkout, installed skill, and cleanup record to the locally ignored
+`.sdd-runtime/agent-guide.md`.
 
-### Step 3 — Prompt the agent for discovery only
+### Step 2 — Give the generated guide to the agent
 
-Use the exact [filled bootstrap prompt](00-bootstrap-prompt.md). The permitted
-write scope contains only the manifest. The agent inventories repository facts,
-records unknowns, proposes routing decisions, and stops.
+```text
+Follow .sdd-runtime/agent-guide.md exactly.
+```
 
-Before submitting it, replace `PROJECT_ROOT_FROM_STEP_1` and
-`PLAYBOOK_ROOT_FROM_STEP_1` with the two resolved runtime values. Do not place
-those absolute paths in the committed manifest.
+The user does not name a skill or supply a need. The guide identifies the
+installed skill and verified runtime inputs. The skill creates the first
+manifest at `.github/spec-driven-delivery/project-adoption-manifest.md`, copies
+only durable playbook identity into it, and keeps it `DISCOVERY`.
+
+### Step 3 — Perform discovery only
+
+The selected adoption skill follows the same boundary demonstrated by the
+[filled bootstrap prompt](00-bootstrap-prompt.md). The permitted write scope
+contains only the manifest. The agent inventories repository facts, records
+unknowns, proposes routing decisions, and stops.
 
 ### Step 4 — Review discovery and mapping
 
@@ -134,9 +123,11 @@ This teaching example records no SGLang approval.
 
 ### Step 5 — Generate one selected artifact per review
 
-Use the exact [filled installation prompt](05-installation-prompt.md) once for
-each selected item. Before every invocation, an authorized reviewer must set
-one `Next action` and its exact `Allowed write scope` in the manifest:
+After each approval, give the agent the same instruction to follow the generated
+guide. The selected skill applies the boundary demonstrated by the
+[filled installation prompt](05-installation-prompt.md). Before every
+continuation, an authorized reviewer must set one `Next action` and its exact
+`Allowed write scope` in the manifest:
 
 1. generate the [project entry point](02-project-entrypoint.md), then review;
 2. generate the [SDD overlay](03-development-policy.md), then review;
@@ -155,29 +146,30 @@ confirm that it resolves:
 
 - existing SGLang authorities and reviewers;
 - the adoption manifest and current state;
-- per-need artifact paths and pinned templates;
+- the working-whiteboard, archive, and pinned-template paths;
 - the caller-supplied playbook root and its revision-verification rule;
 - project test and PR gates; and
-- the exact next-need prompt.
+- the installed empty-whiteboard procedure.
 
 In a real SGLang fork, run the documentation checks selected by its reviewed
 manifest. This playbook example claims only its own `npm run docs:all` evidence.
 
-### Step 7 — Start the first whiteboard
+### Step 7 — Generate the empty solution whiteboard
 
-After an authorized reviewer records `INSTALLED`, fill and submit the
-[SGLang first-need prompt](06-first-need-prompt.md). The agent creates only:
+After an authorized reviewer records `INSTALLED`, the selected skill follows
+the [generated guide representation](06-generated-agent-guide.md) and creates:
 
 ```text
-.github/spec-driven-delivery/deliveries/{need-id}-{slug}/01-solution-whiteboard.md
+.github/spec-driven-delivery/solution-whiteboard.md
 ```
 
-It stops for discussion. Handoff generation and workflow routing remain gated
-until the whiteboard reaches its reviewed convergence state.
+The whiteboard is `EMPTY` and contains no inferred need. The installation
+boundary stops there. A later discussion puts its need inside the whiteboard;
+handoff generation and workflow routing remain gated until reviewed convergence.
 
 ## 5. Automation contract derived from the example
 
-Future automation needs only these stable inputs:
+The installer and selected skill need only these stable inputs:
 
 1. immutable playbook and target revisions;
 2. target project root as the execution working directory;
@@ -189,9 +181,10 @@ Future automation needs only these stable inputs:
 8. applicable project checks; and
 9. reviewer identity/disposition before another invocation.
 
-The automation must not run all steps in one agent call. It invokes one prompt,
-waits for review, then reads the approved manifest state to determine the next
-action.
+The skill must not run all review-dependent actions without stopping. It
+performs one bounded action, waits for review, then reads the approved manifest
+state to determine the next action. The generated guide is the only prompt the
+user needs to supply.
 
 ## 6. Current example handoff
 
@@ -202,4 +195,4 @@ action.
 | Integration shape | Demonstrated through proposed project files |
 | Evidence | Pinned public-source audit plus playbook documentation gates |
 | Pending gate | Independent review of the complete example and authority map |
-| After approval | Mark `EXAMPLE_REVIEWED`; do not start a real need without a separate authorized adoption reaching `INSTALLED` |
+| After approval | Mark `EXAMPLE_REVIEWED`; this example grants no authority to install or discuss a real SGLang need |
