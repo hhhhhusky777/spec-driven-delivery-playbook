@@ -148,15 +148,17 @@ its separate activation gate passes.
 
 ## Three kinds of artifacts
 
-### 1. Project policies — instantiate once, reuse continuously
+### 1. Project governance — establish once, maintain continuously
 
+- Project adoption manifest and contract registry
 - Development policy
 - Test strategy
 - Pull-request and branch policy
 - Active specialized policies
 
-These are inputs to feature delivery. Do not generate slightly different copies
-for every feature.
+These are inputs to feature delivery. The adoption manifest maps the playbook
+to project authority; it is not itself a replacement for the linked contracts.
+Do not generate slightly different policy copies for every feature.
 
 ### 2. Feature artifacts — create per non-trivial need
 
@@ -176,22 +178,95 @@ for every feature.
 - Failure justifications
 - Delivery retrospective
 - Final delivery record
+- Superseded adoption manifests and update assessments
 
 Historical artifacts are not reset for reuse. Start from a fresh template and
 link prior records when later work depends on them.
+
+## Project adoption architecture
+
+An established project adopts the playbook by reconciling it with existing
+authority, not by copying every template. The
+[Project Adoption Runbook](docs/project-adoption-runbook.md) owns the reusable
+procedure. A reviewed
+[project adoption manifest](templates/adoption/project-adoption-manifest.md)
+records the project's pinned playbook revision, existing authorities, selected
+artifacts, local gates, pilot evidence, deviations, and current state.
+
+```mermaid
+flowchart LR
+    subgraph PLAYBOOK["Versioned playbook"]
+        P["Pinned commit or release"]
+        R["Adoption runbook"]
+        T["Reusable templates"]
+    end
+
+    subgraph PROJECT["Adopting project"]
+        M["Reviewed adoption manifest"]
+        D["Repository discovery and authority map"]
+        C["Approved project-local contracts"]
+        G["Local documentation, test, and PR gates"]
+        I["Integration INSTALLED"]
+        X["One bounded real pilot delivery"]
+        A{"Adoption review approved?"}
+        V["Adoption ACTIVE"]
+        U["Version and drift assessment"]
+    end
+
+    P --> M
+    R --> M
+    T --> M
+    M --> D
+    D --> C
+    C --> G
+    G --> I
+    I --> X
+    X --> A
+    A -->|"Changes requested"| D
+    A -->|"Yes"| V
+    V --> U
+    U -->|"Accepted project update"| M
+```
+
+The project remains the authority for its own behavior and process. Existing
+documents are `REUSE` candidates by default; generate or update an artifact
+only after discovery proves a gap and the project approves the route. A later
+playbook revision is assessed through a new manifest review and never silently
+overwrites active project contracts.
+
+Adoption agents run from the target project root. The playbook is a separate,
+read-only dependency: the manifest records its canonical repository, immutable
+revision, and materialization mode, while each invocation supplies and verifies
+the machine-specific checkout root or immutable URL base. Local absolute paths
+are runtime inputs and are never committed as project contracts.
+
+Adoption is complete only when project-owned navigation and gates are active
+at `INSTALLED`; the project can then start its first need in a whiteboard. One
+real bounded delivery supplies the additional evidence for `ACTIVE`. An
+external-project teaching example pins public revisions, separates facts from
+hypothetical additions, and never implies affiliation, endorsement, unobserved
+testing, or authority to change that project. It ends as `EXAMPLE_REVIEWED`,
+not `ACTIVE`.
 
 ## Start here
 
 ### Bootstrap a project
 
-1. Instantiate the
-   [development policy](templates/policies/development-policy.md).
-2. Instantiate the [test strategy](templates/testing/test-strategy.md).
-3. Instantiate the
-   [PR and branch policy](templates/policies/pull-request-policy.md).
-4. Create the project's specialized-policy registry. Do not create policies for
-   domains that are not yet applicable.
-5. Record canonical locations, owners, review dates, and change authority.
+1. Pin the playbook revision and follow the
+   [project adoption runbook](docs/project-adoption-runbook.md).
+2. Run the adoption agent from the target project root and supply the pinned
+   playbook root or immutable URL base as a read-only runtime input.
+3. Create a
+   [project adoption manifest](templates/adoption/project-adoption-manifest.md).
+4. Inventory and review existing project authorities before generating any
+   policy.
+5. Classify each capability as `REUSE`, `UPDATE_EXISTING`, `GENERATE`, `SKIP`,
+   `DEFER`, or `BLOCKED`.
+6. Install and review only the selected project-local contracts, navigation,
+   and gates.
+7. At `INSTALLED`, use the approved agent trigger to create the first
+   whiteboard; pilot one bounded real delivery and activate only through project
+   authority.
 
 ### Start a need or requirement
 
@@ -245,6 +320,8 @@ This prevents document inflation while making omissions reviewable.
 
 | Template | Purpose |
 | --- | --- |
+| [Project adoption manifest](templates/adoption/project-adoption-manifest.md) | Pinned playbook-to-project authority mapping, routing, state, enforcement, pilot evidence, activation, and drift history |
+| [Agent adoption trigger](templates/adoption/agent-adoption-trigger.md) | Bounded bootstrap, one-action continuation, and first-need prompts driven by the reviewed adoption manifest |
 | [Development policy](templates/policies/development-policy.md) | Project-wide delivery, dependency/data sequencing, YAGNI, state, pre-start context receipt, policy discovery, handoff, retrospective, and archive rules |
 | [Specialized policy](templates/policies/specialized-policy.md) | Standardized creation, audit, adoption, enforcement, and review of a mid-project systemic policy |
 | [PR and branch policy](templates/policies/pull-request-policy.md) | Branch models, review readiness, PR evidence, merge, emergency, and post-merge rules |
@@ -255,7 +332,7 @@ This prevents document inflation while making omissions reviewable.
 | [Implementation plan](templates/delivery/implementation-plan.md) | Approved feature contracts, dependency/data phases, incremental tasks, tracking, evidence, and closure |
 | [Architecture decision record](templates/decisions/architecture-decision-record.md) | Durable rationale and consequences for a significant architectural choice |
 
-## Worked example
+## Worked examples
 
 The [parallel provider submissions example](examples/parallel-provider-submissions/README.md)
 starts with a need to remove sequential provider execution. It demonstrates:
@@ -274,6 +351,14 @@ starts with a need to remove sequential provider execution. It demonstrates:
 The example stops at the `READY` gate and lists the project-specific evidence
 still required to pass it; it does not fabricate implementation or passing test
 evidence.
+
+The [SGLang project-adoption example](examples/project-adoption/sglang/README.md)
+starts from pinned public repository and playbook revisions. It demonstrates the
+exact first manifest path, bootstrap prompt, authority inventory, reuse versus
+generation decisions, proposed project entry point and SDD overlay, thin agent
+adapters, review stops, and the prompt that creates only the first whiteboard.
+It changes no SGLang file and remains `REVIEW` until independently reviewed;
+even after approval it can become only `EXAMPLE_REVIEWED`, never `ACTIVE`.
 
 ## Small, self-contained delivery
 
