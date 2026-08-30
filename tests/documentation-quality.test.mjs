@@ -240,11 +240,15 @@ test("project adoption architecture remains connected to runbook and manifest", 
   );
 
   assert.match(readme, /^## Project adoption architecture$/m);
+  assert.match(readme, /^## Contents$/m);
+  assert.match(readme, /^## How to use$/m);
+  assert.match(readme, /\[First-time project adoption\]\(#first-time-project-adoption\)/);
+  assert.match(readme, /\[Deliver future needs\]\(#deliver-future-needs\)/);
   assert.match(readme, /\[`install-sdd\.sh`\]\(install-sdd\.sh\)/);
   assert.match(readme, /generated `\.sdd-runtime\/agent-guide\.md` exactly/);
   assert.match(readme, /docs\/project-adoption-runbook\.md/);
   assert.match(readme, /templates\/adoption\/project-adoption-manifest\.md/);
-  assert.match(readme, /^### Deliver future needs in an adopted project$/m);
+  assert.match(readme, /^### Deliver future needs$/m);
   assert.match(readme, /^### Use this playbook for this repository$/m);
   assert.match(runbook, /^## 2\. Authority and conflict gate$/m);
   assert.match(runbook, /Upstream playbook changes never overwrite/);

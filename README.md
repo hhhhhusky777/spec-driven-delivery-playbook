@@ -19,6 +19,30 @@ This repository is a reusable playbook, not a claim that one workflow fits every
 team. Instantiate the templates, select project-specific values, and preserve
 the distinction between stable policies and feature delivery records.
 
+## Contents
+
+- [The core idea](#the-core-idea)
+- [Mid-delivery policy-gap rerouting](#mid-delivery-policy-gap-rerouting)
+- [Three kinds of artifacts](#three-kinds-of-artifacts)
+- [Project adoption architecture](#project-adoption-architecture)
+- [How to use](#how-to-use)
+  - [First-time project adoption](#first-time-project-adoption)
+  - [Discuss a need](#discuss-a-need)
+  - [Deliver future needs](#deliver-future-needs)
+  - [Use this playbook for this repository](#use-this-playbook-for-this-repository)
+- [Delivery routes](#delivery-routes)
+- [Artifact selection](#artifact-selection)
+- [Template catalog](#template-catalog)
+- [Worked examples](#worked-examples)
+- [Small, self-contained delivery](#small-self-contained-delivery)
+- [Dependency-first data sequencing](#dependency-first-data-sequencing)
+- [Test evidence, not test theater](#test-evidence-not-test-theater)
+- [Progressive policy discovery](#progressive-policy-discovery)
+- [Keeping templates current](#keeping-templates-current)
+- [Documentation quality and tests](#documentation-quality-and-tests)
+- [Methodology references](#methodology-references)
+- [License](#license)
+
 ## The core idea
 
 Always begin with a solution whiteboard. Once discussion converges, generate a
@@ -254,9 +278,9 @@ hypothetical additions, and never implies affiliation, endorsement, unobserved
 testing, or authority to change that project. It ends as `EXAMPLE_REVIEWED`,
 not `ACTIVE`.
 
-## Start here
+## How to use
 
-### Bootstrap a project
+### First-time project adoption
 
 1. Copy [`install-sdd.sh`](install-sdd.sh) to the target project root and run
    it. By default it resolves the latest `main` to an immutable commit.
@@ -281,7 +305,7 @@ immutable revision, and materialization mode into the durable manifest. An
 existing manifest remains authoritative for its pinned revision; upgrading to
 a later playbook revision is a separate reviewed operation.
 
-### Start a need or requirement
+### Discuss a need
 
 1. Record the need in the installed project's empty
    [solution whiteboard](templates/discovery/solution-whiteboard.md) and move
@@ -303,7 +327,7 @@ a later playbook revision is a separate reviewed operation.
 9. Implement dependency-ready tasks under the project test and PR policies.
 10. Reconcile evidence, run the retrospective, and archive the delivery packet.
 
-### Deliver future needs in an adopted project
+### Deliver future needs
 
 Only one need may occupy the stable working-whiteboard path. The normal SDD
 delivery workflow archives the concluded whiteboard with its delivery record,
