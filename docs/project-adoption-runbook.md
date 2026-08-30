@@ -58,7 +58,7 @@ stateDiagram-v2
     [*] --> DISCOVERY
     DISCOVERY --> MAPPED: facts and authority inventory approved
     MAPPED --> INSTALLED: selected artifacts and local gates approved
-    INSTALLED --> PILOT: real project's first whiteboard starts
+    INSTALLED --> PILOT: first need enters the empty whiteboard
     INSTALLED --> REVIEW: external case package complete
     PILOT --> REVIEW: real delivery evidence complete
     REVIEW --> ACTIVE: adoption approved
@@ -86,14 +86,29 @@ stateDiagram-v2
 
 `BLOCKED` preserves the prior state, evidence, owner, and explicit unblock
 condition. `INSTALLED` means the project-local entry point, selected contracts,
-artifact locations, and gates are approved; a contributor can now start the
-first need in a whiteboard. `ACTIVE` additionally requires evidence from that
+artifact locations, and gates are approved. The adoption skill then creates an
+empty project solution whiteboard; a need enters only inside that whiteboard.
+`ACTIVE` additionally requires evidence from that
 first real delivery. It does not imply endorsement by the playbook maintainers
 or by any third-party project used in an example. `EXAMPLE_REVIEWED` is the
 terminal state for a non-authoritative external-project case study; it never
 means that the external project adopted the playbook.
 
 ## 4. Inputs and preflight
+
+The preferred bootstrap is [`install-sdd.sh`](../install-sdd.sh), copied to and
+run from the target project root. With no explicit revision, it resolves the
+latest playbook `main` to an immutable commit. It generates a machine-local
+`.sdd-runtime/agent-guide.md`, installs the skill selected from the manifest
+state, and prints one agent prompt: follow that guide exactly. The installer
+does not collect a product need.
+
+The guide records the source repository, requested and resolved revisions,
+temporary checkout, installed skill, ownership marker, and cleanup command.
+Only the repository, immutable revision, and materialization mode become
+durable manifest fields. Absolute paths and cleanup state remain local runtime
+data. Cleanup must verify both the temporary-path boundary and installer
+ownership marker before deletion.
 
 Create an adoption branch under the project's normal branch policy. Before
 editing project documents, record:
@@ -172,15 +187,15 @@ Fill only the playbook repository/revision/materialization mode, runtime locator
 contract, target revision, project path, adoption type, owner, branch, and next
 action. Leave the state `DISCOVERY`. Do not copy another policy yet.
 
-### Step 3 — Run the bootstrap prompt
+### Step 3 — Run bounded bootstrap discovery
 
-Fill and submit Prompt A from the agent-trigger template. Explicitly bind its
-execution working directory to `PROJECT_ROOT` and its read-only playbook
-runtime locator to `PLAYBOOK_ROOT` or an immutable URL base. The agent verifies
-both revisions, then reads the runbook, new manifest, project instructions, and
-pinned repository. It updates only repository discovery, unknowns, and the
-proposed routing map. It must not create downstream policies or mark its own
-work approved.
+Prompt the agent to follow `.sdd-runtime/agent-guide.md` exactly. The installed
+adoption skill applies Prompt A's boundary from the agent-trigger template and
+uses the guide's project root and read-only playbook checkout. The agent
+verifies both revisions, then reads the runbook, new manifest, project
+instructions, and pinned repository. It updates only repository discovery,
+unknowns, and the proposed routing map. It must not create downstream policies
+or mark its own work approved.
 
 **Review stop A:** an authorized reviewer verifies facts and authority links.
 On approval, the reviewer records the review and moves `DISCOVERY -> MAPPED`.
@@ -188,11 +203,11 @@ Comments keep the manifest in `DISCOVERY`.
 
 ### Step 4 — Install one selected artifact at a time
 
-Invoke Prompt B from the target project root and supply the playbook runtime
-locator again. It verifies that the locator matches the manifest, reads the
-manifest's current state, and performs exactly one dependency-ready `GENERATE`
-or `UPDATE_EXISTING` action. `REUSE`, `SKIP`, and `DEFER` decisions create no
-copied artifact.
+After review, prompt the agent to follow the same generated guide. The installed
+skill applies Prompt B's boundary, verifies that the guide locator matches the
+manifest, reads the current state, and performs exactly one dependency-ready
+`GENERATE` or `UPDATE_EXISTING` action. `REUSE`, `SKIP`, and `DEFER` decisions
+create no copied artifact.
 
 **Review stop B:** review that artifact against the complete mapped project
 authority. Keep the manifest `MAPPED` while selected artifacts remain. Repeat
@@ -200,33 +215,52 @@ Prompt B only after the previous artifact is approved.
 
 ### Step 5 — Verify the installed integration
 
-After every selected artifact is approved, Prompt B performs one final
-installation verification:
+After every selected artifact is approved, the same guide-driven skill performs
+one final installation verification under Prompt B's boundary:
 
 - a human entry point links the project contract registry and start procedure;
 - each supported agent entry point links the same canonical procedure;
 - whiteboard, handoff, workflow, plan, evidence, and archive locations exist;
 - documentation, test, and PR gates are project-owned and executable; and
-- the next-need prompt can resolve every source without hidden chat context;
-  and
+- the installed empty solution whiteboard can resolve every source without
+  hidden chat context; and
 - the installed project trigger declares how callers supply and verify its
   runtime playbook locator.
 
 **Review stop C:** independently follow the entry point as a new contributor.
 If it works and the manifest has no unresolved adoption blocker, record
-`MAPPED -> INSTALLED`. Integration is now complete and the first need may begin.
+`MAPPED -> INSTALLED`. Integration is now complete; the selected skill may now
+instantiate the empty project solution whiteboard.
 
-### Step 6 — Start the first need in a whiteboard
+### Step 6 — Initialize the empty solution whiteboard
 
-Fill Prompt C from the agent-trigger template with the need, issue, or defect.
-The agent creates only the solution whiteboard under the installed project path,
-links the active manifest and project authorities, records unknowns, and stops
-for whiteboard discussion. It does not generate the handoff or plan.
+After `INSTALLED`, prompt the agent to follow the same generated guide. The
+skill applies Prompt C's boundary and creates only the empty solution whiteboard
+under the installed project path, links the active manifest and project
+authorities, and uses neutral initial values. It does not request or infer a
+need, or generate a handoff or plan.
 
-For a real project, record `INSTALLED -> PILOT` when that first workflow starts.
+For a real project, record `INSTALLED -> PILOT` when the first need is later
+recorded in the whiteboard and that workflow starts.
 After it delivers and its evidence is reviewed, complete adoption review and
 move to `ACTIVE`. A non-authoritative external-project example instead stops at
 `EXAMPLE_REVIEWED` and cannot activate the external project.
+
+### Step 7 — Re-enter for future deliveries
+
+At delivery closure, the project's normal SDD delivery workflow preserves the
+concluded whiteboard in its immutable archive, verifies its bidirectional link
+to the delivery record, and replaces the stable working path with a fresh
+`EMPTY` whiteboard. It must not overwrite an active, concluded-but-unarchived,
+or blocked need.
+
+After the archive and fresh-whiteboard checks pass, the archive step may run
+`./install-sdd.sh --cleanup` as its final runtime action to remove the
+installer-owned temporary checkout. For a later need, run `./install-sdd.sh`
+again. An `INSTALLED` or `ACTIVE` manifest selects `sdd-project-workflow`, and
+the manifest's immutable playbook revision is reused unless a separate reviewed
+playbook update explicitly changes it. Give the agent the same generated-guide
+prompt; record the later need only inside the fresh whiteboard.
 
 ## 6. Discovery and authority mapping
 
@@ -266,8 +300,8 @@ before a dependent artifact proceeds.
 2. Link the adoption manifest and the project's canonical contract registry.
 3. Reuse existing development, test, and PR authorities. Instantiate a
    playbook template only for an approved gap.
-4. Define where per-need whiteboards, handoffs, workflow manifests, plans,
-   decisions, evidence, and archives live.
+4. Define the project working-whiteboard path and where concluded whiteboards,
+   handoffs, workflow manifests, plans, decisions, evidence, and archives live.
 5. Connect documentation checks to the project's test strategy and PR gates.
 6. Record commands, environments, permissions, owners, failure handling, and
    evidence locations. Never claim that the playbook repository's checks ran
@@ -384,8 +418,8 @@ A public project used as a teaching example requires:
 - [ ] Conflicts, deviations, gaps, and deferred work are explicit.
 - [ ] Project-local contracts and the contributor/agent entry point are linked.
 - [ ] Documentation, PR, and test enforcement passes in the adopting project.
-- [ ] The manifest is `INSTALLED`, and the next-need prompt creates only the
-      first whiteboard without hidden context.
+- [ ] The manifest is `INSTALLED`, and the selected skill creates only the
+      empty solution whiteboard without hidden context or an inferred need.
 - [ ] A real adoption completed one bounded real delivery; an external teaching
       case completed its declared evidence without claiming project adoption.
 - [ ] Any historical replay labels reconstructed reasoning and unrun evidence.

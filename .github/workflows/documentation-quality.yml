@@ -8,9 +8,11 @@ on:
       - ".github/workflows/documentation-quality.yml"
       - ".markdownlint-cli2.jsonc"
       - "config/**"
+      - "install-sdd.sh"
       - "package.json"
       - "package-lock.json"
       - "scripts/**"
+      - "skills/**"
       - "tests/**"
   push:
     branches:
@@ -21,9 +23,11 @@ on:
       - ".github/workflows/documentation-quality.yml"
       - ".markdownlint-cli2.jsonc"
       - "config/**"
+      - "install-sdd.sh"
       - "package.json"
       - "package-lock.json"
       - "scripts/**"
+      - "skills/**"
       - "tests/**"
   schedule:
     - cron: "17 3 1 * *"

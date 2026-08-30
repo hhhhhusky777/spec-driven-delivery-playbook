@@ -1,0 +1,3 @@
+interface:
+  display_name: "SDD Project Adoption"
+  short_description: "Install or resume the reviewed playbook adoption"

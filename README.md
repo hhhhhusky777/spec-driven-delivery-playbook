@@ -19,6 +19,30 @@ This repository is a reusable playbook, not a claim that one workflow fits every
 team. Instantiate the templates, select project-specific values, and preserve
 the distinction between stable policies and feature delivery records.
 
+## Contents
+
+- [The core idea](#the-core-idea)
+- [Mid-delivery policy-gap rerouting](#mid-delivery-policy-gap-rerouting)
+- [Three kinds of artifacts](#three-kinds-of-artifacts)
+- [Project adoption architecture](#project-adoption-architecture)
+- [How to use](#how-to-use)
+  - [First-time project adoption](#first-time-project-adoption)
+  - [Discuss a need](#discuss-a-need)
+  - [Deliver future needs](#deliver-future-needs)
+  - [Use this playbook for this repository](#use-this-playbook-for-this-repository)
+- [Delivery routes](#delivery-routes)
+- [Artifact selection](#artifact-selection)
+- [Template catalog](#template-catalog)
+- [Worked examples](#worked-examples)
+- [Small, self-contained delivery](#small-self-contained-delivery)
+- [Dependency-first data sequencing](#dependency-first-data-sequencing)
+- [Test evidence, not test theater](#test-evidence-not-test-theater)
+- [Progressive policy discovery](#progressive-policy-discovery)
+- [Keeping templates current](#keeping-templates-current)
+- [Documentation quality and tests](#documentation-quality-and-tests)
+- [Methodology references](#methodology-references)
+- [License](#license)
+
 ## The core idea
 
 Always begin with a solution whiteboard. Once discussion converges, generate a
@@ -197,11 +221,13 @@ artifacts, local gates, pilot evidence, deviations, and current state.
 flowchart LR
     subgraph PLAYBOOK["Versioned playbook"]
         P["Pinned commit or release"]
+        B["Installer + repository skills"]
         R["Adoption runbook"]
         T["Reusable templates"]
     end
 
     subgraph PROJECT["Adopting project"]
+        L["Local generated agent guide"]
         M["Reviewed adoption manifest"]
         D["Repository discovery and authority map"]
         C["Approved project-local contracts"]
@@ -213,6 +239,9 @@ flowchart LR
         U["Version and drift assessment"]
     end
 
+    P --> B
+    B --> L
+    L --> M
     P --> M
     R --> M
     T --> M
@@ -241,37 +270,46 @@ the machine-specific checkout root or immutable URL base. Local absolute paths
 are runtime inputs and are never committed as project contracts.
 
 Adoption is complete only when project-owned navigation and gates are active
-at `INSTALLED`; the project can then start its first need in a whiteboard. One
-real bounded delivery supplies the additional evidence for `ACTIVE`. An
+at `INSTALLED` and an empty project solution whiteboard has been generated.
+A need enters the playbook inside that whiteboard, not through the installer or
+its agent guide. One real bounded delivery supplies the additional evidence for `ACTIVE`. An
 external-project teaching example pins public revisions, separates facts from
 hypothetical additions, and never implies affiliation, endorsement, unobserved
 testing, or authority to change that project. It ends as `EXAMPLE_REVIEWED`,
 not `ACTIVE`.
 
-## Start here
+## How to use
 
-### Bootstrap a project
+### First-time project adoption
 
-1. Pin the playbook revision and follow the
-   [project adoption runbook](docs/project-adoption-runbook.md).
-2. Run the adoption agent from the target project root and supply the pinned
-   playbook root or immutable URL base as a read-only runtime input.
-3. Create a
+1. Copy [`install-sdd.sh`](install-sdd.sh) to the target project root and run
+   it. By default it resolves the latest `main` to an immutable commit.
+2. Give the agent only the prompt printed by the installer: follow the
+   generated `.sdd-runtime/agent-guide.md` exactly. The guide records the
+   verified playbook checkout, revision, selected skill, and cleanup metadata.
+3. Let the selected skill create or resume the
    [project adoption manifest](templates/adoption/project-adoption-manifest.md).
-4. Inventory and review existing project authorities before generating any
+4. Inventory and independently review existing project authorities before generating any
    policy.
 5. Classify each capability as `REUSE`, `UPDATE_EXISTING`, `GENERATE`, `SKIP`,
    `DEFER`, or `BLOCKED`.
 6. Install and review only the selected project-local contracts, navigation,
    and gates.
-7. At `INSTALLED`, use the approved agent trigger to create the first
-   whiteboard; pilot one bounded real delivery and activate only through project
-   authority.
+7. After recorded authority reaches `INSTALLED`, let the skill generate the
+   empty project solution whiteboard. The installer and guide do not collect a
+   need.
 
-### Start a need or requirement
+The generated guide and temporary checkout are machine-local runtime inputs,
+not project contracts. The skill copies only the canonical repository,
+immutable revision, and materialization mode into the durable manifest. An
+existing manifest remains authoritative for its pinned revision; upgrading to
+a later playbook revision is a separate reviewed operation.
 
-1. Copy the
-   [solution whiteboard](templates/discovery/solution-whiteboard.md).
+### Discuss a need
+
+1. Record the need in the installed project's empty
+   [solution whiteboard](templates/discovery/solution-whiteboard.md) and move
+   it from `EMPTY` to `OPEN`.
 2. Discuss facts, assumptions, requirements, gaps, alternatives, PoCs,
    trade-offs, YAGNI, risks, and possible policy gaps.
 3. Mark incorrect proposals `REJECTED` with a concise reason rather than
@@ -288,6 +326,35 @@ not `ACTIVE`.
    artifact at a time in dependency order.
 9. Implement dependency-ready tasks under the project test and PR policies.
 10. Reconcile evidence, run the retrospective, and archive the delivery packet.
+
+### Deliver future needs
+
+Only one need may occupy the stable working-whiteboard path. The normal SDD
+delivery workflow archives the concluded whiteboard with its delivery record,
+verifies both links, and then creates a fresh `EMPTY` working whiteboard. It
+never overwrites an active, blocked, or concluded-but-unarchived need.
+
+If the archive removed the temporary playbook checkout, run `install-sdd.sh`
+again before the next delivery and give the agent the generated-guide prompt.
+The installer detects the existing manifest, reuses its pinned playbook
+revision, and installs `sdd-project-workflow`. The next need then enters the
+fresh whiteboard and follows the same whiteboard -> handoff -> workflow ->
+delivery record cycle.
+
+### Use this playbook for this repository
+
+This repository can use its own SDD delivery workflow for future needs. After
+the installer and skills are merged to `main`, run `./install-sdd.sh` from this
+repository root and follow `.sdd-runtime/agent-guide.md`. Because this
+repository does not yet have an approved adoption manifest, that first run is a
+reviewed project-adoption delivery; it is not permission to self-approve or
+claim `ACTIVE`. Once its project-local manifest and empty whiteboard are
+approved, later needs use the recurring workflow above.
+
+The existing `CONTRIBUTING.md`, documentation-quality policy, template
+governance, pull-request template, and CI remain authoritative during
+self-adoption. The adoption must map them to `REUSE` or a reviewed disposition
+rather than generating competing copies.
 
 ## Delivery routes
 
@@ -321,7 +388,7 @@ This prevents document inflation while making omissions reviewable.
 | Template | Purpose |
 | --- | --- |
 | [Project adoption manifest](templates/adoption/project-adoption-manifest.md) | Pinned playbook-to-project authority mapping, routing, state, enforcement, pilot evidence, activation, and drift history |
-| [Agent adoption trigger](templates/adoption/agent-adoption-trigger.md) | Bounded bootstrap, one-action continuation, and first-need prompts driven by the reviewed adoption manifest |
+| [Agent adoption trigger](templates/adoption/agent-adoption-trigger.md) | Bounded bootstrap, one-action continuation, and empty-whiteboard initialization driven by the reviewed adoption manifest |
 | [Development policy](templates/policies/development-policy.md) | Project-wide delivery, dependency/data sequencing, YAGNI, state, pre-start context receipt, policy discovery, handoff, retrospective, and archive rules |
 | [Specialized policy](templates/policies/specialized-policy.md) | Standardized creation, audit, adoption, enforcement, and review of a mid-project systemic policy |
 | [PR and branch policy](templates/policies/pull-request-policy.md) | Branch models, review readiness, PR evidence, merge, emergency, and post-merge rules |
@@ -356,7 +423,7 @@ The [SGLang project-adoption example](examples/project-adoption/sglang/README.md
 starts from pinned public repository and playbook revisions. It demonstrates the
 exact first manifest path, bootstrap prompt, authority inventory, reuse versus
 generation decisions, proposed project entry point and SDD overlay, thin agent
-adapters, review stops, and the prompt that creates only the first whiteboard.
+adapters, review stops, generated agent guide, and empty-whiteboard boundary.
 It changes no SGLang file and remains `REVIEW` until independently reviewed;
 even after approval it can become only `EXAMPLE_REVIEWED`, never `ACTIVE`.
 

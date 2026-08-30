@@ -11,6 +11,12 @@ because a template exists. Use the
 [agent adoption trigger](adoption/agent-adoption-trigger.md) to perform one
 manifest action at a time and stop at every review gate.
 
+The preferred project entry is the repository-root
+[`install-sdd.sh`](../install-sdd.sh). It generates a machine-local agent guide
+and installs the skill selected by manifest state. After reviewed installation,
+the skill creates an empty solution whiteboard; no need belongs in the
+installer or guide.
+
 ## Project-level templates
 
 Instantiate once and maintain through review:
@@ -32,7 +38,8 @@ and update the active workflow manifest instead of bypassing its review gates.
 
 ## Per-need templates
 
-1. Always begin with a [solution whiteboard](discovery/solution-whiteboard.md).
+1. Always begin inside the installed project's empty
+   [solution whiteboard](discovery/solution-whiteboard.md).
 2. After convergence, generate and approve the
    [whiteboard-to-workflow handoff](handoffs/whiteboard-to-workflow.md).
 3. Approval may trigger routing automatically or a human/agent may invoke it

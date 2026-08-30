@@ -34,16 +34,16 @@ playbook root or immutable URL base as a read-only runtime input. Verify its
 repository and revision against the adoption manifest before reading a
 playbook template. Never commit a workstation-specific absolute path.
 
-## Start a need
+## Use the solution whiteboard
 
 Precondition: adoption state is `INSTALLED` or `ACTIVE`.
 
 1. Create a project branch under the SGLang contribution guide.
-2. Fill Prompt C in the installed project trigger and bind its runtime playbook
-   locator.
-3. Create only
-   `.github/spec-driven-delivery/deliveries/{need-id}-{slug}/01-solution-whiteboard.md`.
-4. Discuss needs, facts, unknowns, options, YAGNI, risks, and policy gaps.
+2. Verify the installed empty
+   `.github/spec-driven-delivery/solution-whiteboard.md` and its runtime
+   playbook binding.
+3. Record the need in its intake section and move `EMPTY -> OPEN`.
+4. Discuss facts, unknowns, options, YAGNI, risks, and policy gaps.
 5. Stop for review. Generate no handoff until the whiteboard convergence gate
    passes.
 6. After approval, use the pinned handoff and workflow templates one artifact
@@ -56,8 +56,9 @@ Precondition: adoption state is `INSTALLED` or `ACTIVE`.
 ├── project-adoption-manifest.md
 ├── development-policy.md
 ├── agent-adoption-trigger.md
+├── solution-whiteboard.md
 └── deliveries/{need-id}-{slug}/
-    ├── 01-solution-whiteboard.md
+    ├── 01-solution-whiteboard.md             # archived concluded copy
     ├── 02-whiteboard-handoff.md
     ├── 03-delivery-workflow.md
     ├── 04-architecture-decision.md        # only when selected
