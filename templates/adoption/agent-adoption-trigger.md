@@ -154,6 +154,26 @@ documentation checks and stop after reporting that the installation boundary
 is ready.
 ```
 
+## Adoption-to-workflow runtime handoff
+
+After the adoption boundary and empty whiteboard are independently approved,
+do not use a guide that still selects `sdd-project-adoption` to record a need.
+If that verified guide records cleanup as `PENDING`, run these commands from the
+project root:
+
+```bash
+./install-sdd.sh --cleanup
+./install-sdd.sh
+```
+
+The first command must remove only the installer-owned checkout. The second
+must reuse the manifest's pinned revision, detect `INSTALLED`, install
+`sdd-project-workflow`, and generate a new guide with cleanup `PENDING`. Verify
+those fields before prompting the agent. If a verified current guide already
+selects `sdd-project-workflow`, reuse it without cleanup. If adoption completion
+or empty-whiteboard approval is missing, report `BLOCKED`; do not clean up or
+admit a need.
+
 ## Reviewer action after every prompt
 
 The reviewer independently reads the complete changed artifact and governing
