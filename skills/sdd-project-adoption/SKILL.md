@@ -23,20 +23,30 @@ playbook checkout, immutable revision, manifest path, and cleanup record.
    project contract.
 4. Perform only the dependency-ready adoption action permitted by the manifest
    and its exact allowed write scope. Preserve unrelated and user-owned work.
-5. Run the project checks applicable to the changed artifact and report exact
+5. Compare that action's changed facts, links, commands, and availability
+   claims with previously approved artifacts. Record affected artifacts as
+   `STALE` in the manifest freshness register and schedule the earliest
+   dependency-ready correction after the current change is independently
+   approved. The immediate next action remains review of the current change.
+   Do not edit a second artifact in this action. Keep volatile adoption
+   progress in the manifest instead of copying it into stable entry points.
+6. Run the project checks applicable to the changed artifact and report exact
    evidence. Do not substitute playbook-repository checks for project evidence.
-6. Stop after every generated or updated artifact. Require an authorized human
+7. Stop after every generated or updated artifact. Require an authorized human
    or independent-agent review before another action or state transition.
-7. Continue on a later invocation from the reviewed manifest state. Never
+8. Continue on a later invocation from the reviewed manifest state. Never
    approve your own artifact or infer reviewer authorization.
-8. After recorded authority moves the manifest to `INSTALLED`, instantiate an
+9. Before proposing `MAPPED -> INSTALLED`, require every applicable freshness
+   entry to be `CURRENT` and complete final cross-document verification.
+10. After recorded authority moves the manifest to `INSTALLED`, instantiate an
    empty solution whiteboard at the guide's recorded adoption root. Populate
    neutral control values such as `EMPTY`, `Not recorded`, or `None`; do not
    infer a need, requirement, solution, handoff, plan, or delivery result.
-9. Stop when the empty whiteboard and installed manifest have passed their
+11. Stop when the empty whiteboard and installed manifest have passed their
    applicable documentation checks.
 
 ## Completion report
 
 Report the current manifest state, one action completed, files changed,
-evidence, blockers, required reviewer, and whether the empty whiteboard exists.
+evidence, stale artifacts or `None`, blockers, required reviewer, and whether
+the empty whiteboard exists.

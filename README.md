@@ -330,6 +330,16 @@ perform exactly one dependency-ready Next action. Stop at the next review gate.
 Do not approve the result of that next action.
 ```
 
+Approval remains scoped to the reviewed artifact and version. After each
+action, compare its changed facts, links, and availability claims with every
+previously approved artifact that depends on them. Record affected artifacts as
+`STALE` in the manifest's freshness register and schedule the earliest
+dependency-ready correction as a later one-artifact action. Do not update a
+second artifact in the current invocation. Stable entry points reference the
+manifest for live adoption status instead of copying temporary statements such
+as "not installed yet." Final installation verification is blocked while any
+applicable artifact remains `STALE`.
+
 For the initial bootstrap-manifest approval, use `NONE` for the transition,
 keep the state `DISCOVERY`, and make bounded bootstrap discovery the next
 action. Use `DISCOVERY -> MAPPED` only after the completed discovery inventory
