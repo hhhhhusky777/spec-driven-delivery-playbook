@@ -252,6 +252,8 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(readme, /^### Review and resume adoption$/m);
   assert.match(readme, /perform exactly one dependency-ready Next action/);
   assert.match(readme, /Stop at the next review gate/);
+  assert.match(readme, /Record affected artifacts as\s+`STALE`/);
+  assert.match(readme, /Stable entry points reference the\s+manifest for live adoption status/);
   assert.match(readme, /For the initial bootstrap-manifest approval, use `NONE`/);
   assert.match(readme, /Use `DISCOVERY -> MAPPED` only after/);
   assert.match(readme, /^### Deliver future needs$/m);
@@ -265,6 +267,9 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(runbook, /target project root as its working directory/);
   assert.match(runbook, /machine-specific playbook locator at runtime/);
   assert.match(runbook, /Neither the manifest nor agent searches the filesystem/);
+  assert.match(runbook, /freshness register/);
+  assert.match(runbook, /no applicable `STALE` or `BLOCKED` artifact/);
+  assert.match(runbook, /installing\s+that checker marks the entry point `STALE`/);
   assert.match(runbook, /^## 8\. Pilot one real delivery$/m);
   assert.match(runbook, /^## 11\. Playbook updates and drift$/m);
   assert.match(runbook, /`EXAMPLE_REVIEWED` is the\s+terminal state/);
@@ -272,6 +277,8 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(manifest, /\| Playbook source repository \|/);
   assert.match(manifest, /\| Runtime playbook locator contract \|/);
   assert.match(manifest, /^## 5\. Adoption routing manifest$/m);
+  assert.match(manifest, /^### Artifact impact and freshness register$/m);
+  assert.match(manifest, /Final installation verification is blocked/);
   assert.match(manifest, /^## 9\. Pilot delivery$/m);
   assert.match(manifest, /^## 10\. Adoption review$/m);
   assert.match(manifest, /BLOCKED \/ EXAMPLE_REVIEWED/);
@@ -285,6 +292,9 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(agentTrigger, /<PLAYBOOK_RUNTIME_LOCATOR>/);
   assert.match(agentTrigger, /make no edit and report `BLOCKED`/);
   assert.match(agentTrigger, /Do not advance Adoption state/);
+  assert.match(agentTrigger, /record every affected artifact as STALE/);
+  assert.match(agentTrigger, /keep independent review of the current change as the immediate Next action/);
+  assert.match(agentTrigger, /do not update a newly stale artifact in this invocation/);
   assert.match(templateCatalog, /adoption\/project-adoption-manifest\.md/);
   assert.match(templateCatalog, /\[`install-sdd\.sh`\]\(\.\.\/install-sdd\.sh\)/);
 });
@@ -318,6 +328,8 @@ test("installer guide and repository skills preserve the adoption boundary", asy
   assert.match(installer, /Follow %s exactly/);
   assert.doesNotMatch(installer, /^\s*- Next action:/m);
   assert.match(adoptionSkill, /After recorded authority moves the manifest to `INSTALLED`/);
+  assert.match(adoptionSkill, /Record affected artifacts as\s+`STALE`/);
+  assert.match(adoptionSkill, /require every applicable freshness\s+entry to be `CURRENT`/);
   assert.match(adoptionSkill, /do not\s+infer a need/);
   assert.match(workflowSkill, /project-owned solution whiteboard/);
   assert.match(workflowSkill, /\*\*`EMPTY`:\*\*/);

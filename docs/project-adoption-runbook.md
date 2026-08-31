@@ -209,14 +209,30 @@ manifest, reads the current state, and performs exactly one dependency-ready
 `GENERATE` or `UPDATE_EXISTING` action. `REUSE`, `SKIP`, and `DEFER` decisions
 create no copied artifact.
 
+As part of the manifest update for that action, compare changed facts, links,
+commands, and availability claims with previously approved artifacts. Record
+each affected artifact as `STALE` in the manifest's freshness register. The
+immediate next action remains independent review of the current change; after
+approval, the earliest dependency-ready stale correction takes priority. This
+impact audit does not authorize changing a second artifact in the same
+invocation. Stable entry points and contract registries link to the manifest
+for live adoption status instead of duplicating temporary progress statements.
+
+Example: if an approved entry point says a checker is not installed, installing
+that checker marks the entry point `STALE`. The checker action still stops for
+its own review. After approval, updating only the entry point becomes the next
+action; final installation verification waits for that correction and review.
+
 **Review stop B:** review that artifact against the complete mapped project
-authority. Keep the manifest `MAPPED` while selected artifacts remain. Repeat
-Prompt B only after the previous artifact is approved.
+authority and verify the impact audit. Keep the manifest `MAPPED` while
+selected or stale artifacts remain. Repeat Prompt B only after the previous
+artifact is approved.
 
 ### Step 5 — Verify the installed integration
 
-After every selected artifact is approved, the same guide-driven skill performs
-one final installation verification under Prompt B's boundary:
+After every selected artifact is approved and the freshness register contains
+no applicable `STALE` or `BLOCKED` artifact, the same guide-driven skill
+performs one final installation verification under Prompt B's boundary:
 
 - a human entry point links the project contract registry and start procedure;
 - each supported agent entry point links the same canonical procedure;
@@ -309,6 +325,11 @@ before a dependent artifact proceeds.
 7. Review the cross-document graph for competing rules, dead links, missing
    inbound references, and instructions that an AI or new contributor cannot
    discover from the entry point.
+8. After each action, invalidate approved artifacts whose recorded facts,
+   links, commands, or availability claims changed. Mark them `STALE` in the
+   manifest and correct them one at a time before final verification.
+9. Keep volatile adoption progress in the manifest. Stable entry points and
+   contract registries link to that live state instead of duplicating it.
 
 If central automation is reused across repositories, apply the project's
 dependency and security policy. Pin mutable workflow dependencies to an

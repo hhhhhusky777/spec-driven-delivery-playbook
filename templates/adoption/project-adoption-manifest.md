@@ -111,6 +111,25 @@ Use only `REUSE`, `UPDATE_EXISTING`, `GENERATE`, `SKIP`, `DEFER`, or `BLOCKED`.
 | `7` | Adoption archive and updates | `<decision>` | `<link/path>` | `<reason>` | `<IDs>` | `<review>` |
 | `8` | Human/agent entry-point adapters | `<decision>` | `<link/path>` | `<reason>` | `<IDs>` | `<review>` |
 
+### Artifact impact and freshness register
+
+Use only `CURRENT`, `STALE`, or `BLOCKED` for freshness. After every adoption
+action, compare changed facts, links, commands, and availability claims with
+previously approved artifacts. Affected artifacts become `STALE` even when an
+earlier review remains valid historical evidence. Schedule the earliest
+dependency-ready stale correction as a separate one-artifact action after the
+current change is independently approved. The immediate next action remains
+review of the current change; do not silently update the stale artifact during
+the action that invalidated it. Stable entry points reference this manifest for
+live adoption status instead of copying temporary progress statements.
+
+| Artifact / routing ID | Changed fact or action | Affected claim or dependency | Freshness | Required next action / evidence |
+| --- | --- | --- | --- | --- |
+| `<path / ID>` | `<change>` | `<claim / dependency>` | `<state>` | `<action / link>` |
+
+Final installation verification is blocked while any applicable artifact is
+`STALE` or `BLOCKED`.
+
 ## 6. Gap, deviation, and YAGNI register
 
 ### Gaps

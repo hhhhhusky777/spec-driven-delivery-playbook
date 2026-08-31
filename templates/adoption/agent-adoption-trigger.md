@@ -97,6 +97,15 @@ Allowed write scope:
   final installation verification when no selected artifact remains;
 - for REUSE, SKIP, or DEFER, record the reviewed decision without copying the
   source document;
+- compare the action's changed facts, links, commands, and availability claims
+  with previously approved artifacts;
+- record every affected artifact as STALE in the manifest freshness register
+  and select the earliest dependency-ready stale correction as the first action
+  after the current change is independently approved;
+- keep independent review of the current change as the immediate Next action;
+- do not update a newly stale artifact in this invocation, and keep volatile
+  adoption progress in the manifest rather than copying it into stable entry
+  points;
 - preserve all unrelated and user-owned changes;
 - do not write outside the current Allowed write scope;
 - update manifest evidence and Next action;
@@ -109,6 +118,7 @@ external project. Stop after reporting:
 - one action completed;
 - files changed;
 - evidence and checks;
+- stale artifacts found by the impact audit, or None;
 - unresolved conflicts or risks;
 - proposed state transition, if any; and
 - required reviewer and next action.
