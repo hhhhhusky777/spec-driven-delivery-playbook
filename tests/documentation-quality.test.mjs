@@ -256,6 +256,8 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(readme, /Stable entry points reference the\s+manifest for live adoption status/);
   assert.match(readme, /For the initial bootstrap-manifest approval, use `NONE`/);
   assert.match(readme, /Use `DISCOVERY -> MAPPED` only after/);
+  assert.match(readme, /Before recording the first need, replace the completed adoption runtime/);
+  assert.match(readme, /new guide detects `INSTALLED`, selects `sdd-project-workflow`/);
   assert.match(readme, /^### Deliver future needs$/m);
   assert.match(readme, /^### Use this playbook for this repository$/m);
   assert.match(runbook, /^## 2\. Authority and conflict gate$/m);
@@ -270,6 +272,8 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(runbook, /freshness register/);
   assert.match(runbook, /no applicable `STALE` or `BLOCKED` artifact/);
   assert.match(runbook, /installing\s+that checker marks the entry point `STALE`/);
+  assert.match(runbook, /^#### Runtime handoff from adoption to delivery$/m);
+  assert.match(runbook, /A `PENDING` adoption\s+guide is reusable only while adoption work remains/);
   assert.match(runbook, /^## 8\. Pilot one real delivery$/m);
   assert.match(runbook, /^## 11\. Playbook updates and drift$/m);
   assert.match(runbook, /`EXAMPLE_REVIEWED` is the\s+terminal state/);
@@ -295,6 +299,9 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(agentTrigger, /record every affected artifact as STALE/);
   assert.match(agentTrigger, /keep independent review of the current change as the immediate Next action/);
   assert.match(agentTrigger, /do not update a newly stale artifact in this invocation/);
+  assert.match(agentTrigger, /^## Adoption-to-workflow runtime handoff$/m);
+  assert.match(agentTrigger, /\.\/install-sdd\.sh --cleanup/);
+  assert.match(agentTrigger, /If a verified current guide already\s+selects `sdd-project-workflow`, reuse it/);
   assert.match(templateCatalog, /adoption\/project-adoption-manifest\.md/);
   assert.match(templateCatalog, /\[`install-sdd\.sh`\]\(\.\.\/install-sdd\.sh\)/);
 });
@@ -325,11 +332,14 @@ test("installer guide and repository skills preserve the adoption boundary", asy
   assert.match(installer, /Required skill/);
   assert.match(installer, /Resolved revision/);
   assert.match(installer, /Ownership marker/);
+  assert.match(installer, /## Runtime replacement/);
   assert.match(installer, /Follow %s exactly/);
   assert.doesNotMatch(installer, /^\s*- Next action:/m);
   assert.match(adoptionSkill, /After recorded authority moves the manifest to `INSTALLED`/);
   assert.match(adoptionSkill, /Record affected artifacts as\s+`STALE`/);
   assert.match(adoptionSkill, /require every applicable freshness\s+entry to be `CURRENT`/);
+  assert.match(adoptionSkill, /do not admit a need through a\s+guide that selects this adoption skill/);
+  assert.match(adoptionSkill, /new\s+guide selects `sdd-project-workflow`/);
   assert.match(adoptionSkill, /do not\s+infer a need/);
   assert.match(workflowSkill, /project-owned solution whiteboard/);
   assert.match(workflowSkill, /\*\*`EMPTY`:\*\*/);

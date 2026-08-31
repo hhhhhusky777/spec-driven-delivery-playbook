@@ -44,9 +44,17 @@ playbook checkout, immutable revision, manifest path, and cleanup record.
    infer a need, requirement, solution, handoff, plan, or delivery result.
 11. Stop when the empty whiteboard and installed manifest have passed their
    applicable documentation checks.
+12. After independent approval of that boundary, do not admit a need through a
+   guide that selects this adoption skill. If its cleanup is `PENDING`, report
+   the required runtime handoff: from the project root, run
+   `./install-sdd.sh --cleanup`, then `./install-sdd.sh`, and verify that the new
+   guide selects `sdd-project-workflow` at the manifest's pinned revision. Do
+   not clean up while adoption work or empty-whiteboard review remains open.
 
 ## Completion report
 
 Report the current manifest state, one action completed, files changed,
 evidence, stale artifacts or `None`, blockers, required reviewer, and whether
-the empty whiteboard exists.
+the empty whiteboard exists. When the adoption boundary is complete, also
+report whether cleanup and workflow-runtime installation are required before
+the first need.

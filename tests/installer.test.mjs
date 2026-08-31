@@ -83,6 +83,8 @@ test("installer resolves latest main, installs adoption skill, and emits one gui
   assert.equal(guideValue(guide, "Requested revision"), "main");
   assert.equal(guideValue(guide, "Resolved revision"), source.latestRevision);
   assert.doesNotMatch(guide, /^- Next action:/m);
+  assert.match(guide, /^## Runtime replacement$/m);
+  assert.match(guide, /Never overwrite a pending checkout/);
   await access(path.join(project, ".agents", "skills", "sdd-project-adoption", "SKILL.md"));
   assert.equal(run("git", ["status", "--short"], project), "");
 
@@ -103,6 +105,50 @@ test("installer resolves latest main, installs adoption skill, and emits one gui
   assert.equal(guideValue(cleanedGuide, "Cleanup state"), "COMPLETE");
   const repeatedCleanup = runInstaller(project, ["--cleanup"]);
   assert.equal(repeatedCleanup.status, 0, repeatedCleanup.stderr);
+});
+
+test("completed adoption replaces its runtime before the first need", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createTargetProject(t);
+  const initial = runInstaller(project, ["--repository", source.repository]);
+  assert.equal(initial.status, 0, initial.stderr);
+
+  const initialGuidePath = path.join(project, ".sdd-runtime", "agent-guide.md");
+  const initialGuide = await readFile(initialGuidePath, "utf8");
+  assert.equal(guideValue(initialGuide, "Required skill"), "sdd-project-adoption");
+  assert.equal(guideValue(initialGuide, "Cleanup state"), "PENDING");
+
+  const manifest = path.join(
+    project,
+    ".github",
+    "spec-driven-delivery",
+    "project-adoption-manifest.md",
+  );
+  await mkdir(path.dirname(manifest), { recursive: true });
+  await writeFile(
+    manifest,
+    `# Manifest\n\n| Field | Value |\n| --- | --- |\n| Adoption state | \`INSTALLED\` |\n| Playbook revision | \`${source.latestRevision}\` |\n`,
+    "utf8",
+  );
+
+  const premature = runInstaller(project, ["--repository", source.repository]);
+  assert.notEqual(premature.status, 0);
+  assert.match(premature.stderr, /checkout is still pending/);
+
+  const cleanup = runInstaller(project, ["--cleanup"]);
+  assert.equal(cleanup.status, 0, cleanup.stderr);
+  const replacement = runInstaller(project, ["--repository", source.repository]);
+  assert.equal(replacement.status, 0, replacement.stderr);
+
+  const replacementGuide = await readFile(initialGuidePath, "utf8");
+  assert.equal(guideValue(replacementGuide, "Manifest state detected"), "INSTALLED");
+  assert.equal(guideValue(replacementGuide, "Required skill"), "sdd-project-workflow");
+  assert.equal(guideValue(replacementGuide, "Requested revision"), source.latestRevision);
+  assert.equal(guideValue(replacementGuide, "Resolved revision"), source.latestRevision);
+  assert.equal(guideValue(replacementGuide, "Cleanup state"), "PENDING");
+
+  const finalCleanup = runInstaller(project, ["--cleanup"]);
+  assert.equal(finalCleanup.status, 0, finalCleanup.stderr);
 });
 
 test("installed and active manifests select workflow skill and preserve their pinned revision", async (t) => {

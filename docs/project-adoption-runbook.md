@@ -256,6 +256,31 @@ under the installed project path, links the active manifest and project
 authorities, and uses neutral initial values. It does not request or infer a
 need, or generate a handoff or plan.
 
+#### Runtime handoff from adoption to delivery
+
+After the empty whiteboard and adoption boundary are independently approved,
+the adoption runtime is complete. Before recording the first need:
+
+1. Verify that the current guide belongs to the project, matches the manifest's
+   playbook repository and revision, selects `sdd-project-adoption`, and records
+   cleanup as `PENDING`.
+2. From the project root, run `./install-sdd.sh --cleanup`. The installer must
+   remove only its verified, owned temporary checkout and mark the guide
+   `COMPLETE`.
+3. Run `./install-sdd.sh`. With no explicit revision override, the installer
+   reuses the manifest's immutable playbook revision.
+4. Verify that the regenerated guide detects `INSTALLED`, selects
+   `sdd-project-workflow`, preserves the manifest revision, and records the new
+   checkout cleanup as `PENDING`.
+5. Give the agent the regenerated-guide prompt and record the user-supplied need
+   only in the reviewed `EMPTY` whiteboard.
+
+If the current verified guide already selects `sdd-project-workflow` for the
+reviewed manifest state, reuse it and do not clean it up. A `PENDING` adoption
+guide is reusable only while adoption work remains; it must not accept the first
+need. If adoption completion or empty-whiteboard approval is missing, stop as
+`BLOCKED` instead of cleaning up the active runtime.
+
 For a real project, record `INSTALLED -> PILOT` when the first need is later
 recorded in the whiteboard and that workflow starts.
 After it delivers and its evidence is reviewed, complete adoption review and

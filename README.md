@@ -303,6 +303,11 @@ not `ACTIVE`.
    `MAPPED -> INSTALLED`.
 9. Follow the same guide once more to generate and review the empty project
    solution whiteboard. The installer and guide do not collect a need.
+10. Before recording the first need, replace the completed adoption runtime:
+    run `./install-sdd.sh --cleanup`, then `./install-sdd.sh`. Verify that the
+    new guide detects `INSTALLED`, selects `sdd-project-workflow`, and preserves
+    the manifest's pinned playbook revision. Do not clean up before the empty
+    whiteboard and adoption boundary are approved.
 
 The generated guide and temporary checkout are machine-local runtime inputs,
 not project contracts. The skill copies only the canonical repository,
@@ -348,6 +353,11 @@ is independently approved. If review comments remain, record
 review; do not use the approval-and-resume prompt.
 
 ### Discuss a need
+
+The active runtime guide must select `sdd-project-workflow`. Reuse it when it
+already matches the reviewed manifest. If a completed adoption guide still
+selects `sdd-project-adoption` with cleanup `PENDING`, perform step 10 above
+before entering the first need.
 
 1. Record the need in the installed project's empty
    [solution whiteboard](templates/discovery/solution-whiteboard.md) and move

@@ -322,6 +322,16 @@ bounded workflow below; do not treat this file as a project system contract.
 - The project solution whiteboard exists in its empty initial state.
 - No need, solution, handoff, plan, product code, or delivery claim has been
   inferred or generated.
+
+## Runtime replacement
+
+Reuse this guide only while its Required skill matches the reviewed manifest
+state. After an approved state change requires a different skill, finish and
+review the current boundary first. If cleanup is \`PENDING\`, run
+\`./install-sdd.sh --cleanup\` from the project root, then run
+\`./install-sdd.sh\` and verify the new guide's manifest state, required skill,
+repository, and immutable revision. Never overwrite a pending checkout or use
+an adoption guide to admit the first need.
 EOF
 
 trap - EXIT
