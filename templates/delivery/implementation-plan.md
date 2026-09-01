@@ -1,5 +1,7 @@
 # Spec-Driven Agile Implementation Plan Template
 
+<!-- sdd-schema: implementation-plan@1; mode: SELECT -->
+
 Use this template for a non-trivial feature, refactor, migration, or reliability
 change. The completed document is the plan of record: it defines intended
 behavior before implementation, decomposes delivery into reviewable increments,
@@ -35,6 +37,7 @@ section.
 | --- | --- |
 | Plan | `<short descriptive name>` |
 | Status | `DRAFT` |
+| Previous status | `DRAFT` |
 | Plan mode | `<COMPACT / FULL>` |
 | Current phase | `SPECIFY` |
 | Current task | `None` |
@@ -76,7 +79,9 @@ DRAFT -> CONTRACT_REVIEW -> READY -> IMPLEMENTING -> VALIDATING -> COMPLETE
 - `COMPLETE`: all required contracts and Definitions of Done are satisfied.
 
 Do not advance a lifecycle state merely because code exists. Record the gate
-that permits every transition in Section 10.
+that permits every transition in Section 10. Before changing `Status`, preserve
+its old value in `Previous status`; the lifecycle checker rejects transitions
+that are not in this state machine.
 
 ### 0.2 Artifact review gate
 
@@ -103,6 +108,12 @@ inapplicable section with a reason rather than hiding the boundary.
 `FULL` is required for multi-task, systemic, policy-gap, high-risk, or otherwise
 escalated delivery. Complete every applicable section and preserve dependency
 ordering across all selected artifacts and tasks.
+
+Both modes preserve the complete task ledger, but task detail is just in time:
+every future `PLANNED` task records a bounded summary and `SPEC_PENDING`; only a
+task entering `READY` must have a complete specification. This avoids a plan
+wall without allowing implementation from an underspecified task. Replace the
+schema marker's `SELECT` with the chosen mode in an instantiated plan.
 
 1. Specify observable outcomes and system contracts before implementation.
 2. Resolve or explicitly defer every clarification in Section 3.
@@ -381,6 +392,8 @@ durable-data dependency.
 
 ### 6.2 Task state application
 
+<!-- sdd-section: task-state-rules -->
+
 ```text
 PLANNED -> READY -> IN_PROGRESS -> VERIFYING -> DONE
    |          |          |             |
@@ -394,6 +407,8 @@ the active development policy. If this delivery permits parallel non-overlapping
 tasks, record the owners, boundaries, and reason here: `<value or None>`.
 
 ### 6.3 Definition of Ready for a task
+
+<!-- sdd-section: definition-of-ready -->
 
 - [ ] Dependencies are `DONE` or their required artifacts are available.
 - [ ] Referenced contracts are approved and testable.
@@ -411,6 +426,8 @@ tasks, record the owners, boundaries, and reason here: `<value or None>`.
 
 ### 6.4 Pre-start task context receipt gate
 
+<!-- sdd-section: context-receipt-gate -->
+
 Apply the active development policy's task context receipt after a task becomes
 `READY` and before it enters `IN_PROGRESS`. The receipt is per task and does not
 add a workflow state. Complete the receipt in that task's execution record;
@@ -423,6 +440,8 @@ refresh it before continuing. `READY -> IN_PROGRESS` is permitted only when the
 receipt is `APPROVED`, or `NOT_APPLICABLE` with a policy-valid reason.
 
 ### 6.5 Definition of Done for a task
+
+<!-- sdd-section: definition-of-done -->
 
 - [ ] Acceptance criteria and referenced contracts are implemented.
 - [ ] The task context receipt was approved before implementation and remained
@@ -443,16 +462,18 @@ receipt is `APPROVED`, or `NOT_APPLICABLE` with a policy-valid reason.
 
 ## 7. Dependency-ordered task ledger
 
+<!-- sdd-section: task-ledger -->
+
 `NEXT` identifies dependency-ready tasks permitted to start within the active
 WIP policy. Use exactly one marker when the project requires a single-next-task
 model. Expected product LOC excludes tests and documentation. `Data phase` is
 `NONE`, `FOUNDATION`, `CONSUMER`, `MIGRATION`, or `CLEANUP` under the active
 development policy.
 
-| ID | State | Next | Depends on | Data phase | Outcome / vertical slice | Contract IDs | Expected product LOC | PR |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `T00` | `PLANNED` | `NEXT` | `None` | `NONE` | `<task outcome>` | `<IDs>` | `Docs only` | `—` |
-| `T01` | `PLANNED` | | `T00` | `<phase>` | `<task outcome>` | `<IDs>` | `<policy target>` | `—` |
+| ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Expected product LOC | PR |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `T00` | `PLANNED` | | `None` | `None` | `CURRENT` | `SPEC_PENDING` | `NONE` | `<task outcome>` | `<IDs>` | `Docs only` | `—` |
+| `T01` | `PLANNED` | | `T00` | `None` | `CURRENT` | `SPEC_PENDING` | `<phase>` | `<task outcome>` | `<IDs>` | `<policy target>` | `—` |
 
 Task-ledger evolution rules:
 
@@ -462,14 +483,23 @@ Task-ledger evolution rules:
 - `CANCELLED` is terminal for an uncompleted task and records why its outcome is
   no longer required; never relabel a `DONE` task as cancelled.
 - Recompute `NEXT` after every material change.
+- Before a task becomes `READY`, expand its complete specification below,
+  change `Spec state` to `COMPLETE`, verify source freshness, and review its DoR.
+- An open blocker prevents `NEXT` only for tasks that list that blocker directly
+  or depend on a blocked task. It does not stop independent work.
 - A newly discovered design-level ambiguity returns to the linked whiteboard;
   do not hide solution discovery inside an implementation task.
 
 ## 8. Task specifications and execution records
 
-Copy this subsection for every task. Freeze its scope when it becomes `READY`;
-append execution evidence rather than replacing the original contract.
+<!-- sdd-section: task-specifications -->
 
+Copy this subsection when a task is proposed for `READY`; future `PLANNED`
+tasks may remain summarized in the ledger as `SPEC_PENDING`. Freeze the scope
+when it becomes `READY`; append execution evidence rather than replacing the
+original contract.
+
+<!-- sdd-task-spec: TNN -->
 ### TNN — `<task name>`
 
 | Field | Value |

@@ -23,6 +23,9 @@ playbook checkout, immutable revision, manifest path, and cleanup record.
    project contract.
 4. Perform only the dependency-ready adoption action permitted by the manifest
    and its exact allowed write scope. Preserve unrelated and user-owned work.
+   Before entering manifest state `BLOCKED`, record the current non-blocked
+   state in `State before block`; reset it to `None` only after returning to a
+   reviewed safe state. Never guess this value.
 5. Compare that action's changed facts, links, commands, and availability
    claims with previously approved artifacts. Record affected artifacts as
    `STALE` in the manifest freshness register and schedule the earliest

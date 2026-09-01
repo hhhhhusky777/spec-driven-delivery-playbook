@@ -9,6 +9,9 @@ ADOPTION_ROOT=".github/spec-driven-delivery"
 MANIFEST_RELATIVE_PATH=""
 RUNTIME_ROOT=".sdd-runtime"
 CLEANUP_ONLY=false
+VALIDATE_ONLY=false
+GUIDE_SCHEMA_VERSION="2"
+GENERATOR_VERSION="2.0.0"
 
 usage() {
   cat <<'EOF'
@@ -22,6 +25,7 @@ Options:
   --adoption-root PATH   Project adoption root.
   --manifest PATH        Existing or future adoption manifest path.
   --cleanup              Remove only the installer-owned temporary checkout.
+  --validate             Validate the generated runtime without changing it.
   --help                 Show this help.
 EOF
 }
@@ -58,6 +62,10 @@ while (($# > 0)); do
       CLEANUP_ONLY=true
       shift
       ;;
+    --validate)
+      VALIDATE_ONLY=true
+      shift
+      ;;
     --help|-h)
       usage
       exit 0
@@ -67,6 +75,10 @@ while (($# > 0)); do
       ;;
   esac
 done
+
+if [[ "$CLEANUP_ONLY" == true && "$VALIDATE_ONLY" == true ]]; then
+  fail "--cleanup and --validate are mutually exclusive"
+fi
 
 command -v git >/dev/null 2>&1 || fail "git is required"
 
@@ -96,11 +108,16 @@ RUNTIME_DIRECTORY="$PROJECT_ROOT/$RUNTIME_ROOT"
 GUIDE_PATH="$RUNTIME_DIRECTORY/agent-guide.md"
 MANIFEST_PATH="$PROJECT_ROOT/$MANIFEST_RELATIVE_PATH"
 MANIFEST_STATE="ABSENT"
+MANIFEST_STATE_BEFORE_BLOCK="NONE"
 if [[ -f "$MANIFEST_PATH" ]]; then
   MANIFEST_STATE=$(
     sed -n 's/^| Adoption state | `\([^`]*\)` |$/\1/p' "$MANIFEST_PATH" | head -n 1
   )
   [[ -n "$MANIFEST_STATE" ]] || MANIFEST_STATE="UNKNOWN"
+  MANIFEST_STATE_BEFORE_BLOCK=$(
+    sed -n 's/^| State before block | `\([^`]*\)` |$/\1/p' "$MANIFEST_PATH" | head -n 1
+  )
+  [[ -n "$MANIFEST_STATE_BEFORE_BLOCK" ]] || MANIFEST_STATE_BEFORE_BLOCK="NONE"
 
   if [[ "$REVISION_EXPLICIT" == false ]]; then
     PINNED_REVISION=$(
@@ -124,6 +141,123 @@ markdown_value() {
       exit
     }
   ' "$file"
+}
+
+profile_for_state() {
+  case "$1" in
+    ABSENT|DISCOVERY|MAPPED)
+      printf '%s\n' "adoption"
+      ;;
+    INSTALLED|PILOT|REVIEW|ACTIVE|UPDATING|EXAMPLE_REVIEWED)
+      printf '%s\n' "workflow"
+      ;;
+    BLOCKED)
+      case "${2:-NONE}" in
+        DISCOVERY|MAPPED) printf '%s\n' "adoption" ;;
+        INSTALLED|PILOT|REVIEW|ACTIVE|UPDATING|EXAMPLE_REVIEWED)
+          printf '%s\n' "workflow"
+          ;;
+        *) return 1 ;;
+      esac
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+skill_for_profile() {
+  case "$1" in
+    adoption) printf '%s\n' "sdd-project-adoption" ;;
+    workflow) printf '%s\n' "sdd-project-workflow" ;;
+    *) return 1 ;;
+  esac
+}
+
+guide_content_hash() {
+  sed 's/^| Content hash | `[^`]*` |$/| Content hash | `<CONTENT_HASH>` |/' "$1" |
+    git hash-object --stdin
+}
+
+refresh_guide_hash() {
+  local file=$1 hash temporary
+  temporary="$file.hash.tmp"
+  sed 's/^| Content hash | `[^`]*` |$/| Content hash | `<CONTENT_HASH>` |/' \
+    "$file" >"$temporary"
+  mv "$temporary" "$file"
+  hash=$(guide_content_hash "$file")
+  temporary="$file.hash.tmp"
+  sed "s/^| Content hash | \`<CONTENT_HASH>\` |$/| Content hash | \`$hash\` |/" \
+    "$file" >"$temporary"
+  mv "$temporary" "$file"
+}
+
+validate_runtime() {
+  [[ -f "$GUIDE_PATH" ]] || fail "STALE_RUNTIME: no generated guide found"
+
+  local recorded_project recorded_generator recorded_schema recorded_profile recorded_state recorded_prior_state
+  local recorded_skill recorded_requested recorded_revision recorded_hash actual_hash expected_profile
+  local expected_skill checkout marker cleanup_state checkout_revision checkout_origin
+  recorded_project=$(markdown_value "Project root" "$GUIDE_PATH")
+  recorded_generator=$(markdown_value "Generator version" "$GUIDE_PATH")
+  recorded_schema=$(markdown_value "Generator schema version" "$GUIDE_PATH")
+  recorded_profile=$(markdown_value "Guide profile" "$GUIDE_PATH")
+  recorded_state=$(markdown_value "Manifest state detected" "$GUIDE_PATH")
+  recorded_prior_state=$(markdown_value "Manifest state before block" "$GUIDE_PATH")
+  recorded_skill=$(markdown_value "Required skill" "$GUIDE_PATH")
+  recorded_requested=$(markdown_value "Requested revision" "$GUIDE_PATH")
+  recorded_revision=$(markdown_value "Resolved revision" "$GUIDE_PATH")
+  recorded_hash=$(markdown_value "Content hash" "$GUIDE_PATH")
+  checkout=$(markdown_value "Playbook checkout" "$GUIDE_PATH")
+  marker=$(markdown_value "Ownership marker" "$GUIDE_PATH")
+  cleanup_state=$(markdown_value "Cleanup state" "$GUIDE_PATH")
+
+  [[ "$recorded_project" == "$PROJECT_ROOT" ]] ||
+    fail "INVALID_RUNTIME: guide belongs to a different project"
+  [[ "$recorded_generator" == "$GENERATOR_VERSION" ]] ||
+    fail "STALE_RUNTIME: unsupported generator version $recorded_generator"
+  [[ "$recorded_schema" == "$GUIDE_SCHEMA_VERSION" ]] ||
+    fail "STALE_RUNTIME: unsupported guide schema $recorded_schema"
+  actual_hash=$(guide_content_hash "$GUIDE_PATH")
+  [[ "$recorded_hash" == "$actual_hash" ]] ||
+    fail "INVALID_RUNTIME: guide content hash mismatch"
+
+  expected_profile=$(profile_for_state "$MANIFEST_STATE" "$MANIFEST_STATE_BEFORE_BLOCK") ||
+    fail "STALE_RUNTIME: unsupported manifest state $MANIFEST_STATE or missing State before block"
+  expected_skill=$(skill_for_profile "$expected_profile")
+  [[ "$recorded_profile" == "$expected_profile" && "$recorded_skill" == "$expected_skill" ]] ||
+    fail "STALE_RUNTIME: manifest requires $expected_profile/$expected_skill, guide records $recorded_profile/$recorded_skill"
+  if [[ "$recorded_state" == "BLOCKED" && "$MANIFEST_STATE" == "BLOCKED" ]]; then
+    [[ "$recorded_prior_state" == "$MANIFEST_STATE_BEFORE_BLOCK" ]] ||
+      fail "STALE_RUNTIME: State before block changed while the manifest remained BLOCKED"
+  fi
+  [[ "$recorded_requested" == "$REQUESTED_REVISION" ]] ||
+    fail "STALE_RUNTIME: guide revision differs from the manifest-pinned revision"
+  [[ "$cleanup_state" == "PENDING" ]] ||
+    fail "STALE_RUNTIME: installer-owned checkout is not available"
+  [[ -d "$checkout/.git" && -f "$marker" ]] ||
+    fail "INVALID_RUNTIME: checkout or ownership marker is missing"
+  [[ "$marker" == "$checkout/.sdd-owned-checkout" ]] ||
+    fail "INVALID_RUNTIME: ownership marker path does not match checkout"
+  grep -Fqx "sdd-owned-checkout-v1" "$marker" ||
+    fail "INVALID_RUNTIME: ownership marker signature is invalid"
+  grep -Fqx "project-root=$PROJECT_ROOT" "$marker" ||
+    fail "INVALID_RUNTIME: ownership marker belongs to a different project"
+  checkout_revision=$(git -C "$checkout" rev-parse HEAD 2>/dev/null) ||
+    fail "INVALID_RUNTIME: cannot read checkout revision"
+  checkout_origin=$(git -C "$checkout" remote get-url origin 2>/dev/null) ||
+    fail "INVALID_RUNTIME: cannot read checkout origin"
+  [[ "$checkout_revision" == "$recorded_revision" ]] ||
+    fail "INVALID_RUNTIME: checkout revision does not match guide provenance"
+  [[ "$checkout_origin" == "$(markdown_value "Source repository" "$GUIDE_PATH")" ]] ||
+    fail "INVALID_RUNTIME: checkout origin does not match guide provenance"
+
+  if [[ "$recorded_state" == "$MANIFEST_STATE" ]]; then
+    printf 'CURRENT: runtime profile, provenance, skill, and manifest state match.\n'
+  else
+    printf 'STATE_ADVANCED: manifest moved from %s to %s within compatible profile %s.\n' \
+      "$recorded_state" "$MANIFEST_STATE" "$expected_profile"
+  fi
 }
 
 cleanup_checkout() {
@@ -169,11 +303,17 @@ cleanup_checkout() {
     { print }
   ' "$GUIDE_PATH" >"$updated_guide"
   mv "$updated_guide" "$GUIDE_PATH"
+  refresh_guide_hash "$GUIDE_PATH"
   printf 'Removed installer-owned checkout: %s\n' "$checkout"
 }
 
 if [[ "$CLEANUP_ONLY" == true ]]; then
   cleanup_checkout
+  exit 0
+fi
+
+if [[ "$VALIDATE_ONLY" == true ]]; then
+  validate_runtime
   exit 0
 fi
 
@@ -231,14 +371,9 @@ RESOLVED_REPOSITORY=$(git -C "$PLAYBOOK_CHECKOUT" remote get-url origin)
 MARKER_PATH="$PLAYBOOK_CHECKOUT/.sdd-owned-checkout"
 printf '%s\nproject-root=%s\n' "sdd-owned-checkout-v1" "$PROJECT_ROOT" >"$MARKER_PATH"
 
-case "$MANIFEST_STATE" in
-  INSTALLED|PILOT|REVIEW|ACTIVE|UPDATING|EXAMPLE_REVIEWED)
-    SKILL_NAME="sdd-project-workflow"
-    ;;
-  *)
-    SKILL_NAME="sdd-project-adoption"
-    ;;
-esac
+GUIDE_PROFILE=$(profile_for_state "$MANIFEST_STATE" "$MANIFEST_STATE_BEFORE_BLOCK") ||
+  fail "unsupported manifest state or missing State before block: $MANIFEST_STATE"
+SKILL_NAME=$(skill_for_profile "$GUIDE_PROFILE")
 
 SKILL_SOURCE="$PLAYBOOK_CHECKOUT/skills/$SKILL_NAME"
 SKILL_DESTINATION="$PROJECT_ROOT/.agents/skills/$SKILL_NAME"
@@ -278,8 +413,13 @@ bounded workflow below; do not treat this file as a project system contract.
 | Project root | \`$PROJECT_ROOT\` |
 | Adoption manifest | \`$MANIFEST_RELATIVE_PATH\` |
 | Manifest state detected | \`$MANIFEST_STATE\` |
+| Manifest state before block | \`$MANIFEST_STATE_BEFORE_BLOCK\` |
+| Generator version | \`$GENERATOR_VERSION\` |
+| Generator schema version | \`$GUIDE_SCHEMA_VERSION\` |
+| Guide profile | \`$GUIDE_PROFILE\` |
 | Required skill | \`$SKILL_NAME\` |
 | Installed skill | \`.agents/skills/$SKILL_NAME/SKILL.md\` |
+| Content hash | \`<CONTENT_HASH>\` |
 
 ## Playbook runtime
 
@@ -300,7 +440,11 @@ bounded workflow below; do not treat this file as a project system contract.
 | Cleanup command | \`./install-sdd.sh --cleanup\` |
 | Cleanup state | \`PENDING\` |
 
-## Agent execution contract
+EOF
+
+if [[ "$GUIDE_PROFILE" == "adoption" ]]; then
+  cat >>"$GUIDE_PATH" <<EOF
+## Adoption execution contract
 
 1. Confirm the working directory is the recorded project root.
 2. Verify the checkout repository and resolved revision before reading it.
@@ -322,6 +466,39 @@ bounded workflow below; do not treat this file as a project system contract.
 - The project solution whiteboard exists in its empty initial state.
 - No need, solution, handoff, plan, product code, or delivery claim has been
   inferred or generated.
+EOF
+else
+  cat >>"$GUIDE_PATH" <<EOF
+## Delivery execution contract
+
+1. Confirm the working directory is the recorded project root.
+2. Verify the checkout repository, resolved revision, ownership marker, and
+   content hash before reading it. Run \`./install-sdd.sh --validate\` when the
+   runtime may have drifted.
+3. Read and follow \`sdd-project-workflow\` completely, then re-read the manifest
+   and active delivery workflow for live state and authorization.
+4. Treat \`Manifest state detected\` as generation-time provenance. A compatible
+   state advance within this workflow profile does not authorize a new action;
+   the reviewed manifest and workflow remain authoritative.
+5. Perform exactly one dependency-ready action inside its allowed write scope.
+   Verify structured blockers and transitive freshness before editing.
+6. After the action, compute freshness impact, keep the current change as the
+   immediate review target, and do not correct a second stale artifact in the
+   same invocation.
+7. Preserve unrelated work and stop whenever approval, authority, or user input
+   is required. Never self-approve.
+
+## Expected completion boundary
+
+- Exactly one manifest/workflow-authorized discovery, artifact, task, validation,
+  or archive action is complete.
+- Required checks and lifecycle invariants are reported separately.
+- Newly stale dependants are recorded but not modified in the same action.
+- The next independent review or dependency-ready action is explicit.
+EOF
+fi
+
+cat >>"$GUIDE_PATH" <<EOF
 
 ## Runtime replacement
 
@@ -333,6 +510,8 @@ review the current boundary first. If cleanup is \`PENDING\`, run
 repository, and immutable revision. Never overwrite a pending checkout or use
 an adoption guide to admit the first need.
 EOF
+
+refresh_guide_hash "$GUIDE_PATH"
 
 trap - EXIT
 

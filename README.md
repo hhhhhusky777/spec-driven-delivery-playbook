@@ -308,6 +308,9 @@ not `ACTIVE`.
     new guide detects `INSTALLED`, selects `sdd-project-workflow`, and preserves
     the manifest's pinned playbook revision. Do not clean up before the empty
     whiteboard and adoption boundary are approved.
+11. Run `./install-sdd.sh --validate`. Continue on `CURRENT`, or on
+    `STATE_ADVANCED` only when the same workflow profile and skill remain
+    compatible. Diagnose `STALE_RUNTIME` or `INVALID_RUNTIME` before use.
 
 The generated guide and temporary checkout are machine-local runtime inputs,
 not project contracts. The skill copies only the canonical repository,
@@ -358,6 +361,12 @@ The active runtime guide must select `sdd-project-workflow`. Reuse it when it
 already matches the reviewed manifest. If a completed adoption guide still
 selects `sdd-project-adoption` with cleanup `PENDING`, perform step 10 above
 before entering the first need.
+
+The manifest owns adoption state, the delivery workflow owns artifact
+freshness, blockers, and next action, and the plan owns task state. Stable entry
+points link to those authorities instead of copying volatile values. After
+every artifact action, compute structured transitive freshness and review the
+current change before correcting a newly stale dependant.
 
 1. Record the need in the installed project's empty
    [solution whiteboard](templates/discovery/solution-whiteboard.md) and move

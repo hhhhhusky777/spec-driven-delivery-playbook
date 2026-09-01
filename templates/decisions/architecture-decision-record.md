@@ -18,7 +18,7 @@
 | Whiteboard | `<link>` |
 | Approved workflow handoff | `<link and version>` |
 | Delivery workflow/manifest | `<link and version>` |
-| Implementation plan | `<link or Not generated>` |
+| Implementation plan state at approval | `<link or Not generated>` |
 | Decision IDs/contracts | `<IDs>` |
 | Supersedes | `<ADR/None>` |
 | Superseded by | `None` |
@@ -26,6 +26,9 @@
 Allowed states: `PROPOSED`, `ACCEPTED`, `REJECTED`, `SUPERSEDED`, `DEPRECATED`.
 An accepted ADR is immutable. Change direction through a new ADR that links and
 supersedes it.
+
+Navigation and generation-state fields record the state at approval; they are
+not live delivery status. Follow the linked workflow for current progress.
 
 ### Review gate
 

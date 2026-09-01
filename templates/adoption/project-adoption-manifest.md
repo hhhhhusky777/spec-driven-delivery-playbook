@@ -13,6 +13,7 @@ evidence; it does not replace the project authorities to which it links.
 | Project / repository | `<canonical name and link>` |
 | Adoption scope | `<repositories/components/teams>` |
 | Adoption state | `DISCOVERY` |
+| State before block | `None` |
 | Playbook source repository | `<canonical repository URL>` |
 | Playbook revision | `<immutable commit or release>` |
 | Playbook materialization mode | `<pinned local checkout / vendored selected artifacts / immutable remote>` |
@@ -30,6 +31,11 @@ evidence; it does not replace the project authorities to which it links.
 | Required documentation checks | `<commands or reviewed Not applicable reason>` |
 | Current blocker | `None` |
 | Next action | `<one concrete action>` |
+
+Set `State before block` to the current non-blocked adoption state before
+entering `BLOCKED`; reset it to `None` after returning to a safe active state.
+The installer uses this field only to retain the correct adoption or workflow
+skill while blocked.
 
 Adoption type: `<real project / internal trial / external-project case study>`
 

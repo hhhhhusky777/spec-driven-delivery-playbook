@@ -112,8 +112,18 @@ export async function loadConfig(configPath = CONFIG_PATH) {
   return JSON.parse(await readFile(configPath, "utf8"));
 }
 
-export async function collectFiles(root = REPOSITORY_ROOT) {
+function isExcluded(relativePath, exclusions) {
+  const normalized = toPosix(relativePath);
+  return exclusions.some(
+    (entry) => normalized === entry || normalized.startsWith(`${entry}/`),
+  );
+}
+
+export async function collectFiles(root = REPOSITORY_ROOT, exclusions = []) {
   const result = [];
+  const normalizedExclusions = exclusions.map((entry) =>
+    toPosix(entry).replace(/^\.\//, "").replace(/\/$/, ""),
+  );
 
   async function visit(directory) {
     const entries = await readdir(directory, { withFileTypes: true });
@@ -123,6 +133,10 @@ export async function collectFiles(root = REPOSITORY_ROOT) {
         continue;
       }
       const absolute = path.join(directory, entry.name);
+      const relative = path.relative(root, absolute);
+      if (isExcluded(relative, normalizedExclusions)) {
+        continue;
+      }
       if (entry.isDirectory()) {
         await visit(absolute);
       } else if (entry.isFile()) {
@@ -320,6 +334,9 @@ export function checkMarkdownContent(relativeFile, text, config) {
       continue;
     }
     for (const match of line.matchAll(/<([^>\n]+)>/g)) {
+      if (!/^[A-Za-z]/.test(match[1])) {
+        continue;
+      }
       const tagName = match[1].replace(/^\//, "").split(/[\s/]/, 1)[0].toLowerCase();
       if (
         /^(?:https?:|mailto:)/i.test(match[1]) ||
@@ -365,9 +382,9 @@ function isTextFile(file) {
   return TEXT_EXTENSIONS.has(path.extname(file).toLowerCase());
 }
 
-export async function runBlockingChecks(root = REPOSITORY_ROOT, config) {
+export async function runBlockingChecks(root = REPOSITORY_ROOT, config, exclusions = []) {
   const resolvedConfig = config || (await loadConfig());
-  const files = await collectFiles(root);
+  const files = await collectFiles(root, exclusions);
   const markdownFiles = files.filter((file) => MARKDOWN_EXTENSIONS.has(path.extname(file).toLowerCase()));
   const diagnostics = await checkLocalLinks(markdownFiles, root);
 
@@ -382,17 +399,19 @@ export async function runBlockingChecks(root = REPOSITORY_ROOT, config) {
   return diagnostics;
 }
 
-export async function collectExternalLinks(root = REPOSITORY_ROOT, config) {
+export async function collectExternalLinks(root = REPOSITORY_ROOT, config, exclusions = []) {
   const resolvedConfig = config || (await loadConfig());
-  const files = (await collectFiles(root)).filter((file) =>
+  const files = (await collectFiles(root, exclusions)).filter((file) =>
     MARKDOWN_EXTENSIONS.has(path.extname(file).toLowerCase()),
   );
-  const exclusions = resolvedConfig.externalLinkExclusions.map((entry) => new RegExp(entry));
+  const linkExclusions = resolvedConfig.externalLinkExclusions.map(
+    (entry) => new RegExp(entry),
+  );
   const links = new Map();
   for (const file of files) {
     const text = await readFile(file, "utf8");
     for (const { target, line } of extractMarkdownLinks(text)) {
-      if (!/^https?:/i.test(target) || exclusions.some((pattern) => pattern.test(target))) {
+      if (!/^https?:/i.test(target) || linkExclusions.some((pattern) => pattern.test(target))) {
         continue;
       }
       if (!links.has(target)) {
@@ -435,9 +454,11 @@ export async function fetchWithRetry(url, options, fetchImplementation = fetch) 
   return lastResult;
 }
 
-export async function checkExternalLinks(root = REPOSITORY_ROOT, config) {
+export async function checkExternalLinks(root = REPOSITORY_ROOT, config, exclusions = []) {
   const resolvedConfig = config || (await loadConfig());
-  const links = [...(await collectExternalLinks(root, resolvedConfig)).entries()];
+  const links = [
+    ...(await collectExternalLinks(root, resolvedConfig, exclusions)).entries(),
+  ];
   const failures = [];
   let cursor = 0;
 
@@ -466,8 +487,36 @@ function printDiagnostics(diagnostics) {
 
 async function main() {
   const command = process.argv[2] || "check";
+  let root = REPOSITORY_ROOT;
+  const exclusions = [];
+  for (let index = 3; index < process.argv.length; index += 1) {
+    const argument = process.argv[index];
+    if (argument === "--root") {
+      const value = process.argv[index + 1];
+      if (!value) {
+        console.error("--root requires a path");
+        process.exitCode = 2;
+        return;
+      }
+      root = path.resolve(value);
+      index += 1;
+    } else if (argument === "--exclude") {
+      const value = process.argv[index + 1];
+      if (!value) {
+        console.error("--exclude requires a root-relative path");
+        process.exitCode = 2;
+        return;
+      }
+      exclusions.push(value);
+      index += 1;
+    } else {
+      console.error(`unknown option: ${argument}`);
+      process.exitCode = 2;
+      return;
+    }
+  }
   if (command === "check") {
-    const diagnostics = await runBlockingChecks();
+    const diagnostics = await runBlockingChecks(root, undefined, exclusions);
     if (diagnostics.length > 0) {
       printDiagnostics(diagnostics);
       process.exitCode = 1;
@@ -477,7 +526,7 @@ async function main() {
     return;
   }
   if (command === "external") {
-    const { checked, failures } = await checkExternalLinks();
+    const { checked, failures } = await checkExternalLinks(root, undefined, exclusions);
     for (const failure of failures) {
       const detail = failure.result?.status || failure.result?.error || "unknown failure";
       console.error(

@@ -30,6 +30,13 @@ introduction from the instantiated whiteboard.
 | Resulting implementation plan | `Not generated` |
 | Archive/record | `Not archived` |
 
+The accepted discovery content and workflow-handoff source become
+`IMMUTABLE_AFTER_APPROVAL` at `CONCLUDED`. The generated-artifact and archive
+links above are `MUTABLE_CONTROL`: update them through review as downstream
+artifacts appear, without changing the frozen conclusion. Discussion and
+decision history is `APPEND_ONLY_HISTORY`. The delivery workflow, not this
+whiteboard, owns the live delivery state and next action.
+
 Lifecycle:
 
 ```text

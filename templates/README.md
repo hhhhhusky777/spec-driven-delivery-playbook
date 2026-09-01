@@ -77,3 +77,9 @@ when project policy says so.
 - Record review owner, state, rounds, comments, and approval in each
   instantiated artifact.
 - Preserve completed artifacts as records; start later work from fresh copies.
+
+Instantiated delivery workflows and implementation plans retain their
+`sdd-schema`, `sdd-section`, and applicable `sdd-task-spec` comments. These
+non-rendered markers let the lifecycle checker verify semantic requirements
+without making headings or prose a second machine interface. Replace the
+implementation-plan marker's `SELECT` mode with `COMPACT` or `FULL`.

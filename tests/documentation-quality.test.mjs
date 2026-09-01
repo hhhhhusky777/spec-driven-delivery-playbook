@@ -101,8 +101,21 @@ test("blocking placeholder check rejects unresolved tokens outside templates", (
 });
 
 test("placeholder checks permit standard HTML and Markdown autolinks", () => {
-  const text = "# Example\n\n<strong>Important</strong> <https://example.com>\n";
+  const text = "# Example\n\n<strong>Important</strong> <https://example.com>\n\n`ACTIVE <-> PAUSED`\n";
   assert.deepEqual(checkMarkdownContent("docs/example.md", text, CONFIG), []);
+});
+
+test("anchor checks support duplicate GitHub headings and encoded fragments", async (t) => {
+  const directory = await temporaryDirectory(t);
+  const source = path.join(directory, "source.md");
+  const target = path.join(directory, "target.md");
+  await writeFile(target, "# Café state\n\n## Repeat\n\n## Repeat\n", "utf8");
+  await writeFile(
+    source,
+    "# Source\n\n[first](target.md#caf%C3%A9-state) [duplicate](target.md#repeat-1)\n",
+    "utf8",
+  );
+  assert.deepEqual(await checkLocalLinks([source], directory), []);
 });
 
 test("blocking sensitive-content check rejects likely committed secrets", () => {
