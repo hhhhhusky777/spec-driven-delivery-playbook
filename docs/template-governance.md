@@ -14,6 +14,9 @@ All repository changes also follow the
   answer applies to every project.
 - A template change must not silently weaken an instantiated project's active
   obligations.
+- Machine-enforced template contracts use a versioned schema. A breaking field,
+  state, marker, or meaning change increments that schema and includes adoption
+  and migration guidance.
 - Examples demonstrate the templates and must not claim evidence that was not
   produced.
 - Concision matters: reference canonical content instead of duplicating it.
@@ -64,6 +67,8 @@ Until a formal release process is adopted:
 
 - use repository history as the version record;
 - describe breaking template changes explicitly in PRs and the changelog;
+- preserve unmarked historical artifacts as version-zero evidence; migrate an
+  active artifact only through its normal review gate;
 - keep accepted ADRs and historical examples stable;
 - add migration notes when instantiated documents need manual updates; and
 - avoid modifying an example's historical evidence to match a newer template.

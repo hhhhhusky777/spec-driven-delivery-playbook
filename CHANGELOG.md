@@ -4,7 +4,18 @@ This project has not published a formal versioned release. Significant template
 and workflow changes are recorded here until a release/versioning policy is
 adopted.
 
-## Unreleased — updated 2026-08-30
+## Unreleased — updated 2026-09-01
+
+- Added versioned SDD lifecycle schemas, structured transitive-freshness and
+  dependency-scoped blocker gates, just-in-time task specifications, and scoped
+  project checker execution.
+- Added skill-specific adoption/workflow runtime guides with generator
+  provenance, content hashing, compatibility-aware `--validate`, and fail-closed
+  runtime diagnostics.
+- Clarified live versus historical metadata ownership across entry points,
+  workflows, plans, whiteboards, handoffs, and ADRs.
+- Made blocked-runtime skill selection explicit through the manifest's
+  preserved pre-block state instead of guessing from `BLOCKED`.
 
 - Added a project-root installer that resolves the requested playbook reference
   to an immutable revision, installs the manifest-appropriate repository skill,
@@ -72,6 +83,15 @@ artifacts at the next safe gate rather than discarding valid evidence. If a
 systemic policy gap is already known, register it, pause only affected work,
 reroute the active manifest, and preserve valid evidence. Preserve completed
 historical records unchanged and apply this workflow to new work.
+
+Schema-1 migration applies only to active implementation plans and delivery
+workflows at their next review gate. Add the schema marker, semantic section
+markers, previous/current lifecycle fields, structured dependency/freshness
+register, scoped blockers, and explicit next-action write targets; then run
+`npm run docs:sdd` and obtain independent approval. Keep completed or otherwise
+frozen unmarked records unchanged as historical evidence. When an adoption
+manifest enters `BLOCKED`, add and populate `State before block` before running
+the installer; reset it after the reviewed safe-state return.
 
 For existing active plans, do not rewrite completed task history. At the next
 planning or replanning gate, classify not-started durable-data work, record its

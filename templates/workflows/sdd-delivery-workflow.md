@@ -1,5 +1,7 @@
 # SDD Delivery Workflow Template
 
+<!-- sdd-schema: delivery-workflow@1 -->
+
 Use this template after a generated whiteboard handoff is reviewed and reaches
 `APPROVED`. It consumes that exact handoff version, selects the smallest safe
 delivery route, determines which existing policies to reuse and which artifacts
@@ -15,6 +17,7 @@ instantiated workflow record.
 | --- | --- |
 | Delivery | `<short requirement/feature name>` |
 | State | `AWAITING_HANDOFF` |
+| Previous state | `AWAITING_HANDOFF` |
 | Owner | `<role/person>` |
 | Concluded whiteboard | `<canonical link>` |
 | Approved workflow handoff | `<canonical link>` |
@@ -27,6 +30,9 @@ instantiated workflow record.
 | Current artifact/gate | `<value>` |
 | Current artifact review state | `<value>` |
 | Next action | `<value>` |
+| Next action target IDs | `<artifact/task IDs>` |
+| Allowed write scope | `<semicolon-separated repository-relative paths>` |
+| Next action write targets | `<semicolon-separated repository-relative paths>` |
 | Last routed | `<date/timezone>` |
 
 ```text
@@ -70,6 +76,21 @@ dependent artifact until its input artifacts are `APPROVED`.
 
 Standard review states are `NOT_STARTED`, `IN_REVIEW`, `CHANGES_REQUESTED`,
 `APPROVED`, and `STALE`.
+
+Before changing `State`, preserve its old value in `Previous state`. The
+lifecycle checker rejects transitions outside the state machine above.
+
+### 1.3 Canonical state and mutability
+
+- This workflow owns the live delivery state, current artifact, blockers,
+  freshness, and next action.
+- The adoption manifest owns adoption state; the implementation plan owns task
+  state. Do not maintain conflicting copies here.
+- Stable contributor entry points link to the live manifest/workflow. They must
+  not copy volatile lifecycle state, blockers, task IDs, or next actions.
+- Approved whiteboard conclusions, normalized handoffs, ADR decisions, and
+  audits are historical inputs. Change their live-reference metadata only when
+  the template explicitly marks it mutable; never rewrite approved evidence.
 
 ## 2. Governing project registry
 
@@ -211,6 +232,8 @@ Justification: `<why this is the smallest safe route>`.
 
 ## 8. Delivery manifest
 
+<!-- sdd-section: delivery-manifest -->
+
 This is the workflow's primary output and the entry point for continuation.
 
 | Order | Artifact | Decision | Reason/trigger | Template or authority | Owner | Review owner | Review state/link |
@@ -221,6 +244,38 @@ This is the workflow's primary output and the entry point for continuation.
 Every `SKIP`, `DEFER`, and `BLOCKED` decision must be justified. Missing rows do
 not mean not applicable. Review and approve the manifest itself before
 generating the first selected artifact.
+
+### 8.1 Artifact dependency and freshness register
+
+<!-- sdd-section: artifact-dependencies -->
+
+This table is the machine-readable dependency source for transitive freshness.
+Use stable IDs. `Consumed version` is the last approved input used downstream;
+`Current version` is the version now presented. Classify a difference as
+`CONTROL_ONLY` only when it cannot alter requirements, contracts, dependencies,
+risk, or evidence. `UNKNOWN` fails closed like `MATERIAL`.
+
+| Artifact ID | Artifact/link | Depends on | Consumed version | Current version | Change impact | Freshness | Blocked by |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `handoff` | `<link>` | `whiteboard` | `<version>` | `<version>` | `<CONTROL_ONLY/MATERIAL/UNKNOWN>` | `<CURRENT/STALE/BLOCKED>` | `<IDs/None>` |
+| `workflow` | This workflow | `handoff` | `<version>` | `<version>` | `<CONTROL_ONLY/MATERIAL/UNKNOWN>` | `<CURRENT/STALE/BLOCKED>` | `<IDs/None>` |
+| `plan` | `<link>` | `workflow` | `<version>` | `<version>` | `<CONTROL_ONLY/MATERIAL/UNKNOWN>` | `<CURRENT/STALE/BLOCKED>` | `<IDs/None>` |
+
+A material or unknown version difference makes that artifact `STALE`. Staleness
+or blocking propagates only to transitive dependants. A control-only navigation
+update does not invalidate frozen content. Review the current change first;
+after approval, the earliest dependency-ready stale correction takes priority.
+
+### 8.2 Scoped blocker register
+
+<!-- sdd-section: blocker-register -->
+
+| Blocker ID | Evidence/unblock condition | Blocks | State | Owner |
+| --- | --- | --- | --- | --- |
+| `<B-ID>` | `<link and exact condition>` | `<artifact/task IDs>` | `<OPEN/RESOLVED>` | `<owner>` |
+
+An open blocker prohibits only actions that depend on an ID in `Blocks`.
+Independent ready work may continue within the approved WIP and write scope.
 
 ## 9. Generation and review-gate order
 
@@ -258,6 +313,12 @@ generating the first selected artifact.
   request another independent review before continuing.
 - Review exposes an incorrect artifact decision -> return to routing and mark
   affected downstream artifacts `STALE`.
+
+After every generated or updated artifact, perform an impact audit before
+selecting another action: compare changed facts, links, commands, versions, and
+availability claims with the dependency register; classify the change; compute
+transitive freshness; verify write scope; and record affected IDs. Passing
+Markdown checks never substitutes for this semantic review.
 
 ### 10.1 Mid-delivery policy-gap rerouting
 
@@ -301,7 +362,7 @@ Record the reroute in the workflow change history and current-state table:
 | Relationship to delivery | `<same delivery/materially independent>` |
 | Linked workflow dependency/blocker | `<link and unblock condition/None>` |
 | Paused and independent tasks | `<IDs and reasons>` |
-| Stale artifacts | `<links/None and reason>` |
+| Policy-reroute stale artifacts | `<links/None and reason>` |
 | Revised manifest version/review | `<version/state/reviewer>` |
 | Proposed adoption boundary | `<new/changed work governed when>` |
 | Existing-system audit/remediation | `<links and state>` |
@@ -309,6 +370,8 @@ Record the reroute in the workflow change history and current-state table:
 | Policy activation gate | `<conditions/state/approver>` |
 
 ## 11. Delivery state and handoff
+
+<!-- sdd-section: delivery-state -->
 
 | Field | Current value |
 | --- | --- |
@@ -318,11 +381,17 @@ Record the reroute in the workflow change history and current-state table:
 | Last approved artifact | `<link/version>` |
 | Next ready action | `<value>` |
 | Active blockers | `<IDs/None>` |
-| Stale artifacts | `<links/None>` |
+| Stale artifacts | `<artifact IDs/None>` |
 | Validation complete | `<summary>` |
 | Validation remaining | `<summary>` |
 | Branch/PR | `<value>` |
 | Last updated | `<date/timezone>` |
+
+`GATES_READY` is valid only when every selected prerequisite is approved, every
+dependency-register entry required by the first task is `CURRENT`, no open
+blocker affects that task, the approved plan has one task that satisfies its
+Definition of Ready and is marked `NEXT`, and the next action's write targets
+are inside the allowed write scope.
 
 ## 12. Completion packet
 

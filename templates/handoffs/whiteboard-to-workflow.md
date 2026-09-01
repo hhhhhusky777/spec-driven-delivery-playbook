@@ -29,6 +29,11 @@ handoff.
 | Workflow record | `Not generated` |
 | Next action | `Submit handoff for review` |
 
+The normalized conclusion is `IMMUTABLE_AFTER_APPROVAL`. Control and trigger
+fields are `MUTABLE_CONTROL` only through `CONSUMED`; afterward they describe
+the state at consumption and the generated workflow owns every live next
+action. Do not keep advancing a consumed handoff as a second workflow ledger.
+
 Lifecycle:
 
 ```text
@@ -130,7 +135,7 @@ version.
 
 After the exactly-once trigger succeeds, change only the control/trigger record:
 set the handoff state to `CONSUMED`, link the generated workflow, and set the
-next action to manifest review. Preserve the approved normalized conclusion
+next action at consumption to manifest review. Preserve the approved normalized conclusion
 unchanged so the workflow can identify the exact version it consumed.
 
 | Trigger field | Value |

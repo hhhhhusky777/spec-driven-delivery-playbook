@@ -150,6 +150,7 @@ Every relevant pull request and push to `main` runs the following gates:
 | --- | --- | --- |
 | Markdown structure/style | `markdownlint-cli2` with repository configuration | Invalid Markdown fails |
 | Relative files and Markdown headings | Repository Node.js checker | Missing file and anchor fail |
+| SDD lifecycle and template conformance | Versioned lifecycle schema and checker | Illegal state/dependency/template combinations fail |
 | Fenced code blocks | Repository Node.js checker | Unclosed fence fails |
 | Mermaid syntax | Official `mermaid.parse` API | Invalid diagram fails |
 | Template placeholders | Repository Node.js checker | Placeholder outside `templates/` fails |
@@ -163,6 +164,26 @@ pass case.
 
 Diagnostics must include the affected file, line, rule, and actionable reason.
 CI never rewrites documentation.
+
+The lifecycle gate validates structured control fields and semantic markers,
+not prose inference. It enforces dependency-scoped blockers, transitive
+freshness, write scope, plan/task readiness, and selected template-mode
+requirements. Future `PLANNED` tasks may remain `SPEC_PENDING`; tasks marked
+`READY`, `NEXT`, or active require a complete task specification.
+
+Use explicit roots and narrow exclusions when applying the structural checker
+to an adopting project:
+
+```bash
+node scripts/documentation-quality.mjs check \
+  --root /path/to/project \
+  --exclude .sdd-runtime \
+  --exclude generated
+node scripts/sdd-lifecycle.mjs check --root /path/to/project
+```
+
+Exclusions are root-relative and reviewed. They must not hide the active SDD
+manifest, workflow, plan, or another governed artifact.
 
 The likely-secret check is defense in depth for documentation changes, not a
 replacement for repository or organization secret scanning. If a credential is

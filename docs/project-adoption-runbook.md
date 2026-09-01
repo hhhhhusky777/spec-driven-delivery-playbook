@@ -84,8 +84,12 @@ stateDiagram-v2
     BLOCKED --> UPDATING: recomputed safe state
 ```
 
-`BLOCKED` preserves the prior state, evidence, owner, and explicit unblock
-condition. `INSTALLED` means the project-local entry point, selected contracts,
+`BLOCKED` preserves the prior state in the manifest's `State before block`
+field, plus the evidence, owner, and explicit unblock condition. Reset it to
+`None` after returning to a recomputed safe state. The installer uses this
+field to retain the correct adoption or workflow skill while blocked and fails
+closed when it is missing or invalid. `INSTALLED` means the project-local entry
+point, selected contracts,
 artifact locations, and gates are approved. The adoption skill then creates an
 empty project solution whiteboard; a need enters only inside that whiteboard.
 `ACTIVE` additionally requires evidence from that
@@ -272,7 +276,11 @@ the adoption runtime is complete. Before recording the first need:
 4. Verify that the regenerated guide detects `INSTALLED`, selects
    `sdd-project-workflow`, preserves the manifest revision, and records the new
    checkout cleanup as `PENDING`.
-5. Give the agent the regenerated-guide prompt and record the user-supplied need
+5. Run `./install-sdd.sh --validate`. Require `CURRENT`; after a compatible
+   manifest transition, `STATE_ADVANCED` is acceptable only while the guide
+   retains the same workflow profile and skill. Diagnose `STALE_RUNTIME` or
+   `INVALID_RUNTIME` before use.
+6. Give the agent the regenerated-guide prompt and record the user-supplied need
    only in the reviewed `EMPTY` whiteboard.
 
 If the current verified guide already selects `sdd-project-workflow` for the
@@ -286,6 +294,12 @@ recorded in the whiteboard and that workflow starts.
 After it delivers and its evidence is reviewed, complete adoption review and
 move to `ACTIVE`. A non-authoritative external-project example instead stops at
 `EXAMPLE_REVIEWED` and cannot activate the external project.
+
+During delivery, the workflow profile owns the live artifact dependency and
+freshness register. Every action compares changed facts and versions with that
+register, computes transitive impact, and reviews the current artifact before a
+newly stale dependant. Stable entry points link to the manifest/workflow rather
+than copying volatile state.
 
 ### Step 7 — Re-enter for future deliveries
 

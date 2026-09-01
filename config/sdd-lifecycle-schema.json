@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "artifacts": {
+    "implementation-plan": {
+      "requiredFields": [
+        "Status",
+        "Previous status",
+        "Plan mode",
+        "Next ready task(s)",
+        "Blockers",
+        "Review state"
+      ],
+      "transitions": {
+        "DRAFT": ["CONTRACT_REVIEW", "BLOCKED"],
+        "CONTRACT_REVIEW": ["DRAFT", "READY", "BLOCKED"],
+        "READY": ["CONTRACT_REVIEW", "IMPLEMENTING", "BLOCKED"],
+        "IMPLEMENTING": ["READY", "VALIDATING", "BLOCKED"],
+        "VALIDATING": ["IMPLEMENTING", "COMPLETE", "BLOCKED"],
+        "BLOCKED": ["DRAFT", "CONTRACT_REVIEW", "READY", "IMPLEMENTING", "VALIDATING"],
+        "COMPLETE": []
+      },
+      "modes": {
+        "COMPACT": {
+          "requiredSections": [
+            "task-state-rules",
+            "definition-of-ready",
+            "context-receipt-gate",
+            "definition-of-done",
+            "task-ledger",
+            "task-specifications"
+          ]
+        },
+        "FULL": {
+          "requiredSections": [
+            "task-state-rules",
+            "definition-of-ready",
+            "context-receipt-gate",
+            "definition-of-done",
+            "task-ledger",
+            "task-specifications"
+          ]
+        }
+      }
+    },
+    "delivery-workflow": {
+      "requiredFields": [
+        "State",
+        "Previous state",
+        "Current artifact/gate",
+        "Next action",
+        "Next action target IDs",
+        "Allowed write scope",
+        "Next action write targets"
+      ],
+      "transitions": {
+        "AWAITING_HANDOFF": ["ROUTING", "BLOCKED"],
+        "ROUTING": ["MANIFEST_IN_REVIEW", "RETURN_TO_WHITEBOARD", "BLOCKED"],
+        "MANIFEST_IN_REVIEW": ["ARTIFACTS_SELECTED", "CHANGES_REQUESTED", "BLOCKED"],
+        "CHANGES_REQUESTED": ["ROUTING", "ARTIFACT_GENERATING", "BLOCKED"],
+        "ARTIFACTS_SELECTED": ["ARTIFACT_GENERATING", "BLOCKED"],
+        "ARTIFACT_GENERATING": ["ARTIFACT_IN_REVIEW", "RETURN_TO_WHITEBOARD", "BLOCKED"],
+        "ARTIFACT_IN_REVIEW": ["GATES_READY", "CHANGES_REQUESTED", "RETURN_TO_WHITEBOARD", "BLOCKED"],
+        "GATES_READY": ["DELIVERY_ACTIVE", "RETURN_TO_WHITEBOARD", "BLOCKED"],
+        "DELIVERY_ACTIVE": ["VALIDATING", "RETURN_TO_WHITEBOARD", "BLOCKED"],
+        "VALIDATING": ["COMPLETE", "RETURN_TO_WHITEBOARD", "BLOCKED"],
+        "COMPLETE": ["ARCHIVED"],
+        "RETURN_TO_WHITEBOARD": ["AWAITING_HANDOFF", "BLOCKED"],
+        "BLOCKED": ["AWAITING_HANDOFF", "ROUTING", "MANIFEST_IN_REVIEW", "ARTIFACTS_SELECTED", "ARTIFACT_GENERATING", "ARTIFACT_IN_REVIEW", "GATES_READY", "DELIVERY_ACTIVE", "VALIDATING", "RETURN_TO_WHITEBOARD"],
+        "ARCHIVED": []
+      },
+      "requiredSections": [
+        "artifact-dependencies",
+        "blocker-register",
+        "delivery-manifest",
+        "delivery-state"
+      ]
+    }
+  }
+}
