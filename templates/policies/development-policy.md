@@ -156,14 +156,22 @@ pseudocode as an engineering contract unless the plan explicitly promotes it.
 
 ### Change-unit rule
 
-- Target `<maximum or range>` changed production-code LOC per task/PR.
-- Define production code for this repository: `<definition>`.
-- Exclude from the planning count: `<tests/docs/generated output/etc.>`.
-- Report generated or mechanical changes separately.
-- Conceptual cohesion and a working integration target take precedence over
-  mechanically satisfying the line count.
-- A material exception requires advance justification, reviewer agreement,
-  risks, and compensating validation.
+Deliver the smallest coherent, self-contained increment that can be reviewed,
+validated, and merged independently while leaving the integration target
+buildable, testable, and behaviorally consistent.
+
+- Include every product change, test, contract, migration, compatibility
+  measure, observability update, and document required for that boundary.
+- The increment may depend on already merged prerequisites, but it must not
+  rely on unmerged follow-up work to build, pass required tests, preserve active
+  behavior, or satisfy its stated contracts.
+- Keep inseparable changes together when splitting them would leave an invalid
+  intermediate state. Split further when separate outcomes can satisfy the
+  rule independently.
+- Treat numeric size and generated/mechanical volume as review-planning inputs,
+  never as acceptance limits or substitutes for cohesion.
+- Justify an unusually broad increment with its inseparable boundary, risks,
+  reviewers, and compensating validation; do not justify it by convenience.
 
 Each increment must:
 

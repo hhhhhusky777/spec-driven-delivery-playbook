@@ -45,11 +45,13 @@ small.
 
 ## 4. Incremental delivery
 
-Split work into the smallest coherent changes that keep SGLang's integration
-target working. LOC is a review signal, not a universal limit. Related tests
-and documentation stay with the behavior they protect. Data or compatibility
-foundations precede dependent behavior only when the approved design requires
-them.
+Split work into the smallest coherent, self-contained increment that can be
+reviewed, validated, and merged independently while keeping SGLang's
+integration target working. An increment may depend on already merged
+prerequisites, but it must not rely on unmerged follow-up work for correctness.
+Related tests and documentation stay with the behavior they protect. Data or
+compatibility foundations precede dependent behavior only when the approved
+design requires them.
 
 ## 5. Testing and failure handling
 

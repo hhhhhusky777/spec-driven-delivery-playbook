@@ -368,11 +368,11 @@ delivery values rather than copying their normative rules:
 
 | Setting | This delivery |
 | --- | --- |
-| Production-code LOC target | `<policy value>` |
-| Production-code definition | `<policy definition/link>` |
+| Increment boundary rule | `<development-policy link>` |
+| Independent merge condition | `<build/test/behavior/contract condition>` |
 | WIP limit | `<policy value>` |
 | Integration model | `<short-lived task to main / approved feature integration branch>` |
-| Increment exception authority | `<role>` |
+| Broad-increment justification authority | `<role>` |
 | Generated/mechanical change treatment | `<rule/link>` |
 
 Describe how the solution is divided into vertical, independently verifiable
@@ -421,8 +421,8 @@ contract-equivalent internal engineering choices.
 
 - [ ] Dependencies are `DONE` or their required artifacts are available.
 - [ ] Referenced contracts are approved and testable.
-- [ ] Scope, non-scope, expected production files, and the policy-defined
-      production-LOC budget are recorded.
+- [ ] Scope, non-scope, expected production files, and the self-contained
+      independent-merge boundary are recorded.
 - [ ] Acceptance criteria and task-specific tests are defined.
 - [ ] The canonical source boundary and attention-map applicability are
       identified, required sources are available/current, and the exact current
@@ -471,7 +471,7 @@ receipt is `APPROVED`, or `NOT_APPLICABLE` with a policy-valid reason.
 - [ ] Diff contains no unrelated changes, secrets, debug artifacts, or
       unexplained generated output.
 - [ ] PR review and merge requirements are satisfied.
-- [ ] Actual production LOC, evidence, decisions, and next-ready task are
+- [ ] Actual change summary, evidence, decisions, and next-ready task are
       recorded in this plan.
 
 ## 7. Dependency-ordered task ledger
@@ -480,14 +480,13 @@ receipt is `APPROVED`, or `NOT_APPLICABLE` with a policy-valid reason.
 
 `NEXT` identifies dependency-ready tasks permitted to start within the active
 WIP policy. Use exactly one marker when the project requires a single-next-task
-model. Expected product LOC excludes tests and documentation. `Data phase` is
-`NONE`, `FOUNDATION`, `CONSUMER`, `MIGRATION`, or `CLEANUP` under the active
-development policy.
+model. `Data phase` is `NONE`, `FOUNDATION`, `CONSUMER`, `MIGRATION`, or
+`CLEANUP` under the active development policy.
 
-| ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Expected product LOC | PR |
+| ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Independent merge boundary | PR |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `T00` | `PLANNED` | | `None` | `None` | `CURRENT` | `SPEC_PENDING` | `NONE` | `<task outcome>` | `<IDs>` | `Docs only` | `—` |
-| `T01` | `PLANNED` | | `T00` | `None` | `CURRENT` | `SPEC_PENDING` | `<phase>` | `<task outcome>` | `<IDs>` | `<policy target>` | `—` |
+| `T00` | `PLANNED` | | `None` | `None` | `CURRENT` | `SPEC_PENDING` | `NONE` | `<task outcome>` | `<IDs>` | `<why it is independently safe>` | `—` |
+| `T01` | `PLANNED` | | `T00` | `None` | `CURRENT` | `SPEC_PENDING` | `<phase>` | `<task outcome>` | `<IDs>` | `<why it is independently safe>` | `—` |
 
 Task-ledger evolution rules:
 
@@ -542,8 +541,8 @@ self-check this specification against Section 6.3 and the
 | Branch / PR | `<value>` |
 | Context receipt | `NOT_STARTED` |
 | Context source revision | `Not recorded` |
-| Expected product LOC | `<value>` |
-| Actual product LOC | `Not measured` |
+| Self-contained boundary | `<why this task can merge without unmerged follow-up>` |
+| Actual change summary | `Not recorded` |
 
 Outcome: `<independently demonstrable value>`
 

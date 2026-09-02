@@ -356,6 +356,34 @@ test("project adoption proves policy conformance before reuse", async () => {
   assert.match(skill, /never create a parallel or replacement policy/i);
 });
 
+test("increment boundaries use self-contained delivery instead of LOC limits", async () => {
+  const paths = [
+    "README.md",
+    "templates/policies/development-policy.md",
+    "templates/policies/pull-request-policy.md",
+    "templates/delivery/implementation-plan.md",
+    "examples/parallel-provider-submissions/04-implementation-plan.md",
+    "examples/project-adoption/sglang/03-development-policy.md",
+  ];
+  const documents = await Promise.all(
+    paths.map((relativePath) =>
+      readFile(path.join(REPOSITORY_ROOT, relativePath), "utf8"),
+    ),
+  );
+  const combined = documents.join("\n");
+
+  assert.doesNotMatch(combined, /\b300\b/);
+  assert.doesNotMatch(combined, /\bLOC\b/);
+  assert.match(combined, /smallest coherent, self-contained increment/i);
+  assert.match(combined, /reviewed, validated, and merged independently/i);
+  assert.match(combined, /must not rely on unmerged follow-up work/i);
+  assert.match(combined, /may depend on already merged prerequisites/i);
+  assert.match(
+    combined,
+    /leav(?:e|es|ing) the integration target (working|buildable)/i,
+  );
+});
+
 test("project adoption architecture remains connected to runbook and manifest", async () => {
   const readme = await readFile(path.join(REPOSITORY_ROOT, "README.md"), "utf8");
   const runbook = await readFile(

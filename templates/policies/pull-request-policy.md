@@ -48,7 +48,7 @@ before activating the policy.
 | Required reviewers | `<roles/count/CODEOWNERS>` | `<risk rules>` |
 | Required checks | `<CI/gates>` | `<authority>` |
 | Deployment maturity | `<development/released>` | `<compatibility effect>` |
-| Change-size target | `<LOC/conceptual rule>` | `<development policy>` |
+| Increment boundary | `<smallest self-contained mergeable change>` | `<development policy>` |
 | Issue linkage | `<required threshold>` | `<tracker>` |
 
 Every applicable choice above must be explicit in the adopted project policy.
@@ -124,8 +124,8 @@ Before editing:
 2. Confirm the approved task and integration target.
 3. Synchronize the base and record required dependency ancestry.
 4. Inspect the worktree and attribute existing modifications.
-5. Freeze allowed product boundaries, non-scope, expected LOC, contracts, and
-   tests.
+5. Freeze allowed product boundaries, non-scope, self-contained merge
+   condition, contracts, and tests.
 6. Confirm required specialized policies and unresolved policy gaps.
 7. Create the branch using the project naming rule.
 
@@ -191,7 +191,7 @@ case if unchanged.>`
 - System contracts implemented: `<IDs/links>`
 - Key decisions and trade-offs: `<summary/ADR links>`
 - Files/components and responsibilities: `<summary>`
-- Actual production LOC and generated changes: `<values>`
+- Actual change summary and generated/mechanical changes: `<values>`
 - YAGNI audit result: `<kept/deferred/removed>`
 
 ### Data, security, concurrency, and compatibility

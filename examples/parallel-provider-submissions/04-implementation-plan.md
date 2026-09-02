@@ -207,26 +207,28 @@ before product, configuration, or test remediation.
 
 ## 6. Dependency-ordered delivery ledger
 
-Each production task targets the project's small-change budget (for example,
-approximately 300 changed production LOC excluding tests/docs). Final boundaries
-are frozen after S01. This example uses a compatible foundation before its
-consumers and defers destructive parent-field cleanup until every reader/writer
-has moved.
+Each production task is the smallest coherent, self-contained increment that
+can be reviewed, validated, and merged independently while leaving the
+integration target working. A task may depend on already merged prerequisites,
+but it must not rely on unmerged follow-up work for correctness. Final
+boundaries are frozen after S01. This example uses a compatible foundation
+before its consumers and defers destructive parent-field cleanup until every
+reader/writer has moved.
 
-| ID | State | Next | Depends | Data phase | Outcome | Product scope estimate |
+| ID | State | Next | Depends | Data phase | Outcome | Independent merge boundary |
 | --- | --- | --- | --- | --- | --- | --- |
 | `S00` | `PLANNED` | `NEXT` | None | `NONE` | Instantiate this packet with canonical policies, paths, issue, owners, branch model, and test environments. | Docs only |
 | `S01` | `PLANNED` | | S00 | `NONE` | Inventory schema/constraints, provider adapters, locks/transactions, queue entry points, reconciliation, billing, API/admin reads, and drain behavior; classify policy compliance. | Discovery/docs/tests only |
-| `S02` | `PLANNED` | | S01 | `NONE` | Resolve discoveries, accept project ADR/contracts, freeze task scopes/LOC/tests, and pass Definition of Ready. | Docs only |
-| `T01` | `PLANNED` | | S02 | `FOUNDATION` | Add the minimum submission-owned provider/attempt schema, constraints, migration, and data-access primitives while existing behavior remains valid. | ~300 + migration |
-| `T02` | `PLANNED` | | T01 | `CONSUMER` | Add durable child processing, child exclusion, exact request snapshots, sync/async state transitions, and bounded provider retry. | ~300 |
-| `T03` | `PLANNED` | | T02 | `CONSUMER` | Refactor parent coordination into prepare/fan-out/parent RUNNING/initial job poll without holding the job lock during provider work. | ~300 |
-| `T04` | `PLANNED` | | T03 | `CONSUMER` | Add async child polling and child stale-work reconciliation. | ~300 |
-| `T05` | `PLANNED` | | T04 | `CONSUMER` | Add database-observing job polling and centralized idempotent job finalization for ordinary/report outcomes. | ~300 |
-| `T06` | `PLANNED` | | T05 | `CONSUMER` | Add original-job selective retry, expired-key/new-attempt handling, and exactly-once billing race coverage. | ~300 |
-| `T07` | `PLANNED` | | T06 | `MIGRATION` | Move API/admin reads and all writers to submission-owned provider identity, update the canonical API contract, and retain the deprecated parent field. | ~300 |
-| `T08` | `PLANNED` | | T07 | `CLEANUP` | Prove no remaining consumer/legacy task uses the parent provider field, then remove its field/index and obsolete entry path. | ~300 + migration |
-| `T09` | `PLANNED` | | T08 | `NONE` | Add observability, queue-age/retry signals, graceful drain, and runbook updates. | ~300 |
+| `S02` | `PLANNED` | | S01 | `NONE` | Resolve discoveries, accept project ADR/contracts, freeze task scopes/tests/merge boundaries, and pass Definition of Ready. | Docs only |
+| `T01` | `PLANNED` | | S02 | `FOUNDATION` | Add the minimum submission-owned provider/attempt schema, constraints, migration, and data-access primitives while existing behavior remains valid. | Additive compatible foundation; existing behavior remains valid |
+| `T02` | `PLANNED` | | T01 | `CONSUMER` | Add durable child processing, child exclusion, exact request snapshots, sync/async state transitions, and bounded provider retry. | New path remains inactive until the coordinator switches in T03 |
+| `T03` | `PLANNED` | | T02 | `CONSUMER` | Refactor parent coordination into prepare/fan-out/parent RUNNING/initial job poll without holding the job lock during provider work. | Activates a complete durable sync-child path |
+| `T04` | `PLANNED` | | T03 | `CONSUMER` | Add async child polling and child stale-work reconciliation. | Completes and tests the async-child path without changing finalization ownership |
+| `T05` | `PLANNED` | | T04 | `CONSUMER` | Add database-observing job polling and centralized idempotent job finalization for ordinary/report outcomes. | Completes parent aggregation for all active child paths |
+| `T06` | `PLANNED` | | T05 | `CONSUMER` | Add original-job selective retry, expired-key/new-attempt handling, and exactly-once billing race coverage. | Adds a complete retry path over the merged lifecycle |
+| `T07` | `PLANNED` | | T06 | `MIGRATION` | Move API/admin reads and all writers to submission-owned provider identity, update the canonical API contract, and retain the deprecated parent field. | Readers and writers move together while the old field remains compatible |
+| `T08` | `PLANNED` | | T07 | `CLEANUP` | Prove no remaining consumer/legacy task uses the parent provider field, then remove its field/index and obsolete entry path. | Removal follows verified migration of every consumer |
+| `T09` | `PLANNED` | | T08 | `NONE` | Add observability, queue-age/retry signals, graceful drain, and runbook updates. | Operational contract and its evidence ship together |
 | `T10` | `PLANNED` | | T01–T09 | `NONE` | Run complete project quality gates, reconcile contract evidence, retrospective, and archive record. | Tests/docs/config |
 
 ## 7. Task-level SDD example: T02
@@ -266,8 +268,8 @@ evidence.
       unambiguous and testable.
 - [ ] Data changes are classified and every foundation, consumer/migration, and
       cleanup dependency preserves a working integration target.
-- [ ] Task scopes, dependencies, expected product LOC, owners, and gates are
-      frozen.
+- [ ] Task scopes, dependencies, independent merge boundaries, owners, and
+      gates are frozen.
 - [ ] Each implementation task identifies its approved source set and immutable
       revision for the pre-start task context receipt.
 - [ ] Existing dirty/user-owned files are attributed and preserved.
