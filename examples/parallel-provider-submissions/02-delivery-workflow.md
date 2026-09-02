@@ -56,6 +56,29 @@
 | API/admin documentation | — | Project-specific reviewer | Human and/or independent agent | `NOT_STARTED` | Wait for approved plan and delivery task |
 | Worker/recovery runbook | — | Project-specific reviewer | Human and/or independent agent | `NOT_STARTED` | Wait for approved plan and delivery task |
 
+### Risk-based action control
+
+| Action ID | Target/output | Review mode | Reason/authority | Required gates | Automation boundary | State |
+| --- | --- | --- | --- | --- | --- | --- |
+| `A-01` | Delivery manifest | `EXPLICIT_REVIEW` | Routing is a semantic decision | Documentation and manifest checks | Not applicable | `COMPLETE` |
+| `A-02` | Queue-topology ADR | `EXPLICIT_REVIEW` | Architecture decision | Documentation, contract, and architecture review | Not applicable | `COMPLETE` |
+| `A-03` | Implementation plan | `EXPLICIT_REVIEW` | Contracts and task boundaries | Documentation, lifecycle, and plan review | Not applicable | `ACTIVE` |
+| `A-04` | Deterministic documentation checks after an approved edit | `REVIEW_ON_EXCEPTION` | Active test strategy | All declared checks pass on exact revision | `A-04` | `PLANNED` |
+| `A-05` | Record unchanged successful check evidence | `AUTO_CONTINUE` | Active development policy | Source result/provenance validation | `A-05` | `PLANNED` |
+| `A-06` | Archive mechanics after closure approval | `AUTO_CONTINUE` | Active archive policy | Closure invariants and safe-path checks | `A-06` | `PLANNED` |
+
+The automatic rows remain inactive until their project authorities and exact
+commands are verified. They fail closed to `EXPLICIT_REVIEW` on any missing or
+failed gate, semantic change, ambiguity, unknown impact, drift, stale/blocking
+dependency, exception, unrelated diff, or scope expansion. `AUTO_CONTINUED`
+will be recorded as execution evidence, never as approval.
+
+### Automation audit ledger
+
+| Action ID | Input/output revision | Mode | Gates/result | Impact/exceptions | Resulting state | Next action |
+| --- | --- | --- | --- | --- | --- | --- |
+| None | Not run | Not run | Not run | None | No automatic action executed | Continue `A-03` explicit plan review |
+
 ## 4. Generation and gate order
 
 ```text

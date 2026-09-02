@@ -209,18 +209,22 @@ Comments keep the manifest in `DISCOVERY`.
 
 After review, prompt the agent to follow the same generated guide. The installed
 skill applies Prompt B's boundary, verifies that the guide locator matches the
-manifest, reads the current state, and performs exactly one dependency-ready
-`GENERATE` or `UPDATE_EXISTING` action. `REUSE`, `SKIP`, and `DEFER` decisions
-create no copied artifact.
+manifest, reads the current state, and starts the next dependency-ready action.
+The default `EXPLICIT_REVIEW` mode stops after that action. A reviewed project
+authority may preclassify deterministic mechanics as `AUTO_CONTINUE` or
+`REVIEW_ON_EXCEPTION`; those actions may continue only through their recorded
+automation boundary while every gate passes. `REUSE`, `SKIP`, and `DEFER`
+decisions create no copied artifact.
 
 As part of the manifest update for that action, compare changed facts, links,
 commands, and availability claims with previously approved artifacts. Record
-each affected artifact as `STALE` in the manifest's freshness register. The
-immediate next action remains independent review of the current change; after
-approval, the earliest dependency-ready stale correction takes priority. This
-impact audit does not authorize changing a second artifact in the same
-invocation. Stable entry points and contract registries link to the manifest
-for live adoption status instead of duplicating temporary progress statements.
+each affected artifact as `STALE` in the manifest's freshness register. Under
+`EXPLICIT_REVIEW`, the immediate next action remains independent review of the
+current change; after approval, the earliest dependency-ready stale correction
+takes priority. Under an automatic mode, any newly stale artifact, unknown
+impact, or exception ends the automation segment and fails closed to explicit
+review. Stable entry points and contract registries link to the manifest for
+live adoption status instead of duplicating temporary progress statements.
 
 Example: if an approved entry point says a checker is not installed, installing
 that checker marks the entry point `STALE`. The checker action still stops for
@@ -414,8 +418,10 @@ The manifest review gate passes only when:
 
 ## 7. Install the project-local integration
 
-Generate or update one selected artifact at a time. Independently review it
-before a dependent artifact proceeds.
+Generate or update one selected artifact per action. Independently review every
+semantic or normative result before a dependent artifact proceeds. Only
+pre-authorized deterministic mechanics may continue automatically, and only
+until the next mandatory semantic checkpoint.
 
 1. Create one concise project development entry point or extend an existing
    one. Link it from the repository locations contributors and supported agents

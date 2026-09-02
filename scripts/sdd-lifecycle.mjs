@@ -514,6 +514,82 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     ),
   );
 
+  const reviewMode = fields.get("Review mode");
+  if (reviewMode) {
+    const allowedReviewModes = new Set([
+      "EXPLICIT_REVIEW",
+      "AUTO_CONTINUE",
+      "REVIEW_ON_EXCEPTION",
+    ]);
+    if (!allowedReviewModes.has(reviewMode)) {
+      diagnostics.push(
+        diagnostic(file, 1, "SDD_REVIEW_MODE", `unsupported review mode: ${reviewMode}`),
+      );
+    } else if (reviewMode !== "EXPLICIT_REVIEW") {
+      const requiredAutomationFields = [
+        "Review mode authority",
+        "Automation boundary",
+        "Required automatic gates",
+        "Automatic gate result",
+        "Semantic decision introduced",
+        "Automation exception",
+        "Automation audit record",
+      ];
+      diagnostics.push(
+        ...checkRequiredFields(file, fields, requiredAutomationFields),
+      );
+      const configurationFields = [
+        "Review mode authority",
+        "Automation boundary",
+        "Required automatic gates",
+        "Automation audit record",
+      ];
+      const missingConfiguration = configurationFields.filter(
+        (field) => !fields.has(field) || isNone(fields.get(field)),
+      );
+      for (const field of missingConfiguration) {
+        diagnostics.push(
+          diagnostic(
+            file,
+            1,
+            "SDD_AUTO_CONFIGURATION",
+            `automatic continuation requires a non-empty ${field}`,
+          ),
+        );
+      }
+      if (fields.get("Semantic decision introduced") !== "NO") {
+        diagnostics.push(
+          diagnostic(
+            file,
+            1,
+            "SDD_AUTO_SEMANTIC_DECISION",
+            "automatic continuation cannot introduce a semantic decision",
+          ),
+        );
+      }
+      if (fields.get("Automatic gate result") !== "PASS") {
+        diagnostics.push(
+          diagnostic(
+            file,
+            1,
+            "SDD_AUTO_GATE_BLOCKED",
+            "automatic continuation requires every declared gate to pass",
+          ),
+        );
+      }
+      if (!isNone(fields.get("Automation exception") || "")) {
+        diagnostics.push(
+          diagnostic(
+            file,
+            1,
+            "SDD_AUTO_EXCEPTION",
+            "automatic continuation must stop on an exception or ambiguity",
+          ),
+        );
+      }
+    }
+  }
+
   const freshnessTable = findTable(tables, [
     "Artifact ID",
     "Depends on",

@@ -20,8 +20,10 @@ All repository changes also follow the
 - Examples demonstrate the templates and must not claim evidence that was not
   produced.
 - Concision matters: reference canonical content instead of duplicating it.
-- Generated artifacts are independently reviewed one at a time before dependent
-  artifacts proceed; review metadata belongs in each instantiated artifact.
+- Normative generated artifacts are independently reviewed before dependent
+  artifacts proceed. Only pre-authorized deterministic mechanics may continue
+  automatically, with fail-closed gates and an audit record; `AUTO_CONTINUED`
+  never means approval.
 
 ## Change categories
 

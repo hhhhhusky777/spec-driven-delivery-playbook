@@ -6,6 +6,11 @@ adopted.
 
 ## Unreleased — updated 2026-09-02
 
+- Added risk-based review gates: semantic decisions default to
+  `EXPLICIT_REVIEW`, while pre-authorized deterministic work may use bounded
+  `AUTO_CONTINUE` or `REVIEW_ON_EXCEPTION`. Added fail-closed lifecycle checks,
+  action-control and automation-audit ledgers, negative tests, and explicit
+  separation between `AUTO_CONTINUED` evidence and approval.
 - Replaced numeric production-line task targets with a semantic delivery gate:
   the smallest coherent, self-contained increment that can be reviewed,
   validated, and merged independently while leaving the integration target

@@ -384,6 +384,69 @@ test("increment boundaries use self-contained delivery instead of LOC limits", a
   );
 });
 
+test("risk-based review gates permit bounded audited auto-continuation", async () => {
+  const read = (relativePath) =>
+    readFile(path.join(REPOSITORY_ROOT, relativePath), "utf8");
+  const [
+    readme,
+    developmentPolicy,
+    testStrategy,
+    workflow,
+    adoptionManifest,
+    adoptionTrigger,
+    workflowSkill,
+    adoptionSkill,
+    workedExample,
+  ] = await Promise.all([
+    read("README.md"),
+    read("templates/policies/development-policy.md"),
+    read("templates/testing/test-strategy.md"),
+    read("templates/workflows/sdd-delivery-workflow.md"),
+    read("templates/adoption/project-adoption-manifest.md"),
+    read("templates/adoption/agent-adoption-trigger.md"),
+    read("skills/sdd-project-workflow/SKILL.md"),
+    read("skills/sdd-project-adoption/SKILL.md"),
+    read("examples/parallel-provider-submissions/02-delivery-workflow.md"),
+  ]);
+  const connected = [
+    readme,
+    developmentPolicy,
+    testStrategy,
+    workflow,
+    adoptionManifest,
+    adoptionTrigger,
+    workflowSkill,
+    adoptionSkill,
+    workedExample,
+  ];
+
+  for (const document of connected) {
+    assert.match(document, /EXPLICIT_REVIEW/);
+    assert.match(document, /AUTO_CONTINUE/);
+    assert.match(document, /REVIEW_ON_EXCEPTION/);
+    assert.match(document, /fail(?:s)? closed/i);
+  }
+
+  assert.match(developmentPolicy, /^### Risk-based review and continuation$/m);
+  assert.match(developmentPolicy, /default review mode is `EXPLICIT_REVIEW`/i);
+  assert.match(developmentPolicy, /must not introduce a new semantic decision/i);
+  assert.match(workflow, /^### 1\.2 Review and automation protocol$/m);
+  assert.match(workflow, /^### 9\.1 Action control ledger$/m);
+  assert.match(workflow, /^### 9\.3 Automation audit ledger$/m);
+  assert.match(workflow, /`AUTO_CONTINUED` is not an approval/i);
+  assert.match(testStrategy, /^### Automated-continuation gate validation$/m);
+  assert.match(
+    workflowSkill,
+    /continue only until the next mandatory\s+semantic checkpoint/i,
+  );
+  assert.match(
+    adoptionSkill,
+    /continue only through the approved\s+automation boundary/i,
+  );
+  assert.match(workedExample, /^### Risk-based action control$/m);
+  assert.match(workedExample, /^### Automation audit ledger$/m);
+});
+
 test("project adoption architecture remains connected to runbook and manifest", async () => {
   const readme = await readFile(path.join(REPOSITORY_ROOT, "README.md"), "utf8");
   const runbook = await readFile(
@@ -424,8 +487,8 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(readme, /docs\/project-adoption-runbook\.md/);
   assert.match(readme, /templates\/adoption\/project-adoption-manifest\.md/);
   assert.match(readme, /^### Review and resume adoption$/m);
-  assert.match(readme, /perform exactly one dependency-ready Next action/);
-  assert.match(readme, /Stop at the next review gate/);
+  assert.match(readme, /pre-approved,\s+fail-closed automation boundary/);
+  assert.match(readme, /Stop at the next explicit checkpoint or exception/);
   assert.match(readme, /Record affected artifacts as\s+`STALE`/);
   assert.match(readme, /Stable entry points reference the\s+manifest for live adoption status/);
   assert.match(readme, /For the initial bootstrap-manifest approval, use `NONE`/);
@@ -471,7 +534,7 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(agentTrigger, /make no edit and report `BLOCKED`/);
   assert.match(agentTrigger, /Do not advance Adoption state/);
   assert.match(agentTrigger, /record every affected artifact as STALE/);
-  assert.match(agentTrigger, /keep independent review of the current change as the immediate Next action/);
+  assert.match(agentTrigger, /for `EXPLICIT_REVIEW`, keep independent review/);
   assert.match(agentTrigger, /do not update a newly stale artifact in this invocation/);
   assert.match(agentTrigger, /^## Adoption-to-workflow runtime handoff$/m);
   assert.match(agentTrigger, /\.\/install-sdd\.sh --cleanup/);
