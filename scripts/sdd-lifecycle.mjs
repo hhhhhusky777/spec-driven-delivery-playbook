@@ -176,6 +176,56 @@ function taskRows(tables) {
   return table?.rows || [];
 }
 
+function checkValidatingPlanState(file, tables, fields) {
+  if (fields.get("Status") !== "VALIDATING") {
+    return [];
+  }
+  const diagnostics = [];
+  const tasks = taskRows(tables);
+  const nonTerminal = tasks.filter(
+    (task) => !["DONE", "CANCELLED"].includes(normalizeValue(task.State)),
+  );
+  if (tasks.length === 0 || nonTerminal.length > 0) {
+    const detail = tasks.length === 0
+      ? "the task ledger is empty"
+      : `non-terminal tasks: ${nonTerminal
+          .map((task) => `${normalizeValue(task.ID)}=${normalizeValue(task.State)}`)
+          .join(", ")}`;
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_PLAN_VALIDATING_TASKS",
+        `plan status VALIDATING requires every task to be DONE or CANCELLED; ${detail}`,
+      ),
+    );
+  }
+  const nextTasks = tasks.filter((task) => !isNone(task.Next || ""));
+  if (nextTasks.length > 0) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_PLAN_VALIDATING_NEXT",
+        `plan status VALIDATING cannot retain next-task markers: ${nextTasks
+          .map((task) => normalizeValue(task.ID))
+          .join(", ")}`,
+      ),
+    );
+  }
+  if (!isNone(fields.get("Next ready task(s)") || "")) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_PLAN_VALIDATING_NEXT_READY",
+        "plan status VALIDATING requires Next ready task(s) to be None",
+      ),
+    );
+  }
+  return diagnostics;
+}
+
 function checkImplementationPlan(file, marker, text, tables, fields, schema) {
   const diagnostics = [];
   diagnostics.push(...checkRequiredFields(file, fields, schema.requiredFields));
@@ -199,6 +249,7 @@ function checkImplementationPlan(file, marker, text, tables, fields, schema) {
   );
 
   const tasks = taskRows(tables);
+  diagnostics.push(...checkValidatingPlanState(file, tables, fields));
   const detailedTasks = extractTaskSpecificationMarkers(text);
   const activeStates = new Set(["READY", "IN_PROGRESS", "VERIFYING", "DONE"]);
   for (const task of tasks) {
@@ -246,6 +297,114 @@ function checkImplementationPlan(file, marker, text, tables, fields, schema) {
         diagnostic(file, 1, "SDD_PLAN_REVIEW", "plan status READY requires review state APPROVED"),
       );
     }
+  }
+  return diagnostics;
+}
+
+function markdownLinkTarget(value) {
+  const match = String(value || "").match(/\[[^\]]*\]\(([^)]+)\)/);
+  return match?.[1]?.trim() || null;
+}
+
+async function checkWorkflowValidatingPlan(file, absoluteFile, root, tables, fields, computed) {
+  if (fields.get("State") !== "VALIDATING") {
+    return [];
+  }
+  const freshnessTable = findTable(tables, [
+    "Artifact ID",
+    "Artifact/link",
+    "Depends on",
+    "Consumed version",
+    "Current version",
+    "Change impact",
+    "Freshness",
+    "Blocked by",
+  ]);
+  const planRow = freshnessTable?.rows.find(
+    (row) => normalizeValue(row["Artifact ID"]) === "plan",
+  );
+  if (!planRow) {
+    return [];
+  }
+  const diagnostics = [];
+  if (computed.get("plan") !== "CURRENT") {
+    diagnostics.push(
+      diagnostic(
+        file,
+        freshnessTable.line,
+        "SDD_WORKFLOW_PLAN_FRESHNESS",
+        "workflow status VALIDATING requires its implementation plan to be CURRENT",
+      ),
+    );
+  }
+  const link = markdownLinkTarget(planRow["Artifact/link"]);
+  if (!link || /^[a-z][a-z0-9+.-]*:/i.test(link) || path.isAbsolute(link)) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        freshnessTable.line,
+        "SDD_WORKFLOW_PLAN_LINK",
+        "workflow status VALIDATING requires the plan artifact row to contain a repository-relative Markdown link",
+      ),
+    );
+    return diagnostics;
+  }
+  let decodedLink;
+  try {
+    decodedLink = decodeURIComponent(link.split("#", 1)[0].split("?", 1)[0]);
+  } catch {
+    decodedLink = link.split("#", 1)[0].split("?", 1)[0];
+  }
+  const linkedPlan = path.resolve(path.dirname(absoluteFile), decodedLink);
+  const relativePlan = path.relative(root, linkedPlan);
+  if (relativePlan.startsWith("..") || path.isAbsolute(relativePlan)) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        freshnessTable.line,
+        "SDD_WORKFLOW_PLAN_LINK",
+        "workflow plan link resolves outside the checked project root",
+      ),
+    );
+    return diagnostics;
+  }
+  let planText;
+  try {
+    planText = await readFile(linkedPlan, "utf8");
+  } catch {
+    diagnostics.push(
+      diagnostic(
+        file,
+        freshnessTable.line,
+        "SDD_WORKFLOW_PLAN_LINK",
+        `workflow plan link does not resolve: ${decodedLink}`,
+      ),
+    );
+    return diagnostics;
+  }
+  const planMarker = extractMarker(planText);
+  const planTables = parseMarkdownTables(planText);
+  const planFields = extractControlFields(planTables);
+  if (planMarker?.artifact !== "implementation-plan") {
+    diagnostics.push(
+      diagnostic(
+        relativePlan,
+        1,
+        "SDD_WORKFLOW_PLAN_LINK",
+        "workflow plan link does not identify an SDD implementation plan",
+      ),
+    );
+    return diagnostics;
+  }
+  if (planFields.get("Status") !== "VALIDATING") {
+    diagnostics.push(
+      diagnostic(
+        relativePlan,
+        1,
+        "SDD_WORKFLOW_PLAN_STATE",
+        `workflow is VALIDATING while its implementation plan is ${planFields.get("Status") || "missing Status"}`,
+      ),
+    );
   }
   return diagnostics;
 }
@@ -316,7 +475,7 @@ function pathWithinScope(target, scope) {
   return normalizedScope === "*" || normalizedTarget === normalizedScope || normalizedTarget.startsWith(`${normalizedScope}/`);
 }
 
-function checkDeliveryWorkflow(file, text, tables, fields, schema) {
+async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fields, schema) {
   const diagnostics = [];
   diagnostics.push(...checkRequiredFields(file, fields, schema.requiredFields));
   diagnostics.push(
@@ -416,6 +575,9 @@ function checkDeliveryWorkflow(file, text, tables, fields, schema) {
       }
     }
   }
+  diagnostics.push(
+    ...(await checkWorkflowValidatingPlan(file, absoluteFile, root, tables, fields, computed)),
+  );
   return diagnostics;
 }
 
@@ -444,7 +606,7 @@ export async function checkSddLifecycleDocument(file, root, schemas) {
     return checkImplementationPlan(relative, marker, text, tables, fields, schema);
   }
   if (marker.artifact === "delivery-workflow") {
-    return checkDeliveryWorkflow(relative, text, tables, fields, schema);
+    return checkDeliveryWorkflow(relative, file, root, text, tables, fields, schema);
   }
   return [];
 }

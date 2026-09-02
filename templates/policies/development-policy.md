@@ -346,6 +346,14 @@ Required rules:
   is never rewritten as cancelled.
 - State changes are recorded before another contributor relies on them.
 
+Parent lifecycle states do not mirror the state of the latest task. A plan may
+enter `VALIDATING` only when every task in its active ledger is terminal:
+`DONE`, or `CANCELLED` with its reason and dependency/contract impact recorded.
+It must have no `NEXT` marker or next-ready task. One task entering `VERIFYING`
+or `DONE` never authorizes plan-level validation while another ledger task is
+non-terminal. Deferred outcomes leave the active delivery only through a
+reviewed scope change and retain a durable owner/tracking reference.
+
 ### 9.1 Pre-start task context receipt
 
 Before a task that changes product, data, runtime configuration, or delivery
