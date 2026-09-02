@@ -114,8 +114,10 @@ ordering across all selected artifacts and tasks.
 
 Both modes preserve the complete task ledger, but task detail is just in time:
 every future `PLANNED` task records a bounded summary and `SPEC_PENDING`; only a
-task entering `READY` must have a complete specification. This avoids a plan
-wall without allowing implementation from an underspecified task. Replace the
+task entering `READY` must have a complete specification under the active
+development policy and the
+[calibration guide](../../docs/task-specification-calibration.md). This avoids a
+plan wall without allowing implementation from an underspecified task. Replace the
 schema marker's `SELECT` with the chosen mode in an instantiated plan.
 
 1. Specify observable outcomes and system contracts before implementation.
@@ -413,13 +415,18 @@ tasks, record the owners, boundaries, and reason here: `<value or None>`.
 
 <!-- sdd-section: definition-of-ready -->
 
+DoR verifies that the task can be implemented without inventing product or
+system behavior. It does not require advance prescription of ordinary,
+contract-equivalent internal engineering choices.
+
 - [ ] Dependencies are `DONE` or their required artifacts are available.
 - [ ] Referenced contracts are approved and testable.
 - [ ] Scope, non-scope, expected production files, and the policy-defined
       production-LOC budget are recorded.
 - [ ] Acceptance criteria and task-specific tests are defined.
-- [ ] The approved source set, immutable revision, and attention-map
-      applicability are identified for the pre-start context receipt.
+- [ ] The canonical source boundary and attention-map applicability are
+      identified, required sources are available/current, and the exact current
+      revision will be frozen by the post-`READY` context receipt.
 - [ ] Data, security, concurrency, failure, compatibility, and operational
       impacts are understood or explicitly not applicable.
 - [ ] The task's data phase is recorded; every required foundation predecessor
@@ -512,6 +519,14 @@ tasks may remain summarized in the ledger as `SPEC_PENDING`. Freeze the scope
 when it becomes `READY`; append execution evidence rather than replacing the
 original contract.
 
+`COMPLETE` means the task fixes or references every product/system decision
+needed for implementation while preserving bounded engineering discretion. It
+requires no unresolved ambiguity that would make the implementer choose
+observable behavior or a material risk boundary. Linked approved contracts
+satisfy the requirement without duplication. Before requesting DoR review,
+self-check this specification against Section 6.3 and the
+[calibration guide](../../docs/task-specification-calibration.md).
+
 <!-- sdd-task-spec: TNN -->
 ### TNN — `<task name>`
 
@@ -520,6 +535,7 @@ original contract.
 | State | `PLANNED` |
 | Depends on | `<IDs>` |
 | Data phase | `<NONE/FOUNDATION/CONSUMER/MIGRATION/CLEANUP>` |
+| Source boundary | `<components/directories and expected production files or areas>` |
 | Compatibility before/after | `<schema/application compatibility boundary or Not applicable>` |
 | Contract IDs | `<IDs>` |
 | Owner | `<owner>` |

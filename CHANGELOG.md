@@ -6,6 +6,11 @@ adopted.
 
 ## Unreleased — updated 2026-09-02
 
+- Defined a complete task specification as sufficient to implement without
+  inventing product/system behavior, while preserving contract-equivalent
+  engineering choices. Added source-boundary versus exact-revision timing,
+  calibration examples, structured `Spec state` enforcement, and explicit
+  automation limits without introducing another lifecycle or review state.
 - Added fail-closed parent-validation gates: an implementation plan may enter
   `VALIDATING` only with terminal task-ledger rows and no next task; a delivery
   workflow with a plan dependency must link to a current plan already in
