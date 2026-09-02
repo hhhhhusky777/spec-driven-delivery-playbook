@@ -64,6 +64,8 @@ section.
 DRAFT -> CONTRACT_REVIEW -> READY -> IMPLEMENTING -> VALIDATING -> COMPLETE
              |                 |          |               |
              +--------------> BLOCKED <---+---------------+
+
+VALIDATING -> IMPLEMENTING when plan-level validation finds more delivery work
 ```
 
 - `DRAFT`: the problem, requirements, or design still contains material gaps.
@@ -72,7 +74,8 @@ DRAFT -> CONTRACT_REVIEW -> READY -> IMPLEMENTING -> VALIDATING -> COMPLETE
 - `READY`: contracts are approved, risks are addressed, and at least one task
   satisfies its Definition of Ready.
 - `IMPLEMENTING`: an approved task is being implemented.
-- `VALIDATING`: implementation is complete and plan-level gates are running.
+- `VALIDATING`: implementation is complete, every ledger task is `DONE` or
+  reviewed `CANCELLED`, no task is `NEXT`, and plan-level gates are running.
 - `BLOCKED`: progress cannot safely continue; record evidence, impact, owner,
   and the precise unblocking condition. A blocked plan returns to its prior
   active state when resolved.
@@ -486,6 +489,12 @@ Task-ledger evolution rules:
 - Never reuse an ID or erase a completed/cancelled task.
 - `CANCELLED` is terminal for an uncompleted task and records why its outcome is
   no longer required; never relabel a `DONE` task as cancelled.
+- Every ledger row participates in the plan-level validation gate. Before the
+  plan enters `VALIDATING`, every row must be `DONE` or reviewed `CANCELLED`,
+  every `Next` cell must be empty, and `Next ready task(s)` must be `None`.
+  A task in `VERIFYING` is still implementation work, not plan validation.
+- Move deferred outcomes out of the active delivery only through a reviewed
+  scope change; preserve their owner and durable tracking reference.
 - Recompute `NEXT` after every material change.
 - Before a task becomes `READY`, expand its complete specification below,
   change `Spec state` to `COMPLETE`, verify source freshness, and review its DoR.

@@ -85,6 +85,13 @@ Definition of Ready and marked `NEXT`. A task may enter `IN_PROGRESS` only with
 an approved, current context receipt. Independent tasks may remain ready while
 an unrelated blocker is open.
 
+Do not promote a plan or workflow to `VALIDATING` because one task enters
+`VERIFYING` or `DONE`. Plan-level validation begins only after every active
+ledger task is `DONE` or reviewed `CANCELLED`, no next task remains, and the
+workflow's linked plan is `CURRENT` and already `VALIDATING`. If plan-level
+validation finds more implementation work, return the plan to `IMPLEMENTING`
+and the workflow to `DELIVERY_ACTIVE` before resuming tasks.
+
 Preserve independent review gates and exact allowed write scopes. Generate no
 downstream artifact before its owning gate authorizes it. Preserve unrelated
 and user-owned work, and report exact checks and evidence.

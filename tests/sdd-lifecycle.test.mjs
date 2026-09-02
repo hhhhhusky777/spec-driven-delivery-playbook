@@ -23,6 +23,16 @@ async function fixture(t, content) {
   return { root, file };
 }
 
+async function linkedFixture(t, workflowContent, planContent) {
+  const root = await mkdtemp(path.join(os.tmpdir(), "sdd-lifecycle-linked-test-"));
+  t.after(async () => rm(root, { recursive: true, force: true }));
+  const workflowFile = path.join(root, "delivery-workflow.md");
+  const planFile = path.join(root, "implementation-plan.md");
+  await writeFile(workflowFile, workflowContent, "utf8");
+  await writeFile(planFile, planContent, "utf8");
+  return { root, workflowFile, planFile };
+}
+
 const PLAN_SECTIONS = `
 <!-- sdd-section: task-state-rules -->
 <!-- sdd-section: definition-of-ready -->
@@ -62,6 +72,38 @@ ${spec ? "<!-- sdd-task-spec: T01 -->" : ""}
 `;
 }
 
+function validatingPlan({
+  taskOneState = "DONE",
+  taskOneNext = "",
+  taskTwoState = "DONE",
+  taskTwoNext = "",
+  nextReadyTasks = "None",
+} = {}) {
+  return `# Plan
+
+<!-- sdd-schema: implementation-plan@1; mode: FULL -->
+
+| Field | Value |
+| --- | --- |
+| Status | \`VALIDATING\` |
+| Previous status | \`IMPLEMENTING\` |
+| Plan mode | \`FULL\` |
+| Next ready task(s) | \`${nextReadyTasks}\` |
+| Blockers | \`None\` |
+| Review state | \`APPROVED\` |
+
+${PLAN_SECTIONS}
+
+| ID | State | Next | Depends on | Blocked by | Source freshness |
+| --- | --- | --- | --- | --- | --- |
+| \`T01\` | \`${taskOneState}\` | \`${taskOneNext}\` | \`None\` | \`None\` | \`CURRENT\` |
+| \`T02\` | \`${taskTwoState}\` | \`${taskTwoNext}\` | \`T01\` | \`None\` | \`CURRENT\` |
+
+<!-- sdd-task-spec: T01 -->
+<!-- sdd-task-spec: T02 -->
+`;
+}
+
 test("READY plan requires one complete READY/NEXT task", async (t) => {
   const valid = await fixture(t, plan());
   assert.deepEqual(await checkSddLifecycleDocument(valid.file, valid.root, SCHEMAS), []);
@@ -88,6 +130,39 @@ test("plan lifecycle and review gates reject illegal READY transitions", async (
   const unapproved = await fixture(t, plan({ reviewState: "IN_REVIEW" }));
   const reviewDiagnostics = await checkSddLifecycleDocument(unapproved.file, unapproved.root, SCHEMAS);
   assert.ok(reviewDiagnostics.some((item) => item.rule === "SDD_PLAN_REVIEW"));
+});
+
+test("VALIDATING plan requires every ledger task terminal and no next task", async (t) => {
+  const verifying = await fixture(
+    t,
+    validatingPlan({ taskOneState: "VERIFYING", taskTwoState: "PLANNED" }),
+  );
+  const verifyingDiagnostics = await checkSddLifecycleDocument(
+    verifying.file,
+    verifying.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    verifyingDiagnostics.some((item) => item.rule === "SDD_PLAN_VALIDATING_TASKS"),
+  );
+
+  const next = await fixture(
+    t,
+    validatingPlan({ taskOneNext: "NEXT", nextReadyTasks: "T01" }),
+  );
+  const nextDiagnostics = await checkSddLifecycleDocument(next.file, next.root, SCHEMAS);
+  assert.ok(
+    nextDiagnostics.some((item) => item.rule === "SDD_PLAN_VALIDATING_NEXT"),
+  );
+  assert.ok(
+    nextDiagnostics.some((item) => item.rule === "SDD_PLAN_VALIDATING_NEXT_READY"),
+  );
+
+  const terminal = await fixture(t, validatingPlan({ taskTwoState: "CANCELLED" }));
+  assert.deepEqual(
+    await checkSddLifecycleDocument(terminal.file, terminal.root, SCHEMAS),
+    [],
+  );
 });
 
 test("transitive freshness propagates only material or unknown changes", () => {
@@ -132,7 +207,16 @@ function workflow({
   freshness = "CURRENT",
   blockerBlocks = "other-task",
   writeTarget = "docs/plan.md",
+  planLink = "[Plan](implementation-plan.md)",
+  includePlan = true,
 } = {}) {
+  const manifestRow = includePlan
+    ? "| 1 | Plan | GENERATE_FULL | APPROVED |"
+    : "| 1 | Documentation | REUSE | APPROVED |";
+  const dependencyRows = includePlan
+    ? `| plan | ${planLink} | None | ${planConsumed} | ${planCurrent} | ${impact} | ${freshness} | None |
+| task-1 | Task 1 | plan | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`
+    : `| task-1 | Task 1 | None | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`;
   return `# Delivery Workflow
 
 <!-- sdd-schema: delivery-workflow@1 -->
@@ -150,13 +234,12 @@ function workflow({
 <!-- sdd-section: delivery-manifest -->
 | Order | Artifact | Decision | Review state/link |
 | --- | --- | --- | --- |
-| 1 | Plan | GENERATE_FULL | APPROVED |
+${manifestRow}
 
 <!-- sdd-section: artifact-dependencies -->
-| Artifact ID | Depends on | Consumed version | Current version | Change impact | Freshness | Blocked by |
-| --- | --- | --- | --- | --- | --- | --- |
-| plan | None | ${planConsumed} | ${planCurrent} | ${impact} | ${freshness} | None |
-| task-1 | plan | v1 | v1 | CONTROL_ONLY | ${freshness} | None |
+| Artifact ID | Artifact/link | Depends on | Consumed version | Current version | Change impact | Freshness | Blocked by |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+${dependencyRows}
 
 <!-- sdd-section: blocker-register -->
 | Blocker ID | Blocks | State |
@@ -201,4 +284,80 @@ test("workflow lifecycle rejects illegal transitions and unsafe relative targets
   const traversal = await fixture(t, workflow({ state: "ARTIFACT_GENERATING", previousState: "ARTIFACTS_SELECTED", writeTarget: "docs/../app/code.py" }));
   const scopeDiagnostics = await checkSddLifecycleDocument(traversal.file, traversal.root, SCHEMAS);
   assert.ok(scopeDiagnostics.some((item) => item.rule === "SDD_WRITE_SCOPE"));
+});
+
+test("VALIDATING workflow requires its current linked plan to be VALIDATING", async (t) => {
+  const premature = await linkedFixture(
+    t,
+    workflow({ state: "VALIDATING", previousState: "DELIVERY_ACTIVE" }),
+    plan({
+      status: "IMPLEMENTING",
+      previousStatus: "READY",
+      taskState: "VERIFYING",
+      next: "",
+    }),
+  );
+  const prematureDiagnostics = await checkSddLifecycleDocument(
+    premature.workflowFile,
+    premature.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    prematureDiagnostics.some((item) => item.rule === "SDD_WORKFLOW_PLAN_STATE"),
+  );
+
+  const missingLink = await fixture(
+    t,
+    workflow({
+      state: "VALIDATING",
+      previousState: "DELIVERY_ACTIVE",
+      planLink: "Plan",
+    }),
+  );
+  const missingLinkDiagnostics = await checkSddLifecycleDocument(
+    missingLink.file,
+    missingLink.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    missingLinkDiagnostics.some((item) => item.rule === "SDD_WORKFLOW_PLAN_LINK"),
+  );
+
+  const aligned = await linkedFixture(
+    t,
+    workflow({ state: "VALIDATING", previousState: "DELIVERY_ACTIVE" }),
+    validatingPlan(),
+  );
+  assert.deepEqual(
+    await checkSddLifecycleDocument(aligned.planFile, aligned.root, SCHEMAS),
+    [],
+  );
+  assert.deepEqual(
+    await checkSddLifecycleDocument(aligned.workflowFile, aligned.root, SCHEMAS),
+    [],
+  );
+
+  const routeZero = await fixture(
+    t,
+    workflow({
+      state: "VALIDATING",
+      previousState: "DELIVERY_ACTIVE",
+      includePlan: false,
+    }),
+  );
+  assert.deepEqual(
+    await checkSddLifecycleDocument(routeZero.file, routeZero.root, SCHEMAS),
+    [],
+  );
+});
+
+test("workflow may return from VALIDATING to DELIVERY_ACTIVE", async (t) => {
+  const correction = await fixture(
+    t,
+    workflow({ state: "DELIVERY_ACTIVE", previousState: "VALIDATING" }),
+  );
+  assert.deepEqual(
+    await checkSddLifecycleDocument(correction.file, correction.root, SCHEMAS),
+    [],
+  );
 });

@@ -6,6 +6,11 @@ adopted.
 
 ## Unreleased — updated 2026-09-02
 
+- Added fail-closed parent-validation gates: an implementation plan may enter
+  `VALIDATING` only with terminal task-ledger rows and no next task; a delivery
+  workflow with a plan dependency must link to a current plan already in
+  `VALIDATING`. Added the `VALIDATING -> DELIVERY_ACTIVE` feedback transition
+  when final validation exposes more implementation work.
 - Clarified that intentional Red tests are transient within one task and merge
   unit, while contract-only predecessors remain explicitly proposed and close
   with passing static validation rather than merged failing runtime tests.

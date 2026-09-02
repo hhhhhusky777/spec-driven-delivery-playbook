@@ -43,6 +43,7 @@ AWAITING_HANDOFF -> ROUTING -> MANIFEST_IN_REVIEW -> ARTIFACTS_SELECTED
 MANIFEST_IN_REVIEW -> CHANGES_REQUESTED -> ROUTING
 ARTIFACT_IN_REVIEW -> CHANGES_REQUESTED -> ARTIFACT_GENERATING
 ROUTING / ARTIFACT_GENERATING / ARTIFACT_IN_REVIEW / DELIVERY_ACTIVE / VALIDATING -> BLOCKED
+VALIDATING -> DELIVERY_ACTIVE when plan-level validation requires more implementation
 material upstream change -> RETURN_TO_WHITEBOARD -> AWAITING_HANDOFF -> ROUTING
 ```
 
@@ -86,6 +87,13 @@ lifecycle checker rejects transitions outside the state machine above.
   freshness, and next action.
 - The adoption manifest owns adoption state; the implementation plan owns task
   state. Do not maintain conflicting copies here.
+- `VALIDATING` is a parent-level state, not a copy of a task's `VERIFYING`
+  state. When the dependency register contains a `plan` artifact, that row must
+  link to a `CURRENT` implementation plan already in `VALIDATING`; its ledger
+  must contain only `DONE` or reviewed `CANCELLED` tasks and no next task.
+- If plan-level validation exposes more implementation work, return the plan to
+  `IMPLEMENTING` and this workflow to `DELIVERY_ACTIVE`. Preserve the failure
+  and transition evidence; do not continue toward closure.
 - Stable contributor entry points link to the live manifest/workflow. They must
   not copy volatile lifecycle state, blockers, task IDs, or next actions.
 - Approved whiteboard conclusions, normalized handoffs, ADR decisions, and
@@ -265,6 +273,10 @@ A material or unknown version difference makes that artifact `STALE`. Staleness
 or blocking propagates only to transitive dependants. A control-only navigation
 update does not invalidate frozen content. Review the current change first;
 after approval, the earliest dependency-ready stale correction takes priority.
+When this workflow enters `VALIDATING`, the `plan` row's Markdown link is the
+machine-readable parent/child state reference. It must resolve inside the
+project to a `CURRENT` SDD implementation plan in `VALIDATING`. Route 0 may omit
+the row when no implementation plan was selected.
 
 ### 8.2 Scoped blocker register
 
