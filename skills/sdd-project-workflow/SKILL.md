@@ -79,6 +79,15 @@ After that one edit and its applicable checks:
 5. Report the invariant results separately from Markdown/test results. Passing
    automation is not semantic approval.
 
+When a material correction changes an approved contract, decision, task scope,
+sequence, authority, acceptance condition, or operational boundary, open the
+plan's correction register before editing. Remove only affected tasks from
+`NEXT`, mark their sources and dependants stale, reconcile every normative
+occurrence across the complete plan, and stop for independent review. Do not
+resume an affected task from a locally corrected task specification while its
+plan-level correction remains open. Preserve old meaning only as explicit
+history or `SUPERSEDED` evidence, never as another active instruction.
+
 `GATES_READY` requires all selected prerequisites approved/current, no blocker
 affecting the first task, and an approved plan with at least one task satisfying
 Definition of Ready and marked `NEXT`. A task may enter `IN_PROGRESS` only with

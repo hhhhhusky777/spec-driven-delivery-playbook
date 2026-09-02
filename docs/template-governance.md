@@ -17,6 +17,8 @@ All repository changes also follow the
 - Machine-enforced template contracts use a versioned schema. A breaking field,
   state, marker, or meaning change increments that schema and includes adoption
   and migration guidance.
+- Schema versions are artifact-specific so a breaking implementation-plan
+  change does not force an unrelated workflow or policy migration.
 - Examples demonstrate the templates and must not claim evidence that was not
   produced.
 - Concision matters: reference canonical content instead of duplicating it.

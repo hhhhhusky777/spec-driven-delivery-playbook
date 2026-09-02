@@ -383,6 +383,30 @@ continuing; use `BLOCKED` only when the change cannot be reconciled safely.
 `READY -> IN_PROGRESS` is prohibited while the receipt is `NOT_STARTED`,
 `CHANGES_REQUESTED`, or `STALE`.
 
+### 9.2 Material correction reconciliation
+
+A material correction changes approved scope, behavior, sequencing, authority,
+acceptance evidence, interfaces, data, security, deployment, or rollback.
+Before affected work proceeds:
+
+1. Record the correction and its affected contract, decision, task, and
+   dependent-artifact IDs in the implementation plan.
+2. Mark affected sources and receipts `STALE` or `BLOCKED`; remove affected
+   tasks from `NEXT`. Do not pause independent work whose sources remain
+   current.
+3. Reconcile every normative occurrence across the whole owning artifact and
+   update traceability and dependent freshness. Replace contradictory active
+   text; preserve history through version control, change logs, or an explicit
+   `SUPERSEDED` pointer.
+4. Require independent semantic review of the complete corrected artifact.
+   Structural checks support this review but cannot approve meaning.
+5. Resume only affected tasks whose correction is approved and whose source
+   set is current. The pre-start context receipt remains the final fail-closed
+   check for conflicting authority.
+
+Treat uncertain impact as material. Navigation or formatting with no possible
+change of meaning may be `CONTROL_ONLY` and does not require this gate.
+
 ## 10. Testing, defects, and quality evidence
 
 Canonical test strategy: `<link>`

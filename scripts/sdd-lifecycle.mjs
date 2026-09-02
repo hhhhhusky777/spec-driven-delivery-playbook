@@ -176,6 +176,152 @@ function taskRows(tables) {
   return table?.rows || [];
 }
 
+function checkMaterialCorrections(file, tables, tasks) {
+  const diagnostics = [];
+  const correctionTable = findTable(tables, [
+    "Correction ID",
+    "State",
+    "Affected IDs",
+    "Affected tasks",
+    "Supersedes/current authority",
+    "Reconciled locations",
+    "Dependent impact/freshness",
+    "Review evidence",
+  ]);
+  if (!correctionTable) {
+    return [
+      diagnostic(
+        file,
+        1,
+        "SDD_CORRECTION_REGISTER_REQUIRED",
+        "schema-2 implementation plan requires a material-correction register",
+      ),
+    ];
+  }
+
+  const corrections = new Map();
+  const taskById = new Map(tasks.map((task) => [normalizeValue(task.ID), task]));
+  const allowedStates = new Set(["OPEN", "IN_REVIEW", "APPROVED", "BLOCKED"]);
+  for (const row of correctionTable.rows) {
+    const id = normalizeValue(row["Correction ID"]);
+    const state = normalizeValue(row.State);
+    const affectedIds = splitIdentifiers(row["Affected IDs"]);
+    const affectedTasks = splitIdentifiers(row["Affected tasks"]);
+    if (isNone(id) || corrections.has(id)) {
+      diagnostics.push(
+        diagnostic(file, correctionTable.line, "SDD_CORRECTION_ID", `invalid or duplicate correction ID: ${id}`),
+      );
+      continue;
+    }
+    corrections.set(id, row);
+    if (!allowedStates.has(state)) {
+      diagnostics.push(
+        diagnostic(file, correctionTable.line, "SDD_CORRECTION_STATE", `${id} has unsupported state ${state}`),
+      );
+    }
+    if (affectedIds.length === 0) {
+      diagnostics.push(
+        diagnostic(file, correctionTable.line, "SDD_CORRECTION_SCOPE", `${id} must identify affected contract or decision IDs`),
+      );
+    }
+    for (const taskId of affectedTasks) {
+      const task = taskById.get(taskId);
+      if (!task) {
+        diagnostics.push(
+          diagnostic(file, correctionTable.line, "SDD_CORRECTION_TASK_UNKNOWN", `${id} references unknown task ${taskId}`),
+        );
+        continue;
+      }
+      if (state !== "APPROVED") {
+        const taskState = normalizeValue(task.State);
+        const next = normalizeValue(task.Next);
+        if (["READY", "IN_PROGRESS", "VERIFYING"].includes(taskState) || next === "NEXT") {
+          diagnostics.push(
+            diagnostic(file, correctionTable.line, "SDD_OPEN_CORRECTION_TASK", `${id} is ${state} but affected task ${taskId} is ${taskState}${next === "NEXT" ? "/NEXT" : ""}`),
+          );
+        }
+        const freshness = normalizeValue(task["Source freshness"] || "");
+        if (!["STALE", "BLOCKED"].includes(freshness)) {
+          diagnostics.push(
+            diagnostic(file, correctionTable.line, "SDD_OPEN_CORRECTION_FRESHNESS", `${id} is ${state} but affected task ${taskId} source freshness is ${freshness || "missing"}`),
+          );
+        }
+      }
+    }
+    if (state === "APPROVED") {
+      for (const field of [
+        "Supersedes/current authority",
+        "Reconciled locations",
+        "Dependent impact/freshness",
+        "Review evidence",
+      ]) {
+        if (isNone(row[field])) {
+          diagnostics.push(
+            diagnostic(file, correctionTable.line, "SDD_CORRECTION_APPROVAL_EVIDENCE", `${id} is APPROVED without ${field}`),
+          );
+        }
+      }
+      if (!/\bAPPROVED\b/.test(normalizeValue(row["Review evidence"]))) {
+        diagnostics.push(
+          diagnostic(file, correctionTable.line, "SDD_CORRECTION_REVIEW", `${id} is APPROVED without an APPROVED review disposition`),
+        );
+      }
+    }
+  }
+
+  const changeLog = findTable(tables, [
+    "Time",
+    "Changed by",
+    "Change class",
+    "Correction ID",
+  ]);
+  if (!changeLog) {
+    diagnostics.push(
+      diagnostic(file, 1, "SDD_CHANGE_LOG_REQUIRED", "schema-2 implementation plan requires classified change-log entries"),
+    );
+    return diagnostics;
+  }
+  const referencedCorrections = new Set();
+  for (const row of changeLog.rows) {
+    const changeClass = normalizeValue(row["Change class"]);
+    const correctionIds = splitIdentifiers(row["Correction ID"]);
+    if (!["CONTROL_ONLY", "MATERIAL", "UNKNOWN"].includes(changeClass)) {
+      diagnostics.push(
+        diagnostic(file, changeLog.line, "SDD_CHANGE_CLASS", `unsupported plan change class: ${changeClass}`),
+      );
+      continue;
+    }
+    if (["MATERIAL", "UNKNOWN"].includes(changeClass) && correctionIds.length === 0) {
+      diagnostics.push(
+        diagnostic(file, changeLog.line, "SDD_CHANGE_CORRECTION_REQUIRED", `${changeClass} plan change must reference a correction ID`),
+      );
+    }
+    if (changeClass === "CONTROL_ONLY" && correctionIds.length > 0) {
+      diagnostics.push(
+        diagnostic(file, changeLog.line, "SDD_CONTROL_CHANGE_CORRECTION", "CONTROL_ONLY plan change must not claim a material correction ID"),
+      );
+    }
+    for (const correctionId of correctionIds) {
+      if (["MATERIAL", "UNKNOWN"].includes(changeClass)) {
+        referencedCorrections.add(correctionId);
+      }
+      if (!corrections.has(correctionId)) {
+        diagnostics.push(
+          diagnostic(file, changeLog.line, "SDD_CHANGE_CORRECTION_UNKNOWN", `change log references unknown correction ${correctionId}`),
+        );
+      }
+    }
+  }
+  for (const correctionId of corrections.keys()) {
+    if (!referencedCorrections.has(correctionId)) {
+      diagnostics.push(
+        diagnostic(file, correctionTable.line, "SDD_CORRECTION_CHANGE_LOG", `${correctionId} has no MATERIAL or UNKNOWN change-log entry`),
+      );
+    }
+  }
+  return diagnostics;
+}
+
 function checkImplementationPlan(file, marker, text, tables, fields, schema) {
   const diagnostics = [];
   diagnostics.push(...checkRequiredFields(file, fields, schema.requiredFields));
@@ -199,13 +345,15 @@ function checkImplementationPlan(file, marker, text, tables, fields, schema) {
   );
 
   const tasks = taskRows(tables);
+  diagnostics.push(...checkMaterialCorrections(file, tables, tasks));
   const detailedTasks = extractTaskSpecificationMarkers(text);
-  const activeStates = new Set(["READY", "IN_PROGRESS", "VERIFYING", "DONE"]);
+  const specificationRequiredStates = new Set(["READY", "IN_PROGRESS", "VERIFYING", "DONE"]);
+  const currentSourceRequiredStates = new Set(["READY", "IN_PROGRESS", "VERIFYING"]);
   for (const task of tasks) {
     const id = normalizeValue(task.ID);
     const state = normalizeValue(task.State);
     const next = normalizeValue(task.Next);
-    if ((activeStates.has(state) || next === "NEXT") && !detailedTasks.has(id)) {
+    if ((specificationRequiredStates.has(state) || next === "NEXT") && !detailedTasks.has(id)) {
       diagnostics.push(
         diagnostic(
           file,
@@ -220,7 +368,7 @@ function checkImplementationPlan(file, marker, text, tables, fields, schema) {
         diagnostic(file, 1, "SDD_BLOCKED_NEXT", `${id} is NEXT but is blocked by ${task["Blocked by"]}`),
       );
     }
-    if (activeStates.has(state) && task["Source freshness"] && normalizeValue(task["Source freshness"]) !== "CURRENT") {
+    if (currentSourceRequiredStates.has(state) && task["Source freshness"] && normalizeValue(task["Source freshness"]) !== "CURRENT") {
       diagnostics.push(
         diagnostic(file, 1, "SDD_STALE_TASK_SOURCE", `${id} is ${state} with non-current sources`),
       );
@@ -429,14 +577,15 @@ export async function checkSddLifecycleDocument(file, root, schemas) {
   if (relative.split(path.sep)[0] === "templates") {
     return [];
   }
-  if (marker.version !== schemas.schemaVersion) {
-    return [
-      diagnostic(relative, 1, "SDD_SCHEMA_VERSION", `artifact schema ${marker.version} does not match supported schema ${schemas.schemaVersion}`),
-    ];
-  }
   const schema = schemas.artifacts[marker.artifact];
   if (!schema) {
     return [diagnostic(relative, 1, "SDD_SCHEMA_UNKNOWN", `unknown artifact schema: ${marker.artifact}`)];
+  }
+  const supportedVersion = schema.version || schemas.schemaVersion;
+  if (marker.version !== supportedVersion) {
+    return [
+      diagnostic(relative, 1, "SDD_SCHEMA_VERSION", `artifact schema ${marker.version} does not match supported ${marker.artifact} schema ${supportedVersion}`),
+    ];
   }
   const tables = parseMarkdownTables(text);
   const fields = extractControlFields(tables);

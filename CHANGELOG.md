@@ -6,6 +6,10 @@ adopted.
 
 ## Unreleased — updated 2026-09-02
 
+- Added implementation-plan schema 2 with a scoped material-correction
+  reconciliation register, classified change-log linkage, independent
+  whole-plan review evidence, and lifecycle checks that prevent affected tasks
+  from becoming ready while leaving unrelated current work available.
 - Clarified that intentional Red tests are transient within one task and merge
   unit, while contract-only predecessors remain explicitly proposed and close
   with passing static validation rather than merged failing runtime tests.
@@ -87,14 +91,22 @@ systemic policy gap is already known, register it, pause only affected work,
 reroute the active manifest, and preserve valid evidence. Preserve completed
 historical records unchanged and apply this workflow to new work.
 
-Schema-1 migration applies only to active implementation plans and delivery
-workflows at their next review gate. Add the schema marker, semantic section
-markers, previous/current lifecycle fields, structured dependency/freshness
-register, scoped blockers, and explicit next-action write targets; then run
-`npm run docs:sdd` and obtain independent approval. Keep completed or otherwise
-frozen unmarked records unchanged as historical evidence. When an adoption
-manifest enters `BLOCKED`, add and populate `State before block` before running
-the installer; reset it after the reviewed safe-state return.
+The initial lifecycle-schema migration introduced schema 1 for implementation
+plans and delivery workflows. It added semantic markers, lifecycle fields,
+structured dependency/freshness, scoped blockers, and explicit next-action
+write targets. Delivery workflows remain on schema 1; implementation plans now
+follow the schema-2 migration below. Keep completed or otherwise frozen
+unmarked records unchanged as historical evidence. When an adoption manifest
+enters `BLOCKED`, add and populate `State before block` before running the
+installer; reset it after the reviewed safe-state return.
+
+Implementation-plan schema 2 is an artifact-specific migration; delivery
+workflows remain schema 1. At the next active-plan review, replace the plan
+marker with `implementation-plan@2`, add the material-correction register and
+classified change-log columns, and independently review the migrated plan.
+Do not reconstruct correction history that was never recorded. Preserve frozen
+schema-1 plans unchanged; start schema-2 correction records from the migration
+version forward.
 
 For existing active plans, do not rewrite completed task history. At the next
 planning or replanning gate, classify not-started durable-data work, record its

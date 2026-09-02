@@ -1,6 +1,6 @@
 # Spec-Driven Agile Implementation Plan Template
 
-<!-- sdd-schema: implementation-plan@1; mode: SELECT -->
+<!-- sdd-schema: implementation-plan@2; mode: SELECT -->
 
 Use this template for a non-trivial feature, refactor, migration, or reliability
 change. The completed document is the plan of record: it defines intended
@@ -604,23 +604,59 @@ changes.
 | --- | --- | --- | --- | --- |
 | `<ID>` | `<D-ID>` | `<T-IDs>` | `<tests>` | `<result/link>` |
 
-### 10.2 Failure and blocker log
+### 10.2 Material correction reconciliation
+
+<!-- sdd-section: material-corrections -->
+
+A correction is `MATERIAL` when it changes approved scope, behavior,
+sequencing, authority, acceptance evidence, an interface, data, security,
+deployment, or rollback. Treat uncertain impact as `UNKNOWN`, which uses the
+same fail-closed gate. Formatting, links, and navigation that cannot alter
+meaning are `CONTROL_ONLY`.
+
+Before editing an approved material statement, add a correction row and a
+matching plan-change entry. Enumerate affected contract/decision IDs and tasks,
+remove `NEXT` from affected tasks, and mark their source freshness `STALE` or
+`BLOCKED`. Independent tasks may remain ready when their source set and
+dependencies are unaffected.
+
+Reconcile the complete plan, not only the locally corrected task: system
+contracts, accepted design, task ledger/specifications, traceability, tests,
+deployment/rollback, and dependent artifacts or context receipts. Replace
+contradictory active text. Preserve prior meaning in repository history, the
+change log, or an explicitly `SUPERSEDED` record pointing to the current
+authority—never as a second active instruction. An affected completed task
+remains `DONE`; create a remediation task when the corrected contract requires
+new work.
+
+Only an independent whole-plan review may set a correction to `APPROVED`.
+Automation validates the structured scope and evidence but does not claim that
+the prose is semantically consistent. Document control `Review state` records
+the last approved full-plan baseline; it does not approve an open correction.
+The correction state overrides that baseline only for its affected IDs and
+tasks.
+
+| Correction ID | State | Affected IDs | Affected tasks | Supersedes/current authority | Reconciled locations | Dependent impact/freshness | Review evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `C-01` | `<OPEN/IN_REVIEW/APPROVED/BLOCKED>` | `<contract/decision IDs>` | `<task IDs or exact None>` | `<old -> current authority>` | `<sections and occurrence-search evidence>` | `<artifacts/receipts and CURRENT/STALE/BLOCKED; explain None here>` | `<reviewer, result, version/link>` |
+
+### 10.3 Failure and blocker log
 
 | ID | Time | Task | Observed vs expected | Classification and evidence | Decision / unblock condition | State |
 | --- | --- | --- | --- | --- | --- | --- |
 | `B-01` | `<time>` | `<ID>` | `<failure>` | `<triage>` | `<next step>` | `OPEN` |
 
-### 10.3 Decision log
+### 10.4 Decision log
 
 | Time | Decision ID | Event | Rationale and consequences | Approved by |
 | --- | --- | --- | --- | --- |
 | `<time>` | `<D-ID>` | `<proposed/accepted/superseded>` | `<reason>` | `<owner>` |
 
-### 10.4 Plan change log
+### 10.5 Plan change log
 
-| Time | Changed by | Sections | Change and reason | Contract/task impact |
-| --- | --- | --- | --- | --- |
-| `<time>` | `<owner>` | `<sections>` | `<change>` | `<impact>` |
+| Time | Changed by | Change class | Sections | Change and reason | Contract/task impact | Correction ID |
+| --- | --- | --- | --- | --- | --- | --- |
+| `<time>` | `<owner>` | `<CONTROL_ONLY/MATERIAL/UNKNOWN>` | `<sections>` | `<change>` | `<impact>` | `<C-ID/None>` |
 
 ## 11. Plan-level validation and closure
 
@@ -680,4 +716,5 @@ requires it:
 - [Microsoft — Architecture design specification](https://learn.microsoft.com/en-us/azure/well-architected/architect-role/architecture-design-specification): plan-of-record metadata, API/data contracts, rollout, rollback, testing, security, monitoring, and alternatives.
 - [Microsoft — Maintain an architecture decision record](https://learn.microsoft.com/en-us/azure/well-architected/architect-role/architecture-decision-record): append-only accepted decisions and explicit supersession.
 - [Microsoft Azure DevOps — What is Agile?](https://learn.microsoft.com/en-us/devops/plan/what-is-agile): continual planning, explicit value, and Definition of Done.
+- [NASA Software Engineering Handbook — Manage Requirements Changes](https://swehb.nasa.gov/spaces/7150/pages/16449679/SWE-053%2B-%2BManage%2BRequirements%2BChanges): change-impact analysis, traceability maintenance, affected-work-product updates, and reviewed approval.
 - [AWS Prescriptive Guidance — ADR process](https://docs.aws.amazon.com/prescriptive-guidance/latest/architectural-decision-records/adr-process.html): lifecycle-managed records of significant architectural context, decisions, and consequences.

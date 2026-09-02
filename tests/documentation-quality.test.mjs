@@ -219,6 +219,38 @@ test("intentional Red remains transient across task and merge boundaries", async
   assert.match(pullRequestPolicy, /canonical test strategy's Red closure boundary is satisfied/);
 });
 
+test("material corrections require scoped whole-artifact reconciliation", async () => {
+  const documentationPolicy = await readFile(
+    path.join(REPOSITORY_ROOT, "docs", "documentation-quality-policy.md"),
+    "utf8",
+  );
+  const developmentPolicy = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "policies", "development-policy.md"),
+    "utf8",
+  );
+  const implementationPlan = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "delivery", "implementation-plan.md"),
+    "utf8",
+  );
+  const workflowSkill = await readFile(
+    path.join(REPOSITORY_ROOT, "skills", "sdd-project-workflow", "SKILL.md"),
+    "utf8",
+  );
+
+  assert.match(documentationPolicy, /For a material semantic correction, enumerate affected stable IDs/);
+  assert.match(developmentPolicy, /^### 9\.2 Material correction reconciliation$/m);
+  assert.match(developmentPolicy, /Do not pause independent work whose sources remain\s+current/);
+  assert.match(developmentPolicy, /pre-start context receipt remains the final fail-closed/);
+  assert.match(implementationPlan, /sdd-schema: implementation-plan@2/);
+  assert.match(implementationPlan, /sdd-section: material-corrections/);
+  assert.match(implementationPlan, /Reconcile the complete plan, not only the locally corrected task/);
+  assert.match(implementationPlan, /Replace\s+contradictory active text/);
+  assert.match(implementationPlan, /Only an independent whole-plan review may set a correction to `APPROVED`/);
+  assert.match(implementationPlan, /Review state` records\s+the last approved full-plan baseline/);
+  assert.match(workflowSkill, /plan's correction register before editing/);
+  assert.match(workflowSkill, /Do not\s+resume an affected task from a locally corrected task specification/);
+});
+
 test("task context receipt remains a READY-to-IN_PROGRESS gate", async () => {
   const developmentPolicy = await readFile(
     path.join(REPOSITORY_ROOT, "templates", "policies", "development-policy.md"),

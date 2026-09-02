@@ -75,6 +75,10 @@ follow-up for every material problem.
   reference the changed term, state, gate, path, or responsibility.
 - Reconcile contradictions at their owning authority. Mark dependents stale or
   update them in the same change when required.
+- For a material semantic correction, enumerate affected stable IDs and search
+  the complete owning artifact. Record each reconciled normative location,
+  supersession/current-authority result, dependent freshness impact, and
+  independent review evidence; a locally coherent edit is not sufficient.
 - Verify inbound and outbound links, terminology, lifecycle states, task IDs,
   examples, and migration/adoption guidance.
 - If a workflow route, state, artifact trigger, or review gate changes, update

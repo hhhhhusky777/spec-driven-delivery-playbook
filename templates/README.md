@@ -81,5 +81,7 @@ when project policy says so.
 Instantiated delivery workflows and implementation plans retain their
 `sdd-schema`, `sdd-section`, and applicable `sdd-task-spec` comments. These
 non-rendered markers let the lifecycle checker verify semantic requirements
-without making headings or prose a second machine interface. Replace the
+without making headings or prose a second machine interface. Schema versions
+are artifact-specific; use `config/sdd-lifecycle-schema.json` and migrate an
+active artifact only through its reviewed governance gate. Replace the
 implementation-plan marker's `SELECT` mode with `COMPACT` or `FULL`.

@@ -29,19 +29,36 @@ const PLAN_SECTIONS = `
 <!-- sdd-section: context-receipt-gate -->
 <!-- sdd-section: definition-of-done -->
 <!-- sdd-section: task-ledger -->
-<!-- sdd-section: task-specifications -->`;
+<!-- sdd-section: task-specifications -->
+<!-- sdd-section: material-corrections -->`;
 
 function plan({
   status = "READY",
   previousStatus = "CONTRACT_REVIEW",
   reviewState = "APPROVED",
   taskState = "READY",
+  taskFreshness = "CURRENT",
   next = "NEXT",
   spec = true,
+  secondTask = false,
+  secondTaskFreshness = "STALE",
+  correctionState = null,
+  affectedIds = "API-01",
+  affectedTasks = "T01",
+  correctionEvidence = true,
+  reviewEvidence = null,
+  changeClass = "CONTROL_ONLY",
+  changeCorrectionId = "None",
 } = {}) {
+  const correctionRow = correctionState
+    ? `| \`C-01\` | \`${correctionState}\` | \`${affectedIds}\` | \`${affectedTasks}\` | ${correctionEvidence ? "old -> current" : "None"} | ${correctionEvidence ? "Sections 4, 8, 10" : "None"} | ${correctionEvidence ? "plan CURRENT" : "None"} | ${reviewEvidence ?? (correctionEvidence ? "reviewer; APPROVED; v2" : "None")} |`
+    : "";
+  const secondTaskRow = secondTask
+    ? `| \`T02\` | \`PLANNED\` | | \`None\` | \`None\` | \`${secondTaskFreshness}\` |`
+    : "";
   return `# Plan
 
-<!-- sdd-schema: implementation-plan@1; mode: FULL -->
+<!-- sdd-schema: implementation-plan@2; mode: FULL -->
 
 | Field | Value |
 | --- | --- |
@@ -56,9 +73,18 @@ ${PLAN_SECTIONS}
 
 | ID | State | Next | Depends on | Blocked by | Source freshness |
 | --- | --- | --- | --- | --- | --- |
-| \`T01\` | \`${taskState}\` | \`${next}\` | \`None\` | \`None\` | \`CURRENT\` |
+| \`T01\` | \`${taskState}\` | \`${next}\` | \`None\` | \`None\` | \`${taskFreshness}\` |
+${secondTaskRow}
 
 ${spec ? "<!-- sdd-task-spec: T01 -->" : ""}
+
+| Correction ID | State | Affected IDs | Affected tasks | Supersedes/current authority | Reconciled locations | Dependent impact/freshness | Review evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+${correctionRow}
+
+| Time | Changed by | Change class | Sections | Change and reason | Contract/task impact | Correction ID |
+| --- | --- | --- | --- | --- | --- | --- |
+| now | owner | ${changeClass} | plan | update | impact | ${changeCorrectionId} |
 `;
 }
 
@@ -88,6 +114,135 @@ test("plan lifecycle and review gates reject illegal READY transitions", async (
   const unapproved = await fixture(t, plan({ reviewState: "IN_REVIEW" }));
   const reviewDiagnostics = await checkSddLifecycleDocument(unapproved.file, unapproved.root, SCHEMAS);
   assert.ok(reviewDiagnostics.some((item) => item.rule === "SDD_PLAN_REVIEW"));
+});
+
+test("open material corrections block only affected tasks", async (t) => {
+  const affectedReady = await fixture(
+    t,
+    plan({
+      correctionState: "OPEN",
+      correctionEvidence: false,
+      changeClass: "MATERIAL",
+      changeCorrectionId: "C-01",
+    }),
+  );
+  const blockedDiagnostics = await checkSddLifecycleDocument(
+    affectedReady.file,
+    affectedReady.root,
+    SCHEMAS,
+  );
+  assert.ok(blockedDiagnostics.some((item) => item.rule === "SDD_OPEN_CORRECTION_TASK"));
+  assert.ok(
+    blockedDiagnostics.some((item) => item.rule === "SDD_OPEN_CORRECTION_FRESHNESS"),
+  );
+
+  const independentReady = await fixture(
+    t,
+    plan({
+      secondTask: true,
+      correctionState: "IN_REVIEW",
+      correctionEvidence: false,
+      affectedTasks: "T02",
+      changeClass: "MATERIAL",
+      changeCorrectionId: "C-01",
+    }),
+  );
+  assert.deepEqual(
+    await checkSddLifecycleDocument(independentReady.file, independentReady.root, SCHEMAS),
+    [],
+  );
+
+  const completedHistory = await fixture(
+    t,
+    plan({
+      status: "IMPLEMENTING",
+      previousStatus: "READY",
+      taskState: "DONE",
+      taskFreshness: "STALE",
+      next: "",
+      correctionState: "OPEN",
+      correctionEvidence: false,
+      changeClass: "MATERIAL",
+      changeCorrectionId: "C-01",
+    }),
+  );
+  assert.deepEqual(
+    await checkSddLifecycleDocument(completedHistory.file, completedHistory.root, SCHEMAS),
+    [],
+  );
+});
+
+test("material correction approval requires reconciliation and change-log evidence", async (t) => {
+  const incomplete = await fixture(
+    t,
+    plan({
+      correctionState: "APPROVED",
+      correctionEvidence: false,
+      changeClass: "MATERIAL",
+      changeCorrectionId: "C-01",
+    }),
+  );
+  const incompleteDiagnostics = await checkSddLifecycleDocument(
+    incomplete.file,
+    incomplete.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    incompleteDiagnostics.some((item) => item.rule === "SDD_CORRECTION_APPROVAL_EVIDENCE"),
+  );
+
+  const unapprovedReview = await fixture(
+    t,
+    plan({
+      correctionState: "APPROVED",
+      reviewEvidence: "reviewer; CHANGES_REQUESTED; v2",
+      changeClass: "MATERIAL",
+      changeCorrectionId: "C-01",
+    }),
+  );
+  const unapprovedReviewDiagnostics = await checkSddLifecycleDocument(
+    unapprovedReview.file,
+    unapprovedReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    unapprovedReviewDiagnostics.some((item) => item.rule === "SDD_CORRECTION_REVIEW"),
+  );
+
+  const missingLink = await fixture(t, plan({ changeClass: "MATERIAL" }));
+  const missingLinkDiagnostics = await checkSddLifecycleDocument(
+    missingLink.file,
+    missingLink.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    missingLinkDiagnostics.some((item) => item.rule === "SDD_CHANGE_CORRECTION_REQUIRED"),
+  );
+
+  const approved = await fixture(
+    t,
+    plan({
+      correctionState: "APPROVED",
+      changeClass: "MATERIAL",
+      changeCorrectionId: "C-01",
+    }),
+  );
+  assert.deepEqual(
+    await checkSddLifecycleDocument(approved.file, approved.root, SCHEMAS),
+    [],
+  );
+});
+
+test("artifact-specific schema versions do not force workflow migration", async (t) => {
+  const oldPlan = await fixture(t, plan().replace("implementation-plan@2", "implementation-plan@1"));
+  const planDiagnostics = await checkSddLifecycleDocument(oldPlan.file, oldPlan.root, SCHEMAS);
+  assert.ok(planDiagnostics.some((item) => item.rule === "SDD_SCHEMA_VERSION"));
+
+  const currentWorkflow = await fixture(t, workflow());
+  assert.deepEqual(
+    await checkSddLifecycleDocument(currentWorkflow.file, currentWorkflow.root, SCHEMAS),
+    [],
+  );
 });
 
 test("transitive freshness propagates only material or unknown changes", () => {

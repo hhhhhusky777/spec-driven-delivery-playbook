@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "artifacts": {
     "implementation-plan": {
+      "version": 2,
       "requiredFields": [
         "Status",
         "Previous status",
@@ -27,7 +28,8 @@
             "context-receipt-gate",
             "definition-of-done",
             "task-ledger",
-            "task-specifications"
+            "task-specifications",
+            "material-corrections"
           ]
         },
         "FULL": {
@@ -37,12 +39,14 @@
             "context-receipt-gate",
             "definition-of-done",
             "task-ledger",
-            "task-specifications"
+            "task-specifications",
+            "material-corrections"
           ]
         }
       }
     },
     "delivery-workflow": {
+      "version": 1,
       "requiredFields": [
         "State",
         "Previous state",
