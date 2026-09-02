@@ -32,7 +32,11 @@ playbook checkout, immutable revision, manifest path, and cleanup record.
    headings, and observed Git history are insufficient. Route a missing or
    ambiguous decision to `UPDATE_EXISTING`. Require a reviewed exception with
    rationale, owner, risk, and equivalent control for intentional differences.
-   Do not silently copy a playbook default or choose for the project owner.
+   Apply this to every applicable policy family. Update the canonical existing
+   authority; never create a parallel or replacement policy merely because it
+   is incomplete. If competing copies lack declared precedence, record
+   `BLOCKED`. Do not silently copy a playbook default or choose for the project
+   owner.
 6. Compare that action's changed facts, links, commands, and availability
    claims with previously approved artifacts. Record affected artifacts as
    `STALE` in the manifest freshness register and schedule the earliest

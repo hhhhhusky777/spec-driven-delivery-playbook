@@ -127,9 +127,22 @@ requires `UPDATE_EXISTING`. An intentional difference requires a reviewed
 exception with an owner and equivalent control. Do not silently copy a
 playbook default or choose for the project owner.
 
-| Policy/routing ID | Required decision or obligation | Applicable? / reason | Existing project evidence | Gap, equivalent control, or exception | Disposition | Reviewer/state |
+When a canonical policy exists but is incomplete, update that artifact through
+`UPDATE_EXISTING`; do not create a duplicate or parallel project policy. If
+several documents compete for the same rule without declared precedence,
+record `BLOCKED` until the project owner identifies or consolidates authority.
+Policy families may share one file or use several explicitly linked canonical
+documents.
+
+| Policy family / routing ID | Required decision or obligation | Applicable? / reason | Existing project evidence | Gap, equivalent control, or exception | Disposition | Reviewer/state |
 | --- | --- | --- | --- | --- | --- | --- |
-| `<path / ID>` | `<playbook requirement>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
+| Development and delivery / `<ID>` | `<boundaries, tasks, lifecycle, readiness, defects, policy gaps>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
+| Testing and quality / `<ID>` | `<levels, coverage, environments, triage, evidence, exceptions>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
+| PR and branch / `<ID>` | `<models, targets, naming, reviews/checks, merge, closure, archive>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
+| Documentation and API contracts / `<ID>` | `<authority, precedence, consumers, compatibility, freshness, validation>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
+| Security, data, concurrency, and performance / `<ID>` | `<invariants, risks, migrations, races, capacity, observability, enforcement>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
+| Release, operations, and incident response / `<ID>` | `<environments, rollout, rollback, recovery, escalation, reconciliation>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
+| Specialized policies / `<ID>` | `<trigger, scope, state, audit, exception, enforcement, remediation, retirement>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
 
 For PR and branch policy, include protected target, default branch model,
 optional epic-model decision and criteria, naming, allowed source/target

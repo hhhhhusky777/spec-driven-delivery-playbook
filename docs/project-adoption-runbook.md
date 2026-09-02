@@ -356,6 +356,34 @@ history. A missing project choice remains a gap for its authorized owner. The
 updated project policy remains canonical and must pass independent review
 before a plan or agent relies on the new rule.
 
+When an incomplete canonical project policy already exists,
+`UPDATE_EXISTING` must update that canonical artifact instead of creating a
+duplicate, parallel, or replacement policy. One project artifact may own
+several policy families, and one family may intentionally be split across
+clearly linked authorities. If discovery finds competing or contradictory
+copies with no declared precedence, record `BLOCKED` until an authorized owner
+selects or consolidates the canonical authority.
+
+### Policy-family conformance inventory
+
+Apply the same audit to every applicable policy family. The table lists minimum
+decision areas, not mandatory headings or separate files:
+
+| Policy family | Minimum decision areas to audit |
+| --- | --- |
+| Development and delivery | change boundaries, task sizing, dependencies, lifecycle states, readiness/completion, defects, and mid-delivery policy gaps |
+| Testing and quality | test levels and scope, coverage expectations, environments, failure triage, evidence, exceptions, and documentation-only handling |
+| PR and branch | protected targets, branch models, naming, source/target relationships, review/check gates, synchronization, merge, closure, and archive order |
+| Documentation and API contracts | canonical sources, precedence, update triggers, compatibility, consumers, review, validation, freshness, and archive rules |
+| Security, data, concurrency, and performance | applicable invariants, ownership, threat/risk boundaries, migrations, locking/races, capacity, observability, and enforcement |
+| Release, operations, and incident response | environments, approvals, rollout/rollback, recovery, evidence, escalation, incident routing, and post-release reconciliation |
+| Specialized policies | observed systemic trigger, scope, proposed/active state, existing-system audit, exceptions, enforcement, remediation, and retirement |
+
+An inapplicable family or decision needs a reviewed reason; it does not need an
+empty policy file. A project-specific authority may use different controls, but
+the manifest must show where each applicable decision lives and how it meets
+or intentionally replaces the playbook obligation.
+
 ### PR and branch policy conformance
 
 For a PR and branch policy, assess at least:

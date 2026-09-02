@@ -9,8 +9,11 @@ the project's existing authorities first. Reuse them only after the manifest
 records decision-level conformance for every applicable template obligation;
 file existence alone is insufficient. Route missing decisions to
 `UPDATE_EXISTING`, and require a reviewed exception for an intentional
-alternative. Do not create a parallel development, test, or PR policy merely
-because a template exists. Use the
+alternative. Apply the audit to every applicable policy family. When a
+canonical project policy is incomplete, update it; do not create a parallel or
+replacement development, testing, PR, documentation/API, security, data,
+concurrency, performance, release, operations, incident, or specialized policy
+merely because a template exists. Use the
 [agent adoption trigger](adoption/agent-adoption-trigger.md) to perform one
 manifest action at a time and stop at every review gate.
 

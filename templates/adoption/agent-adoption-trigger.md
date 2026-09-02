@@ -61,6 +61,9 @@ Perform only the DISCOVERY action:
 - do not infer conformance from file existence, headings, or repository
   history; route missing or ambiguous decisions to UPDATE_EXISTING and record
   intentional alternatives as reviewed-exception candidates;
+- apply the audit to every applicable policy family, update the canonical
+  existing authority when it is incomplete, and do not create a duplicate
+  policy; record BLOCKED when competing copies have no declared precedence;
 - update only <ADOPTION_MANIFEST>;
 - keep Adoption state as DISCOVERY;
 - set Next action to independent review for DISCOVERY -> MAPPED;
@@ -103,7 +106,8 @@ Allowed write scope:
 - for REUSE, record decision-level conformance evidence for every applicable
   policy obligation without copying the source document;
 - for UPDATE_EXISTING, preserve the existing project policy as canonical and
-  add only reviewed missing decisions or accepted alternatives;
+  add only reviewed missing decisions or accepted alternatives; do not create
+  a duplicate policy or a parallel replacement;
 - for SKIP or DEFER, record the reviewed decision without copying the source;
 - require a reviewed exception with rationale, owner, risk, and equivalent
   control for an intentional deviation; do not silently apply a playbook

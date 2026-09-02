@@ -264,8 +264,11 @@ conformance. Adoption compares every applicable playbook obligation with
 explicit project evidence. A missing decision routes to `UPDATE_EXISTING`; an
 intentional alternative requires a reviewed exception with its rationale,
 owner, and equivalent control. Never silently copy a playbook default into a
-project contract. A later playbook revision is assessed through a new manifest
-review and never silently overwrites active project contracts.
+project contract. This applies to every applicable project-policy family, not
+only PR/branch rules. If the canonical policy is incomplete, update it through
+`UPDATE_EXISTING`; never generate a duplicate policy beside it. A later
+playbook revision is assessed through a new manifest review and never silently
+overwrites active project contracts.
 
 Adoption agents run from the target project root. The playbook is a separate,
 read-only dependency: the manifest records its canonical repository, immutable

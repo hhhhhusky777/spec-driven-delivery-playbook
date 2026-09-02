@@ -326,14 +326,34 @@ test("project adoption proves policy conformance before reuse", async () => {
   }
 
   assert.match(runbook, /^### PR and branch policy conformance$/m);
+  assert.match(runbook, /^### Policy-family conformance inventory$/m);
+  assert.match(runbook, /Development and delivery/);
+  assert.match(runbook, /Testing and quality/);
+  assert.match(runbook, /Documentation and API contracts/);
+  assert.match(runbook, /Security, data, concurrency, and performance/);
+  assert.match(runbook, /Release, operations, and incident response/);
+  assert.match(runbook, /Specialized policies/);
   assert.match(runbook, /task PR targets and final integration PR target/i);
   assert.match(runbook, /merge.*archive/i);
+  assert.match(
+    runbook,
+    /must update that canonical artifact instead of creating a\s+duplicate/i,
+  );
   assert.match(manifest, /^### Policy conformance audit$/m);
+  assert.match(manifest, /Policy family/);
+  assert.match(manifest, /Development and delivery/);
+  assert.match(manifest, /Testing and quality/);
+  assert.match(manifest, /Documentation and API contracts/);
+  assert.match(manifest, /Security, data, concurrency, and performance/);
+  assert.match(manifest, /Release, operations, and incident response/);
+  assert.match(manifest, /Specialized policies/);
   assert.match(manifest, /Required decision or obligation/);
   assert.match(manifest, /Existing project evidence/);
   assert.match(manifest, /Gap, equivalent control, or exception/);
   assert.match(trigger, /Do not infer conformance from file existence/i);
+  assert.match(trigger, /do not create a duplicate\s+policy/i);
   assert.match(skill, /Do not silently copy a playbook default/i);
+  assert.match(skill, /never create a parallel or replacement policy/i);
 });
 
 test("project adoption architecture remains connected to runbook and manifest", async () => {
