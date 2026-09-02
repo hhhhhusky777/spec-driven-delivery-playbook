@@ -354,7 +354,37 @@ or `DONE` never authorizes plan-level validation while another ledger task is
 non-terminal. Deferred outcomes leave the active delivery only through a
 reviewed scope change and retain a durable owner/tracking reference.
 
-### 9.1 Pre-start task context receipt
+### 9.1 Complete task specification
+
+A task specification is complete when an implementer can implement it without
+inventing or changing product or system behavior. It is not a line-by-line
+implementation blueprint. Before readiness, identify or canonically reference:
+
+- observable outcomes, postconditions, failures, and prohibited behavior;
+- approved contract and decision IDs;
+- scope, non-scope, dependencies, data phase, affected component/source
+  boundary, compatibility or migration boundary, and expected evidence; and
+- applicability of data, concurrency, security, operations, and performance
+  risks, with reasons for every `Not applicable` decision.
+
+Canonical approved contracts satisfy these obligations by reference; do not
+duplicate their full text in the task. Helper/class layout, incidental internal
+names, local refactoring structure, and contract-equivalent internal
+engineering choices remain with the implementer. An internal choice must be
+elevated before coding when it changes observable behavior, difficult-to-reverse
+architecture or data, transaction or lock ownership, integrity, security,
+compatibility, operations, or an approved performance boundary.
+
+The task author prepares the complete specification and self-checks every DoR
+input before requesting one independent readiness review. DoR verifies the
+specification; it is not a reason to prescribe every internal choice or to use
+review as the planned authoring step. The workflow freshness value `UNKNOWN`
+applies to artifact-change impact, not to ordinary implementation choices among
+approved contract-equivalent alternatives. Use the
+[task-specification calibration guide](../../docs/task-specification-calibration.md)
+for positive, negative, and migration examples.
+
+### 9.2 Pre-start task context receipt
 
 Before a task that changes product, data, runtime configuration, or delivery
 behavior moves from `READY` to `IN_PROGRESS`, its implementer must complete an
@@ -384,6 +414,12 @@ independent-review requirement. Configure qualified human or specialist review
 for security, privacy, billing, destructive data, concurrency, or other
 project-defined high-risk work; an independent agent may review lower-risk work
 when project policy permits it.
+
+Before `READY`, the task identifies its canonical source boundary and confirms
+that the required sources and a current revision are available. After `READY`
+and before `IN_PROGRESS`, the receipt freezes and reconciles the exact current
+revision, risks, prohibitions, and completion evidence. Intentionally blank
+post-`READY` receipt fields do not fail DoR.
 
 If a governing source changes after approval, mark the receipt `STALE` and
 pause affected work at the next safe boundary. Refresh and reapprove it before

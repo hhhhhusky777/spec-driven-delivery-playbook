@@ -169,7 +169,10 @@ The lifecycle gate validates structured control fields and semantic markers,
 not prose inference. It enforces dependency-scoped blockers, transitive
 freshness, write scope, plan/task readiness, and selected template-mode
 requirements. Future `PLANNED` tasks may remain `SPEC_PENDING`; tasks marked
-`READY`, `NEXT`, or active require a complete task specification.
+`READY`, `NEXT`, or active require `Spec state: COMPLETE` and a matching task
+specification marker. Automation checks those structured facts; it does not
+infer prose quality or require one internal design when multiple implementations
+satisfy the same approved contracts.
 
 Use explicit roots and narrow exclusions when applying the structural checker
 to an adopting project:

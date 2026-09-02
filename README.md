@@ -460,6 +460,10 @@ This prevents document inflation while making omissions reviewable.
 | [Implementation plan](templates/delivery/implementation-plan.md) | Approved feature contracts, dependency/data phases, incremental tasks, tracking, evidence, and closure |
 | [Architecture decision record](templates/decisions/architecture-decision-record.md) | Durable rationale and consequences for a significant architectural choice |
 
+The [task-specification calibration guide](docs/task-specification-calibration.md)
+defines what `COMPLETE` means, separates product/system decisions from bounded
+engineering discretion, and provides readiness examples.
+
 ## Worked examples
 
 The [parallel provider submissions example](examples/parallel-provider-submissions/README.md)

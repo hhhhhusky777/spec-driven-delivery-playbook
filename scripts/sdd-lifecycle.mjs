@@ -252,17 +252,40 @@ function checkImplementationPlan(file, marker, text, tables, fields, schema) {
   diagnostics.push(...checkValidatingPlanState(file, tables, fields));
   const detailedTasks = extractTaskSpecificationMarkers(text);
   const activeStates = new Set(["READY", "IN_PROGRESS", "VERIFYING", "DONE"]);
+  const allowedSpecStates = new Set(["SPEC_PENDING", "COMPLETE"]);
   for (const task of tasks) {
     const id = normalizeValue(task.ID);
     const state = normalizeValue(task.State);
     const next = normalizeValue(task.Next);
-    if ((activeStates.has(state) || next === "NEXT") && !detailedTasks.has(id)) {
+    const specState = normalizeValue(task["Spec state"] || "");
+    const requiresCompleteSpec = activeStates.has(state) || next === "NEXT";
+    if (!allowedSpecStates.has(specState)) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          1,
+          "SDD_TASK_SPEC_STATE",
+          `${id} has unsupported Spec state ${specState || "missing"}`,
+        ),
+      );
+    }
+    if (requiresCompleteSpec && specState !== "COMPLETE") {
+      diagnostics.push(
+        diagnostic(
+          file,
+          1,
+          "SDD_TASK_SPEC_INCOMPLETE",
+          `${id} is ${state}${next === "NEXT" ? " and NEXT" : ""} but Spec state is ${specState || "missing"}`,
+        ),
+      );
+    }
+    if ((requiresCompleteSpec || specState === "COMPLETE") && !detailedTasks.has(id)) {
       diagnostics.push(
         diagnostic(
           file,
           1,
           "SDD_TASK_SPEC_REQUIRED",
-          `${id} is ${state}${next === "NEXT" ? " and NEXT" : ""} but has no complete task specification`,
+          `${id} declares or requires a complete task specification but has no matching task-spec marker`,
         ),
       );
     }

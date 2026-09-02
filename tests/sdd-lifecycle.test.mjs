@@ -48,6 +48,7 @@ function plan({
   taskState = "READY",
   next = "NEXT",
   spec = true,
+  specState = "COMPLETE",
 } = {}) {
   return `# Plan
 
@@ -64,9 +65,9 @@ function plan({
 
 ${PLAN_SECTIONS}
 
-| ID | State | Next | Depends on | Blocked by | Source freshness |
-| --- | --- | --- | --- | --- | --- |
-| \`T01\` | \`${taskState}\` | \`${next}\` | \`None\` | \`None\` | \`CURRENT\` |
+| ID | State | Next | Depends on | Blocked by | Source freshness | Spec state |
+| --- | --- | --- | --- | --- | --- | --- |
+| \`T01\` | \`${taskState}\` | \`${next}\` | \`None\` | \`None\` | \`CURRENT\` | \`${specState}\` |
 
 ${spec ? "<!-- sdd-task-spec: T01 -->" : ""}
 `;
@@ -94,10 +95,10 @@ function validatingPlan({
 
 ${PLAN_SECTIONS}
 
-| ID | State | Next | Depends on | Blocked by | Source freshness |
-| --- | --- | --- | --- | --- | --- |
-| \`T01\` | \`${taskOneState}\` | \`${taskOneNext}\` | \`None\` | \`None\` | \`CURRENT\` |
-| \`T02\` | \`${taskTwoState}\` | \`${taskTwoNext}\` | \`T01\` | \`None\` | \`CURRENT\` |
+| ID | State | Next | Depends on | Blocked by | Source freshness | Spec state |
+| --- | --- | --- | --- | --- | --- | --- |
+| \`T01\` | \`${taskOneState}\` | \`${taskOneNext}\` | \`None\` | \`None\` | \`CURRENT\` | \`COMPLETE\` |
+| \`T02\` | \`${taskTwoState}\` | \`${taskTwoNext}\` | \`T01\` | \`None\` | \`CURRENT\` | \`COMPLETE\` |
 
 <!-- sdd-task-spec: T01 -->
 <!-- sdd-task-spec: T02 -->
@@ -114,12 +115,55 @@ test("READY plan requires one complete READY/NEXT task", async (t) => {
 });
 
 test("future PLANNED tasks may remain concise but active tasks require specifications", async (t) => {
-  const planned = await fixture(t, plan({ status: "CONTRACT_REVIEW", previousStatus: "DRAFT", reviewState: "IN_REVIEW", taskState: "PLANNED", next: "", spec: false }));
+  const planned = await fixture(t, plan({ status: "CONTRACT_REVIEW", previousStatus: "DRAFT", reviewState: "IN_REVIEW", taskState: "PLANNED", next: "", spec: false, specState: "SPEC_PENDING" }));
   assert.deepEqual(await checkSddLifecycleDocument(planned.file, planned.root, SCHEMAS), []);
 
   const ready = await fixture(t, plan({ spec: false }));
   const diagnostics = await checkSddLifecycleDocument(ready.file, ready.root, SCHEMAS);
   assert.ok(diagnostics.some((item) => item.rule === "SDD_TASK_SPEC_REQUIRED"));
+});
+
+test("task Spec state is objective and consistent with task readiness", async (t) => {
+  const unknown = await fixture(t, plan({ specState: "DRAFT" }));
+  const unknownDiagnostics = await checkSddLifecycleDocument(
+    unknown.file,
+    unknown.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    unknownDiagnostics.some((item) => item.rule === "SDD_TASK_SPEC_STATE"),
+  );
+
+  const pendingReady = await fixture(t, plan({ specState: "SPEC_PENDING" }));
+  const pendingDiagnostics = await checkSddLifecycleDocument(
+    pendingReady.file,
+    pendingReady.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    pendingDiagnostics.some((item) => item.rule === "SDD_TASK_SPEC_INCOMPLETE"),
+  );
+
+  const unsupportedComplete = await fixture(
+    t,
+    plan({
+      status: "CONTRACT_REVIEW",
+      previousStatus: "DRAFT",
+      reviewState: "IN_REVIEW",
+      taskState: "PLANNED",
+      next: "",
+      spec: false,
+      specState: "COMPLETE",
+    }),
+  );
+  const unsupportedDiagnostics = await checkSddLifecycleDocument(
+    unsupportedComplete.file,
+    unsupportedComplete.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    unsupportedDiagnostics.some((item) => item.rule === "SDD_TASK_SPEC_REQUIRED"),
+  );
 });
 
 test("plan lifecycle and review gates reject illegal READY transitions", async (t) => {

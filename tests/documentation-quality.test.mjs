@@ -242,7 +242,7 @@ test("task context receipt remains a READY-to-IN_PROGRESS gate", async () => {
     "utf8",
   );
 
-  assert.match(developmentPolicy, /^### 9\.1 Pre-start task context receipt$/m);
+  assert.match(developmentPolicy, /^### 9\.2 Pre-start task context receipt$/m);
   assert.match(developmentPolicy, /`READY -> IN_PROGRESS` is prohibited/);
   assert.match(developmentPolicy, /mark the receipt `STALE`/);
   assert.match(implementationPlan, /^### 6\.4 Pre-start task context receipt gate$/m);
@@ -250,6 +250,38 @@ test("task context receipt remains a READY-to-IN_PROGRESS gate", async () => {
   assert.match(implementationPlan, /\| Review disposition \|/);
   assert.match(pullRequest, /approved, current pre-start\s+context receipt/);
   assert.match(workedExample, /All task context receipts remain `NOT_STARTED`\./);
+});
+
+test("complete task specifications preserve engineering discretion", async () => {
+  const developmentPolicy = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "policies", "development-policy.md"),
+    "utf8",
+  );
+  const implementationPlan = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "delivery", "implementation-plan.md"),
+    "utf8",
+  );
+  const workflowSkill = await readFile(
+    path.join(REPOSITORY_ROOT, "skills", "sdd-project-workflow", "SKILL.md"),
+    "utf8",
+  );
+  const calibrationGuide = await readFile(
+    path.join(REPOSITORY_ROOT, "docs", "task-specification-calibration.md"),
+    "utf8",
+  );
+
+  assert.match(
+    developmentPolicy,
+    /implement it without\s+inventing or changing product or system behavior/,
+  );
+  assert.match(developmentPolicy, /contract-equivalent internal\s+engineering choices/);
+  assert.match(implementationPlan, /canonical source boundary/);
+  assert.match(implementationPlan, /exact current\s+revision/);
+  assert.match(workflowSkill, /ordinary internal engineering choices/i);
+  assert.match(calibrationGuide, /^## 1\. Framework-only task/m);
+  assert.match(calibrationGuide, /^## 2\. Complete bounded task/m);
+  assert.match(calibrationGuide, /^## 3\. High-risk migration task/m);
+  assert.match(calibrationGuide, /^## 4\. Detailed but behaviorally ambiguous task/m);
 });
 
 test("project adoption architecture remains connected to runbook and manifest", async () => {

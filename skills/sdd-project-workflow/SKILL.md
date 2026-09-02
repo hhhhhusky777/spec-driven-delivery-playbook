@@ -85,6 +85,17 @@ Definition of Ready and marked `NEXT`. A task may enter `IN_PROGRESS` only with
 an approved, current context receipt. Independent tasks may remain ready while
 an unrelated blocker is open.
 
+Treat a task specification as complete when implementation can proceed without
+inventing product or system behavior, not when every helper or algorithm is
+preselected. Approved contracts may be referenced without copying them.
+Ordinary internal engineering choices remain with the implementer unless they
+change observable behavior, architecture/data reversibility, transaction or
+lock ownership, integrity, security, compatibility, operations, or an approved
+performance boundary. `UNKNOWN` artifact freshness does not apply merely
+because several contract-equivalent implementation choices remain. Before
+`READY`, verify the canonical source boundary and availability; freeze the exact
+current revision in the approved receipt before `IN_PROGRESS`.
+
 Do not promote a plan or workflow to `VALIDATING` because one task enters
 `VERIFYING` or `DONE`. Plan-level validation begins only after every active
 ledger task is `DONE` or reviewed `CANCELLED`, no next task remains, and the
