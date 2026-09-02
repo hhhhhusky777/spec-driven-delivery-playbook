@@ -422,6 +422,10 @@ tasks, record the owners, boundaries, and reason here: `<value or None>`.
 - [ ] The task's data phase is recorded; every required foundation predecessor
       is `DONE`, or inseparable data/behavior scope has an approved exception.
 - [ ] Existing dirty worktree files are attributed and preserved.
+- [ ] The test strategy's Red closure boundary is satisfied: this task owns the
+      Green implementation for every required behavioral test it introduces,
+      or a contract-only predecessor uses `PROPOSED` status and passing static
+      validation without an intentionally failing runtime test.
 - [ ] No unresolved clarification makes the implementation ambiguous.
 
 ### 6.4 Pre-start task context receipt gate

@@ -188,6 +188,29 @@ implementation:
 
 Record what qualifies as Red-Green evidence: `<commands/artifacts/PR record>`.
 
+### Red closure and contract-first sequencing
+
+Red is transient diagnostic evidence, not a completed deliverable. A task and
+its merge unit own every required behavioral test they introduce: each test
+must fail for the expected reason and return to Green before the task becomes
+`DONE` or the change merges into a shared integration branch. A draft or
+stacked unmerged branch may remain Red during active development when project
+policy permits it, but it does not satisfy Definition of Done or merge gates.
+
+When implementation must follow a contract-only predecessor:
+
+- mark the unavailable behavior or interface `PROPOSED`, not active or live;
+- use passing static document, schema, example, or compatibility validation as
+  the predecessor's terminal evidence; and
+- introduce the failing runtime behavioral test in the consuming
+  implementation task, immediately before the production change that makes it
+  pass.
+
+Do not merge an intentionally failing required runtime test for a later task to
+repair. Do not make a live API authority advertise behavior that its runtime
+does not provide. If parallel consumers need an early contract, version its
+proposed status and record the evidence required to activate it.
+
 Permitted exceptions to test-first order:
 
 - bounded discovery/PoC code that is not shipped;

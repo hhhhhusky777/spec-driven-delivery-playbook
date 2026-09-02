@@ -171,6 +171,8 @@ Each increment must:
 - include its related tests and contract/documentation updates;
 - satisfy its own Definition of Done;
 - keep the integration target buildable and internally consistent;
+- close the canonical test strategy's Red-Green cycle inside the same task and
+  merge unit;
 - avoid unused APIs or incomplete invariants unless safely gated; and
 - remain independently reviewable and reversible or forward-fixable.
 
