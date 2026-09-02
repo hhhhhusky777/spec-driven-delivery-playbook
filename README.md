@@ -503,11 +503,19 @@ even after approval it can become only `EXAMPLE_REVIEWED`, never `ACTIVE`.
 
 ## Small, self-contained delivery
 
-Use LOC as a reviewability signal, not a substitute for conceptual cohesion.
-A project may choose a target such as approximately 300 changed production
-lines per task while excluding tests and documentation from planning size. A
-change still needs its related tests, contracts, migration, observability, and
-documentation, and it must leave the integration target working.
+Deliver the smallest coherent, self-contained increment that creates a useful
+or necessary system outcome. It must be reviewable, validated, and merged
+independently while leaving the integration target working. It includes every
+test, contract, migration, compatibility measure, observability change, and
+document needed to make that boundary safe.
+
+Independent does not mean dependency-free. An increment may depend on already
+merged prerequisites, but it must not rely on unmerged follow-up work to build,
+pass its required tests, preserve active behavior, or satisfy its stated
+contracts. If a proposed split would leave either side incomplete or unsafe,
+keep the inseparable work together. Split further when separate outcomes can
+meet these conditions on their own. Numeric size is descriptive review input,
+never the delivery gate.
 
 Google's published engineering guidance similarly emphasizes one
 self-contained change, related tests, and a working system rather than a

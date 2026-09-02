@@ -6,6 +6,11 @@ adopted.
 
 ## Unreleased — updated 2026-09-02
 
+- Replaced numeric production-line task targets with a semantic delivery gate:
+  the smallest coherent, self-contained increment that can be reviewed,
+  validated, and merged independently while leaving the integration target
+  working. Clarified that merged prerequisites are allowed but unmerged
+  follow-up work cannot be required for correctness.
 - Made reuse evidence-based across every project-policy family: adoption now
   audits decision-level conformance, routes missing or ambiguous requirements
   to `UPDATE_EXISTING`, updates the canonical artifact instead of creating a
