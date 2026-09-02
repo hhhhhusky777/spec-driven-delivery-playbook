@@ -26,28 +26,39 @@ playbook checkout, immutable revision, manifest path, and cleanup record.
    Before entering manifest state `BLOCKED`, record the current non-blocked
    state in `State before block`; reset it to `None` only after returning to a
    reviewed safe state. Never guess this value.
-5. Compare that action's changed facts, links, commands, and availability
+5. Before proposing `REUSE` for an existing policy, prove decision-level
+   conformance against every applicable obligation in the pinned template and
+   record the project evidence in the manifest. File existence, similar
+   headings, and observed Git history are insufficient. Route a missing or
+   ambiguous decision to `UPDATE_EXISTING`. Require a reviewed exception with
+   rationale, owner, risk, and equivalent control for intentional differences.
+   Apply this to every applicable policy family. Update the canonical existing
+   authority; never create a parallel or replacement policy merely because it
+   is incomplete. If competing copies lack declared precedence, record
+   `BLOCKED`. Do not silently copy a playbook default or choose for the project
+   owner.
+6. Compare that action's changed facts, links, commands, and availability
    claims with previously approved artifacts. Record affected artifacts as
    `STALE` in the manifest freshness register and schedule the earliest
    dependency-ready correction after the current change is independently
    approved. The immediate next action remains review of the current change.
    Do not edit a second artifact in this action. Keep volatile adoption
    progress in the manifest instead of copying it into stable entry points.
-6. Run the project checks applicable to the changed artifact and report exact
+7. Run the project checks applicable to the changed artifact and report exact
    evidence. Do not substitute playbook-repository checks for project evidence.
-7. Stop after every generated or updated artifact. Require an authorized human
+8. Stop after every generated or updated artifact. Require an authorized human
    or independent-agent review before another action or state transition.
-8. Continue on a later invocation from the reviewed manifest state. Never
+9. Continue on a later invocation from the reviewed manifest state. Never
    approve your own artifact or infer reviewer authorization.
-9. Before proposing `MAPPED -> INSTALLED`, require every applicable freshness
+10. Before proposing `MAPPED -> INSTALLED`, require every applicable freshness
    entry to be `CURRENT` and complete final cross-document verification.
-10. After recorded authority moves the manifest to `INSTALLED`, instantiate an
+11. After recorded authority moves the manifest to `INSTALLED`, instantiate an
    empty solution whiteboard at the guide's recorded adoption root. Populate
    neutral control values such as `EMPTY`, `Not recorded`, or `None`; do not
    infer a need, requirement, solution, handoff, plan, or delivery result.
-11. Stop when the empty whiteboard and installed manifest have passed their
+12. Stop when the empty whiteboard and installed manifest have passed their
    applicable documentation checks.
-12. After independent approval of that boundary, do not admit a need through a
+13. After independent approval of that boundary, do not admit a need through a
    guide that selects this adoption skill. If its cleanup is `PENDING`, report
    the required runtime handoff: from the project root, run
    `./install-sdd.sh --cleanup`, then `./install-sdd.sh`, and verify that the new

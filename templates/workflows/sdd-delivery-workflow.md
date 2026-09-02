@@ -211,7 +211,8 @@ Justification: `<why this is the smallest safe route>`.
 
 ## 6. Artifact decision vocabulary
 
-- `REUSE` — use an active project artifact unchanged.
+- `REUSE` — use an active project artifact unchanged after its applicable
+  decisions have approved decision-level conformance evidence.
 - `UPDATE_EXISTING` — change an existing authority through its review process.
 - `GENERATE` — instantiate the linked template.
 - `GENERATE_COMPACT` — instantiate only required compact-plan sections.

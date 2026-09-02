@@ -259,8 +259,14 @@ flowchart LR
 ```
 
 The project remains the authority for its own behavior and process. Existing
-documents are `REUSE` candidates by default; generate or update an artifact
-only after discovery proves a gap and the project approves the route. A later
+documents are `REUSE` candidates, but file existence is not decision-level
+conformance. Adoption compares every applicable playbook obligation with
+explicit project evidence. A missing decision routes to `UPDATE_EXISTING`; an
+intentional alternative requires a reviewed exception with its rationale,
+owner, and equivalent control. Never silently copy a playbook default into a
+project contract. This applies to every applicable project-policy family, not
+only PR/branch rules. If the canonical policy is incomplete, update it through
+`UPDATE_EXISTING`; never generate a duplicate policy beside it. A later
 playbook revision is assessed through a new manifest review and never silently
 overwrites active project contracts.
 
@@ -296,7 +302,9 @@ not `ACTIVE`.
 5. Independently review the inventory. Approval records
    `DISCOVERY -> MAPPED`; comments keep the manifest in `DISCOVERY`.
 6. Classify each capability as `REUSE`, `UPDATE_EXISTING`, `GENERATE`, `SKIP`,
-   `DEFER`, or `BLOCKED`.
+   `DEFER`, or `BLOCKED`. `REUSE` requires recorded decision-level conformance,
+   not merely an existing filename; missing decisions require
+   `UPDATE_EXISTING`, and accepted alternatives require a reviewed exception.
 7. Generate or update one selected project-local contract, navigation entry,
    or gate at a time. Independently review each artifact before continuing.
 8. After all selected artifacts and installation evidence are approved, record
@@ -434,7 +442,8 @@ authorization, or external side effects may require Route 3.
 
 The workflow creates a delivery manifest using explicit decisions:
 
-- `REUSE` — use an active project artifact.
+- `REUSE` — use an active project artifact whose applicable decisions have
+  decision-level conformance evidence in the adoption manifest.
 - `UPDATE_EXISTING` — change an existing authority through review.
 - `GENERATE` — instantiate a selected template.
 - `GENERATE_COMPACT` / `GENERATE_FULL` — select plan depth.

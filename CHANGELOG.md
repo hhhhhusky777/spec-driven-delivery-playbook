@@ -6,6 +6,13 @@ adopted.
 
 ## Unreleased — updated 2026-09-02
 
+- Made reuse evidence-based across every project-policy family: adoption now
+  audits decision-level conformance, routes missing or ambiguous requirements
+  to `UPDATE_EXISTING`, updates the canonical artifact instead of creating a
+  duplicate, and requires reviewed exceptions for intentional alternatives.
+  Added a general policy-family inventory and a detailed PR/branch checklist,
+  including task/final targets and merge-before-archive ordering, without
+  imposing one branch model.
 - Defined a complete task specification as sufficient to implement without
   inventing product/system behavior, while preserving contract-equivalent
   engineering choices. Added source-boundary versus exact-revision timing,

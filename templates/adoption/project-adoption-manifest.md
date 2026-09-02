@@ -117,6 +117,40 @@ Use only `REUSE`, `UPDATE_EXISTING`, `GENERATE`, `SKIP`, `DEFER`, or `BLOCKED`.
 | `7` | Adoption archive and updates | `<decision>` | `<link/path>` | `<reason>` | `<IDs>` | `<review>` |
 | `8` | Human/agent entry-point adapters | `<decision>` | `<link/path>` | `<reason>` | `<IDs>` | `<review>` |
 
+### Policy conformance audit
+
+Complete this audit before approving `REUSE` for an existing policy. Assess
+decision-level conformance; matching filenames, headings, or general intent are
+not evidence by themselves. Equivalent project controls are acceptable when
+their location and effect are explicit. A missing or ambiguous applicable item
+requires `UPDATE_EXISTING`. An intentional difference requires a reviewed
+exception with an owner and equivalent control. Do not silently copy a
+playbook default or choose for the project owner.
+
+When a canonical policy exists but is incomplete, update that artifact through
+`UPDATE_EXISTING`; do not create a duplicate or parallel project policy. If
+several documents compete for the same rule without declared precedence,
+record `BLOCKED` until the project owner identifies or consolidates authority.
+Policy families may share one file or use several explicitly linked canonical
+documents.
+
+| Policy family / routing ID | Required decision or obligation | Applicable? / reason | Existing project evidence | Gap, equivalent control, or exception | Disposition | Reviewer/state |
+| --- | --- | --- | --- | --- | --- | --- |
+| Development and delivery / `<ID>` | `<boundaries, tasks, lifecycle, readiness, defects, policy gaps>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
+| Testing and quality / `<ID>` | `<levels, coverage, environments, triage, evidence, exceptions>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
+| PR and branch / `<ID>` | `<models, targets, naming, reviews/checks, merge, closure, archive>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
+| Documentation and API contracts / `<ID>` | `<authority, precedence, consumers, compatibility, freshness, validation>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
+| Security, data, concurrency, and performance / `<ID>` | `<invariants, risks, migrations, races, capacity, observability, enforcement>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
+| Release, operations, and incident response / `<ID>` | `<environments, rollout, rollback, recovery, escalation, reconciliation>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
+| Specialized policies / `<ID>` | `<trigger, scope, state, audit, exception, enforcement, remediation, retirement>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
+
+For PR and branch policy, include protected target, default branch model,
+optional epic-model decision and criteria, naming, allowed source/target
+relationships, task and final PR targets, synchronization and closure,
+required validation/review, and merge-before-reconciliation-before-archive
+ordering. A `REUSE` disposition is invalid until every applicable row has
+evidence or a reviewed exception.
+
 ### Artifact impact and freshness register
 
 Use only `CURRENT`, `STALE`, or `BLOCKED` for freshness. After every adoption
