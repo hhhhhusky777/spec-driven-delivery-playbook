@@ -4,8 +4,11 @@ This project has not published a formal versioned release. Significant template
 and workflow changes are recorded here until a release/versioning policy is
 adopted.
 
-## Unreleased — updated 2026-09-01
+## Unreleased — updated 2026-09-02
 
+- Clarified that intentional Red tests are transient within one task and merge
+  unit, while contract-only predecessors remain explicitly proposed and close
+  with passing static validation rather than merged failing runtime tests.
 - Added versioned SDD lifecycle schemas, structured transitive-freshness and
   dependency-scoped blocker gates, just-in-time task specifications, and scoped
   project checker execution.

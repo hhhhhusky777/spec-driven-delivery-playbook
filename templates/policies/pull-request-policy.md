@@ -229,6 +229,8 @@ State what was not run and why. A reduced run is not a full-gate pass.
 ### Checklist and next gate
 
 - [ ] Task Definition of Done satisfied.
+- [ ] The canonical test strategy's Red closure boundary is satisfied; no
+      required test intentionally remains failing for a later PR to repair.
 - [ ] Required reviewers/checks complete.
 - [ ] Plan/task/evidence updated.
 - Next task or closure gate: `<ID/action>`.

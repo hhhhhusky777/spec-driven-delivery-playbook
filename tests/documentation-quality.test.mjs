@@ -190,6 +190,35 @@ test("attention gate remains connected to policy, project template, and PR revie
   assert.match(pullRequest, /independent\s+inventory of the complete diff/);
 });
 
+test("intentional Red remains transient across task and merge boundaries", async () => {
+  const testStrategy = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "testing", "test-strategy.md"),
+    "utf8",
+  );
+  const developmentPolicy = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "policies", "development-policy.md"),
+    "utf8",
+  );
+  const implementationPlan = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "delivery", "implementation-plan.md"),
+    "utf8",
+  );
+  const pullRequestPolicy = await readFile(
+    path.join(REPOSITORY_ROOT, "templates", "policies", "pull-request-policy.md"),
+    "utf8",
+  );
+
+  assert.match(testStrategy, /^### Red closure and contract-first sequencing$/m);
+  assert.match(testStrategy, /Red is transient diagnostic evidence, not a completed deliverable/);
+  assert.match(testStrategy, /return to Green before the task becomes\s+`DONE`/);
+  assert.match(testStrategy, /mark the unavailable behavior or interface `PROPOSED`/);
+  assert.match(testStrategy, /passing static document, schema, example, or compatibility validation/);
+  assert.match(testStrategy, /failing runtime behavioral test in the consuming\s+implementation task/);
+  assert.match(developmentPolicy, /close the canonical test strategy's Red-Green cycle/);
+  assert.match(implementationPlan, /test strategy's Red closure boundary is satisfied/);
+  assert.match(pullRequestPolicy, /canonical test strategy's Red closure boundary is satisfied/);
+});
+
 test("task context receipt remains a READY-to-IN_PROGRESS gate", async () => {
   const developmentPolicy = await readFile(
     path.join(REPOSITORY_ROOT, "templates", "policies", "development-policy.md"),
