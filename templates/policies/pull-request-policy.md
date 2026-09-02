@@ -51,6 +51,12 @@ before activating the policy.
 | Change-size target | `<LOC/conceptual rule>` | `<development policy>` |
 | Issue linkage | `<required threshold>` | `<tracker>` |
 
+Every applicable choice above must be explicit in the adopted project policy.
+Omission does not mean that an optional model is disabled or that a playbook
+default applies. During adoption, record decision-level conformance evidence;
+route a missing or ambiguous choice to `UPDATE_EXISTING`, and record an
+intentional alternative as a reviewed exception with its equivalent control.
+
 ## 3. Core principles
 
 - A PR is one coherent, independently reviewable change—not storage for

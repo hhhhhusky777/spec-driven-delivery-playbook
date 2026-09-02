@@ -5,8 +5,11 @@
 Before instantiating project policies, follow the
 [Project Adoption Runbook](../docs/project-adoption-runbook.md) and create a
 [project adoption manifest](adoption/project-adoption-manifest.md). Inventory
-the project's existing authorities first. Reuse them when they already satisfy
-the need; do not create a parallel development, test, or PR policy merely
+the project's existing authorities first. Reuse them only after the manifest
+records decision-level conformance for every applicable template obligation;
+file existence alone is insufficient. Route missing decisions to
+`UPDATE_EXISTING`, and require a reviewed exception for an intentional
+alternative. Do not create a parallel development, test, or PR policy merely
 because a template exists. Use the
 [agent adoption trigger](adoption/agent-adoption-trigger.md) to perform one
 manifest action at a time and stop at every review gate.

@@ -56,6 +56,11 @@ Perform only the DISCOVERY action:
 - record UNKNOWN when evidence is missing;
 - propose REUSE, UPDATE_EXISTING, GENERATE, SKIP, DEFER, or BLOCKED for every
   applicable playbook capability;
+- audit existing policies for decision-level conformance against every
+  applicable obligation in the pinned template;
+- do not infer conformance from file existence, headings, or repository
+  history; route missing or ambiguous decisions to UPDATE_EXISTING and record
+  intentional alternatives as reviewed-exception candidates;
 - update only <ADOPTION_MANIFEST>;
 - keep Adoption state as DISCOVERY;
 - set Next action to independent review for DISCOVERY -> MAPPED;
@@ -95,8 +100,14 @@ Allowed write scope:
 - while DISCOVERY, change only the manifest discovery proposal;
 - while MAPPED, create or update only one selected artifact, or perform the
   final installation verification when no selected artifact remains;
-- for REUSE, SKIP, or DEFER, record the reviewed decision without copying the
-  source document;
+- for REUSE, record decision-level conformance evidence for every applicable
+  policy obligation without copying the source document;
+- for UPDATE_EXISTING, preserve the existing project policy as canonical and
+  add only reviewed missing decisions or accepted alternatives;
+- for SKIP or DEFER, record the reviewed decision without copying the source;
+- require a reviewed exception with rationale, owner, risk, and equivalent
+  control for an intentional deviation; do not silently apply a playbook
+  default;
 - compare the action's changed facts, links, commands, and availability claims
   with previously approved artifacts;
 - record every affected artifact as STALE in the manifest freshness register

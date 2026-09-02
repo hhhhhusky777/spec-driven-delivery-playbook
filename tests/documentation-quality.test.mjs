@@ -284,6 +284,58 @@ test("complete task specifications preserve engineering discretion", async () =>
   assert.match(calibrationGuide, /^## 4\. Detailed but behaviorally ambiguous task/m);
 });
 
+test("project adoption proves policy conformance before reuse", async () => {
+  const read = (relativePath) =>
+    readFile(path.join(REPOSITORY_ROOT, relativePath), "utf8");
+  const [
+    readme,
+    runbook,
+    manifest,
+    trigger,
+    skill,
+    catalog,
+    workflow,
+    pullRequestPolicy,
+  ] = await Promise.all([
+    read("README.md"),
+    read("docs/project-adoption-runbook.md"),
+    read("templates/adoption/project-adoption-manifest.md"),
+    read("templates/adoption/agent-adoption-trigger.md"),
+    read("skills/sdd-project-adoption/SKILL.md"),
+    read("templates/README.md"),
+    read("templates/workflows/sdd-delivery-workflow.md"),
+    read("templates/policies/pull-request-policy.md"),
+  ]);
+
+  for (const document of [
+    readme,
+    runbook,
+    manifest,
+    trigger,
+    skill,
+    catalog,
+    workflow,
+    pullRequestPolicy,
+  ]) {
+    assert.match(document, /decision-level\s+conformance/i);
+    assert.match(document, /UPDATE_EXISTING/);
+  }
+
+  for (const document of [readme, runbook, manifest, trigger, skill, catalog, pullRequestPolicy]) {
+    assert.match(document, /reviewed exception/i);
+  }
+
+  assert.match(runbook, /^### PR and branch policy conformance$/m);
+  assert.match(runbook, /task PR targets and final integration PR target/i);
+  assert.match(runbook, /merge.*archive/i);
+  assert.match(manifest, /^### Policy conformance audit$/m);
+  assert.match(manifest, /Required decision or obligation/);
+  assert.match(manifest, /Existing project evidence/);
+  assert.match(manifest, /Gap, equivalent control, or exception/);
+  assert.match(trigger, /Do not infer conformance from file existence/i);
+  assert.match(skill, /Do not silently copy a playbook default/i);
+});
+
 test("project adoption architecture remains connected to runbook and manifest", async () => {
   const readme = await readFile(path.join(REPOSITORY_ROOT, "README.md"), "utf8");
   const runbook = await readFile(

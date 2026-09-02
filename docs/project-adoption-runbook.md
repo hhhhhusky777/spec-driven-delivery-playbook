@@ -336,12 +336,52 @@ At minimum, assess development, testing, PR/branch, documentation, API,
 security, data, concurrency, performance, release, incident, and operations
 rules. Do not create specialized policies for hypothetical future needs.
 
+### Decision-level policy conformance
+
+An existing policy is a `REUSE` candidate, not proof of compatibility. Compare
+the policy with every applicable decision or obligation in the pinned playbook
+template and record project evidence for each item. Equivalent headings and
+controls are valid; exact template wording and structure are not required.
+
+Route the result as follows:
+
+- use `REUSE` only when every applicable item has explicit project evidence;
+- use `UPDATE_EXISTING` when a required decision is absent or ambiguous;
+- record `SKIP` only when the obligation is demonstrably inapplicable; and
+- require a reviewed exception with rationale, owner, risk, and equivalent
+  control when the project intentionally differs from the playbook baseline.
+
+Do not silently insert a playbook default or infer a choice from current Git
+history. A missing project choice remains a gap for its authorized owner. The
+updated project policy remains canonical and must pass independent review
+before a plan or agent relies on the new rule.
+
+### PR and branch policy conformance
+
+For a PR and branch policy, assess at least:
+
+- protected integration branch and default branch model;
+- whether the optional epic integration model is disabled or enabled, plus its
+  activation criteria, owner, lifetime, and closure condition;
+- branch naming and allowed source/target relationships;
+- task PR targets and final integration PR target;
+- synchronization, merge method, deletion, and abandoned-branch handling;
+- required reviews, checks, and final integration validation; and
+- merge, post-merge reconciliation, and archive ordering.
+
+For the epic model, the delivery must reach and validate the feature branch,
+merge its final reviewed PR into the protected branch, reconcile the merged
+state, and only then archive the implementation plan. An existing policy that
+omits any applicable choice routes to `UPDATE_EXISTING`; adoption must not pick
+the choice on the project's behalf.
+
 The manifest review gate passes only when:
 
 - every applicable capability has one decision and canonical destination;
+- every `REUSE` policy has complete decision-level conformance evidence;
 - conflicts, duplication, and unclear authority have dispositions;
 - missing policies are supported by observed project evidence;
-- deviations from the playbook are explicit and owned; and
+- deviations from the playbook have a reviewed exception and owner; and
 - the smallest safe adoption scope is selected.
 
 ## 7. Install the project-local integration
