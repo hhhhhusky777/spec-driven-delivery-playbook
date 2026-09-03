@@ -32,6 +32,10 @@ instantiated workflow record.
 | Self-review state | `<NOT_STARTED / SELF_REVIEW_PASSED / SELF_REVIEW_FAILED>` |
 | Self-review candidate revision | `<exact commit/version or Not applicable>` |
 | Self-review evidence | `<record/link or Not applicable>` |
+| Implementation continuation mode | `NOT_SELECTED` |
+| Implementation mode authority | `Not selected` |
+| Implementation mode scope | `Not selected` |
+| Implementation mode selected at | `Not selected` |
 | Next action | `<value>` |
 | Next action target IDs | `<artifact/task IDs>` |
 | Allowed write scope | `<semicolon-separated repository-relative paths>` |
@@ -109,10 +113,47 @@ expansion, or a mandatory semantic checkpoint.
 Standard review states are `NOT_STARTED`, `IN_REVIEW`, `CHANGES_REQUESTED`,
 `APPROVED`, and `STALE`.
 
+### 1.3 Implementation continuation mode
+
+This mode is separate from the action-level review mode above. It applies only
+to implementation PRs after every design dependency and the applicable complete
+task specification are approved.
+
+- `NOT_SELECTED`: required throughout design; at `GATES_READY`, ask the user to
+  choose before entering `DELIVERY_ACTIVE`.
+- `HUMAN_REVIEW_BEFORE_MERGE`: after checks and mandatory self-review, open the
+  PR and stop for its required review and merge decision.
+- `AGENT_AUTO_MERGE`: after checks and mandatory self-review, open the PR,
+  verify repository protections and the current mode again, merge without
+  bypass, record the audit, and continue to the next dependency-ready task.
+
+Record the user's identity/instruction, selection time, and exact task/PR scope.
+The user may change the mode at any time. Before each task edit, self-review
+gate, PR opening, merge attempt, and continuation, reread these live fields;
+never rely on an earlier prompt or cached value. A missing, invalid, stale, or
+out-of-scope value stops for user direction. A later change takes effect before
+the next irreversible action and cannot undo a completed merge.
+
+Writing the user's explicit selection into these live fields is a control-only
+synchronization, not a new agent decision, and needs no additional semantic
+approval unless project policy says otherwise. Copy the instructed value and
+scope exactly, run lifecycle validation, and never broaden it.
+
+The implementation mode cannot bypass branch protection, required checks,
+CODEOWNERS, security/compliance rules, or any project rule requiring review.
+Stop on a conflict, inconsistency, failed/missing gate, unresolved comment or
+change request, stale dependency, unexpected diff, new semantic decision,
+scope expansion, mode change, or repository refusal. Design artifacts and
+their review ledgers never use `AGENT_AUTO_MERGE`.
+
+For a multi-task delivery, the user may explicitly include the final feature PR
+in scope only after final validation receives its required approval. The mode
+may authorize that merge; it never approves the validation decision itself.
+
 Before changing `State`, preserve its old value in `Previous state`. The
 lifecycle checker rejects transitions outside the state machine above.
 
-### 1.3 Canonical state and mutability
+### 1.4 Canonical state and mutability
 
 - This workflow owns the live delivery state, current artifact, blockers,
   freshness, and next action.
@@ -357,6 +398,19 @@ Normative generated content, interpretation, or a new decision always uses
 not in the artifact review ledger. At the next `EXPLICIT_REVIEW`, provide one
 concise inventory of the automatic actions and their evidence.
 
+### 9.4 Implementation PR and post-merge review ledger
+
+| Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Required checks | Merge result | Human review | Findings/follow-up |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `<task + PR link>` | `<commits>` | `<mode + authority link>` | `<record>` | `<evidence>` | `<merged/stopped>` | `<PENDING/ACCEPTED/FOLLOW_UP_REQUIRED/FOLLOW_UP_COMPLETE>` | `<links or None>` |
+
+In `HUMAN_REVIEW_BEFORE_MERGE`, record the human review before merge. In
+`AGENT_AUTO_MERGE`, create the row immediately after merge with human review
+`PENDING`; later record `ACCEPTED` or `FOLLOW_UP_REQUIRED` without rewriting the
+merge evidence. A finding that affects active or future work marks those
+dependencies stale or blocked. Every row must be accepted, or have completed
+follow-up recorded as `FOLLOW_UP_COMPLETE`, before `COMPLETE` and archive.
+
 ## 10. Feedback and rerouting rules
 
 - Requirement or accepted-solution ambiguity -> return to whiteboard.
@@ -457,6 +511,11 @@ blocker affects that task, the approved plan has one task that satisfies its
 Definition of Ready and is marked `NEXT`, and the next action's write targets
 are inside the allowed write scope.
 
+At `GATES_READY`, `NOT_SELECTED` is a valid waiting state whose next action is
+to ask the user for the implementation continuation mode. The workflow cannot
+enter `DELIVERY_ACTIVE` until a valid mode, authority, scope, and selection time
+are recorded.
+
 ## 12. Completion packet
 
 At completion, the linked packet contains as applicable:
@@ -485,6 +544,8 @@ Closure checklist:
 - [ ] No dependent artifact was generated from a draft, rejected, or stale
       input without documented reconciliation.
 - [ ] Required gates pass or have explicit approved exceptions.
+- [ ] Every automatically merged PR has post-merge human disposition
+      `ACCEPTED`, or its required follow-up is complete and linked.
 - [ ] Contracts, implementation, tests, and operational documentation agree.
 - [ ] Deferred work/residual risk has an owner and durable location.
 - [ ] The concluded whiteboard is preserved at its immutable archive path and

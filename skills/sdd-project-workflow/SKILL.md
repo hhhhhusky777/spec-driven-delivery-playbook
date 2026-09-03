@@ -69,6 +69,9 @@ Before every project edit:
 6. For a multi-task delivery, verify the task branch starts from and the task
    PR targets the feature integration branch. Only the final validated feature
    PR may target the protected branch.
+7. If the action is implementation, reread the workflow's live implementation
+   continuation mode, authority, scope, and selection time. Do not use a cached
+   value or infer the user's choice.
 
 After that one edit and its applicable checks:
 
@@ -77,7 +80,8 @@ After that one edit and its applicable checks:
    changes to their governing statements, verify scope, evidence, risks, and
    cross-document consistency, and record `SELF_REVIEW_PASSED` or
    `SELF_REVIEW_FAILED`. Any candidate change invalidates the result. A passing
-   self-review is evidence only and cannot approve, merge, or continue the work.
+   self-review is evidence only and cannot by itself approve, merge, or continue
+   the work.
 2. Compare changed facts, links, commands, versions, availability claims, and
    contracts with the workflow dependency register.
 3. Classify the change `CONTROL_ONLY`, `MATERIAL`, or `UNKNOWN` and compute
@@ -98,6 +102,44 @@ After that one edit and its applicable checks:
    dependent generation or implementation.
 8. Report the invariant results separately from Markdown/test results. Passing
    automation is not semantic approval.
+
+## Implementation task continuation
+
+Keep `NOT_SELECTED` throughout design. At `GATES_READY`, ask the user to choose
+`HUMAN_REVIEW_BEFORE_MERGE` or `AGENT_AUTO_MERGE` before the first task enters
+`IN_PROGRESS`; record the instruction and exact scope in the workflow. The user
+may change the mode at any time.
+
+Treat exact recording of the user's instruction as a control-only workflow
+update unless project policy requires another review. Do not reinterpret or
+broaden its scope, and run lifecycle validation after recording it.
+
+For every implementation task, reread the canonical mode before the task edit,
+self-review gate, PR opening, merge attempt, and next-task continuation:
+
+- `HUMAN_REVIEW_BEFORE_MERGE`: open the annotated, exact-head self-reviewed PR
+  and stop for required human review and merge authority.
+- `AGENT_AUTO_MERGE`: open the annotated, exact-head self-reviewed PR, wait for
+  all required checks and repository protections, reread the mode, then merge
+  without bypass and record the merge and post-merge review row before
+  continuing to the next dependency-ready task.
+
+Self-review does not authorize the merge; the user's current scoped mode choice
+does. Stop on missing/invalid/stale/out-of-scope mode data, a failed/missing
+gate, conflict, unresolved comment or change request, stale dependency,
+unexpected diff, ambiguity, inconsistency, new semantic decision, scope
+expansion, mode change, or repository refusal. Never weaken checks, use
+administrator bypass, or apply this mode to design, policy, contract, task-spec,
+exception, final-validation, or archive approval.
+
+Every automatically merged PR starts as `PENDING` in the post-merge human-review
+ledger. A finding blocks affected work and routes its correction through the
+workflow. Do not mark the delivery `COMPLETE` or archive until all rows are
+`ACCEPTED` or their required follow-up is complete.
+
+For a multi-task delivery, apply `AGENT_AUTO_MERGE` to the final feature PR only
+when the current user scope names it and final validation is already approved.
+Merging that PR does not approve validation or delivery closure.
 
 `GATES_READY` requires all selected prerequisites approved/current, no blocker
 affecting the first task, and an approved plan with at least one task satisfying
@@ -123,9 +165,9 @@ workflow's linked plan is `CURRENT` and already `VALIDATING`. If plan-level
 validation finds more implementation work, return the plan to `IMPLEMENTING`
 and the workflow to `DELIVERY_ACTIVE` before resuming tasks.
 
-Preserve independent review gates and exact allowed write scopes. Generate no
-downstream artifact before its owning gate authorizes it. Preserve unrelated
-and user-owned work, and report exact checks and evidence.
+Preserve every design-phase independent review gate and exact allowed write
+scope. Generate no downstream artifact before its owning gate authorizes it.
+Preserve unrelated and user-owned work, and report exact checks and evidence.
 
 The installation guide is runtime orchestration data, not project authority.
 The reviewed manifest and linked project contracts remain authoritative.

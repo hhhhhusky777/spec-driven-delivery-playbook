@@ -194,6 +194,116 @@ function checkSelfReviewGate(file, fields, reviewRequired) {
   return diagnostics;
 }
 
+function isUnselected(value) {
+  return isNone(value || "") || /^not selected$/i.test(normalizeValue(value || ""));
+}
+
+function checkImplementationContinuation(file, fields, tables) {
+  const diagnostics = [];
+  const mode = fields.get("Implementation continuation mode");
+  const state = fields.get("State");
+  const allowedModes = new Set([
+    "NOT_SELECTED",
+    "HUMAN_REVIEW_BEFORE_MERGE",
+    "AGENT_AUTO_MERGE",
+  ]);
+  if (!allowedModes.has(mode)) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_IMPLEMENTATION_MODE",
+        `unsupported implementation continuation mode: ${mode || "missing"}`,
+      ),
+    );
+    return diagnostics;
+  }
+
+  const designStates = new Set([
+    "AWAITING_HANDOFF",
+    "ROUTING",
+    "MANIFEST_IN_REVIEW",
+    "CHANGES_REQUESTED",
+    "ARTIFACTS_SELECTED",
+    "ARTIFACT_GENERATING",
+    "ARTIFACT_IN_REVIEW",
+    "RETURN_TO_WHITEBOARD",
+  ]);
+  if (designStates.has(state) && mode !== "NOT_SELECTED") {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_IMPLEMENTATION_MODE_PHASE",
+        `${mode} cannot be selected during design state ${state}`,
+      ),
+    );
+  }
+
+  const implementationStates = new Set([
+    "DELIVERY_ACTIVE",
+    "VALIDATING",
+    "COMPLETE",
+    "ARCHIVED",
+  ]);
+  if (implementationStates.has(state) && mode === "NOT_SELECTED") {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_IMPLEMENTATION_MODE_REQUIRED",
+        `${state} requires a user-selected implementation continuation mode`,
+      ),
+    );
+  }
+
+  if (mode !== "NOT_SELECTED") {
+    for (const field of [
+      "Implementation mode authority",
+      "Implementation mode scope",
+      "Implementation mode selected at",
+    ]) {
+      if (isUnselected(fields.get(field))) {
+        diagnostics.push(
+          diagnostic(
+            file,
+            1,
+            "SDD_IMPLEMENTATION_MODE_AUTHORITY",
+            `${mode} requires recorded ${field}`,
+          ),
+        );
+      }
+    }
+  }
+
+  if (["COMPLETE", "ARCHIVED"].includes(state)) {
+    const reviewLedger = findTable(tables, [
+      "Task/PR",
+      "Head and merge commit",
+      "Implementation mode/authority",
+      "Self-review",
+      "Required checks",
+      "Merge result",
+      "Human review",
+      "Findings/follow-up",
+    ]);
+    const openRows = (reviewLedger?.rows || []).filter((row) =>
+      ["PENDING", "FOLLOW_UP_REQUIRED"].includes(normalizeValue(row["Human review"])),
+    );
+    if (openRows.length > 0) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          reviewLedger.line,
+          "SDD_POST_MERGE_REVIEW_OPEN",
+          `${state} cannot retain pending post-merge human review`,
+        ),
+      );
+    }
+  }
+  return diagnostics;
+}
+
 function checkRequiredSections(file, sections, requiredSections) {
   return requiredSections
     .filter((section) => !sections.has(section))
@@ -561,6 +671,7 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
         ),
     ),
   );
+  diagnostics.push(...checkImplementationContinuation(file, fields, tables));
 
   const reviewMode = fields.get("Review mode");
   if (reviewMode) {

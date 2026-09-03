@@ -55,6 +55,7 @@ section.
 | Concluded whiteboard | `<canonical path/URL>` |
 | Approved workflow handoff | `<canonical path/URL and version>` |
 | Delivery workflow/manifest | `<canonical path/URL and version>` |
+| Implementation continuation mode | `Read live from delivery workflow; do not copy` |
 | Development policy | `<canonical path/URL>` |
 | Test strategy | `<canonical path/URL>` |
 | PR/branch policy | `<canonical path/URL>` |
@@ -457,6 +458,9 @@ contract-equivalent internal engineering choices.
 - [ ] Existing dirty worktree files are attributed and preserved.
 - [ ] The task branch source and PR target match the selected single-task or
       multi-task integration model.
+- [ ] The delivery is past design approval, and the workflow records a
+      user-selected implementation continuation mode, authority, scope, and
+      selection time covering this task.
 - [ ] The test strategy's Red closure boundary is satisfied: this task owns the
       Green implementation for every required behavioral test it introduces,
       or a contract-only predecessor uses `PROPOSED` status and passing static
@@ -495,7 +499,8 @@ receipt is `APPROVED`, or `NOT_APPLICABLE` with a policy-valid reason.
       updated where applicable.
 - [ ] Diff contains no unrelated changes, secrets, debug artifacts, or
       unexplained generated output.
-- [ ] PR review and merge requirements are satisfied.
+- [ ] PR review and merge requirements for the current live implementation mode
+      are satisfied; automatic merges have a post-merge review-ledger row.
 - [ ] Actual change summary, evidence, decisions, and next-ready task are
       recorded in this plan.
 
@@ -566,6 +571,9 @@ self-check this specification against Section 6.3 and the
 | Branch / PR | `<value>` |
 | Context receipt | `NOT_STARTED` |
 | Context source revision | `Not recorded` |
+| Implementation mode at task start | `<mode + workflow revision + authority>` |
+| Implementation mode at PR/merge | `<mode + workflow revision + recheck time>` |
+| Post-merge human review | `<NOT_APPLICABLE/PENDING/ACCEPTED/FOLLOW_UP_REQUIRED + link>` |
 | Self-contained boundary | `<why this task can merge without unmerged follow-up>` |
 | Actual change summary | `Not recorded` |
 

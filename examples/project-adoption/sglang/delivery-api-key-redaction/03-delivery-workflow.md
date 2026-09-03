@@ -13,6 +13,10 @@
 | Self-review state | `NOT_STARTED` |
 | Self-review candidate revision | `Not recorded` |
 | Self-review evidence | `Not recorded` |
+| Implementation continuation mode | `NOT_SELECTED` |
+| Implementation mode authority | `Not selected` |
+| Implementation mode scope | `Not selected` |
+| Implementation mode selected at | `Not selected` |
 | Next action | Complete agent self-review, then request independent review and resolve project-owned unknowns |
 | Allowed write scope | This example packet only |
 | Review mode | `EXPLICIT_REVIEW` |
@@ -56,6 +60,12 @@ unknown impact, or scope expansion fails closed to `EXPLICIT_REVIEW`.
 Before the plan enters `IN_REVIEW`, the producing agent must audit the exact
 candidate and record `SELF_REVIEW_PASSED`. Any change invalidates that result;
 self-review cannot approve, merge, or continue the delivery.
+
+The implementation continuation mode remains `NOT_SELECTED` while this example
+is in design. After the plan and a complete next-task specification are
+approved, a real adopting user chooses `HUMAN_REVIEW_BEFORE_MERGE` or
+`AGENT_AUTO_MERGE` with explicit task/PR scope. This teaching example does not
+make that choice for SGLang.
 
 ### Automation audit ledger
 

@@ -287,6 +287,11 @@ function workflow({
   selfReviewState = "SELF_REVIEW_PASSED",
   selfReviewRevision = "candidate-v1",
   selfReviewEvidence = "reviews/self-review.md",
+  implementationMode = "HUMAN_REVIEW_BEFORE_MERGE",
+  implementationModeAuthority = "user instruction 2026-09-03",
+  implementationModeScope = "task-1",
+  implementationModeSelectedAt = "2026-09-03 10:00 UTC",
+  postMergeHumanReview = null,
 } = {}) {
   const manifestRow = includePlan
     ? "| 1 | Plan | GENERATE_FULL | APPROVED |"
@@ -308,6 +313,10 @@ function workflow({
 | Self-review state | \`${selfReviewState}\` |
 | Self-review candidate revision | \`${selfReviewRevision}\` |
 | Self-review evidence | \`${selfReviewEvidence}\` |
+| Implementation continuation mode | \`${implementationMode}\` |
+| Implementation mode authority | \`${implementationModeAuthority}\` |
+| Implementation mode scope | \`${implementationModeScope}\` |
+| Implementation mode selected at | \`${implementationModeSelectedAt}\` |
 | Next action | Prepare task |
 | Next action target IDs | \`task-1\` |
 | Allowed write scope | \`docs\` |
@@ -340,6 +349,10 @@ ${dependencyRows}
 | Field | Current value |
 | --- | --- |
 | Stale artifacts | \`None\` |
+
+${postMergeHumanReview === null ? "" : `| Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Required checks | Merge result | Human review | Findings/follow-up |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| T01 / PR-1 | head-1 / merge-1 | AGENT_AUTO_MERGE / user | review-1 | checks-1 | merged | ${postMergeHumanReview} | None |`}
 `;
 }
 
@@ -468,6 +481,112 @@ test("automatic continuation fails closed on invalid mode, decisions, or gates",
   );
   assert.deepEqual(
     await checkSddLifecycleDocument(valid.file, valid.root, SCHEMAS),
+    [],
+  );
+});
+
+test("implementation continuation is user-selected, implementation-only, and fail closed", async (t) => {
+  const awaitingChoice = await fixture(
+    t,
+    workflow({
+      implementationMode: "NOT_SELECTED",
+      implementationModeAuthority: "Not selected",
+      implementationModeScope: "Not selected",
+      implementationModeSelectedAt: "Not selected",
+    }),
+  );
+  assert.deepEqual(
+    await checkSddLifecycleDocument(awaitingChoice.file, awaitingChoice.root, SCHEMAS),
+    [],
+  );
+
+  const designAuto = await fixture(
+    t,
+    workflow({
+      state: "ARTIFACT_GENERATING",
+      previousState: "ARTIFACTS_SELECTED",
+      artifactReviewState: "NOT_STARTED",
+      selfReviewState: "NOT_STARTED",
+      selfReviewRevision: "Not applicable",
+      selfReviewEvidence: "Not applicable",
+      implementationMode: "AGENT_AUTO_MERGE",
+    }),
+  );
+  const designDiagnostics = await checkSddLifecycleDocument(
+    designAuto.file,
+    designAuto.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    designDiagnostics.some((item) => item.rule === "SDD_IMPLEMENTATION_MODE_PHASE"),
+  );
+
+  const missingChoice = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "NOT_SELECTED",
+      implementationModeAuthority: "Not selected",
+      implementationModeScope: "Not selected",
+      implementationModeSelectedAt: "Not selected",
+    }),
+  );
+  const missingChoiceDiagnostics = await checkSddLifecycleDocument(
+    missingChoice.file,
+    missingChoice.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    missingChoiceDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_MODE_REQUIRED",
+    ),
+  );
+
+  const missingAuthority = await fixture(
+    t,
+    workflow({ implementationModeAuthority: "Not selected" }),
+  );
+  const authorityDiagnostics = await checkSddLifecycleDocument(
+    missingAuthority.file,
+    missingAuthority.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    authorityDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_MODE_AUTHORITY",
+    ),
+  );
+
+  const pendingReview = await fixture(
+    t,
+    workflow({
+      state: "COMPLETE",
+      previousState: "VALIDATING",
+      implementationMode: "AGENT_AUTO_MERGE",
+      postMergeHumanReview: "PENDING",
+    }),
+  );
+  const pendingDiagnostics = await checkSddLifecycleDocument(
+    pendingReview.file,
+    pendingReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    pendingDiagnostics.some((item) => item.rule === "SDD_POST_MERGE_REVIEW_OPEN"),
+  );
+
+  const reviewed = await fixture(
+    t,
+    workflow({
+      state: "COMPLETE",
+      previousState: "VALIDATING",
+      implementationMode: "AGENT_AUTO_MERGE",
+      postMergeHumanReview: "ACCEPTED",
+    }),
+  );
+  assert.deepEqual(
+    await checkSddLifecycleDocument(reviewed.file, reviewed.root, SCHEMAS),
     [],
   );
 });

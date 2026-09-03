@@ -6,6 +6,13 @@ adopted.
 
 ## Unreleased — updated 2026-09-03
 
+- Added a user-selected, implementation-only continuation mode. After design
+  approval, `HUMAN_REVIEW_BEFORE_MERGE` pauses each task PR, while scoped
+  `AGENT_AUTO_MERGE` permits merge and next-task continuation only after exact
+  self-review and repository gates pass. Added per-checkpoint mode rereads,
+  fail-closed lifecycle rules, post-merge human-review closure, tests, and
+  SGLang examples. Existing instantiated delivery workflows must add the four
+  implementation-mode control fields before their next lifecycle check.
 - Added mandatory exact-revision agent self-review before every review gate,
   contract-to-change author annotations for material PR changes, fail-closed
   lifecycle validation, and SGLang examples of the prerequisite. Existing

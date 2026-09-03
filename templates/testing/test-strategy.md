@@ -176,6 +176,18 @@ Passing tests do not prove semantic correctness and cannot turn
 policy, contract, behavior, risk, or exception requires the explicit review
 defined by the development policy.
 
+For implementation `AGENT_AUTO_MERGE`, also test the control plane that checks
+the live user-selected mode before task start, PR opening, merge, and
+continuation. Positive fixtures require approved design inputs, in-scope user
+authority, exact-head `SELF_REVIEW_PASSED`, current annotations, all required
+checks, correct branch targets, and an append-only post-merge review row.
+Negative fixtures must block missing/invalid mode data, design-phase use,
+out-of-scope tasks, mode changes, conflicts, unresolved comments/change
+requests, failed or missing checks, stale inputs, unexpected diffs, repository
+refusal, and completion with pending post-merge human review.
+For multi-task delivery, also reject automatic final-feature merge before final
+validation approval or when that PR is absent from the recorded user scope.
+
 ## 5. Contract and risk traceability
 
 ### Contract coverage

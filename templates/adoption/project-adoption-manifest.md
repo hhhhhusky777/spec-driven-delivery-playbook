@@ -54,6 +54,12 @@ exception exists, and the next action remains within the recorded automation
 boundary and write scope. Otherwise continuation fails closed to
 `EXPLICIT_REVIEW`.
 
+During policy mapping, require the development and PR/branch authorities to
+decide whether implementation permits `AGENT_AUTO_MERGE` or only
+`HUMAN_REVIEW_BEFORE_MERGE`. Record where the live delivery choice and
+post-merge review ledger will reside. A missing decision routes to
+`UPDATE_EXISTING`; adoption never infers auto-merge permission.
+
 Adoption type: `<real project / internal trial / external-project case study>`
 
 External-project disclaimer: `<Not applicable, or explicit no-affiliation and

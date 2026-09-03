@@ -55,7 +55,9 @@ explicit case-by-case invocation. The workflow classifies the change, selects
 the smallest safe route, reuses active project policies, and generates only the
 artifacts the delivery needs. Each action follows its pre-approved review mode;
 only deterministic, non-semantic steps may continue automatically before the
-next mandatory review checkpoint.
+next mandatory review checkpoint. Separately, after all design gates pass, the
+user may authorize scoped implementation PR auto-merge with exact-revision
+self-review, repository gates, and post-merge human review.
 
 ```mermaid
 flowchart TD
@@ -84,7 +86,9 @@ flowchart TD
     AR -->|"Yes, more artifacts"| G
     AR -->|"Yes, all artifacts"| PG["Planning, Policy, and Decision Gates Ready"]
 
-    PG --> T["Dependency-Ordered Agile Tasks or Scoped Change"]
+    PG --> IM{"User selected implementation continuation mode?"}
+    IM -->|"Not selected"| IM
+    IM -->|"Human review or agent auto-merge"| T["Dependency-Ordered Agile Tasks or Scoped Change"]
     T --> D["TDD + Small Self-Contained PR"]
     D --> MP{"Mid-delivery issue reveals a systemic rule?"}
     MP -->|"No"| V{"Required evidence passes?"}
@@ -95,9 +99,16 @@ flowchart TD
     F -->|"Plan/artifact/task gap"| G
     F -->|"New systemic rule"| RP
     F -->|"Product/test/config/environment"| D
-    V -->|"More tasks"| T
-    V -->|"All tasks complete"| X["Plan-Level Validation + Retrospective"]
-    X --> DR["Delivery Record + Archived Whiteboard"]
+    V -->|"Pass"| MC{"Reread live implementation mode"}
+    MC -->|"Human review"| HP["Open PR and stop for review"]
+    MC -->|"Agent auto-merge"| AM["Open + merge PR; queue human post-review"]
+    HP --> NT{"More tasks?"}
+    AM --> NT
+    NT -->|"Yes"| T
+    NT -->|"No"| X["Plan-Level Validation + Retrospective"]
+    X --> PH{"Post-merge human reviews closed?"}
+    PH -->|"No: resolve findings"| D
+    PH -->|"Yes"| DR["Delivery Record + Archived Whiteboard"]
 ```
 
 The workflow is intentionally not a one-way waterfall. Review and delivery
@@ -588,8 +599,19 @@ candidate change and records `SELF_REVIEW_PASSED` or `SELF_REVIEW_FAILED`.
 
 `SELF_REVIEW_PASSED` is pre-review evidence, never approval. It does not satisfy
 reviewer independence, change the selected review mode, authorize merge, or
-authorize continuation. Automatic merging and user-selectable implementation
-continuation modes are intentionally outside this contract.
+authorize continuation by itself.
+
+After every design artifact and complete task specification is approved, the
+user chooses the implementation continuation mode in the live delivery
+workflow. `HUMAN_REVIEW_BEFORE_MERGE` pauses each task PR for review;
+`AGENT_AUTO_MERGE` lets the agent merge an annotated, exact-revision
+self-reviewed task PR only after all repository protections and declared gates
+pass. The agent rereads this mode before each task, PR, merge, and continuation;
+the user may change it at any time. Missing or invalid mode data, conflicts,
+inconsistencies, failed gates, scope drift, unresolved comments, or repository
+rules requiring review stop automation. Design and planning gates never use
+this implementation-only choice, and all automatically merged PRs require
+post-merge human review before delivery completion/archive.
 
 ## Dependency-first data sequencing
 
