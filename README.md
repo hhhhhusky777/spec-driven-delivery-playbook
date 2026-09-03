@@ -476,6 +476,7 @@ This prevents document inflation while making omissions reviewable.
 | [Delivery workflow](templates/workflows/sdd-delivery-workflow.md) | Approved-handoff-input routing, artifact selection, gates, feedback loops, and completion packet |
 | [Implementation plan](templates/delivery/implementation-plan.md) | Approved feature contracts, dependency/data phases, incremental tasks, tracking, evidence, and closure |
 | [Architecture decision record](templates/decisions/architecture-decision-record.md) | Durable rationale and consequences for a significant architectural choice |
+| [Agent self-review record](templates/reviews/agent-self-review.md) | Mandatory exact-revision audit and annotated contract-to-change map before every review gate |
 
 The [task-specification calibration guide](docs/task-specification-calibration.md)
 defines what `COMPLETE` means, separates product/system decisions from bounded
@@ -577,6 +578,18 @@ work continues only until the next mandatory semantic checkpoint.
 automation cannot mark normative content `APPROVED`, and changing a review mode
 requires explicit review. This reduces mechanical review stops without
 allowing green tests to approve a wrong design.
+
+Before every review gate, the generating or implementing agent self-reviews the
+exact candidate revision against its approved inputs, scope, acceptance
+criteria, policies, tests, risks, and surrounding context. For a PR, it also
+adds concise author annotations to material or non-obvious hunks and maps them
+to governing statements and evidence. The self-review is repeated after any
+candidate change and records `SELF_REVIEW_PASSED` or `SELF_REVIEW_FAILED`.
+
+`SELF_REVIEW_PASSED` is pre-review evidence, never approval. It does not satisfy
+reviewer independence, change the selected review mode, authorize merge, or
+authorize continuation. Automatic merging and user-selectable implementation
+continuation modes are intentionally outside this contract.
 
 ## Dependency-first data sequencing
 

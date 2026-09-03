@@ -201,6 +201,12 @@ instructions, and pinned repository. It updates only repository discovery,
 unknowns, and the proposed routing map. It must not create downstream policies
 or mark its own work approved.
 
+Before each review stop, the agent completes the adopted self-review record
+against the exact candidate revision and records `SELF_REVIEW_PASSED` or
+`SELF_REVIEW_FAILED`. A later change invalidates that result. A pass supplies
+review evidence but cannot approve adoption, satisfy reviewer independence,
+authorize merge, or authorize continuation.
+
 **Review stop A:** an authorized reviewer verifies facts and authority links.
 On approval, the reviewer records the review and moves `DISCOVERY -> MAPPED`.
 Comments keep the manifest in `DISCOVERY`.

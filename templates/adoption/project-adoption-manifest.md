@@ -31,6 +31,9 @@ evidence; it does not replace the project authorities to which it links.
 | Required documentation checks | `<commands or reviewed Not applicable reason>` |
 | Review mode | `<EXPLICIT_REVIEW / AUTO_CONTINUE / REVIEW_ON_EXCEPTION>` |
 | Review mode authority | `<approved action-control row / policy link>` |
+| Self-review state | `<NOT_STARTED / SELF_REVIEW_PASSED / SELF_REVIEW_FAILED>` |
+| Self-review candidate revision | `<exact commit/version or Not applicable>` |
+| Self-review evidence | `<record/link or Not applicable>` |
 | Automation boundary | `<last permitted action ID or Not applicable>` |
 | Required automatic gates | `<commands/check IDs or Not applicable>` |
 | Automatic gate result | `<PASS / FAIL / NOT_RUN / NOT_APPLICABLE>` |
@@ -286,9 +289,15 @@ which reasoning is reconstructed>`
 
 ### Review rounds
 
-| Round | Reviewer/type | Scope | Disposition | Comments resolved | Version/date |
-| --- | --- | --- | --- | --- | --- |
-| `1` | `<identity/type>` | `<items>` | `IN_REVIEW` | `<links or None>` | `<value>` |
+Every adoption review round requires a completed
+[agent self-review](../reviews/agent-self-review.md) against the exact candidate
+revision. A later candidate change invalidates the result and requires another
+self-review. `SELF_REVIEW_PASSED` is evidence only; it cannot approve adoption,
+satisfy reviewer independence, authorize merge, or authorize continuation.
+
+| Round | Self-review evidence | Reviewer/type | Scope | Disposition | Comments resolved | Version/date |
+| --- | --- | --- | --- | --- | --- | --- |
+| `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity/type>` | `<items>` | `IN_REVIEW` | `<links or None>` | `<value>` |
 
 ### Installation checklist
 

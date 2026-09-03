@@ -44,12 +44,15 @@ a checkout exists on another machine.
 1. Verify the project root, source repository, and resolved revision.
 2. Read and follow the installed skill completely.
 3. Preserve exact write scopes and every independent review stop.
-4. Populate only durable playbook identity in the manifest; never commit the
+4. Before every review stop, complete the agent self-review record against the
+   exact candidate revision. A pass is evidence only, never approval or
+   authorization to merge or continue.
+5. Populate only durable playbook identity in the manifest; never commit the
    machine-local checkout.
-5. Do not request or infer a product need during installation.
-6. Validate the runtime with `./install-sdd.sh --validate` when it may have
+6. Do not request or infer a product need during installation.
+7. Validate the runtime with `./install-sdd.sh --validate` when it may have
    drifted.
-7. After reviewed authority reaches `INSTALLED`, clean up the pending checkout,
+8. After reviewed authority reaches `INSTALLED`, clean up the pending checkout,
    rerun the installer to select `sdd-project-workflow`, then create only the empty
    `.github/spec-driven-delivery/solution-whiteboard.md` and stop.
 

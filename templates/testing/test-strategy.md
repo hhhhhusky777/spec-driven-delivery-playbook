@@ -35,12 +35,15 @@ Only `ACTIVE` versions define required quality gates.
 
 Submit each draft or update for human or independent-agent review. The author
 or generating runner must not self-approve unless a documented project rule
-allows a low-risk exception. Resolve `CHANGES_REQUESTED` and repeat review
-before activating the strategy.
+allows a low-risk exception. First complete the
+[agent self-review](../reviews/agent-self-review.md) against the exact candidate
+revision and record `SELF_REVIEW_PASSED`; any candidate change invalidates that
+evidence. Resolve `CHANGES_REQUESTED`, repeat self-review, and repeat independent
+review before activating the strategy. Self-review is evidence, not approval.
 
-| Round | Reviewer | Type | Result | Comments/link | Resolved version |
-| --- | --- | --- | --- | --- | --- |
-| `1` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
+| Round | Self-review evidence | Reviewer | Type | Result | Comments/link | Resolved version |
+| --- | --- | --- | --- | --- | --- | --- |
+| `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
 
 ## 2. Quality objectives and claims
 

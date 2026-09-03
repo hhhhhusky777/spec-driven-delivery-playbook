@@ -4,12 +4,16 @@
 
 | Field | Value |
 | --- | --- |
-| State | `ARTIFACT_IN_REVIEW` |
-| Previous state | `ARTIFACT_GENERATING` |
+| State | `ARTIFACT_GENERATING` |
+| Previous state | `ARTIFACTS_SELECTED` |
 | Approved handoff | [Workflow input](02-whiteboard-handoff.md) |
 | Selected route | Route 2 — Multi-task security defect; full plan, no new policy or ADR |
 | Current artifact | [Implementation plan](04-implementation-plan.md) in `CONTRACT_REVIEW` |
-| Next action | Independent review and resolution of project-owned unknowns |
+| Current artifact review state | `NOT_STARTED` |
+| Self-review state | `NOT_STARTED` |
+| Self-review candidate revision | `Not recorded` |
+| Self-review evidence | `Not recorded` |
+| Next action | Complete agent self-review, then request independent review and resolve project-owned unknowns |
 | Allowed write scope | This example packet only |
 | Review mode | `EXPLICIT_REVIEW` |
 | Automation boundary | `Not applicable` |
@@ -49,6 +53,9 @@
 Missing or invalid mode data, ambiguity, drift, stale inputs, a failed gate, an
 unknown impact, or scope expansion fails closed to `EXPLICIT_REVIEW`.
 `AUTO_CONTINUED` records execution evidence and is never approval.
+Before the plan enters `IN_REVIEW`, the producing agent must audit the exact
+candidate and record `SELF_REVIEW_PASSED`. Any change invalidates that result;
+self-review cannot approve, merge, or continue the delivery.
 
 ### Automation audit ledger
 

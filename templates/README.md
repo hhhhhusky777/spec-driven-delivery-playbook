@@ -47,6 +47,10 @@ and update the active workflow manifest instead of bypassing its review gates.
 
 ## Per-need templates
 
+Before every review gate, use the
+[agent self-review record](reviews/agent-self-review.md) as a separate record or
+embed its fields in the owning artifact.
+
 1. Always begin inside the installed project's empty
    [solution whiteboard](discovery/solution-whiteboard.md).
 2. After convergence, generate and approve the
@@ -73,6 +77,11 @@ generating runner must not self-approve unless an active project policy grants
 a documented low-risk exception. A reviewer may be a human or an independent
 review agent; high-risk or externally accountable decisions require a human
 when project policy says so.
+
+Before submission, the generating or implementing agent must record
+`SELF_REVIEW_PASSED` against the exact candidate revision. Any later change
+invalidates that result. Self-review prepares the review package; it never
+becomes `APPROVED` or authorizes merge or continuation.
 
 ## Instantiation rules
 

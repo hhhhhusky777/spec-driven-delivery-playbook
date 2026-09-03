@@ -72,25 +72,31 @@ Before every project edit:
 
 After that one edit and its applicable checks:
 
-1. Compare changed facts, links, commands, versions, availability claims, and
+1. Before every review gate, complete the repository's adopted agent self-review
+   record against the exact candidate revision. Map material or non-obvious
+   changes to their governing statements, verify scope, evidence, risks, and
+   cross-document consistency, and record `SELF_REVIEW_PASSED` or
+   `SELF_REVIEW_FAILED`. Any candidate change invalidates the result. A passing
+   self-review is evidence only and cannot approve, merge, or continue the work.
+2. Compare changed facts, links, commands, versions, availability claims, and
    contracts with the workflow dependency register.
-2. Classify the change `CONTROL_ONLY`, `MATERIAL`, or `UNKNOWN` and compute
+3. Classify the change `CONTROL_ONLY`, `MATERIAL`, or `UNKNOWN` and compute
    transitive `CURRENT`, `STALE`, or `BLOCKED` state from structured dependency
    IDs. Do not infer the graph from prose.
-3. For `EXPLICIT_REVIEW`, keep independent review of the current change as the
+4. For `EXPLICIT_REVIEW`, keep independent review of the current change as the
    immediate next action. Do not correct a newly stale second artifact in the
    same invocation.
-4. For `AUTO_CONTINUE` or `REVIEW_ON_EXCEPTION`, verify approved/current inputs,
+5. For `AUTO_CONTINUE` or `REVIEW_ON_EXCEPTION`, verify approved/current inputs,
    no semantic decision, every declared gate passing on the output revision, no
    exception, and an audit entry. Continue only until the next mandatory
    semantic checkpoint and only inside the approved automation boundary, WIP
    policy, and write scope. `AUTO_CONTINUED` is not approval.
-5. Fail closed to `EXPLICIT_REVIEW` on a failed/missing gate, ambiguity, unknown
+6. Fail closed to `EXPLICIT_REVIEW` on a failed/missing gate, ambiguity, unknown
    impact, exception, drift, blocker, stale dependency, unrelated change, or
    scope expansion.
-6. After approval, route the earliest dependency-ready stale correction before
+7. After approval, route the earliest dependency-ready stale correction before
    dependent generation or implementation.
-7. Report the invariant results separately from Markdown/test results. Passing
+8. Report the invariant results separately from Markdown/test results. Passing
    automation is not semantic approval.
 
 `GATES_READY` requires all selected prerequisites approved/current, no blocker

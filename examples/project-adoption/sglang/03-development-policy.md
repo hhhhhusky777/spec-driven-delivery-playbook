@@ -85,6 +85,12 @@ flaky-test/CI rules permit it and the underlying result is understood.
 - Preserve unrelated changes and report exactly which evidence ran.
 - Keep live state, next action, blockers, source revisions, and evidence in the
   owning artifact rather than relying on chat history.
+- Before every review gate, audit the exact candidate against approved inputs,
+  scope, contracts, tests, risks, and cross-document consistency. Record
+  `SELF_REVIEW_PASSED` or `SELF_REVIEW_FAILED`, and add concise PR author
+  annotations for material or non-obvious changes. Any candidate change
+  invalidates the result. A pass is evidence, not approval or authorization to
+  merge or continue.
 
 ## 7. Specialized policy discovery
 

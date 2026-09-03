@@ -65,13 +65,16 @@ delivery-record links, and only then create a fresh `EMPTY` working copy.
 ### 0.1 Conclusion review gate
 
 The whiteboard owner may facilitate discussion but must not alone approve the
-conclusion. Record human or independent-agent review of the convergence gate.
-Resolve `CHANGES_REQUESTED` in the whiteboard and repeat review before setting
-the state to `CONCLUDED`.
+conclusion. Before requesting human or independent-agent review, complete the
+[agent self-review](../reviews/agent-self-review.md) against the exact candidate
+revision and record `SELF_REVIEW_PASSED`. Any candidate change invalidates that
+evidence. Resolve `CHANGES_REQUESTED` in the whiteboard, repeat self-review, and
+repeat independent review before setting the state to `CONCLUDED`. Self-review
+is evidence, not approval.
 
-| Round | Reviewer | Type | Result | Comments/link | Resolved version |
-| --- | --- | --- | --- | --- | --- |
-| `1` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
+| Round | Self-review evidence | Reviewer | Type | Result | Comments/link | Resolved version |
+| --- | --- | --- | --- | --- | --- | --- |
+| `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
 
 ## 1. How the AI and contributors use this whiteboard
 

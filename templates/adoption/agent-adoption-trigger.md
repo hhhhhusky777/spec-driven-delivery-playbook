@@ -134,7 +134,13 @@ write scope. Apply its pre-approved `EXPLICIT_REVIEW`, `AUTO_CONTINUE`, or
 - preserve all unrelated and user-owned changes;
 - do not write outside the current Allowed write scope;
 - update manifest evidence and Next action;
-- run only the Required documentation checks applicable to this action.
+- run only the Required documentation checks applicable to this action;
+- before every review gate, complete the adopted agent self-review record
+  against the exact candidate revision, including the contract-to-change map,
+  material author annotations, scope, evidence, risks, and cross-document
+  consistency; and
+- record `SELF_REVIEW_PASSED` or `SELF_REVIEW_FAILED`; any candidate change
+  invalidates the result, and a pass cannot approve, merge, or continue work.
 
 Do not advance Adoption state without recorded explicit reviewer authority.
 Do not approve your own work, use `AUTO_CONTINUED` as approval, cross an

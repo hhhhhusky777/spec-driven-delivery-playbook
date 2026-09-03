@@ -48,6 +48,8 @@ All repository changes also follow the
 9. Record migration guidance for existing instantiated documents when needed.
 10. When review states or dependencies change, verify the handoff trigger,
     manifest review, per-artifact review loop, and return paths together.
+11. Before every review gate, complete the agent self-review record against the
+    exact candidate revision; any later change invalidates that evidence.
 
 ## Periodic review
 

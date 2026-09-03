@@ -7,6 +7,7 @@
 | State | `APPROVED` for playbook demonstration only |
 | Source | [Concluded whiteboard](01-solution-whiteboard.md) |
 | Source revision | Example revision containing this packet |
+| Self-review evidence | `SELF_REVIEW_PASSED` against the source revision |
 | Trigger | `MANUAL_INVOCATION` |
 | External authority | None; SGLang review is still required |
 

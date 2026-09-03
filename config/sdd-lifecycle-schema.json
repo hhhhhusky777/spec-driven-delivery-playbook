@@ -8,7 +8,10 @@
         "Plan mode",
         "Next ready task(s)",
         "Blockers",
-        "Review state"
+        "Review state",
+        "Self-review state",
+        "Self-review candidate revision",
+        "Self-review evidence"
       ],
       "transitions": {
         "DRAFT": ["CONTRACT_REVIEW", "BLOCKED"],
@@ -47,6 +50,10 @@
         "State",
         "Previous state",
         "Current artifact/gate",
+        "Current artifact review state",
+        "Self-review state",
+        "Self-review candidate revision",
+        "Self-review evidence",
         "Next action",
         "Next action target IDs",
         "Allowed write scope",
