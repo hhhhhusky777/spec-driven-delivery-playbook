@@ -36,6 +36,7 @@ the distinction between stable policies and feature delivery records.
 - [Template catalog](#template-catalog)
 - [Worked examples](#worked-examples)
 - [Small, self-contained delivery](#small-self-contained-delivery)
+- [Branch isolation for parallel deliveries](#branch-isolation-for-parallel-deliveries)
 - [Risk-based review gates](#risk-based-review-gates)
 - [Dependency-first data sequencing](#dependency-first-data-sequencing)
 - [Test evidence, not test theater](#test-evidence-not-test-theater)
@@ -527,6 +528,33 @@ never the delivery gate.
 Google's published engineering guidance similarly emphasizes one
 self-contained change, related tests, and a working system rather than a
 universal hard line count: [Small CLs](https://google.github.io/eng-practices/review/developer/small-cls.html).
+
+## Branch isolation for parallel deliveries
+
+Select the integration route from the number of implementation and merge
+units in the approved plan. Discovery, planning, final-validation, and
+archive-only rows do not count.
+
+One implementation unit uses the direct route:
+
+```text
+protected branch -> task branch -> reviewed task PR -> protected branch
+```
+
+Two or more implementation units use an isolated feature route:
+
+```text
+protected branch -> feature integration branch
+feature integration branch -> task branches -> reviewed task PRs -> feature integration branch
+feature integration branch -> final validated reviewed PR -> protected branch
+```
+
+Each parallel delivery owns a separate feature integration branch. Task PRs
+must target that branch, which remains green and is synchronized from the
+protected branch. After all tasks complete, run full feature-level validation,
+review the final PR to the protected branch, reconcile the merged state, and
+only then archive. If a one-task delivery splits before merge, reroute its
+unmerged work through a feature integration branch.
 
 ## Risk-based review gates
 

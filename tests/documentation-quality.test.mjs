@@ -447,6 +447,46 @@ test("risk-based review gates permit bounded audited auto-continuation", async (
   assert.match(workedExample, /^### Automation audit ledger$/m);
 });
 
+test("multi-task deliveries isolate work on feature integration branches", async () => {
+  const read = (relativePath) =>
+    readFile(path.join(REPOSITORY_ROOT, relativePath), "utf8");
+  const [
+    readme,
+    pullRequestPolicy,
+    developmentPolicy,
+    implementationPlan,
+    adoptionRunbook,
+    workflowSkill,
+    workedExample,
+  ] = await Promise.all([
+    read("README.md"),
+    read("templates/policies/pull-request-policy.md"),
+    read("templates/policies/development-policy.md"),
+    read("templates/delivery/implementation-plan.md"),
+    read("docs/project-adoption-runbook.md"),
+    read("skills/sdd-project-workflow/SKILL.md"),
+    read("examples/parallel-provider-submissions/04-implementation-plan.md"),
+  ]);
+
+  assert.match(readme, /^## Branch isolation for parallel deliveries$/m);
+  assert.match(pullRequestPolicy, /^### Single-task delivery$/m);
+  assert.match(pullRequestPolicy, /^### Multi-task feature integration$/m);
+  assert.doesNotMatch(pullRequestPolicy, /^### Optional: epic integration branch$/m);
+  assert.match(pullRequestPolicy, /task branches -> reviewed task PRs -> feature integration branch/);
+  assert.match(pullRequestPolicy, /final validated reviewed PR -> protected branch/);
+  assert.match(pullRequestPolicy, /must not target the\s+protected branch/i);
+  assert.match(pullRequestPolicy, /Source branch and PR target/);
+  assert.match(developmentPolicy, /multi-task delivery uses a\s+delivery-specific feature integration branch/i);
+  assert.match(implementationPlan, /Delivery implementation task count/);
+  assert.match(implementationPlan, /Feature integration branch/);
+  assert.match(implementationPlan, /Task PR target/);
+  assert.match(implementationPlan, /Final PR target/);
+  assert.match(adoptionRunbook, /single-task and multi-task branch\s+models/i);
+  assert.match(workflowSkill, /verify the task branch starts from and the task\s+PR targets the feature integration branch/i);
+  assert.match(workedExample, /Multi-task feature integration/);
+  assert.match(workedExample, /task PRs target the feature integration branch/i);
+});
+
 test("project adoption architecture remains connected to runbook and manifest", async () => {
   const readme = await readFile(path.join(REPOSITORY_ROOT, "README.md"), "utf8");
   const runbook = await readFile(

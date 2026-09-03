@@ -2,7 +2,7 @@
 
 Use this template to create a project-specific policy for branches, pull
 requests, review, merge, and post-merge responsibility. Replace every
-`<placeholder>`, choose one default integration model, and write
+`<placeholder>`, apply the task-count routing rule, and write
 `Not applicable — <reason>` instead of deleting a required section. Remove this
 introduction from the instantiated policy.
 
@@ -41,8 +41,9 @@ before activating the policy.
 | Policy value | Project choice | Reason / replacement guidance |
 | --- | --- | --- |
 | Protected integration branch | `<main>` | `<rule>` |
-| Default branch model | `<short-lived topic -> main>` | `<rule>` |
-| Optional epic model | `<main -> feature -> tasks -> feature -> main / disabled>` | `<when justified>` |
+| Single-task branch model | `<protected -> task -> protected>` | `<rule>` |
+| Multi-task branch model | `<protected -> feature -> tasks -> feature -> protected>` | `<rule>` |
+| Feature-branch synchronization | `<cadence or trigger>` | `<how drift is controlled>` |
 | Branch naming | `<format>` | `<examples>` |
 | Default merge method | `<squash/rebase/merge>` | `<reason>` |
 | Required reviewers | `<roles/count/CODEOWNERS>` | `<risk rules>` |
@@ -52,8 +53,8 @@ before activating the policy.
 | Issue linkage | `<required threshold>` | `<tracker>` |
 
 Every applicable choice above must be explicit in the adopted project policy.
-Omission does not mean that an optional model is disabled or that a playbook
-default applies. During adoption, record decision-level conformance evidence;
+Omission does not mean that a branch model or control is selected. During
+adoption, record decision-level conformance evidence;
 route a missing or ambiguous choice to `UPDATE_EXISTING`, and record an
 intentional alternative as a reviewed exception with its equivalent control.
 
@@ -75,41 +76,58 @@ intentional alternative as a reviewed exception with its equivalent control.
 
 ## 4. Branch models
 
-### Default: short-lived topic branch
+### Single-task delivery
 
 ```text
-protected integration branch -> topic branch -> reviewed PR -> protected branch
+protected integration branch -> task branch -> reviewed task PR -> protected branch
 ```
 
 Rules:
 
+- Use this route only when the approved delivery contains one implementation
+  and merge unit. Discovery, planning, final-validation, and archive-only ledger
+  rows do not increase that count.
+- The task must be self-contained and must not depend on unmerged follow-up work.
 - Start from a sufficiently current protected branch.
 - Keep the branch short-lived and scoped to one change.
 - Refresh deliberately when upstream changes affect review or validation.
 - Delete/close it after merge according to retention policy.
 
-### Optional: epic integration branch
+### Multi-task feature integration
 
 ```text
 protected branch -> feature integration branch
-feature integration branch -> task branches -> feature integration branch
-feature integration branch -> final reviewed PR -> protected branch
+feature integration branch -> task branches -> reviewed task PRs -> feature integration branch
+feature integration branch -> final validated reviewed PR -> protected branch
 ```
 
-Permit only when several dependent increments cannot safely or meaningfully
-reach the protected branch independently. Require:
+Every approved delivery with two or more implementation and merge units uses
+this route. Give each concurrently active delivery its own feature integration
+branch so unfinished work cannot enter the protected branch or another
+delivery's integration target. Require:
 
-- written justification and owner;
+- an owner and delivery identifier;
 - bounded lifetime and closure condition;
 - green/buildable feature branch after every task merge;
+- every task branch starts from the current feature integration branch;
+- every task PR targets the feature integration branch and must not target the
+  protected branch;
 - regular synchronization from the protected branch;
 - dependency-ordered task PRs;
 - no direct unreviewed feature implementation;
-- final end-to-end integration validation; and
+- complete feature-level regression and applicable integration/end-to-end
+  validation; and
 - an explicit final feature-to-protected-branch review.
 
-Do not use an epic branch merely to hide broken intermediate work or postpone
-integration conflicts.
+After the final merge, reconcile the protected-branch state before archiving
+the delivery and close branches according to the retention policy. Do not use
+the feature branch to hide broken intermediate work or postpone integration
+conflicts.
+
+If an approved single-task delivery splits into multiple implementation and
+merge units before its protected-branch PR merges, pause for routing review,
+designate a feature integration branch, and retarget all unmerged task work to
+it.
 
 ### Release/hotfix branches
 
@@ -163,6 +181,8 @@ A PR may be marked ready only when:
 - [ ] Compatibility, data, security, privacy, concurrency, performance,
       deployment, rollback/forward-fix, and operational risks are addressed.
 - [ ] Branch/base/dependency ancestry is sufficiently current.
+- [ ] Source branch and PR target match the approved single-task or multi-task
+      route.
 - [ ] Implementation-plan state and evidence are updated.
 
 Draft PRs may be opened earlier for collaboration but must not imply readiness
@@ -189,6 +209,9 @@ case if unchanged.>`
 ### Design and implementation
 
 - System contracts implemented: `<IDs/links>`
+- Integration model: `<single-task direct / multi-task feature integration>`
+- Source branch and PR target: `<source -> target>`
+- Delivery feature branch: `<branch or Not applicable>`
 - Key decisions and trade-offs: `<summary/ADR links>`
 - Files/components and responsibilities: `<summary>`
 - Actual change summary and generated/mechanical changes: `<values>`
@@ -272,6 +295,10 @@ Before merge:
 - required approvals and checks are current;
 - unresolved blocking comments are closed;
 - branch protection and dependency order are satisfied;
+- the PR source and target match the approved integration model;
+- a multi-task task PR targets the feature integration branch, while its final
+  feature PR targets the protected branch only after all delivery tasks and
+  feature-level validation complete;
 - required evidence matches the final commit;
 - the implementation plan identifies the correct next state/task;
 - deployment and migration prerequisites are ready; and
@@ -319,7 +346,7 @@ a reviewed documentation PR and update dependent templates/automation.
 
 ## 15. Project instantiation checklist
 
-- [ ] Choose one default branch model and criteria for the optional epic model.
+- [ ] Define the single-task and multi-task branch models and the implementation-unit counting rule.
 - [ ] Define protected branches, naming, merge method, reviewers, and checks.
 - [ ] Link development and test policies.
 - [ ] Define issue/task/plan integration.

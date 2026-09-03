@@ -4,8 +4,12 @@ This project has not published a formal versioned release. Significant template
 and workflow changes are recorded here until a release/versioning policy is
 adopted.
 
-## Unreleased — updated 2026-09-02
+## Unreleased — updated 2026-09-03
 
+- Made branch routing deterministic by implementation/merge-unit count: a
+  one-task delivery may merge directly through a task PR, while every
+  multi-task delivery uses its own feature integration branch, task PRs return
+  there, and only the fully validated feature PR targets the protected branch.
 - Added risk-based review gates: semantic decisions default to
   `EXPLICIT_REVIEW`, while pre-authorized deterministic work may use bounded
   `AUTO_CONTINUE` or `REVIEW_ON_EXCEPTION`. Added fail-closed lifecycle checks,
@@ -21,8 +25,7 @@ adopted.
   to `UPDATE_EXISTING`, updates the canonical artifact instead of creating a
   duplicate, and requires reviewed exceptions for intentional alternatives.
   Added a general policy-family inventory and a detailed PR/branch checklist,
-  including task/final targets and merge-before-archive ordering, without
-  imposing one branch model.
+  including task/final targets and merge-before-archive ordering.
 - Defined a complete task specification as sufficient to implement without
   inventing product/system behavior, while preserving contract-equivalent
   engineering choices. Added source-boundary versus exact-revision timing,

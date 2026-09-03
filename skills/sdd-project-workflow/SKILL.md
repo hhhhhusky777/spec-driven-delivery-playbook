@@ -66,6 +66,9 @@ Before every project edit:
    closed like `MATERIAL`; `CONTROL_ONLY` does not invalidate frozen content.
 5. Read its pre-approved review mode. Missing or invalid mode information fails
    closed to `EXPLICIT_REVIEW`.
+6. For a multi-task delivery, verify the task branch starts from and the task
+   PR targets the feature integration branch. Only the final validated feature
+   PR may target the protected branch.
 
 After that one edit and its applicable checks:
 

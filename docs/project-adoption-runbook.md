@@ -392,18 +392,21 @@ or intentionally replaces the playbook obligation.
 
 For a PR and branch policy, assess at least:
 
-- protected integration branch and default branch model;
-- whether the optional epic integration model is disabled or enabled, plus its
-  activation criteria, owner, lifetime, and closure condition;
+- protected integration branch and explicit single-task and multi-task branch
+  models;
+- the implementation/merge-unit counting rule that selects the branch model;
+- feature integration branch owner, lifetime, protected-branch synchronization,
+  validation, and closure conditions;
 - branch naming and allowed source/target relationships;
 - task PR targets and final integration PR target;
 - synchronization, merge method, deletion, and abandoned-branch handling;
 - required reviews, checks, and final integration validation; and
 - merge, post-merge reconciliation, and archive ordering.
 
-For the epic model, the delivery must reach and validate the feature branch,
+For the multi-task model, the delivery must reach and validate the feature branch,
 merge its final reviewed PR into the protected branch, reconcile the merged
-state, and only then archive the implementation plan. An existing policy that
+state, and only then archive the implementation plan. Every task PR targets the
+feature integration branch, not the protected branch. An existing policy that
 omits any applicable choice routes to `UPDATE_EXISTING`; adoption must not pick
 the choice on the project's behalf.
 

@@ -215,6 +215,11 @@ boundaries are frozen after S01. This example uses a compatible foundation
 before its consumers and defers destructive parent-field cleanup until every
 reader/writer has moved.
 
+Integration model: **Multi-task feature integration**. T01-T09 task branches
+start from and their task PRs target the feature integration branch. T10 runs
+complete feature validation; only the final reviewed feature PR targets the
+protected branch. Archive follows protected-branch reconciliation.
+
 | ID | State | Next | Depends | Data phase | Outcome | Independent merge boundary |
 | --- | --- | --- | --- | --- | --- | --- |
 | `S00` | `PLANNED` | `NEXT` | None | `NONE` | Instantiate this packet with canonical policies, paths, issue, owners, branch model, and test environments. | Docs only |
