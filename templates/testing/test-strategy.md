@@ -150,6 +150,29 @@ Before implementation, the active development policy turns applicable map and
 source obligations into a reviewed task context receipt. Evidence named in the
 receipt must agree with this strategy's task-specific gates.
 
+### Automated-continuation gate validation
+
+The active development policy defines `EXPLICIT_REVIEW`, `AUTO_CONTINUE`, and
+`REVIEW_ON_EXCEPTION`. This strategy must map each automatic action class to
+deterministic gates that run against the exact output revision. Automatic
+continuation fails closed to `EXPLICIT_REVIEW` when a required gate is missing,
+skipped, flaky without an approved treatment, or not passing.
+
+For every gate that can authorize continuation, require:
+
+- a positive fixture proving valid output passes;
+- a negative regression proving invalid output blocks continuation;
+- immutable or attributable gate provenance and an auditable result;
+- explicit detection of stale inputs, scope drift, unrelated changes,
+  ambiguity, and exceptions where applicable; and
+- a documented failure route that preserves evidence and stops before the next
+  action.
+
+Passing tests do not prove semantic correctness and cannot turn
+`AUTO_CONTINUED` into `APPROVED`. Any new or changed requirement, design,
+policy, contract, behavior, risk, or exception requires the explicit review
+defined by the development policy.
+
 ## 5. Contract and risk traceability
 
 ### Contract coverage

@@ -21,8 +21,11 @@ playbook checkout, immutable revision, manifest path, and cleanup record.
    recorded path. Populate its durable repository, immutable revision, and
    materialization mode from the guide. Never copy a machine-local path into a
    project contract.
-4. Perform only the dependency-ready adoption action permitted by the manifest
-   and its exact allowed write scope. Preserve unrelated and user-owned work.
+4. Perform the dependency-ready adoption action permitted by the manifest and
+   its exact allowed write scope. Apply only the pre-approved
+   `EXPLICIT_REVIEW`, `AUTO_CONTINUE`, or `REVIEW_ON_EXCEPTION` mode; an absent
+   or invalid mode fails closed to `EXPLICIT_REVIEW`. Preserve unrelated and
+   user-owned work.
    Before entering manifest state `BLOCKED`, record the current non-blocked
    state in `State before block`; reset it to `None` only after returning to a
    reviewed safe state. Never guess this value.
@@ -37,28 +40,38 @@ playbook checkout, immutable revision, manifest path, and cleanup record.
    is incomplete. If competing copies lack declared precedence, record
    `BLOCKED`. Do not silently copy a playbook default or choose for the project
    owner.
-6. Compare that action's changed facts, links, commands, and availability
+6. For an automatic mode, verify approved/current inputs, no new semantic
+   decision, every declared gate passing on the output revision, no exception
+   or drift, and an auditable result. Continue only through the approved
+   automation boundary and stop at the next mandatory semantic checkpoint.
+   `AUTO_CONTINUED` is not approval. Initial discovery, authority mapping,
+   policy changes, exceptions, activation, and adoption approval remain
+   `EXPLICIT_REVIEW`.
+7. Compare each action's changed facts, links, commands, and availability
    claims with previously approved artifacts. Record affected artifacts as
    `STALE` in the manifest freshness register and schedule the earliest
-   dependency-ready correction after the current change is independently
-   approved. The immediate next action remains review of the current change.
-   Do not edit a second artifact in this action. Keep volatile adoption
-   progress in the manifest instead of copying it into stable entry points.
-7. Run the project checks applicable to the changed artifact and report exact
+   dependency-ready correction. In `EXPLICIT_REVIEW`, the immediate next action
+   remains review of the current change and no second artifact is edited. In an
+   automatic mode, any newly stale or unknown impact stops the automation
+   segment. Keep volatile adoption progress in the manifest instead of copying
+   it into stable entry points.
+8. Run the project checks applicable to the changed artifact and report exact
    evidence. Do not substitute playbook-repository checks for project evidence.
-8. Stop after every generated or updated artifact. Require an authorized human
-   or independent-agent review before another action or state transition.
-9. Continue on a later invocation from the reviewed manifest state. Never
+9. Stop at an `EXPLICIT_REVIEW` action, the recorded automation boundary, or the
+   first failed/missing gate, ambiguity, unknown impact, exception, blocker,
+   stale dependency, unrelated change, or scope expansion. Automatic
+   continuation fails closed; record completed automatic actions separately.
+10. Continue on a later invocation from the reviewed manifest state. Never
    approve your own artifact or infer reviewer authorization.
-10. Before proposing `MAPPED -> INSTALLED`, require every applicable freshness
+11. Before proposing `MAPPED -> INSTALLED`, require every applicable freshness
    entry to be `CURRENT` and complete final cross-document verification.
-11. After recorded authority moves the manifest to `INSTALLED`, instantiate an
+12. After recorded authority moves the manifest to `INSTALLED`, instantiate an
    empty solution whiteboard at the guide's recorded adoption root. Populate
    neutral control values such as `EMPTY`, `Not recorded`, or `None`; do not
    infer a need, requirement, solution, handoff, plan, or delivery result.
-12. Stop when the empty whiteboard and installed manifest have passed their
+13. Stop when the empty whiteboard and installed manifest have passed their
    applicable documentation checks.
-13. After independent approval of that boundary, do not admit a need through a
+14. After independent approval of that boundary, do not admit a need through a
    guide that selects this adoption skill. If its cleanup is `PENDING`, report
    the required runtime handoff: from the project root, run
    `./install-sdd.sh --cleanup`, then `./install-sdd.sh`, and verify that the new
@@ -67,8 +80,8 @@ playbook checkout, immutable revision, manifest path, and cleanup record.
 
 ## Completion report
 
-Report the current manifest state, one action completed, files changed,
-evidence, stale artifacts or `None`, blockers, required reviewer, and whether
-the empty whiteboard exists. When the adoption boundary is complete, also
-report whether cleanup and workflow-runtime installation are required before
-the first need.
+Report the current manifest state, actions completed and their review modes,
+files changed, automatic-gate/audit evidence, stale artifacts or `None`,
+blockers, stop reason, required reviewer, and whether the empty whiteboard
+exists. When the adoption boundary is complete, also report whether cleanup and
+workflow-runtime installation are required before the first need.

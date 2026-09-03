@@ -36,6 +36,7 @@ the distinction between stable policies and feature delivery records.
 - [Template catalog](#template-catalog)
 - [Worked examples](#worked-examples)
 - [Small, self-contained delivery](#small-self-contained-delivery)
+- [Risk-based review gates](#risk-based-review-gates)
 - [Dependency-first data sequencing](#dependency-first-data-sequencing)
 - [Test evidence, not test theater](#test-evidence-not-test-theater)
 - [Progressive policy discovery](#progressive-policy-discovery)
@@ -51,8 +52,9 @@ small handoff document from its structured conclusion and review it. Approval
 of that version triggers the delivery workflow automatically or through an
 explicit case-by-case invocation. The workflow classifies the change, selects
 the smallest safe route, reuses active project policies, and generates only the
-artifacts the delivery needs. Each generated artifact is reviewed before a
-dependent artifact proceeds.
+artifacts the delivery needs. Each action follows its pre-approved review mode;
+only deterministic, non-semantic steps may continue automatically before the
+next mandatory review checkpoint.
 
 ```mermaid
 flowchart TD
@@ -74,8 +76,8 @@ flowchart TD
     A -->|"Yes"| AS["Select Architecture Decision Record"]
     A -->|"No"| G
     AS --> G["Generate Next Selected Artifact"]
-    G --> AR{"Independent artifact review approved?"}
-    AR -->|"Document comments"| G
+    G --> AR{"Required review or automatic gate passed?"}
+    AR -->|"Comments, failure, or exception"| G
     AR -->|"Manifest or routing problem"| R
     AR -->|"Requirement or solution problem"| W
     AR -->|"Yes, more artifacts"| G
@@ -328,9 +330,10 @@ a later playbook revision is a separate reviewed operation.
 
 ### Review and resume adoption
 
-Each agent invocation performs at most one dependency-ready adoption action and
-stops at the next review gate. After an authorized human or independent agent
-has reviewed the complete changed artifact and its governing sources, the
+Each agent invocation stops at the next mandatory review checkpoint. It may
+perform more than one dependency-ready action only inside a pre-approved,
+fail-closed automation boundary. After an authorized human or independent
+agent has reviewed the complete changed artifact and its governing sources, the
 reviewer may use this prompt to record approval and resume:
 
 ```text
@@ -341,9 +344,12 @@ Evidence/comments: <LINK_OR_NONE>.
 Approved state transition: <NONE_OR_EXPLICIT_TRANSITION>.
 
 Record only this supplied review disposition and state transition in the
-adoption manifest. Then follow `.sdd-runtime/agent-guide.md` exactly and
-perform exactly one dependency-ready Next action. Stop at the next review gate.
-Do not approve the result of that next action.
+adoption manifest. Then follow `.sdd-runtime/agent-guide.md` exactly. Apply the
+recorded `EXPLICIT_REVIEW`, `AUTO_CONTINUE`, or `REVIEW_ON_EXCEPTION` mode to
+each dependency-ready action. Continue automatically only while every declared
+gate passes and the next action remains inside the approved automation
+boundary. Stop at the next explicit checkpoint or exception. Do not approve
+the result of the next action.
 ```
 
 Approval remains scoped to the reviewed artifact and version. After each
@@ -373,8 +379,9 @@ before entering the first need.
 The manifest owns adoption state, the delivery workflow owns artifact
 freshness, blockers, and next action, and the plan owns task state. Stable entry
 points link to those authorities instead of copying volatile values. After
-every artifact action, compute structured transitive freshness and review the
-current change before correcting a newly stale dependant.
+every artifact action, compute structured transitive freshness. An explicit
+action stops for review; an automatic action stops if that audit finds a stale
+dependant, unknown impact, or any other exception.
 
 1. Record the need in the installed project's empty
    [solution whiteboard](templates/discovery/solution-whiteboard.md) and move
@@ -520,6 +527,26 @@ never the delivery gate.
 Google's published engineering guidance similarly emphasizes one
 self-contained change, related tests, and a working system rather than a
 universal hard line count: [Small CLs](https://google.github.io/eng-practices/review/developer/small-cls.html).
+
+## Risk-based review gates
+
+The default is `EXPLICIT_REVIEW`. It remains mandatory for requirements,
+solution conclusions, handoffs, routing, policies, ADRs, contracts, complete
+task specifications, risk/exception decisions, and externally consequential
+actions.
+
+`AUTO_CONTINUE` permits deterministic or mechanically derived work;
+`REVIEW_ON_EXCEPTION` permits a pre-authorized repeatable action. Both require
+approved/current inputs, exact scope, no new semantic decision, all declared
+gates passing on the output revision, and an audit record. They fail closed to
+`EXPLICIT_REVIEW` on failure, ambiguity, unknown impact, drift, a stale or
+blocked dependency, exception, unrelated change, or scope expansion. Automatic
+work continues only until the next mandatory semantic checkpoint.
+
+`AUTO_CONTINUED` records execution evidence; it is never an approval. Passing
+automation cannot mark normative content `APPROVED`, and changing a review mode
+requires explicit review. This reduces mechanical review stops without
+allowing green tests to approve a wrong design.
 
 ## Dependency-first data sequencing
 

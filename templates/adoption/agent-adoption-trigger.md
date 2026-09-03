@@ -98,8 +98,9 @@ and report `BLOCKED`.
 Read the manifest, its current state, approved review records, Next action,
 project instructions, and every authority linked by the selected action.
 
-Perform exactly one dependency-ready Next action within the manifest's current
-Allowed write scope:
+Perform the dependency-ready Next action within the manifest's current Allowed
+write scope. Apply its pre-approved `EXPLICIT_REVIEW`, `AUTO_CONTINUE`, or
+`REVIEW_ON_EXCEPTION` mode:
 - while DISCOVERY, change only the manifest discovery proposal;
 - while MAPPED, create or update only one selected artifact, or perform the
   final installation verification when no selected artifact remains;
@@ -117,7 +118,16 @@ Allowed write scope:
 - record every affected artifact as STALE in the manifest freshness register
   and select the earliest dependency-ready stale correction as the first action
   after the current change is independently approved;
-- keep independent review of the current change as the immediate Next action;
+- for `EXPLICIT_REVIEW`, keep independent review of the current change as the
+  immediate Next action;
+- for `AUTO_CONTINUE` or `REVIEW_ON_EXCEPTION`, require approved/current inputs,
+  no semantic decision, every declared gate passing, an audit entry, and the
+  next action inside the approved automation boundary and write scope;
+- continue through eligible automatic actions only until the next mandatory
+  semantic checkpoint;
+- fail closed to `EXPLICIT_REVIEW` on a failed/missing gate, ambiguity, unknown
+  impact, exception, drift, blocker, stale dependency, unrelated change, or
+  scope expansion;
 - do not update a newly stale artifact in this invocation, and keep volatile
   adoption progress in the manifest rather than copying it into stable entry
   points;
@@ -126,11 +136,13 @@ Allowed write scope:
 - update manifest evidence and Next action;
 - run only the Required documentation checks applicable to this action.
 
-Do not advance Adoption state, approve your own work, generate a dependent
-artifact, start a feature whiteboard, modify product code, or contact an
-external project. Stop after reporting:
+Do not advance Adoption state without recorded explicit reviewer authority.
+Do not approve your own work, use `AUTO_CONTINUED` as approval, cross an
+explicit checkpoint, start a feature whiteboard, modify product code, or
+contact an external project. Stop at `EXPLICIT_REVIEW`, the automation
+boundary, or the first exception, then report:
 - current state;
-- one action completed;
+- actions completed and their review modes;
 - files changed;
 - evidence and checks;
 - stale artifacts found by the impact audit, or None;

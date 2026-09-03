@@ -15,7 +15,10 @@ replacement development, testing, PR, documentation/API, security, data,
 concurrency, performance, release, operations, incident, or specialized policy
 merely because a template exists. Use the
 [agent adoption trigger](adoption/agent-adoption-trigger.md) to perform one
-manifest action at a time and stop at every review gate.
+manifest action at a time by default. A reviewed project development policy may
+pre-authorize bounded `AUTO_CONTINUE` or `REVIEW_ON_EXCEPTION` actions; missing
+mode information fails closed to `EXPLICIT_REVIEW`, and automatic work stops at
+the next semantic checkpoint or exception.
 
 The preferred project entry is the repository-root
 [`install-sdd.sh`](../install-sdd.sh). It generates a machine-local agent guide

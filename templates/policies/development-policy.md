@@ -118,6 +118,49 @@ handoff. Low-risk documentation and emergency records may be compact, and an
 authorized emergency may complete them concurrently with bounded mitigation,
 but the durable discovery/decision record and follow-up review are not erased.
 
+### Risk-based review and continuation
+
+Assign one review mode to every workflow action before it starts. If the mode
+or its authority is absent, the default review mode is `EXPLICIT_REVIEW`.
+
+| Mode | Behavior | Permitted use |
+| --- | --- | --- |
+| `EXPLICIT_REVIEW` | Stop for authorized human or independent-agent review | Any semantic decision, approval, exception, or risk boundary |
+| `AUTO_CONTINUE` | Run deterministic work and continue while every condition passes | Mechanical generation, state/evidence synchronization, and deterministic validation |
+| `REVIEW_ON_EXCEPTION` | Continue through a pre-authorized repeatable action; stop on any exception | Known low-risk operations with objective success/failure gates |
+
+An automatic action must satisfy all of these conditions:
+
+- an active project policy pre-authorizes its action class, gates, write scope,
+  automation boundary, and audit destination;
+- its inputs are approved and `CURRENT`;
+- it must not introduce a new semantic decision about requirements, design,
+  policy, architecture, contracts, behavior, risk, or exceptions;
+- its output is deterministic or mechanically derived from approved inputs;
+- every required automated gate passes against the exact resulting revision;
+- no blocker, stale dependency, ambiguity, unknown, exception, test failure,
+  unrelated diff, or scope expansion exists; and
+- the next action remains inside the approved automation boundary, WIP policy,
+  and exact write scope.
+
+Automatic continuation fails closed to `EXPLICIT_REVIEW` when any condition is
+false or cannot be proven. It continues only until the next mandatory semantic
+checkpoint. `AUTO_CONTINUED` is an audit outcome, not an approval, review state,
+or permission to mark a normative artifact `APPROVED`.
+
+Always require `EXPLICIT_REVIEW` for a whiteboard conclusion, handoff meaning,
+routing choice, policy, ADR, public/system contract, complete task
+specification, acceptance or risk decision, exception, destructive or
+externally consequential action, and any approval required by project PR,
+security, release, or compliance policy. A project may make this list stricter.
+Changing an action from `EXPLICIT_REVIEW` to another mode is itself a semantic
+policy decision and requires explicit review.
+
+Record each automatic action, input/output revision, mode authority, gates and
+results, change/impact classification, resulting state, and next action. At the
+next explicit checkpoint, summarize the automatic segment without representing
+it as reviewer approval.
+
 ## 5. Spec-driven development workflow
 
 Use separate artifacts with one primary purpose:

@@ -29,6 +29,13 @@ evidence; it does not replace the project authorities to which it links.
 | Branch / PR | `<value>` |
 | Allowed write scope | `<exact paths; update before every agent action>` |
 | Required documentation checks | `<commands or reviewed Not applicable reason>` |
+| Review mode | `<EXPLICIT_REVIEW / AUTO_CONTINUE / REVIEW_ON_EXCEPTION>` |
+| Review mode authority | `<approved action-control row / policy link>` |
+| Automation boundary | `<last permitted action ID or Not applicable>` |
+| Required automatic gates | `<commands/check IDs or Not applicable>` |
+| Automatic gate result | `<PASS / FAIL / NOT_RUN / NOT_APPLICABLE>` |
+| Semantic decision introduced | `<NO / YES / UNKNOWN>` |
+| Automation exception | `<ID/details or None>` |
 | Current blocker | `None` |
 | Next action | `<one concrete action>` |
 
@@ -36,6 +43,13 @@ Set `State before block` to the current non-blocked adoption state before
 entering `BLOCKED`; reset it to `None` after returning to a safe active state.
 The installer uses this field only to retain the correct adoption or workflow
 skill while blocked.
+
+Review defaults to `EXPLICIT_REVIEW`. `AUTO_CONTINUE` and
+`REVIEW_ON_EXCEPTION` are valid only when a reviewed project authority
+preclassifies the action, every declared gate passes, no semantic decision or
+exception exists, and the next action remains within the recorded automation
+boundary and write scope. Otherwise continuation fails closed to
+`EXPLICIT_REVIEW`.
 
 Adoption type: `<real project / internal trial / external-project case study>`
 
@@ -157,11 +171,13 @@ Use only `CURRENT`, `STALE`, or `BLOCKED` for freshness. After every adoption
 action, compare changed facts, links, commands, and availability claims with
 previously approved artifacts. Affected artifacts become `STALE` even when an
 earlier review remains valid historical evidence. Schedule the earliest
-dependency-ready stale correction as a separate one-artifact action after the
-current change is independently approved. The immediate next action remains
-review of the current change; do not silently update the stale artifact during
-the action that invalidated it. Stable entry points reference this manifest for
-live adoption status instead of copying temporary progress statements.
+dependency-ready stale correction as a separate action. For `EXPLICIT_REVIEW`,
+the immediate next action remains review of the current change; do not silently
+update the stale artifact during the action that invalidated it. For an
+automatic mode, newly stale or unknown impact is an exception that stops the
+segment and fails closed to explicit review. Stable entry points reference this
+manifest for live adoption status instead of copying temporary progress
+statements.
 
 | Artifact / routing ID | Changed fact or action | Affected claim or dependency | Freshness | Required next action / evidence |
 | --- | --- | --- | --- | --- |
@@ -216,6 +232,28 @@ Inbound references to this manifest: `<README/CONTRIBUTING/agent or other links>
 Failure-triage authority: `<link>`
 
 Shared workflow/dependency provenance and immutable revision: `<value or None>`
+
+### 8.1 Adoption action control
+
+Initial discovery, authority mapping, policy creation/update, exceptions, state
+activation, and adoption approval require `EXPLICIT_REVIEW`. Only deterministic
+mechanics pre-authorized by reviewed project policy may use `AUTO_CONTINUE` or
+`REVIEW_ON_EXCEPTION`.
+
+| Action ID | Target/output | Review mode | Mode authority | Required gates | Automation boundary | Semantic decision? | State |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `<ID>` | `<path/action>` | `<EXPLICIT_REVIEW/AUTO_CONTINUE/REVIEW_ON_EXCEPTION>` | `<link>` | `<checks>` | `<last action ID/Not applicable>` | `<NO/YES>` | `<PLANNED/ACTIVE/COMPLETE/STOPPED>` |
+
+### 8.2 Automation audit ledger
+
+| Action ID | Input/output revision | Mode | Authority | Gates/result | Impact/exceptions | Resulting state | Next action |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `<ID>` | `<versions>` | `<AUTO_CONTINUE/REVIEW_ON_EXCEPTION>` | `<link>` | `<evidence / PASS>` | `<CONTROL_ONLY / None>` | `<state>` | `<action or explicit checkpoint>` |
+
+`AUTO_CONTINUED` is not an approval or review state. Automatic adoption work
+fails closed on a failed/missing gate, ambiguity, unknown/material semantic
+impact, exception, drift, blocker, stale dependency, unrelated change, or scope
+expansion.
 
 ## 9. Pilot delivery
 

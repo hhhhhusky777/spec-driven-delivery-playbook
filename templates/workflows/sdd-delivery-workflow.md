@@ -33,6 +33,14 @@ instantiated workflow record.
 | Next action target IDs | `<artifact/task IDs>` |
 | Allowed write scope | `<semicolon-separated repository-relative paths>` |
 | Next action write targets | `<semicolon-separated repository-relative paths>` |
+| Review mode | `<EXPLICIT_REVIEW / AUTO_CONTINUE / REVIEW_ON_EXCEPTION>` |
+| Review mode authority | `<development-policy section and approved action-control row>` |
+| Automation boundary | `<last permitted action ID or Not applicable>` |
+| Required automatic gates | `<commands/check IDs or Not applicable>` |
+| Automatic gate result | `<PASS / FAIL / NOT_RUN / NOT_APPLICABLE>` |
+| Semantic decision introduced | `<NO / YES / UNKNOWN>` |
+| Automation exception | `<ID/details or None>` |
+| Automation audit record | `<section/link or Not applicable>` |
 | Last routed | `<date/timezone>` |
 
 ```text
@@ -56,11 +64,21 @@ must reference the approved handoff and must not redefine its content or this
 workflow. Record an idempotency/run ID so automation does not create duplicate
 workflow records for one approval event.
 
-### 1.2 Review protocol
+### 1.2 Review and automation protocol
 
-The manifest and every generated or updated artifact require a review gate.
-Generate one artifact at a time in dependency order. Do not generate a
-dependent artifact until its input artifacts are `APPROVED`.
+The approved development policy assigns `EXPLICIT_REVIEW`, `AUTO_CONTINUE`, or
+`REVIEW_ON_EXCEPTION` before each action starts. Missing or unapproved mode
+information fails closed to `EXPLICIT_REVIEW`. Generate or update artifacts in
+dependency order; a normative artifact cannot supply authority to a dependent
+artifact until it is `APPROVED`.
+
+`EXPLICIT_REVIEW` stops after the action. `AUTO_CONTINUE` and
+`REVIEW_ON_EXCEPTION` may continue through multiple pre-authorized actions in
+one invocation only while every input is approved/current, no semantic decision
+is introduced, all declared gates pass, and each next action remains within the
+recorded automation boundary, WIP policy, and write scope. Stop immediately on
+failure, ambiguity, unknown impact, exception, drift, unrelated change, scope
+expansion, or a mandatory semantic checkpoint.
 
 - The author or generating runner must not self-approve unless an active project
   policy grants a documented low-risk exception.
@@ -74,6 +92,8 @@ dependent artifact until its input artifacts are `APPROVED`.
   returns to the handoff/whiteboard owner.
 - Record reviewer identity, review type, comments, resolution, version, and
   approval. Silence or elapsed time is never approval.
+- Record every automatic action separately. `AUTO_CONTINUED` is not an approval
+  or review state and cannot mark a normative artifact `APPROVED`.
 
 Standard review states are `NOT_STARTED`, `IN_REVIEW`, `CHANGES_REQUESTED`,
 `APPROVED`, and `STALE`.
@@ -292,19 +312,39 @@ Independent ready work may continue within the approved WIP and write scope.
 
 ## 9. Generation and review-gate order
 
-| Order | Input | Generate/update exactly one output | Review gate | Approved next action | Failure/return path |
+| Order | Input | Generate/update output | Review mode | Successful next action | Failure/return path |
 | --- | --- | --- | --- | --- | --- |
-| `0` | Approved handoff | Delivery manifest | Independent manifest review | Select first dependency-ready artifact | Routing or handoff |
-| `1..N` | Approved dependencies | `<one policy/ADR/audit/contract/plan/runbook>` | Independent artifact review | Select next dependency-ready artifact | Current artifact, manifest, handoff, or whiteboard |
-| `N+1` | Approved plan and authorities | `<one task: code/tests/docs/PR>` | PR policy and task DOD | Select next ready task | Failure triage/responsible artifact |
-| `N+2` | All approved task evidence | Validation/retrospective | Plan DOD review | Generate delivery record | Responsible artifact |
-| `N+3` | Reconciled approved packet | Delivery record | Closure review | Archive | Closure correction |
+| `0` | Approved handoff | Delivery manifest | `EXPLICIT_REVIEW` | Select first dependency-ready artifact | Routing or handoff |
+| `1..N` | Approved dependencies | `<policy/ADR/audit/contract/plan/runbook>` | `<normally EXPLICIT_REVIEW>` | Select next dependency-ready artifact | Current artifact, manifest, handoff, or whiteboard |
+| `N+1` | Approved plan and authorities | `<task: code/tests/docs/PR>` | `<project PR/task policy>` | Select next ready task | Failure triage/responsible artifact |
+| `N+2` | All approved task evidence | Validation/retrospective | `<REVIEW_ON_EXCEPTION then plan DOD EXPLICIT_REVIEW>` | Generate delivery record | Responsible artifact |
+| `N+3` | Reconciled approved packet | Delivery record/archive mechanics | `<EXPLICIT_REVIEW then bounded AUTO_CONTINUE>` | Archive and cleanup | Closure correction |
 
-### 9.1 Artifact review ledger
+### 9.1 Action control ledger
+
+Classify each action before execution. Mode changes require explicit review.
+Normative generated content, interpretation, or a new decision always uses
+`EXPLICIT_REVIEW`, even when its formatting checks pass.
+
+| Action ID | Target/output | Review mode | Mode authority | Required gates | Automation boundary | Semantic decision? | State |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `<ID>` | `<path/action>` | `<EXPLICIT_REVIEW/AUTO_CONTINUE/REVIEW_ON_EXCEPTION>` | `<policy/approved decision>` | `<checks>` | `<last action ID/Not applicable>` | `<NO/YES>` | `<PLANNED/ACTIVE/COMPLETE/STOPPED>` |
+
+### 9.2 Artifact review ledger
 
 | Artifact | Version | Round | Reviewer | Type | Result | Comments/resolution | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `<link>` | `<version>` | `1` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<summary/link>` | `<value>` |
+
+### 9.3 Automation audit ledger
+
+| Action ID | Input/output revision | Mode | Authority | Gates/result | Impact | Resulting state | Next action |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `<ID>` | `<versions>` | `<AUTO_CONTINUE/REVIEW_ON_EXCEPTION>` | `<link>` | `<evidence / PASS>` | `<CONTROL_ONLY/MATERIAL/UNKNOWN>` | `<state>` | `<action or explicit checkpoint>` |
+
+`AUTO_CONTINUED` is not an approval. Record it in the action result/evidence,
+not in the artifact review ledger. At the next `EXPLICIT_REVIEW`, provide one
+concise inventory of the automatic actions and their evidence.
 
 ## 10. Feedback and rerouting rules
 
@@ -428,8 +468,9 @@ originating need/requirement/issue
 Closure checklist:
 
 - [ ] Manifest decisions match actual artifacts.
-- [ ] The handoff, manifest, and every generated/updated artifact have explicit
-      approval records.
+- [ ] The handoff, manifest, and every normative generated/updated artifact have
+      explicit approval records; every automatic action has gate and audit
+      evidence without representing `AUTO_CONTINUED` as approval.
 - [ ] No dependent artifact was generated from a draft, rejected, or stale
       input without documented reconciliation.
 - [ ] Required gates pass or have explicit approved exceptions.

@@ -253,6 +253,11 @@ function workflow({
   writeTarget = "docs/plan.md",
   planLink = "[Plan](implementation-plan.md)",
   includePlan = true,
+  reviewMode = "EXPLICIT_REVIEW",
+  semanticDecision = "NO",
+  automaticGateResult = "NOT_APPLICABLE",
+  automationBoundary = "task-1",
+  automationException = "None",
 } = {}) {
   const manifestRow = includePlan
     ? "| 1 | Plan | GENERATE_FULL | APPROVED |"
@@ -274,6 +279,14 @@ function workflow({
 | Next action target IDs | \`task-1\` |
 | Allowed write scope | \`docs\` |
 | Next action write targets | \`${writeTarget}\` |
+| Review mode | \`${reviewMode}\` |
+| Review mode authority | \`docs/development-policy.md\` |
+| Automation boundary | \`${automationBoundary}\` |
+| Required automatic gates | \`docs:all\` |
+| Automatic gate result | \`${automaticGateResult}\` |
+| Semantic decision introduced | \`${semanticDecision}\` |
+| Automation exception | \`${automationException}\` |
+| Automation audit record | \`docs/automation-audit.md\` |
 
 <!-- sdd-section: delivery-manifest -->
 | Order | Artifact | Decision | Review state/link |
@@ -318,6 +331,96 @@ test("next-action write targets must stay within allowed scope", async (t) => {
   const invalid = await fixture(t, workflow({ state: "ARTIFACT_GENERATING", writeTarget: "app/code.py" }));
   const diagnostics = await checkSddLifecycleDocument(invalid.file, invalid.root, SCHEMAS);
   assert.ok(diagnostics.some((item) => item.rule === "SDD_WRITE_SCOPE"));
+});
+
+test("automatic continuation fails closed on invalid mode, decisions, or gates", async (t) => {
+  const invalidMode = await fixture(t, workflow({ reviewMode: "FAST_TRACK" }));
+  const invalidModeDiagnostics = await checkSddLifecycleDocument(
+    invalidMode.file,
+    invalidMode.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    invalidModeDiagnostics.some((item) => item.rule === "SDD_REVIEW_MODE"),
+  );
+
+  const semantic = await fixture(
+    t,
+    workflow({
+      reviewMode: "AUTO_CONTINUE",
+      semanticDecision: "YES",
+      automaticGateResult: "PASS",
+    }),
+  );
+  const semanticDiagnostics = await checkSddLifecycleDocument(
+    semantic.file,
+    semantic.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    semanticDiagnostics.some((item) => item.rule === "SDD_AUTO_SEMANTIC_DECISION"),
+  );
+
+  const failedGate = await fixture(
+    t,
+    workflow({
+      reviewMode: "REVIEW_ON_EXCEPTION",
+      automaticGateResult: "FAIL",
+    }),
+  );
+  const failedGateDiagnostics = await checkSddLifecycleDocument(
+    failedGate.file,
+    failedGate.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    failedGateDiagnostics.some((item) => item.rule === "SDD_AUTO_GATE_BLOCKED"),
+  );
+
+  const missingBoundary = await fixture(
+    t,
+    workflow({
+      reviewMode: "AUTO_CONTINUE",
+      automaticGateResult: "PASS",
+      automationBoundary: "None",
+    }),
+  );
+  const missingBoundaryDiagnostics = await checkSddLifecycleDocument(
+    missingBoundary.file,
+    missingBoundary.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    missingBoundaryDiagnostics.some(
+      (item) => item.rule === "SDD_AUTO_CONFIGURATION",
+    ),
+  );
+
+  const exception = await fixture(
+    t,
+    workflow({
+      reviewMode: "REVIEW_ON_EXCEPTION",
+      automaticGateResult: "PASS",
+      automationException: "unexpected output",
+    }),
+  );
+  const exceptionDiagnostics = await checkSddLifecycleDocument(
+    exception.file,
+    exception.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    exceptionDiagnostics.some((item) => item.rule === "SDD_AUTO_EXCEPTION"),
+  );
+
+  const valid = await fixture(
+    t,
+    workflow({ reviewMode: "AUTO_CONTINUE", automaticGateResult: "PASS" }),
+  );
+  assert.deepEqual(
+    await checkSddLifecycleDocument(valid.file, valid.root, SCHEMAS),
+    [],
+  );
 });
 
 test("workflow lifecycle rejects illegal transitions and unsafe relative targets", async (t) => {
