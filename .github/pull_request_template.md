@@ -14,6 +14,16 @@
 - Required reviewers or specialties:
 - Recommended reading order and evidence:
 
+## Contract-to-change map and author annotations
+
+| Material change / PR annotation | Governing statement | Why / expected effect | Evidence | Risk / non-scope |
+| --- | --- | --- | --- | --- |
+| | | | | |
+
+- [ ] Material or non-obvious hunks have concise author annotations.
+- [ ] Routine mechanics were not annotated merely to increase comment count.
+- [ ] Every annotation still matches the exact current PR head.
+
 ## Documentation review
 
 - [ ] Statements were checked against their governing contracts or primary sources.
@@ -37,6 +47,19 @@
 - [ ] `npm run docs:all`
 - [ ] `npm run docs:links:external` reviewed as advisory evidence.
 - [ ] Failures were justified and classified before content, configuration, or tests changed.
+
+## Agent self-review
+
+- Exact reviewed PR head:
+- Governing inputs and versions:
+- Self-review record or embedded findings:
+- Result: `SELF_REVIEW_PASSED / SELF_REVIEW_FAILED`
+
+- [ ] The complete diff and surrounding behavior were reviewed against approved
+      requirements, contracts, scope, non-scope, tests, risks, and policies.
+- [ ] Every material change is represented in the review map.
+- [ ] No blocking finding, unexplained change, or missing required gate remains.
+- [ ] This result is presented as pre-review evidence, not approval or merge authority.
 
 ## Risk and adoption
 

@@ -32,6 +32,8 @@ Before a non-trivial repository change, read
 `.github/spec-driven-delivery/README.md` and the active delivery artifacts it
 selects. Continue to follow all component-specific rules and skills. Do not
 generate a dependent artifact or begin implementation before its review gate.
+Before requesting that review, complete the required agent self-review against
+the exact candidate revision; a pass is evidence, not approval.
 ```
 
 ## Contribution-guide link
@@ -44,7 +46,8 @@ Proposed concise addition to the SGLang contribution guide:
 For a non-trivial feature, defect, refactor, architecture decision, or systemic
 policy gap, start at `.github/spec-driven-delivery/README.md`. This adds
 reviewed discovery and planning before implementation; the testing, CI,
-reviewer, and merge requirements in this guide remain authoritative.
+reviewer, and merge requirements in this guide remain authoritative. Complete
+the required exact-revision agent self-review before each review gate.
 ```
 
 In a real adoption, each change follows its existing path owner and is reviewed

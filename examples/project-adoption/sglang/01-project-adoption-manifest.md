@@ -25,13 +25,16 @@
 | Required documentation checks | `npm run docs:all` in this playbook |
 | Review mode | `EXPLICIT_REVIEW` |
 | Review mode authority | Current playbook adoption policy; semantic example refresh |
+| Self-review state | `NOT_STARTED` |
+| Self-review candidate revision | `Not recorded` |
+| Self-review evidence | `Not recorded` |
 | Automation boundary | `Not applicable` |
 | Required automatic gates | `Not applicable` |
 | Automatic gate result | `NOT_APPLICABLE` |
 | Semantic decision introduced | `YES` |
 | Automation exception | `None` |
-| Current blocker | Independent example review pending |
-| Next action | Review the complete example and authority map |
+| Current blocker | Agent self-review of the exact example candidate is pending |
+| Next action | Complete agent self-review, then request independent review |
 
 Adoption type: non-authoritative external-project case study.
 
@@ -165,8 +168,9 @@ no SGLang edit and records no unselected need.
 
 | Review item | Required reviewer | Current disposition |
 | --- | --- | --- |
-| Public SGLang facts and links | Independent playbook reviewer | `IN_REVIEW` |
-| Proposed target paths and reuse decisions | Independent playbook reviewer | `IN_REVIEW` |
+| Agent self-review of exact candidate | Producing agent | `NOT_STARTED` |
+| Public SGLang facts and links | Independent playbook reviewer | `NOT_STARTED` until self-review passes |
+| Proposed target paths and reuse decisions | Independent playbook reviewer | `NOT_STARTED` until self-review passes |
 | Real SGLang adoption authority | SGLang maintainers/owners | `NOT_REQUESTED` |
 | Example documentation tests | Playbook CI | `PENDING` until this refresh is validated |
 

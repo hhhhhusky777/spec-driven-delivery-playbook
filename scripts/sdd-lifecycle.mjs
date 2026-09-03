@@ -163,6 +163,37 @@ function checkRequiredFields(file, fields, requiredFields) {
     .map((field) => diagnostic(file, 1, "SDD_REQUIRED_FIELD", `missing control field: ${field}`));
 }
 
+function checkSelfReviewGate(file, fields, reviewRequired) {
+  if (!reviewRequired) {
+    return [];
+  }
+  const diagnostics = [];
+  if (fields.get("Self-review state") !== "SELF_REVIEW_PASSED") {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_SELF_REVIEW_STATE",
+        "review requires Self-review state SELF_REVIEW_PASSED",
+      ),
+    );
+  }
+  for (const field of ["Self-review candidate revision", "Self-review evidence"]) {
+    const value = fields.get(field) || "";
+    if (isNone(value) || /^not recorded$/i.test(normalizeValue(value))) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          1,
+          "SDD_SELF_REVIEW_EVIDENCE",
+          `review requires a recorded ${field}`,
+        ),
+      );
+    }
+  }
+  return diagnostics;
+}
+
 function checkRequiredSections(file, sections, requiredSections) {
   return requiredSections
     .filter((section) => !sections.has(section))
@@ -245,6 +276,13 @@ function checkImplementationPlan(file, marker, text, tables, fields, schema) {
       fields.get("Status"),
       schema.transitions,
       "plan",
+    ),
+  );
+  diagnostics.push(
+    ...checkSelfReviewGate(
+      file,
+      fields,
+      ["IN_REVIEW", "APPROVED"].includes(fields.get("Review state")),
     ),
   );
 
@@ -511,6 +549,16 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
       fields.get("State"),
       schema.transitions,
       "workflow",
+    ),
+  );
+  diagnostics.push(
+    ...checkSelfReviewGate(
+      file,
+      fields,
+      ["IN_REVIEW", "APPROVED"].includes(fields.get("Current artifact review state")) ||
+        ["MANIFEST_IN_REVIEW", "ARTIFACT_IN_REVIEW", "GATES_READY"].includes(
+          fields.get("State"),
+        ),
     ),
   );
 

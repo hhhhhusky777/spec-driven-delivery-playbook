@@ -119,8 +119,11 @@ unknowns, proposes routing decisions, and stops.
 
 Compare the agent result with
 [the completed example manifest](01-project-adoption-manifest.md). An authorized
-real-project reviewer would correct facts and approve `DISCOVERY -> MAPPED`.
-This teaching example records no SGLang approval.
+real-project reviewer would review only after the agent records
+`SELF_REVIEW_PASSED` against that exact candidate. The reviewer then corrects
+facts or approves `DISCOVERY -> MAPPED`. Self-review does not grant approval.
+This teaching example records no SGLang approval and therefore leaves its
+self-review and independent review states `NOT_STARTED`.
 
 ### Step 5 — Generate one selected artifact per review
 
@@ -128,12 +131,15 @@ After each approval, give the agent the same instruction to follow the generated
 guide. Before every continuation, an authorized reviewer must set one `Next action` and its exact
 `Allowed write scope` in the manifest:
 
-1. generate the [project entry point](02-project-entrypoint.md), then review;
-2. generate the [SDD overlay](03-development-policy.md), then review;
-3. create the [thin agent adapters](04-agent-entrypoint-adapters.md), then
-   review; and
+1. generate the [project entry point](02-project-entrypoint.md), self-review the
+   exact candidate, then request review;
+2. generate the [SDD overlay](03-development-policy.md), self-review the exact
+   candidate, then request review;
+3. create the [thin agent adapters](04-agent-entrypoint-adapters.md), self-review
+   the exact candidate, then request review; and
 4. update documentation-link checking for the new `.github` Markdown path,
-   then review under SGLang's `.github` and CI ownership.
+   self-review the exact candidate, then request review under SGLang's `.github`
+   and CI ownership.
 
 The existing contribution, test, CI, and maintainer documents remain canonical.
 The PR/branch family routes to `UPDATE_EXISTING` because the pinned sources do

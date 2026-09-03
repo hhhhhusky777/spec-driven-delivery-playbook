@@ -724,6 +724,69 @@ test("canonical playbook URL and examples use the transferred repository and SGL
   assert.match(readme, /SGLang API-key redaction delivery/);
 });
 
+test("every review gate requires exact-revision agent self-review without granting approval", async () => {
+  const reviewArtifacts = [
+    "README.md",
+    "docs/documentation-quality-policy.md",
+    "docs/project-adoption-runbook.md",
+    "templates/README.md",
+    "templates/adoption/agent-adoption-trigger.md",
+    "templates/adoption/project-adoption-manifest.md",
+    "templates/decisions/architecture-decision-record.md",
+    "templates/delivery/implementation-plan.md",
+    "templates/discovery/solution-whiteboard.md",
+    "templates/handoffs/whiteboard-to-workflow.md",
+    "templates/policies/development-policy.md",
+    "templates/policies/pull-request-policy.md",
+    "templates/policies/specialized-policy.md",
+    "templates/testing/test-strategy.md",
+    "templates/workflows/sdd-delivery-workflow.md",
+    "skills/sdd-project-adoption/SKILL.md",
+    "skills/sdd-project-workflow/SKILL.md",
+  ];
+
+  for (const relativePath of reviewArtifacts) {
+    const content = await readFile(path.join(REPOSITORY_ROOT, relativePath), "utf8");
+    assert.match(
+      content,
+      /SELF_REVIEW_PASSED|self-review/i,
+      `${relativePath} must carry the mandatory self-review gate`,
+    );
+  }
+
+  const record = await readFile(
+    path.join(REPOSITORY_ROOT, "templates/reviews/agent-self-review.md"),
+    "utf8",
+  );
+  const prPolicy = await readFile(
+    path.join(REPOSITORY_ROOT, "templates/policies/pull-request-policy.md"),
+    "utf8",
+  );
+  const prTemplate = await readFile(
+    path.join(REPOSITORY_ROOT, ".github/pull_request_template.md"),
+    "utf8",
+  );
+  const exampleManifest = await readFile(
+    path.join(
+      REPOSITORY_ROOT,
+      "examples/project-adoption/sglang/01-project-adoption-manifest.md",
+    ),
+    "utf8",
+  );
+
+  assert.match(record, /Exact candidate revision/);
+  assert.match(record, /Contract-to-change map and author annotations/);
+  assert.match(record, /SELF_REVIEW_FAILED/);
+  assert.match(record, /cannot set\s+`APPROVED`/);
+  assert.match(record, /authorize merge, or authorize\s+continuation/);
+  assert.match(prPolicy, /exact current PR head/);
+  assert.match(prPolicy, /material or non-obvious PR hunks/);
+  assert.match(prTemplate, /Contract-to-change map and author annotations/);
+  assert.match(prTemplate, /Agent self-review/);
+  assert.match(exampleManifest, /\| Self-review state \| `NOT_STARTED` \|/);
+  assert.match(exampleManifest, /Complete agent self-review, then request independent review/);
+});
+
 test("external-link checks dispose response bodies before returning status", async () => {
   let cancelCalls = 0;
   const result = await fetchWithRetry(

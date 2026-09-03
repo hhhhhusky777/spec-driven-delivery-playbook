@@ -49,6 +49,9 @@ function plan({
   next = "NEXT",
   spec = true,
   specState = "COMPLETE",
+  selfReviewState = "SELF_REVIEW_PASSED",
+  selfReviewRevision = "candidate-v1",
+  selfReviewEvidence = "reviews/self-review.md",
 } = {}) {
   return `# Plan
 
@@ -62,6 +65,9 @@ function plan({
 | Next ready task(s) | \`T01\` |
 | Blockers | \`None\` |
 | Review state | \`${reviewState}\` |
+| Self-review state | \`${selfReviewState}\` |
+| Self-review candidate revision | \`${selfReviewRevision}\` |
+| Self-review evidence | \`${selfReviewEvidence}\` |
 
 ${PLAN_SECTIONS}
 
@@ -92,6 +98,9 @@ function validatingPlan({
 | Next ready task(s) | \`${nextReadyTasks}\` |
 | Blockers | \`None\` |
 | Review state | \`APPROVED\` |
+| Self-review state | \`SELF_REVIEW_PASSED\` |
+| Self-review candidate revision | \`candidate-v1\` |
+| Self-review evidence | \`reviews/self-review.md\` |
 
 ${PLAN_SECTIONS}
 
@@ -174,6 +183,22 @@ test("plan lifecycle and review gates reject illegal READY transitions", async (
   const unapproved = await fixture(t, plan({ reviewState: "IN_REVIEW" }));
   const reviewDiagnostics = await checkSddLifecycleDocument(unapproved.file, unapproved.root, SCHEMAS);
   assert.ok(reviewDiagnostics.some((item) => item.rule === "SDD_PLAN_REVIEW"));
+
+  const missingSelfReview = await fixture(
+    t,
+    plan({ selfReviewState: "NOT_STARTED", selfReviewRevision: "Not recorded" }),
+  );
+  const selfReviewDiagnostics = await checkSddLifecycleDocument(
+    missingSelfReview.file,
+    missingSelfReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    selfReviewDiagnostics.some((item) => item.rule === "SDD_SELF_REVIEW_STATE"),
+  );
+  assert.ok(
+    selfReviewDiagnostics.some((item) => item.rule === "SDD_SELF_REVIEW_EVIDENCE"),
+  );
 });
 
 test("VALIDATING plan requires every ledger task terminal and no next task", async (t) => {
@@ -258,6 +283,10 @@ function workflow({
   automaticGateResult = "NOT_APPLICABLE",
   automationBoundary = "task-1",
   automationException = "None",
+  artifactReviewState = "APPROVED",
+  selfReviewState = "SELF_REVIEW_PASSED",
+  selfReviewRevision = "candidate-v1",
+  selfReviewEvidence = "reviews/self-review.md",
 } = {}) {
   const manifestRow = includePlan
     ? "| 1 | Plan | GENERATE_FULL | APPROVED |"
@@ -275,6 +304,10 @@ function workflow({
 | State | \`${state}\` |
 | Previous state | \`${previousState}\` |
 | Current artifact/gate | \`plan\` |
+| Current artifact review state | \`${artifactReviewState}\` |
+| Self-review state | \`${selfReviewState}\` |
+| Self-review candidate revision | \`${selfReviewRevision}\` |
+| Self-review evidence | \`${selfReviewEvidence}\` |
 | Next action | Prepare task |
 | Next action target IDs | \`task-1\` |
 | Allowed write scope | \`docs\` |
@@ -325,6 +358,22 @@ test("GATES_READY rejects stale prerequisites and only scoped blockers", async (
   const blocked = await fixture(t, workflow({ blockerBlocks: "task-1" }));
   const blockedDiagnostics = await checkSddLifecycleDocument(blocked.file, blocked.root, SCHEMAS);
   assert.ok(blockedDiagnostics.some((item) => item.rule === "SDD_BLOCKED_NEXT"));
+
+  const missingSelfReview = await fixture(
+    t,
+    workflow({ selfReviewState: "NOT_STARTED", selfReviewEvidence: "Not recorded" }),
+  );
+  const selfReviewDiagnostics = await checkSddLifecycleDocument(
+    missingSelfReview.file,
+    missingSelfReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    selfReviewDiagnostics.some((item) => item.rule === "SDD_SELF_REVIEW_STATE"),
+  );
+  assert.ok(
+    selfReviewDiagnostics.some((item) => item.rule === "SDD_SELF_REVIEW_EVIDENCE"),
+  );
 });
 
 test("next-action write targets must stay within allowed scope", async (t) => {

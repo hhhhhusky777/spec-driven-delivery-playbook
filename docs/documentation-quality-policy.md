@@ -35,6 +35,14 @@ template or generated artifact.
 > material documentation change therefore requires both automated evidence and
 > human or independent-agent semantic review.
 
+Before every review gate, the producing agent must complete the
+[agent self-review record](../templates/reviews/agent-self-review.md) against the
+exact candidate revision. It checks correctness, clarity, canonical ownership,
+cross-document consistency, freshness, duplication, attention mapping, scope,
+and applicable automated evidence. Any candidate change invalidates the result.
+`SELF_REVIEW_PASSED` is review input only; it cannot approve the artifact,
+satisfy reviewer independence, authorize merge, or authorize continuation.
+
 ## 2. Required semantic review
 
 The reviewer records a change, an evidence-backed explanation, or an accepted
@@ -106,6 +114,8 @@ Content created from a template must pass the same review as a template change:
 
 Generation is not review. A producing agent or automation does not approve its
 own artifact unless an active project policy explicitly permits that risk level.
+It must still perform and record the mandatory agent self-review before the
+artifact reaches that review gate.
 
 ### 2.6 Attention and reviewability gate
 

@@ -29,6 +29,9 @@ instantiated workflow record.
 | Manifest review state | `NOT_STARTED` |
 | Current artifact/gate | `<value>` |
 | Current artifact review state | `<value>` |
+| Self-review state | `<NOT_STARTED / SELF_REVIEW_PASSED / SELF_REVIEW_FAILED>` |
+| Self-review candidate revision | `<exact commit/version or Not applicable>` |
+| Self-review evidence | `<record/link or Not applicable>` |
 | Next action | `<value>` |
 | Next action target IDs | `<artifact/task IDs>` |
 | Allowed write scope | `<semicolon-separated repository-relative paths>` |
@@ -82,6 +85,11 @@ expansion, or a mandatory semantic checkpoint.
 
 - The author or generating runner must not self-approve unless an active project
   policy grants a documented low-risk exception.
+- Before every review gate, the implementing agent completes the
+  [agent self-review](../reviews/agent-self-review.md) against the exact
+  candidate revision. Review may begin only with `SELF_REVIEW_PASSED` and linked
+  evidence. Any candidate change invalidates that result and requires another
+  self-review.
 - Review may be performed by a human or an independent review agent. Human
   approval is required when project policy, risk, or external accountability
   requires it.
@@ -94,6 +102,9 @@ expansion, or a mandatory semantic checkpoint.
   approval. Silence or elapsed time is never approval.
 - Record every automatic action separately. `AUTO_CONTINUED` is not an approval
   or review state and cannot mark a normative artifact `APPROVED`.
+- `SELF_REVIEW_PASSED` is pre-review evidence only. It cannot approve an
+  artifact, satisfy reviewer independence, authorize merge, or authorize
+  continuation.
 
 Standard review states are `NOT_STARTED`, `IN_REVIEW`, `CHANGES_REQUESTED`,
 `APPROVED`, and `STALE`.
@@ -332,9 +343,9 @@ Normative generated content, interpretation, or a new decision always uses
 
 ### 9.2 Artifact review ledger
 
-| Artifact | Version | Round | Reviewer | Type | Result | Comments/resolution | Next action |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `<link>` | `<version>` | `1` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<summary/link>` | `<value>` |
+| Artifact | Version | Round | Self-review evidence | Reviewer | Type | Result | Comments/resolution | Next action |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `<link>` | `<version>` | `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<summary/link>` | `<value>` |
 
 ### 9.3 Automation audit ledger
 

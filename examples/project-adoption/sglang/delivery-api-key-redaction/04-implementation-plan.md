@@ -10,7 +10,10 @@
 | Current phase | `SPECIFY` |
 | Current task | `None` |
 | Next ready task | `None` |
-| Review state | `IN_REVIEW` |
+| Review state | `NOT_STARTED` |
+| Self-review state | `NOT_STARTED` |
+| Self-review candidate revision | `Not recorded` |
+| Self-review evidence | `Not recorded` |
 | Primary issue | [SGLang #37457](https://github.com/sgl-project/sglang/issues/37457) |
 | Target source boundary | SGLang at `9a05b470fa849b349e384ef3c1381f9a85c6c550`; refresh before approval |
 | Delivery implementation task count | `2` |
@@ -19,7 +22,7 @@
 | Task PR target | Feature integration branch |
 | Final PR target | Protected branch selected by SGLang policy |
 | Protected-branch synchronization | Project owner must define before `READY` |
-| Blockers | Allowlist, compatibility, exact sources/tests, owners, and branch values |
+| Blockers | Agent self-review plus allowlist, compatibility, exact sources/tests, owners, and branch values |
 
 Discovery, planning, validation-only, and archive-only rows do not count as
 implementation tasks. T01 and T02 task branches start from and their task PRs

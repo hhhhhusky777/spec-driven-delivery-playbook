@@ -29,12 +29,15 @@ Only `ACTIVE` versions govern pull requests.
 
 Submit each draft or update for human or independent-agent review. The author
 or generating runner must not self-approve unless a documented project rule
-allows a low-risk exception. Resolve `CHANGES_REQUESTED` and repeat review
-before activating the policy.
+allows a low-risk exception. First complete the
+[agent self-review](../reviews/agent-self-review.md) against the exact candidate
+revision and record `SELF_REVIEW_PASSED`; any candidate change invalidates that
+evidence. Resolve `CHANGES_REQUESTED`, repeat self-review, and repeat independent
+review before activating the policy. Self-review is evidence, not approval.
 
-| Round | Reviewer | Type | Result | Comments/link | Resolved version |
-| --- | --- | --- | --- | --- | --- |
-| `1` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
+| Round | Self-review evidence | Reviewer | Type | Result | Comments/link | Resolved version |
+| --- | --- | --- | --- | --- | --- | --- |
+| `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
 
 ## 2. Project profile
 
@@ -188,6 +191,12 @@ A PR may be marked ready only when:
 Draft PRs may be opened earlier for collaboration but must not imply readiness
 or passed gates.
 
+Before requesting review, the implementing agent adds author annotations to
+material or non-obvious PR hunks and completes the canonical agent self-review
+against the exact PR head. A subsequent commit invalidates the result and
+requires annotation reconciliation and a new self-review. Author annotations
+are navigation and rationale, not reviewer comments or approval.
+
 ## 8. Required PR description
 
 Use every section. Write `Not applicable — <reason>` rather than omitting one.
@@ -216,6 +225,16 @@ case if unchanged.>`
 - Files/components and responsibilities: `<summary>`
 - Actual change summary and generated/mechanical changes: `<values>`
 - YAGNI audit result: `<kept/deferred/removed>`
+
+### Contract-to-change map and author annotations
+
+| Material change / annotation | Governing statement | Why / expected effect | Evidence | Risk / non-scope |
+| --- | --- | --- | --- | --- |
+| `<file/hunk/comment link>` | `<requirement/task/contract ID>` | `<reason>` | `<test/check>` | `<value>` |
+
+Annotate material and non-obvious hunks in the PR. Do not create repetitive
+comments for routine imports, formatting, generated mechanics, or changes
+already obvious from the diff.
 
 ### Data, security, concurrency, and compatibility
 
@@ -255,12 +274,24 @@ State what was not run and why. A reduced run is not a full-gate pass.
 - Highest-risk decisions: `<items>`
 - Reviewer questions: `<items/None>`
 
+### Agent self-review evidence
+
+- Exact reviewed PR head: `<commit>`
+- Governing inputs and versions: `<links>`
+- Self-review record: `<link or embedded record>`
+- Findings and resolutions: `<summary>`
+- Result: `<SELF_REVIEW_PASSED / SELF_REVIEW_FAILED>`
+
+`SELF_REVIEW_PASSED` is required before requesting review, but it is not an
+approval and does not authorize merge or continuation.
+
 ### Checklist and next gate
 
 - [ ] Task Definition of Done satisfied.
 - [ ] The canonical test strategy's Red closure boundary is satisfied; no
       required test intentionally remains failing for a later PR to repair.
 - [ ] Required reviewers/checks complete.
+- [ ] Agent self-review passed against the exact current PR head.
 - [ ] Plan/task/evidence updated.
 - Next task or closure gate: `<ID/action>`.
 

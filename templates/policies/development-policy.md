@@ -40,12 +40,16 @@ rewrite obligations during active delivery.
 
 Submit each draft or update for human or independent-agent review. The author
 or generating runner must not self-approve unless a documented project rule
-allows a low-risk exception. Resolve `CHANGES_REQUESTED` and repeat review
-before changing the policy to `ACTIVE`.
+allows a low-risk exception. First complete the
+[agent self-review](../reviews/agent-self-review.md) against the exact candidate
+revision and record `SELF_REVIEW_PASSED`; any candidate change invalidates that
+evidence. Resolve `CHANGES_REQUESTED`, repeat self-review, and repeat independent
+review before changing the policy to `ACTIVE`. Self-review is evidence, not
+approval.
 
-| Round | Reviewer | Type | Result | Comments/link | Resolved version |
-| --- | --- | --- | --- | --- | --- |
-| `1` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
+| Round | Self-review evidence | Reviewer | Type | Result | Comments/link | Resolved version |
+| --- | --- | --- | --- | --- | --- | --- |
+| `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
 
 ## 2. Purpose, scope, and authority
 
@@ -160,6 +164,33 @@ Record each automatic action, input/output revision, mode authority, gates and
 results, change/impact classification, resulting state, and next action. At the
 next explicit checkpoint, summarize the automatic segment without representing
 it as reviewer approval.
+
+### Mandatory agent self-review
+
+Before every review gate, the generating or implementing agent reviews the
+exact candidate revision against approved inputs, requirements, contracts,
+scope and non-scope, acceptance criteria, applicable policies, required tests,
+risks, surrounding behavior, and cross-document consistency. Use the canonical
+agent self-review template: `<link>`.
+
+For code changes, open a draft PR when project policy permits and add concise
+author annotations to material or non-obvious hunks. Each annotation maps the
+change to its governing statement, reason, expected effect, evidence, and
+risk. Do not comment on routine mechanics or add source-code comments that only
+repeat the PR explanation.
+
+The agent then audits the complete diff and annotations against the final PR
+head. Record the exact commit or immutable artifact version, findings,
+resolutions, gates, and `SELF_REVIEW_PASSED` or `SELF_REVIEW_FAILED`. Any
+candidate change invalidates the prior result. An open blocking finding or
+missing/failed gate requires `SELF_REVIEW_FAILED` and stops submission to the
+owning review gate until resolved.
+
+Self-review is mandatory pre-review evidence regardless of the selected review
+mode. It is not independent approval: `SELF_REVIEW_PASSED` cannot set
+`APPROVED`, satisfy a required reviewer, authorize merge, or authorize
+continuation. User-selectable implementation continuation and automatic PR
+merging are defined separately and are not granted by this policy section.
 
 ## 5. Spec-driven development workflow
 

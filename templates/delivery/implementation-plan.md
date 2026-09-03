@@ -46,6 +46,9 @@ section.
 | Owner | `<person or team>` |
 | Reviewers | `<product, engineering, QA, security, operations as applicable>` |
 | Review state | `NOT_STARTED` |
+| Self-review state | `<NOT_STARTED / SELF_REVIEW_PASSED / SELF_REVIEW_FAILED>` |
+| Self-review candidate revision | `<exact commit/version or Not applicable>` |
+| Self-review evidence | `<record/link or Not applicable>` |
 | Created | `<YYYY-MM-DD and timezone>` |
 | Last updated | `<YYYY-MM-DD HH:MM and timezone>` |
 | Primary issue | `<canonical URL>` |
@@ -103,14 +106,17 @@ that are not in this state machine.
 
 Submit the plan for human or independent-agent review before `READY`. The
 author or generating runner must not self-approve unless a documented project
-rule allows a low-risk exception. Resolve `CHANGES_REQUESTED`, update affected
-contracts/tasks, and repeat review. If comments invalidate the accepted
+rule allows a low-risk exception. First complete the
+[agent self-review](../reviews/agent-self-review.md) against the exact candidate
+revision and record `SELF_REVIEW_PASSED`; any candidate change invalidates that
+evidence. Resolve `CHANGES_REQUESTED`, update affected contracts/tasks, repeat
+self-review, and repeat independent review. If comments invalidate the accepted
 solution or manifest, return to the owning upstream artifact instead of fixing
-the contradiction only in this plan.
+the contradiction only in this plan. Self-review is evidence, not approval.
 
-| Round | Reviewer | Type | Result | Comments/link | Resolved version |
-| --- | --- | --- | --- | --- | --- |
-| `1` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
+| Round | Self-review evidence | Reviewer | Type | Result | Comments/link | Resolved version |
+| --- | --- | --- | --- | --- | --- | --- |
+| `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
 
 ### 0.3 How to use this document
 

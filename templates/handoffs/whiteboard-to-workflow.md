@@ -98,6 +98,11 @@ accountability requires one.
 
 Review the handoff as one small artifact before routing. Confirm that it is a
 faithful, complete, and unambiguous projection of the concluded whiteboard.
+Before requesting review, complete the
+[agent self-review](../reviews/agent-self-review.md) against the exact handoff
+candidate and record `SELF_REVIEW_PASSED`. Any candidate change invalidates the
+evidence and requires another self-review. Self-review is evidence, not
+approval.
 
 - [ ] The referenced whiteboard is `CONCLUDED` at the recorded version.
 - [ ] Accepted requirements and solution match the frozen conclusion.
@@ -110,9 +115,9 @@ faithful, complete, and unambiguous projection of the concluded whiteboard.
 - [ ] No secrets, private credentials, customer data, or transient signed URLs
       are included.
 
-| Review round | Reviewer | Type | Result | Comments/link | Resolved in version |
-| --- | --- | --- | --- | --- | --- |
-| `1` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<summary/link>` | `<version>` |
+| Review round | Self-review evidence | Reviewer | Type | Result | Comments/link | Resolved in version |
+| --- | --- | --- | --- | --- | --- | --- |
+| `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<summary/link>` | `<version>` |
 
 Approval statement:
 

@@ -6,6 +6,12 @@ adopted.
 
 ## Unreleased — updated 2026-09-03
 
+- Added mandatory exact-revision agent self-review before every review gate,
+  contract-to-change author annotations for material PR changes, fail-closed
+  lifecycle validation, and SGLang examples of the prerequisite. Existing
+  instantiated plans and workflows must add the three self-review control
+  fields before their next lifecycle check; self-review remains evidence and
+  cannot approve, merge, or continue work.
 - Updated the canonical repository after transfer to
   `hhhhhusky777/spec-driven-delivery-playbook`, refreshed the SGLang adoption
   example against current installer and policy contracts, and replaced the
