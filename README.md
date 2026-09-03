@@ -613,6 +613,46 @@ rules requiring review stop automation. Design and planning gates never use
 this implementation-only choice, and all automatically merged PRs require
 post-merge human review before delivery completion/archive.
 
+### Example: enable auto-continuation during implementation
+
+Suppose `T01` was merged under `HUMAN_REVIEW_BEFORE_MERGE`, the workflow is
+`DELIVERY_ACTIVE`, and `T02` is next. The user can change the mode with one
+bounded instruction:
+
+```text
+Change the implementation continuation mode to AGENT_AUTO_MERGE for the T02
+and T03 task PRs only. Do not include the final feature PR. Record this
+instruction as the mode authority, then continue following the delivery
+workflow.
+```
+
+The agent records the instruction in the live delivery workflow before editing
+`T02`:
+
+| Field | Example value |
+| --- | --- |
+| Implementation continuation mode | `AGENT_AUTO_MERGE` |
+| Implementation mode authority | `Example user — instruction quoted above` |
+| Implementation mode scope | `T02 task PR; T03 task PR` |
+| Implementation mode selected at | `2026-09-03 15:00 Asia/Shanghai (example)` |
+
+Recording this exact instruction is a control-only update. The agent runs the
+lifecycle check, then rereads these fields before the `T02` edit, self-review,
+PR opening, merge, and `T03` continuation. It may merge only while the PR stays
+inside this scope and every required check and repository protection passes.
+The final feature PR remains outside the authorization.
+
+To stop automatic merging before the next irreversible action, the user can
+say:
+
+```text
+Change the implementation continuation mode to HUMAN_REVIEW_BEFORE_MERGE now.
+Record this instruction and stop at the next PR review gate.
+```
+
+The agent rereads the changed value and stops before the next merge. A mode
+change cannot undo a merge that already completed.
+
 ## Dependency-first data sequencing
 
 Do not translate “dependency-ordered” into a universal rule to complete an

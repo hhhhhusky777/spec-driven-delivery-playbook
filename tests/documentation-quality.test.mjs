@@ -788,6 +788,10 @@ test("every review gate requires exact-revision agent self-review without granti
 });
 
 test("implementation auto-merge is human-selected, implementation-only, and rechecked", async () => {
+  const playbookReadme = await readFile(
+    path.join(REPOSITORY_ROOT, "README.md"),
+    "utf8",
+  );
   const developmentPolicy = await readFile(
     path.join(REPOSITORY_ROOT, "templates/policies/development-policy.md"),
     "utf8",
@@ -832,6 +836,10 @@ test("implementation auto-merge is human-selected, implementation-only, and rech
   assert.match(testStrategy, /Negative fixtures must block missing\/invalid mode data/);
   assert.match(sglangWorkflow, /\| Implementation continuation mode \| `NOT_SELECTED` \|/);
   assert.match(sglangWorkflow, /does not\s+make that choice for SGLang/);
+  assert.match(playbookReadme, /^### Example: enable auto-continuation during implementation$/m);
+  assert.match(playbookReadme, /AGENT_AUTO_MERGE for the T02\s+and T03 task PRs only/);
+  assert.match(playbookReadme, /Do not include the final feature PR/);
+  assert.match(playbookReadme, /Change the implementation continuation mode to HUMAN_REVIEW_BEFORE_MERGE now/);
 });
 
 test("external-link checks dispose response bodies before returning status", async () => {
