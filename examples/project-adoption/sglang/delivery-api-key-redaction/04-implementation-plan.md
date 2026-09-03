@@ -14,6 +14,7 @@
 | Self-review state | `NOT_STARTED` |
 | Self-review candidate revision | `Not recorded` |
 | Self-review evidence | `Not recorded` |
+| Implementation continuation mode | Read live from workflow; currently `NOT_SELECTED` |
 | Primary issue | [SGLang #37457](https://github.com/sgl-project/sglang/issues/37457) |
 | Target source boundary | SGLang at `9a05b470fa849b349e384ef3c1381f9a85c6c550`; refresh before approval |
 | Delivery implementation task count | `2` |

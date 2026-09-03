@@ -51,6 +51,7 @@ review before activating the policy. Self-review is evidence, not approval.
 | Default merge method | `<squash/rebase/merge>` | `<reason>` |
 | Required reviewers | `<roles/count/CODEOWNERS>` | `<risk rules>` |
 | Required checks | `<CI/gates>` | `<authority>` |
+| Permitted implementation continuation modes | `<HUMAN_REVIEW_BEFORE_MERGE only / both modes>` | `<risk and repository-protection rule>` |
 | Deployment maturity | `<development/released>` | `<compatibility effect>` |
 | Increment boundary | `<smallest self-contained mergeable change>` | `<development policy>` |
 | Issue linkage | `<required threshold>` | `<tracker>` |
@@ -297,6 +298,28 @@ approval and does not authorize merge or continuation.
 
 ## 9. Review policy
 
+The live delivery workflow records the user-selected implementation mode; this
+policy defines what each value permits. The user chooses after design approval
+and before implementation begins, and may change it at any time. The agent
+rereads the live mode before each task edit, self-review gate, PR opening, merge
+attempt, and continuation.
+
+- `HUMAN_REVIEW_BEFORE_MERGE`: the agent opens the ready PR and stops until all
+  required review and merge authority are recorded.
+- `AGENT_AUTO_MERGE`: the user's recorded mode selection supplies merge
+  authorization for only the listed task/PR scope. The agent may merge only
+  after its exact-head self-review passes, annotations are current, all checks
+  and repository protections pass, and no stop condition exists. It must not
+  bypass a repository-required approval.
+
+This implementation-only choice cannot approve requirements, design, policy,
+contracts, task specifications, exceptions, or final delivery. Missing,
+invalid, stale, or out-of-scope mode data stops for user direction.
+
+For multi-task delivery, the recorded scope may include the final feature PR
+only after final validation has its required approval. Auto-merge authority for
+that PR is merge authority, not validation or delivery approval.
+
 Reviewers evaluate:
 
 - requirement and contract correctness;
@@ -323,7 +346,9 @@ without addressing them.
 
 Before merge:
 
-- required approvals and checks are current;
+- required checks are current; per-PR approval is current in
+  `HUMAN_REVIEW_BEFORE_MERGE`, while `AGENT_AUTO_MERGE` requires recorded user
+  authority and remains subject to every repository-enforced approval;
 - unresolved blocking comments are closed;
 - branch protection and dependency order are satisfied;
 - the PR source and target match the approved integration model;
@@ -334,6 +359,13 @@ Before merge:
 - the implementation plan identifies the correct next state/task;
 - deployment and migration prerequisites are ready; and
 - no secret or sensitive artifact entered history.
+
+In `AGENT_AUTO_MERGE`, stop instead of merging on a failed/missing check,
+conflict, unresolved comment or change request, stale input, unexpected diff,
+ambiguity, inconsistency, new semantic decision, scope expansion, mode change,
+or repository refusal. Never use administrator bypass or weaken protections.
+After merging, record the PR head, merge commit, mode authority, self-review,
+checks, and `PENDING` post-merge human review before continuing.
 
 Define stale-approval, merge-queue, auto-merge, administrator bypass, and
 required up-to-date-branch rules: `<rules>`.
@@ -347,6 +379,9 @@ required up-to-date-branch rules: `<rules>`.
 - Delete or retain branches according to policy.
 - Create/close follow-up issues and exceptions.
 - Advance only the next dependency-ready task.
+- Complete post-merge human review for every automatically merged PR. Record
+  `ACCEPTED` or `FOLLOW_UP_REQUIRED`; block affected work on a finding, and do
+  not complete/archive the delivery until review or follow-up closes.
 
 ## 12. Emergency changes
 

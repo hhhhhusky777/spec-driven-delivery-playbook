@@ -346,6 +346,13 @@ At minimum, assess development, testing, PR/branch, documentation, API,
 security, data, concurrency, performance, release, incident, and operations
 rules. Do not create specialized policies for hypothetical future needs.
 
+The development and PR/branch families must explicitly decide whether the
+project permits both implementation continuation modes or only
+`HUMAN_REVIEW_BEFORE_MERGE`, where the live workflow stores the user's choice,
+which repository protections remain mandatory, and where post-merge human
+review is recorded. Missing decisions route to `UPDATE_EXISTING`; adoption must
+not infer permission for `AGENT_AUTO_MERGE`.
+
 ### Decision-level policy conformance
 
 An existing policy is a `REUSE` candidate, not proof of compatibility. Compare

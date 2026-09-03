@@ -787,6 +787,61 @@ test("every review gate requires exact-revision agent self-review without granti
   assert.match(exampleManifest, /Complete agent self-review, then request independent review/);
 });
 
+test("implementation auto-merge is human-selected, implementation-only, and rechecked", async () => {
+  const playbookReadme = await readFile(
+    path.join(REPOSITORY_ROOT, "README.md"),
+    "utf8",
+  );
+  const developmentPolicy = await readFile(
+    path.join(REPOSITORY_ROOT, "templates/policies/development-policy.md"),
+    "utf8",
+  );
+  const prPolicy = await readFile(
+    path.join(REPOSITORY_ROOT, "templates/policies/pull-request-policy.md"),
+    "utf8",
+  );
+  const workflow = await readFile(
+    path.join(REPOSITORY_ROOT, "templates/workflows/sdd-delivery-workflow.md"),
+    "utf8",
+  );
+  const workflowSkill = await readFile(
+    path.join(REPOSITORY_ROOT, "skills/sdd-project-workflow/SKILL.md"),
+    "utf8",
+  );
+  const testStrategy = await readFile(
+    path.join(REPOSITORY_ROOT, "templates/testing/test-strategy.md"),
+    "utf8",
+  );
+  const sglangWorkflow = await readFile(
+    path.join(
+      REPOSITORY_ROOT,
+      "examples/project-adoption/sglang/delivery-api-key-redaction/03-delivery-workflow.md",
+    ),
+    "utf8",
+  );
+
+  for (const content of [developmentPolicy, prPolicy, workflow, workflowSkill]) {
+    assert.match(content, /HUMAN_REVIEW_BEFORE_MERGE/);
+    assert.match(content, /AGENT_AUTO_MERGE/);
+    assert.match(content, /user.*choos|user-selected/is);
+    assert.match(content, /before (?:each|the) task.*PR.*merge.*continu/is);
+    assert.match(content, /design/i);
+    assert.match(content, /post-merge (?:human[- ]?)?review/i);
+  }
+  assert.match(developmentPolicy, /The agent must never infer or select\s+`AGENT_AUTO_MERGE`/);
+  assert.match(prPolicy, /must not\s+bypass a repository-required approval/);
+  assert.match(prPolicy, /final feature PR[\s\S]*final validation has its required approval/);
+  assert.match(workflowSkill, /Never weaken checks, use\s+administrator bypass/);
+  assert.match(workflowSkill, /final feature PR only[\s\S]*final validation is already approved/);
+  assert.match(testStrategy, /Negative fixtures must block missing\/invalid mode data/);
+  assert.match(sglangWorkflow, /\| Implementation continuation mode \| `NOT_SELECTED` \|/);
+  assert.match(sglangWorkflow, /does not\s+make that choice for SGLang/);
+  assert.match(playbookReadme, /^### Example: enable auto-continuation during implementation$/m);
+  assert.match(playbookReadme, /AGENT_AUTO_MERGE for the T02\s+and T03 task PRs only/);
+  assert.match(playbookReadme, /Do not include the final feature PR/);
+  assert.match(playbookReadme, /Change the implementation continuation mode to HUMAN_REVIEW_BEFORE_MERGE now/);
+});
+
 test("external-link checks dispose response bodies before returning status", async () => {
   let cancelCalls = 0;
   const result = await fetchWithRetry(

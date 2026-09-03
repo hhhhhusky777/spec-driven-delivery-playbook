@@ -61,6 +61,22 @@
 - [ ] No blocking finding, unexplained change, or missing required gate remains.
 - [ ] This result is presented as pre-review evidence, not approval or merge authority.
 
+## Implementation continuation
+
+- Phase: `DESIGN / IMPLEMENTATION`
+- Live workflow and revision:
+- Current mode: `NOT_SELECTED / HUMAN_REVIEW_BEFORE_MERGE / AGENT_AUTO_MERGE`
+- User authority, selection time, and task/PR scope:
+- Mode rechecked before this PR/merge: `YES / NOT_APPLICABLE`
+- Post-merge human review destination: `ledger link / NOT_APPLICABLE`
+
+- [ ] `AGENT_AUTO_MERGE`, if selected, applies only to implementation and does
+      not bypass repository protections or required checks.
+- [ ] Missing/invalid mode data, conflicts, inconsistencies, failed gates,
+      unresolved comments, drift, or scope expansion stop automatic merge.
+- [ ] An automatically merged PR will be recorded `PENDING` for post-merge
+      human review and cannot be omitted from delivery closure.
+
 ## Risk and adoption
 
 - Worst case if incorrect:

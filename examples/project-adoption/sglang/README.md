@@ -147,6 +147,14 @@ not prove the playbook's deterministic single-task/multi-task integration rule;
 the agent updates project authority through owner review and never creates a
 duplicate policy.
 
+After all design artifacts and the next task specification are approved, the
+agent asks the adopting user to choose the implementation continuation mode.
+`HUMAN_REVIEW_BEFORE_MERGE` stops at every task PR. `AGENT_AUTO_MERGE` applies
+only to explicitly scoped implementation PRs and only if SGLang's repository
+protections permit the merge without bypass. The agent rereads the choice
+before every task, PR, merge, and continuation. This non-authoritative example
+leaves the mode `NOT_SELECTED` and performs no merge.
+
 ### Step 6 — Verify `INSTALLED`
 
 From a fresh context, follow only `.github/spec-driven-delivery/README.md` and

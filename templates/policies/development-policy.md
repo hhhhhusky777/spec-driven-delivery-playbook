@@ -189,8 +189,58 @@ owning review gate until resolved.
 Self-review is mandatory pre-review evidence regardless of the selected review
 mode. It is not independent approval: `SELF_REVIEW_PASSED` cannot set
 `APPROVED`, satisfy a required reviewer, authorize merge, or authorize
-continuation. User-selectable implementation continuation and automatic PR
-merging are defined separately and are not granted by this policy section.
+continuation by itself.
+
+### Human-selected implementation continuation
+
+This choice applies only after the whiteboard, handoff, routing, policies,
+contracts, complete task specification, and implementation plan have received
+their required design-phase approvals. Design and planning gates always stop
+for their required reviewer and cannot use this implementation mode.
+
+The delivery workflow is the canonical live owner of one mode:
+
+| Mode | Task-PR behavior |
+| --- | --- |
+| `NOT_SELECTED` | Implementation cannot start; ask the user to choose a mode |
+| `HUMAN_REVIEW_BEFORE_MERGE` | Open the annotated, self-reviewed PR and stop until its required human review and merge authority are recorded |
+| `AGENT_AUTO_MERGE` | Open the annotated, self-reviewed implementation PR; after all repository protections and gates pass, merge it and continue to the next dependency-ready task |
+
+Ask the user to choose after design approval and before the first task enters
+`IN_PROGRESS`. Record the user's identity/instruction, selected time, and exact
+task/PR scope in the workflow. The agent must never infer or select
+`AGENT_AUTO_MERGE`.
+
+Recording an explicit user selection or change is a control-only workflow
+synchronization and needs no second semantic approval unless project policy
+requires one. It must reproduce the instructed mode and scope exactly and pass
+the workflow's lifecycle checks; it cannot broaden the authorization.
+
+The user may change the mode at any time. The new value applies before the next
+irreversible action; it cannot undo a completed merge. Before each task edit,
+self-review gate, PR opening, merge attempt, and next-task continuation, the
+agent rereads the canonical workflow and verifies the current mode, authority,
+scope, and revision. Missing, invalid, stale, or out-of-scope mode data stops
+for user direction.
+
+`AGENT_AUTO_MERGE` does not relax the approved task, tests, self-review, PR
+annotations, branch routing, branch protection, CODEOWNERS, security,
+compliance, deployment, or repository merge rules. The agent must stop on a
+failed or missing gate, conflict, unresolved comment, change request, stale
+input, unexpected diff, ambiguity, inconsistency, new semantic decision,
+scope expansion, mode change, or a repository rule requiring review. It must
+not use administrator bypass or weaken a required check.
+
+The recorded scope may include task PRs and, after final validation receives
+its required approval, the final feature-integration PR. The mode may authorize
+that PR's merge but cannot approve final validation or any other design,
+contract, risk, exception, or closure decision.
+
+Every automatically merged PR enters a post-merge human-review ledger with its
+head and merge commit, mode authority, self-review, checks, and disposition.
+Implementation may continue while those reviews are pending only when no
+finding affects the next task. Delivery cannot become `COMPLETE` or archive
+until every pending review is accepted or its required follow-up is resolved.
 
 ## 5. Spec-driven development workflow
 
