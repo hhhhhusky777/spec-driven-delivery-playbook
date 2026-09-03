@@ -578,9 +578,13 @@ Canonical PR/branch policy: `<link>`
 
 Record only development-level expectations here:
 
-- default integration model: `<short-lived topic to main / approved feature integration branch>`;
+- single-task integration model: `<protected -> task -> protected>`;
+- multi-task integration model: `<protected -> feature -> tasks -> feature -> protected>`;
+- every multi-task delivery uses a delivery-specific feature integration branch,
+  and every task branch and task PR returns to that branch;
 - integration target must remain green after every increment;
-- long-lived branches require explicit justification and refresh rules;
+- feature integration branches require bounded lifetime, protected-branch
+  synchronization, final validation, and explicit closure rules;
 - related tests accompany behavior changes; and
 - PRs contain contract, risk, validation, migration, rollback, and review
   evidence required by the canonical policy.

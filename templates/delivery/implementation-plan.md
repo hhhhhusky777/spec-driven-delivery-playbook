@@ -55,8 +55,21 @@ section.
 | Development policy | `<canonical path/URL>` |
 | Test strategy | `<canonical path/URL>` |
 | PR/branch policy | `<canonical path/URL>` |
+| Delivery implementation task count | `<integer; exclude discovery, planning, validation-only, and archive-only rows>` |
+| Integration model | `<single-task direct / multi-task feature integration>` |
+| Feature integration branch | `<branch or Not applicable>` |
+| Task PR target | `<protected branch / feature integration branch>` |
+| Final PR target | `<protected branch>` |
+| Protected-branch synchronization | `<cadence/trigger or Not applicable>` |
 | Branch / PR | `<branch and canonical PR URL, or Not opened>` |
 | Archived record | `Not archived` |
+
+One implementation and merge unit uses a task PR to the protected branch. Two
+or more use a delivery-specific feature integration branch: every task starts
+from and returns to that branch, and only the complete, validated feature uses
+a final reviewed PR to the protected branch. Discovery, planning,
+validation-only, and archive-only ledger rows do not count as implementation
+units.
 
 ### 0.1 Plan lifecycle
 
@@ -371,7 +384,11 @@ delivery values rather than copying their normative rules:
 | Increment boundary rule | `<development-policy link>` |
 | Independent merge condition | `<build/test/behavior/contract condition>` |
 | WIP limit | `<policy value>` |
-| Integration model | `<short-lived task to main / approved feature integration branch>` |
+| Delivery implementation task count | `<integer using the policy counting rule>` |
+| Integration model | `<single-task direct / multi-task feature integration>` |
+| Feature integration branch | `<branch or Not applicable>` |
+| Task PR target | `<protected branch / feature integration branch>` |
+| Final PR target | `<protected branch>` |
 | Broad-increment justification authority | `<role>` |
 | Generated/mechanical change treatment | `<rule/link>` |
 
@@ -432,6 +449,8 @@ contract-equivalent internal engineering choices.
 - [ ] The task's data phase is recorded; every required foundation predecessor
       is `DONE`, or inseparable data/behavior scope has an approved exception.
 - [ ] Existing dirty worktree files are attributed and preserved.
+- [ ] The task branch source and PR target match the selected single-task or
+      multi-task integration model.
 - [ ] The test strategy's Red closure boundary is satisfied: this task owns the
       Green implementation for every required behavioral test it introduces,
       or a contract-only predecessor uses `PROPOSED` status and passing static

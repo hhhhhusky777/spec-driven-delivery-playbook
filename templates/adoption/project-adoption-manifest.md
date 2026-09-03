@@ -158,8 +158,8 @@ documents.
 | Release, operations, and incident response / `<ID>` | `<environments, rollout, rollback, recovery, escalation, reconciliation>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
 | Specialized policies / `<ID>` | `<trigger, scope, state, audit, exception, enforcement, remediation, retirement>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
 
-For PR and branch policy, include protected target, default branch model,
-optional epic-model decision and criteria, naming, allowed source/target
+For PR and branch policy, include protected target, single-task and multi-task
+branch models, the implementation-unit counting rule, naming, allowed source/target
 relationships, task and final PR targets, synchronization and closure,
 required validation/review, and merge-before-reconciliation-before-archive
 ordering. A `REUSE` disposition is invalid until every applicable row has
