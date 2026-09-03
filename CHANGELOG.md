@@ -6,6 +6,12 @@ adopted.
 
 ## Unreleased — updated 2026-09-03
 
+- Updated the canonical repository after transfer to
+  `hhhhhusky777/spec-driven-delivery-playbook`, refreshed the SGLang adoption
+  example against current installer and policy contracts, and replaced the
+  project-specific parallel-submission packet with a non-authoritative SGLang
+  API-key-redaction delivery example. Bumped the installer generator to `2.0.1`
+  so runtimes generated with pre-transfer provenance fail closed as stale.
 - Made branch routing deterministic by implementation/merge-unit count: a
   one-task delivery may merge directly through a task PR, while every
   multi-task delivery uses its own feature integration branch, task PRs return
@@ -69,8 +75,8 @@ adopted.
 - Added the whiteboard-to-manifest-to-delivery workflow graph and teaching
   README.
 - Added template governance and contribution guidance.
-- Added a complete parallel-provider-submission example that stops honestly
-  before repository-specific implementation and test evidence.
+- Added a complete worked delivery example that stops honestly before
+  repository-specific implementation and test evidence.
 - Added a reviewed whiteboard-to-workflow handoff with automatic-on-approval or
   manual invocation modes.
 - Added independent manifest and one-artifact-at-a-time review gates across the

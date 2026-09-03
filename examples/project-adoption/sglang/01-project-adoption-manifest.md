@@ -7,7 +7,8 @@
 | Project / repository | [sgl-project/sglang](https://github.com/sgl-project/sglang) |
 | Adoption scope | Non-authoritative repository-wide integration simulation |
 | Adoption state | `REVIEW` |
-| Playbook source repository | `https://github.com/Orientation-CD/spec-driven-delivery-playbook.git` |
+| State before block | `None` |
+| Playbook source repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook.git` |
 | Playbook revision | Immutable revision containing this example; resolve with `git rev-parse HEAD` before use |
 | Playbook materialization mode | Pinned local read-only checkout |
 | Runtime playbook locator contract | Caller supplies `PLAYBOOK_ROOT`; never committed as an absolute path |
@@ -19,9 +20,16 @@
 | Project adoption root | Proposed `.github/spec-driven-delivery/` |
 | Bootstrap trigger source | `$PLAYBOOK_ROOT/templates/adoption/agent-adoption-trigger.md` after revision verification |
 | Installed project trigger | Proposed `.github/spec-driven-delivery/agent-adoption-trigger.md` |
-| Branch / PR | Playbook PR #7 only; no SGLang branch or PR |
+| Branch / PR | Current playbook example branch/PR only; no SGLang branch or PR |
 | Allowed write scope | These playbook example files only; no SGLang path |
 | Required documentation checks | `npm run docs:all` in this playbook |
+| Review mode | `EXPLICIT_REVIEW` |
+| Review mode authority | Current playbook adoption policy; semantic example refresh |
+| Automation boundary | `Not applicable` |
+| Required automatic gates | `Not applicable` |
+| Automatic gate result | `NOT_APPLICABLE` |
+| Semantic decision introduced | `YES` |
+| Automation exception | `None` |
 | Current blocker | Independent example review pending |
 | Next action | Review the complete example and authority map |
 
@@ -39,7 +47,7 @@ whiteboard without collecting a need during installation.
 In scope:
 
 - public files at the pinned SGLang revision;
-- proposed adoption paths, prompts, authority mapping, and review sequence; and
+- proposed adoption paths, generated-guide routing, authority mapping, and review sequence; and
 - playbook-repository validation of the example.
 
 Not in scope:
@@ -66,7 +74,7 @@ example cannot decide on SGLang's behalf.
 | Domain | Verified existing authority/evidence | Owner evidence | Result |
 | --- | --- | --- | --- |
 | Contributor workflow | [Contribution guide](https://github.com/sgl-project/sglang/blob/d315eb725044e435b146c85488b7c6d9222f7fec/docs/docs/developer_guide/contribution_guide.mdx) | Links maintainer and CI owners | `REUSE` |
-| PR/branch/review | [Maintenance model](https://github.com/sgl-project/sglang/blob/d315eb725044e435b146c85488b7c6d9222f7fec/.github/MAINTAINER.md), [CODEOWNERS](https://github.com/sgl-project/sglang/blob/d315eb725044e435b146c85488b7c6d9222f7fec/.github/CODEOWNERS), and [PR template](https://github.com/sgl-project/sglang/blob/d315eb725044e435b146c85488b7c6d9222f7fec/.github/pull_request_template.md) | Path-specific owners and merge on-call | `REUSE` |
+| PR/branch/review | [Maintenance model](https://github.com/sgl-project/sglang/blob/d315eb725044e435b146c85488b7c6d9222f7fec/.github/MAINTAINER.md), [CODEOWNERS](https://github.com/sgl-project/sglang/blob/d315eb725044e435b146c85488b7c6d9222f7fec/.github/CODEOWNERS), and [PR template](https://github.com/sgl-project/sglang/blob/d315eb725044e435b146c85488b7c6d9222f7fec/.github/pull_request_template.md) | Owners exist; integration-route conformance is incomplete | `UPDATE_EXISTING` |
 | Tests and CI | [Test system](https://github.com/sgl-project/sglang/blob/d315eb725044e435b146c85488b7c6d9222f7fec/test/README.md), [registered tests](https://github.com/sgl-project/sglang/blob/d315eb725044e435b146c85488b7c6d9222f7fec/test/registered/README.md), and [unit tests](https://github.com/sgl-project/sglang/blob/d315eb725044e435b146c85488b7c6d9222f7fec/test/registered/unit/README.md) | CI and path owners are documented | `REUSE` |
 | Agent instructions | `docs/AGENTS.md`, `.claude/rules/`, and `.claude/skills/` | Scoped by path or tool | `UPDATE_EXISTING` with thin pointer only |
 | SDD entry point | No root `AGENTS.md` or filename matching adoption manifest, solution whiteboard, implementation plan, or SDD was found in the pinned Git tree | Absence by filename only | `GENERATE` proposal |
@@ -90,11 +98,37 @@ Unknowns requiring SGLang authority in a real adoption:
 | `1` | Project development entry point | `GENERATE` | `.github/spec-driven-delivery/README.md` | One human/agent route | Demonstrated |
 | `2` | Development policy | `GENERATE` | `.github/spec-driven-delivery/development-policy.md` | SDD routing gap only | Demonstrated |
 | `3` | Test strategy | `REUSE` | Existing contribution and test guides | Strong project-specific system exists | Mapped |
-| `4` | PR/branch policy | `REUSE` | Maintainer model, CODEOWNERS, PR template | Existing authority is stronger | Mapped |
+| `4` | PR/branch policy | `UPDATE_EXISTING` | Existing maintainer model, CODEOWNERS, contribution guide, and PR template | No verified deterministic one-task versus multi-task integration route | Project-owner decision required |
 | `5` | Specialized-policy registry | `DEFER` | Future manifest entry | No observed current need | Trigger recorded |
 | `6` | Whiteboard and delivery templates | `REUSE` | Pinned playbook checkout recorded above | Immutable source without copied policy | Mapped |
 | `7` | Documentation enforcement | `UPDATE_EXISTING` | Pre-commit/link-check scope | New `.github` Markdown lacks full link coverage | Proposed only |
 | `8` | Agent entry-point adapters | `UPDATE_EXISTING` / `GENERATE` | Root `AGENTS.md`, `.claude/rules`, contribution guide link | Discoverability without duplicate rules | Demonstrated |
+
+### Policy conformance audit
+
+`REUSE` requires decision-level evidence, not only an existing document. This
+example therefore routes the incomplete PR/branch family to `UPDATE_EXISTING`
+instead of silently importing the playbook default.
+
+| Policy family | Evidence and gap | Disposition |
+| --- | --- | --- |
+| Development and delivery | Contribution guidance exists; whiteboard, lifecycle, receipts, and archive routing are not verified | `UPDATE_EXISTING` through the proposed SDD overlay |
+| Testing and quality | Test placement, registration, hardware classes, and CI commands are documented; exact per-change selection remains project-owned | `REUSE` with project selection |
+| PR and branch | Review ownership exists; single-task direct and multi-task feature-integration routing is not verified | `UPDATE_EXISTING`; no duplicate PR policy |
+| Documentation and API contracts | Documentation authorities exist; proposed `.github` paths lack verified link coverage | `UPDATE_EXISTING` |
+| Security, data, concurrency, and performance | Scoped authorities exist; no repository-wide replacement is justified | `REUSE` by affected scope |
+| Release, operations, and incident response | Existing project authorities remain canonical; exhaustive conformance is not claimed | `REUSE` by affected scope with `UNKNOWN` where unverified |
+| Specialized policies | No observed systemic policy gap in adoption itself | `DEFER` until evidence exists |
+
+### Artifact impact and freshness register
+
+| Artifact | Depends on | Freshness | Evidence/action |
+| --- | --- | --- | --- |
+| Adoption manifest | Pinned playbook and SGLang revisions | `CURRENT` | Refreshed against current playbook contracts |
+| Proposed project entry point | Adoption manifest | `CURRENT` | Links live state rather than copying it |
+| Proposed SDD overlay | Adoption manifest and project authorities | `CURRENT` | Review modes and branch routing added |
+| Agent adapters | Proposed entry point | `CURRENT` | Thin links only |
+| Generated-guide representation | Current installer schema | `CURRENT` | Provenance, validation, cleanup, and replacement fields represented |
 
 ## 6. Gap, deviation, and YAGNI register
 
@@ -134,7 +168,7 @@ no SGLang edit and records no unselected need.
 | Public SGLang facts and links | Independent playbook reviewer | `IN_REVIEW` |
 | Proposed target paths and reuse decisions | Independent playbook reviewer | `IN_REVIEW` |
 | Real SGLang adoption authority | SGLang maintainers/owners | `NOT_REQUESTED` |
-| Example documentation tests | Playbook CI | `PENDING` until rerun |
+| Example documentation tests | Playbook CI | `PENDING` until this refresh is validated |
 
 Final disposition: `IN_REVIEW`. `EXAMPLE_REVIEWED` requires independent playbook
 review. `ACTIVE` is prohibited because no SGLang adoption occurred.
@@ -145,6 +179,6 @@ review. `ACTIVE` is prohibited because no SGLang adoption occurred.
 | --- | --- |
 | Current example state | `REVIEW` |
 | SGLang working tree | Read-only pinned audit; no example edits |
-| Next action | Independent review of PR #7 example additions |
+| Next action | Independent review of the refreshed current-playbook example |
 | After approval | Mark example `EXAMPLE_REVIEWED`; no authority to start SGLang work |
 | First project action if authorized later | Re-run discovery against a fresh SGLang revision and resolve `U-01`–`U-04` |

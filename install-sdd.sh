@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-PLAYBOOK_REPOSITORY="https://github.com/Orientation-CD/spec-driven-delivery-playbook.git"
+PLAYBOOK_REPOSITORY="https://github.com/hhhhhusky777/spec-driven-delivery-playbook.git"
 REQUESTED_REVISION="main"
 REVISION_EXPLICIT=false
 ADOPTION_ROOT=".github/spec-driven-delivery"
@@ -11,7 +11,7 @@ RUNTIME_ROOT=".sdd-runtime"
 CLEANUP_ONLY=false
 VALIDATE_ONLY=false
 GUIDE_SCHEMA_VERSION="2"
-GENERATOR_VERSION="2.0.0"
+GENERATOR_VERSION="2.0.1"
 
 usage() {
   cat <<'EOF'
