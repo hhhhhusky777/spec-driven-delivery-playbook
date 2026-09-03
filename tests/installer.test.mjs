@@ -80,7 +80,7 @@ test("installer resolves latest main, installs adoption skill, and emits one gui
   const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
   assert.equal(guideValue(guide, "Manifest state detected"), "ABSENT");
   assert.equal(guideValue(guide, "Manifest state before block"), "NONE");
-  assert.equal(guideValue(guide, "Generator version"), "2.0.0");
+  assert.equal(guideValue(guide, "Generator version"), "2.0.1");
   assert.equal(guideValue(guide, "Generator schema version"), "2");
   assert.equal(guideValue(guide, "Guide profile"), "adoption");
   assert.equal(guideValue(guide, "Required skill"), "sdd-project-adoption");

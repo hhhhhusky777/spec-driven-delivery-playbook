@@ -483,31 +483,33 @@ engineering discretion, and provides readiness examples.
 
 ## Worked examples
 
-The [parallel provider submissions example](examples/parallel-provider-submissions/README.md)
-starts with a need to remove sequential provider execution. It demonstrates:
+The [SGLang project-adoption example](examples/project-adoption/sglang/README.md)
+uses one public project for both adoption and delivery. Its adoption walk-through
+demonstrates the installer-generated guide, authority inventory, evidence-based
+policy reuse or update, project entry points, review stops, cleanup, and the
+empty-whiteboard boundary.
+
+The nested [SGLang API-key redaction delivery](examples/project-adoption/sglang/delivery-api-key-redaction/README.md)
+starts from a public SGLang issue and demonstrates:
 
 1. several rounds of whiteboard discussion;
 2. corrections and rejected approaches;
 3. a concluded requirements/solution handoff;
 4. generation, review, and approval of the workflow-input connector;
-5. Route 3 manifest generation and review;
+5. Route 2 manifest generation and review with security-sensitive gates;
 6. one-at-a-time artifact review before dependent generation;
-7. an ADR for queue-per-submission topology;
-8. reuse—not regeneration—of project test, PR, and locking policies;
-9. a full implementation plan with small dependency-ordered tasks; and
-10. the exact gate that marks the example ready for implementation.
+7. a justified decision not to create an ADR or duplicate project policies;
+8. risk-based action controls and fail-closed review routing;
+9. a full implementation plan with two dependency-ordered implementation
+   tasks on a feature integration branch; and
+10. the exact project evidence still required before implementation.
 
-The example stops at the `READY` gate and lists the project-specific evidence
-still required to pass it; it does not fabricate implementation or passing test
-evidence.
+The example stops in `CONTRACT_REVIEW` and lists the project-specific evidence
+still required to reach `READY`; it does not fabricate implementation or
+passing test evidence.
 
-The [SGLang project-adoption example](examples/project-adoption/sglang/README.md)
-starts from pinned public repository and playbook revisions. It demonstrates the
-exact first manifest path, bootstrap prompt, authority inventory, reuse versus
-generation decisions, proposed project entry point and SDD overlay, thin agent
-adapters, review stops, generated agent guide, and empty-whiteboard boundary.
-It changes no SGLang file and remains `REVIEW` until independently reviewed;
-even after approval it can become only `EXAMPLE_REVIEWED`, never `ACTIVE`.
+Both examples are teaching records only. They change no SGLang file, claim no
+SGLang approval, and cannot become `ACTIVE` project authority.
 
 ## Small, self-contained delivery
 

@@ -37,6 +37,9 @@ small.
 
 - An artifact author or generating agent does not approve its own output.
 - A dependent artifact is not generated from an unapproved predecessor.
+- Semantic work uses `EXPLICIT_REVIEW`. Only pre-authorized deterministic work
+  may use `AUTO_CONTINUE` or `REVIEW_ON_EXCEPTION`; ambiguity, drift, a failed
+  gate, or a new decision fails closed to explicit review.
 - Unknown project facts remain explicit and can block only affected work.
 - Task states are `PLANNED -> READY -> IN_PROGRESS -> VERIFYING -> DONE`, with
   recorded `BLOCKED` and `CANCELLED` handling from the pinned playbook policy.
@@ -52,6 +55,12 @@ prerequisites, but it must not rely on unmerged follow-up work for correctness.
 Related tests and documentation stay with the behavior they protect. Data or
 compatibility foundations precede dependent behavior only when the approved
 design requires them.
+
+One implementation task uses a task PR to the protected branch. A delivery
+with two or more implementation tasks uses its own feature integration branch;
+every task starts from and returns to that branch, which stays green and
+synchronized. Only the fully validated feature PR targets the protected branch.
+Discovery, planning, validation-only, and archive-only rows do not count.
 
 ## 5. Testing and failure handling
 
@@ -70,7 +79,9 @@ flaky-test/CI rules permit it and the underlying result is understood.
   approved feature artifacts before editing.
 - Run from the SGLang root and verify the caller-supplied read-only playbook
   locator against the manifest before reading a playbook artifact.
-- Perform one manifest `Next action` and stop at its review gate.
+- Perform one manifest `Next action`; continue automatically only inside a
+  pre-approved, fail-closed automation boundary, and stop at the next semantic
+  review gate.
 - Preserve unrelated changes and report exactly which evidence ran.
 - Keep live state, next action, blockers, source revisions, and evidence in the
   owning artifact rather than relying on chat history.

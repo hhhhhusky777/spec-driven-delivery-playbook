@@ -2,9 +2,11 @@
 
 This is a non-authoritative integration example for the public
 [SGLang repository](https://github.com/sgl-project/sglang). It demonstrates
-exactly where the first adoption document goes, how an agent is prompted, what
-is reused versus proposed, where review stops occur, and how an installed
-integration produces its empty solution whiteboard.
+exactly where the first adoption document goes, how the installer-generated
+guide drives the agent, what is reused versus updated, where review stops
+occur, and how an installed integration produces its empty solution
+whiteboard. The nested delivery example then applies the current workflow to a
+public SGLang issue.
 
 The example is not affiliated with or endorsed by SGLang. It changes no SGLang
 repository, opens no upstream issue or pull request, and claims no SGLang test
@@ -17,7 +19,7 @@ or maintainer approval.
 | Playbook contract | Approved immutable checkout containing this example; start at the [playbook README](../../../README.md) |
 | SGLang target | [`d315eb725044e435b146c85488b7c6d9222f7fec`](https://github.com/sgl-project/sglang/commit/d315eb725044e435b146c85488b7c6d9222f7fec) |
 | Inspection date | 2026-08-22 |
-| Example state | `REVIEW` — awaiting independent review in the playbook PR |
+| Example state | `REVIEW` — refreshed against the current playbook contracts |
 | Proposed SGLang adoption root | `.github/spec-driven-delivery/` |
 | Runtime execution | Agent working directory is SGLang; playbook root is an explicit read-only input |
 
@@ -72,12 +74,12 @@ The example representations are:
 
 | Proposed SGLang path | Example file |
 | --- | --- |
-| `.github/spec-driven-delivery/project-adoption-manifest.md` | [Completed discovery and mapping](01-project-adoption-manifest.md) |
+| `.github/spec-driven-delivery/project-adoption-manifest.md` | [Current adoption example](01-project-adoption-manifest.md) |
 | `.github/spec-driven-delivery/README.md` | [Project entry point](02-project-entrypoint.md) |
 | `.github/spec-driven-delivery/development-policy.md` | [SDD overlay](03-development-policy.md) |
 | Root and Claude pointers | [Agent adapters](04-agent-entrypoint-adapters.md) |
-| Repeated installation invocation | [Filled Prompt B](05-installation-prompt.md) |
 | Generated runtime connector | [Agent guide representation](06-generated-agent-guide.md) |
+| First future delivery | [API-key redaction packet](delivery-api-key-redaction/README.md) |
 
 ## 4. Step-by-step execution
 
@@ -109,9 +111,8 @@ only durable playbook identity into it, and keeps it `DISCOVERY`.
 
 ### Step 3 — Perform discovery only
 
-The selected adoption skill follows the same boundary demonstrated by the
-[filled bootstrap prompt](00-bootstrap-prompt.md). The permitted write scope
-contains only the manifest. The agent inventories repository facts, records
+The selected adoption skill follows the boundary in the generated guide. The
+permitted write scope contains only the manifest. The agent inventories repository facts, records
 unknowns, proposes routing decisions, and stops.
 
 ### Step 4 — Review discovery and mapping
@@ -124,9 +125,7 @@ This teaching example records no SGLang approval.
 ### Step 5 — Generate one selected artifact per review
 
 After each approval, give the agent the same instruction to follow the generated
-guide. The selected skill applies the boundary demonstrated by the
-[filled installation prompt](05-installation-prompt.md). Before every
-continuation, an authorized reviewer must set one `Next action` and its exact
+guide. Before every continuation, an authorized reviewer must set one `Next action` and its exact
 `Allowed write scope` in the manifest:
 
 1. generate the [project entry point](02-project-entrypoint.md), then review;
@@ -136,8 +135,11 @@ continuation, an authorized reviewer must set one `Next action` and its exact
 4. update documentation-link checking for the new `.github` Markdown path,
    then review under SGLang's `.github` and CI ownership.
 
-The existing contribution, test, CI, PR, and maintainer documents remain
-`REUSE`; the agent does not copy or rewrite them.
+The existing contribution, test, CI, and maintainer documents remain canonical.
+The PR/branch family routes to `UPDATE_EXISTING` because the pinned sources do
+not prove the playbook's deterministic single-task/multi-task integration rule;
+the agent updates project authority through owner review and never creates a
+duplicate policy.
 
 ### Step 6 — Verify `INSTALLED`
 
@@ -166,6 +168,10 @@ the [generated guide representation](06-generated-agent-guide.md) and creates:
 The whiteboard is `EMPTY` and contains no inferred need. The installation
 boundary stops there. A later discussion puts its need inside the whiteboard;
 handoff generation and workflow routing remain gated until reviewed convergence.
+
+After adoption, the [API-key redaction delivery](delivery-api-key-redaction/README.md)
+demonstrates that future-need route using the current whiteboard, handoff,
+workflow, implementation-plan, review-mode, task-receipt, and branch contracts.
 
 ## 5. Automation contract derived from the example
 

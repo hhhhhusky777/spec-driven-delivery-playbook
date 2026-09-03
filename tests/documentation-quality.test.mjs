@@ -10,6 +10,7 @@ import {
   checkLocalLinks,
   checkMarkdownContent,
   checkSensitiveContent,
+  collectFiles,
   extractMarkdownLinks,
   fetchWithRetry,
   parseFencedBlocks,
@@ -236,7 +237,9 @@ test("task context receipt remains a READY-to-IN_PROGRESS gate", async () => {
     path.join(
       REPOSITORY_ROOT,
       "examples",
-      "parallel-provider-submissions",
+      "project-adoption",
+      "sglang",
+      "delivery-api-key-redaction",
       "04-implementation-plan.md",
     ),
     "utf8",
@@ -362,7 +365,7 @@ test("increment boundaries use self-contained delivery instead of LOC limits", a
     "templates/policies/development-policy.md",
     "templates/policies/pull-request-policy.md",
     "templates/delivery/implementation-plan.md",
-    "examples/parallel-provider-submissions/04-implementation-plan.md",
+    "examples/project-adoption/sglang/delivery-api-key-redaction/04-implementation-plan.md",
     "examples/project-adoption/sglang/03-development-policy.md",
   ];
   const documents = await Promise.all(
@@ -406,7 +409,7 @@ test("risk-based review gates permit bounded audited auto-continuation", async (
     read("templates/adoption/agent-adoption-trigger.md"),
     read("skills/sdd-project-workflow/SKILL.md"),
     read("skills/sdd-project-adoption/SKILL.md"),
-    read("examples/parallel-provider-submissions/02-delivery-workflow.md"),
+    read("examples/project-adoption/sglang/delivery-api-key-redaction/03-delivery-workflow.md"),
   ]);
   const connected = [
     readme,
@@ -465,7 +468,7 @@ test("multi-task deliveries isolate work on feature integration branches", async
     read("templates/delivery/implementation-plan.md"),
     read("docs/project-adoption-runbook.md"),
     read("skills/sdd-project-workflow/SKILL.md"),
-    read("examples/parallel-provider-submissions/04-implementation-plan.md"),
+    read("examples/project-adoption/sglang/delivery-api-key-redaction/04-implementation-plan.md"),
   ]);
 
   assert.match(readme, /^## Branch isolation for parallel deliveries$/m);
@@ -484,7 +487,7 @@ test("multi-task deliveries isolate work on feature integration branches", async
   assert.match(adoptionRunbook, /single-task and multi-task branch\s+models/i);
   assert.match(workflowSkill, /verify the task branch starts from and the task\s+PR targets the feature integration branch/i);
   assert.match(workedExample, /Multi-task feature integration/);
-  assert.match(workedExample, /task PRs target the feature integration branch/i);
+  assert.match(workedExample, /task PRs\s+target the feature integration branch/i);
 });
 
 test("project adoption architecture remains connected to runbook and manifest", async () => {
@@ -637,10 +640,6 @@ test("SGLang example demonstrates automated adoption through an empty whiteboard
     "sglang",
   );
   const walkthrough = await readFile(path.join(exampleRoot, "README.md"), "utf8");
-  const bootstrap = await readFile(
-    path.join(exampleRoot, "00-bootstrap-prompt.md"),
-    "utf8",
-  );
   const manifest = await readFile(
     path.join(exampleRoot, "01-project-adoption-manifest.md"),
     "utf8",
@@ -653,8 +652,16 @@ test("SGLang example demonstrates automated adoption through an empty whiteboard
     path.join(exampleRoot, "06-generated-agent-guide.md"),
     "utf8",
   );
-  const installationPrompt = await readFile(
-    path.join(exampleRoot, "05-installation-prompt.md"),
+  const deliveryWalkthrough = await readFile(
+    path.join(exampleRoot, "delivery-api-key-redaction", "README.md"),
+    "utf8",
+  );
+  const deliveryWorkflow = await readFile(
+    path.join(exampleRoot, "delivery-api-key-redaction", "03-delivery-workflow.md"),
+    "utf8",
+  );
+  const deliveryPlan = await readFile(
+    path.join(exampleRoot, "delivery-api-key-redaction", "04-implementation-plan.md"),
     "utf8",
   );
 
@@ -664,24 +671,57 @@ test("SGLang example demonstrates automated adoption through an empty whiteboard
   assert.match(walkthrough, /generated guide is the only prompt/);
   assert.match(walkthrough, /\.github\/spec-driven-delivery\/project-adoption-manifest\.md/);
   assert.match(walkthrough, /changes no SGLang\s+repository/);
-  assert.match(bootstrap, /update only\s+\.github\/spec-driven-delivery\/project-adoption-manifest\.md/);
-  assert.match(bootstrap, /keep Adoption state as DISCOVERY/);
-  assert.match(bootstrap, /Execution working directory: PROJECT_ROOT_FROM_STEP_1/);
-  assert.match(bootstrap, /Read-only playbook root: PLAYBOOK_ROOT_FROM_STEP_1/);
-  assert.match(bootstrap, /Do not search for or guess another playbook checkout/);
   assert.match(manifest, /\| Adoption state \| `REVIEW` \|/);
   assert.match(manifest, /\| Runtime playbook locator contract \|/);
-  assert.match(manifest, /Orientation-CD\/spec-driven-delivery-playbook\.git/);
+  assert.match(manifest, /hhhhhusky777\/spec-driven-delivery-playbook\.git/);
+  assert.match(manifest, /^### Policy conformance audit$/m);
+  assert.match(manifest, /^### Artifact impact and freshness register$/m);
   assert.match(manifest, /`ACTIVE` is prohibited/);
   assert.match(entrypoint, /^## Use the solution whiteboard$/m);
   assert.match(entrypoint, /^## Runtime source binding$/m);
-  assert.match(installationPrompt, /Perform exactly one Next action/);
-  assert.match(installationPrompt, /PLAYBOOK_ROOT_FROM_STEP_1\/docs\/project-adoption-runbook\.md/);
-  assert.match(installationPrompt, /Do not advance the Adoption state/);
   assert.match(generatedGuide, /Required skill.*`sdd-project-adoption`/s);
+  assert.match(generatedGuide, /Generator schema version.*`2`/s);
+  assert.match(generatedGuide, /\.\/install-sdd\.sh --cleanup/);
+  assert.match(generatedGuide, /\.\/install-sdd\.sh --validate/);
   assert.match(generatedGuide, /Do not request or infer a product need/);
   assert.match(generatedGuide, /solution-whiteboard\.md/);
+  assert.match(deliveryWalkthrough, /SGLang issue #37457/);
+  assert.match(deliveryWalkthrough, /latest playbook controls/i);
+  assert.match(deliveryWorkflow, /Route 2 — Multi-task security defect/);
+  assert.match(deliveryWorkflow, /^### Artifact dependency and freshness register$/m);
+  assert.match(deliveryWorkflow, /^### Risk-based action control$/m);
+  assert.match(deliveryPlan, /\| Status \| `CONTRACT_REVIEW` \|/);
+  assert.match(deliveryPlan, /All task context receipts remain `NOT_STARTED`/);
+  assert.match(deliveryPlan, /This teaching packet claims none of those gates/);
   assert.match(walkthrough, /grants no authority to install or discuss a real SGLang need/);
+});
+
+test("canonical playbook URL and examples use the transferred repository and SGLang only", async () => {
+  const installer = await readFile(path.join(REPOSITORY_ROOT, "install-sdd.sh"), "utf8");
+  const readme = await readFile(path.join(REPOSITORY_ROOT, "README.md"), "utf8");
+  const trackedFiles = await collectFiles(REPOSITORY_ROOT);
+  const trackedText = (
+    await Promise.all(
+      trackedFiles
+        .filter((file) => file.endsWith(".md") || file.endsWith(".sh"))
+        .map((file) => readFile(file, "utf8")),
+    )
+  ).join("\n");
+
+  assert.match(installer, /github\.com\/hhhhhusky777\/spec-driven-delivery-playbook\.git/);
+  assert.doesNotMatch(trackedText, /Orientation-CD\/spec-driven-delivery-playbook/);
+  assert.doesNotMatch(
+    trackedFiles.map((file) => path.relative(REPOSITORY_ROOT, file)).join("\n"),
+    /examples\/parallel-provider-submissions/,
+  );
+  const examplePaths = trackedFiles
+    .map((file) => path.relative(REPOSITORY_ROOT, file))
+    .filter((file) => file.startsWith("examples/"));
+  assert.ok(
+    examplePaths.every((file) => file.startsWith("examples/project-adoption/sglang/")),
+    "every maintained example must use SGLang",
+  );
+  assert.match(readme, /SGLang API-key redaction delivery/);
 });
 
 test("external-link checks dispose response bodies before returning status", async () => {
