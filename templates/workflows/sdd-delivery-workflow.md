@@ -422,7 +422,7 @@ the ledger fails closed because it would erase implementation review duties.
 
 | Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | Human review | Findings/follow-up |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `<task + PR link>` | `<commits>` | `<mode + authority link>` | `<record>` | `<APPROVED / packet-or-receipt-link>` | `<evidence>` | `<MERGED/STOPPED>` | `<APPROVED / evidence for manual mode, or PENDING/ACCEPTED/FOLLOW_UP_REQUIRED/FOLLOW_UP_COMPLETE / evidence for auto mode>` | `<links or None>` |
+| `<task ID + PR link>` | `HEAD <exact revision> / MERGE <exact revision>` | `<mode> / <authority link>` | `SELF_REVIEW_PASSED / <record>` | `APPROVED / <packet-or-receipt-link>` | `PASS / <evidence>` | `<MERGED/STOPPED> / <evidence>` | `<APPROVED / evidence for manual mode, or PENDING/ACCEPTED/FOLLOW_UP_REQUIRED/FOLLOW_UP_COMPLETE / evidence for auto mode>` | `<links or None>` |
 
 Every row's mode must lead with exactly `HUMAN_REVIEW_BEFORE_MERGE` or
 `AGENT_AUTO_MERGE`. Every merged row requires fresh-context `APPROVED`. In
@@ -434,9 +434,15 @@ dependencies stale or blocked. `COMPLETE` and `ARCHIVED` require at least one
 ledger row, and every row must be accepted or have completed follow-up recorded
 as `FOLLOW_UP_COMPLETE`.
 
-Use the exact leading disposition shown above, optionally followed by ` / ` and
-an evidence link. Unknown values fail closed. At `COMPLETE` or `ARCHIVED`, human
-review must lead with `APPROVED`, `ACCEPTED`, or `FOLLOW_UP_COMPLETE`.
+A merged row records its task/PR identity; exact head and merge revisions;
+mode authority; `SELF_REVIEW_PASSED`, fresh `APPROVED`, and required-check
+`PASS` receipts; and merge evidence. A bare disposition without its ` / `
+evidence does not satisfy the per-PR record.
+
+Use the exact leading dispositions shown above. Where the ledger requires
+evidence, record it after ` / `; a bare disposition does not pass that gate.
+Unknown values fail closed. At `COMPLETE` or `ARCHIVED`, human review must record
+`APPROVED`, `ACCEPTED`, or `FOLLOW_UP_COMPLETE` with evidence.
 
 ## 10. Feedback and rerouting rules
 

@@ -252,6 +252,21 @@ test("plan lifecycle and review gates reject illegal READY transitions", async (
   assert.ok(
     humanReviewDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
   );
+
+  const misleadingPrerequisite = await fixture(
+    t,
+    workflow({ manifestReviewState: "NOT_APPROVED" }),
+  );
+  const misleadingPrerequisiteDiagnostics = await checkSddLifecycleDocument(
+    misleadingPrerequisite.file,
+    misleadingPrerequisite.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    misleadingPrerequisiteDiagnostics.some(
+      (item) => item.rule === "SDD_UNAPPROVED_PREREQUISITE",
+    ),
+  );
   assert.ok(
     humanReviewDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_EVIDENCE"),
   );
@@ -367,10 +382,15 @@ function workflow({
   implementationModeAuthority = "user instruction 2026-09-03",
   implementationModeScope = "task-1",
   implementationModeSelectedAt = "2026-09-03 10:00 UTC",
+  manifestReviewState = "APPROVED",
   postMergeHumanReview = null,
   postMergeFreshReview = "APPROVED / fresh-review-1",
-  postMergeResult = "MERGED",
+  postMergeResult = "MERGED / merge-evidence",
   postMergeMode = "AGENT_AUTO_MERGE / user",
+  postMergeTaskPr = "T01 / PR-1",
+  postMergeRevisions = "HEAD head-1 / MERGE merge-1",
+  postMergeSelfReview = "SELF_REVIEW_PASSED / self-review-1",
+  postMergeChecks = "PASS / checks-1",
   includeReviewLedger = true,
   reviewLedgerHumanHeader = "Human review",
 } = {}) {
@@ -388,8 +408,8 @@ function workflow({
       ? "Not applicable"
       : "reviews/human-review.md");
   const manifestRow = includePlan
-    ? "| 1 | Plan | GENERATE_FULL | APPROVED |"
-    : "| 1 | Documentation | REUSE | APPROVED |";
+    ? `| 1 | Plan | GENERATE_FULL | ${manifestReviewState} |`
+    : `| 1 | Documentation | REUSE | ${manifestReviewState} |`;
   const dependencyRows = includePlan
     ? `| plan | ${planLink} | None | ${planConsumed} | ${planCurrent} | ${impact} | ${freshness} | None |
 | task-1 | Task 1 | plan | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`
@@ -453,7 +473,7 @@ ${dependencyRows}
 <!-- sdd-section: implementation-review-ledger -->
 ${includeReviewLedger ? `| Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | ${reviewLedgerHumanHeader} | Findings/follow-up |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-${postMergeHumanReview === null ? "" : `| T01 / PR-1 | head-1 / merge-1 | ${postMergeMode} | review-1 | ${postMergeFreshReview} | checks-1 | ${postMergeResult} | ${postMergeHumanReview} | None |`}` : ""}
+${postMergeHumanReview === null ? "" : `| ${postMergeTaskPr} | ${postMergeRevisions} | ${postMergeMode} | ${postMergeSelfReview} | ${postMergeFreshReview} | ${postMergeChecks} | ${postMergeResult} | ${postMergeHumanReview} | None |`}` : ""}
 `;
 }
 
@@ -696,6 +716,39 @@ test("implementation review requires fresh approval in both continuation modes",
       (item) => item.rule === "SDD_MANUAL_MERGE_HUMAN_REVIEW",
     ),
   );
+
+  for (const [field, override] of [
+    ["Task/PR", { postMergeTaskPr: "None" }],
+    ["Head and merge commit", { postMergeRevisions: "None" }],
+    ["Implementation mode/authority", { postMergeMode: "AGENT_AUTO_MERGE" }],
+    ["Self-review", { postMergeSelfReview: "SELF_REVIEW_PASSED" }],
+    ["Fresh-context review", { postMergeFreshReview: "APPROVED" }],
+    ["Required checks", { postMergeChecks: "None" }],
+    ["Merge result", { postMergeResult: "MERGED" }],
+  ]) {
+    const missingRowEvidence = await fixture(
+      t,
+      workflow({
+        state: "COMPLETE",
+        previousState: "VALIDATING",
+        postMergeHumanReview: "ACCEPTED / human-review-1",
+        ...override,
+      }),
+    );
+    const missingEvidenceDiagnostics = await checkSddLifecycleDocument(
+      missingRowEvidence.file,
+      missingRowEvidence.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      missingEvidenceDiagnostics.some(
+        (item) =>
+          item.rule === "SDD_IMPLEMENTATION_REVIEW_EVIDENCE" &&
+          item.message.includes(field),
+      ),
+      `merged row must reject missing ${field} evidence`,
+    );
+  }
 
   for (const [state, previousState] of [
     ["COMPLETE", "VALIDATING"],
@@ -1000,12 +1053,32 @@ test("implementation continuation is user-selected, implementation-only, and fai
       state: "COMPLETE",
       previousState: "VALIDATING",
       implementationMode: "AGENT_AUTO_MERGE",
-      postMergeHumanReview: "ACCEPTED",
+      postMergeHumanReview: "ACCEPTED / human-review-1",
     }),
   );
   assert.deepEqual(
     await checkSddLifecycleDocument(reviewed.file, reviewed.root, SCHEMAS),
     [],
+  );
+
+  const reviewedWithoutEvidence = await fixture(
+    t,
+    workflow({
+      state: "COMPLETE",
+      previousState: "VALIDATING",
+      implementationMode: "AGENT_AUTO_MERGE",
+      postMergeHumanReview: "ACCEPTED",
+    }),
+  );
+  const reviewedWithoutEvidenceDiagnostics = await checkSddLifecycleDocument(
+    reviewedWithoutEvidence.file,
+    reviewedWithoutEvidence.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    reviewedWithoutEvidenceDiagnostics.some(
+      (item) => item.rule === "SDD_POST_MERGE_REVIEW_OPEN",
+    ),
   );
 });
 

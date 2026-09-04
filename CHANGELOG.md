@@ -18,11 +18,12 @@ adopted.
   Lifecycle schema 2 adds fresh-context and human-review state, exact revision,
   and evidence fields, plus the canonical implementation PR and post-merge
   review ledger. The checker requires its exact headers, recognized row modes,
-  fresh approval for every merged row, and non-empty closure evidence. Active
-  schema-1 plans and workflows must add those six fields; workflows must also
-  add the ledger section and exact headers before changing their markers to
-  `@2` at their next review gate. Existing approvals remain historical evidence
-  and do not satisfy the new gate.
+  exact per-PR head/merge and review/check receipts, fresh approval for every
+  merged row, exact prerequisite dispositions, and non-empty closure evidence.
+  Active schema-1 plans and workflows must add those six fields; workflows must
+  also add the ledger section and exact headers before changing their markers
+  to `@2` at their next review gate. Existing approvals remain historical
+  evidence and do not satisfy the new gate.
 
 - Added `install-sdd.sh --upgrade` for fail-closed, between-task preparation of
   an immutable candidate without changing the active manifest pin. Added a

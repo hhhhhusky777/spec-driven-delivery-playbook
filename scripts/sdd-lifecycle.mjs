@@ -126,6 +126,31 @@ function leadingDisposition(value) {
   return match ? match[1] : null;
 }
 
+function hasRecordedValue(value) {
+  const normalized = normalizeValue(value || "");
+  return !(
+    isNone(normalized) ||
+    /^(?:not recorded|pending)$/i.test(normalized) ||
+    /<[^>]+>/.test(normalized)
+  );
+}
+
+function hasDispositionEvidence(value, allowedDispositions) {
+  const normalized = normalizeValue(value || "");
+  const match = /^([A-Z_]+)\s+\/\s+(.+)$/.exec(normalized);
+  return Boolean(
+    match &&
+      allowedDispositions.includes(match[1]) &&
+      hasRecordedValue(match[2]),
+  );
+}
+
+function hasHeadAndMergeEvidence(value) {
+  const normalized = normalizeValue(value || "");
+  const match = /^HEAD\s+(.+?)\s+\/\s+MERGE\s+(.+)$/.exec(normalized);
+  return Boolean(match && hasRecordedValue(match[1]) && hasRecordedValue(match[2]));
+}
+
 function splitIdentifiers(value) {
   if (isNone(value)) {
     return [];
@@ -421,6 +446,39 @@ function checkImplementationContinuation(file, fields, tables) {
     (row) => leadingDisposition(row["Merge result"]) === "MERGED",
   );
   for (const row of mergedRows) {
+    const requiredEvidence = [
+      ["Task/PR", hasRecordedValue(row["Task/PR"])],
+      ["Head and merge commit", hasHeadAndMergeEvidence(row["Head and merge commit"])],
+      [
+        "Implementation mode/authority",
+        hasDispositionEvidence(row["Implementation mode/authority"], [
+          "HUMAN_REVIEW_BEFORE_MERGE",
+          "AGENT_AUTO_MERGE",
+        ]),
+      ],
+      [
+        "Self-review",
+        hasDispositionEvidence(row["Self-review"], ["SELF_REVIEW_PASSED"]),
+      ],
+      [
+        "Fresh-context review",
+        hasDispositionEvidence(row["Fresh-context review"], ["APPROVED"]),
+      ],
+      ["Required checks", hasDispositionEvidence(row["Required checks"], ["PASS"])],
+      ["Merge result", hasDispositionEvidence(row["Merge result"], ["MERGED"])],
+    ];
+    for (const [field, valid] of requiredEvidence) {
+      if (!valid) {
+        diagnostics.push(
+          diagnostic(
+            file,
+            reviewLedger.line,
+            "SDD_IMPLEMENTATION_REVIEW_EVIDENCE",
+            `a merged implementation row requires recorded ${field} evidence`,
+          ),
+        );
+      }
+    }
     if (leadingDisposition(row["Fresh-context review"]) !== "APPROVED") {
       diagnostics.push(
         diagnostic(
@@ -434,7 +492,7 @@ function checkImplementationContinuation(file, fields, tables) {
     if (
       leadingDisposition(row["Implementation mode/authority"]) ===
         "HUMAN_REVIEW_BEFORE_MERGE" &&
-      leadingDisposition(row["Human review"]) !== "APPROVED"
+      !hasDispositionEvidence(row["Human review"], ["APPROVED"])
     ) {
       diagnostics.push(
         diagnostic(
@@ -459,8 +517,11 @@ function checkImplementationContinuation(file, fields, tables) {
       );
     }
     const invalidRows = (reviewLedger?.rows || []).filter((row) => {
-      const disposition = leadingDisposition(row["Human review"]);
-      return !["APPROVED", "ACCEPTED", "FOLLOW_UP_COMPLETE"].includes(disposition);
+      return !hasDispositionEvidence(row["Human review"], [
+        "APPROVED",
+        "ACCEPTED",
+        "FOLLOW_UP_COMPLETE",
+      ]);
     });
     if (invalidRows.length > 0) {
       diagnostics.push(
@@ -468,7 +529,7 @@ function checkImplementationContinuation(file, fields, tables) {
           file,
           reviewLedger.line,
           "SDD_POST_MERGE_REVIEW_OPEN",
-          `${state} requires each human-review row to be APPROVED, ACCEPTED, or FOLLOW_UP_COMPLETE`,
+          `${state} requires each human-review row to record APPROVED, ACCEPTED, or FOLLOW_UP_COMPLETE with evidence`,
         ),
       );
     }
@@ -1048,8 +1109,8 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
       if (["SKIP", "DEFER", "BLOCKED"].includes(decision)) {
         continue;
       }
-      const review = normalizeValue(row["Review state/link"]);
-      if (!/(?:APPROVED|CURRENT|JUSTIFIED)/i.test(review)) {
+      const review = leadingDisposition(row["Review state/link"]);
+      if (!["APPROVED", "CURRENT", "JUSTIFIED"].includes(review)) {
         diagnostics.push(
           diagnostic(file, manifest.line, "SDD_UNAPPROVED_PREREQUISITE", `${normalizeValue(row.Artifact)} is not approved/current`),
         );
