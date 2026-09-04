@@ -376,6 +376,10 @@ audit history. The author marks every comment `ACCEPT`, `PARTIALLY_ACCEPT`,
 is escalated to human review rather than forcing a change or silently resolving
 the comment.
 
+Assign stable reviewer seats `R1` and `R2`. Finding IDs include the session,
+reviewer seat, and reviewer-local sequence (for example, `S1-R2-F03`) so two
+concurrent reviewers cannot publish the same durable identifier.
+
 Fresh context does not create a second GitHub identity. Record whether the
 result is workflow evidence, a PR comment, or a formal review made through
 separately authorized credentials. Never count a same-actor advisory result as

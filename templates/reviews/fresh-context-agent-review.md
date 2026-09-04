@@ -53,7 +53,7 @@ rounds and findings to that record instead of replacing it.
 | Review session ID | `<stable ID>` |
 | Subject and base | `<artifact/PR + exact base>` |
 | State | `<OPEN/CHANGES_REQUESTED/APPROVED/BLOCKED/HUMAN_DECISION_REQUIRED/CLOSED>` |
-| Assigned reviewers | `<stable reviewer IDs>` |
+| Assigned reviewers | `<R1: stable reviewer ID; R2: stable reviewer ID>` |
 | Required approvals | `2` |
 | Approved reviewers | `<same reviewer IDs only after each approves Current candidate>` |
 | Current candidate | `<exact revision>` |
@@ -174,9 +174,14 @@ The author must reject an incorrect comment rather than modifying the product
 to satisfy it. A reviewer either accepts that justification, keeps the finding
 open with contrary contract evidence, or records a conflict for human decision.
 
+Give each assigned reviewer a stable session seat (`R1` or `R2`). Finding IDs
+must include the session, reviewer seat, and reviewer-local sequence so
+concurrent reviewers cannot create the same identifier. Never renumber a
+published finding when reconciling historical records.
+
 | Finding ID | Location | Governing statement | Expected | Observed | Impact/severity | Requested correction | Author response and revision | Reviewer disposition |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `<S1-F01>` | `<file/section/line/hunk>` | `<requirement/contract/plan/policy ID>` | `<required result>` | `<actual result>` | `<blocking/non-blocking and consequence>` | `<required outcome, without unnecessary implementation prescription>` | `<ACCEPT/PARTIALLY_ACCEPT/REJECT_WITH_JUSTIFICATION/DEFER_WITH_AUTHORITY + evidence + exact revision>` | `<OPEN/RESOLVED/JUSTIFICATION_ACCEPTED/HUMAN_DECISION_REQUIRED>` |
+| `<S1-R1-F01>` | `<file/section/line/hunk>` | `<requirement/contract/plan/policy ID>` | `<required result>` | `<actual result>` | `<blocking/non-blocking and consequence>` | `<required outcome, without unnecessary implementation prescription>` | `<ACCEPT/PARTIALLY_ACCEPT/REJECT_WITH_JUSTIFICATION/DEFER_WITH_AUTHORITY + evidence + exact revision>` | `<OPEN/RESOLVED/JUSTIFICATION_ACCEPTED/HUMAN_DECISION_REQUIRED>` |
 
 The original agent must answer each finding with a fix, an evidence-backed
 justification, or an accepted follow-up allowed by project policy. It must not

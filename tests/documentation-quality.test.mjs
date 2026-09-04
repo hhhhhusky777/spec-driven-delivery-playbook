@@ -886,6 +886,8 @@ test("fresh-context review isolates author context and returns an exact-revision
   assert.match(protocol, /must not edit files, push commits/);
   assert.match(protocol, /assigns exactly two\s+reviewers/i);
   assert.match(protocol, /Required approvals \| `2`/);
+  assert.match(protocol, /session, reviewer seat, and reviewer-local sequence/i);
+  assert.match(protocol, /S1-R1-F01/);
   assert.match(protocol, /`ISOLATION_UNVERIFIED` and return `BLOCKED`/);
   assert.match(
     protocol,
