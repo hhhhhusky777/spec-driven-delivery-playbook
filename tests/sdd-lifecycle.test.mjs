@@ -784,6 +784,27 @@ test("implementation review requires fresh approval in both continuation modes",
     nonPrGateDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
   );
 
+  const ambiguousTargetLabel = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      currentArtifactGate:
+        "[task-10 PR #1](https://github.com/example/project/pull/1)",
+    }),
+  );
+  const ambiguousTargetDiagnostics = await checkSddLifecycleDocument(
+    ambiguousTargetLabel.file,
+    ambiguousTargetLabel.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    ambiguousTargetDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_SCOPE",
+    ),
+  );
+
   const autoWithoutFresh = await fixture(
     t,
     workflow({

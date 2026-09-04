@@ -173,7 +173,8 @@ function hasTaskAndPrEvidence(value) {
 
 function hasReviewTargetLink(value, targetId) {
   const normalized = normalizeValue(value || "").toLowerCase();
-  return normalized.includes(normalizeValue(targetId).toLowerCase()) &&
+  const labelIds = normalized.split(/[^a-z0-9_-]+/).filter(Boolean);
+  return labelIds.includes(normalizeValue(targetId).toLowerCase()) &&
     /\]\(https:\/\/github\.com\/[^)\s]+\/pull\/\d+(?:[?#][^)]*)?\)/i.test(
       String(value || ""),
     );
