@@ -36,6 +36,40 @@ async function temporaryDirectory(t) {
   return directory;
 }
 
+test("README leads with value and groups details into reader-oriented chapters", async () => {
+  const readme = await readFile(path.join(REPOSITORY_ROOT, "README.md"), "utf8");
+  const levelTwoHeadings = [...readme.matchAll(/^## (.+)$/gm)].map((match) => match[1]);
+
+  assert.match(readme, /^# Spec-Driven Delivery Playbook$/m);
+  assert.match(readme, /Turn an uncertain request into a reviewable product change/i);
+  assert.deepEqual(levelTwoHeadings, [
+    "What the playbook gives you",
+    "Contents",
+    "Understand the delivery model",
+    "Adopt and use the playbook",
+    "Choose the delivery route and artifacts",
+    "Deliver safely",
+    "Evolve and verify governance",
+    "References",
+  ]);
+  for (const capability of [
+    "Guided project adoption",
+    "Solution whiteboarding",
+    "Spec-driven routing",
+    "Two-agent review sessions",
+    "Controlled automation",
+    "Versioned upgrades",
+  ]) {
+    assert.match(readme, new RegExp(`\\| ${capability} \\|`));
+  }
+  assert.match(readme, /^### Try it in a project$/m);
+  assert.match(readme, /\.\/install-sdd\.sh/);
+  assert.match(readme, /^### The core idea$/m);
+  assert.match(readme, /^### How to use$/m);
+  assert.match(readme, /^### Risk-based review gates$/m);
+  assert.match(readme, /^### Documentation quality and tests$/m);
+});
+
 test("blocking Markdown formatting check rejects invalid Markdown", async (t) => {
   const directory = await temporaryDirectory(t);
   const invalid = path.join(directory, "invalid.md");
@@ -475,7 +509,7 @@ test("multi-task deliveries isolate work on feature integration branches", async
     read("examples/project-adoption/sglang/delivery-api-key-redaction/04-implementation-plan.md"),
   ]);
 
-  assert.match(readme, /^## Branch isolation for parallel deliveries$/m);
+  assert.match(readme, /^### Branch isolation for parallel deliveries$/m);
   assert.match(pullRequestPolicy, /^### Single-task delivery$/m);
   assert.match(pullRequestPolicy, /^### Multi-task feature integration$/m);
   assert.doesNotMatch(pullRequestPolicy, /^### Optional: epic integration branch$/m);
@@ -523,9 +557,9 @@ test("project adoption architecture remains connected to runbook and manifest", 
     "utf8",
   );
 
-  assert.match(readme, /^## Project adoption architecture$/m);
+  assert.match(readme, /^### Project adoption architecture$/m);
   assert.match(readme, /^## Contents$/m);
-  assert.match(readme, /^## How to use$/m);
+  assert.match(readme, /^### How to use$/m);
   assert.match(readme, /\[First-time project adoption\]\(#first-time-project-adoption\)/);
   assert.match(readme, /\[Upgrade an installed project\]\(#upgrade-an-installed-project\)/);
   assert.match(readme, /\[Review and resume adoption\]\(#review-and-resume-adoption\)/);
@@ -534,7 +568,7 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(readme, /generated `\.sdd-runtime\/agent-guide\.md` exactly/);
   assert.match(readme, /docs\/project-adoption-runbook\.md/);
   assert.match(readme, /templates\/adoption\/project-adoption-manifest\.md/);
-  assert.match(readme, /^### Review and resume adoption$/m);
+  assert.match(readme, /^#### Review and resume adoption$/m);
   assert.match(readme, /pre-approved,\s+fail-closed automation boundary/);
   assert.match(readme, /Stop at the next explicit checkpoint or exception/);
   assert.match(readme, /Record affected artifacts as\s+`STALE`/);
@@ -543,8 +577,8 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(readme, /Use `DISCOVERY -> MAPPED` only after/);
   assert.match(readme, /Before recording the first need, replace the completed adoption runtime/);
   assert.match(readme, /new guide detects `INSTALLED`, selects `sdd-project-workflow`/);
-  assert.match(readme, /^### Deliver future needs$/m);
-  assert.match(readme, /^### Use this playbook for this repository$/m);
+  assert.match(readme, /^#### Deliver future needs$/m);
+  assert.match(readme, /^#### Use this playbook for this repository$/m);
   assert.match(runbook, /^## 2\. Authority and conflict gate$/m);
   assert.match(runbook, /Upstream playbook changes never overwrite/);
   assert.match(runbook, /^## 5\. Executable integration sequence$/m);
@@ -874,7 +908,7 @@ test("fresh-context review isolates author context and returns an exact-revision
       read("examples/project-adoption/sglang/delivery-api-key-redaction/03-delivery-workflow.md"),
     ]);
 
-  assert.match(readme, /^### Fresh-context agent review design$/m);
+  assert.match(readme, /^#### Fresh-context agent review design$/m);
   assert.match(readme, /create_agents\(count = 2, inherit_author_conversation = false/);
   assert.match(readme, /process independence, not account independence/i);
   assert.match(protocol, /^## 1\. Phase and continuation policy$/m);
@@ -909,7 +943,7 @@ test("fresh-context review isolates author context and returns an exact-revision
   assert.match(prTemplate, /same-actor comment is not represented as a formal approval/i);
   assert.match(catalog, /fresh-context agent review/);
   assert.match(example, /This\s+example does not invent a reviewer/);
-  assert.match(readme, /same assigned reviewer/i);
+  assert.match(readme, /same two reviewers/i);
   assert.match(workflowSkill, /same assigned session reviewer/i);
   assert.match(workflowSkill, /initialize exactly two reviewers/i);
   assert.match(prPolicy, /REJECT_WITH_JUSTIFICATION/);
@@ -1023,7 +1057,7 @@ test("implementation auto-merge is human-selected, implementation-only, and rech
   assert.match(testStrategy, /Negative fixtures must block missing\/invalid mode data/);
   assert.match(sglangWorkflow, /\| Implementation continuation mode \| `NOT_SELECTED` \|/);
   assert.match(sglangWorkflow, /does not\s+make that choice for SGLang/);
-  assert.match(playbookReadme, /^### Example: enable auto-continuation during implementation$/m);
+  assert.match(playbookReadme, /^#### Example: enable auto-continuation during implementation$/m);
   assert.match(playbookReadme, /AGENT_AUTO_MERGE for the T02\s+and T03 task PRs only/);
   assert.match(playbookReadme, /Do not include the final feature PR/);
   assert.match(playbookReadme, /Change the implementation continuation mode to HUMAN_REVIEW_BEFORE_MERGE now/);
