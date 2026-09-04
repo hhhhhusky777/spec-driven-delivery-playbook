@@ -38,11 +38,7 @@ async function temporaryDirectory(t) {
 
 test("README leads with value and groups details into reader-oriented chapters", async () => {
   const readme = await readFile(path.join(REPOSITORY_ROOT, "README.md"), "utf8");
-  const levelTwoHeadings = [...readme.matchAll(/^## (.+)$/gm)].map((match) => match[1]);
-
-  assert.match(readme, /^# Spec-Driven Delivery Playbook$/m);
-  assert.match(readme, /Turn an uncertain request into a reviewable product change/i);
-  assert.deepEqual(levelTwoHeadings, [
+  const expectedLevelTwo = [
     "What the playbook gives you",
     "Contents",
     "Understand the delivery model",
@@ -51,7 +47,122 @@ test("README leads with value and groups details into reader-oriented chapters",
     "Deliver safely",
     "Evolve and verify governance",
     "References",
+    "License",
+  ];
+  const expectedChildren = new Map([
+    ["What the playbook gives you", ["Try it in a project"]],
+    ["Contents", []],
+    ["Understand the delivery model", [
+      "The core idea",
+      "Mid-delivery policy-gap rerouting",
+      "Three kinds of artifacts",
+    ]],
+    ["Adopt and use the playbook", ["Project adoption architecture", "How to use"]],
+    ["Choose the delivery route and artifacts", [
+      "Delivery routes",
+      "Artifact selection",
+      "Template catalog",
+      "Worked examples",
+    ]],
+    ["Deliver safely", [
+      "Small, self-contained delivery",
+      "Branch isolation for parallel deliveries",
+      "Risk-based review gates",
+      "Dependency-first data sequencing",
+      "Test evidence, not test theater",
+    ]],
+    ["Evolve and verify governance", [
+      "Progressive policy discovery",
+      "Keeping templates current",
+      "Documentation quality and tests",
+    ]],
+    ["References", ["Methodology references"]],
+    ["License", []],
   ]);
+  const expectedContents = [
+    ["What the playbook gives you", "what-the-playbook-gives-you"],
+    ["Understand the delivery model", "understand-the-delivery-model"],
+    ["The core idea", "the-core-idea"],
+    ["Mid-delivery policy-gap rerouting", "mid-delivery-policy-gap-rerouting"],
+    ["Three kinds of artifacts", "three-kinds-of-artifacts"],
+    ["Adopt and use the playbook", "adopt-and-use-the-playbook"],
+    ["Project adoption architecture", "project-adoption-architecture"],
+    ["How to use", "how-to-use"],
+    ["First-time project adoption", "first-time-project-adoption"],
+    ["Upgrade an installed project", "upgrade-an-installed-project"],
+    ["Review and resume adoption", "review-and-resume-adoption"],
+    ["Discuss a need", "discuss-a-need"],
+    ["Deliver future needs", "deliver-future-needs"],
+    ["Use this playbook for this repository", "use-this-playbook-for-this-repository"],
+    ["Choose the delivery route and artifacts", "choose-the-delivery-route-and-artifacts"],
+    ["Delivery routes", "delivery-routes"],
+    ["Artifact selection", "artifact-selection"],
+    ["Template catalog", "template-catalog"],
+    ["Worked examples", "worked-examples"],
+    ["Deliver safely", "deliver-safely"],
+    ["Small, self-contained delivery", "small-self-contained-delivery"],
+    ["Branch isolation for parallel deliveries", "branch-isolation-for-parallel-deliveries"],
+    ["Risk-based review gates", "risk-based-review-gates"],
+    ["Fresh-context agent review design", "fresh-context-agent-review-design"],
+    [
+      "Example: enable auto-continuation during implementation",
+      "example-enable-auto-continuation-during-implementation",
+    ],
+    ["Dependency-first data sequencing", "dependency-first-data-sequencing"],
+    ["Test evidence, not test theater", "test-evidence-not-test-theater"],
+    ["Evolve and verify governance", "evolve-and-verify-governance"],
+    ["Progressive policy discovery", "progressive-policy-discovery"],
+    ["Keeping templates current", "keeping-templates-current"],
+    ["Documentation quality and tests", "documentation-quality-and-tests"],
+    ["References", "references"],
+    ["Methodology references", "methodology-references"],
+    ["License", "license"],
+  ];
+
+  function assertReaderJourney(candidate) {
+    const headings = [...candidate.matchAll(/^(#{2,4}) (.+)$/gm)].map((match) => ({
+      level: match[1].length,
+      title: match[2],
+      index: match.index,
+    }));
+    const levelTwo = headings.filter(({ level }) => level === 2);
+    assert.deepEqual(levelTwo.map(({ title }) => title), expectedLevelTwo);
+
+    for (const [parent, children] of expectedChildren) {
+      const parentIndex = levelTwo.findIndex(({ title }) => title === parent);
+      const start = levelTwo[parentIndex].index;
+      const end = levelTwo[parentIndex + 1]?.index ?? candidate.length;
+      assert.deepEqual(
+        headings
+          .filter(({ level, index }) => level === 3 && index > start && index < end)
+          .map(({ title }) => title),
+        children,
+        `unexpected subtitles under ${parent}`,
+      );
+    }
+
+    const positions = [
+      candidate.indexOf("# Spec-Driven Delivery Playbook"),
+      candidate.indexOf("Turn an uncertain request into a reviewable product change"),
+      candidate.indexOf("## What the playbook gives you"),
+      candidate.indexOf("| Guided project adoption |"),
+      candidate.indexOf("### Try it in a project"),
+      candidate.indexOf("./install-sdd.sh"),
+      candidate.indexOf("## Contents"),
+      candidate.indexOf("## Understand the delivery model"),
+    ];
+    assert.ok(positions.every((position) => position >= 0), "value-first elements must exist");
+    assert.deepEqual([...positions].sort((left, right) => left - right), positions);
+
+    const contentsStart = candidate.indexOf("## Contents");
+    const contentsEnd = candidate.indexOf("\n## ", contentsStart + 1);
+    const contents = candidate.slice(contentsStart, contentsEnd);
+    const actualContents = [...contents.matchAll(/^\s*- \[([^\]]+)\]\(#([^)]+)\)$/gm)]
+      .map((match) => [match[1], match[2]]);
+    assert.deepEqual(actualContents, expectedContents, "contents must map the reader hierarchy");
+  }
+
+  assert.match(readme, /^# Spec-Driven Delivery Playbook$/m);
   for (const capability of [
     "Guided project adoption",
     "Solution whiteboarding",
@@ -62,12 +173,14 @@ test("README leads with value and groups details into reader-oriented chapters",
   ]) {
     assert.match(readme, new RegExp(`\\| ${capability} \\|`));
   }
-  assert.match(readme, /^### Try it in a project$/m);
-  assert.match(readme, /\.\/install-sdd\.sh/);
-  assert.match(readme, /^### The core idea$/m);
-  assert.match(readme, /^### How to use$/m);
-  assert.match(readme, /^### Risk-based review gates$/m);
-  assert.match(readme, /^### Documentation quality and tests$/m);
+  assertReaderJourney(readme);
+  assert.throws(
+    () => assertReaderJourney(readme.replace(
+      "  - [Risk-based review gates](#risk-based-review-gates)\n",
+      "",
+    )),
+    /contents must map the reader hierarchy/,
+  );
 });
 
 test("blocking Markdown formatting check rejects invalid Markdown", async (t) => {
@@ -943,7 +1056,8 @@ test("fresh-context review isolates author context and returns an exact-revision
   assert.match(prTemplate, /same-actor comment is not represented as a formal approval/i);
   assert.match(catalog, /fresh-context agent review/);
   assert.match(example, /This\s+example does not invent a reviewer/);
-  assert.match(readme, /same two reviewers/i);
+  assert.match(readme, /assigned reviewers retain\s+their context through every revision round/i);
+  assert.match(readme, /REVIEWER_REPLACED/);
   assert.match(workflowSkill, /same assigned session reviewer/i);
   assert.match(workflowSkill, /initialize exactly two reviewers/i);
   assert.match(prPolicy, /REJECT_WITH_JUSTIFICATION/);

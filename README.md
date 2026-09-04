@@ -20,7 +20,7 @@ governance without forcing every project to generate every document.
 | TDD and failure triage | Use tests to find product defects and justify failures before changing either code or tests |
 | Safe incremental delivery | Ship the smallest self-contained change that keeps its integration target working |
 | Parallel-delivery isolation | Keep multi-task features independent through feature and task branch boundaries |
-| Two-agent review sessions | Start each gate with two fresh reviewers and retain both across every revision round |
+| Two-agent review sessions | Start each gate with two fresh reviewers in stable seats and preserve their context across revision rounds, with recorded replacement only when a reviewer is unavailable |
 | Controlled automation | Continue deterministic steps automatically and optionally merge scoped implementation PRs after every gate passes |
 | Evolving governance | Add or strengthen specialized policies when real delivery evidence exposes a systemic gap |
 | Versioned upgrades | Assess and migrate a project's pinned playbook revision without silently changing active contracts |
@@ -64,9 +64,25 @@ for the complete procedure.
     - [Deliver future needs](#deliver-future-needs)
     - [Use this playbook for this repository](#use-this-playbook-for-this-repository)
 - [Choose the delivery route and artifacts](#choose-the-delivery-route-and-artifacts)
+  - [Delivery routes](#delivery-routes)
+  - [Artifact selection](#artifact-selection)
+  - [Template catalog](#template-catalog)
+  - [Worked examples](#worked-examples)
 - [Deliver safely](#deliver-safely)
+  - [Small, self-contained delivery](#small-self-contained-delivery)
+  - [Branch isolation for parallel deliveries](#branch-isolation-for-parallel-deliveries)
+  - [Risk-based review gates](#risk-based-review-gates)
+    - [Fresh-context agent review design](#fresh-context-agent-review-design)
+    - [Example: enable auto-continuation during implementation](#example-enable-auto-continuation-during-implementation)
+  - [Dependency-first data sequencing](#dependency-first-data-sequencing)
+  - [Test evidence, not test theater](#test-evidence-not-test-theater)
 - [Evolve and verify governance](#evolve-and-verify-governance)
+  - [Progressive policy discovery](#progressive-policy-discovery)
+  - [Keeping templates current](#keeping-templates-current)
+  - [Documentation quality and tests](#documentation-quality-and-tests)
 - [References](#references)
+  - [Methodology references](#methodology-references)
+- [License](#license)
 
 ## Understand the delivery model
 
@@ -402,8 +418,10 @@ Each agent invocation stops at the next mandatory review checkpoint. It may
 perform more than one dependency-ready deterministic action only inside a
 pre-approved, fail-closed automation boundary. The original agent first
 self-reviews the exact candidate, then opens a review session with exactly two
-reviewers initialized without author context. The same two reviewers handle
-every revision round in that session. After both approve one exact candidate, an
+reviewer seats initialized without author context. The assigned reviewers retain
+their context through every revision round. If one becomes unavailable, the
+coordinator records the canonical replacement handoff without resetting that
+seat's unresolved findings. After both seats approve one exact candidate, an
 authorized human may use this prompt to record approval and resume:
 
 ```text
@@ -685,10 +703,13 @@ Every review gate opens a review session with fresh reviewer context to reduce a
 on the author's conversation and reasoning. The original agent acts as the
 coordinator: it freezes a bounded review packet, assigns exactly two reviewers
 with conversation inheritance disabled, waits for their structured receipts,
-triages every finding, and then resumes the delivery. The same two reviewers
-verify fixes in later rounds. They read the approved documents, complete diff,
-checks, and repository state directly. They perform review only; they do not
-edit, merge, resolve their own comments, or continue implementation.
+triages every finding, and then resumes the delivery. The assigned reviewers
+verify fixes in later rounds. If one becomes unavailable, the coordinator records
+`REVIEWER_REPLACED` and gives a newly isolated reviewer the full immutable
+session history, stable seat, and next finding sequence. They read the approved
+documents, complete diff, checks, and repository state directly. They perform
+review only; they do not edit, merge, resolve their own comments, or continue
+implementation.
 
 ```mermaid
 sequenceDiagram
@@ -945,7 +966,7 @@ contracts:
 - [AWS — Managing Data Synchronization and Schema Changes](https://docs.aws.amazon.com/whitepapers/latest/blue-green-deployments/best-practices-for-managing-data-synchronization-and-schema-changes.html)
 - [The Scrum Guide](https://scrumguides.org/scrum-guide.html)
 
-### License
+## License
 
 No license has been selected yet. Until the repository owner adds one, do not
 assume permission for external redistribution. Template content can still be
