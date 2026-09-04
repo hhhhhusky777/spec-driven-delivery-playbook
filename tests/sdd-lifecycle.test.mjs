@@ -263,11 +263,16 @@ test("plan lifecycle and review gates reject illegal READY transitions", async (
         status: "CONTRACT_REVIEW",
         previousStatus: "DRAFT",
         reviewState: "NOT_STARTED",
+        selfReviewState: "NOT_STARTED",
+        selfReviewRevision: "Not recorded",
+        selfReviewEvidence: "Not recorded",
         freshReviewState,
         freshReviewSessionId: "Not recorded",
         freshAssignedReviewers: "reviewer-1",
         freshRequiredApprovals: "1",
         freshApprovedReviewers: "Not recorded",
+        freshReviewRevision: "Not recorded",
+        freshReviewEvidence: "Not recorded",
       }),
     );
     const diagnostics = await checkSddLifecycleDocument(
@@ -278,6 +283,12 @@ test("plan lifecycle and review gates reject illegal READY transitions", async (
     assert.ok(
       diagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_SESSION"),
     );
+    assert.ok(diagnostics.some((item) => item.rule === "SDD_SELF_REVIEW_STATE"));
+    if (freshReviewState === "APPROVED") {
+      assert.ok(
+        diagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_EVIDENCE"),
+      );
+    }
   }
 
   const missingSelfReview = await fixture(
@@ -929,6 +940,8 @@ test("active or retained workflow review sessions require both reviewers", async
         freshAssignedReviewers: "reviewer-1",
         freshRequiredApprovals: "1",
         freshApprovedReviewers: "Not recorded",
+        freshReviewRevision: "Not recorded",
+        freshReviewEvidence: "Not recorded",
       }),
     );
     const diagnostics = await checkSddLifecycleDocument(
@@ -948,11 +961,16 @@ test("active or retained workflow review sessions require both reviewers", async
         state: "MANIFEST_REVIEWED",
         previousState: "MANIFEST_IN_REVIEW",
         artifactReviewState: "NOT_STARTED",
+        selfReviewState: "NOT_STARTED",
+        selfReviewRevision: "Not recorded",
+        selfReviewEvidence: "Not recorded",
         freshReviewState,
         freshReviewSessionId: "Not recorded",
         freshAssignedReviewers: "reviewer-1",
         freshRequiredApprovals: "1",
         freshApprovedReviewers: "Not recorded",
+        freshReviewRevision: "Not recorded",
+        freshReviewEvidence: "Not recorded",
       }),
     );
     const diagnostics = await checkSddLifecycleDocument(
@@ -963,6 +981,12 @@ test("active or retained workflow review sessions require both reviewers", async
     assert.ok(
       diagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_SESSION"),
     );
+    assert.ok(diagnostics.some((item) => item.rule === "SDD_SELF_REVIEW_STATE"));
+    if (freshReviewState === "APPROVED") {
+      assert.ok(
+        diagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_EVIDENCE"),
+      );
+    }
   }
 });
 

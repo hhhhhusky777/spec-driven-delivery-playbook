@@ -509,7 +509,7 @@ function checkIndependentReviewGate(file, fields, approvalRequired, humanRequire
         ),
       );
     }
-  } else if (fields.get("Human review state") !== "NOT_APPLICABLE") {
+  } else if (humanRequired === false && fields.get("Human review state") !== "NOT_APPLICABLE") {
     diagnostics.push(
       diagnostic(
         file,
@@ -1008,7 +1008,9 @@ function checkImplementationPlan(file, marker, text, tables, fields, schema) {
     ...checkSelfReviewGate(
       file,
       fields,
-      ["IN_REVIEW", "APPROVED"].includes(fields.get("Review state")),
+      ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED"].includes(
+        fields.get("Review state"),
+      ) || hasActiveFreshReviewSession(fields),
     ),
   );
   diagnostics.push(
@@ -1024,7 +1026,9 @@ function checkImplementationPlan(file, marker, text, tables, fields, schema) {
     ...checkIndependentReviewGate(
       file,
       fields,
-      fields.get("Review state") === "APPROVED",
+      fields.get("Review state") === "APPROVED" ||
+        fields.get("Fresh-context review state") === "APPROVED",
+      fields.get("Review state") === "APPROVED" ? true : null,
     ),
   );
 
@@ -1375,10 +1379,13 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     ...checkSelfReviewGate(
       file,
       fields,
-      ["IN_REVIEW", "APPROVED"].includes(fields.get("Current artifact review state")) ||
+      ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED"].includes(
+        fields.get("Current artifact review state"),
+      ) ||
         ["MANIFEST_IN_REVIEW", "ARTIFACT_IN_REVIEW", "GATES_READY"].includes(
           fields.get("State"),
-        ),
+        ) ||
+        hasActiveFreshReviewSession(fields),
     ),
   );
   const artifactReviewState = fields.get("Current artifact review state");
@@ -1480,8 +1487,10 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     ...checkIndependentReviewGate(
       file,
       fields,
-      artifactApproved || reviewApprovedRequired,
-      !agentAutoMergeReview,
+      artifactApproved ||
+        reviewApprovedRequired ||
+        fields.get("Fresh-context review state") === "APPROVED",
+      artifactApproved || reviewApprovedRequired ? !agentAutoMergeReview : null,
     ),
   );
   diagnostics.push(...checkImplementationContinuation(file, fields, tables));
