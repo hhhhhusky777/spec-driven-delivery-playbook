@@ -378,10 +378,33 @@ function checkImplementationContinuation(file, fields, tables) {
     "Human review",
     "Findings/follow-up",
   ]);
+  if (!reviewLedger) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_IMPLEMENTATION_REVIEW_LEDGER",
+        "workflow requires the canonical implementation PR and post-merge review ledger",
+      ),
+    );
+  }
+  const invalidMergeRows = (reviewLedger?.rows || []).filter(
+    (row) => !["MERGED", "STOPPED"].includes(leadingDisposition(row["Merge result"])),
+  );
+  if (invalidMergeRows.length > 0) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        reviewLedger.line,
+        "SDD_MERGE_RESULT",
+        "implementation review ledger Merge result must lead with MERGED or STOPPED",
+      ),
+    );
+  }
   const mergedAutoRows = (reviewLedger?.rows || []).filter(
     (row) =>
       /AGENT_AUTO_MERGE/.test(normalizeValue(row["Implementation mode/authority"])) &&
-      normalizeValue(row["Merge result"]).toUpperCase() === "MERGED",
+      leadingDisposition(row["Merge result"]) === "MERGED",
   );
   for (const row of mergedAutoRows) {
     if (leadingDisposition(row["Fresh-context review"]) !== "APPROVED") {

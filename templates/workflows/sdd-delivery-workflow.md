@@ -414,6 +414,12 @@ concise inventory of the automatic actions and their evidence.
 
 ### 9.4 Implementation PR and post-merge review ledger
 
+<!-- sdd-section: implementation-review-ledger -->
+
+Keep this semantic marker and the exact table headers present even before the
+first implementation PR; an empty ledger has no data rows. Renaming or omitting
+the ledger fails closed because it would erase implementation review duties.
+
 | Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | Human review | Findings/follow-up |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `<task + PR link>` | `<commits>` | `<mode + authority link>` | `<record>` | `<APPROVED / packet-or-receipt-link>` | `<evidence>` | `<MERGED/STOPPED>` | `<APPROVED / evidence for manual mode, or PENDING/ACCEPTED/FOLLOW_UP_REQUIRED/FOLLOW_UP_COMPLETE / evidence for auto mode>` | `<links or None>` |

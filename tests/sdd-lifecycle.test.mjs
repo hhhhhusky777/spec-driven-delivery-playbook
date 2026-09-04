@@ -369,6 +369,9 @@ function workflow({
   implementationModeSelectedAt = "2026-09-03 10:00 UTC",
   postMergeHumanReview = null,
   postMergeFreshReview = "APPROVED / fresh-review-1",
+  postMergeResult = "MERGED",
+  includeReviewLedger = true,
+  reviewLedgerHumanHeader = "Human review",
 } = {}) {
   const resolvedHumanReviewState =
     humanReviewState ??
@@ -446,9 +449,10 @@ ${dependencyRows}
 | --- | --- |
 | Stale artifacts | \`None\` |
 
-${postMergeHumanReview === null ? "" : `| Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | Human review | Findings/follow-up |
+<!-- sdd-section: implementation-review-ledger -->
+${includeReviewLedger ? `| Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | ${reviewLedgerHumanHeader} | Findings/follow-up |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| T01 / PR-1 | head-1 / merge-1 | AGENT_AUTO_MERGE / user | review-1 | ${postMergeFreshReview} | checks-1 | merged | ${postMergeHumanReview} | None |`}
+${postMergeHumanReview === null ? "" : `| T01 / PR-1 | head-1 / merge-1 | AGENT_AUTO_MERGE / user | review-1 | ${postMergeFreshReview} | checks-1 | ${postMergeResult} | ${postMergeHumanReview} | None |`}` : ""}
 `;
 }
 
@@ -583,6 +587,78 @@ test("implementation review requires fresh approval in both continuation modes",
   assert.ok(
     mergedWithoutFreshDiagnostics.some(
       (item) => item.rule === "SDD_AUTO_MERGE_FRESH_REVIEW",
+    ),
+  );
+
+  const annotatedMergeWithoutFresh = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      artifactReviewState: "IN_REVIEW",
+      postMergeHumanReview: "PENDING",
+      postMergeFreshReview: "NOT_APPROVED",
+      postMergeResult: "MERGED / merge-evidence",
+    }),
+  );
+  const annotatedMergeDiagnostics = await checkSddLifecycleDocument(
+    annotatedMergeWithoutFresh.file,
+    annotatedMergeWithoutFresh.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    annotatedMergeDiagnostics.some(
+      (item) => item.rule === "SDD_AUTO_MERGE_FRESH_REVIEW",
+    ),
+  );
+
+  const invalidMergeResult = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      artifactReviewState: "IN_REVIEW",
+      postMergeHumanReview: "PENDING",
+      postMergeResult: "UNKNOWN / merge-evidence",
+    }),
+  );
+  const invalidMergeDiagnostics = await checkSddLifecycleDocument(
+    invalidMergeResult.file,
+    invalidMergeResult.root,
+    SCHEMAS,
+  );
+  assert.ok(invalidMergeDiagnostics.some((item) => item.rule === "SDD_MERGE_RESULT"));
+
+  const missingLedger = await fixture(t, workflow({ includeReviewLedger: false }));
+  const missingLedgerDiagnostics = await checkSddLifecycleDocument(
+    missingLedger.file,
+    missingLedger.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    missingLedgerDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_LEDGER",
+    ),
+  );
+  assert.ok(
+    !missingLedgerDiagnostics.some((item) => item.rule === "SDD_REQUIRED_SECTION"),
+    "the semantic marker alone must not satisfy the ledger-table obligation",
+  );
+
+  const malformedLedger = await fixture(
+    t,
+    workflow({ reviewLedgerHumanHeader: "Post review" }),
+  );
+  const malformedLedgerDiagnostics = await checkSddLifecycleDocument(
+    malformedLedger.file,
+    malformedLedger.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    malformedLedgerDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_LEDGER",
     ),
   );
 

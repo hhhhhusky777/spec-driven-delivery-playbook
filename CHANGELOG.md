@@ -16,9 +16,11 @@ adopted.
   templates, skills, PR policy, and SGLang examples, while retaining the
   distinction between process isolation and a different formal GitHub identity.
   Lifecycle schema 2 adds fresh-context and human-review state, exact revision,
-  and evidence fields. Active schema-1 plans and workflows must add those six
-  fields and change their markers to `@2` at their next review gate; existing
-  approvals remain historical evidence and do not satisfy the new gate.
+  and evidence fields, plus the canonical implementation PR and post-merge
+  review ledger. Active schema-1 plans and workflows must add those six fields;
+  workflows must also add the ledger section and exact headers before changing
+  their markers to `@2` at their next review gate. Existing approvals remain
+  historical evidence and do not satisfy the new gate.
 
 - Added `install-sdd.sh --upgrade` for fail-closed, between-task preparation of
   an immutable candidate without changing the active manifest pin. Added a
