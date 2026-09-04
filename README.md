@@ -363,8 +363,8 @@ Follow .sdd-runtime/playbook-upgrade-guide.md exactly.
 The preflight does not change the manifest pin and does not declare semantic
 compatibility. The agent creates a project-owned upgrade assessment, compares
 the exact revisions and affected project authorities, self-reviews it, creates
-a fresh-context reviewer, and then stops for human approval. After both reviews
-approve, it migrates one reviewed boundary at a time, validates before final
+exactly two fresh-context reviewers, and then stops for human approval. After
+both reviewers approve, it migrates one reviewed boundary at a time, validates before final
 cutover, then updates the manifest pin once. Finally run
 `./install-sdd.sh --cleanup`, regenerate the normal guide
 with `./install-sdd.sh`, and require `./install-sdd.sh --validate` to pass.
@@ -377,8 +377,8 @@ and [upgrade assessment template](templates/adoption/playbook-upgrade-assessment
 Each agent invocation stops at the next mandatory review checkpoint. It may
 perform more than one dependency-ready deterministic action only inside a
 pre-approved, fail-closed automation boundary. The original agent first
-self-reviews the exact candidate, then opens a review session with reviewer(s)
-initialized without author context. The same assigned reviewer(s) handle every
+self-reviews the exact candidate, then opens a review session with exactly two
+reviewers initialized without author context. The same assigned reviewer(s) handle every
 revision round in that session. After all approve one exact candidate, an
 authorized human may use this prompt to record approval and resume:
 
@@ -655,7 +655,7 @@ authorize continuation by itself.
 
 Every review gate opens a review session with fresh reviewer context to reduce anchoring
 on the author's conversation and reasoning. The original agent acts as the
-coordinator: it freezes a bounded review packet, assigns one or more reviewers
+coordinator: it freezes a bounded review packet, assigns exactly two reviewers
 with conversation inheritance disabled, waits for their structured receipts,
 triages every finding, and then resumes the delivery. The same reviewer(s)
 verify fixes in later rounds. They read the approved documents, complete diff,

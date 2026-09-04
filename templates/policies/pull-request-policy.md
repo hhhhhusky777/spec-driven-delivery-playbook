@@ -359,12 +359,12 @@ disagreement requires human decision.
 
 At every PR review gate, use the canonical
 [review packet and receipt](../reviews/fresh-context-agent-review.md). The
-original agent creates the reviewer without author-conversation inheritance,
-waits for its receipt, and remains responsible for addressing findings or
-running the merge gate. The reviewer is read-only and reviews the complete
-exact candidate. The reviewer remains assigned throughout the review session;
-any new commit invalidates the prior revision disposition and requires the same
-reviewer to review the new exact head after author self-review.
+original agent creates exactly two reviewers without author-conversation
+inheritance, waits for both receipts, and remains responsible for addressing
+findings or running the merge gate. Both reviewers are read-only and review the
+complete exact candidate. Both remain assigned throughout the review session;
+any new commit invalidates their prior revision dispositions and requires the
+same two reviewers to review the new exact head after author self-review.
 
 Persist every requested-change finding without overwriting it. A PR finding
 links its inline or summary comment and records the governing statement,

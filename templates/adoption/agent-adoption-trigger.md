@@ -141,7 +141,7 @@ write scope. Apply its pre-approved `EXPLICIT_REVIEW`, `AUTO_CONTINUE`, or
   consistency; and
 - record `SELF_REVIEW_PASSED` or `SELF_REVIEW_FAILED`; any candidate change
   invalidates the result, and a pass cannot approve, merge, or continue work;
-- after self-review passes, open a stable session and initialize its reviewer(s)
+- after self-review passes, open a stable session and initialize exactly two reviewers
   with no inherited authoring conversation, follow the canonical fresh-context
   review protocol, and preserve requested-change findings plus explicit author
   dispositions without overwriting them; and

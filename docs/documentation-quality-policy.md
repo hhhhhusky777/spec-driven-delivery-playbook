@@ -42,7 +42,7 @@ cross-document consistency, freshness, duplication, attention mapping, scope,
 and applicable automated evidence. Any candidate change invalidates the result.
 `SELF_REVIEW_PASSED` is review input only; it cannot approve the artifact,
 satisfy reviewer independence, authorize merge, or authorize continuation.
-Next open a review session and initialize its fresh-context reviewer(s) for the exact candidate under the
+Next open a review session and initialize exactly two fresh-context reviewers for the exact candidate under the
 [canonical protocol](../templates/reviews/fresh-context-agent-review.md).
 Preserve requested changes, author dispositions, and resolutions as immutable
 findings. After all assigned reviewers approve the same exact candidate,

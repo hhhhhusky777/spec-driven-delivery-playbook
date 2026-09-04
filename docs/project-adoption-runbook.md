@@ -207,7 +207,7 @@ against the exact candidate revision and records `SELF_REVIEW_PASSED` or
 review evidence but cannot approve adoption, satisfy reviewer independence,
 authorize merge, or authorize continuation.
 
-It then opens a stable review session and initializes its fresh-context
+It then opens a stable review session and initializes exactly two fresh-context
 reviewer(s) for the exact candidate using the canonical protocol. Requested
 changes and author dispositions remain durable audit history. After all
 assigned reviewers approve, adoption still stops for mandatory human review; a

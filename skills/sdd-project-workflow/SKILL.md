@@ -114,7 +114,7 @@ At every review gate:
    and publication channel. Do not include this conversation, hidden reasoning,
    a proposed disposition, or an advocacy summary.
 3. Open a stable review session and use the runtime's isolated-agent mechanism
-   to initialize its reviewer(s) with no inherited authoring conversation. Keep
+   to initialize exactly two reviewers with no inherited authoring conversation. Keep
    those reviewer(s) assigned for later rounds. Give them only the protocol,
    packet, and bounded read/review permissions. If isolation cannot be verified, record
    `ISOLATION_UNVERIFIED` and fail closed.

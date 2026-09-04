@@ -53,7 +53,7 @@ All repository changes also follow the
     manifest review, per-artifact review loop, and return paths together.
 11. Before every review gate, complete the agent self-review record against the
     exact candidate revision; any later change invalidates that evidence.
-12. Open a stable session with fresh-context reviewer(s) for that exact
+12. Open a stable session with exactly two fresh-context reviewers for that exact
     candidate, preserve findings and author dispositions, and retain those
     reviewer(s) through revisions. Require human review unless the candidate is
     inside a live scoped implementation `AGENT_AUTO_MERGE` action.

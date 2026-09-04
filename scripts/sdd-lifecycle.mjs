@@ -405,8 +405,8 @@ function checkIndependentReviewGate(file, fields, approvalRequired, humanRequire
     !isStableIdentifier(reviewSessionId) ||
     !assignedReviewers ||
     !approvedReviewers ||
-    !/^[1-9]\d*$/.test(requiredApprovals) ||
-    Number(requiredApprovals) !== assignedReviewers.length ||
+    requiredApprovals !== "2" ||
+    assignedReviewers.length !== 2 ||
     assignedReviewerSet.size !== approvedReviewerSet.size ||
     [...assignedReviewerSet].some((item) => !approvedReviewerSet.has(item))
   ) {
@@ -415,7 +415,7 @@ function checkIndependentReviewGate(file, fields, approvalRequired, humanRequire
         file,
         1,
         "SDD_FRESH_REVIEW_SESSION",
-        "approval requires a stable review-session ID, unique assigned reviewer IDs, and approval from every assigned reviewer",
+        "approval requires a stable review-session ID, exactly two unique assigned reviewers, and approval from both reviewers",
       ),
     );
   }

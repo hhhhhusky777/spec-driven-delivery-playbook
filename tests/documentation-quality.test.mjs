@@ -884,6 +884,8 @@ test("fresh-context review isolates author context and returns an exact-revision
   assert.match(protocol, /^## 6\. Review receipt$/m);
   assert.match(protocol, /^## 7\. Coordinator resume gate$/m);
   assert.match(protocol, /must not edit files, push commits/);
+  assert.match(protocol, /assigns exactly two\s+reviewers/i);
+  assert.match(protocol, /Required approvals \| `2`/);
   assert.match(protocol, /`ISOLATION_UNVERIFIED` and return `BLOCKED`/);
   assert.match(
     protocol,
@@ -905,6 +907,7 @@ test("fresh-context review isolates author context and returns an exact-revision
   assert.match(example, /This\s+example does not invent a reviewer/);
   assert.match(readme, /same assigned reviewer/i);
   assert.match(workflowSkill, /same assigned session reviewer/i);
+  assert.match(workflowSkill, /initialize exactly two reviewers/i);
   assert.match(prPolicy, /REJECT_WITH_JUSTIFICATION/);
   assert.match(prTemplate, /same assigned reviewer/i);
 });

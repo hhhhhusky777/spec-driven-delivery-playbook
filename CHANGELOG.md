@@ -1,5 +1,8 @@
 # Changelog
 
+- Require exactly two initially isolated subagents per review gate, retain both
+  across every revision round, and require both to approve the same candidate.
+
 This project has not published a formal versioned release. Significant template
 and workflow changes are recorded here until a release/versioning policy is
 adopted.

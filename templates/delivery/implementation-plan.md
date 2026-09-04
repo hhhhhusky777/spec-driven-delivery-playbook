@@ -51,8 +51,8 @@ section.
 | Self-review evidence | `<record/link or Not applicable>` |
 | Fresh-context review state | `<NOT_STARTED / IN_REVIEW / APPROVED / CHANGES_REQUESTED / BLOCKED>` |
 | Fresh-context review session ID | `<stable ID or Not recorded>` |
-| Fresh-context assigned reviewers | `<comma-separated stable reviewer IDs or Not recorded>` |
-| Fresh-context required approvals | `<all assigned reviewer count or Not recorded>` |
+| Fresh-context assigned reviewers | `<exactly two comma-separated stable reviewer IDs or Not recorded>` |
+| Fresh-context required approvals | `<2 or Not recorded>` |
 | Fresh-context approved reviewers | `<same reviewer IDs after all approve this exact revision, or Not recorded>` |
 | Fresh-context reviewed revision | `<exact commit/version or Not recorded>` |
 | Fresh-context review evidence | `<packet/receipt link or Not recorded>` |

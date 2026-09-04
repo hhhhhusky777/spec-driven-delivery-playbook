@@ -201,7 +201,7 @@ continuation by itself.
 ### Mandatory fresh-context and human review
 
 After self-review passes, every review gate opens a stable review session and
-initializes one or more fresh-context subagents using the canonical protocol:
+initializes exactly two fresh-context subagents using the canonical protocol:
 `<link>`. Each reviewer receives a frozen exact-revision packet without the
 author's conversation or proposed result, derives expectations from approved
 sources, remains read-only, and returns `APPROVED`, `CHANGES_REQUESTED`, or

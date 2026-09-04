@@ -47,7 +47,7 @@ a checkout exists on another machine.
 4. Before every review stop, complete the agent self-review record against the
    exact candidate revision. A pass is evidence only, never approval or
    authorization to merge or continue.
-5. Open a stable review session and initialize its fresh-context reviewer(s)
+5. Open a stable review session and initialize exactly two fresh-context reviewers
    for that candidate. Preserve requested changes and author dispositions;
    reuse those reviewer(s) for revisions, then stop for human review.
 6. Populate only durable playbook identity in the manifest; never commit the

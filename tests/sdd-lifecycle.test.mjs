@@ -54,9 +54,9 @@ function plan({
   selfReviewEvidence = "reviews/self-review.md",
   freshReviewState = "APPROVED",
   freshReviewSessionId = "RS-01",
-  freshAssignedReviewers = "reviewer-1",
-  freshRequiredApprovals = "1",
-  freshApprovedReviewers = "reviewer-1",
+  freshAssignedReviewers = "reviewer-1, reviewer-2",
+  freshRequiredApprovals = "2",
+  freshApprovedReviewers = "reviewer-1, reviewer-2",
   freshReviewRevision = "candidate-v1",
   freshReviewEvidence = "reviews/fresh-review.md",
   humanReviewState = "APPROVED",
@@ -123,9 +123,9 @@ function validatingPlan({
 | Self-review evidence | \`reviews/self-review.md\` |
 | Fresh-context review state | \`APPROVED\` |
 | Fresh-context review session ID | \`RS-01\` |
-| Fresh-context assigned reviewers | \`reviewer-1\` |
-| Fresh-context required approvals | \`1\` |
-| Fresh-context approved reviewers | \`reviewer-1\` |
+| Fresh-context assigned reviewers | \`reviewer-1, reviewer-2\` |
+| Fresh-context required approvals | \`2\` |
+| Fresh-context approved reviewers | \`reviewer-1, reviewer-2\` |
 | Fresh-context reviewed revision | \`candidate-v1\` |
 | Fresh-context review evidence | \`reviews/fresh-review.md\` |
 | Human review state | \`APPROVED\` |
@@ -386,9 +386,9 @@ function workflow({
   selfReviewEvidence = "reviews/self-review.md",
   freshReviewState = "APPROVED",
   freshReviewSessionId = "RS-01",
-  freshAssignedReviewers = "reviewer-1",
-  freshRequiredApprovals = "1",
-  freshApprovedReviewers = "reviewer-1",
+  freshAssignedReviewers = "reviewer-1, reviewer-2",
+  freshRequiredApprovals = "2",
+  freshApprovedReviewers = "reviewer-1, reviewer-2",
   freshReviewRevision = "candidate-v1",
   freshReviewEvidence = "reviews/fresh-review.md",
   humanReviewState,
@@ -548,6 +548,11 @@ test("GATES_READY rejects stale prerequisites and only scoped blockers", async (
 
   for (const sessionOverride of [
     { freshReviewSessionId: "Pending" },
+    {
+      freshAssignedReviewers: "reviewer-1",
+      freshRequiredApprovals: "1",
+      freshApprovedReviewers: "reviewer-1",
+    },
     { freshAssignedReviewers: "reviewer-1, reviewer-1", freshRequiredApprovals: "2" },
     {
       freshAssignedReviewers: "reviewer-1, reviewer-2",

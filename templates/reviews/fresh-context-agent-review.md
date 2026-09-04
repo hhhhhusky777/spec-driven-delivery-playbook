@@ -33,7 +33,7 @@ deterministic actions that are not review gates. They cannot publish or approve
 semantic content. Reaching a review-gated artifact ends that automatic segment
 and starts the shared review prefix above.
 
-Every review gate opens one stable review session and assigns one or more
+Every review gate opens one stable review session and assigns exactly two
 reviewers. Each reviewer is created without authoring context when first
 assigned, then remains assigned for every revision round in that session. A
 candidate change invalidates the prior revision disposition, requires a new
@@ -54,16 +54,15 @@ rounds and findings to that record instead of replacing it.
 | Subject and base | `<artifact/PR + exact base>` |
 | State | `<OPEN/CHANGES_REQUESTED/APPROVED/BLOCKED/HUMAN_DECISION_REQUIRED/CLOSED>` |
 | Assigned reviewers | `<stable reviewer IDs>` |
-| Required approvals | `<all assigned reviewers>` |
+| Required approvals | `2` |
 | Approved reviewers | `<same reviewer IDs only after each approves Current candidate>` |
 | Current candidate | `<exact revision>` |
 | Current round | `<R01, R02, ...>` |
 | Replacement history | `<reviewer + reason + handoff, or None>` |
 
-One reviewer is the normal minimum. Assign two or more when project policy,
-risk, or the human owner requires independent specialties or redundant review.
-All assigned reviewers independently review the initial candidate and must
-approve the same final candidate. If any reviewer requests changes, every prior
+Assign exactly two reviewers so the gate has independent challenge without an
+unbounded review quorum. Both reviewers independently review the initial
+candidate and must approve the same final candidate. If any reviewer requests changes, every prior
 approval becomes stale when the candidate changes, and all assigned reviewers
 review the revised exact candidate.
 
@@ -84,7 +83,7 @@ round, freeze it before initializing the assigned reviewer(s):
 | Review session ID | `<stable ID for the whole review gate>` |
 | Review round | `<R01, R02, ...>` |
 | Assigned reviewers | `<stable reviewer IDs>` |
-| Required approvals | `<count; all assigned reviewers by default>` |
+| Required approvals | `2` |
 | Approved reviewers | `<aggregate session record; Not recorded in an individual packet>` |
 | Subject | `<artifact path or PR URL>` |
 | Project root | `<absolute runtime path>` |
@@ -123,8 +122,8 @@ The coordinating agent remains responsible for waiting for the receipt and
 resuming the original delivery. The reviewer does not need to recover or
 trigger the original conversation.
 
-For later rounds, resume the same assigned reviewer rather than creating a new
-one. Provide the new exact candidate, its author self-review, the changed diff,
+For later rounds, resume the same two assigned reviewers rather than creating new
+ones. Provide the new exact candidate, its author self-review, the changed diff,
 and the immutable session findings/responses. The reviewer may use its own
 prior review context to verify that requested changes were actually resolved.
 If an assigned reviewer becomes unavailable, record `REVIEWER_REPLACED`, the
@@ -169,7 +168,7 @@ review gate.
 Never overwrite a request for changes. The author/coordinator evaluates every
 finding and records exactly one response: `ACCEPT`, `PARTIALLY_ACCEPT`,
 `REJECT_WITH_JUSTIFICATION`, or `DEFER_WITH_AUTHORITY`. Append the response,
-evidence, and the same assigned reviewer's next-round disposition so a later
+evidence, and the same assigned reviewers' next-round dispositions so a later
 audit can reconstruct what was wrong, why it mattered, and how it was resolved.
 The author must reject an incorrect comment rather than modifying the product
 to satisfy it. A reviewer either accepts that justification, keeps the finding
@@ -209,7 +208,7 @@ finding.
 
 Before using the receipt, the original agent verifies:
 
-- review session, round, assigned reviewer, subject, base, and candidate
+- review session, round, both assigned reviewers, subject, base, and candidate
   revision match the frozen packet;
 - the reviewer attested `FRESH_CONTEXT` and stayed read-only;
 - published comments and the receipt agree;

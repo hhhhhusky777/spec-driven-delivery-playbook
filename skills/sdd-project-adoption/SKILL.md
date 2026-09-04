@@ -65,7 +65,7 @@ playbook checkout, immutable revision, manifest path, and cleanup record.
    self-review is evidence only and cannot approve, merge, or continue the work.
 10. At every review gate, read the canonical fresh-context review protocol from
    the verified checkout. Freeze the exact candidate packet, open a stable
-   review session, initialize its read-only reviewer(s) without inherited author
+   review session, initialize exactly two read-only reviewers without inherited author
    conversation, and wait for their receipts. Preserve requested changes as immutable per-round findings with
    governing statement, expected/observed result, impact, requested outcome,
    explicit author disposition, resolution revision, and reviewer disposition.
