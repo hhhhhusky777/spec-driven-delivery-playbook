@@ -1,54 +1,92 @@
 # Spec-Driven Delivery Playbook
 
-Turn a need, requirement, issue, or defect into a reviewable product change
-through a repeatable combination of:
+**Turn an uncertain request into a reviewable product change—without losing the
+decisions, evidence, or context that make it safe to ship.**
 
-- **Solution discovery** — structured discussion before implementation.
-- **Specification-driven development (SDD)** — approved needs and system
-  contracts drive the solution and tasks.
-- **Test-driven development (TDD)** — tests expose defects early and provide
-  traceable quality evidence.
-- **Agile incremental delivery** — small, self-contained changes keep the
-  integration target working.
-- **Stateful execution** — every artifact records current state, next action,
-  blockers, decisions, and evidence.
-- **Progressive governance** — specialized policies are created when real
-  systemic problems reveal a policy gap, not speculated at project inception.
+The Spec-Driven Delivery Playbook gives humans and coding agents one practical
+workflow for discovering the right solution, defining its contracts, delivering
+it in working increments, and preserving an auditable development history. It
+combines SDD, TDD, Agile delivery, stateful execution, and progressive
+governance without forcing every project to generate every document.
 
-This repository is a reusable playbook, not a claim that one workflow fits every
-team. Instantiate the templates, select project-specific values, and preserve
-the distinction between stable policies and feature delivery records.
+## What the playbook gives you
+
+| Capability | What it helps you do |
+| --- | --- |
+| Guided project adoption | Reconcile the playbook with an existing repository instead of replacing project authority |
+| Solution whiteboarding | Turn needs, issues, and defects into reviewed requirements and decisions before implementation |
+| Spec-driven routing | Select only the contracts, policies, decisions, plans, and runbooks a change actually needs |
+| Stateful delivery | Track the current gate, next action, blockers, dependencies, evidence, and immutable history |
+| TDD and failure triage | Use tests to find product defects and justify failures before changing either code or tests |
+| Safe incremental delivery | Ship the smallest self-contained change that keeps its integration target working |
+| Parallel-delivery isolation | Keep multi-task features independent through feature and task branch boundaries |
+| Two-agent review sessions | Start each gate with two fresh reviewers in stable seats and preserve their context across revision rounds, with controlled replacement only for recorded unavailability, authority, or specialty need |
+| Controlled automation | Continue deterministic steps automatically and optionally merge scoped implementation PRs after every gate passes |
+| Evolving governance | Add or strengthen specialized policies when real delivery evidence exposes a systemic gap |
+| Versioned upgrades | Assess and migrate a project's pinned playbook revision without silently changing active contracts |
+| Documentation quality gates | Check Markdown, links, anchors, diagrams, placeholders, secrets, paths, and lifecycle invariants |
+
+The playbook remains adaptable: project-owned contracts are authoritative,
+templates are selected rather than copied wholesale, and human approval remains
+mandatory for design and governance decisions.
+
+### Try it in a project
+
+Clone this repository, copy the installer into the target project root, and run
+it there:
+
+```bash
+git clone https://github.com/hhhhhusky777/spec-driven-delivery-playbook.git
+cp spec-driven-delivery-playbook/install-sdd.sh /path/to/project/
+cd /path/to/project
+./install-sdd.sh
+```
+
+Then give the agent only the prompt printed by the installer. The generated
+guide verifies the playbook revision and leads the project through adoption to
+its first empty solution whiteboard. See [Adopt and use the playbook](#adopt-and-use-the-playbook)
+for the complete procedure.
 
 ## Contents
 
-- [The core idea](#the-core-idea)
-- [Mid-delivery policy-gap rerouting](#mid-delivery-policy-gap-rerouting)
-- [Three kinds of artifacts](#three-kinds-of-artifacts)
-- [Project adoption architecture](#project-adoption-architecture)
-- [How to use](#how-to-use)
-  - [First-time project adoption](#first-time-project-adoption)
-  - [Upgrade an installed project](#upgrade-an-installed-project)
-  - [Review and resume adoption](#review-and-resume-adoption)
-  - [Discuss a need](#discuss-a-need)
-  - [Deliver future needs](#deliver-future-needs)
-  - [Use this playbook for this repository](#use-this-playbook-for-this-repository)
-- [Delivery routes](#delivery-routes)
-- [Artifact selection](#artifact-selection)
-- [Template catalog](#template-catalog)
-- [Worked examples](#worked-examples)
-- [Small, self-contained delivery](#small-self-contained-delivery)
-- [Branch isolation for parallel deliveries](#branch-isolation-for-parallel-deliveries)
-- [Risk-based review gates](#risk-based-review-gates)
-  - [Fresh-context agent review design](#fresh-context-agent-review-design)
-- [Dependency-first data sequencing](#dependency-first-data-sequencing)
-- [Test evidence, not test theater](#test-evidence-not-test-theater)
-- [Progressive policy discovery](#progressive-policy-discovery)
-- [Keeping templates current](#keeping-templates-current)
-- [Documentation quality and tests](#documentation-quality-and-tests)
-- [Methodology references](#methodology-references)
+- [What the playbook gives you](#what-the-playbook-gives-you)
+- [Understand the delivery model](#understand-the-delivery-model)
+  - [The core idea](#the-core-idea)
+  - [Mid-delivery policy-gap rerouting](#mid-delivery-policy-gap-rerouting)
+  - [Three kinds of artifacts](#three-kinds-of-artifacts)
+- [Adopt and use the playbook](#adopt-and-use-the-playbook)
+  - [Project adoption architecture](#project-adoption-architecture)
+  - [How to use](#how-to-use)
+    - [First-time project adoption](#first-time-project-adoption)
+    - [Upgrade an installed project](#upgrade-an-installed-project)
+    - [Review and resume adoption](#review-and-resume-adoption)
+    - [Discuss a need](#discuss-a-need)
+    - [Deliver future needs](#deliver-future-needs)
+    - [Use this playbook for this repository](#use-this-playbook-for-this-repository)
+- [Choose the delivery route and artifacts](#choose-the-delivery-route-and-artifacts)
+  - [Delivery routes](#delivery-routes)
+  - [Artifact selection](#artifact-selection)
+  - [Template catalog](#template-catalog)
+  - [Worked examples](#worked-examples)
+- [Deliver safely](#deliver-safely)
+  - [Small, self-contained delivery](#small-self-contained-delivery)
+  - [Branch isolation for parallel deliveries](#branch-isolation-for-parallel-deliveries)
+  - [Risk-based review gates](#risk-based-review-gates)
+    - [Fresh-context agent review design](#fresh-context-agent-review-design)
+    - [Example: enable auto-continuation during implementation](#example-enable-auto-continuation-during-implementation)
+  - [Dependency-first data sequencing](#dependency-first-data-sequencing)
+  - [Test evidence, not test theater](#test-evidence-not-test-theater)
+- [Evolve and verify governance](#evolve-and-verify-governance)
+  - [Progressive policy discovery](#progressive-policy-discovery)
+  - [Keeping templates current](#keeping-templates-current)
+  - [Documentation quality and tests](#documentation-quality-and-tests)
+- [References](#references)
+  - [Methodology references](#methodology-references)
 - [License](#license)
 
-## The core idea
+## Understand the delivery model
+
+### The core idea
 
 Always begin with a solution whiteboard. Once discussion converges, generate a
 small handoff document from its structured conclusion and review it. Approval
@@ -118,7 +156,7 @@ evidence can return work to the upstream artifact that owns the problem. The
 diagram abbreviates selected policy, audit, ADR, contract, plan, and runbook
 documents as one-at-a-time artifacts in the generation/review loop.
 
-## Mid-delivery policy-gap rerouting
+### Mid-delivery policy-gap rerouting
 
 A policy gap can be discovered after implementation starts. Do not quietly add
 a feature-local rule, discard valid work, or automatically open an unrelated
@@ -187,9 +225,9 @@ policy update, audit existing callers, and add risk-ordered remediation. Resume 
 affected feature after its explicit gate passes; activate the policy only after
 its separate activation gate passes.
 
-## Three kinds of artifacts
+### Three kinds of artifacts
 
-### 1. Project governance — establish once, maintain continuously
+#### 1. Project governance — establish once, maintain continuously
 
 - Project adoption manifest and contract registry
 - Development policy
@@ -201,7 +239,7 @@ These are inputs to feature delivery. The adoption manifest maps the playbook
 to project authority; it is not itself a replacement for the linked contracts.
 Do not generate slightly different policy copies for every feature.
 
-### 2. Feature artifacts — create per non-trivial need
+#### 2. Feature artifacts — create per non-trivial need
 
 - Solution whiteboard
 - Reviewed whiteboard-to-workflow handoff
@@ -211,7 +249,7 @@ Do not generate slightly different policy copies for every feature.
 - Task/PR/test evidence
 - Retrospective and delivery record
 
-### 3. Historical records — preserve why and what happened
+#### 3. Historical records — preserve why and what happened
 
 - Concluded whiteboard with rejected alternatives
 - Accepted and superseded ADRs
@@ -224,7 +262,9 @@ Do not generate slightly different policy copies for every feature.
 Historical artifacts are not reset for reuse. Start from a fresh template and
 link prior records when later work depends on them.
 
-## Project adoption architecture
+## Adopt and use the playbook
+
+### Project adoption architecture
 
 An established project adopts the playbook by reconciling it with existing
 authority, not by copying every template. The
@@ -301,9 +341,9 @@ hypothetical additions, and never implies affiliation, endorsement, unobserved
 testing, or authority to change that project. It ends as `EXAMPLE_REVIEWED`,
 not `ACTIVE`.
 
-## How to use
+### How to use
 
-### First-time project adoption
+#### First-time project adoption
 
 1. Copy [`install-sdd.sh`](install-sdd.sh) to the target project root and run
    it. By default it resolves the latest `main` to an immutable commit.
@@ -342,7 +382,7 @@ immutable revision, and materialization mode into the durable manifest. An
 existing manifest remains authoritative for its pinned revision; upgrading to
 a later playbook revision is a separate reviewed operation.
 
-### Upgrade an installed project
+#### Upgrade an installed project
 
 Run an upgrade only between implementation tasks, with no task PR, merge,
 self-review, or validation in flight:
@@ -372,15 +412,18 @@ Rollback keeps or restores the previous pin. See the
 [project adoption runbook](docs/project-adoption-runbook.md#11-playbook-updates-and-drift)
 and [upgrade assessment template](templates/adoption/playbook-upgrade-assessment.md).
 
-### Review and resume adoption
+#### Review and resume adoption
 
 Each agent invocation stops at the next mandatory review checkpoint. It may
 perform more than one dependency-ready deterministic action only inside a
 pre-approved, fail-closed automation boundary. The original agent first
 self-reviews the exact candidate, then opens a review session with exactly two
-reviewers initialized without author context. The same assigned reviewer(s) handle every
-revision round in that session. After all approve one exact candidate, an
-authorized human may use this prompt to record approval and resume:
+reviewer seats initialized without author context. The assigned reviewers retain
+their context through every revision round. Replacement is limited to recorded
+unavailability, authority, or specialty need and follows the canonical handoff
+without resetting that seat's unresolved findings. After both seats approve one
+exact candidate, an authorized human may use this prompt to record approval and
+resume:
 
 ```text
 Fresh-context review is APPROVED for <ARTIFACT_PATH> at <VERSION_OR_COMMIT>.
@@ -416,7 +459,7 @@ is independently approved. If review comments remain, record
 `CHANGES_REQUESTED` and resolve only those comments before another independent
 review; do not use the approval-and-resume prompt.
 
-### Discuss a need
+#### Discuss a need
 
 The active runtime guide must select `sdd-project-workflow`. Reuse it when it
 already matches the reviewed manifest. If a completed adoption guide still
@@ -450,7 +493,7 @@ dependant, unknown impact, or any other exception.
 9. Implement dependency-ready tasks under the project test and PR policies.
 10. Reconcile evidence, run the retrospective, and archive the delivery packet.
 
-### Deliver future needs
+#### Deliver future needs
 
 Only one need may occupy the stable working-whiteboard path. The normal SDD
 delivery workflow archives the concluded whiteboard with its delivery record,
@@ -464,7 +507,7 @@ revision, and installs `sdd-project-workflow`. The next need then enters the
 fresh whiteboard and follows the same whiteboard -> handoff -> workflow ->
 delivery record cycle.
 
-### Use this playbook for this repository
+#### Use this playbook for this repository
 
 This repository can use its own SDD delivery workflow for future needs. After
 the installer and skills are merged to `main`, run `./install-sdd.sh` from this
@@ -479,7 +522,9 @@ governance, pull-request template, and CI remain authoritative during
 self-adoption. The adoption must map them to `REUSE` or a reviewed disposition
 rather than generating competing copies.
 
-## Delivery routes
+## Choose the delivery route and artifacts
+
+### Delivery routes
 
 | Route | Use when | Typical generated artifacts |
 | --- | --- | --- |
@@ -492,7 +537,7 @@ rather than generating competing copies.
 Line count alone never selects a route. A small change to billing, locking,
 authorization, or external side effects may require Route 3.
 
-## Artifact selection
+### Artifact selection
 
 The workflow creates a delivery manifest using explicit decisions:
 
@@ -507,7 +552,7 @@ The workflow creates a delivery manifest using explicit decisions:
 
 This prevents document inflation while making omissions reviewable.
 
-## Template catalog
+### Template catalog
 
 | Template | Purpose |
 | --- | --- |
@@ -528,7 +573,7 @@ The [task-specification calibration guide](docs/task-specification-calibration.m
 defines what `COMPLETE` means, separates product/system decisions from bounded
 engineering discretion, and provides readiness examples.
 
-## Worked examples
+### Worked examples
 
 The [SGLang project-adoption example](examples/project-adoption/sglang/README.md)
 uses one public project for both adoption and delivery. Its adoption walk-through
@@ -558,7 +603,9 @@ passing test evidence.
 Both examples are teaching records only. They change no SGLang file, claim no
 SGLang approval, and cannot become `ACTIVE` project authority.
 
-## Small, self-contained delivery
+## Deliver safely
+
+### Small, self-contained delivery
 
 Deliver the smallest coherent, self-contained increment that creates a useful
 or necessary system outcome. It must be reviewable, validated, and merged
@@ -578,7 +625,7 @@ Google's published engineering guidance similarly emphasizes one
 self-contained change, related tests, and a working system rather than a
 universal hard line count: [Small CLs](https://google.github.io/eng-practices/review/developer/small-cls.html).
 
-## Branch isolation for parallel deliveries
+### Branch isolation for parallel deliveries
 
 Select the integration route from the number of implementation and merge
 units in the approved plan. Discovery, planning, final-validation, and
@@ -605,10 +652,10 @@ review the final PR to the protected branch, reconcile the merged state, and
 only then archive. If a one-task delivery splits before merge, reroute its
 unmerged work through a feature integration branch.
 
-## Risk-based review gates
+### Risk-based review gates
 
-The default is `EXPLICIT_REVIEW`. Every such review gate requires a new
-fresh-context subagent review of the exact candidate, followed by human review.
+The default is `EXPLICIT_REVIEW`. Every such review gate requires reviews from
+two newly isolated subagents of the exact candidate, followed by human review.
 It remains mandatory for requirements,
 solution conclusions, handoffs, routing, policies, ADRs, contracts, complete
 task specifications, risk/exception decisions, and externally consequential
@@ -651,28 +698,32 @@ candidate change and records `SELF_REVIEW_PASSED` or `SELF_REVIEW_FAILED`.
 reviewer independence, change the selected review mode, authorize merge, or
 authorize continuation by itself.
 
-### Fresh-context agent review design
+#### Fresh-context agent review design
 
 Every review gate opens a review session with fresh reviewer context to reduce anchoring
 on the author's conversation and reasoning. The original agent acts as the
 coordinator: it freezes a bounded review packet, assigns exactly two reviewers
 with conversation inheritance disabled, waits for their structured receipts,
-triages every finding, and then resumes the delivery. The same reviewer(s)
-verify fixes in later rounds. They read the approved documents, complete diff,
-checks, and repository state directly. They perform review only; they do not
-edit, merge, resolve their own comments, or continue implementation.
+triages every finding, and then resumes the delivery. The assigned reviewers
+verify fixes in later rounds. Replacement is allowed only for recorded
+unavailability, authority, or specialty need. The coordinator records
+`REVIEWER_REPLACED` and gives the newly isolated reviewer the full immutable
+session history, stable seat, and next finding sequence; replacement cannot
+bypass an unresolved finding. Reviewers read the approved documents, complete
+diff, checks, and repository state directly. They perform review only; they do
+not edit, merge, resolve their own comments, or continue implementation.
 
 ```mermaid
 sequenceDiagram
     participant U as Human
     participant A as Original agent
-    participant R as Assigned fresh-context reviewer(s)
+    participant R as Two assigned fresh-context reviewers
     participant P as Project and PR
 
     U->>A: Start or continue delivery
     A->>P: Implement, test, annotate, and self-review exact revision
     A->>A: Freeze review packet without author conversation or proposed result
-    A->>R: Open session and initialize reviewer(s) with no author context
+    A->>R: Open session and initialize both reviewers with no author context
     R->>P: Read contracts, base, exact candidate, full diff, and gate evidence
     R->>R: Derive expectations independently, then reconcile author evidence
     R->>P: Publish summary and actionable inline comments
@@ -681,14 +732,14 @@ sequenceDiagram
     alt Changes requested
         A->>A: Accept, partly accept, reject with evidence, or defer with authority
         A->>P: Apply accepted fixes and self-review the new exact revision
-        A->>R: Resume same session reviewer(s) to verify responses and revision
+        A->>R: Resume both session reviewers to verify responses and revision
     else Approved in design or manual implementation
         A-->>U: Stop for human review
         alt Human requests changes
             U->>A: Return durable findings
             A->>A: Triage every human finding
             A->>P: Apply accepted fixes and self-review the new exact revision
-            A->>R: Resume same session reviewer(s) before human re-review
+            A->>R: Resume both session reviewers before human re-review
         else Human approves
             U->>A: Authorize next workflow action
         end
@@ -729,8 +780,8 @@ resume_original_agent(receipts)
 Design, governance, adoption, upgrade, validation, and archive artifacts always
 stop for human review after fresh-context approval. Implementation under
 `HUMAN_REVIEW_BEFORE_MERGE` follows the same sequence. Only implementation PRs
-inside a live `AGENT_AUTO_MERGE` scope may merge and continue after fresh-agent
-approval and all repository gates pass; they still enter the post-merge human
+inside a live `AGENT_AUTO_MERGE` scope may merge and continue after both agent
+reviews approve and all repository gates pass; they still enter the post-merge human
 review ledger.
 
 Fresh context is process independence, not account independence. With the same
@@ -752,7 +803,7 @@ rules requiring review stop automation. Design and planning gates never use
 this implementation-only choice, and all automatically merged PRs require
 post-merge human review before delivery completion/archive.
 
-### Example: enable auto-continuation during implementation
+#### Example: enable auto-continuation during implementation
 
 Suppose `T01` was merged under `HUMAN_REVIEW_BEFORE_MERGE`, the workflow is
 `DELIVERY_ACTIVE`, and `T02` is next. The user can change the mode with one
@@ -793,7 +844,7 @@ Record this instruction and stop at the next PR review gate.
 The agent rereads the changed value and stops before the next merge. A mode
 change cannot undo a merge that already completed.
 
-## Dependency-first data sequencing
+### Dependency-first data sequencing
 
 Do not translate “dependency-ordered” into a universal rule to complete an
 entire data layer before business behavior. When approved behavior depends on a
@@ -816,7 +867,7 @@ For systems with live data or mixed versions, additive changes before consumers
 and destructive changes after migration preserve compatibility; see
 [AWS guidance on decoupling schema and code changes](https://docs.aws.amazon.com/whitepapers/latest/blue-green-deployments/best-practices-for-managing-data-synchronization-and-schema-changes.html).
 
-## Test evidence, not test theater
+### Test evidence, not test theater
 
 The test strategy template avoids undefined claims such as “90% E2E coverage.”
 Instead, it requires named denominators:
@@ -832,7 +883,9 @@ Code coverage is one signal. Google likewise notes that there is no universal
 ideal coverage number and warns against turning percentages into checkboxes:
 [Code Coverage Best Practices](https://testing.googleblog.com/2020/08/code-coverage-best-practices.html).
 
-## Progressive policy discovery
+## Evolve and verify governance
+
+### Progressive policy discovery
 
 You cannot know every specialized policy at project inception. Every whiteboard
 and plan performs an applicability scan. A systemic gap follows this flow:
@@ -854,7 +907,7 @@ a policy. During active delivery, pause only affected tasks and preserve valid
 evidence. This applies YAGNI to governance itself; see
 [Mid-delivery policy-gap rerouting](#mid-delivery-policy-gap-rerouting).
 
-## Keeping templates current
+### Keeping templates current
 
 Templates have owners, version/review metadata, external sources, and change
 history. New industry guidance does not automatically rewrite an active
@@ -864,7 +917,7 @@ examples through review.
 See [Template Governance](docs/template-governance.md) and
 [Contributing](CONTRIBUTING.md).
 
-## Documentation quality and tests
+### Documentation quality and tests
 
 Every playbook change follows the
 [Documentation Quality and Testing Policy](docs/documentation-quality-policy.md).
@@ -898,7 +951,9 @@ npm run docs:all
 Then review advisory external-link evidence with
 `npm run docs:links:external`.
 
-## Methodology references
+## References
+
+### Methodology references
 
 These sources inform the playbook but do not override an instantiated project's
 contracts:
