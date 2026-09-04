@@ -523,6 +523,7 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(readme, /^## Contents$/m);
   assert.match(readme, /^## How to use$/m);
   assert.match(readme, /\[First-time project adoption\]\(#first-time-project-adoption\)/);
+  assert.match(readme, /\[Upgrade an installed project\]\(#upgrade-an-installed-project\)/);
   assert.match(readme, /\[Review and resume adoption\]\(#review-and-resume-adoption\)/);
   assert.match(readme, /\[Deliver future needs\]\(#deliver-future-needs\)/);
   assert.match(readme, /\[`install-sdd\.sh`\]\(install-sdd\.sh\)/);
@@ -556,6 +557,8 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(runbook, /A `PENDING` adoption\s+guide is reusable only while adoption work remains/);
   assert.match(runbook, /^## 8\. Pilot one real delivery$/m);
   assert.match(runbook, /^## 11\. Playbook updates and drift$/m);
+  assert.match(runbook, /\.\/install-sdd\.sh --upgrade/);
+  assert.match(runbook, /does\s+not prove semantic compatibility/);
   assert.match(runbook, /`EXAMPLE_REVIEWED` is the\s+terminal state/);
   assert.match(manifest, /\| Playbook revision \| `<immutable commit or release>` \|/);
   assert.match(manifest, /\| Playbook source repository \|/);
@@ -583,6 +586,7 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(agentTrigger, /\.\/install-sdd\.sh --cleanup/);
   assert.match(agentTrigger, /If a verified current guide already\s+selects `sdd-project-workflow`, reuse it/);
   assert.match(templateCatalog, /adoption\/project-adoption-manifest\.md/);
+  assert.match(templateCatalog, /adoption\/playbook-upgrade-assessment\.md/);
   assert.match(templateCatalog, /\[`install-sdd\.sh`\]\(\.\.\/install-sdd\.sh\)/);
 });
 
@@ -632,6 +636,48 @@ test("installer guide and repository skills preserve the adoption boundary", asy
   assert.match(deliveryWorkflow, /stable project working-whiteboard path is replaced/);
 });
 
+test("upgrade mode preserves the active pin until reviewed validation and cutover", async () => {
+  const installer = await readFile(path.join(REPOSITORY_ROOT, "install-sdd.sh"), "utf8");
+  const readme = await readFile(path.join(REPOSITORY_ROOT, "README.md"), "utf8");
+  const runbook = await readFile(
+    path.join(REPOSITORY_ROOT, "docs/project-adoption-runbook.md"),
+    "utf8",
+  );
+  const skill = await readFile(
+    path.join(REPOSITORY_ROOT, "skills/sdd-playbook-upgrade/SKILL.md"),
+    "utf8",
+  );
+  const assessment = await readFile(
+    path.join(REPOSITORY_ROOT, "templates/adoption/playbook-upgrade-assessment.md"),
+    "utf8",
+  );
+  const example = await readFile(
+    path.join(
+      REPOSITORY_ROOT,
+      "examples/project-adoption/sglang/07-playbook-upgrade-assessment.md",
+    ),
+    "utf8",
+  );
+
+  for (const content of [readme, runbook, skill, assessment, example]) {
+    assert.match(content, /current (?:revision|pin)|previous pin/i);
+    assert.match(content, /candidate revision|immutable candidate/i);
+    assert.match(content, /independent (?:approval|review)/i);
+    assert.match(content, /cutover/i);
+    assert.match(content, /rollback|restore/i);
+  }
+  assert.match(installer, /--upgrade/);
+  assert.match(installer, /merge-base --is-ancestor/);
+  assert.match(installer, /sdd-playbook-upgrade/);
+  assert.match(installer, /playbook-upgrade-guide\.md/);
+  assert.match(installer, /upgrade is allowed only between tasks/);
+  assert.match(skill, /Record `SELF_REVIEW_PASSED` only when every assertion is supported/);
+  assert.match(skill, /Never approve the assessment you generated/);
+  assert.match(skill, /task is `IN_PROGRESS` or `VERIFYING`/);
+  assert.match(assessment, /ACCEPT.*ADAPT.*REJECT.*NOT_APPLICABLE/s);
+  assert.match(assessment, /The manifest's current revision\s+remains authoritative/);
+});
+
 test("SGLang example demonstrates automated adoption through an empty whiteboard", async () => {
   const exampleRoot = path.join(
     REPOSITORY_ROOT,
@@ -664,6 +710,10 @@ test("SGLang example demonstrates automated adoption through an empty whiteboard
     path.join(exampleRoot, "delivery-api-key-redaction", "04-implementation-plan.md"),
     "utf8",
   );
+  const upgradeExample = await readFile(
+    path.join(exampleRoot, "07-playbook-upgrade-assessment.md"),
+    "utf8",
+  );
 
   assert.match(walkthrough, /d315eb725044e435b146c85488b7c6d9222f7fec/);
   assert.match(walkthrough, /\.\/install-sdd\.sh --revision/);
@@ -680,6 +730,10 @@ test("SGLang example demonstrates automated adoption through an empty whiteboard
   assert.match(entrypoint, /^## Use the solution whiteboard$/m);
   assert.match(entrypoint, /^## Runtime source binding$/m);
   assert.match(generatedGuide, /Required skill.*`sdd-project-adoption`/s);
+  const installer = await readFile(path.join(REPOSITORY_ROOT, "install-sdd.sh"), "utf8");
+  const generatorVersion = installer.match(/^GENERATOR_VERSION="([^"]+)"$/m)?.[1];
+  assert.ok(generatorVersion, "installer must declare its generator version");
+  assert.match(generatedGuide, new RegExp(`Generator version.*\`${generatorVersion}\``, "s"));
   assert.match(generatedGuide, /Generator schema version.*`2`/s);
   assert.match(generatedGuide, /\.\/install-sdd\.sh --cleanup/);
   assert.match(generatedGuide, /\.\/install-sdd\.sh --validate/);
@@ -694,6 +748,9 @@ test("SGLang example demonstrates automated adoption through an empty whiteboard
   assert.match(deliveryPlan, /All task context receipts remain `NOT_STARTED`/);
   assert.match(deliveryPlan, /This teaching packet claims none of those gates/);
   assert.match(walkthrough, /grants no authority to install or discuss a real SGLang need/);
+  assert.match(walkthrough, /Upgrade assessment representation/);
+  assert.match(upgradeExample, /\.\/install-sdd\.sh --upgrade/);
+  assert.match(upgradeExample, /Follow \.sdd-runtime\/playbook-upgrade-guide\.md exactly/);
 });
 
 test("canonical playbook URL and examples use the transferred repository and SGLang only", async () => {
@@ -732,6 +789,7 @@ test("every review gate requires exact-revision agent self-review without granti
     "templates/README.md",
     "templates/adoption/agent-adoption-trigger.md",
     "templates/adoption/project-adoption-manifest.md",
+    "templates/adoption/playbook-upgrade-assessment.md",
     "templates/decisions/architecture-decision-record.md",
     "templates/delivery/implementation-plan.md",
     "templates/discovery/solution-whiteboard.md",
@@ -743,6 +801,7 @@ test("every review gate requires exact-revision agent self-review without granti
     "templates/workflows/sdd-delivery-workflow.md",
     "skills/sdd-project-adoption/SKILL.md",
     "skills/sdd-project-workflow/SKILL.md",
+    "skills/sdd-playbook-upgrade/SKILL.md",
   ];
 
   for (const relativePath of reviewArtifacts) {

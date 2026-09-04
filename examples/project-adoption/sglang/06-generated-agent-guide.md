@@ -13,7 +13,7 @@ a checkout exists on another machine.
 | Adoption manifest | `.github/spec-driven-delivery/project-adoption-manifest.md` |
 | Manifest state detected | `ABSENT` |
 | Manifest state before block | `NONE` |
-| Generator version | `2.0.1` |
+| Generator version | `2.1.0` |
 | Generator schema version | `2` |
 | Guide profile | `adoption` |
 | Required skill | `sdd-project-adoption` |

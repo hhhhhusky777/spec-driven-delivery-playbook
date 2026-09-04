@@ -16,6 +16,8 @@ evidence; it does not replace the project authorities to which it links.
 | State before block | `None` |
 | Playbook source repository | `<canonical repository URL>` |
 | Playbook revision | `<immutable commit or release>` |
+| Upgrade state | `NONE` |
+| Upgrade assessment / candidate | `<None, or link + immutable candidate revision>` |
 | Playbook materialization mode | `<pinned local checkout / vendored selected artifacts / immutable remote>` |
 | Runtime playbook locator contract | `<caller-supplied variable/input name; never a committed machine-local path>` |
 | Target base revision | `<immutable commit>` |
@@ -336,6 +338,13 @@ Last approved project authorities to preserve: `<links/versions>`
 Rollback/correction procedure: `<branch/PR/state/evidence steps>`
 
 Update owner and cadence/triggers: `<value>`
+
+Start an in-flight update only through `./install-sdd.sh --upgrade` at a
+between-task boundary. Use `NONE`, `ASSESSING`, `APPROVED`, `APPLYING`,
+`VALIDATING`, `COMPLETE`, or `BLOCKED` for `Upgrade state`. The candidate does
+not replace `Playbook revision` until the reviewed migration passes validation
+and reaches final cutover. Link the project-owned upgrade assessment while an
+update is open; do not copy its volatile details into this manifest.
 
 | Playbook revision | Assessment | Accepted/adapted/rejected items | Project PR | Result/date |
 | --- | --- | --- | --- | --- |

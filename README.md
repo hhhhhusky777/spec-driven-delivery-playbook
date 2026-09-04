@@ -27,6 +27,7 @@ the distinction between stable policies and feature delivery records.
 - [Project adoption architecture](#project-adoption-architecture)
 - [How to use](#how-to-use)
   - [First-time project adoption](#first-time-project-adoption)
+  - [Upgrade an installed project](#upgrade-an-installed-project)
   - [Review and resume adoption](#review-and-resume-adoption)
   - [Discuss a need](#discuss-a-need)
   - [Deliver future needs](#deliver-future-needs)
@@ -339,6 +340,35 @@ not project contracts. The skill copies only the canonical repository,
 immutable revision, and materialization mode into the durable manifest. An
 existing manifest remains authoritative for its pinned revision; upgrading to
 a later playbook revision is a separate reviewed operation.
+
+### Upgrade an installed project
+
+Run an upgrade only between implementation tasks, with no task PR, merge,
+self-review, or validation in flight:
+
+```bash
+./install-sdd.sh --upgrade
+```
+
+Add `--revision REVISION` to assess a specific branch, tag, or commit; otherwise
+the candidate is the latest `main`, resolved to an immutable commit. The
+installer verifies the current project/runtime boundary and candidate ancestry,
+installs the candidate's `sdd-playbook-upgrade` skill, and prints:
+
+```text
+Follow .sdd-runtime/playbook-upgrade-guide.md exactly.
+```
+
+The preflight does not change the manifest pin and does not declare semantic
+compatibility. The agent creates a project-owned upgrade assessment, compares
+the exact revisions and affected project authorities, self-reviews it, and
+stops for independent approval. After approval, it migrates one reviewed
+boundary at a time, validates before final cutover, then updates the manifest
+pin once. Finally run `./install-sdd.sh --cleanup`, regenerate the normal guide
+with `./install-sdd.sh`, and require `./install-sdd.sh --validate` to pass.
+Rollback keeps or restores the previous pin. See the
+[project adoption runbook](docs/project-adoption-runbook.md#11-playbook-updates-and-drift)
+and [upgrade assessment template](templates/adoption/playbook-upgrade-assessment.md).
 
 ### Review and resume adoption
 

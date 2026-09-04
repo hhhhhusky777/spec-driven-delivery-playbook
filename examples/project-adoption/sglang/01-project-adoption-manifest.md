@@ -10,6 +10,8 @@
 | State before block | `None` |
 | Playbook source repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook.git` |
 | Playbook revision | Immutable revision containing this example; resolve with `git rev-parse HEAD` before use |
+| Upgrade state | `NONE` |
+| Upgrade assessment / candidate | `None` |
 | Playbook materialization mode | Pinned local read-only checkout |
 | Runtime playbook locator contract | Caller supplies `PLAYBOOK_ROOT`; never committed as an absolute path |
 | Target base revision | [`d315eb725044e435b146c85488b7c6d9222f7fec`](https://github.com/sgl-project/sglang/commit/d315eb725044e435b146c85488b7c6d9222f7fec) |

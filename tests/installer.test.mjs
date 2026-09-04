@@ -34,7 +34,7 @@ async function temporaryDirectory(t, prefix) {
 
 async function createPlaybookFixture(t) {
   const repository = await temporaryDirectory(t, "sdd-installer-source-");
-  for (const name of ["sdd-project-adoption", "sdd-project-workflow"]) {
+  for (const name of ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade"]) {
     const directory = path.join(repository, "skills", name);
     await mkdir(directory, { recursive: true });
     await writeFile(
@@ -43,6 +43,13 @@ async function createPlaybookFixture(t) {
       "utf8",
     );
   }
+  const templateDirectory = path.join(repository, "templates", "adoption");
+  await mkdir(templateDirectory, { recursive: true });
+  await writeFile(
+    path.join(templateDirectory, "playbook-upgrade-assessment.md"),
+    "# Fixture upgrade assessment\n",
+    "utf8",
+  );
   run("git", ["init", "-b", "main"], repository);
   run("git", ["config", "user.name", "Installer Test"], repository);
   run("git", ["config", "user.email", "installer@example.test"], repository);
@@ -63,6 +70,31 @@ async function createTargetProject(t) {
   return project;
 }
 
+async function createInstalledProject(t, source, state = "ACTIVE") {
+  const project = await createTargetProject(t);
+  const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
+  await mkdir(adoptionRoot, { recursive: true });
+  await writeFile(path.join(adoptionRoot, "README.md"), "# SDD entry point\n", "utf8");
+  await writeFile(path.join(adoptionRoot, "solution-whiteboard.md"), "# Whiteboard\n", "utf8");
+  await writeFile(
+    path.join(adoptionRoot, "project-adoption-manifest.md"),
+    `# Manifest\n\n| Field | Value |\n| --- | --- |\n| Adoption state | \`${state}\` |\n| Playbook source repository | \`${source.repository}\` |\n| Playbook revision | \`${source.firstRevision}\` |\n| Current blocker | \`None\` |\n`,
+    "utf8",
+  );
+  run("git", ["add", ".github"], project);
+  run("git", ["config", "user.name", "Installer Test"], project);
+  run("git", ["config", "user.email", "installer@example.test"], project);
+  run("git", ["commit", "-m", "adopt playbook"], project);
+  const installed = runInstaller(project, [
+    "--repository",
+    source.repository,
+    "--revision",
+    source.firstRevision,
+  ]);
+  assert.equal(installed.status, 0, installed.stderr);
+  return project;
+}
+
 function guideValue(guide, label) {
   const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const match = guide.match(new RegExp(`^\\| ${escaped} \\| ` + "`([^`]*)`" + ` \\|$`, "m"));
@@ -80,7 +112,7 @@ test("installer resolves latest main, installs adoption skill, and emits one gui
   const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
   assert.equal(guideValue(guide, "Manifest state detected"), "ABSENT");
   assert.equal(guideValue(guide, "Manifest state before block"), "NONE");
-  assert.equal(guideValue(guide, "Generator version"), "2.0.1");
+  assert.equal(guideValue(guide, "Generator version"), "2.1.0");
   assert.equal(guideValue(guide, "Generator schema version"), "2");
   assert.equal(guideValue(guide, "Guide profile"), "adoption");
   assert.equal(guideValue(guide, "Required skill"), "sdd-project-adoption");
@@ -310,7 +342,154 @@ test("validation checks marker ownership and command modes are exclusive", async
   assert.notEqual(validation.status, 0);
   assert.match(validation.stderr, /ownership marker belongs to a different project/);
 
-  const conflictingModes = runInstaller(project, ["--cleanup", "--validate"]);
+  const conflictingModes = runInstaller(project, ["--cleanup", "--validate", "--upgrade"]);
   assert.notEqual(conflictingModes.status, 0);
   assert.match(conflictingModes.stderr, /mutually exclusive/);
+});
+
+test("upgrade prepares a newer immutable candidate without changing the active runtime", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const normalGuidePath = path.join(project, ".sdd-runtime", "agent-guide.md");
+  const normalGuideBefore = await readFile(normalGuidePath, "utf8");
+
+  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Follow \.sdd-runtime\/playbook-upgrade-guide\.md exactly\./);
+
+  const upgradeGuidePath = path.join(project, ".sdd-runtime", "playbook-upgrade-guide.md");
+  const upgradeGuide = await readFile(upgradeGuidePath, "utf8");
+  assert.equal(guideValue(upgradeGuide, "Current revision"), source.firstRevision);
+  assert.equal(guideValue(upgradeGuide, "Requested revision"), "main");
+  assert.equal(guideValue(upgradeGuide, "Resolved revision"), source.latestRevision);
+  assert.equal(guideValue(upgradeGuide, "Required skill"), "sdd-playbook-upgrade");
+  assert.equal(guideValue(upgradeGuide, "Cleanup state"), "PENDING");
+  assert.match(guideValue(upgradeGuide, "Content hash"), /^[0-9a-f]{40}$/);
+  assert.equal(await readFile(normalGuidePath, "utf8"), normalGuideBefore);
+  await access(path.join(project, ".agents", "skills", "sdd-playbook-upgrade", "SKILL.md"));
+  assert.equal(run("git", ["status", "--short"], project), "");
+  const validation = runInstaller(project, ["--validate"]);
+  assert.equal(validation.status, 0, validation.stderr);
+  assert.match(validation.stdout, /^UPGRADE_CURRENT:/);
+  await writeFile(
+    upgradeGuidePath,
+    upgradeGuide.replace("Access mode", "Changed access mode"),
+    "utf8",
+  );
+  const invalid = runInstaller(project, ["--validate"]);
+  assert.notEqual(invalid.status, 0);
+  assert.match(invalid.stderr, /INVALID_UPGRADE_RUNTIME: guide content hash mismatch/);
+  await writeFile(upgradeGuidePath, upgradeGuide, "utf8");
+
+  const manifest = await readFile(
+    path.join(project, ".github", "spec-driven-delivery", "project-adoption-manifest.md"),
+    "utf8",
+  );
+  assert.match(manifest, new RegExp(source.firstRevision));
+  assert.doesNotMatch(manifest, new RegExp(source.latestRevision));
+
+  const repeated = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(repeated.status, 0);
+  assert.match(repeated.stderr, /upgrade checkout is still pending/);
+
+  const cleanup = runInstaller(project, ["--cleanup"]);
+  assert.equal(cleanup.status, 0, cleanup.stderr);
+  const cleanedUpgradeGuide = await readFile(upgradeGuidePath, "utf8");
+  const cleanedNormalGuide = await readFile(normalGuidePath, "utf8");
+  assert.equal(guideValue(cleanedUpgradeGuide, "Cleanup state"), "COMPLETE");
+  assert.equal(guideValue(cleanedNormalGuide, "Cleanup state"), "COMPLETE");
+});
+
+test("upgrade preflight fails closed for active work, blocked adoption, and unchanged candidates", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const activeProject = await createInstalledProject(t, source);
+  const activeRoot = path.join(
+    activeProject,
+    ".github",
+    "spec-driven-delivery",
+    "active",
+    "need",
+  );
+  await mkdir(activeRoot, { recursive: true });
+  await writeFile(
+    path.join(activeRoot, "04-implementation-plan.md"),
+    "| Field | Value |\n| --- | --- |\n| Current task | `T01` |\n",
+    "utf8",
+  );
+  const active = runInstaller(activeProject, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(active.status, 0);
+  assert.match(active.stderr, /allowed only between tasks/);
+
+  const blockedProject = await createInstalledProject(t, source);
+  const blockedManifest = path.join(
+    blockedProject,
+    ".github",
+    "spec-driven-delivery",
+    "project-adoption-manifest.md",
+  );
+  await writeFile(
+    blockedManifest,
+    `# Manifest\n\n| Field | Value |\n| --- | --- |\n| Adoption state | \`BLOCKED\` |\n| State before block | \`ACTIVE\` |\n| Playbook source repository | \`${source.repository}\` |\n| Playbook revision | \`${source.firstRevision}\` |\n| Current blocker | \`upgrade unsafe\` |\n`,
+    "utf8",
+  );
+  const blocked = runInstaller(blockedProject, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(blocked.status, 0);
+  assert.match(blocked.stderr, /stable installed state/);
+
+  const currentProject = await createInstalledProject(t, source);
+  const unchanged = runInstaller(currentProject, [
+    "--repository",
+    source.repository,
+    "--revision",
+    source.firstRevision,
+    "--upgrade",
+  ]);
+  assert.notEqual(unchanged.status, 0);
+  assert.match(unchanged.stderr, /already uses the resolved/);
+});
+
+test("upgrade preflight rejects missing project contracts and divergent candidates", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const missingProject = await createInstalledProject(t, source);
+  await rm(
+    path.join(missingProject, ".github", "spec-driven-delivery", "solution-whiteboard.md"),
+  );
+  const missing = runInstaller(missingProject, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(missing.status, 0);
+  assert.match(missing.stderr, /requires the project solution whiteboard/);
+
+  const divergentRevision = run("git", ["rev-parse", source.firstRevision], source.repository).trim();
+  run("git", ["checkout", "--orphan", "divergent"], source.repository);
+  await writeFile(path.join(source.repository, "divergent.md"), "# Divergent\n", "utf8");
+  run("git", ["add", "divergent.md"], source.repository);
+  run("git", ["commit", "-m", "divergent candidate"], source.repository);
+  const candidate = run("git", ["rev-parse", "HEAD"], source.repository).trim();
+  run("git", ["checkout", "main"], source.repository);
+  assert.notEqual(candidate, divergentRevision);
+
+  const divergentProject = await createInstalledProject(t, source);
+  const divergent = runInstaller(divergentProject, [
+    "--repository",
+    source.repository,
+    "--revision",
+    candidate,
+    "--upgrade",
+  ]);
+  assert.notEqual(divergent.status, 0);
+  assert.match(divergent.stderr, /does not descend/);
+
+  const incompleteSource = await createPlaybookFixture(t);
+  await rm(path.join(incompleteSource.repository, "skills", "sdd-playbook-upgrade"), {
+    recursive: true,
+  });
+  run("git", ["add", "-A"], incompleteSource.repository);
+  run("git", ["commit", "-m", "remove upgrade protocol"], incompleteSource.repository);
+  const incompleteProject = await createInstalledProject(t, incompleteSource);
+  const incomplete = runInstaller(incompleteProject, [
+    "--repository",
+    incompleteSource.repository,
+    "--upgrade",
+  ]);
+  assert.notEqual(incomplete.status, 0);
+  assert.match(incomplete.stderr, /does not contain sdd-playbook-upgrade/);
 });
