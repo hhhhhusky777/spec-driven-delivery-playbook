@@ -20,6 +20,10 @@ pre-authorize bounded `AUTO_CONTINUE` or `REVIEW_ON_EXCEPTION` actions; missing
 mode information fails closed to `EXPLICIT_REVIEW`, and automatic work stops at
 the next semantic checkpoint or exception.
 
+Use the [playbook upgrade assessment](adoption/playbook-upgrade-assessment.md)
+for a reviewed current-to-candidate decision, migration order, validation,
+cutover, and rollback in an installed project.
+
 The preferred project entry is the repository-root
 [`install-sdd.sh`](../install-sdd.sh). It generates a machine-local agent guide
 and installs the skill selected by manifest state. After reviewed installation,

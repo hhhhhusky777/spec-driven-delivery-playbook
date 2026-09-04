@@ -4,7 +4,14 @@ This project has not published a formal versioned release. Significant template
 and workflow changes are recorded here until a release/versioning policy is
 adopted.
 
-## Unreleased — updated 2026-09-03
+## Unreleased — updated 2026-09-04
+
+- Added `install-sdd.sh --upgrade` for fail-closed, between-task preparation of
+  an immutable candidate without changing the active manifest pin. Added a
+  dedicated upgrade skill, generated guide, reviewed assessment template,
+  ancestry/runtime preflight, rollback and cutover rules, SGLang example, and
+  installer/documentation tests. Existing projects opt in by running the new
+  mode from their project root; no active project is updated automatically.
 
 - Added a user-selected, implementation-only continuation mode. After design
   approval, `HUMAN_REVIEW_BEFORE_MERGE` pauses each task PR, while scoped

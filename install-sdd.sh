@@ -10,8 +10,10 @@ MANIFEST_RELATIVE_PATH=""
 RUNTIME_ROOT=".sdd-runtime"
 CLEANUP_ONLY=false
 VALIDATE_ONLY=false
+UPGRADE_MODE=false
 GUIDE_SCHEMA_VERSION="2"
-GENERATOR_VERSION="2.0.1"
+UPGRADE_GUIDE_SCHEMA_VERSION="1"
+GENERATOR_VERSION="2.1.0"
 
 usage() {
   cat <<'EOF'
@@ -26,6 +28,7 @@ Options:
   --manifest PATH        Existing or future adoption manifest path.
   --cleanup              Remove only the installer-owned temporary checkout.
   --validate             Validate the generated runtime without changing it.
+  --upgrade              Prepare a reviewed upgrade to a newer playbook revision.
   --help                 Show this help.
 EOF
 }
@@ -66,6 +69,10 @@ while (($# > 0)); do
       VALIDATE_ONLY=true
       shift
       ;;
+    --upgrade)
+      UPGRADE_MODE=true
+      shift
+      ;;
     --help|-h)
       usage
       exit 0
@@ -76,8 +83,12 @@ while (($# > 0)); do
   esac
 done
 
-if [[ "$CLEANUP_ONLY" == true && "$VALIDATE_ONLY" == true ]]; then
-  fail "--cleanup and --validate are mutually exclusive"
+MODE_COUNT=0
+[[ "$CLEANUP_ONLY" == true ]] && MODE_COUNT=$((MODE_COUNT + 1))
+[[ "$VALIDATE_ONLY" == true ]] && MODE_COUNT=$((MODE_COUNT + 1))
+[[ "$UPGRADE_MODE" == true ]] && MODE_COUNT=$((MODE_COUNT + 1))
+if ((MODE_COUNT > 1)); then
+  fail "--cleanup, --validate, and --upgrade are mutually exclusive"
 fi
 
 command -v git >/dev/null 2>&1 || fail "git is required"
@@ -106,9 +117,11 @@ esac
 
 RUNTIME_DIRECTORY="$PROJECT_ROOT/$RUNTIME_ROOT"
 GUIDE_PATH="$RUNTIME_DIRECTORY/agent-guide.md"
+UPGRADE_GUIDE_PATH="$RUNTIME_DIRECTORY/playbook-upgrade-guide.md"
 MANIFEST_PATH="$PROJECT_ROOT/$MANIFEST_RELATIVE_PATH"
 MANIFEST_STATE="ABSENT"
 MANIFEST_STATE_BEFORE_BLOCK="NONE"
+PINNED_REVISION=""
 if [[ -f "$MANIFEST_PATH" ]]; then
   MANIFEST_STATE=$(
     sed -n 's/^| Adoption state | `\([^`]*\)` |$/\1/p' "$MANIFEST_PATH" | head -n 1
@@ -119,11 +132,11 @@ if [[ -f "$MANIFEST_PATH" ]]; then
   )
   [[ -n "$MANIFEST_STATE_BEFORE_BLOCK" ]] || MANIFEST_STATE_BEFORE_BLOCK="NONE"
 
-  if [[ "$REVISION_EXPLICIT" == false ]]; then
-    PINNED_REVISION=$(
-      sed -n 's/^| Playbook revision | `\([0-9a-fA-F]\{40\}\)` |$/\1/p' \
-        "$MANIFEST_PATH" | head -n 1
-    )
+  PINNED_REVISION=$(
+    sed -n 's/^| Playbook revision | `\([0-9a-fA-F]\{40\}\)` |$/\1/p' \
+      "$MANIFEST_PATH" | head -n 1
+  )
+  if [[ "$REVISION_EXPLICIT" == false && "$UPGRADE_MODE" == false ]]; then
     if [[ -n "$PINNED_REVISION" ]]; then
       REQUESTED_REVISION=$PINNED_REVISION
     fi
@@ -260,21 +273,91 @@ validate_runtime() {
   fi
 }
 
+validate_upgrade_runtime() {
+  [[ -f "$UPGRADE_GUIDE_PATH" ]] ||
+    fail "STALE_UPGRADE_RUNTIME: no generated upgrade guide found"
+
+  local recorded_project recorded_generator recorded_schema recorded_current
+  local recorded_revision recorded_repository recorded_hash actual_hash checkout
+  local marker cleanup_state checkout_revision checkout_origin installed_marker
+  recorded_project=$(markdown_value "Project root" "$UPGRADE_GUIDE_PATH")
+  recorded_generator=$(markdown_value "Generator version" "$UPGRADE_GUIDE_PATH")
+  recorded_schema=$(markdown_value "Generator schema version" "$UPGRADE_GUIDE_PATH")
+  recorded_current=$(markdown_value "Current revision" "$UPGRADE_GUIDE_PATH")
+  recorded_revision=$(markdown_value "Resolved revision" "$UPGRADE_GUIDE_PATH")
+  recorded_repository=$(markdown_value "Source repository" "$UPGRADE_GUIDE_PATH")
+  recorded_hash=$(markdown_value "Content hash" "$UPGRADE_GUIDE_PATH")
+  checkout=$(markdown_value "Playbook checkout" "$UPGRADE_GUIDE_PATH")
+  marker=$(markdown_value "Ownership marker" "$UPGRADE_GUIDE_PATH")
+  cleanup_state=$(markdown_value "Cleanup state" "$UPGRADE_GUIDE_PATH")
+
+  [[ "$recorded_project" == "$PROJECT_ROOT" ]] ||
+    fail "INVALID_UPGRADE_RUNTIME: guide belongs to a different project"
+  [[ "$recorded_generator" == "$GENERATOR_VERSION" && \
+    "$recorded_schema" == "$UPGRADE_GUIDE_SCHEMA_VERSION" ]] ||
+    fail "STALE_UPGRADE_RUNTIME: unsupported generator or guide schema"
+  actual_hash=$(guide_content_hash "$UPGRADE_GUIDE_PATH")
+  [[ "$recorded_hash" == "$actual_hash" ]] ||
+    fail "INVALID_UPGRADE_RUNTIME: guide content hash mismatch"
+  [[ "$recorded_current" == "$PINNED_REVISION" ]] ||
+    fail "STALE_UPGRADE_RUNTIME: manifest pin changed after preparation"
+  [[ "$(canonical_repository "$recorded_repository")" == \
+    "$(canonical_repository "$(markdown_value "Playbook source repository" "$MANIFEST_PATH")")" ]] ||
+    fail "INVALID_UPGRADE_RUNTIME: candidate repository differs from the manifest"
+  [[ "$cleanup_state" == "PENDING" ]] ||
+    fail "STALE_UPGRADE_RUNTIME: candidate checkout is not available"
+  [[ -d "$checkout/.git" && -f "$marker" ]] ||
+    fail "INVALID_UPGRADE_RUNTIME: checkout or ownership marker is missing"
+  [[ "$marker" == "$checkout/.sdd-owned-checkout" ]] ||
+    fail "INVALID_UPGRADE_RUNTIME: ownership marker path does not match checkout"
+  grep -Fqx "sdd-owned-checkout-v1" "$marker" ||
+    fail "INVALID_UPGRADE_RUNTIME: ownership marker signature is invalid"
+  grep -Fqx "project-root=$PROJECT_ROOT" "$marker" ||
+    fail "INVALID_UPGRADE_RUNTIME: ownership marker belongs to a different project"
+  checkout_revision=$(git -C "$checkout" rev-parse HEAD 2>/dev/null) ||
+    fail "INVALID_UPGRADE_RUNTIME: cannot read candidate checkout revision"
+  checkout_origin=$(git -C "$checkout" remote get-url origin 2>/dev/null) ||
+    fail "INVALID_UPGRADE_RUNTIME: cannot read candidate checkout origin"
+  [[ "$checkout_revision" == "$recorded_revision" ]] ||
+    fail "INVALID_UPGRADE_RUNTIME: checkout revision differs from the guide"
+  [[ "$(canonical_repository "$checkout_origin")" == \
+    "$(canonical_repository "$recorded_repository")" ]] ||
+    fail "INVALID_UPGRADE_RUNTIME: checkout origin differs from the guide"
+  git -C "$checkout" merge-base --is-ancestor "$recorded_current" "$recorded_revision" ||
+    fail "INVALID_UPGRADE_RUNTIME: candidate no longer descends from the current revision"
+  installed_marker="$PROJECT_ROOT/.agents/skills/sdd-playbook-upgrade/.sdd-playbook-managed"
+  [[ -f "$installed_marker" && "$(head -n 1 "$installed_marker")" == "$recorded_revision" ]] ||
+    fail "INVALID_UPGRADE_RUNTIME: installed upgrade skill differs from the candidate"
+
+  printf 'UPGRADE_CURRENT: candidate provenance, ancestry, guide, and skill match.\n'
+}
+
 cleanup_checkout() {
-  [[ -f "$GUIDE_PATH" ]] || fail "no installation guide found at $GUIDE_PATH"
+  local guides=() guide
+  [[ -f "$UPGRADE_GUIDE_PATH" ]] && guides+=("$UPGRADE_GUIDE_PATH")
+  [[ -f "$GUIDE_PATH" ]] && guides+=("$GUIDE_PATH")
+  ((${#guides[@]} > 0)) || fail "no installer guide found in $RUNTIME_DIRECTORY"
+
+  for guide in "${guides[@]}"; do
+    cleanup_guide_checkout "$guide"
+  done
+}
+
+cleanup_guide_checkout() {
+  local guide=$1
 
   local checkout marker recorded_project cleanup_state temp_root updated_guide
-  cleanup_state=$(markdown_value "Cleanup state" "$GUIDE_PATH")
+  cleanup_state=$(markdown_value "Cleanup state" "$guide")
   if [[ "$cleanup_state" == "COMPLETE" ]]; then
-    printf 'Installer-owned checkout is already cleaned up.\n'
+    printf 'Installer-owned checkout is already cleaned up for %s.\n' "$guide"
     return
   fi
   [[ "$cleanup_state" == "PENDING" ]] ||
     fail "installation guide has an unknown cleanup state"
 
-  checkout=$(markdown_value "Playbook checkout" "$GUIDE_PATH")
-  marker=$(markdown_value "Ownership marker" "$GUIDE_PATH")
-  recorded_project=$(markdown_value "Project root" "$GUIDE_PATH")
+  checkout=$(markdown_value "Playbook checkout" "$guide")
+  marker=$(markdown_value "Ownership marker" "$guide")
+  recorded_project=$(markdown_value "Project root" "$guide")
   [[ -n "$checkout" && -n "$marker" && -n "$recorded_project" ]] ||
     fail "installation guide is missing cleanup metadata"
   [[ "$recorded_project" == "$PROJECT_ROOT" ]] ||
@@ -294,17 +377,242 @@ cleanup_checkout() {
     fail "ownership marker belongs to a different project"
 
   rm -rf "${checkout%/repository}"
-  updated_guide="$GUIDE_PATH.tmp"
+  updated_guide="$guide.tmp"
   awk '
     /^\| Cleanup state \| `PENDING` \|$/ {
       print "| Cleanup state | `COMPLETE` |"
       next
     }
     { print }
-  ' "$GUIDE_PATH" >"$updated_guide"
-  mv "$updated_guide" "$GUIDE_PATH"
-  refresh_guide_hash "$GUIDE_PATH"
+  ' "$guide" >"$updated_guide"
+  mv "$updated_guide" "$guide"
+  refresh_guide_hash "$guide"
   printf 'Removed installer-owned checkout: %s\n' "$checkout"
+}
+
+canonical_repository() {
+  printf '%s' "$1" | sed -e 's#/$##' -e 's#\.git$##'
+}
+
+cleanup_failed_upgrade() {
+  local status=$?
+  if ((status != 0)); then
+    if [[ -n "${FAILED_UPGRADE_TEMP_DIRECTORY:-}" ]]; then
+      rm -rf "$FAILED_UPGRADE_TEMP_DIRECTORY"
+    fi
+    if [[ -n "${FAILED_UPGRADE_SKILL_DESTINATION:-}" &&
+      -f "$FAILED_UPGRADE_SKILL_DESTINATION/.sdd-playbook-managed" ]] &&
+      grep -Fqx "${FAILED_UPGRADE_REVISION:-missing}" \
+        "$FAILED_UPGRADE_SKILL_DESTINATION/.sdd-playbook-managed"; then
+      rm -rf "$FAILED_UPGRADE_SKILL_DESTINATION"
+    fi
+  fi
+  exit "$status"
+}
+
+ensure_runtime_excludes() {
+  local git_exclude installer_path installer_pattern pattern
+  git_exclude=$(git rev-parse --git-path info/exclude)
+  case "$git_exclude" in
+    /*) ;;
+    *) git_exclude="$PROJECT_ROOT/$git_exclude" ;;
+  esac
+  mkdir -p "$(dirname "$git_exclude")"
+  touch "$git_exclude"
+  for pattern in \
+    "/$RUNTIME_ROOT/" \
+    "/.agents/skills/sdd-project-adoption/" \
+    "/.agents/skills/sdd-project-workflow/" \
+    "/.agents/skills/sdd-playbook-upgrade/"; do
+    grep -Fqx "$pattern" "$git_exclude" || printf '%s\n' "$pattern" >>"$git_exclude"
+  done
+
+  installer_path=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)/$(basename "${BASH_SOURCE[0]}")
+  case "$installer_path" in
+    "$PROJECT_ROOT"/*)
+      installer_pattern="/${installer_path#"$PROJECT_ROOT"/}"
+      grep -Fqx "$installer_pattern" "$git_exclude" ||
+        printf '%s\n' "$installer_pattern" >>"$git_exclude"
+      ;;
+  esac
+}
+
+prepare_upgrade() {
+  [[ -f "$MANIFEST_PATH" ]] ||
+    fail "upgrade requires an installed project adoption manifest"
+  case "$MANIFEST_STATE" in
+    INSTALLED|PILOT|REVIEW|ACTIVE|EXAMPLE_REVIEWED) ;;
+    *) fail "upgrade requires a stable installed state; found $MANIFEST_STATE" ;;
+  esac
+  [[ -n "$PINNED_REVISION" ]] ||
+    fail "upgrade requires an exact 40-character Playbook revision in the manifest"
+
+  local manifest_repository current_blocker installed_marker recorded_hash actual_hash
+  local recorded_revision recorded_repository cleanup_state plan active_line
+  manifest_repository=$(markdown_value "Playbook source repository" "$MANIFEST_PATH")
+  [[ -n "$manifest_repository" ]] ||
+    fail "upgrade requires Playbook source repository in the manifest"
+  [[ "$(canonical_repository "$manifest_repository")" == \
+    "$(canonical_repository "$PLAYBOOK_REPOSITORY")" ]] ||
+    fail "requested repository differs from the manifest playbook source"
+  current_blocker=$(markdown_value "Current blocker" "$MANIFEST_PATH")
+  [[ "$current_blocker" == "None" ]] ||
+    fail "upgrade requires Current blocker to be None"
+
+  [[ -f "$PROJECT_ROOT/$ADOPTION_ROOT/README.md" ]] ||
+    fail "upgrade requires the project SDD entry point: $ADOPTION_ROOT/README.md"
+  [[ -f "$PROJECT_ROOT/$ADOPTION_ROOT/solution-whiteboard.md" ]] ||
+    fail "upgrade requires the project solution whiteboard"
+  [[ -f "$GUIDE_PATH" ]] ||
+    fail "upgrade requires the current generated agent guide"
+  recorded_hash=$(markdown_value "Content hash" "$GUIDE_PATH")
+  actual_hash=$(guide_content_hash "$GUIDE_PATH")
+  [[ "$recorded_hash" == "$actual_hash" ]] ||
+    fail "INVALID_RUNTIME: current guide content hash mismatch"
+  recorded_revision=$(markdown_value "Resolved revision" "$GUIDE_PATH")
+  recorded_repository=$(markdown_value "Source repository" "$GUIDE_PATH")
+  cleanup_state=$(markdown_value "Cleanup state" "$GUIDE_PATH")
+  [[ "$recorded_revision" == "$PINNED_REVISION" ]] ||
+    fail "STALE_RUNTIME: current guide differs from the manifest-pinned revision"
+  [[ "$(canonical_repository "$recorded_repository")" == \
+    "$(canonical_repository "$manifest_repository")" ]] ||
+    fail "INVALID_RUNTIME: current guide repository differs from the manifest"
+  [[ "$cleanup_state" == "PENDING" || "$cleanup_state" == "COMPLETE" ]] ||
+    fail "INVALID_RUNTIME: current guide has an unknown cleanup state"
+  installed_marker="$PROJECT_ROOT/.agents/skills/sdd-project-workflow/.sdd-playbook-managed"
+  [[ -f "$installed_marker" ]] ||
+    fail "upgrade requires the managed sdd-project-workflow skill"
+  [[ "$(head -n 1 "$installed_marker")" == "$PINNED_REVISION" ]] ||
+    fail "STALE_RUNTIME: installed workflow skill differs from the manifest pin"
+
+  while IFS= read -r plan; do
+    active_line=$(sed -n \
+      -e 's/^| Current task | `\([^`]*\)` |$/\1/p' \
+      -e '/| `[^`]*` | `\(IN_PROGRESS\|VERIFYING\)` |/p' "$plan" | head -n 1)
+    [[ -z "$active_line" || "$active_line" == "None" ]] ||
+      fail "upgrade is allowed only between tasks; active work found in ${plan#"$PROJECT_ROOT/"}"
+  done < <(find "$PROJECT_ROOT/$ADOPTION_ROOT/active" -type f -name '*implementation-plan.md' 2>/dev/null | sort)
+
+  if [[ -f "$UPGRADE_GUIDE_PATH" ]]; then
+    [[ "$(markdown_value "Cleanup state" "$UPGRADE_GUIDE_PATH")" == "COMPLETE" ]] ||
+      fail "an upgrade checkout is still pending; finish it or run ./install-sdd.sh --cleanup"
+  fi
+
+  ensure_runtime_excludes
+
+  local temp_root temp_directory checkout marker resolved_revision resolved_repository
+  local skill_source skill_destination template_source
+  temp_root=$(cd "${TMPDIR:-/tmp}" && pwd -P)
+  temp_directory=$(mktemp -d "$temp_root/sdd-playbook.XXXXXX")
+  checkout="$temp_directory/repository"
+  FAILED_UPGRADE_TEMP_DIRECTORY=$temp_directory
+  FAILED_UPGRADE_SKILL_DESTINATION=""
+  FAILED_UPGRADE_REVISION=""
+  trap cleanup_failed_upgrade EXIT
+  git clone --quiet --filter=blob:none "$PLAYBOOK_REPOSITORY" "$checkout"
+  git -C "$checkout" checkout --quiet --detach "$REQUESTED_REVISION" ||
+    fail "cannot resolve candidate playbook revision: $REQUESTED_REVISION"
+  resolved_revision=$(git -C "$checkout" rev-parse HEAD)
+  FAILED_UPGRADE_REVISION=$resolved_revision
+  resolved_repository=$(git -C "$checkout" remote get-url origin)
+  [[ "$resolved_revision" != "$PINNED_REVISION" ]] ||
+    fail "project already uses the resolved playbook revision"
+  git -C "$checkout" cat-file -e "$PINNED_REVISION^{commit}" 2>/dev/null ||
+    fail "manifest-pinned revision is not available from the candidate repository"
+  git -C "$checkout" merge-base --is-ancestor "$PINNED_REVISION" "$resolved_revision" ||
+    fail "candidate revision does not descend from the manifest-pinned revision"
+
+  skill_source="$checkout/skills/sdd-playbook-upgrade"
+  template_source="$checkout/templates/adoption/playbook-upgrade-assessment.md"
+  [[ -f "$skill_source/SKILL.md" ]] ||
+    fail "candidate playbook does not contain sdd-playbook-upgrade"
+  [[ -z "$(find "$skill_source" -type l -print -quit)" ]] ||
+    fail "candidate upgrade skill contains a symbolic link"
+  [[ -f "$template_source" ]] ||
+    fail "candidate playbook does not contain the upgrade assessment template"
+  skill_destination="$PROJECT_ROOT/.agents/skills/sdd-playbook-upgrade"
+  FAILED_UPGRADE_SKILL_DESTINATION=$skill_destination
+  if [[ -e "$skill_destination" ]]; then
+    [[ -f "$skill_destination/.sdd-playbook-managed" ]] ||
+      fail "refusing to overwrite unmanaged skill: $skill_destination"
+    rm -rf "$skill_destination"
+  fi
+  mkdir -p "$(dirname "$skill_destination")" "$RUNTIME_DIRECTORY"
+  cp -R "$skill_source" "$skill_destination"
+  printf '%s\n' "$resolved_revision" >"$skill_destination/.sdd-playbook-managed"
+
+  marker="$checkout/.sdd-owned-checkout"
+  printf '%s\nproject-root=%s\n' "sdd-owned-checkout-v1" "$PROJECT_ROOT" >"$marker"
+  cat >"$UPGRADE_GUIDE_PATH" <<EOF
+# SDD Playbook Upgrade Guide
+
+This machine-local guide prepares a candidate upgrade. It does not change the
+active project pin, approve compatibility, or authorize work in an active task.
+
+## Upgrade state
+
+| Field | Value |
+| --- | --- |
+| Project root | \`$PROJECT_ROOT\` |
+| Adoption manifest | \`$MANIFEST_RELATIVE_PATH\` |
+| Manifest state detected | \`$MANIFEST_STATE\` |
+| Generator version | \`$GENERATOR_VERSION\` |
+| Generator schema version | \`$UPGRADE_GUIDE_SCHEMA_VERSION\` |
+| Required skill | \`sdd-playbook-upgrade\` |
+| Installed skill | \`.agents/skills/sdd-playbook-upgrade/SKILL.md\` |
+| Assessment destination | \`$ADOPTION_ROOT/playbook-upgrade-assessment.md\` |
+| Content hash | \`<CONTENT_HASH>\` |
+
+## Revision boundary
+
+| Field | Value |
+| --- | --- |
+| Source repository | \`$resolved_repository\` |
+| Current revision | \`$PINNED_REVISION\` |
+| Requested revision | \`$REQUESTED_REVISION\` |
+| Resolved revision | \`$resolved_revision\` |
+| Playbook checkout | \`$checkout\` |
+| Access mode | \`read-only\` |
+
+## Cleanup record
+
+| Field | Value |
+| --- | --- |
+| Checkout owner | \`install-sdd.sh\` |
+| Ownership marker | \`$marker\` |
+| Cleanup command | \`./install-sdd.sh --cleanup\` |
+| Cleanup state | \`PENDING\` |
+
+## Execution contract
+
+1. Run \`./install-sdd.sh --validate\`, confirm every recorded path and
+   revision, then read the installed required skill completely.
+2. Keep the current revision authoritative while assessing the candidate.
+3. Use the candidate's upgrade-assessment template and migration evidence.
+4. Stop for independent review before changing the manifest pin or applying a
+   migration. Self-review is evidence, never approval.
+5. After supplied approval, migrate one reviewed boundary at a time. Recompute
+   freshness and stop on conflicts, ambiguity, failed gates, or active work.
+6. Cut over the manifest pin only after candidate validation passes. If it
+   fails, preserve or restore the current revision and record rollback evidence.
+7. If continuation or merge rules changed, reset them to explicit review until
+   project authority reconfirms the mode.
+8. At successful cutover or rollback, run \`./install-sdd.sh --cleanup\`, then
+   run \`./install-sdd.sh\` to regenerate the normal runtime from the reviewed
+   manifest pin and validate it.
+
+## Prompt
+
+Follow \`.sdd-runtime/playbook-upgrade-guide.md\` exactly.
+EOF
+  refresh_guide_hash "$UPGRADE_GUIDE_PATH"
+  trap - EXIT
+
+  printf 'Prepared candidate revision: %s\n' "$resolved_revision"
+  printf 'Installed skill: sdd-playbook-upgrade\n'
+  printf 'Generated guide: %s\n\n' "$UPGRADE_GUIDE_PATH"
+  printf 'Prompt the agent with:\n\n'
+  printf 'Follow %s exactly.\n' "$RUNTIME_ROOT/playbook-upgrade-guide.md"
 }
 
 if [[ "$CLEANUP_ONLY" == true ]]; then
@@ -313,7 +621,21 @@ if [[ "$CLEANUP_ONLY" == true ]]; then
 fi
 
 if [[ "$VALIDATE_ONLY" == true ]]; then
-  validate_runtime
+  if [[ -f "$UPGRADE_GUIDE_PATH" ]]; then
+    UPGRADE_CLEANUP_STATE=$(markdown_value "Cleanup state" "$UPGRADE_GUIDE_PATH")
+    case "$UPGRADE_CLEANUP_STATE" in
+      PENDING) validate_upgrade_runtime ;;
+      COMPLETE) validate_runtime ;;
+      *) fail "INVALID_UPGRADE_RUNTIME: unknown cleanup state" ;;
+    esac
+  else
+    validate_runtime
+  fi
+  exit 0
+fi
+
+if [[ "$UPGRADE_MODE" == true ]]; then
+  prepare_upgrade
   exit 0
 fi
 
@@ -326,28 +648,7 @@ if [[ -f "$GUIDE_PATH" ]]; then
     fail "existing installation guide has an unknown cleanup state"
 fi
 
-GIT_EXCLUDE=$(git rev-parse --git-path info/exclude)
-case "$GIT_EXCLUDE" in
-  /*) ;;
-  *) GIT_EXCLUDE="$PROJECT_ROOT/$GIT_EXCLUDE" ;;
-esac
-mkdir -p "$(dirname "$GIT_EXCLUDE")"
-touch "$GIT_EXCLUDE"
-for pattern in \
-  "/$RUNTIME_ROOT/" \
-  "/.agents/skills/sdd-project-adoption/" \
-  "/.agents/skills/sdd-project-workflow/"; do
-  grep -Fqx "$pattern" "$GIT_EXCLUDE" || printf '%s\n' "$pattern" >>"$GIT_EXCLUDE"
-done
-
-INSTALLER_PATH=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)/$(basename "${BASH_SOURCE[0]}")
-case "$INSTALLER_PATH" in
-  "$PROJECT_ROOT"/*)
-    INSTALLER_PATTERN="/${INSTALLER_PATH#"$PROJECT_ROOT"/}"
-    grep -Fqx "$INSTALLER_PATTERN" "$GIT_EXCLUDE" ||
-      printf '%s\n' "$INSTALLER_PATTERN" >>"$GIT_EXCLUDE"
-    ;;
-esac
+ensure_runtime_excludes
 
 TEMP_ROOT=$(cd "${TMPDIR:-/tmp}" && pwd -P)
 TEMP_DIRECTORY=$(mktemp -d "$TEMP_ROOT/sdd-playbook.XXXXXX")
@@ -397,6 +698,10 @@ fi
 OTHER_SKILL_DESTINATION="$PROJECT_ROOT/.agents/skills/$OTHER_SKILL"
 if [[ -f "$OTHER_SKILL_DESTINATION/.sdd-playbook-managed" ]]; then
   rm -rf "$OTHER_SKILL_DESTINATION"
+fi
+UPGRADE_SKILL_DESTINATION="$PROJECT_ROOT/.agents/skills/sdd-playbook-upgrade"
+if [[ -f "$UPGRADE_SKILL_DESTINATION/.sdd-playbook-managed" ]]; then
+  rm -rf "$UPGRADE_SKILL_DESTINATION"
 fi
 
 mkdir -p "$RUNTIME_DIRECTORY"

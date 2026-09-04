@@ -529,16 +529,51 @@ back or supersedes the integration.
 
 ## 11. Playbook updates and drift
 
-An active project consumes no playbook update automatically. At the project's
-review cadence or an event trigger:
+An installed project consumes no playbook update automatically. Start only at a
+between-task boundary: no task may be `IN_PROGRESS` or `VERIFYING`, and no task
+PR, merge, self-review, or validation may be open. Preserve the current
+revision as project authority until final cutover.
 
-1. pin the candidate playbook revision;
-2. read its changelog and migration guidance;
-3. compare affected templates and rules with the adoption manifest;
-4. classify each change as `ACCEPT`, `ADAPT`, `REJECT`, or `NOT_APPLICABLE`;
-5. update only affected project artifacts through their normal owners;
-6. rerun applicable documentation and delivery gates; and
-7. approve a new manifest revision before returning to `ACTIVE`.
+From the target project root, run:
+
+```bash
+./install-sdd.sh --upgrade
+```
+
+Without `--revision`, this resolves the source repository's latest `main` to an
+immutable candidate. The preflight fails closed unless the manifest, stable
+entry point, whiteboard, current generated guide, managed workflow skill,
+repository identity, current pin, candidate ancestry, candidate upgrade skill,
+and upgrade template are mechanically valid. It also rejects an unchanged
+candidate, a blocked or unstable adoption state, active task work, or another
+pending upgrade checkout. Passing preflight proves readiness to assess; it does
+not prove semantic compatibility.
+
+Give the agent only the printed prompt. The generated upgrade guide installs
+`sdd-playbook-upgrade` and records the current and candidate revisions in an
+isolated read-only checkout. The agent then:
+
+1. creates the project-owned
+   [upgrade assessment](../templates/adoption/playbook-upgrade-assessment.md);
+2. compares changelog, migration guidance, schemas, templates, skills,
+   installer behavior, gates, project authorities, and active delivery inputs;
+3. classifies every material change `ACCEPT`, `ADAPT`, `REJECT`, or
+   `NOT_APPLICABLE` and computes transitive staleness;
+4. self-reviews the exact assessment candidate, then stops for independent
+   review without changing the manifest pin;
+5. after supplied approval, applies one dependency-ready migration boundary at
+   a time through normal owners, scopes, checks, and review modes, recording
+   `UPDATING` only when project authority uses the adoption-state transition;
+6. validates the complete candidate migration, then changes the manifest pin
+   once at final cutover; and
+7. cleans both installer-owned checkouts, regenerates the normal runtime from
+   the reviewed pin, and requires `./install-sdd.sh --validate` to pass.
+
+If review, gate, merge, or continuation semantics changed, the migration resets
+implementation continuation to explicit review until project authority
+reconfirms a more permissive mode. On any failed migration or cutover, restore
+the last approved pin and affected artifacts, record rollback evidence, clean
+the candidate runtime, and regenerate the normal runtime from the restored pin.
 
 Repository templates are appropriate for an initial copy, not synchronization:
 GitHub states that repositories created from a template have unrelated

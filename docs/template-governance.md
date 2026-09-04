@@ -86,6 +86,12 @@ an adopting project. Migration guidance identifies possible impact, while each
 project's reviewed adoption manifest decides whether to accept, adapt, reject,
 or defer the update.
 
+An installed project prepares a candidate with `./install-sdd.sh --upgrade`
+only between tasks. The generated guide and
+[upgrade assessment](../templates/adoption/playbook-upgrade-assessment.md)
+preserve the current pin through independent review and migration validation;
+the manifest changes once at final cutover.
+
 ## Definition of Done for a template change
 
 - [ ] Primary purpose remains clear.

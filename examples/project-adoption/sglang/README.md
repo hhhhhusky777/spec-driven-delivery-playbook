@@ -80,6 +80,7 @@ The example representations are:
 | Root and Claude pointers | [Agent adapters](04-agent-entrypoint-adapters.md) |
 | Generated runtime connector | [Agent guide representation](06-generated-agent-guide.md) |
 | First future delivery | [API-key redaction packet](delivery-api-key-redaction/README.md) |
+| Later playbook update | [Upgrade assessment representation](07-playbook-upgrade-assessment.md) |
 
 ## 4. Step-by-step execution
 
