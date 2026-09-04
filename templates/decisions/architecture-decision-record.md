@@ -32,18 +32,21 @@ not live delivery status. Follow the linked workflow for current progress.
 
 ### Review gate
 
-Submit the ADR for human or independent-agent review before `ACCEPTED`. The
-author or generating runner must not self-approve unless a documented project
-rule allows a low-risk exception. First complete the
+Submit the ADR through self-review, fresh-context agent review, and human review
+before `ACCEPTED`. First complete the
 [agent self-review](../reviews/agent-self-review.md) against the exact candidate
-revision and record `SELF_REVIEW_PASSED`; any candidate change invalidates that
-evidence. Resolve `CHANGES_REQUESTED`, repeat self-review, and repeat independent
-review; return to the handoff or whiteboard if comments invalidate the accepted
-requirements or solution. Self-review is evidence, not approval.
+revision and record `SELF_REVIEW_PASSED`, then use the canonical
+[fresh-context review](../reviews/fresh-context-agent-review.md). After fresh
+approval, stop for mandatory human review. Any candidate change invalidates
+both results; resolve `CHANGES_REQUESTED`, record an explicit author
+disposition, repeat self-review, and return to the same assigned session
+reviewer(s). Return to the handoff or whiteboard if comments invalidate the
+accepted requirements or solution. Agent review is evidence, not design
+approval.
 
-| Round | Self-review evidence | Reviewer | Type | Result | Comments/link | Resolved version |
+| Round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
 | --- | --- | --- | --- | --- | --- | --- |
-| `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
+| `1` | `<exact revision>` | `<record>` | `<receipt>` | `<links/None>` | `<identity + evidence>` | `<APPROVED/CHANGES_REQUESTED>` |
 
 ## Context and problem
 

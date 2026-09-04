@@ -63,21 +63,32 @@ playbook checkout, immutable revision, manifest path, and cleanup record.
    cross-document consistency, and record `SELF_REVIEW_PASSED` or
    `SELF_REVIEW_FAILED`. Any candidate change invalidates the result. A passing
    self-review is evidence only and cannot approve, merge, or continue the work.
-10. Stop at an `EXPLICIT_REVIEW` action, the recorded automation boundary, or the
+10. At every review gate, read the canonical fresh-context review protocol from
+   the verified checkout. Freeze the exact candidate packet, open a stable
+   review session, initialize exactly two read-only reviewers without inherited author
+   conversation, and wait for their receipts. Preserve requested changes as immutable per-round findings with
+   governing statement, expected/observed result, impact, requested outcome,
+   explicit author disposition, resolution revision, and reviewer disposition.
+   Any change requires a new self-review and re-review by the same assigned
+   session reviewer(s). Reject incorrect findings with evidence; escalate an
+   unresolved conflict to human review.
+11. After fresh-context `APPROVED`, stop for mandatory human adoption review.
+   Fresh review prepares that decision and cannot replace human authority.
+12. Stop at an `EXPLICIT_REVIEW` action, the recorded automation boundary, or the
    first failed/missing gate, ambiguity, unknown impact, exception, blocker,
    stale dependency, unrelated change, or scope expansion. Automatic
    continuation fails closed; record completed automatic actions separately.
-11. Continue on a later invocation from the reviewed manifest state. Never
+13. Continue on a later invocation from the human-reviewed manifest state. Never
    approve your own artifact or infer reviewer authorization.
-12. Before proposing `MAPPED -> INSTALLED`, require every applicable freshness
+14. Before proposing `MAPPED -> INSTALLED`, require every applicable freshness
    entry to be `CURRENT` and complete final cross-document verification.
-13. After recorded authority moves the manifest to `INSTALLED`, instantiate an
+15. After recorded authority moves the manifest to `INSTALLED`, instantiate an
    empty solution whiteboard at the guide's recorded adoption root. Populate
    neutral control values such as `EMPTY`, `Not recorded`, or `None`; do not
    infer a need, requirement, solution, handoff, plan, or delivery result.
-14. Stop when the empty whiteboard and installed manifest have passed their
+16. Stop when the empty whiteboard and installed manifest have passed their
    applicable documentation checks.
-15. After independent approval of that boundary, do not admit a need through a
+17. After fresh-context and human approval of that boundary, do not admit a need through a
    guide that selects this adoption skill. If its cleanup is `PENDING`, report
    the required runtime handoff: from the project root, run
    `./install-sdd.sh --cleanup`, then `./install-sdd.sh`, and verify that the new

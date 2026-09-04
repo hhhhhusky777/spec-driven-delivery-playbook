@@ -1,6 +1,6 @@
 ---
 name: sdd-playbook-upgrade
-description: Assess and apply a prepared Spec-Driven Delivery Playbook revision in an installed project through its generated upgrade guide, without changing the active pin before independent approval or upgrading during active task work.
+description: Assess and apply a prepared Spec-Driven Delivery Playbook revision in an installed project through its generated upgrade guide, without changing the active pin before fresh-context and human approval or upgrading during active task work.
 ---
 
 # SDD Playbook Upgrade
@@ -41,13 +41,22 @@ Create or resume the guide's assessment destination from the candidate
   must reconfirm any more permissive mode after migration.
 
 Perform the standard agent self-review against the exact assessment candidate.
-Record `SELF_REVIEW_PASSED` only when every assertion is supported. Then stop
-for independent review. Never approve the assessment you generated.
+Record `SELF_REVIEW_PASSED` only when every assertion is supported. Then read
+the candidate's canonical fresh-context review protocol, freeze the exact
+assessment packet, open a stable session, and initialize exactly two read-only
+reviewers without inherited author conversation. Preserve requested changes
+and explicit author dispositions as immutable per-round findings. Any
+assessment change requires a new self-review and re-review by the same assigned
+session reviewer(s). After all assigned reviewers record fresh-context
+`APPROVED`, stop for
+mandatory human upgrade review. Never approve the assessment you generated or
+treat agent approval as human upgrade authority.
 
 ## Apply an approved upgrade
 
-Resume only from an explicit review disposition that identifies the approved
-assessment revision and permitted transition.
+Resume only from an explicit human review disposition that follows
+fresh-context approval and identifies the approved assessment revision and
+permitted transition.
 
 1. Record the supplied approval and enter assessment/manifest upgrade state
    `APPLYING`. Change adoption state to `UPDATING` only when project authority

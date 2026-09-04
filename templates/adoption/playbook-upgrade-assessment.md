@@ -19,14 +19,20 @@ paths; do not commit machine-local paths.
 | Safe boundary evidence | `<no active task, PR, merge, or validation>` |
 | Allowed write scope | `<exact paths>` |
 | Self-review state / evidence | `<state and link>` |
-| Independent review state / evidence | `<state and link>` |
+| Fresh-context review state / evidence | `<state + exact-revision receipt>` |
+| Fresh-context review session / assigned reviewers | `<stable session ID + assigned and approved reviewer IDs + required approval count>` |
+| Human review state / evidence | `<state + reviewer/link>` |
 | Current blocker | `None` |
 | Next action | `<one dependency-ready action>` |
 
 States: `DRAFT -> IN_REVIEW -> APPROVED -> APPLYING -> VALIDATING -> COMPLETE`.
-Review comments return to `DRAFT`; any state may enter `BLOCKED`. Only supplied
-independent approval may enter `APPROVED`. The manifest's current revision
-remains authoritative through assessment and migration validation.
+Review comments return to `DRAFT`; any state may enter `BLOCKED`. Exact-candidate
+self-review must be followed by a stable session whose reviewer(s) were
+initialized without author context, then mandatory human approval before
+entering `APPROVED`. Preserve requested-change findings, author dispositions,
+and resolutions; any candidate change starts a same-reviewer session round. The manifest's
+current revision remains authoritative through assessment and migration
+validation.
 
 ## 2. Candidate evidence
 
@@ -66,7 +72,8 @@ Continuation-mode impact: `<UNCHANGED, or reset to EXPLICIT_REVIEW and required 
 - [ ] Rollback preserves the current pin and runtime until candidate validation.
 - [ ] Required project checks pass; unrun checks are named, not implied.
 - [ ] Agent self-review covers this exact assessment candidate.
-- [ ] Independent approval identifies this exact assessment candidate.
+- [ ] Fresh-context approval identifies this exact assessment candidate.
+- [ ] Human approval identifies this exact assessment candidate.
 - [ ] The manifest pin changes only at final cutover.
 - [ ] Normal runtime is regenerated and validates against the new pin.
 - [ ] No affected artifact remains `STALE` or `BLOCKED`.
@@ -77,9 +84,9 @@ Rollback evidence or procedure: `<last approved pin, restoration steps, result>`
 
 ## 6. Review and history
 
-| Round | Candidate revision | Self-review | Independent reviewer | Disposition / comments | Date |
-| --- | --- | --- | --- | --- | --- |
-| `1` | `<value>` | `<evidence>` | `<identity/role>` | `IN_REVIEW` | `<date>` |
+| Round | Candidate revision | Self-review | Fresh-context receipt | Durable findings/resolution | Human review | Result/date |
+| --- | --- | --- | --- | --- | --- | --- |
+| `1` | `<value>` | `<evidence>` | `<receipt>` | `<links/None>` | `<identity/evidence>` | `IN_REVIEW / <date>` |
 
 | Event | From -> to | Evidence / authority | Next action |
 | --- | --- | --- | --- |

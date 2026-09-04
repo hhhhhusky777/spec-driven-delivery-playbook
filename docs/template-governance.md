@@ -20,10 +20,13 @@ All repository changes also follow the
 - Examples demonstrate the templates and must not claim evidence that was not
   produced.
 - Concision matters: reference canonical content instead of duplicating it.
-- Normative generated artifacts are independently reviewed before dependent
-  artifacts proceed. Only pre-authorized deterministic mechanics may continue
-  automatically, with fail-closed gates and an audit record; `AUTO_CONTINUED`
-  never means approval.
+- Every review gate requires exact-candidate self-review and a stable review
+  session whose reviewer(s) are initially created without author context and
+  retained across revision rounds. Design and governance artifacts then require human
+  approval. Only scoped implementation `AGENT_AUTO_MERGE` may proceed after
+  fresh approval without pre-merge human review. Pre-authorized deterministic
+  mechanics may continue automatically with fail-closed gates and an audit
+  record; `AUTO_CONTINUED` never means approval.
 
 ## Change categories
 
@@ -50,6 +53,10 @@ All repository changes also follow the
     manifest review, per-artifact review loop, and return paths together.
 11. Before every review gate, complete the agent self-review record against the
     exact candidate revision; any later change invalidates that evidence.
+12. Open a stable session with exactly two fresh-context reviewers for that exact
+    candidate, preserve findings and author dispositions, and retain those
+    reviewer(s) through revisions. Require human review unless the candidate is
+    inside a live scoped implementation `AGENT_AUTO_MERGE` action.
 
 ## Periodic review
 
@@ -99,6 +106,8 @@ the manifest changes once at final cutover.
 - [ ] Cross-template references and routing are consistent.
 - [ ] Review owner, state, comments, and approval remain explicit and no
       dependent artifact relies on an unapproved draft.
+- [ ] Self-review, fresh-context review, durable findings, and applicable human
+      approval are traceable to the exact candidate.
 - [ ] Affected examples and README guidance are updated.
 - [ ] Required/conditional fields are understandable.
 - [ ] External claims have primary-source links.

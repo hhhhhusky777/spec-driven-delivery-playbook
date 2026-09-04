@@ -52,10 +52,20 @@ function plan({
   selfReviewState = "SELF_REVIEW_PASSED",
   selfReviewRevision = "candidate-v1",
   selfReviewEvidence = "reviews/self-review.md",
+  freshReviewState = "APPROVED",
+  freshReviewSessionId = "RS-01",
+  freshAssignedReviewers = "reviewer-1, reviewer-2",
+  freshRequiredApprovals = "2",
+  freshApprovedReviewers = "reviewer-1, reviewer-2",
+  freshReviewRevision = "candidate-v1",
+  freshReviewEvidence = "reviews/fresh-review.md",
+  humanReviewState = "APPROVED",
+  humanReviewRevision = "candidate-v1",
+  humanReviewEvidence = "reviews/human-review.md",
 } = {}) {
   return `# Plan
 
-<!-- sdd-schema: implementation-plan@1; mode: FULL -->
+<!-- sdd-schema: implementation-plan@2; mode: FULL -->
 
 | Field | Value |
 | --- | --- |
@@ -68,6 +78,16 @@ function plan({
 | Self-review state | \`${selfReviewState}\` |
 | Self-review candidate revision | \`${selfReviewRevision}\` |
 | Self-review evidence | \`${selfReviewEvidence}\` |
+| Fresh-context review state | \`${freshReviewState}\` |
+| Fresh-context review session ID | \`${freshReviewSessionId}\` |
+| Fresh-context assigned reviewers | \`${freshAssignedReviewers}\` |
+| Fresh-context required approvals | \`${freshRequiredApprovals}\` |
+| Fresh-context approved reviewers | \`${freshApprovedReviewers}\` |
+| Fresh-context reviewed revision | \`${freshReviewRevision}\` |
+| Fresh-context review evidence | \`${freshReviewEvidence}\` |
+| Human review state | \`${humanReviewState}\` |
+| Human reviewed revision | \`${humanReviewRevision}\` |
+| Human review evidence | \`${humanReviewEvidence}\` |
 
 ${PLAN_SECTIONS}
 
@@ -88,7 +108,7 @@ function validatingPlan({
 } = {}) {
   return `# Plan
 
-<!-- sdd-schema: implementation-plan@1; mode: FULL -->
+<!-- sdd-schema: implementation-plan@2; mode: FULL -->
 
 | Field | Value |
 | --- | --- |
@@ -101,6 +121,16 @@ function validatingPlan({
 | Self-review state | \`SELF_REVIEW_PASSED\` |
 | Self-review candidate revision | \`candidate-v1\` |
 | Self-review evidence | \`reviews/self-review.md\` |
+| Fresh-context review state | \`APPROVED\` |
+| Fresh-context review session ID | \`RS-01\` |
+| Fresh-context assigned reviewers | \`reviewer-1, reviewer-2\` |
+| Fresh-context required approvals | \`2\` |
+| Fresh-context approved reviewers | \`reviewer-1, reviewer-2\` |
+| Fresh-context reviewed revision | \`candidate-v1\` |
+| Fresh-context review evidence | \`reviews/fresh-review.md\` |
+| Human review state | \`APPROVED\` |
+| Human reviewed revision | \`candidate-v1\` |
+| Human review evidence | \`reviews/human-review.md\` |
 
 ${PLAN_SECTIONS}
 
@@ -184,6 +214,83 @@ test("plan lifecycle and review gates reject illegal READY transitions", async (
   const reviewDiagnostics = await checkSddLifecycleDocument(unapproved.file, unapproved.root, SCHEMAS);
   assert.ok(reviewDiagnostics.some((item) => item.rule === "SDD_PLAN_REVIEW"));
 
+  const oneReviewerInReview = await fixture(
+    t,
+    plan({
+      reviewState: "IN_REVIEW",
+      freshReviewState: "NOT_STARTED",
+      freshAssignedReviewers: "reviewer-1",
+      freshRequiredApprovals: "1",
+      freshApprovedReviewers: "Not recorded",
+    }),
+  );
+  const oneReviewerInReviewDiagnostics = await checkSddLifecycleDocument(
+    oneReviewerInReview.file,
+    oneReviewerInReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    oneReviewerInReviewDiagnostics.some(
+      (item) => item.rule === "SDD_FRESH_REVIEW_SESSION",
+    ),
+  );
+
+  const oneReviewerChangesRequested = await fixture(
+    t,
+    plan({
+      reviewState: "CHANGES_REQUESTED",
+      freshReviewState: "CHANGES_REQUESTED",
+      freshAssignedReviewers: "reviewer-1",
+      freshRequiredApprovals: "1",
+      freshApprovedReviewers: "Not recorded",
+    }),
+  );
+  const oneReviewerChangesRequestedDiagnostics = await checkSddLifecycleDocument(
+    oneReviewerChangesRequested.file,
+    oneReviewerChangesRequested.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    oneReviewerChangesRequestedDiagnostics.some(
+      (item) => item.rule === "SDD_FRESH_REVIEW_SESSION",
+    ),
+  );
+
+  for (const freshReviewState of ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED", "BLOCKED"]) {
+    const missingSession = await fixture(
+      t,
+      plan({
+        status: "CONTRACT_REVIEW",
+        previousStatus: "DRAFT",
+        reviewState: "NOT_STARTED",
+        selfReviewState: "NOT_STARTED",
+        selfReviewRevision: "Not recorded",
+        selfReviewEvidence: "Not recorded",
+        freshReviewState,
+        freshReviewSessionId: "Not recorded",
+        freshAssignedReviewers: "reviewer-1",
+        freshRequiredApprovals: "1",
+        freshApprovedReviewers: "Not recorded",
+        freshReviewRevision: "Not recorded",
+        freshReviewEvidence: "Not recorded",
+      }),
+    );
+    const diagnostics = await checkSddLifecycleDocument(
+      missingSession.file,
+      missingSession.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      diagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_SESSION"),
+    );
+    assert.ok(diagnostics.some((item) => item.rule === "SDD_SELF_REVIEW_STATE"));
+    if (freshReviewState === "APPROVED") {
+      assert.ok(
+        diagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_EVIDENCE"),
+      );
+    }
+  }
+
   const missingSelfReview = await fixture(
     t,
     plan({ selfReviewState: "NOT_STARTED", selfReviewRevision: "Not recorded" }),
@@ -198,6 +305,59 @@ test("plan lifecycle and review gates reject illegal READY transitions", async (
   );
   assert.ok(
     selfReviewDiagnostics.some((item) => item.rule === "SDD_SELF_REVIEW_EVIDENCE"),
+  );
+
+  const missingFreshReview = await fixture(
+    t,
+    plan({
+      freshReviewState: "CHANGES_REQUESTED",
+      freshReviewEvidence: "Not recorded",
+    }),
+  );
+  const freshReviewDiagnostics = await checkSddLifecycleDocument(
+    missingFreshReview.file,
+    missingFreshReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    freshReviewDiagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_STATE"),
+  );
+  assert.ok(
+    freshReviewDiagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_EVIDENCE"),
+  );
+
+  const missingHumanReview = await fixture(
+    t,
+    plan({
+      humanReviewState: "NOT_STARTED",
+      humanReviewEvidence: "Not recorded",
+    }),
+  );
+  const humanReviewDiagnostics = await checkSddLifecycleDocument(
+    missingHumanReview.file,
+    missingHumanReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    humanReviewDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
+  );
+
+  assert.ok(
+    humanReviewDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_EVIDENCE"),
+  );
+
+  const mismatchedReview = await fixture(
+    t,
+    plan({ freshReviewRevision: "candidate-v0", humanReviewRevision: "candidate-v2" }),
+  );
+  const mismatchDiagnostics = await checkSddLifecycleDocument(
+    mismatchedReview.file,
+    mismatchedReview.root,
+    SCHEMAS,
+  );
+  assert.equal(
+    mismatchDiagnostics.filter((item) => item.rule === "SDD_REVIEW_REVISION_MISMATCH").length,
+    2,
   );
 });
 
@@ -237,7 +397,7 @@ test("VALIDATING plan requires every ledger task terminal and no next task", asy
 test("transitive freshness propagates only material or unknown changes", () => {
   const rows = [
     {
-      "Artifact ID": "plan",
+      "Artifact ID": "Plan",
       "Depends on": "None",
       "Consumed version": "v1",
       "Current version": "v2",
@@ -275,6 +435,7 @@ function workflow({
   impact = "CONTROL_ONLY",
   freshness = "CURRENT",
   blockerBlocks = "other-task",
+  nextActionTargetIds = "task-1",
   writeTarget = "docs/plan.md",
   planLink = "[Plan](implementation-plan.md)",
   includePlan = true,
@@ -283,42 +444,126 @@ function workflow({
   automaticGateResult = "NOT_APPLICABLE",
   automationBoundary = "task-1",
   automationException = "None",
+  includeManifestTable = true,
+  includeDependencyTable = true,
+  includeDependencyRows = true,
+  includeBlockerTable = true,
+  workflowArtifactId = "workflow",
+  workflowConsumed = "v1",
+  workflowCurrent = "v1",
+  workflowImpact = "CONTROL_ONLY",
+  workflowFreshness = "CURRENT",
+  extraDependencyRows = "",
   artifactReviewState = "APPROVED",
+  currentReviewPhase,
+  currentReviewTargetId = "task-1",
+  currentArtifactGate,
   selfReviewState = "SELF_REVIEW_PASSED",
   selfReviewRevision = "candidate-v1",
   selfReviewEvidence = "reviews/self-review.md",
+  freshReviewState = "APPROVED",
+  freshReviewSessionId = "RS-01",
+  freshAssignedReviewers = "reviewer-1, reviewer-2",
+  freshRequiredApprovals = "2",
+  freshApprovedReviewers = "reviewer-1, reviewer-2",
+  freshReviewRevision = "candidate-v1",
+  freshReviewEvidence = "reviews/fresh-review.md",
+  humanReviewState,
+  humanReviewRevision,
+  humanReviewEvidence,
   implementationMode = "HUMAN_REVIEW_BEFORE_MERGE",
   implementationModeAuthority = "user instruction 2026-09-03",
   implementationModeScope = "task-1",
+  implementationRepository = "https://github.com/example/project",
   implementationModeSelectedAt = "2026-09-03 10:00 UTC",
+  manifestReviewState = "APPROVED",
+  manifestArtifactId,
+  manifestArtifact,
+  taskDependsOn,
   postMergeHumanReview = null,
+  postMergeFreshReview = "APPROVED HEAD 1111111111111111111111111111111111111111 / [fresh review](reviews/fresh-review.md)",
+  postMergeResult = "MERGED / [merge](https://github.com/example/project/commit/2222222222222222222222222222222222222222)",
+  postMergeMode = "AGENT_AUTO_MERGE / [authority](delivery-workflow.md)",
+  postMergeTaskPr = "task-1 / [PR #1](https://github.com/example/project/pull/1)",
+  postMergeRevisions = "HEAD 1111111111111111111111111111111111111111 / MERGE 2222222222222222222222222222222222222222",
+  postMergeSelfReview = "SELF_REVIEW_PASSED HEAD 1111111111111111111111111111111111111111 / [self review](reviews/self-review.md)",
+  postMergeChecks = "PASS HEAD 1111111111111111111111111111111111111111 / [checks](https://github.com/example/project/actions/runs/1)",
+  postMergeFindings = "None",
+  includeReviewLedger = true,
+  reviewLedgerHumanHeader = "Human review",
 } = {}) {
-  const manifestRow = includePlan
-    ? "| 1 | Plan | GENERATE_FULL | APPROVED |"
-    : "| 1 | Documentation | REUSE | APPROVED |";
+  const resolvedHumanReviewState =
+    humanReviewState ??
+    (state === "DELIVERY_ACTIVE" && implementationMode === "AGENT_AUTO_MERGE"
+      ? "NOT_APPLICABLE"
+      : "APPROVED");
+  const resolvedHumanReviewRevision =
+    humanReviewRevision ??
+    (resolvedHumanReviewState === "NOT_APPLICABLE" ? "Not applicable" : "candidate-v1");
+  const resolvedHumanReviewEvidence =
+    humanReviewEvidence ??
+    (resolvedHumanReviewState === "NOT_APPLICABLE"
+      ? "Not applicable"
+      : "reviews/human-review.md");
+  const resolvedReviewPhase =
+    currentReviewPhase ??
+    (state === "DELIVERY_ACTIVE"
+      ? "IMPLEMENTATION"
+      : state === "VALIDATING"
+        ? "VALIDATION"
+        : ["COMPLETE", "ARCHIVED"].includes(state)
+          ? "ARCHIVE"
+          : "DESIGN");
+  const resolvedArtifactGate =
+    currentArtifactGate ??
+    (resolvedReviewPhase === "IMPLEMENTATION"
+      ? `[task-1 PR #1](https://github.com/example/project/pull/1)`
+      : `[plan](implementation-plan.md)`);
+  const resolvedManifestArtifactId =
+    manifestArtifactId ?? (includePlan ? "plan" : "documentation");
   const dependencyRows = includePlan
-    ? `| plan | ${planLink} | None | ${planConsumed} | ${planCurrent} | ${impact} | ${freshness} | None |
-| task-1 | Task 1 | plan | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`
-    : `| task-1 | Task 1 | None | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`;
+    ? `| whiteboard | Whiteboard | None | v1 | v1 | CONTROL_ONLY | CURRENT | None |
+| ${workflowArtifactId} | Workflow | whiteboard | ${workflowConsumed} | ${workflowCurrent} | ${workflowImpact} | ${workflowFreshness} | None |
+| plan | ${planLink} | workflow | ${planConsumed} | ${planCurrent} | ${impact} | ${freshness} | None |
+| task-1 | Task 1 | ${taskDependsOn ?? "plan"} | v1 | v1 | CONTROL_ONLY | ${freshness} | None |${extraDependencyRows}`
+    : `| whiteboard | Whiteboard | None | v1 | v1 | CONTROL_ONLY | CURRENT | None |
+| ${workflowArtifactId} | Workflow | whiteboard | ${workflowConsumed} | ${workflowCurrent} | ${workflowImpact} | ${workflowFreshness} | None |
+| documentation | Documentation | workflow | v1 | v1 | CONTROL_ONLY | CURRENT | None |
+| task-1 | Task 1 | ${taskDependsOn ?? "workflow"} | v1 | v1 | CONTROL_ONLY | ${freshness} | None |${extraDependencyRows}`;
+  const resolvedManifestArtifact =
+    manifestArtifact ?? (includePlan ? "Plan" : "Documentation");
   return `# Delivery Workflow
 
-<!-- sdd-schema: delivery-workflow@1 -->
+<!-- sdd-schema: delivery-workflow@2 -->
 
 | Field | Value |
 | --- | --- |
 | State | \`${state}\` |
 | Previous state | \`${previousState}\` |
-| Current artifact/gate | \`plan\` |
+| Current artifact/gate | ${resolvedArtifactGate} |
+| Current review phase | \`${resolvedReviewPhase}\` |
+| Current review target ID | \`${currentReviewTargetId}\` |
 | Current artifact review state | \`${artifactReviewState}\` |
 | Self-review state | \`${selfReviewState}\` |
 | Self-review candidate revision | \`${selfReviewRevision}\` |
 | Self-review evidence | \`${selfReviewEvidence}\` |
+| Fresh-context review state | \`${freshReviewState}\` |
+| Fresh-context review session ID | \`${freshReviewSessionId}\` |
+| Fresh-context assigned reviewers | \`${freshAssignedReviewers}\` |
+| Fresh-context required approvals | \`${freshRequiredApprovals}\` |
+| Fresh-context approved reviewers | \`${freshApprovedReviewers}\` |
+| Fresh-context reviewed revision | \`${freshReviewRevision}\` |
+| Fresh-context review evidence | \`${freshReviewEvidence}\` |
+| Human review state | \`${resolvedHumanReviewState}\` |
+| Human reviewed revision | \`${resolvedHumanReviewRevision}\` |
+| Human review evidence | \`${resolvedHumanReviewEvidence}\` |
 | Implementation continuation mode | \`${implementationMode}\` |
 | Implementation mode authority | \`${implementationModeAuthority}\` |
 | Implementation mode scope | \`${implementationModeScope}\` |
+| Implementation repository | \`${implementationRepository}\` |
 | Implementation mode selected at | \`${implementationModeSelectedAt}\` |
 | Next action | Prepare task |
-| Next action target IDs | \`task-1\` |
+| Next action target IDs | \`${nextActionTargetIds}\` |
 | Allowed write scope | \`docs\` |
 | Next action write targets | \`${writeTarget}\` |
 | Review mode | \`${reviewMode}\` |
@@ -331,34 +576,94 @@ function workflow({
 | Automation audit record | \`docs/automation-audit.md\` |
 
 <!-- sdd-section: delivery-manifest -->
-| Order | Artifact | Decision | Review state/link |
-| --- | --- | --- | --- |
-${manifestRow}
+${includeManifestTable ? `| Order | Artifact ID | Artifact | Decision | Reason/trigger | Template or authority | Owner | Review owner | Review state/link |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | ${resolvedManifestArtifactId} | ${resolvedManifestArtifact} | ${includePlan ? "GENERATE_FULL" : "REUSE"} | Required | artifact.md | Author | Reviewer | ${manifestReviewState} |` : ""}
 
 <!-- sdd-section: artifact-dependencies -->
-| Artifact ID | Artifact/link | Depends on | Consumed version | Current version | Change impact | Freshness | Blocked by |
+${includeDependencyTable ? `| Artifact ID | Artifact/link | Depends on | Consumed version | Current version | Change impact | Freshness | Blocked by |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-${dependencyRows}
+${includeDependencyRows ? dependencyRows : ""}` : ""}
 
 <!-- sdd-section: blocker-register -->
-| Blocker ID | Blocks | State |
-| --- | --- | --- |
-| B-01 | ${blockerBlocks} | OPEN |
+${includeBlockerTable ? `| Blocker ID | Evidence/unblock condition | Blocks | State | Owner |
+| --- | --- | --- | --- | --- |
+| B-01 | evidence | ${blockerBlocks} | OPEN | owner |` : ""}
 
 <!-- sdd-section: delivery-state -->
 | Field | Current value |
 | --- | --- |
 | Stale artifacts | \`None\` |
 
-${postMergeHumanReview === null ? "" : `| Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Required checks | Merge result | Human review | Findings/follow-up |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| T01 / PR-1 | head-1 / merge-1 | AGENT_AUTO_MERGE / user | review-1 | checks-1 | merged | ${postMergeHumanReview} | None |`}
+<!-- sdd-section: implementation-review-ledger -->
+${includeReviewLedger ? `| Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | ${reviewLedgerHumanHeader} | Findings/follow-up |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+${postMergeHumanReview === null ? "" : `| ${postMergeTaskPr} | ${postMergeRevisions} | ${postMergeMode} | ${postMergeSelfReview} | ${postMergeFreshReview} | ${postMergeChecks} | ${postMergeResult} | ${postMergeHumanReview} | ${postMergeFindings} |`}` : ""}
 `;
 }
 
 test("GATES_READY rejects stale prerequisites and only scoped blockers", async (t) => {
   const valid = await fixture(t, workflow());
   assert.deepEqual(await checkSddLifecycleDocument(valid.file, valid.root, SCHEMAS), []);
+
+  const twoReviewerSession = await fixture(
+    t,
+    workflow({
+      freshAssignedReviewers: "reviewer-1, reviewer-2",
+      freshRequiredApprovals: "2",
+      freshApprovedReviewers: "reviewer-1, reviewer-2",
+    }),
+  );
+  assert.deepEqual(
+    await checkSddLifecycleDocument(
+      twoReviewerSession.file,
+      twoReviewerSession.root,
+      SCHEMAS,
+    ),
+    [],
+  );
+
+  for (const sessionOverride of [
+    { freshReviewSessionId: "Pending" },
+    {
+      freshAssignedReviewers: "reviewer-1",
+      freshRequiredApprovals: "1",
+      freshApprovedReviewers: "reviewer-1",
+    },
+    { freshAssignedReviewers: "reviewer-1, reviewer-1", freshRequiredApprovals: "2" },
+    {
+      freshAssignedReviewers: "/root/reviewer-1, root/reviewer-1",
+      freshRequiredApprovals: "2",
+      freshApprovedReviewers: "/root/reviewer-1, root/reviewer-1",
+    },
+    {
+      freshAssignedReviewers: "reviewer-1, reviewer-2, reviewer-3",
+      freshRequiredApprovals: "2",
+      freshApprovedReviewers: "reviewer-1, reviewer-2, reviewer-3",
+    },
+    {
+      freshAssignedReviewers: "reviewer-1, reviewer-2",
+      freshRequiredApprovals: "1",
+      freshApprovedReviewers: "reviewer-1, reviewer-2",
+    },
+    {
+      freshAssignedReviewers: "reviewer-1, reviewer-2",
+      freshRequiredApprovals: "2",
+      freshApprovedReviewers: "reviewer-1",
+    },
+  ]) {
+    const invalidSession = await fixture(t, workflow(sessionOverride));
+    const invalidSessionDiagnostics = await checkSddLifecycleDocument(
+      invalidSession.file,
+      invalidSession.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      invalidSessionDiagnostics.some(
+        (item) => item.rule === "SDD_FRESH_REVIEW_SESSION",
+      ),
+    );
+  }
 
   const stale = await fixture(
     t,
@@ -367,6 +672,29 @@ test("GATES_READY rejects stale prerequisites and only scoped blockers", async (
   const staleDiagnostics = await checkSddLifecycleDocument(stale.file, stale.root, SCHEMAS);
   assert.ok(staleDiagnostics.some((item) => item.rule === "SDD_FRESHNESS_MISMATCH"));
   assert.ok(staleDiagnostics.some((item) => item.rule === "SDD_GATES_NOT_READY"));
+
+  const caseVariedDependency = await fixture(
+    t,
+    workflow({
+      workflowArtifactId: "Workflow",
+      workflowCurrent: "v2",
+      workflowImpact: "MATERIAL",
+      workflowFreshness: "STALE",
+    }),
+  );
+  const caseVariedDiagnostics = await checkSddLifecycleDocument(
+    caseVariedDependency.file,
+    caseVariedDependency.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    caseVariedDiagnostics.some(
+      (item) =>
+        item.rule === "SDD_FRESHNESS_MISMATCH" &&
+        item.message.includes("plan declares CURRENT"),
+    ),
+    "case-varied dependency IDs must still propagate staleness",
+  );
 
   const blocked = await fixture(t, workflow({ blockerBlocks: "task-1" }));
   const blockedDiagnostics = await checkSddLifecycleDocument(blocked.file, blocked.root, SCHEMAS);
@@ -387,6 +715,901 @@ test("GATES_READY rejects stale prerequisites and only scoped blockers", async (
   assert.ok(
     selfReviewDiagnostics.some((item) => item.rule === "SDD_SELF_REVIEW_EVIDENCE"),
   );
+
+  const missingFreshReview = await fixture(
+    t,
+    workflow({ freshReviewState: "NOT_STARTED", freshReviewEvidence: "Not recorded" }),
+  );
+  const freshReviewDiagnostics = await checkSddLifecycleDocument(
+    missingFreshReview.file,
+    missingFreshReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    freshReviewDiagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_STATE"),
+  );
+
+  const missingHumanReview = await fixture(
+    t,
+    workflow({ humanReviewState: "NOT_STARTED", humanReviewEvidence: "Not recorded" }),
+  );
+  const humanReviewDiagnostics = await checkSddLifecycleDocument(
+    missingHumanReview.file,
+    missingHumanReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    humanReviewDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
+  );
+
+  const misleadingPrerequisite = await fixture(
+    t,
+    workflow({ manifestReviewState: "NOT_APPROVED" }),
+  );
+  const misleadingPrerequisiteDiagnostics = await checkSddLifecycleDocument(
+    misleadingPrerequisite.file,
+    misleadingPrerequisite.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    misleadingPrerequisiteDiagnostics.some(
+      (item) => item.rule === "SDD_UNAPPROVED_PREREQUISITE",
+    ),
+  );
+
+  for (const [name, override] of [
+    ["delivery manifest", { includeManifestTable: false }],
+    ["artifact dependency and freshness register", { includeDependencyTable: false }],
+    ["scoped blocker register", { includeBlockerTable: false }],
+  ]) {
+    const missingCoreTable = await fixture(t, workflow(override));
+    const missingCoreTableDiagnostics = await checkSddLifecycleDocument(
+      missingCoreTable.file,
+      missingCoreTable.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      missingCoreTableDiagnostics.some(
+        (item) => item.rule === "SDD_REQUIRED_TABLE" && item.message.includes(name),
+      ),
+      `workflow must reject a missing ${name} table even when its marker remains`,
+    );
+  }
+
+  const emptyDependencies = await fixture(
+    t,
+    workflow({ includeDependencyRows: false }),
+  );
+  const emptyDependencyDiagnostics = await checkSddLifecycleDocument(
+    emptyDependencies.file,
+    emptyDependencies.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    emptyDependencyDiagnostics.some(
+      (item) => item.rule === "SDD_DEPENDENCY_REGISTER_EMPTY",
+    ),
+  );
+
+  const uncoveredTarget = await fixture(
+    t,
+    workflow({ nextActionTargetIds: "task-2" }),
+  );
+  const uncoveredTargetDiagnostics = await checkSddLifecycleDocument(
+    uncoveredTarget.file,
+    uncoveredTarget.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    uncoveredTargetDiagnostics.some(
+      (item) => item.rule === "SDD_DEPENDENCY_COVERAGE",
+    ),
+  );
+
+  const uncoveredManifestArtifact = await fixture(
+    t,
+    workflow({ manifestArtifactId: "policy", manifestArtifact: "Policy" }),
+  );
+  const uncoveredManifestDiagnostics = await checkSddLifecycleDocument(
+    uncoveredManifestArtifact.file,
+    uncoveredManifestArtifact.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    uncoveredManifestDiagnostics.some(
+      (item) => item.rule === "SDD_DEPENDENCY_COVERAGE",
+    ),
+  );
+
+  const danglingDependency = await fixture(
+    t,
+    workflow({ taskDependsOn: "missing-plan" }),
+  );
+  const danglingDependencyDiagnostics = await checkSddLifecycleDocument(
+    danglingDependency.file,
+    danglingDependency.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    danglingDependencyDiagnostics.some(
+      (item) => item.rule === "SDD_DEPENDENCY_REFERENCE",
+    ),
+  );
+
+  for (const invalidIdFixture of [
+    workflow({ manifestArtifactId: "None" }),
+    workflow({ workflowArtifactId: "None" }),
+    workflow({
+      extraDependencyRows:
+        "\n| plan | Duplicate plan | workflow | v1 | v1 | CONTROL_ONLY | CURRENT | None |",
+    }),
+  ]) {
+    const invalidArtifactIds = await fixture(t, invalidIdFixture);
+    const invalidIdDiagnostics = await checkSddLifecycleDocument(
+      invalidArtifactIds.file,
+      invalidArtifactIds.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      invalidIdDiagnostics.some((item) => item.rule === "SDD_ARTIFACT_ID"),
+    );
+  }
+
+  for (const pendingValue of [
+    "Pending",
+    "<placeholder>",
+    "Pending / [receipt](reviews/pending.md)",
+  ]) {
+    const pendingReviewEvidence = await fixture(
+      t,
+      workflow({
+        selfReviewRevision: pendingValue,
+        selfReviewEvidence: pendingValue,
+        freshReviewRevision: pendingValue,
+        freshReviewEvidence: pendingValue,
+        humanReviewRevision: pendingValue,
+        humanReviewEvidence: pendingValue,
+      }),
+    );
+    const pendingReviewDiagnostics = await checkSddLifecycleDocument(
+      pendingReviewEvidence.file,
+      pendingReviewEvidence.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      pendingReviewDiagnostics.some(
+        (item) => item.rule === "SDD_SELF_REVIEW_EVIDENCE",
+      ),
+    );
+    assert.ok(
+      pendingReviewDiagnostics.some(
+        (item) => item.rule === "SDD_FRESH_REVIEW_EVIDENCE",
+      ),
+    );
+    assert.ok(
+      pendingReviewDiagnostics.some(
+        (item) => item.rule === "SDD_HUMAN_REVIEW_EVIDENCE",
+      ),
+    );
+  }
+
+  const prematureReady = await fixture(
+    t,
+    workflow({ artifactReviewState: "IN_REVIEW" }),
+  );
+  const prematureReadyDiagnostics = await checkSddLifecycleDocument(
+    prematureReady.file,
+    prematureReady.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    prematureReadyDiagnostics.some((item) => item.rule === "SDD_WORKFLOW_REVIEW_STATE"),
+  );
+
+  const invalidReviewState = await fixture(
+    t,
+    workflow({ state: "ARTIFACT_GENERATING", artifactReviewState: "PASSED" }),
+  );
+  const invalidReviewDiagnostics = await checkSddLifecycleDocument(
+    invalidReviewState.file,
+    invalidReviewState.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    invalidReviewDiagnostics.some((item) => item.rule === "SDD_WORKFLOW_REVIEW_STATE"),
+  );
+});
+
+test("active or retained workflow review sessions require both reviewers", async (t) => {
+  for (const stateOverride of [
+    {
+      state: "ARTIFACT_IN_REVIEW",
+      previousState: "MANIFEST_REVIEWED",
+      artifactReviewState: "NOT_STARTED",
+    },
+    {
+      state: "BLOCKED",
+      previousState: "ARTIFACT_IN_REVIEW",
+      artifactReviewState: "NOT_STARTED",
+    },
+  ]) {
+    const oneReviewer = await fixture(
+      t,
+      workflow({
+        ...stateOverride,
+        freshAssignedReviewers: "reviewer-1",
+        freshRequiredApprovals: "1",
+        freshApprovedReviewers: "Not recorded",
+        freshReviewRevision: "Not recorded",
+        freshReviewEvidence: "Not recorded",
+      }),
+    );
+    const diagnostics = await checkSddLifecycleDocument(
+      oneReviewer.file,
+      oneReviewer.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      diagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_SESSION"),
+    );
+  }
+
+  for (const freshReviewState of ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED", "BLOCKED"]) {
+    const missingSession = await fixture(
+      t,
+      workflow({
+        state: "MANIFEST_REVIEWED",
+        previousState: "MANIFEST_IN_REVIEW",
+        artifactReviewState: "NOT_STARTED",
+        selfReviewState: "NOT_STARTED",
+        selfReviewRevision: "Not recorded",
+        selfReviewEvidence: "Not recorded",
+        freshReviewState,
+        freshReviewSessionId: "Not recorded",
+        freshAssignedReviewers: "reviewer-1",
+        freshRequiredApprovals: "1",
+        freshApprovedReviewers: "Not recorded",
+        freshReviewRevision: "Not recorded",
+        freshReviewEvidence: "Not recorded",
+      }),
+    );
+    const diagnostics = await checkSddLifecycleDocument(
+      missingSession.file,
+      missingSession.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      diagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_SESSION"),
+    );
+    assert.ok(diagnostics.some((item) => item.rule === "SDD_SELF_REVIEW_STATE"));
+    if (freshReviewState === "APPROVED") {
+      assert.ok(
+        diagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_EVIDENCE"),
+      );
+    }
+  }
+});
+
+test("implementation review requires fresh approval in both continuation modes", async (t) => {
+  const auto = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+    }),
+  );
+  assert.deepEqual(await checkSddLifecycleDocument(auto.file, auto.root, SCHEMAS), []);
+
+  const designGateInAutoMode = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      currentReviewPhase: "DESIGN",
+    }),
+  );
+  const designGateDiagnostics = await checkSddLifecycleDocument(
+    designGateInAutoMode.file,
+    designGateInAutoMode.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    designGateDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
+  );
+
+  const outOfScopeImplementationGate = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      currentReviewTargetId: "task-2",
+    }),
+  );
+  const outOfScopeDiagnostics = await checkSddLifecycleDocument(
+    outOfScopeImplementationGate.file,
+    outOfScopeImplementationGate.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    outOfScopeDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_SCOPE",
+    ),
+  );
+  assert.ok(
+    outOfScopeDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
+  );
+
+  const unregisteredImplementationGate = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      implementationModeScope: "task-1, T99",
+      currentReviewTargetId: "T99",
+      currentArtifactGate:
+        "[T99 PR #99](https://github.com/example/project/pull/99)",
+    }),
+  );
+  const unregisteredGateDiagnostics = await checkSddLifecycleDocument(
+    unregisteredImplementationGate.file,
+    unregisteredImplementationGate.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    unregisteredGateDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_SCOPE",
+    ),
+  );
+  assert.ok(
+    unregisteredGateDiagnostics.some(
+      (item) => item.rule === "SDD_HUMAN_REVIEW_STATE",
+    ),
+  );
+
+  const nonPrImplementationGate = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      currentArtifactGate: "[plan](implementation-plan.md)",
+    }),
+  );
+  const nonPrGateDiagnostics = await checkSddLifecycleDocument(
+    nonPrImplementationGate.file,
+    nonPrImplementationGate.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    nonPrGateDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_SCOPE",
+    ),
+  );
+  assert.ok(
+    nonPrGateDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
+  );
+
+  const ambiguousTargetLabel = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      currentArtifactGate:
+        "[task-10 PR #1](https://github.com/example/project/pull/1)",
+    }),
+  );
+  const ambiguousTargetDiagnostics = await checkSddLifecycleDocument(
+    ambiguousTargetLabel.file,
+    ambiguousTargetLabel.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    ambiguousTargetDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_SCOPE",
+    ),
+  );
+
+  const mismatchedPrIdentity = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      currentArtifactGate:
+        "[task-1 PR #1](https://github.com/example/project/pull/2)",
+    }),
+  );
+  const mismatchedPrDiagnostics = await checkSddLifecycleDocument(
+    mismatchedPrIdentity.file,
+    mismatchedPrIdentity.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    mismatchedPrDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_SCOPE",
+    ),
+  );
+
+  const proseScope = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      implementationModeScope: "task-1 task PR",
+    }),
+  );
+  const proseScopeDiagnostics = await checkSddLifecycleDocument(
+    proseScope.file,
+    proseScope.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    proseScopeDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_MODE_SCOPE",
+    ),
+  );
+  assert.ok(
+    proseScopeDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
+  );
+
+  for (const implementationModeScope of [
+    "task-1, task-1",
+    "task-1; task-2",
+    "PR",
+  ]) {
+    const malformedScope = await fixture(
+      t,
+      workflow({ implementationModeScope }),
+    );
+    const malformedScopeDiagnostics = await checkSddLifecycleDocument(
+      malformedScope.file,
+      malformedScope.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      malformedScopeDiagnostics.some(
+        (item) => item.rule === "SDD_IMPLEMENTATION_MODE_SCOPE",
+      ),
+    );
+  }
+
+  const invalidRepository = await fixture(
+    t,
+    workflow({ implementationRepository: "example/project" }),
+  );
+  const invalidRepositoryDiagnostics = await checkSddLifecycleDocument(
+    invalidRepository.file,
+    invalidRepository.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    invalidRepositoryDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REPOSITORY",
+    ),
+  );
+
+  const unrelatedRepository = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      currentArtifactGate:
+        "[task-1 PR #1](https://github.com/unrelated/project/pull/1)",
+    }),
+  );
+  const unrelatedRepositoryDiagnostics = await checkSddLifecycleDocument(
+    unrelatedRepository.file,
+    unrelatedRepository.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    unrelatedRepositoryDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_SCOPE",
+    ),
+  );
+
+  const autoWithoutFresh = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      freshReviewState: "NOT_STARTED",
+    }),
+  );
+  const autoDiagnostics = await checkSddLifecycleDocument(
+    autoWithoutFresh.file,
+    autoWithoutFresh.root,
+    SCHEMAS,
+  );
+  assert.ok(autoDiagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_STATE"));
+
+  const mergedWithoutFreshReview = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      artifactReviewState: "IN_REVIEW",
+      postMergeHumanReview: "PENDING",
+      postMergeFreshReview: "NOT_APPROVED",
+    }),
+  );
+  const mergedWithoutFreshDiagnostics = await checkSddLifecycleDocument(
+    mergedWithoutFreshReview.file,
+    mergedWithoutFreshReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    mergedWithoutFreshDiagnostics.some(
+      (item) => item.rule === "SDD_MERGED_FRESH_REVIEW",
+    ),
+  );
+
+  const annotatedMergeWithoutFresh = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      artifactReviewState: "IN_REVIEW",
+      postMergeHumanReview: "PENDING",
+      postMergeFreshReview: "NOT_APPROVED",
+      postMergeResult: "MERGED / [merge](https://github.com/example/project/commit/2222222222222222222222222222222222222222)",
+    }),
+  );
+  const annotatedMergeDiagnostics = await checkSddLifecycleDocument(
+    annotatedMergeWithoutFresh.file,
+    annotatedMergeWithoutFresh.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    annotatedMergeDiagnostics.some(
+      (item) => item.rule === "SDD_MERGED_FRESH_REVIEW",
+    ),
+  );
+
+  const invalidMergeResult = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      artifactReviewState: "IN_REVIEW",
+      postMergeHumanReview: "PENDING",
+      postMergeResult: "UNKNOWN / [evidence](reviews/merge.md)",
+    }),
+  );
+  const invalidMergeDiagnostics = await checkSddLifecycleDocument(
+    invalidMergeResult.file,
+    invalidMergeResult.root,
+    SCHEMAS,
+  );
+  assert.ok(invalidMergeDiagnostics.some((item) => item.rule === "SDD_MERGE_RESULT"));
+
+  const manualMergeWithoutFresh = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      artifactReviewState: "IN_REVIEW",
+      postMergeHumanReview: "APPROVED HEAD 1111111111111111111111111111111111111111 / [human review](reviews/human.md)",
+      postMergeFreshReview: "NOT_APPROVED",
+      postMergeMode: "HUMAN_REVIEW_BEFORE_MERGE / [authority](delivery-workflow.md)",
+    }),
+  );
+  const manualMergeDiagnostics = await checkSddLifecycleDocument(
+    manualMergeWithoutFresh.file,
+    manualMergeWithoutFresh.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    manualMergeDiagnostics.some(
+      (item) => item.rule === "SDD_MERGED_FRESH_REVIEW",
+    ),
+  );
+
+  const unknownRowMode = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      artifactReviewState: "IN_REVIEW",
+      postMergeHumanReview: "PENDING",
+      postMergeFreshReview: "NOT_APPROVED",
+      postMergeMode: "AGENT_AUTO_MERG / user",
+    }),
+  );
+  const unknownModeDiagnostics = await checkSddLifecycleDocument(
+    unknownRowMode.file,
+    unknownRowMode.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    unknownModeDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_MODE",
+    ),
+  );
+
+  const manualMergeWithoutHuman = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      artifactReviewState: "IN_REVIEW",
+      postMergeHumanReview: "PENDING",
+      postMergeMode: "HUMAN_REVIEW_BEFORE_MERGE / [authority](delivery-workflow.md)",
+    }),
+  );
+  const manualHumanDiagnostics = await checkSddLifecycleDocument(
+    manualMergeWithoutHuman.file,
+    manualMergeWithoutHuman.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    manualHumanDiagnostics.some(
+      (item) => item.rule === "SDD_MANUAL_MERGE_HUMAN_REVIEW",
+    ),
+  );
+
+  for (const [field, override] of [
+    ["Task/PR", { postMergeTaskPr: "None" }],
+    ["Task/PR", { postMergeTaskPr: "bananas" }],
+    [
+      "Task/PR",
+      {
+        postMergeTaskPr:
+          "T01 / [PR #1](https://github.com/example/project/pull/2)",
+      },
+    ],
+    ["Head and merge commit", { postMergeRevisions: "None" }],
+    [
+      "Head and merge commit",
+      { postMergeRevisions: "HEAD potato / MERGE turnip" },
+    ],
+    ["Implementation mode/authority", { postMergeMode: "AGENT_AUTO_MERGE" }],
+    ["Self-review", { postMergeSelfReview: "SELF_REVIEW_PASSED" }],
+    ["Fresh-context review", { postMergeFreshReview: "APPROVED" }],
+    ["Required checks", { postMergeChecks: "None" }],
+    ["Merge result", { postMergeResult: "MERGED" }],
+  ]) {
+    const missingRowEvidence = await fixture(
+      t,
+      workflow({
+        state: "COMPLETE",
+        previousState: "VALIDATING",
+        postMergeHumanReview: "ACCEPTED MERGE 2222222222222222222222222222222222222222 / [human review](reviews/human.md)",
+        ...override,
+      }),
+    );
+    const missingEvidenceDiagnostics = await checkSddLifecycleDocument(
+      missingRowEvidence.file,
+      missingRowEvidence.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      missingEvidenceDiagnostics.some(
+        (item) =>
+          item.rule === "SDD_IMPLEMENTATION_REVIEW_EVIDENCE" &&
+          item.message.includes(field),
+      ),
+      `merged row must reject missing ${field} evidence`,
+    );
+  }
+
+  const unregisteredTask = await fixture(
+    t,
+    workflow({
+      state: "COMPLETE",
+      previousState: "VALIDATING",
+      implementationModeScope: "task-1, T99",
+      postMergeTaskPr:
+        "T99 / [PR #99](https://github.com/example/project/pull/99)",
+      postMergeHumanReview: "ACCEPTED MERGE 2222222222222222222222222222222222222222 / [human review](reviews/human.md)",
+    }),
+  );
+  const unregisteredTaskDiagnostics = await checkSddLifecycleDocument(
+    unregisteredTask.file,
+    unregisteredTask.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    unregisteredTaskDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_BINDING",
+    ),
+  );
+
+  const contradictoryMergeEvidence = await fixture(
+    t,
+    workflow({
+      state: "COMPLETE",
+      previousState: "VALIDATING",
+      postMergeResult:
+        "MERGED / [merge](https://github.com/example/project/commit/3333333333333333333333333333333333333333)",
+      postMergeHumanReview: "ACCEPTED MERGE 2222222222222222222222222222222222222222 / [human review](reviews/human.md)",
+    }),
+  );
+  const contradictoryMergeDiagnostics = await checkSddLifecycleDocument(
+    contradictoryMergeEvidence.file,
+    contradictoryMergeEvidence.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    contradictoryMergeDiagnostics.some(
+      (item) =>
+        item.rule === "SDD_IMPLEMENTATION_REVIEW_EVIDENCE" &&
+        item.message.includes("Merge result"),
+    ),
+  );
+
+  const wrongRepositoryLedger = await fixture(
+    t,
+    workflow({
+      state: "COMPLETE",
+      previousState: "VALIDATING",
+      postMergeTaskPr:
+        "task-1 / [PR #1](https://github.com/unrelated/project/pull/1)",
+      postMergeHumanReview: "ACCEPTED MERGE 2222222222222222222222222222222222222222 / [human review](reviews/human.md)",
+    }),
+  );
+  const wrongRepositoryLedgerDiagnostics = await checkSddLifecycleDocument(
+    wrongRepositoryLedger.file,
+    wrongRepositoryLedger.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    wrongRepositoryLedgerDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_BINDING",
+    ),
+  );
+
+  for (const [field, override] of [
+    [
+      "Self-review",
+      {
+        postMergeSelfReview:
+          "SELF_REVIEW_PASSED HEAD 3333333333333333333333333333333333333333 / [self review](reviews/self-review.md)",
+      },
+    ],
+    [
+      "Fresh-context review",
+      {
+        postMergeFreshReview:
+          "APPROVED HEAD 3333333333333333333333333333333333333333 / [fresh review](reviews/fresh-review.md)",
+      },
+    ],
+    [
+      "Required checks",
+      {
+        postMergeChecks:
+          "PASS HEAD 3333333333333333333333333333333333333333 / [checks](https://github.com/example/project/actions/runs/1)",
+      },
+    ],
+  ]) {
+    const contradictoryHeadReceipt = await fixture(
+      t,
+      workflow({
+        state: "COMPLETE",
+        previousState: "VALIDATING",
+        postMergeHumanReview: "ACCEPTED MERGE 2222222222222222222222222222222222222222 / [human review](reviews/human.md)",
+        ...override,
+      }),
+    );
+    const contradictoryHeadDiagnostics = await checkSddLifecycleDocument(
+      contradictoryHeadReceipt.file,
+      contradictoryHeadReceipt.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      contradictoryHeadDiagnostics.some(
+        (item) =>
+          item.rule === "SDD_IMPLEMENTATION_REVIEW_EVIDENCE" &&
+          item.message.includes(field),
+      ),
+      `${field} must bind to the recorded head revision`,
+    );
+  }
+
+  const stoppedOnlyClosure = await fixture(
+    t,
+    workflow({
+      state: "COMPLETE",
+      previousState: "VALIDATING",
+      postMergeRevisions: "Not applicable",
+      postMergeSelfReview: "Not applicable",
+      postMergeFreshReview: "Not applicable",
+      postMergeChecks: "Not applicable",
+      postMergeResult: "STOPPED / [stop record](reviews/stopped.md)",
+      postMergeHumanReview: "ACCEPTED / [human review](reviews/human.md)",
+      postMergeFindings: "[finding](reviews/stopped.md)",
+    }),
+  );
+  const stoppedOnlyDiagnostics = await checkSddLifecycleDocument(
+    stoppedOnlyClosure.file,
+    stoppedOnlyClosure.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    stoppedOnlyDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_EMPTY",
+    ),
+  );
+
+  for (const [state, previousState] of [
+    ["COMPLETE", "VALIDATING"],
+    ["ARCHIVED", "COMPLETE"],
+  ]) {
+    const emptyClosureLedger = await fixture(
+      t,
+      workflow({ state, previousState, postMergeHumanReview: null }),
+    );
+    const emptyClosureDiagnostics = await checkSddLifecycleDocument(
+      emptyClosureLedger.file,
+      emptyClosureLedger.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      emptyClosureDiagnostics.some(
+        (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_EMPTY",
+      ),
+      `${state} must reject an empty implementation review ledger`,
+    );
+  }
+
+  const missingLedger = await fixture(t, workflow({ includeReviewLedger: false }));
+  const missingLedgerDiagnostics = await checkSddLifecycleDocument(
+    missingLedger.file,
+    missingLedger.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    missingLedgerDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_LEDGER",
+    ),
+  );
+  assert.ok(
+    !missingLedgerDiagnostics.some((item) => item.rule === "SDD_REQUIRED_SECTION"),
+    "the semantic marker alone must not satisfy the ledger-table obligation",
+  );
+
+  const malformedLedger = await fixture(
+    t,
+    workflow({ reviewLedgerHumanHeader: "Post review" }),
+  );
+  const malformedLedgerDiagnostics = await checkSddLifecycleDocument(
+    malformedLedger.file,
+    malformedLedger.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    malformedLedgerDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_LEDGER",
+    ),
+  );
+
+  const manualWithoutHuman = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      humanReviewState: "NOT_APPLICABLE",
+      humanReviewRevision: "Not applicable",
+      humanReviewEvidence: "Not applicable",
+    }),
+  );
+  const manualDiagnostics = await checkSddLifecycleDocument(
+    manualWithoutHuman.file,
+    manualWithoutHuman.root,
+    SCHEMAS,
+  );
+  assert.ok(manualDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"));
 });
 
 test("next-action write targets must stay within allowed scope", async (t) => {
@@ -576,7 +1799,103 @@ test("implementation continuation is user-selected, implementation-only, and fai
     pendingDiagnostics.some((item) => item.rule === "SDD_POST_MERGE_REVIEW_OPEN"),
   );
 
+  const annotatedPendingReview = await fixture(
+    t,
+    workflow({
+      state: "COMPLETE",
+      previousState: "VALIDATING",
+      implementationMode: "AGENT_AUTO_MERGE",
+      postMergeHumanReview: "PENDING / reviews/human.md",
+    }),
+  );
+  const annotatedPendingDiagnostics = await checkSddLifecycleDocument(
+    annotatedPendingReview.file,
+    annotatedPendingReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    annotatedPendingDiagnostics.some(
+      (item) => item.rule === "SDD_POST_MERGE_REVIEW_OPEN",
+    ),
+  );
+
+  const invalidHumanReview = await fixture(
+    t,
+    workflow({
+      state: "COMPLETE",
+      previousState: "VALIDATING",
+      implementationMode: "AGENT_AUTO_MERGE",
+      postMergeHumanReview: "UNKNOWN / reviews/human.md",
+    }),
+  );
+  const invalidHumanDiagnostics = await checkSddLifecycleDocument(
+    invalidHumanReview.file,
+    invalidHumanReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    invalidHumanDiagnostics.some(
+      (item) => item.rule === "SDD_POST_MERGE_REVIEW_OPEN",
+    ),
+  );
+
   const reviewed = await fixture(
+    t,
+    workflow({
+      state: "COMPLETE",
+      previousState: "VALIDATING",
+      implementationMode: "AGENT_AUTO_MERGE",
+      postMergeHumanReview: "ACCEPTED MERGE 2222222222222222222222222222222222222222 / [human review](reviews/human.md)",
+    }),
+  );
+  assert.deepEqual(
+    await checkSddLifecycleDocument(reviewed.file, reviewed.root, SCHEMAS),
+    [],
+  );
+
+  const manuallyReviewed = await fixture(
+    t,
+    workflow({
+      state: "COMPLETE",
+      previousState: "VALIDATING",
+      implementationMode: "HUMAN_REVIEW_BEFORE_MERGE",
+      postMergeMode:
+        "HUMAN_REVIEW_BEFORE_MERGE / [authority](delivery-workflow.md)",
+      postMergeHumanReview:
+        "APPROVED HEAD 1111111111111111111111111111111111111111 / [human review](reviews/human.md)",
+    }),
+  );
+  assert.deepEqual(
+    await checkSddLifecycleDocument(
+      manuallyReviewed.file,
+      manuallyReviewed.root,
+      SCHEMAS,
+    ),
+    [],
+  );
+
+  const reviewedWrongMerge = await fixture(
+    t,
+    workflow({
+      state: "COMPLETE",
+      previousState: "VALIDATING",
+      implementationMode: "AGENT_AUTO_MERGE",
+      postMergeHumanReview:
+        "ACCEPTED MERGE 3333333333333333333333333333333333333333 / [human review](reviews/human.md)",
+    }),
+  );
+  const reviewedWrongMergeDiagnostics = await checkSddLifecycleDocument(
+    reviewedWrongMerge.file,
+    reviewedWrongMerge.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    reviewedWrongMergeDiagnostics.some(
+      (item) => item.rule === "SDD_POST_MERGE_REVIEW_OPEN",
+    ),
+  );
+
+  const reviewedWithoutEvidence = await fixture(
     t,
     workflow({
       state: "COMPLETE",
@@ -585,9 +1904,15 @@ test("implementation continuation is user-selected, implementation-only, and fai
       postMergeHumanReview: "ACCEPTED",
     }),
   );
-  assert.deepEqual(
-    await checkSddLifecycleDocument(reviewed.file, reviewed.root, SCHEMAS),
-    [],
+  const reviewedWithoutEvidenceDiagnostics = await checkSddLifecycleDocument(
+    reviewedWithoutEvidence.file,
+    reviewedWithoutEvidence.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    reviewedWithoutEvidenceDiagnostics.some(
+      (item) => item.rule === "SDD_POST_MERGE_REVIEW_OPEN",
+    ),
   );
 });
 

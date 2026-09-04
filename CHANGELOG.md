@@ -1,10 +1,46 @@
 # Changelog
 
+- Require exactly two initially isolated subagents per review gate, retain both
+  across every revision round, and require both to approve the same candidate.
+
 This project has not published a formal versioned release. Significant template
 and workflow changes are recorded here until a release/versioning policy is
 adopted.
 
 ## Unreleased — updated 2026-09-04
+
+- Made fresh-context agent review mandatory at every review gate. The author
+  freezes an exact-revision packet after self-review and opens a stable review
+  session whose assigned reviewer(s) are initially isolated from author
+  conversation and retained across revision rounds. The author records
+  accepted, partially accepted, evidence-rejected, or authorized-deferred
+  dispositions for every finding; unresolved reviewer disagreement routes to a
+  human. Requested changes and resolutions remain immutable audit history. Design, governance,
+  adoption, upgrade, validation, archive, and manual implementation then require
+  human review; only scoped implementation `AGENT_AUTO_MERGE` may proceed after
+  fresh approval and all live gates pass. Added the phase sequence to the README,
+  templates, skills, PR policy, and SGLang examples, while retaining the
+  distinction between process isolation and a different formal GitHub identity.
+  Lifecycle schema 2 adds fresh-context and human-review state, exact revision,
+  session/assigned-and-approved-roster, exact revision, and evidence fields,
+  plus the canonical implementation PR and post-merge
+  review ledger. The checker requires exact core workflow tables and ledger
+  headers, recognized row modes, exact per-PR head/merge and review/check
+  receipts, fresh approval for every merged row, exact prerequisite
+  dispositions, structured phase/scope/repository proof for the
+  implementation-only human-review exception, stable manifest-to-dependency
+  IDs, cross-bound task/PR/head/merge receipts, case-normalized transitive
+  freshness, and non-empty/non-dangling dependency and merged closure evidence.
+  Annotated sentinels, free-text scope, wrong-repository PRs, mismatched
+  displayed and linked PR numbers, contradictory merge evidence, stopped-only
+  closure, and invalid or duplicate artifact IDs fail closed.
+  Active schema-1 plans and workflows must add the review fields; workflows
+  must also add the current review phase/target fields, implementation
+  repository, delivery-manifest artifact IDs, complete dependency roots, and
+  ledger section with exact headers before changing their markers to `@2` at
+  their next review gate.
+  Existing approvals remain historical evidence and do not satisfy the new
+  gate.
 
 - Added `install-sdd.sh --upgrade` for fail-closed, between-task preparation of
   an immutable candidate without changing the active manifest pin. Added a
@@ -18,7 +54,7 @@ adopted.
   `AGENT_AUTO_MERGE` permits merge and next-task continuation only after exact
   self-review and repository gates pass. Added per-checkpoint mode rereads,
   fail-closed lifecycle rules, post-merge human-review closure, tests, and
-  SGLang examples. Existing instantiated delivery workflows must add the four
+  SGLang examples. Existing instantiated delivery workflows must add the five
   implementation-mode control fields before their next lifecycle check.
 - Added mandatory exact-revision agent self-review before every review gate,
   contract-to-change author annotations for material PR changes, fail-closed

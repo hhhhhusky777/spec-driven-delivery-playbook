@@ -33,17 +33,20 @@ Only `ACTIVE` versions define required quality gates.
 
 ### 1.1 Artifact review gate
 
-Submit each draft or update for human or independent-agent review. The author
-or generating runner must not self-approve unless a documented project rule
-allows a low-risk exception. First complete the
+Submit each draft or update through exact-revision self-review, fresh-context
+agent review, and human review. First complete the
 [agent self-review](../reviews/agent-self-review.md) against the exact candidate
-revision and record `SELF_REVIEW_PASSED`; any candidate change invalidates that
-evidence. Resolve `CHANGES_REQUESTED`, repeat self-review, and repeat independent
-review before activating the strategy. Self-review is evidence, not approval.
+revision, then use the canonical
+[fresh-context review](../reviews/fresh-context-agent-review.md). After fresh
+approval, stop for mandatory human review before activating the strategy. Any
+candidate change invalidates both prior results; resolve `CHANGES_REQUESTED`,
+record an explicit author disposition, repeat self-review, and return to the
+same assigned session reviewer(s). Agent review is evidence, not policy
+approval.
 
-| Round | Self-review evidence | Reviewer | Type | Result | Comments/link | Resolved version |
+| Round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
 | --- | --- | --- | --- | --- | --- | --- |
-| `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
+| `1` | `<exact revision>` | `<record>` | `<receipt>` | `<links/None>` | `<identity + evidence>` | `<APPROVED/CHANGES_REQUESTED>` |
 
 ## 2. Quality objectives and claims
 
@@ -141,7 +144,7 @@ When triggered, require a concise attention map near the beginning:
 | Outcome and scope | `<one coherent outcome and explicit boundary>` |
 | Changed decisions/obligations | `<stable IDs and canonical section links>` |
 | Blockers/questions/risks/exceptions | `<IDs, state, owner, and section links>` |
-| Review routing | `<item -> required human/specialty/independent agent>` |
+| Review routing | `<item -> fresh-context reviewer -> required human/specialty reviewer>` |
 | Reading order | `<dependency-ordered section/evidence links>` |
 
 The reviewer first inventories material items from the complete artifact or
@@ -182,8 +185,10 @@ continuation. Positive fixtures require approved design inputs, in-scope user
 authority, exact-head `SELF_REVIEW_PASSED`, current annotations, all required
 checks, correct branch targets, and an append-only post-merge review row.
 Negative fixtures must block missing/invalid mode data, design-phase use,
-out-of-scope tasks, mode changes, conflicts, unresolved comments/change
-requests, failed or missing checks, stale inputs, unexpected diffs, repository
+free-text or duplicate scope IDs, out-of-scope tasks, wrong-repository PRs,
+mode changes, conflicts, unresolved comments/change requests, contradictory
+task/PR/head/merge receipts, stopped-only closure, failed or missing checks,
+stale inputs including case-varied dependencies, unexpected diffs, repository
 refusal, and completion with pending post-merge human review.
 For multi-task delivery, also reject automatic final-feature merge before final
 validation approval or when that PR is absent from the recorded user scope.

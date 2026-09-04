@@ -85,6 +85,19 @@ function extractControlFields(tables) {
   return fields;
 }
 
+function rawControlField(tables, field) {
+  for (const table of tables) {
+    if (table.headers.length !== 2 || table.headers[0] !== "Field") {
+      continue;
+    }
+    const row = table.rows.find((item) => normalizeValue(item.Field) === field);
+    if (row) {
+      return row[table.headers[1]];
+    }
+  }
+  return "";
+}
+
 function extractMarker(text) {
   const match = text.match(
     /<!--\s*sdd-schema:\s*([a-z-]+)@(\d+)(?:;\s*mode:\s*([A-Z]+))?\s*-->/,
@@ -118,6 +131,174 @@ function findTable(tables, requiredHeaders) {
 
 function isNone(value) {
   return /^(?:|none|not applicable|—|-)$/.test(normalizeValue(value).toLowerCase());
+}
+
+function leadingDisposition(value) {
+  const normalized = normalizeValue(value || "");
+  const match = /^([A-Z_]+)(?:\s+\/\s+.+)?$/.exec(normalized);
+  return match ? match[1] : null;
+}
+
+function hasRecordedValue(value) {
+  const normalized = normalizeValue(value || "");
+  return !(
+    isNone(normalized) ||
+    /^(?:not recorded|not available|pending|placeholder|tbd|todo|unknown)(?:\s*\/|$)/i.test(
+      normalized,
+    ) ||
+    /<[^>]+>/.test(normalized)
+  );
+}
+
+function hasMarkdownLink(value) {
+  return /\[[^\]]+\]\([^)]+\)/.test(String(value || ""));
+}
+
+function hasDispositionEvidence(value, allowedDispositions) {
+  const normalized = normalizeValue(value || "");
+  const match = /^([A-Z_]+)\s+\/\s+(.+)$/.exec(normalized);
+  return Boolean(
+    match &&
+      allowedDispositions.includes(match[1]) &&
+      hasRecordedValue(match[2]) &&
+      hasMarkdownLink(value),
+  );
+}
+
+function hasRevisionDispositionEvidence(
+  value,
+  allowedDispositions,
+  revisionKind,
+  expectedRevision,
+) {
+  const normalized = normalizeValue(value || "");
+  const match = /^([A-Z_]+)\s+(HEAD|MERGE)\s+([0-9a-f]{40})\s+\/\s+(.+)$/i.exec(
+    normalized,
+  );
+  return Boolean(
+    match &&
+    allowedDispositions.includes(match[1].toUpperCase()) &&
+    match[2].toUpperCase() === revisionKind &&
+    match[3].toLowerCase() === expectedRevision &&
+    hasRecordedValue(match[4]) &&
+    hasMarkdownLink(value),
+  );
+}
+
+function parseTaskAndPrEvidence(value) {
+  const normalized = normalizeValue(value || "");
+  const identity = /^([A-Z][A-Z0-9_-]*)\s+\/\s+PR\s+#?(\d+)$/i.exec(normalized);
+  const links = [
+    ...String(value || "").matchAll(/\[[^\]]+\]\(([^)]+)\)/g),
+  ];
+  const pull = links.length === 1
+    ? /https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)\/pull\/(\d+)(?:[?#][^)]*)?$/i.exec(links[0][1])
+    : null;
+  if (!identity || !pull || identity[2] !== pull[2]) {
+    return null;
+  }
+  return {
+    taskId: identity[1].toLowerCase(),
+    repository: pull[1].toLowerCase(),
+    pullNumber: pull[2],
+  };
+}
+
+function isStableIdentifier(value) {
+  const normalized = normalizeValue(value || "");
+  return hasRecordedValue(normalized) && /^[A-Za-z][A-Za-z0-9_-]*$/.test(normalized);
+}
+
+function parseGitHubRepository(value) {
+  const match = /^https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)$/i.exec(
+    normalizeValue(value || ""),
+  );
+  return match ? match[1].toLowerCase() : null;
+}
+
+function hasReviewTargetLink(value, targetId, repository) {
+  const links = [
+    ...String(value || "").matchAll(
+      /\[([^\]]+)\]\(https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)\/pull\/(\d+)(?:[?#][^)]*)?\)/gi,
+    ),
+  ];
+  if (links.length !== 1) {
+    return false;
+  }
+  const label = normalizeValue(links[0][1]).toLowerCase();
+  const labelIds = label.split(/[^a-z0-9_-]+/).filter(Boolean);
+  const labelPr = /(?:^|\s)PR\s+#?(\d+)(?:$|\s)/i.exec(label);
+  return labelIds.includes(normalizeValue(targetId).toLowerCase()) &&
+    Boolean(
+      labelPr &&
+      labelPr[1] === links[0][3] &&
+      repository &&
+      links[0][2].toLowerCase() === repository,
+    );
+}
+
+function parseHeadAndMergeEvidence(value) {
+  const normalized = normalizeValue(value || "");
+  const match = /^HEAD\s+([0-9a-f]{40})\s+\/\s+MERGE\s+([0-9a-f]{40})$/i.exec(
+    normalized,
+  );
+  return match ? { head: match[1].toLowerCase(), merge: match[2].toLowerCase() } : null;
+}
+
+function mergeEvidenceMatches(value, repository, mergeRevision) {
+  if (!hasDispositionEvidence(value, ["MERGED"])) {
+    return false;
+  }
+  const links = [...String(value || "").matchAll(/\[[^\]]+\]\(([^)]+)\)/g)];
+  const commit = links.length === 1
+    ? /https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)\/commit\/([0-9a-f]{40})(?:[?#][^)]*)?$/i.exec(
+        links[0][1],
+      )
+    : null;
+  return Boolean(
+    commit &&
+    repository &&
+    mergeRevision &&
+    commit[1].toLowerCase() === repository &&
+    commit[2].toLowerCase() === mergeRevision,
+  );
+}
+
+function parseStableIdentifierList(value) {
+  const normalized = normalizeValue(value || "");
+  if (!hasRecordedValue(normalized)) {
+    return null;
+  }
+  const identifiers = normalized.split(",").map((item) => item.trim());
+  const reserved = new Set(["task", "pr", "pull", "branch", "feature", "main", "master"]);
+  if (
+    identifiers.length === 0 ||
+    identifiers.some((item) => !isStableIdentifier(item)) ||
+    identifiers.some((item) => reserved.has(item.toLowerCase())) ||
+    new Set(identifiers.map((item) => item.toLowerCase())).size !== identifiers.length
+  ) {
+    return null;
+  }
+  return identifiers.map((item) => item.toLowerCase());
+}
+
+function parseReviewerRoster(value) {
+  const normalized = normalizeValue(value || "");
+  if (!hasRecordedValue(normalized)) {
+    return null;
+  }
+  const reviewers = normalized.split(",").map((item) => item.trim());
+  const canonicalReviewers = reviewers.map((item) =>
+    item.replace(/^\/+/, "").toLowerCase(),
+  );
+  if (
+    reviewers.length === 0 ||
+    reviewers.some((item) => !/^\/?[A-Za-z0-9][A-Za-z0-9_.:/-]*$/.test(item)) ||
+    new Set(canonicalReviewers).size !== reviewers.length
+  ) {
+    return null;
+  }
+  return canonicalReviewers;
 }
 
 function splitIdentifiers(value) {
@@ -180,7 +361,7 @@ function checkSelfReviewGate(file, fields, reviewRequired) {
   }
   for (const field of ["Self-review candidate revision", "Self-review evidence"]) {
     const value = fields.get(field) || "";
-    if (isNone(value) || /^not recorded$/i.test(normalizeValue(value))) {
+    if (!hasRecordedValue(value)) {
       diagnostics.push(
         diagnostic(
           file,
@@ -190,6 +371,153 @@ function checkSelfReviewGate(file, fields, reviewRequired) {
         ),
       );
     }
+  }
+  return diagnostics;
+}
+
+function hasActiveFreshReviewSession(fields) {
+  const state = normalizeValue(fields.get("Fresh-context review state") || "").toUpperCase();
+  return (
+    hasRecordedValue(fields.get("Fresh-context review session ID") || "") ||
+    (hasRecordedValue(state) && !["NOT_STARTED", "NOT_APPLICABLE"].includes(state))
+  );
+}
+
+function checkReviewSessionRoster(file, fields, reviewRequired) {
+  if (!reviewRequired) {
+    return [];
+  }
+  const reviewSessionId = fields.get("Fresh-context review session ID") || "";
+  const assignedReviewers = parseReviewerRoster(
+    fields.get("Fresh-context assigned reviewers") || "",
+  );
+  const requiredApprovals = fields.get("Fresh-context required approvals") || "";
+  if (
+    !isStableIdentifier(reviewSessionId) ||
+    !assignedReviewers ||
+    requiredApprovals !== "2" ||
+    assignedReviewers.length !== 2
+  ) {
+    return [
+      diagnostic(
+        file,
+        1,
+        "SDD_FRESH_REVIEW_SESSION",
+        "review requires a stable session with exactly two unique assigned reviewers and two required approvals",
+      ),
+    ];
+  }
+  return [];
+}
+
+function checkIndependentReviewGate(file, fields, approvalRequired, humanRequired = true) {
+  if (!approvalRequired) {
+    return [];
+  }
+  const diagnostics = [];
+  if (fields.get("Fresh-context review state") !== "APPROVED") {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_FRESH_REVIEW_STATE",
+        "approval requires Fresh-context review state APPROVED",
+      ),
+    );
+  }
+  const assignedReviewers = parseReviewerRoster(
+    fields.get("Fresh-context assigned reviewers") || "",
+  );
+  const approvedReviewers = parseReviewerRoster(
+    fields.get("Fresh-context approved reviewers") || "",
+  );
+  const assignedReviewerSet = new Set(
+    (assignedReviewers || []).map((item) => item.toLowerCase()),
+  );
+  const approvedReviewerSet = new Set(
+    (approvedReviewers || []).map((item) => item.toLowerCase()),
+  );
+  if (
+    !assignedReviewers ||
+    !approvedReviewers ||
+    assignedReviewerSet.size !== approvedReviewerSet.size ||
+    [...assignedReviewerSet].some((item) => !approvedReviewerSet.has(item))
+  ) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_FRESH_REVIEW_SESSION",
+        "approval requires both assigned reviewers to approve the exact candidate",
+      ),
+    );
+  }
+  for (const field of ["Fresh-context reviewed revision", "Fresh-context review evidence"]) {
+    const value = fields.get(field) || "";
+    if (!hasRecordedValue(value)) {
+      diagnostics.push(
+        diagnostic(file, 1, "SDD_FRESH_REVIEW_EVIDENCE", `approval requires a recorded ${field}`),
+      );
+    }
+  }
+  const candidateRevision = fields.get("Self-review candidate revision");
+  const freshRevision = fields.get("Fresh-context reviewed revision");
+  if (
+    candidateRevision &&
+    freshRevision &&
+    !isNone(candidateRevision) &&
+    !isNone(freshRevision) &&
+    normalizeValue(candidateRevision) !== normalizeValue(freshRevision)
+  ) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_REVIEW_REVISION_MISMATCH",
+        "Fresh-context reviewed revision must match Self-review candidate revision",
+      ),
+    );
+  }
+  if (humanRequired) {
+    if (fields.get("Human review state") !== "APPROVED") {
+      diagnostics.push(
+        diagnostic(file, 1, "SDD_HUMAN_REVIEW_STATE", "approval requires Human review state APPROVED"),
+      );
+    }
+    for (const field of ["Human reviewed revision", "Human review evidence"]) {
+      const value = fields.get(field) || "";
+      if (!hasRecordedValue(value)) {
+        diagnostics.push(
+          diagnostic(file, 1, "SDD_HUMAN_REVIEW_EVIDENCE", `approval requires a recorded ${field}`),
+        );
+      }
+    }
+    const humanRevision = fields.get("Human reviewed revision");
+    if (
+      candidateRevision &&
+      humanRevision &&
+      !isNone(candidateRevision) &&
+      !isNone(humanRevision) &&
+      normalizeValue(candidateRevision) !== normalizeValue(humanRevision)
+    ) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          1,
+          "SDD_REVIEW_REVISION_MISMATCH",
+          "Human reviewed revision must match Self-review candidate revision",
+        ),
+      );
+    }
+  } else if (humanRequired === false && fields.get("Human review state") !== "NOT_APPLICABLE") {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_HUMAN_REVIEW_MODE",
+        "AGENT_AUTO_MERGE review gates require Human review state NOT_APPLICABLE before merge",
+      ),
+    );
   }
   return diagnostics;
 }
@@ -261,6 +589,7 @@ function checkImplementationContinuation(file, fields, tables) {
     for (const field of [
       "Implementation mode authority",
       "Implementation mode scope",
+      "Implementation repository",
       "Implementation mode selected at",
     ]) {
       if (isUnselected(fields.get(field))) {
@@ -276,27 +605,314 @@ function checkImplementationContinuation(file, fields, tables) {
     }
   }
 
-  if (["COMPLETE", "ARCHIVED"].includes(state)) {
-    const reviewLedger = findTable(tables, [
-      "Task/PR",
-      "Head and merge commit",
-      "Implementation mode/authority",
-      "Self-review",
-      "Required checks",
-      "Merge result",
-      "Human review",
-      "Findings/follow-up",
-    ]);
-    const openRows = (reviewLedger?.rows || []).filter((row) =>
-      ["PENDING", "FOLLOW_UP_REQUIRED"].includes(normalizeValue(row["Human review"])),
+  const implementationScopeIds = parseStableIdentifierList(
+    fields.get("Implementation mode scope") || "",
+  );
+  if (mode !== "NOT_SELECTED" && !implementationScopeIds) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_IMPLEMENTATION_MODE_SCOPE",
+        "Implementation mode scope must be a comma-separated list of unique stable task IDs without prose",
+      ),
     );
-    if (openRows.length > 0) {
+  }
+  const implementationRepository = parseGitHubRepository(
+    fields.get("Implementation repository") || "",
+  );
+  if (mode !== "NOT_SELECTED" && !implementationRepository) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_IMPLEMENTATION_REPOSITORY",
+        "Implementation repository must be an exact https://github.com/owner/repository URL",
+      ),
+    );
+  }
+
+  const dependencyTable = findTable(tables, [
+    "Artifact ID",
+    "Artifact/link",
+    "Depends on",
+    "Consumed version",
+    "Current version",
+    "Change impact",
+    "Freshness",
+    "Blocked by",
+  ]);
+  const registeredIds = new Set(
+    (dependencyTable?.rows || []).map((row) =>
+      normalizeValue(row["Artifact ID"] || "").toLowerCase(),
+    ),
+  );
+
+  const reviewLedger = findTable(tables, [
+    "Task/PR",
+    "Head and merge commit",
+    "Implementation mode/authority",
+    "Self-review",
+    "Fresh-context review",
+    "Required checks",
+    "Merge result",
+    "Human review",
+    "Findings/follow-up",
+  ]);
+  if (!reviewLedger) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_IMPLEMENTATION_REVIEW_LEDGER",
+        "workflow requires the canonical implementation PR and post-merge review ledger",
+      ),
+    );
+  }
+  const invalidModeRows = (reviewLedger?.rows || []).filter(
+    (row) =>
+      !["HUMAN_REVIEW_BEFORE_MERGE", "AGENT_AUTO_MERGE"].includes(
+        leadingDisposition(row["Implementation mode/authority"]),
+      ),
+  );
+  if (invalidModeRows.length > 0) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        reviewLedger.line,
+        "SDD_IMPLEMENTATION_REVIEW_MODE",
+        "implementation review ledger mode must lead with HUMAN_REVIEW_BEFORE_MERGE or AGENT_AUTO_MERGE",
+      ),
+    );
+  }
+  const invalidMergeRows = (reviewLedger?.rows || []).filter(
+    (row) => !["MERGED", "STOPPED"].includes(leadingDisposition(row["Merge result"])),
+  );
+  if (invalidMergeRows.length > 0) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        reviewLedger.line,
+        "SDD_MERGE_RESULT",
+        "implementation review ledger Merge result must lead with MERGED or STOPPED",
+      ),
+    );
+  }
+  const mergedRows = (reviewLedger?.rows || []).filter(
+    (row) => leadingDisposition(row["Merge result"]) === "MERGED",
+  );
+  for (const row of reviewLedger?.rows || []) {
+    const mergeDisposition = leadingDisposition(row["Merge result"]);
+    const taskPr = parseTaskAndPrEvidence(row["Task/PR"]);
+    const commonEvidence = [
+      ["Task/PR", Boolean(taskPr)],
+      [
+        "Implementation mode/authority",
+        hasDispositionEvidence(row["Implementation mode/authority"], [
+          "HUMAN_REVIEW_BEFORE_MERGE",
+          "AGENT_AUTO_MERGE",
+        ]),
+      ],
+      [
+        "Merge result",
+        hasDispositionEvidence(row["Merge result"], ["MERGED", "STOPPED"]),
+      ],
+    ];
+    for (const [field, valid] of commonEvidence) {
+      if (!valid) {
+        diagnostics.push(
+          diagnostic(
+            file,
+            reviewLedger.line,
+            "SDD_IMPLEMENTATION_REVIEW_EVIDENCE",
+            `an implementation review row requires recorded ${field} evidence`,
+          ),
+        );
+      }
+    }
+    if (
+      taskPr &&
+      (!registeredIds.has(taskPr.taskId) ||
+        taskPr.repository !== implementationRepository)
+    ) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          reviewLedger.line,
+          "SDD_IMPLEMENTATION_REVIEW_BINDING",
+          "implementation ledger task/PR must match the dependency register and implementation repository",
+        ),
+      );
+    }
+    if (mergeDisposition === "STOPPED") {
+      if (
+        !hasRecordedValue(row["Findings/follow-up"] || "") ||
+        !hasMarkdownLink(row["Findings/follow-up"])
+      ) {
+        diagnostics.push(
+          diagnostic(
+            file,
+            reviewLedger.line,
+            "SDD_STOPPED_REVIEW_EVIDENCE",
+            "a STOPPED implementation row requires linked findings/follow-up evidence",
+          ),
+        );
+      }
+      continue;
+    }
+    if (mergeDisposition !== "MERGED") {
+      continue;
+    }
+    const revisions = parseHeadAndMergeEvidence(row["Head and merge commit"]);
+    const requiredEvidence = [
+      ["Head and merge commit", Boolean(revisions)],
+      [
+        "Self-review",
+        Boolean(
+          revisions &&
+          hasRevisionDispositionEvidence(
+            row["Self-review"],
+            ["SELF_REVIEW_PASSED"],
+            "HEAD",
+            revisions.head,
+          ),
+        ),
+      ],
+      [
+        "Fresh-context review",
+        Boolean(
+          revisions &&
+          hasRevisionDispositionEvidence(
+            row["Fresh-context review"],
+            ["APPROVED"],
+            "HEAD",
+            revisions.head,
+          ),
+        ),
+      ],
+      [
+        "Required checks",
+        Boolean(
+          revisions &&
+          hasRevisionDispositionEvidence(
+            row["Required checks"],
+            ["PASS"],
+            "HEAD",
+            revisions.head,
+          ),
+        ),
+      ],
+      [
+        "Merge result",
+        Boolean(
+          revisions &&
+          mergeEvidenceMatches(
+            row["Merge result"],
+            implementationRepository,
+            revisions.merge,
+          ),
+        ),
+      ],
+    ];
+    for (const [field, valid] of requiredEvidence) {
+      if (!valid) {
+        diagnostics.push(
+          diagnostic(
+            file,
+            reviewLedger.line,
+            "SDD_IMPLEMENTATION_REVIEW_EVIDENCE",
+            `a merged implementation row requires recorded ${field} evidence`,
+          ),
+        );
+      }
+    }
+    if (
+      !revisions ||
+      !hasRevisionDispositionEvidence(
+        row["Fresh-context review"],
+        ["APPROVED"],
+        "HEAD",
+        revisions.head,
+      )
+    ) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          reviewLedger.line,
+          "SDD_MERGED_FRESH_REVIEW",
+          "an implementation row cannot be merged without fresh-context APPROVED evidence",
+        ),
+      );
+    }
+    if (
+      leadingDisposition(row["Implementation mode/authority"]) ===
+        "HUMAN_REVIEW_BEFORE_MERGE" &&
+      (!revisions ||
+        !hasRevisionDispositionEvidence(
+          row["Human review"],
+          ["APPROVED"],
+          "HEAD",
+          revisions.head,
+        ))
+    ) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          reviewLedger.line,
+          "SDD_MANUAL_MERGE_HUMAN_REVIEW",
+          "a HUMAN_REVIEW_BEFORE_MERGE row cannot be merged without human APPROVED evidence",
+        ),
+      );
+    }
+  }
+
+  if (["COMPLETE", "ARCHIVED"].includes(state)) {
+    if (mergedRows.length === 0) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          reviewLedger?.line || 1,
+          "SDD_IMPLEMENTATION_REVIEW_EMPTY",
+          `${state} requires at least one auditable MERGED implementation PR review-ledger row`,
+        ),
+      );
+    }
+    const invalidRows = (reviewLedger?.rows || []).filter((row) => {
+      const mergeDisposition = leadingDisposition(row["Merge result"]);
+      if (mergeDisposition === "STOPPED") {
+        return !hasDispositionEvidence(row["Human review"], [
+          "APPROVED",
+          "ACCEPTED",
+          "FOLLOW_UP_COMPLETE",
+        ]);
+      }
+      const revisions = parseHeadAndMergeEvidence(row["Head and merge commit"]);
+      const modeDisposition = leadingDisposition(row["Implementation mode/authority"]);
+      if (!revisions) {
+        return true;
+      }
+      if (modeDisposition === "HUMAN_REVIEW_BEFORE_MERGE") {
+        return !hasRevisionDispositionEvidence(
+          row["Human review"],
+          ["APPROVED"],
+          "HEAD",
+          revisions.head,
+        );
+      }
+      return !hasRevisionDispositionEvidence(
+        row["Human review"],
+        ["ACCEPTED", "FOLLOW_UP_COMPLETE"],
+        "MERGE",
+        revisions.merge,
+      );
+    });
+    if (invalidRows.length > 0) {
       diagnostics.push(
         diagnostic(
           file,
           reviewLedger.line,
           "SDD_POST_MERGE_REVIEW_OPEN",
-          `${state} cannot retain pending post-merge human review`,
+          `${state} requires each human-review row to record revision-bound APPROVED, ACCEPTED, or FOLLOW_UP_COMPLETE evidence`,
         ),
       );
     }
@@ -392,7 +1008,27 @@ function checkImplementationPlan(file, marker, text, tables, fields, schema) {
     ...checkSelfReviewGate(
       file,
       fields,
-      ["IN_REVIEW", "APPROVED"].includes(fields.get("Review state")),
+      ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED"].includes(
+        fields.get("Review state"),
+      ) || hasActiveFreshReviewSession(fields),
+    ),
+  );
+  diagnostics.push(
+    ...checkReviewSessionRoster(
+      file,
+      fields,
+      ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED"].includes(
+        fields.get("Review state"),
+      ) || hasActiveFreshReviewSession(fields),
+    ),
+  );
+  diagnostics.push(
+    ...checkIndependentReviewGate(
+      file,
+      fields,
+      fields.get("Review state") === "APPROVED" ||
+        fields.get("Fresh-context review state") === "APPROVED",
+      fields.get("Review state") === "APPROVED" ? true : null,
     ),
   );
 
@@ -594,26 +1230,29 @@ function ownFreshness(row) {
 }
 
 export function computeTransitiveFreshness(rows) {
-  const byId = new Map(rows.map((row) => [normalizeValue(row["Artifact ID"]), row]));
+  const byId = new Map(
+    rows.map((row) => [normalizeValue(row["Artifact ID"]).toLowerCase(), row]),
+  );
   const result = new Map();
   function visit(id, stack = new Set()) {
-    if (result.has(id)) {
-      return result.get(id);
+    const normalizedId = normalizeValue(id).toLowerCase();
+    if (result.has(normalizedId)) {
+      return result.get(normalizedId);
     }
-    if (stack.has(id)) {
-      result.set(id, "BLOCKED");
+    if (stack.has(normalizedId)) {
+      result.set(normalizedId, "BLOCKED");
       return "BLOCKED";
     }
-    const row = byId.get(id);
+    const row = byId.get(normalizedId);
     if (!row) {
       return "CURRENT";
     }
     const own = ownFreshness(row);
     if (own !== "CURRENT") {
-      result.set(id, own);
+      result.set(normalizedId, own);
       return own;
     }
-    const nextStack = new Set(stack).add(id);
+    const nextStack = new Set(stack).add(normalizedId);
     const dependencies = splitIdentifiers(row["Depends on"] || "None");
     const dependencyStates = dependencies.map((dependency) => visit(dependency, nextStack));
     const state = dependencyStates.includes("BLOCKED")
@@ -621,7 +1260,7 @@ export function computeTransitiveFreshness(rows) {
       : dependencyStates.includes("STALE")
         ? "STALE"
         : "CURRENT";
-    result.set(id, state);
+    result.set(normalizedId, state);
     return state;
   }
   for (const id of byId.keys()) {
@@ -661,14 +1300,197 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
       "workflow",
     ),
   );
+
+  const deliveryManifest = findTable(tables, [
+    "Order",
+    "Artifact ID",
+    "Artifact",
+    "Decision",
+    "Reason/trigger",
+    "Template or authority",
+    "Owner",
+    "Review owner",
+    "Review state/link",
+  ]);
+  const freshnessTable = findTable(tables, [
+    "Artifact ID",
+    "Artifact/link",
+    "Depends on",
+    "Consumed version",
+    "Current version",
+    "Change impact",
+    "Freshness",
+    "Blocked by",
+  ]);
+  const blockerTable = findTable(tables, [
+    "Blocker ID",
+    "Evidence/unblock condition",
+    "Blocks",
+    "State",
+    "Owner",
+  ]);
+  for (const [name, table] of [
+    ["delivery manifest", deliveryManifest],
+    ["artifact dependency and freshness register", freshnessTable],
+    ["scoped blocker register", blockerTable],
+  ]) {
+    if (!table) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          1,
+          "SDD_REQUIRED_TABLE",
+          `workflow requires the canonical ${name} table and exact headers`,
+        ),
+      );
+    }
+  }
+  for (const [name, table, field] of [
+    ["delivery manifest", deliveryManifest, "Artifact ID"],
+    ["dependency register", freshnessTable, "Artifact ID"],
+  ]) {
+    const seen = new Set();
+    for (const row of table?.rows || []) {
+      const id = normalizeValue(row[field]);
+      const key = id.toLowerCase();
+      if (!isStableIdentifier(id)) {
+        diagnostics.push(
+          diagnostic(
+            file,
+            table.line,
+            "SDD_ARTIFACT_ID",
+            `${name} requires a non-sentinel stable ${field}: ${id || "missing"}`,
+          ),
+        );
+      } else if (seen.has(key)) {
+        diagnostics.push(
+          diagnostic(
+            file,
+            table.line,
+            "SDD_ARTIFACT_ID",
+            `${name} contains duplicate ${field}: ${id}`,
+          ),
+        );
+      }
+      seen.add(key);
+    }
+  }
   diagnostics.push(
     ...checkSelfReviewGate(
       file,
       fields,
-      ["IN_REVIEW", "APPROVED"].includes(fields.get("Current artifact review state")) ||
+      ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED"].includes(
+        fields.get("Current artifact review state"),
+      ) ||
         ["MANIFEST_IN_REVIEW", "ARTIFACT_IN_REVIEW", "GATES_READY"].includes(
           fields.get("State"),
-        ),
+        ) ||
+        hasActiveFreshReviewSession(fields),
+    ),
+  );
+  const artifactReviewState = fields.get("Current artifact review state");
+  const allowedArtifactReviewStates = new Set([
+    "NOT_STARTED",
+    "IN_REVIEW",
+    "CHANGES_REQUESTED",
+    "APPROVED",
+    "BLOCKED",
+    "STALE",
+  ]);
+  if (artifactReviewState && !allowedArtifactReviewStates.has(artifactReviewState)) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_WORKFLOW_REVIEW_STATE",
+        `unsupported Current artifact review state: ${artifactReviewState}`,
+      ),
+    );
+  }
+  const reviewApprovedRequired = ["GATES_READY", "COMPLETE", "ARCHIVED"].includes(
+    fields.get("State"),
+  );
+  if (reviewApprovedRequired && artifactReviewState !== "APPROVED") {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_WORKFLOW_REVIEW_STATE",
+        `${fields.get("State")} requires Current artifact review state APPROVED`,
+      ),
+    );
+  }
+  const artifactApproved = artifactReviewState === "APPROVED";
+  diagnostics.push(
+    ...checkReviewSessionRoster(
+      file,
+      fields,
+      ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED"].includes(artifactReviewState) ||
+        ["MANIFEST_IN_REVIEW", "ARTIFACT_IN_REVIEW"].includes(fields.get("State")) ||
+        hasActiveFreshReviewSession(fields),
+    ),
+  );
+  const reviewPhase = fields.get("Current review phase");
+  const allowedReviewPhases = new Set([
+    "DESIGN",
+    "IMPLEMENTATION",
+    "VALIDATION",
+    "ARCHIVE",
+  ]);
+  if (!allowedReviewPhases.has(reviewPhase)) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_REVIEW_PHASE",
+        `unsupported Current review phase: ${reviewPhase || "missing"}`,
+      ),
+    );
+  }
+  const reviewTarget = fields.get("Current review target ID") || "";
+  const implementationScope = new Set(
+    parseStableIdentifierList(fields.get("Implementation mode scope") || "") || [],
+  );
+  const implementationRepository = parseGitHubRepository(
+    fields.get("Implementation repository") || "",
+  );
+  const registeredImplementationTargets = new Set(
+    (freshnessTable?.rows || []).map((row) =>
+      normalizeValue(row["Artifact ID"] || "").toLowerCase(),
+    ),
+  );
+  const implementationReviewInScope =
+    reviewPhase === "IMPLEMENTATION" &&
+    hasRecordedValue(reviewTarget) &&
+    implementationScope.has(normalizeValue(reviewTarget).toLowerCase()) &&
+    registeredImplementationTargets.has(normalizeValue(reviewTarget).toLowerCase()) &&
+    hasReviewTargetLink(
+      rawControlField(tables, "Current artifact/gate"),
+      reviewTarget,
+      implementationRepository,
+    );
+  if (reviewPhase === "IMPLEMENTATION" && !implementationReviewInScope) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_IMPLEMENTATION_REVIEW_SCOPE",
+        "implementation review requires a registered target ID inside Implementation mode scope and a linked PR in Implementation repository",
+      ),
+    );
+  }
+  const agentAutoMergeReview =
+    fields.get("State") === "DELIVERY_ACTIVE" &&
+    fields.get("Implementation continuation mode") === "AGENT_AUTO_MERGE" &&
+    implementationReviewInScope;
+  diagnostics.push(
+    ...checkIndependentReviewGate(
+      file,
+      fields,
+      artifactApproved ||
+        reviewApprovedRequired ||
+        fields.get("Fresh-context review state") === "APPROVED",
+      artifactApproved || reviewApprovedRequired ? !agentAutoMergeReview : null,
     ),
   );
   diagnostics.push(...checkImplementationContinuation(file, fields, tables));
@@ -749,25 +1571,31 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     }
   }
 
-  const freshnessTable = findTable(tables, [
-    "Artifact ID",
-    "Depends on",
-    "Consumed version",
-    "Current version",
-    "Change impact",
-    "Freshness",
-    "Blocked by",
-  ]);
   const freshnessRows = freshnessTable?.rows || [];
   const computed = computeTransitiveFreshness(freshnessRows);
+  const freshnessIds = new Set(
+    freshnessRows.map((row) => normalizeValue(row["Artifact ID"]).toLowerCase()),
+  );
   for (const row of freshnessRows) {
     const id = normalizeValue(row["Artifact ID"]);
     const declared = normalizeValue(row.Freshness);
-    const expected = computed.get(id);
+    const expected = computed.get(id.toLowerCase());
     if (declared !== expected) {
       diagnostics.push(
         diagnostic(file, freshnessTable.line, "SDD_FRESHNESS_MISMATCH", `${id} declares ${declared}; dependency graph requires ${expected}`),
       );
+    }
+    for (const dependency of splitIdentifiers(row["Depends on"] || "None")) {
+      if (!freshnessIds.has(dependency.toLowerCase())) {
+        diagnostics.push(
+          diagnostic(
+            file,
+            freshnessTable.line,
+            "SDD_DEPENDENCY_REFERENCE",
+            `${id} depends on missing artifact ID ${dependency}`,
+          ),
+        );
+      }
     }
   }
 
@@ -781,7 +1609,6 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     }
   }
 
-  const blockerTable = findTable(tables, ["Blocker ID", "Blocks", "State"]);
   const targetIds = new Set(splitIdentifiers(fields.get("Next action target IDs") || ""));
   for (const blocker of blockerTable?.rows || []) {
     if (normalizeValue(blocker.State) !== "OPEN") {
@@ -819,16 +1646,63 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
         diagnostic(file, 1, "SDD_GATES_NOT_READY", `GATES_READY has non-current artifacts: ${nonCurrent.map(([id]) => id).join(", ")}`),
       );
     }
-    const manifest = findTable(tables, ["Order", "Artifact", "Decision", "Review state/link"]);
-    for (const row of manifest?.rows || []) {
+    if ((deliveryManifest?.rows || []).length === 0) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          deliveryManifest?.line || 1,
+          "SDD_DELIVERY_MANIFEST_EMPTY",
+          "GATES_READY requires at least one reviewed delivery-manifest row",
+        ),
+      );
+    }
+    if (freshnessRows.length === 0) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          freshnessTable?.line || 1,
+          "SDD_DEPENDENCY_REGISTER_EMPTY",
+          "GATES_READY requires a non-empty dependency and freshness register",
+        ),
+      );
+    }
+    const selectedManifestRows = (deliveryManifest?.rows || []).filter((row) =>
+      !["SKIP", "DEFER", "BLOCKED"].includes(normalizeValue(row.Decision)),
+    );
+    const uncovered = [];
+    if (!freshnessIds.has("workflow")) {
+      uncovered.push("workflow");
+    }
+    for (const targetId of targetIds) {
+      if (!freshnessIds.has(targetId.toLowerCase())) {
+        uncovered.push(`next target ${targetId}`);
+      }
+    }
+    for (const row of selectedManifestRows) {
+      const artifactId = normalizeValue(row["Artifact ID"]);
+      if (!freshnessIds.has(artifactId.toLowerCase())) {
+        uncovered.push(`manifest artifact ${artifactId}`);
+      }
+    }
+    if (uncovered.length > 0) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          freshnessTable?.line || 1,
+          "SDD_DEPENDENCY_COVERAGE",
+          `GATES_READY dependency register does not cover: ${uncovered.join(", ")}`,
+        ),
+      );
+    }
+    for (const row of deliveryManifest?.rows || []) {
       const decision = normalizeValue(row.Decision);
       if (["SKIP", "DEFER", "BLOCKED"].includes(decision)) {
         continue;
       }
-      const review = normalizeValue(row["Review state/link"]);
-      if (!/(?:APPROVED|CURRENT|JUSTIFIED)/i.test(review)) {
+      const review = leadingDisposition(row["Review state/link"]);
+      if (!["APPROVED", "CURRENT", "JUSTIFIED"].includes(review)) {
         diagnostics.push(
-          diagnostic(file, manifest.line, "SDD_UNAPPROVED_PREREQUISITE", `${normalizeValue(row.Artifact)} is not approved/current`),
+          diagnostic(file, deliveryManifest.line, "SDD_UNAPPROVED_PREREQUISITE", `${normalizeValue(row.Artifact)} is not approved/current`),
         );
       }
     }

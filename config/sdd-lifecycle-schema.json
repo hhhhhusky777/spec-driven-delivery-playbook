@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "artifacts": {
     "implementation-plan": {
       "requiredFields": [
@@ -11,7 +11,17 @@
         "Review state",
         "Self-review state",
         "Self-review candidate revision",
-        "Self-review evidence"
+        "Self-review evidence",
+        "Fresh-context review state",
+        "Fresh-context review session ID",
+        "Fresh-context assigned reviewers",
+        "Fresh-context required approvals",
+        "Fresh-context approved reviewers",
+        "Fresh-context reviewed revision",
+        "Fresh-context review evidence",
+        "Human review state",
+        "Human reviewed revision",
+        "Human review evidence"
       ],
       "transitions": {
         "DRAFT": ["CONTRACT_REVIEW", "BLOCKED"],
@@ -50,18 +60,32 @@
         "State",
         "Previous state",
         "Current artifact/gate",
+        "Current review phase",
+        "Current review target ID",
         "Current artifact review state",
         "Self-review state",
         "Self-review candidate revision",
         "Self-review evidence",
+        "Fresh-context review state",
+        "Fresh-context review session ID",
+        "Fresh-context assigned reviewers",
+        "Fresh-context required approvals",
+        "Fresh-context approved reviewers",
+        "Fresh-context reviewed revision",
+        "Fresh-context review evidence",
+        "Human review state",
+        "Human reviewed revision",
+        "Human review evidence",
         "Implementation continuation mode",
         "Implementation mode authority",
         "Implementation mode scope",
+        "Implementation repository",
         "Implementation mode selected at",
         "Next action",
         "Next action target IDs",
         "Allowed write scope",
-        "Next action write targets"
+        "Next action write targets",
+        "Stale artifacts"
       ],
       "transitions": {
         "AWAITING_HANDOFF": ["ROUTING", "BLOCKED"],
@@ -83,7 +107,8 @@
         "artifact-dependencies",
         "blocker-register",
         "delivery-manifest",
-        "delivery-state"
+        "delivery-state",
+        "implementation-review-ledger"
       ]
     }
   }

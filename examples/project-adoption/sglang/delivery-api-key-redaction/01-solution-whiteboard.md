@@ -8,6 +8,8 @@
 | Input | [SGLang issue #37457](https://github.com/sgl-project/sglang/issues/37457) |
 | Target revision | `9a05b470fa849b349e384ef3c1381f9a85c6c550` |
 | Self-review evidence | `SELF_REVIEW_PASSED` against the example revision containing this packet |
+| Fresh-context review | Required for real adoption; no SGLang review claimed |
+| Human review | Required for real adoption; no SGLang approval claimed |
 | Authority | Teaching example only; no SGLang approval |
 
 ## Need and observed gap

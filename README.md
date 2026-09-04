@@ -39,6 +39,7 @@ the distinction between stable policies and feature delivery records.
 - [Small, self-contained delivery](#small-self-contained-delivery)
 - [Branch isolation for parallel deliveries](#branch-isolation-for-parallel-deliveries)
 - [Risk-based review gates](#risk-based-review-gates)
+  - [Fresh-context agent review design](#fresh-context-agent-review-design)
 - [Dependency-first data sequencing](#dependency-first-data-sequencing)
 - [Test evidence, not test theater](#test-evidence-not-test-theater)
 - [Progressive policy discovery](#progressive-policy-discovery)
@@ -361,10 +362,11 @@ Follow .sdd-runtime/playbook-upgrade-guide.md exactly.
 
 The preflight does not change the manifest pin and does not declare semantic
 compatibility. The agent creates a project-owned upgrade assessment, compares
-the exact revisions and affected project authorities, self-reviews it, and
-stops for independent approval. After approval, it migrates one reviewed
-boundary at a time, validates before final cutover, then updates the manifest
-pin once. Finally run `./install-sdd.sh --cleanup`, regenerate the normal guide
+the exact revisions and affected project authorities, self-reviews it, creates
+exactly two fresh-context reviewers, and then stops for human approval. After
+both reviewers approve, it migrates one reviewed boundary at a time, validates before final
+cutover, then updates the manifest pin once. Finally run
+`./install-sdd.sh --cleanup`, regenerate the normal guide
 with `./install-sdd.sh`, and require `./install-sdd.sh --validate` to pass.
 Rollback keeps or restores the previous pin. See the
 [project adoption runbook](docs/project-adoption-runbook.md#11-playbook-updates-and-drift)
@@ -373,15 +375,18 @@ and [upgrade assessment template](templates/adoption/playbook-upgrade-assessment
 ### Review and resume adoption
 
 Each agent invocation stops at the next mandatory review checkpoint. It may
-perform more than one dependency-ready action only inside a pre-approved,
-fail-closed automation boundary. After an authorized human or independent
-agent has reviewed the complete changed artifact and its governing sources, the
-reviewer may use this prompt to record approval and resume:
+perform more than one dependency-ready deterministic action only inside a
+pre-approved, fail-closed automation boundary. The original agent first
+self-reviews the exact candidate, then opens a review session with exactly two
+reviewers initialized without author context. The same assigned reviewer(s) handle every
+revision round in that session. After all approve one exact candidate, an
+authorized human may use this prompt to record approval and resume:
 
 ```text
-Independent review is complete for <ARTIFACT_PATH> at <VERSION_OR_COMMIT>.
-Disposition: APPROVED.
-Reviewer/authority: <IDENTITY_OR_REVIEW_ROLE>.
+Fresh-context review is APPROVED for <ARTIFACT_PATH> at <VERSION_OR_COMMIT>.
+Fresh-context receipt: <LINK>.
+Human review disposition: APPROVED.
+Human reviewer/authority: <IDENTITY_OR_REVIEW_ROLE>.
 Evidence/comments: <LINK_OR_NONE>.
 Approved state transition: <NONE_OR_EXPLICIT_TRANSITION>.
 
@@ -602,7 +607,9 @@ unmerged work through a feature integration branch.
 
 ## Risk-based review gates
 
-The default is `EXPLICIT_REVIEW`. It remains mandatory for requirements,
+The default is `EXPLICIT_REVIEW`. Every such review gate requires a new
+fresh-context subagent review of the exact candidate, followed by human review.
+It remains mandatory for requirements,
 solution conclusions, handoffs, routing, policies, ADRs, contracts, complete
 task specifications, risk/exception decisions, and externally consequential
 actions.
@@ -620,6 +627,19 @@ automation cannot mark normative content `APPROVED`, and changing a review mode
 requires explicit review. This reduces mechanical review stops without
 allowing green tests to approve a wrong design.
 
+`AUTO_CONTINUE` and `REVIEW_ON_EXCEPTION` are non-review action modes. They end
+at the next review-gated artifact and cannot approve normative content. The
+implementation-only `AGENT_AUTO_MERGE` choice is different: it may continue
+after fresh-context approval without pre-merge human review, subject to its
+exact scope and every live merge gate.
+
+The live workflow proves that exception with `Current review phase =
+IMPLEMENTATION` and a `Current review target ID` contained in the recorded mode
+scope, plus a PR link in the recorded implementation repository. Scope is a
+comma-separated stable-ID list, never free-text task/PR prose. A selected
+auto-merge mode never waives human review for a design,
+validation, or archive gate encountered during implementation.
+
 Before every review gate, the generating or implementing agent self-reviews the
 exact candidate revision against its approved inputs, scope, acceptance
 criteria, policies, tests, risks, and surrounding context. For a PR, it also
@@ -630,6 +650,95 @@ candidate change and records `SELF_REVIEW_PASSED` or `SELF_REVIEW_FAILED`.
 `SELF_REVIEW_PASSED` is pre-review evidence, never approval. It does not satisfy
 reviewer independence, change the selected review mode, authorize merge, or
 authorize continuation by itself.
+
+### Fresh-context agent review design
+
+Every review gate opens a review session with fresh reviewer context to reduce anchoring
+on the author's conversation and reasoning. The original agent acts as the
+coordinator: it freezes a bounded review packet, assigns exactly two reviewers
+with conversation inheritance disabled, waits for their structured receipts,
+triages every finding, and then resumes the delivery. The same reviewer(s)
+verify fixes in later rounds. They read the approved documents, complete diff,
+checks, and repository state directly. They perform review only; they do not
+edit, merge, resolve their own comments, or continue implementation.
+
+```mermaid
+sequenceDiagram
+    participant U as Human
+    participant A as Original agent
+    participant R as Assigned fresh-context reviewer(s)
+    participant P as Project and PR
+
+    U->>A: Start or continue delivery
+    A->>P: Implement, test, annotate, and self-review exact revision
+    A->>A: Freeze review packet without author conversation or proposed result
+    A->>R: Open session and initialize reviewer(s) with no author context
+    R->>P: Read contracts, base, exact candidate, full diff, and gate evidence
+    R->>R: Derive expectations independently, then reconcile author evidence
+    R->>P: Publish summary and actionable inline comments
+    R-->>A: Return structured receipt
+    A->>A: Verify isolation, revisions, comments, and live workflow mode
+    alt Changes requested
+        A->>A: Accept, partly accept, reject with evidence, or defer with authority
+        A->>P: Apply accepted fixes and self-review the new exact revision
+        A->>R: Resume same session reviewer(s) to verify responses and revision
+    else Approved in design or manual implementation
+        A-->>U: Stop for human review
+        alt Human requests changes
+            U->>A: Return durable findings
+            A->>A: Triage every human finding
+            A->>P: Apply accepted fixes and self-review the new exact revision
+            A->>R: Resume same session reviewer(s) before human re-review
+        else Human approves
+            U->>A: Authorize next workflow action
+        end
+    else Approved in scoped implementation auto mode
+        A->>A: Recheck exact head, mode, scope, checks, comments, and blockers
+        A->>P: Merge and continue when every gate passes
+    else Blocked or inconsistent
+        A-->>U: Stop with the exact blocker
+    end
+```
+
+The durable connector is the
+[fresh-context review packet and receipt](templates/reviews/fresh-context-agent-review.md).
+The packet contains the exact subject and revision, governing inputs, scope,
+evidence, and publication channel. It must not include the authoring chat,
+private reasoning, or a recommended disposition. The reviewer first derives
+expectations from source documents and the complete candidate, then reconciles
+the author's annotations and self-review in a second pass.
+
+The reviewer returns `APPROVED`, `CHANGES_REQUESTED`, or `BLOCKED`. It records
+each requested change with its location, governing statement, expected and
+observed behavior, impact, and required outcome. PR findings remain in inline
+comments; non-PR findings are preserved in an immutable per-round review
+record. The original finding is never overwritten when the author responds.
+
+Any new candidate revision invalidates the receipt. The original agent, not
+the reviewer, waits for the result and performs the next action after
+rechecking the live workflow. Conceptually, a compatible agent runtime
+performs:
+
+```text
+packet = freeze_review_packet(exact_candidate)
+reviewers = create_agents(count = 2, inherit_author_conversation = false, input = packet)
+receipts = wait_for_all(reviewers)
+resume_original_agent(receipts)
+```
+
+Design, governance, adoption, upgrade, validation, and archive artifacts always
+stop for human review after fresh-context approval. Implementation under
+`HUMAN_REVIEW_BEFORE_MERGE` follows the same sequence. Only implementation PRs
+inside a live `AGENT_AUTO_MERGE` scope may merge and continue after fresh-agent
+approval and all repository gates pass; they still enter the post-merge human
+review ledger.
+
+Fresh context is process independence, not account independence. With the same
+GitHub identity, the result can be recorded in the workflow ledger or a PR
+comment but must not be represented as a repository-required approval from a
+different actor. A separately authorized GitHub App and restricted review
+gateway can provide that formal identity later; they are not required for this
+review method to improve the current delivery loop.
 
 After every design artifact and complete task specification is approved, the
 user chooses the implementation continuation mode in the live delivery
@@ -663,7 +772,8 @@ The agent records the instruction in the live delivery workflow before editing
 | --- | --- |
 | Implementation continuation mode | `AGENT_AUTO_MERGE` |
 | Implementation mode authority | `Example user — instruction quoted above` |
-| Implementation mode scope | `T02 task PR; T03 task PR` |
+| Implementation mode scope | `T02, T03` |
+| Implementation repository | `https://github.com/example/project` |
 | Implementation mode selected at | `2026-09-03 15:00 Asia/Shanghai (example)` |
 
 Recording this exact instruction is a control-only update. The agent runs the

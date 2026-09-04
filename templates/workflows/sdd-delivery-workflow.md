@@ -1,6 +1,6 @@
 # SDD Delivery Workflow Template
 
-<!-- sdd-schema: delivery-workflow@1 -->
+<!-- sdd-schema: delivery-workflow@2 -->
 
 Use this template after a generated whiteboard handoff is reviewed and reaches
 `APPROVED`. It consumes that exact handoff version, selects the smallest safe
@@ -28,13 +28,26 @@ instantiated workflow record.
 | Selected route | `Not selected` |
 | Manifest review state | `NOT_STARTED` |
 | Current artifact/gate | `<value>` |
+| Current review phase | `<DESIGN/IMPLEMENTATION/VALIDATION/ARCHIVE>` |
+| Current review target ID | `<stable artifact/task/PR ID>` |
 | Current artifact review state | `<value>` |
 | Self-review state | `<NOT_STARTED / SELF_REVIEW_PASSED / SELF_REVIEW_FAILED>` |
 | Self-review candidate revision | `<exact commit/version or Not applicable>` |
 | Self-review evidence | `<record/link or Not applicable>` |
+| Fresh-context review state | `<NOT_STARTED / IN_REVIEW / APPROVED / CHANGES_REQUESTED / BLOCKED>` |
+| Fresh-context review session ID | `<stable ID or Not recorded>` |
+| Fresh-context assigned reviewers | `<exactly two comma-separated stable reviewer IDs or Not recorded>` |
+| Fresh-context required approvals | `<2 or Not recorded>` |
+| Fresh-context approved reviewers | `<same reviewer IDs after all approve this exact revision, or Not recorded>` |
+| Fresh-context reviewed revision | `<exact commit/version or Not recorded>` |
+| Fresh-context review evidence | `<packet/receipt link or Not recorded>` |
+| Human review state | `<NOT_STARTED / IN_REVIEW / APPROVED / CHANGES_REQUESTED / NOT_APPLICABLE>` |
+| Human reviewed revision | `<exact commit/version or Not recorded/Not applicable>` |
+| Human review evidence | `<review link or Not recorded/Not applicable>` |
 | Implementation continuation mode | `NOT_SELECTED` |
 | Implementation mode authority | `Not selected` |
 | Implementation mode scope | `Not selected` |
+| Implementation repository | `Not selected` |
 | Implementation mode selected at | `Not selected` |
 | Next action | `<value>` |
 | Next action target IDs | `<artifact/task IDs>` |
@@ -79,31 +92,40 @@ information fails closed to `EXPLICIT_REVIEW`. Generate or update artifacts in
 dependency order; a normative artifact cannot supply authority to a dependent
 artifact until it is `APPROVED`.
 
-`EXPLICIT_REVIEW` stops after the action. `AUTO_CONTINUE` and
+`EXPLICIT_REVIEW` starts the mandatory self-review -> fresh-context review ->
+human-review sequence. `AUTO_CONTINUE` and
 `REVIEW_ON_EXCEPTION` may continue through multiple pre-authorized actions in
 one invocation only while every input is approved/current, no semantic decision
 is introduced, all declared gates pass, and each next action remains within the
 recorded automation boundary, WIP policy, and write scope. Stop immediately on
 failure, ambiguity, unknown impact, exception, drift, unrelated change, scope
-expansion, or a mandatory semantic checkpoint.
+expansion, or a mandatory semantic checkpoint. These automatic modes apply
+only to deterministic non-review actions and cannot approve normative content.
 
-- The author or generating runner must not self-approve unless an active project
-  policy grants a documented low-risk exception.
 - Before every review gate, the implementing agent completes the
   [agent self-review](../reviews/agent-self-review.md) against the exact
   candidate revision. Review may begin only with `SELF_REVIEW_PASSED` and linked
   evidence. Any candidate change invalidates that result and requires another
   self-review.
-- Review may be performed by a human or an independent review agent. Human
-  approval is required when project policy, risk, or external accountability
-  requires it.
+- Then open or resume the gate's stable review session through the
+  [fresh-context review protocol](../reviews/fresh-context-agent-review.md).
+  Initially create its assigned read-only reviewer(s) without author context.
+  Record packets/receipts, exact revisions, immutable findings, and author
+  dispositions. Any candidate change requires a new self-review and re-review
+  by the same assigned session reviewer(s).
+- After fresh-context `APPROVED`, design, governance, adoption, upgrade,
+  validation, archive, and manual implementation stop for human review. Only a
+  scoped implementation `AGENT_AUTO_MERGE` action may proceed without
+  pre-merge human review after all live gates are rechecked.
 - `CHANGES_REQUESTED` returns to the same artifact for refinement and another
   review round.
 - A local documentation problem returns to the current artifact; an incorrect
   manifest decision returns to routing; a requirement or solution problem
   returns to the handoff/whiteboard owner.
-- Record reviewer identity, review type, comments, resolution, version, and
-  approval. Silence or elapsed time is never approval.
+- Record each finding's location, governing statement, expected/observed
+  result, impact, requested outcome, author response, resolution revision, and
+  reviewer disposition. Preserve original findings. Silence or elapsed time is
+  never approval.
 - Record every automatic action separately. `AUTO_CONTINUED` is not an approval
   or review state and cannot mark a normative artifact `APPROVED`.
 - `SELF_REVIEW_PASSED` is pre-review evidence only. It cannot approve an
@@ -121,13 +143,21 @@ task specification are approved.
 
 - `NOT_SELECTED`: required throughout design; at `GATES_READY`, ask the user to
   choose before entering `DELIVERY_ACTIVE`.
-- `HUMAN_REVIEW_BEFORE_MERGE`: after checks and mandatory self-review, open the
-  PR and stop for its required review and merge decision.
-- `AGENT_AUTO_MERGE`: after checks and mandatory self-review, open the PR,
-  verify repository protections and the current mode again, merge without
-  bypass, record the audit, and continue to the next dependency-ready task.
+- `HUMAN_REVIEW_BEFORE_MERGE`: after checks, mandatory self-review, and
+  fresh-context approval, stop for human review and merge authority.
+- `AGENT_AUTO_MERGE`: after checks, mandatory self-review, and fresh-context
+  approval, verify repository protections and the current mode again, merge
+  without bypass, record the audit, and continue to the next dependency-ready
+  task.
 
-Record the user's identity/instruction, selection time, and exact task/PR scope.
+Record the user's identity/instruction, selection time, exact implementation
+repository URL, and exact task scope as a comma-separated list of unique stable
+task IDs (for example, `T02, T03`). Do not put prose, `task`, `PR`, branch names,
+or the final feature PR in the scope field.
+At each review gate, record its phase and stable target ID. Auto-merge can omit
+pre-merge human review only when `Current review phase` is `IMPLEMENTATION`, the
+target ID is in that scope, and `Current artifact/gate` links that same target's
+PR. A design, validation, or archive gate always requires human review.
 The user may change the mode at any time. Before each task edit, self-review
 gate, PR opening, merge attempt, and continuation, reread these live fields;
 never rely on an earlier prompt or cached value. A missing, invalid, stale, or
@@ -317,10 +347,10 @@ Justification: `<why this is the smallest safe route>`.
 
 This is the workflow's primary output and the entry point for continuation.
 
-| Order | Artifact | Decision | Reason/trigger | Template or authority | Owner | Review owner | Review state/link |
+| Order | Artifact ID | Artifact | Decision | Reason/trigger | Template or authority | Owner | Review owner | Review state/link |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `0` | Approved handoff | `REUSE` | Reviewed workflow input | `<link>` | `<owner>` | `<reviewer>` | `APPROVED / <link>` |
-| `1` | `<artifact>` | `<decision>` | `<reason>` | `<template/link>` | `<owner>` | `<reviewer>` | `<state/link>` |
+| `0` | `handoff` | Approved handoff | `REUSE` | Reviewed workflow input | `<link>` | `<owner>` | `<reviewer>` | `APPROVED / <link>` |
+| `1` | `<stable ID>` | `<artifact>` | `<decision>` | `<reason>` | `<template/link>` | `<owner>` | `<reviewer>` | `<state/link>` |
 
 Every `SKIP`, `DEFER`, and `BLOCKED` decision must be justified. Missing rows do
 not mean not applicable. Review and approve the manifest itself before
@@ -331,13 +361,15 @@ generating the first selected artifact.
 <!-- sdd-section: artifact-dependencies -->
 
 This table is the machine-readable dependency source for transitive freshness.
-Use stable IDs. `Consumed version` is the last approved input used downstream;
+Use non-sentinel, case-insensitively unique stable IDs in this table and the
+delivery manifest. `Consumed version` is the last approved input used downstream;
 `Current version` is the version now presented. Classify a difference as
 `CONTROL_ONLY` only when it cannot alter requirements, contracts, dependencies,
 risk, or evidence. `UNKNOWN` fails closed like `MATERIAL`.
 
 | Artifact ID | Artifact/link | Depends on | Consumed version | Current version | Change impact | Freshness | Blocked by |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| `whiteboard` | `<link>` | `None` | `<version>` | `<version>` | `<CONTROL_ONLY/MATERIAL/UNKNOWN>` | `<CURRENT/STALE/BLOCKED>` | `<IDs/None>` |
 | `handoff` | `<link>` | `whiteboard` | `<version>` | `<version>` | `<CONTROL_ONLY/MATERIAL/UNKNOWN>` | `<CURRENT/STALE/BLOCKED>` | `<IDs/None>` |
 | `workflow` | This workflow | `handoff` | `<version>` | `<version>` | `<CONTROL_ONLY/MATERIAL/UNKNOWN>` | `<CURRENT/STALE/BLOCKED>` | `<IDs/None>` |
 | `plan` | `<link>` | `workflow` | `<version>` | `<version>` | `<CONTROL_ONLY/MATERIAL/UNKNOWN>` | `<CURRENT/STALE/BLOCKED>` | `<IDs/None>` |
@@ -346,6 +378,10 @@ A material or unknown version difference makes that artifact `STALE`. Staleness
 or blocking propagates only to transitive dependants. A control-only navigation
 update does not invalidate frozen content. Review the current change first;
 after approval, the earliest dependency-ready stale correction takes priority.
+At `GATES_READY`, the register must be non-empty and cover the workflow, every
+selected delivery-manifest `Artifact ID`, every next-action target ID, and every
+ID named by `Depends on`. A marker and header-only table or dangling dependency
+cannot prove freshness.
 When this workflow enters `VALIDATING`, the `plan` row's Markdown link is the
 machine-readable parent/child state reference. It must resolve inside the
 project to a `CURRENT` SDD implementation plan in `VALIDATING`. Route 0 may omit
@@ -384,9 +420,9 @@ Normative generated content, interpretation, or a new decision always uses
 
 ### 9.2 Artifact review ledger
 
-| Artifact | Version | Round | Self-review evidence | Reviewer | Type | Result | Comments/resolution | Next action |
+| Artifact | Version | Round | Self-review | Fresh-context review | Human review | Durable findings/resolution | Result | Next action |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `<link>` | `<version>` | `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<summary/link>` | `<value>` |
+| `<link>` | `<version>` | `1` | `<SELF_REVIEW_PASSED + link>` | `<APPROVED/CHANGES_REQUESTED/BLOCKED + packet/receipt>` | `<APPROVED/CHANGES_REQUESTED + link, or NOT_APPLICABLE for scoped implementation auto-merge>` | `<per-round record/None>` | `<APPROVED/CHANGES_REQUESTED/BLOCKED>` | `<value>` |
 
 ### 9.3 Automation audit ledger
 
@@ -400,16 +436,46 @@ concise inventory of the automatic actions and their evidence.
 
 ### 9.4 Implementation PR and post-merge review ledger
 
-| Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Required checks | Merge result | Human review | Findings/follow-up |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `<task + PR link>` | `<commits>` | `<mode + authority link>` | `<record>` | `<evidence>` | `<merged/stopped>` | `<PENDING/ACCEPTED/FOLLOW_UP_REQUIRED/FOLLOW_UP_COMPLETE>` | `<links or None>` |
+<!-- sdd-section: implementation-review-ledger -->
 
-In `HUMAN_REVIEW_BEFORE_MERGE`, record the human review before merge. In
+Keep this semantic marker and the exact table headers present even before the
+first implementation PR; an empty ledger has no data rows. Renaming or omitting
+the ledger fails closed because it would erase implementation review duties.
+
+| Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | Human review | Findings/follow-up |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `<task ID> / <PR Markdown link>` | `HEAD <full 40-character commit SHA> / MERGE <full 40-character commit SHA>` | `<mode> / <authority link>` | `SELF_REVIEW_PASSED HEAD <head SHA> / <record link>` | `APPROVED HEAD <head SHA> / <packet-or-receipt link>` | `PASS HEAD <head SHA> / <checks link>` | `<MERGED/STOPPED> / <evidence link>` | `<APPROVED HEAD <head SHA> / evidence for manual mode, or PENDING/ACCEPTED/FOLLOW_UP_REQUIRED/FOLLOW_UP_COMPLETE MERGE <merge SHA> / evidence for auto mode>` | `<links or None>` |
+
+Every row's mode must lead with exactly `HUMAN_REVIEW_BEFORE_MERGE` or
+`AGENT_AUTO_MERGE`. Every merged row requires fresh-context `APPROVED`. In
+`HUMAN_REVIEW_BEFORE_MERGE`, it also requires human `APPROVED` before merge. In
 `AGENT_AUTO_MERGE`, create the row immediately after merge with human review
 `PENDING`; later record `ACCEPTED` or `FOLLOW_UP_REQUIRED` without rewriting the
 merge evidence. A finding that affects active or future work marks those
-dependencies stale or blocked. Every row must be accepted, or have completed
-follow-up recorded as `FOLLOW_UP_COMPLETE`, before `COMPLETE` and archive.
+dependencies stale or blocked. `COMPLETE` and `ARCHIVED` require at least one
+auditable `MERGED` row; a `STOPPED` row cannot satisfy delivery closure. Every
+row must be accepted or have completed follow-up recorded as
+`FOLLOW_UP_COMPLETE`. A `STOPPED` row is for an already-opened scoped PR that
+did not merge and requires linked findings/follow-up evidence.
+
+A merged row records its task/PR identity; exact head and merge revisions;
+mode authority; `SELF_REVIEW_PASSED`, fresh `APPROVED`, and required-check
+`PASS` receipts; and merge evidence. A bare disposition without its ` / `
+evidence does not satisfy the per-PR record. The displayed PR number and the
+single GitHub PR link must identify the same PR.
+The live review target must exist in the current mode scope. Every historical
+ledger task ID must exist in the dependency register; its linked authority
+preserves the mode scope that applied when that PR was reviewed.
+The PR and merge-evidence links must use `Implementation repository`, and the
+merge-evidence commit must equal the recorded full merge SHA.
+Self-review, fresh-review, and check receipts repeat the exact head SHA. Manual
+human approval repeats that head SHA; auto-mode post-merge review repeats the
+merge SHA. Contradictory revisions fail closed.
+
+Use the exact leading dispositions shown above. Where the ledger requires
+evidence, record it after ` / `; a bare disposition does not pass that gate.
+Unknown values fail closed. At `COMPLETE` or `ARCHIVED`, human review must record
+`APPROVED`, `ACCEPTED`, or `FOLLOW_UP_COMPLETE` with evidence.
 
 ## 10. Feedback and rerouting rules
 
@@ -509,7 +575,9 @@ Record the reroute in the workflow change history and current-state table:
 dependency-register entry required by the first task is `CURRENT`, no open
 blocker affects that task, the approved plan has one task that satisfies its
 Definition of Ready and is marked `NEXT`, and the next action's write targets
-are inside the allowed write scope.
+are inside the allowed write scope. Its `Current artifact review state` must be
+`APPROVED`; invalid review-state values fail closed. `COMPLETE` and `ARCHIVED`
+also require the current validation or closure gate to be `APPROVED`.
 
 At `GATES_READY`, `NOT_SELECTED` is a valid waiting state whose next action is
 to ask the user for the implementation continuation mode. The workflow cannot

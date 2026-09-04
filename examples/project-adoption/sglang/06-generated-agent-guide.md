@@ -47,12 +47,15 @@ a checkout exists on another machine.
 4. Before every review stop, complete the agent self-review record against the
    exact candidate revision. A pass is evidence only, never approval or
    authorization to merge or continue.
-5. Populate only durable playbook identity in the manifest; never commit the
+5. Open a stable review session and initialize exactly two fresh-context reviewers
+   for that candidate. Preserve requested changes and author dispositions;
+   reuse those reviewer(s) for revisions, then stop for human review.
+6. Populate only durable playbook identity in the manifest; never commit the
    machine-local checkout.
-6. Do not request or infer a product need during installation.
-7. Validate the runtime with `./install-sdd.sh --validate` when it may have
+7. Do not request or infer a product need during installation.
+8. Validate the runtime with `./install-sdd.sh --validate` when it may have
    drifted.
-8. After reviewed authority reaches `INSTALLED`, clean up the pending checkout,
+9. After reviewed authority reaches `INSTALLED`, clean up the pending checkout,
    rerun the installer to select `sdd-project-workflow`, then create only the empty
    `.github/spec-driven-delivery/solution-whiteboard.md` and stop.
 

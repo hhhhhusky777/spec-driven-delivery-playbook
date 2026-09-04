@@ -36,6 +36,9 @@ evidence; it does not replace the project authorities to which it links.
 | Self-review state | `<NOT_STARTED / SELF_REVIEW_PASSED / SELF_REVIEW_FAILED>` |
 | Self-review candidate revision | `<exact commit/version or Not applicable>` |
 | Self-review evidence | `<record/link or Not applicable>` |
+| Fresh-context review state / evidence | `<state + exact-revision receipt or Not started>` |
+| Fresh-context review session / assigned reviewers | `<stable session ID + assigned and approved reviewer IDs + required approval count or Not started>` |
+| Human review state / evidence | `<state + reviewer/link or Not started>` |
 | Automation boundary | `<last permitted action ID or Not applicable>` |
 | Required automatic gates | `<commands/check IDs or Not applicable>` |
 | Automatic gate result | `<PASS / FAIL / NOT_RUN / NOT_APPLICABLE>` |
@@ -251,6 +254,13 @@ activation, and adoption approval require `EXPLICIT_REVIEW`. Only deterministic
 mechanics pre-authorized by reviewed project policy may use `AUTO_CONTINUE` or
 `REVIEW_ON_EXCEPTION`.
 
+Every adoption review gate requires exact-candidate self-review followed by a
+stable session with reviewer(s) initialized without author context and then
+mandatory human review. Preserve requested changes, author dispositions, and
+resolutions as immutable findings. A candidate change starts a new round with
+the same assigned reviewer(s); automatic action modes do not replace either
+review.
+
 | Action ID | Target/output | Review mode | Mode authority | Required gates | Automation boundary | Semantic decision? | State |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `<ID>` | `<path/action>` | `<EXPLICIT_REVIEW/AUTO_CONTINUE/REVIEW_ON_EXCEPTION>` | `<link>` | `<checks>` | `<last action ID/Not applicable>` | `<NO/YES>` | `<PLANNED/ACTIVE/COMPLETE/STOPPED>` |
@@ -303,9 +313,9 @@ revision. A later candidate change invalidates the result and requires another
 self-review. `SELF_REVIEW_PASSED` is evidence only; it cannot approve adoption,
 satisfy reviewer independence, authorize merge, or authorize continuation.
 
-| Round | Self-review evidence | Reviewer/type | Scope | Disposition | Comments resolved | Version/date |
-| --- | --- | --- | --- | --- | --- | --- |
-| `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity/type>` | `<items>` | `IN_REVIEW` | `<links or None>` | `<value>` |
+| Session | Round | Self-review evidence | Assigned reviewer/type | Scope | Disposition | Findings/author responses | Version/date |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `<ID>` | `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity/type>` | `<items>` | `IN_REVIEW` | `<links or None>` | `<value>` |
 
 ### Installation checklist
 
