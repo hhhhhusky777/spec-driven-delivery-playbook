@@ -194,6 +194,91 @@ function checkSelfReviewGate(file, fields, reviewRequired) {
   return diagnostics;
 }
 
+function checkIndependentReviewGate(file, fields, approvalRequired, humanRequired = true) {
+  if (!approvalRequired) {
+    return [];
+  }
+  const diagnostics = [];
+  if (fields.get("Fresh-context review state") !== "APPROVED") {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_FRESH_REVIEW_STATE",
+        "approval requires Fresh-context review state APPROVED",
+      ),
+    );
+  }
+  for (const field of ["Fresh-context reviewed revision", "Fresh-context review evidence"]) {
+    const value = fields.get(field) || "";
+    if (isNone(value) || /^not recorded$/i.test(normalizeValue(value))) {
+      diagnostics.push(
+        diagnostic(file, 1, "SDD_FRESH_REVIEW_EVIDENCE", `approval requires a recorded ${field}`),
+      );
+    }
+  }
+  const candidateRevision = fields.get("Self-review candidate revision");
+  const freshRevision = fields.get("Fresh-context reviewed revision");
+  if (
+    candidateRevision &&
+    freshRevision &&
+    !isNone(candidateRevision) &&
+    !isNone(freshRevision) &&
+    normalizeValue(candidateRevision) !== normalizeValue(freshRevision)
+  ) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_REVIEW_REVISION_MISMATCH",
+        "Fresh-context reviewed revision must match Self-review candidate revision",
+      ),
+    );
+  }
+  if (humanRequired) {
+    if (fields.get("Human review state") !== "APPROVED") {
+      diagnostics.push(
+        diagnostic(file, 1, "SDD_HUMAN_REVIEW_STATE", "approval requires Human review state APPROVED"),
+      );
+    }
+    for (const field of ["Human reviewed revision", "Human review evidence"]) {
+      const value = fields.get(field) || "";
+      if (isNone(value) || /^not recorded$/i.test(normalizeValue(value))) {
+        diagnostics.push(
+          diagnostic(file, 1, "SDD_HUMAN_REVIEW_EVIDENCE", `approval requires a recorded ${field}`),
+        );
+      }
+    }
+    const humanRevision = fields.get("Human reviewed revision");
+    if (
+      candidateRevision &&
+      humanRevision &&
+      !isNone(candidateRevision) &&
+      !isNone(humanRevision) &&
+      normalizeValue(candidateRevision) !== normalizeValue(humanRevision)
+    ) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          1,
+          "SDD_REVIEW_REVISION_MISMATCH",
+          "Human reviewed revision must match Self-review candidate revision",
+        ),
+      );
+    }
+  } else if (fields.get("Human review state") !== "NOT_APPLICABLE") {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_HUMAN_REVIEW_MODE",
+        "AGENT_AUTO_MERGE review gates require Human review state NOT_APPLICABLE before merge",
+      ),
+    );
+  }
+  return diagnostics;
+}
+
 function isUnselected(value) {
   return isNone(value || "") || /^not selected$/i.test(normalizeValue(value || ""));
 }
@@ -282,6 +367,7 @@ function checkImplementationContinuation(file, fields, tables) {
       "Head and merge commit",
       "Implementation mode/authority",
       "Self-review",
+      "Fresh-context review",
       "Required checks",
       "Merge result",
       "Human review",
@@ -393,6 +479,13 @@ function checkImplementationPlan(file, marker, text, tables, fields, schema) {
       file,
       fields,
       ["IN_REVIEW", "APPROVED"].includes(fields.get("Review state")),
+    ),
+  );
+  diagnostics.push(
+    ...checkIndependentReviewGate(
+      file,
+      fields,
+      fields.get("Review state") === "APPROVED",
     ),
   );
 
@@ -669,6 +762,18 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
         ["MANIFEST_IN_REVIEW", "ARTIFACT_IN_REVIEW", "GATES_READY"].includes(
           fields.get("State"),
         ),
+    ),
+  );
+  const artifactApproved = fields.get("Current artifact review state") === "APPROVED";
+  const agentAutoMergeReview =
+    fields.get("State") === "DELIVERY_ACTIVE" &&
+    fields.get("Implementation continuation mode") === "AGENT_AUTO_MERGE";
+  diagnostics.push(
+    ...checkIndependentReviewGate(
+      file,
+      fields,
+      artifactApproved,
+      !agentAutoMergeReview,
     ),
   );
   diagnostics.push(...checkImplementationContinuation(file, fields, tables));

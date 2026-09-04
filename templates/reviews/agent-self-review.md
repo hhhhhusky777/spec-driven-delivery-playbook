@@ -1,6 +1,6 @@
 # Agent Self-Review Record — `<artifact or change>`
 
-Use this record before every human or independent-agent review gate. It is the
+Use this record before every fresh-context and human review sequence. It is the
 authoring agent's pre-review audit, not approval and not a substitute for the
 reviewer required by project policy. Embed the same fields in the owning
 artifact when a separate file would add unnecessary overhead.

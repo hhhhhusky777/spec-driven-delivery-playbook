@@ -53,11 +53,11 @@ and update the active workflow manifest instead of bypassing its review gates.
 
 Before every review gate, use the
 [agent self-review record](reviews/agent-self-review.md) as a separate record or
-embed its fields in the owning artifact.
-When an independent-agent gate uses a reviewer without the author's
-conversation, use the
+embed its fields in the owning artifact. Then use the
 [fresh-context agent review](reviews/fresh-context-agent-review.md) packet and
-receipt to connect the original agent, isolated reviewer, and exact candidate.
+receipt to connect the original agent, a newly created isolated reviewer, and
+the exact candidate. Preserve requested-change findings as immutable audit
+records.
 
 1. Always begin inside the installed project's empty
    [solution whiteboard](discovery/solution-whiteboard.md).
@@ -82,9 +82,12 @@ Generate or update one selected artifact, then move it through
 `IN_REVIEW -> CHANGES_REQUESTED -> IN_REVIEW` until it is `APPROVED`. Do not
 generate a dependent artifact from an unapproved draft. The author or
 generating runner must not self-approve unless an active project policy grants
-a documented low-risk exception. A reviewer may be a human or an independent
-review agent; high-risk or externally accountable decisions require a human
-when project policy says so.
+a documented low-risk exception. Every review gate requires a new
+fresh-context reviewer. Design, governance, adoption, upgrade, validation,
+archive, and implementation under `HUMAN_REVIEW_BEFORE_MERGE` then stop for
+mandatory human review. Only a user-authorized, scoped implementation
+`AGENT_AUTO_MERGE` action may proceed after fresh approval without pre-merge
+human review, subject to every live gate and repository protection.
 
 For a fresh-context independent review, the original agent freezes the review
 packet and creates a read-only reviewer with author-conversation inheritance
@@ -92,6 +95,10 @@ disabled. The reviewer returns a structured receipt; it never edits, merges,
 or continues delivery. A candidate change invalidates the receipt and requires
 a new fresh reviewer. Shared GitHub credentials do not constitute a distinct
 formal approval identity.
+
+`AUTO_CONTINUE` and `REVIEW_ON_EXCEPTION` classify deterministic non-review
+actions. They do not approve artifacts or replace fresh-context or human
+review.
 
 Before submission, the generating or implementing agent must record
 `SELF_REVIEW_PASSED` against the exact candidate revision. Any later change

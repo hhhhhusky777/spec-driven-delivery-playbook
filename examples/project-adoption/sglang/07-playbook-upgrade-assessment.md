@@ -30,12 +30,13 @@ Follow .sdd-runtime/playbook-upgrade-guide.md exactly.
 | Candidate revision | `{resolved-candidate-playbook-commit}` |
 | Safe boundary | `No active task, PR, merge, self-review, or validation` |
 | Manifest pin during assessment | `{approved-current-playbook-commit}` |
-| Independent review | `REQUIRED` |
+| Fresh-context review | `REQUIRED` |
+| Human review | `REQUIRED` |
 
 The agent compares exact changelog, migration, template, schema, skill, and gate
 changes with the proposed SGLang authorities. Each material item is classified
 `ACCEPT`, `ADAPT`, `REJECT`, or `NOT_APPLICABLE`; unknown impact blocks review.
-Only after independent approval may migrations begin. The manifest pin changes
+Only after fresh-context and human approval may migrations begin. The manifest pin changes
 once at final cutover after all candidate-required checks pass. Cleanup then
 removes installer-owned checkouts, and the normal guide is regenerated and
 validated from the new pin. A failed migration restores the previous pin and

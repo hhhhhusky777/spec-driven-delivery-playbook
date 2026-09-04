@@ -1,6 +1,6 @@
 # SDD Delivery Workflow Template
 
-<!-- sdd-schema: delivery-workflow@1 -->
+<!-- sdd-schema: delivery-workflow@2 -->
 
 Use this template after a generated whiteboard handoff is reviewed and reaches
 `APPROVED`. It consumes that exact handoff version, selects the smallest safe
@@ -32,6 +32,12 @@ instantiated workflow record.
 | Self-review state | `<NOT_STARTED / SELF_REVIEW_PASSED / SELF_REVIEW_FAILED>` |
 | Self-review candidate revision | `<exact commit/version or Not applicable>` |
 | Self-review evidence | `<record/link or Not applicable>` |
+| Fresh-context review state | `<NOT_STARTED / IN_REVIEW / APPROVED / CHANGES_REQUESTED / BLOCKED>` |
+| Fresh-context reviewed revision | `<exact commit/version or Not recorded>` |
+| Fresh-context review evidence | `<packet/receipt link or Not recorded>` |
+| Human review state | `<NOT_STARTED / IN_REVIEW / APPROVED / CHANGES_REQUESTED / NOT_APPLICABLE>` |
+| Human reviewed revision | `<exact commit/version or Not recorded/Not applicable>` |
+| Human review evidence | `<review link or Not recorded/Not applicable>` |
 | Implementation continuation mode | `NOT_SELECTED` |
 | Implementation mode authority | `Not selected` |
 | Implementation mode scope | `Not selected` |
@@ -79,36 +85,38 @@ information fails closed to `EXPLICIT_REVIEW`. Generate or update artifacts in
 dependency order; a normative artifact cannot supply authority to a dependent
 artifact until it is `APPROVED`.
 
-`EXPLICIT_REVIEW` stops after the action. `AUTO_CONTINUE` and
+`EXPLICIT_REVIEW` starts the mandatory self-review -> fresh-context review ->
+human-review sequence. `AUTO_CONTINUE` and
 `REVIEW_ON_EXCEPTION` may continue through multiple pre-authorized actions in
 one invocation only while every input is approved/current, no semantic decision
 is introduced, all declared gates pass, and each next action remains within the
 recorded automation boundary, WIP policy, and write scope. Stop immediately on
 failure, ambiguity, unknown impact, exception, drift, unrelated change, scope
-expansion, or a mandatory semantic checkpoint.
+expansion, or a mandatory semantic checkpoint. These automatic modes apply
+only to deterministic non-review actions and cannot approve normative content.
 
-- The author or generating runner must not self-approve unless an active project
-  policy grants a documented low-risk exception.
 - Before every review gate, the implementing agent completes the
   [agent self-review](../reviews/agent-self-review.md) against the exact
   candidate revision. Review may begin only with `SELF_REVIEW_PASSED` and linked
   evidence. Any candidate change invalidates that result and requires another
   self-review.
-- Review may be performed by a human or an independent review agent. Human
-  approval is required when project policy, risk, or external accountability
-  requires it.
-- When an independent-agent review uses fresh context, create it through the
+- Then create a new read-only reviewer through the
   [fresh-context review protocol](../reviews/fresh-context-agent-review.md).
-  Record its packet/receipt link and exact revision in the artifact review
-  ledger. The reviewer stays read-only; any candidate change requires a new
-  fresh reviewer.
+  Record its packet/receipt, exact revision, and immutable findings. Any
+  candidate change requires a new self-review and newly created fresh reviewer.
+- After fresh-context `APPROVED`, design, governance, adoption, upgrade,
+  validation, archive, and manual implementation stop for human review. Only a
+  scoped implementation `AGENT_AUTO_MERGE` action may proceed without
+  pre-merge human review after all live gates are rechecked.
 - `CHANGES_REQUESTED` returns to the same artifact for refinement and another
   review round.
 - A local documentation problem returns to the current artifact; an incorrect
   manifest decision returns to routing; a requirement or solution problem
   returns to the handoff/whiteboard owner.
-- Record reviewer identity, review type, comments, resolution, version, and
-  approval. Silence or elapsed time is never approval.
+- Record each finding's location, governing statement, expected/observed
+  result, impact, requested outcome, author response, resolution revision, and
+  reviewer disposition. Preserve original findings. Silence or elapsed time is
+  never approval.
 - Record every automatic action separately. `AUTO_CONTINUED` is not an approval
   or review state and cannot mark a normative artifact `APPROVED`.
 - `SELF_REVIEW_PASSED` is pre-review evidence only. It cannot approve an
@@ -126,11 +134,12 @@ task specification are approved.
 
 - `NOT_SELECTED`: required throughout design; at `GATES_READY`, ask the user to
   choose before entering `DELIVERY_ACTIVE`.
-- `HUMAN_REVIEW_BEFORE_MERGE`: after checks and mandatory self-review, open the
-  PR and stop for its required review and merge decision.
-- `AGENT_AUTO_MERGE`: after checks and mandatory self-review, open the PR,
-  verify repository protections and the current mode again, merge without
-  bypass, record the audit, and continue to the next dependency-ready task.
+- `HUMAN_REVIEW_BEFORE_MERGE`: after checks, mandatory self-review, and
+  fresh-context approval, stop for human review and merge authority.
+- `AGENT_AUTO_MERGE`: after checks, mandatory self-review, and fresh-context
+  approval, verify repository protections and the current mode again, merge
+  without bypass, record the audit, and continue to the next dependency-ready
+  task.
 
 Record the user's identity/instruction, selection time, and exact task/PR scope.
 The user may change the mode at any time. Before each task edit, self-review
@@ -389,9 +398,9 @@ Normative generated content, interpretation, or a new decision always uses
 
 ### 9.2 Artifact review ledger
 
-| Artifact | Version | Round | Self-review evidence | Reviewer | Type | Independent review evidence | Result | Comments/resolution | Next action |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `<link>` | `<version>` | `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/fresh-context agent/other independent agent>` | `<fresh-context packet + receipt links or Not applicable>` | `<APPROVED/CHANGES_REQUESTED/BLOCKED>` | `<summary/link>` | `<value>` |
+| Artifact | Version | Round | Self-review | Fresh-context review | Human review | Durable findings/resolution | Result | Next action |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `<link>` | `<version>` | `1` | `<SELF_REVIEW_PASSED + link>` | `<APPROVED/CHANGES_REQUESTED/BLOCKED + packet/receipt>` | `<APPROVED/CHANGES_REQUESTED + link, or NOT_APPLICABLE for scoped implementation auto-merge>` | `<per-round record/None>` | `<APPROVED/CHANGES_REQUESTED/BLOCKED>` | `<value>` |
 
 ### 9.3 Automation audit ledger
 
@@ -405,9 +414,9 @@ concise inventory of the automatic actions and their evidence.
 
 ### 9.4 Implementation PR and post-merge review ledger
 
-| Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Required checks | Merge result | Human review | Findings/follow-up |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `<task + PR link>` | `<commits>` | `<mode + authority link>` | `<record>` | `<evidence>` | `<merged/stopped>` | `<PENDING/ACCEPTED/FOLLOW_UP_REQUIRED/FOLLOW_UP_COMPLETE>` | `<links or None>` |
+| Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | Human review | Findings/follow-up |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `<task + PR link>` | `<commits>` | `<mode + authority link>` | `<record>` | `<packet/receipt + disposition>` | `<evidence>` | `<merged/stopped>` | `<pre-merge approval or PENDING/ACCEPTED/FOLLOW_UP_REQUIRED/FOLLOW_UP_COMPLETE>` | `<links or None>` |
 
 In `HUMAN_REVIEW_BEFORE_MERGE`, record the human review before merge. In
 `AGENT_AUTO_MERGE`, create the row immediately after merge with human review

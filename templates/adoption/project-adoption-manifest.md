@@ -36,6 +36,8 @@ evidence; it does not replace the project authorities to which it links.
 | Self-review state | `<NOT_STARTED / SELF_REVIEW_PASSED / SELF_REVIEW_FAILED>` |
 | Self-review candidate revision | `<exact commit/version or Not applicable>` |
 | Self-review evidence | `<record/link or Not applicable>` |
+| Fresh-context review state / evidence | `<state + exact-revision receipt or Not started>` |
+| Human review state / evidence | `<state + reviewer/link or Not started>` |
 | Automation boundary | `<last permitted action ID or Not applicable>` |
 | Required automatic gates | `<commands/check IDs or Not applicable>` |
 | Automatic gate result | `<PASS / FAIL / NOT_RUN / NOT_APPLICABLE>` |
@@ -250,6 +252,11 @@ Initial discovery, authority mapping, policy creation/update, exceptions, state
 activation, and adoption approval require `EXPLICIT_REVIEW`. Only deterministic
 mechanics pre-authorized by reviewed project policy may use `AUTO_CONTINUE` or
 `REVIEW_ON_EXCEPTION`.
+
+Every adoption review gate requires exact-candidate self-review followed by a
+new fresh-context reviewer and then mandatory human review. Preserve requested
+changes and their resolutions as immutable findings. A candidate change starts
+a new round; automatic action modes do not replace either review.
 
 | Action ID | Target/output | Review mode | Mode authority | Required gates | Automation boundary | Semantic decision? | State |
 | --- | --- | --- | --- | --- | --- | --- | --- |

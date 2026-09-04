@@ -121,10 +121,11 @@ unknowns, proposes routing decisions, and stops.
 Compare the agent result with
 [the completed example manifest](01-project-adoption-manifest.md). An authorized
 real-project reviewer would review only after the agent records
-`SELF_REVIEW_PASSED` against that exact candidate. The reviewer then corrects
-facts or approves `DISCOVERY -> MAPPED`. Self-review does not grant approval.
-This teaching example records no SGLang approval and therefore leaves its
-self-review and independent review states `NOT_STARTED`.
+`SELF_REVIEW_PASSED` against that exact candidate. A new fresh-context reviewer
+then checks the candidate; after it approves, a human corrects facts or approves
+`DISCOVERY -> MAPPED`. Neither agent review grants adoption approval. This
+teaching example records no SGLang approval and therefore leaves self-review,
+fresh-context review, and human review `NOT_STARTED`.
 
 ### Step 5 — Generate one selected artifact per review
 
@@ -133,14 +134,14 @@ guide. Before every continuation, an authorized reviewer must set one `Next acti
 `Allowed write scope` in the manifest:
 
 1. generate the [project entry point](02-project-entrypoint.md), self-review the
-   exact candidate, then request review;
+   exact candidate, obtain fresh-context review, then request human review;
 2. generate the [SDD overlay](03-development-policy.md), self-review the exact
-   candidate, then request review;
+   candidate, obtain fresh-context review, then request human review;
 3. create the [thin agent adapters](04-agent-entrypoint-adapters.md), self-review
-   the exact candidate, then request review; and
+   the exact candidate, obtain fresh-context review, then request human review; and
 4. update documentation-link checking for the new `.github` Markdown path,
-   self-review the exact candidate, then request review under SGLang's `.github`
-   and CI ownership.
+   self-review the exact candidate, obtain fresh-context review, then request
+   human review under SGLang's `.github` and CI ownership.
 
 The existing contribution, test, CI, and maintainer documents remain canonical.
 The PR/branch family routes to `UPDATE_EXISTING` because the pinned sources do
@@ -215,5 +216,5 @@ user needs to supply.
 | SGLang files changed | None |
 | Integration shape | Demonstrated through proposed project files |
 | Evidence | Pinned public-source audit plus playbook documentation gates |
-| Pending gate | Independent review of the complete example and authority map |
+| Pending gate | Fresh-context review, then human review, of the complete example and authority map |
 | After approval | Mark `EXAMPLE_REVIEWED`; this example grants no authority to install or discuss a real SGLang need |

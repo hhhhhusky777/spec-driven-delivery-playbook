@@ -6,14 +6,19 @@ adopted.
 
 ## Unreleased — updated 2026-09-04
 
-- Added a tool-neutral fresh-context independent-agent review protocol. The
-  original agent now freezes an exact-revision packet, creates a read-only
-  reviewer without inherited author conversation, waits for a structured
-  receipt, and resumes through existing gates. Added a README design sequence,
-  workflow/PR policy integration, SGLang teaching use, and explicit separation
-  between context isolation and a different formal GitHub review identity.
-  Existing projects may opt in by updating their canonical PR policy at its
-  next review gate; active artifacts do not require a schema migration.
+- Made fresh-context agent review mandatory at every review gate. The author
+  freezes an exact-revision packet after self-review, creates a new read-only
+  reviewer without inherited author conversation, and preserves requested
+  changes and resolutions as immutable audit history. Design, governance,
+  adoption, upgrade, validation, archive, and manual implementation then require
+  human review; only scoped implementation `AGENT_AUTO_MERGE` may proceed after
+  fresh approval and all live gates pass. Added the phase sequence to the README,
+  templates, skills, PR policy, and SGLang examples, while retaining the
+  distinction between process isolation and a different formal GitHub identity.
+  Lifecycle schema 2 adds fresh-context and human-review state, exact revision,
+  and evidence fields. Active schema-1 plans and workflows must add those six
+  fields and change their markers to `@2` at their next review gate; existing
+  approvals remain historical evidence and do not satisfy the new gate.
 
 - Added `install-sdd.sh --upgrade` for fail-closed, between-task preparation of
   an immutable candidate without changing the active manifest pin. Added a

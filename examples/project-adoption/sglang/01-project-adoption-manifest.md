@@ -30,13 +30,15 @@
 | Self-review state | `NOT_STARTED` |
 | Self-review candidate revision | `Not recorded` |
 | Self-review evidence | `Not recorded` |
+| Fresh-context review state / evidence | `NOT_STARTED / Not recorded` |
+| Human review state / evidence | `NOT_STARTED / Not recorded` |
 | Automation boundary | `Not applicable` |
 | Required automatic gates | `Not applicable` |
 | Automatic gate result | `NOT_APPLICABLE` |
 | Semantic decision introduced | `YES` |
 | Automation exception | `None` |
-| Current blocker | Agent self-review of the exact example candidate is pending |
-| Next action | Complete agent self-review, then request independent review |
+| Current blocker | Self-review, fresh-context review, and human review of the exact example candidate are pending |
+| Next action | Complete self-review, then fresh-context review, then request human review |
 
 Adoption type: non-authoritative external-project case study.
 
@@ -176,8 +178,9 @@ no SGLang edit and records no unselected need.
 | Real SGLang adoption authority | SGLang maintainers/owners | `NOT_REQUESTED` |
 | Example documentation tests | Playbook CI | `PENDING` until this refresh is validated |
 
-Final disposition: `IN_REVIEW`. `EXAMPLE_REVIEWED` requires independent playbook
-review. `ACTIVE` is prohibited because no SGLang adoption occurred.
+Final disposition: `IN_REVIEW`. `EXAMPLE_REVIEWED` requires fresh-context and
+human playbook review. `ACTIVE` is prohibited because no SGLang adoption
+occurred.
 
 ## 9. Current handoff
 
@@ -185,6 +188,6 @@ review. `ACTIVE` is prohibited because no SGLang adoption occurred.
 | --- | --- |
 | Current example state | `REVIEW` |
 | SGLang working tree | Read-only pinned audit; no example edits |
-| Next action | Independent review of the refreshed current-playbook example |
+| Next action | Fresh-context review, then human review, of the refreshed current-playbook example |
 | After approval | Mark example `EXAMPLE_REVIEWED`; no authority to start SGLang work |
 | First project action if authorized later | Re-run discovery against a fresh SGLang revision and resolve `U-01`–`U-04` |

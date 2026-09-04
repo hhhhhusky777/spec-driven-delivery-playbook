@@ -32,8 +32,8 @@ template or generated artifact.
 > [!IMPORTANT]
 > Automation can prove structure and known mechanical rules. It cannot approve
 > factual correctness, clarity, completeness, or methodological fitness. Every
-> material documentation change therefore requires both automated evidence and
-> human or independent-agent semantic review.
+> material documentation change therefore requires automated evidence,
+> fresh-context agent review, and human semantic review.
 
 Before every review gate, the producing agent must complete the
 [agent self-review record](../templates/reviews/agent-self-review.md) against the
@@ -42,6 +42,11 @@ cross-document consistency, freshness, duplication, attention mapping, scope,
 and applicable automated evidence. Any candidate change invalidates the result.
 `SELF_REVIEW_PASSED` is review input only; it cannot approve the artifact,
 satisfy reviewer independence, authorize merge, or authorize continuation.
+Next create a new fresh-context reviewer for the exact candidate under the
+[canonical protocol](../templates/reviews/fresh-context-agent-review.md).
+Preserve requested changes and resolutions as immutable findings. After fresh
+approval, mandatory human review decides the documentation gate; any candidate
+change requires a new self-review and a new fresh reviewer.
 
 ## 2. Required semantic review
 
@@ -113,9 +118,8 @@ Content created from a template must pass the same review as a template change:
 - run the project's documentation checks in addition to any product-code gates.
 
 Generation is not review. A producing agent or automation does not approve its
-own artifact unless an active project policy explicitly permits that risk level.
-It must still perform and record the mandatory agent self-review before the
-artifact reaches that review gate.
+own artifact. It must perform and record self-review, then obtain fresh-context
+review and human approval before the artifact passes its review gate.
 
 ### 2.6 Attention and reviewability gate
 

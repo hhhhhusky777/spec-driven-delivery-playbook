@@ -65,16 +65,19 @@ delivery-record links, and only then create a fresh `EMPTY` working copy.
 ### 0.1 Conclusion review gate
 
 The whiteboard owner may facilitate discussion but must not alone approve the
-conclusion. Before requesting human or independent-agent review, complete the
+conclusion. First complete the
 [agent self-review](../reviews/agent-self-review.md) against the exact candidate
-revision and record `SELF_REVIEW_PASSED`. Any candidate change invalidates that
-evidence. Resolve `CHANGES_REQUESTED` in the whiteboard, repeat self-review, and
-repeat independent review before setting the state to `CONCLUDED`. Self-review
-is evidence, not approval.
+revision and record `SELF_REVIEW_PASSED`, then run the canonical
+[fresh-context agent review](../reviews/fresh-context-agent-review.md). After
+fresh-context approval, stop for mandatory human review before setting the
+state to `CONCLUDED`. Any candidate change invalidates both review results;
+resolve `CHANGES_REQUESTED`, repeat self-review with the revised candidate, and
+create a new fresh reviewer before returning to human review. Self-review and
+fresh-context review are evidence; neither replaces human design approval.
 
-| Round | Self-review evidence | Reviewer | Type | Result | Comments/link | Resolved version |
+| Round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
 | --- | --- | --- | --- | --- | --- | --- |
-| `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
+| `1` | `<exact revision>` | `<record>` | `<receipt>` | `<links/None>` | `<identity + evidence>` | `<APPROVED/CHANGES_REQUESTED>` |
 
 ## 1. How the AI and contributors use this whiteboard
 

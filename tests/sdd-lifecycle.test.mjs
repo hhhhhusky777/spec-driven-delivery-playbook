@@ -52,10 +52,16 @@ function plan({
   selfReviewState = "SELF_REVIEW_PASSED",
   selfReviewRevision = "candidate-v1",
   selfReviewEvidence = "reviews/self-review.md",
+  freshReviewState = "APPROVED",
+  freshReviewRevision = "candidate-v1",
+  freshReviewEvidence = "reviews/fresh-review.md",
+  humanReviewState = "APPROVED",
+  humanReviewRevision = "candidate-v1",
+  humanReviewEvidence = "reviews/human-review.md",
 } = {}) {
   return `# Plan
 
-<!-- sdd-schema: implementation-plan@1; mode: FULL -->
+<!-- sdd-schema: implementation-plan@2; mode: FULL -->
 
 | Field | Value |
 | --- | --- |
@@ -68,6 +74,12 @@ function plan({
 | Self-review state | \`${selfReviewState}\` |
 | Self-review candidate revision | \`${selfReviewRevision}\` |
 | Self-review evidence | \`${selfReviewEvidence}\` |
+| Fresh-context review state | \`${freshReviewState}\` |
+| Fresh-context reviewed revision | \`${freshReviewRevision}\` |
+| Fresh-context review evidence | \`${freshReviewEvidence}\` |
+| Human review state | \`${humanReviewState}\` |
+| Human reviewed revision | \`${humanReviewRevision}\` |
+| Human review evidence | \`${humanReviewEvidence}\` |
 
 ${PLAN_SECTIONS}
 
@@ -88,7 +100,7 @@ function validatingPlan({
 } = {}) {
   return `# Plan
 
-<!-- sdd-schema: implementation-plan@1; mode: FULL -->
+<!-- sdd-schema: implementation-plan@2; mode: FULL -->
 
 | Field | Value |
 | --- | --- |
@@ -101,6 +113,12 @@ function validatingPlan({
 | Self-review state | \`SELF_REVIEW_PASSED\` |
 | Self-review candidate revision | \`candidate-v1\` |
 | Self-review evidence | \`reviews/self-review.md\` |
+| Fresh-context review state | \`APPROVED\` |
+| Fresh-context reviewed revision | \`candidate-v1\` |
+| Fresh-context review evidence | \`reviews/fresh-review.md\` |
+| Human review state | \`APPROVED\` |
+| Human reviewed revision | \`candidate-v1\` |
+| Human review evidence | \`reviews/human-review.md\` |
 
 ${PLAN_SECTIONS}
 
@@ -199,6 +217,58 @@ test("plan lifecycle and review gates reject illegal READY transitions", async (
   assert.ok(
     selfReviewDiagnostics.some((item) => item.rule === "SDD_SELF_REVIEW_EVIDENCE"),
   );
+
+  const missingFreshReview = await fixture(
+    t,
+    plan({
+      freshReviewState: "CHANGES_REQUESTED",
+      freshReviewEvidence: "Not recorded",
+    }),
+  );
+  const freshReviewDiagnostics = await checkSddLifecycleDocument(
+    missingFreshReview.file,
+    missingFreshReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    freshReviewDiagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_STATE"),
+  );
+  assert.ok(
+    freshReviewDiagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_EVIDENCE"),
+  );
+
+  const missingHumanReview = await fixture(
+    t,
+    plan({
+      humanReviewState: "NOT_STARTED",
+      humanReviewEvidence: "Not recorded",
+    }),
+  );
+  const humanReviewDiagnostics = await checkSddLifecycleDocument(
+    missingHumanReview.file,
+    missingHumanReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    humanReviewDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
+  );
+  assert.ok(
+    humanReviewDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_EVIDENCE"),
+  );
+
+  const mismatchedReview = await fixture(
+    t,
+    plan({ freshReviewRevision: "candidate-v0", humanReviewRevision: "candidate-v2" }),
+  );
+  const mismatchDiagnostics = await checkSddLifecycleDocument(
+    mismatchedReview.file,
+    mismatchedReview.root,
+    SCHEMAS,
+  );
+  assert.equal(
+    mismatchDiagnostics.filter((item) => item.rule === "SDD_REVIEW_REVISION_MISMATCH").length,
+    2,
+  );
 });
 
 test("VALIDATING plan requires every ledger task terminal and no next task", async (t) => {
@@ -287,12 +357,31 @@ function workflow({
   selfReviewState = "SELF_REVIEW_PASSED",
   selfReviewRevision = "candidate-v1",
   selfReviewEvidence = "reviews/self-review.md",
+  freshReviewState = "APPROVED",
+  freshReviewRevision = "candidate-v1",
+  freshReviewEvidence = "reviews/fresh-review.md",
+  humanReviewState,
+  humanReviewRevision,
+  humanReviewEvidence,
   implementationMode = "HUMAN_REVIEW_BEFORE_MERGE",
   implementationModeAuthority = "user instruction 2026-09-03",
   implementationModeScope = "task-1",
   implementationModeSelectedAt = "2026-09-03 10:00 UTC",
   postMergeHumanReview = null,
 } = {}) {
+  const resolvedHumanReviewState =
+    humanReviewState ??
+    (state === "DELIVERY_ACTIVE" && implementationMode === "AGENT_AUTO_MERGE"
+      ? "NOT_APPLICABLE"
+      : "APPROVED");
+  const resolvedHumanReviewRevision =
+    humanReviewRevision ??
+    (resolvedHumanReviewState === "NOT_APPLICABLE" ? "Not applicable" : "candidate-v1");
+  const resolvedHumanReviewEvidence =
+    humanReviewEvidence ??
+    (resolvedHumanReviewState === "NOT_APPLICABLE"
+      ? "Not applicable"
+      : "reviews/human-review.md");
   const manifestRow = includePlan
     ? "| 1 | Plan | GENERATE_FULL | APPROVED |"
     : "| 1 | Documentation | REUSE | APPROVED |";
@@ -302,7 +391,7 @@ function workflow({
     : `| task-1 | Task 1 | None | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`;
   return `# Delivery Workflow
 
-<!-- sdd-schema: delivery-workflow@1 -->
+<!-- sdd-schema: delivery-workflow@2 -->
 
 | Field | Value |
 | --- | --- |
@@ -313,6 +402,12 @@ function workflow({
 | Self-review state | \`${selfReviewState}\` |
 | Self-review candidate revision | \`${selfReviewRevision}\` |
 | Self-review evidence | \`${selfReviewEvidence}\` |
+| Fresh-context review state | \`${freshReviewState}\` |
+| Fresh-context reviewed revision | \`${freshReviewRevision}\` |
+| Fresh-context review evidence | \`${freshReviewEvidence}\` |
+| Human review state | \`${resolvedHumanReviewState}\` |
+| Human reviewed revision | \`${resolvedHumanReviewRevision}\` |
+| Human review evidence | \`${resolvedHumanReviewEvidence}\` |
 | Implementation continuation mode | \`${implementationMode}\` |
 | Implementation mode authority | \`${implementationModeAuthority}\` |
 | Implementation mode scope | \`${implementationModeScope}\` |
@@ -350,9 +445,9 @@ ${dependencyRows}
 | --- | --- |
 | Stale artifacts | \`None\` |
 
-${postMergeHumanReview === null ? "" : `| Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Required checks | Merge result | Human review | Findings/follow-up |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| T01 / PR-1 | head-1 / merge-1 | AGENT_AUTO_MERGE / user | review-1 | checks-1 | merged | ${postMergeHumanReview} | None |`}
+${postMergeHumanReview === null ? "" : `| Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | Human review | Findings/follow-up |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| T01 / PR-1 | head-1 / merge-1 | AGENT_AUTO_MERGE / user | review-1 | fresh-review-1 | checks-1 | merged | ${postMergeHumanReview} | None |`}
 `;
 }
 
@@ -387,6 +482,77 @@ test("GATES_READY rejects stale prerequisites and only scoped blockers", async (
   assert.ok(
     selfReviewDiagnostics.some((item) => item.rule === "SDD_SELF_REVIEW_EVIDENCE"),
   );
+
+  const missingFreshReview = await fixture(
+    t,
+    workflow({ freshReviewState: "NOT_STARTED", freshReviewEvidence: "Not recorded" }),
+  );
+  const freshReviewDiagnostics = await checkSddLifecycleDocument(
+    missingFreshReview.file,
+    missingFreshReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    freshReviewDiagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_STATE"),
+  );
+
+  const missingHumanReview = await fixture(
+    t,
+    workflow({ humanReviewState: "NOT_STARTED", humanReviewEvidence: "Not recorded" }),
+  );
+  const humanReviewDiagnostics = await checkSddLifecycleDocument(
+    missingHumanReview.file,
+    missingHumanReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    humanReviewDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
+  );
+});
+
+test("implementation review requires fresh approval in both continuation modes", async (t) => {
+  const auto = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+    }),
+  );
+  assert.deepEqual(await checkSddLifecycleDocument(auto.file, auto.root, SCHEMAS), []);
+
+  const autoWithoutFresh = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      freshReviewState: "NOT_STARTED",
+    }),
+  );
+  const autoDiagnostics = await checkSddLifecycleDocument(
+    autoWithoutFresh.file,
+    autoWithoutFresh.root,
+    SCHEMAS,
+  );
+  assert.ok(autoDiagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_STATE"));
+
+  const manualWithoutHuman = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      humanReviewState: "NOT_APPLICABLE",
+      humanReviewRevision: "Not applicable",
+      humanReviewEvidence: "Not applicable",
+    }),
+  );
+  const manualDiagnostics = await checkSddLifecycleDocument(
+    manualWithoutHuman.file,
+    manualWithoutHuman.root,
+    SCHEMAS,
+  );
+  assert.ok(manualDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"));
 });
 
 test("next-action write targets must stay within allowed scope", async (t) => {

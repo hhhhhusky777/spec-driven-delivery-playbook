@@ -362,10 +362,11 @@ Follow .sdd-runtime/playbook-upgrade-guide.md exactly.
 
 The preflight does not change the manifest pin and does not declare semantic
 compatibility. The agent creates a project-owned upgrade assessment, compares
-the exact revisions and affected project authorities, self-reviews it, and
-stops for independent approval. After approval, it migrates one reviewed
-boundary at a time, validates before final cutover, then updates the manifest
-pin once. Finally run `./install-sdd.sh --cleanup`, regenerate the normal guide
+the exact revisions and affected project authorities, self-reviews it, creates
+a fresh-context reviewer, and then stops for human approval. After both reviews
+approve, it migrates one reviewed boundary at a time, validates before final
+cutover, then updates the manifest pin once. Finally run
+`./install-sdd.sh --cleanup`, regenerate the normal guide
 with `./install-sdd.sh`, and require `./install-sdd.sh --validate` to pass.
 Rollback keeps or restores the previous pin. See the
 [project adoption runbook](docs/project-adoption-runbook.md#11-playbook-updates-and-drift)
@@ -374,15 +375,17 @@ and [upgrade assessment template](templates/adoption/playbook-upgrade-assessment
 ### Review and resume adoption
 
 Each agent invocation stops at the next mandatory review checkpoint. It may
-perform more than one dependency-ready action only inside a pre-approved,
-fail-closed automation boundary. After an authorized human or independent
-agent has reviewed the complete changed artifact and its governing sources, the
-reviewer may use this prompt to record approval and resume:
+perform more than one dependency-ready deterministic action only inside a
+pre-approved, fail-closed automation boundary. The original agent first
+self-reviews the exact candidate, then creates a new fresh-context reviewer.
+After that reviewer approves, an authorized human may use this prompt to record
+approval and resume:
 
 ```text
-Independent review is complete for <ARTIFACT_PATH> at <VERSION_OR_COMMIT>.
-Disposition: APPROVED.
-Reviewer/authority: <IDENTITY_OR_REVIEW_ROLE>.
+Fresh-context review is APPROVED for <ARTIFACT_PATH> at <VERSION_OR_COMMIT>.
+Fresh-context receipt: <LINK>.
+Human review disposition: APPROVED.
+Human reviewer/authority: <IDENTITY_OR_REVIEW_ROLE>.
 Evidence/comments: <LINK_OR_NONE>.
 Approved state transition: <NONE_OR_EXPLICIT_TRANSITION>.
 
@@ -603,7 +606,9 @@ unmerged work through a feature integration branch.
 
 ## Risk-based review gates
 
-The default is `EXPLICIT_REVIEW`. It remains mandatory for requirements,
+The default is `EXPLICIT_REVIEW`. Every such review gate requires a new
+fresh-context subagent review of the exact candidate, followed by human review.
+It remains mandatory for requirements,
 solution conclusions, handoffs, routing, policies, ADRs, contracts, complete
 task specifications, risk/exception decisions, and externally consequential
 actions.
@@ -621,6 +626,12 @@ automation cannot mark normative content `APPROVED`, and changing a review mode
 requires explicit review. This reduces mechanical review stops without
 allowing green tests to approve a wrong design.
 
+`AUTO_CONTINUE` and `REVIEW_ON_EXCEPTION` are non-review action modes. They end
+at the next review-gated artifact and cannot approve normative content. The
+implementation-only `AGENT_AUTO_MERGE` choice is different: it may continue
+after fresh-context approval without pre-merge human review, subject to its
+exact scope and every live merge gate.
+
 Before every review gate, the generating or implementing agent self-reviews the
 exact candidate revision against its approved inputs, scope, acceptance
 criteria, policies, tests, risks, and surrounding context. For a PR, it also
@@ -634,7 +645,7 @@ authorize continuation by itself.
 
 ### Fresh-context agent review design
 
-An independent-agent gate may use a fresh reviewer context to reduce anchoring
+Every review gate uses a fresh reviewer context to reduce anchoring
 on the author's conversation and reasoning. The original agent acts as the
 coordinator: it freezes a bounded review packet, creates a reviewer with
 conversation inheritance disabled, waits for a structured receipt, and then
@@ -661,8 +672,18 @@ sequenceDiagram
     alt Changes requested
         A->>P: Address findings and create revision
         A->>R: Create fresh reviewer because prior receipt is stale
-    else Approved and all live gates pass
-        A->>P: Follow existing continuation and merge rules
+    else Approved in design or manual implementation
+        A-->>U: Stop for human review
+        alt Human requests changes
+            U->>A: Return durable findings
+            A->>P: Address findings and create revision
+            A->>R: Create a new fresh reviewer before human re-review
+        else Human approves
+            U->>A: Authorize next workflow action
+        end
+    else Approved in scoped implementation auto mode
+        A->>A: Recheck exact head, mode, scope, checks, comments, and blockers
+        A->>P: Merge and continue when every gate passes
     else Blocked or inconsistent
         A-->>U: Stop with the exact blocker
     end
@@ -676,10 +697,16 @@ private reasoning, or a recommended disposition. The reviewer first derives
 expectations from source documents and the complete candidate, then reconciles
 the author's annotations and self-review in a second pass.
 
-The reviewer returns `APPROVED`, `CHANGES_REQUESTED`, or `BLOCKED`. Any new
-candidate revision invalidates the receipt. The original agent, not the
-reviewer, waits for the result and performs the next action after rechecking the
-live workflow. Conceptually, a compatible agent runtime performs:
+The reviewer returns `APPROVED`, `CHANGES_REQUESTED`, or `BLOCKED`. It records
+each requested change with its location, governing statement, expected and
+observed behavior, impact, and required outcome. PR findings remain in inline
+comments; non-PR findings are preserved in an immutable per-round review
+record. The original finding is never overwritten when the author responds.
+
+Any new candidate revision invalidates the receipt. The original agent, not
+the reviewer, waits for the result and performs the next action after
+rechecking the live workflow. Conceptually, a compatible agent runtime
+performs:
 
 ```text
 packet = freeze_review_packet(exact_candidate)
@@ -687,6 +714,13 @@ reviewer = create_agent(inherit_author_conversation = false, input = packet)
 receipt = wait_for(reviewer)
 resume_original_agent(receipt)
 ```
+
+Design, governance, adoption, upgrade, validation, and archive artifacts always
+stop for human review after fresh-context approval. Implementation under
+`HUMAN_REVIEW_BEFORE_MERGE` follows the same sequence. Only implementation PRs
+inside a live `AGENT_AUTO_MERGE` scope may merge and continue after fresh-agent
+approval and all repository gates pass; they still enter the post-merge human
+review ledger.
 
 Fresh context is process independence, not account independence. With the same
 GitHub identity, the result can be recorded in the workflow ledger or a PR

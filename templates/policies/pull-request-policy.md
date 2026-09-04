@@ -27,17 +27,19 @@ Only `ACTIVE` versions govern pull requests.
 
 ### 1.1 Artifact review gate
 
-Submit each draft or update for human or independent-agent review. The author
-or generating runner must not self-approve unless a documented project rule
-allows a low-risk exception. First complete the
+Submit each draft or update through exact-revision self-review, fresh-context
+agent review, and human review. First complete the
 [agent self-review](../reviews/agent-self-review.md) against the exact candidate
-revision and record `SELF_REVIEW_PASSED`; any candidate change invalidates that
-evidence. Resolve `CHANGES_REQUESTED`, repeat self-review, and repeat independent
-review before activating the policy. Self-review is evidence, not approval.
+evidence, then use the canonical
+[fresh-context review](../reviews/fresh-context-agent-review.md). After fresh
+approval, stop for mandatory human review before activating the policy. Any
+candidate change invalidates both prior results; resolve `CHANGES_REQUESTED`,
+repeat self-review, and create a new fresh reviewer. Agent review is evidence,
+not policy approval.
 
-| Round | Self-review evidence | Reviewer | Type | Result | Comments/link | Resolved version |
+| Round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
 | --- | --- | --- | --- | --- | --- | --- |
-| `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
+| `1` | `<exact revision>` | `<record>` | `<receipt>` | `<links/None>` | `<identity + evidence>` | `<APPROVED/CHANGES_REQUESTED>` |
 
 ## 2. Project profile
 
@@ -52,7 +54,7 @@ review before activating the policy. Self-review is evidence, not approval.
 | Required reviewers | `<roles/count/CODEOWNERS>` | `<risk rules>` |
 | Required checks | `<CI/gates>` | `<authority>` |
 | Permitted implementation continuation modes | `<HUMAN_REVIEW_BEFORE_MERGE only / both modes>` | `<risk and repository-protection rule>` |
-| Permitted independent-agent review methods | `<fresh-context / other / Not permitted>` | `<risk, identity, and formal-approval boundary>` |
+| Fresh-context agent review method | `<runtime/tool and receipt location>` | `<isolation and formal-identity boundary>` |
 | Deployment maturity | `<development/released>` | `<compatibility effect>` |
 | Increment boundary | `<smallest self-contained mergeable change>` | `<development policy>` |
 | Issue linkage | `<required threshold>` | `<tracker>` |
@@ -305,13 +307,14 @@ and before implementation begins, and may change it at any time. The agent
 rereads the live mode before each task edit, self-review gate, PR opening, merge
 attempt, and continuation.
 
-- `HUMAN_REVIEW_BEFORE_MERGE`: the agent opens the ready PR and stops until all
-  required review and merge authority are recorded.
+- `HUMAN_REVIEW_BEFORE_MERGE`: after exact-head self-review and fresh-context
+  approval, the agent opens the ready PR and stops until human review and merge
+  authority are recorded.
 - `AGENT_AUTO_MERGE`: the user's recorded mode selection supplies merge
   authorization for only the listed task/PR scope. The agent may merge only
-  after its exact-head self-review passes, annotations are current, all checks
-  and repository protections pass, and no stop condition exists. It must not
-  bypass a repository-required approval.
+  after its exact-head self-review and a new fresh-context review pass,
+  annotations are current, all checks and repository protections pass, and no
+  stop condition exists. It must not bypass a repository-required approval.
 
 This implementation-only choice cannot approve requirements, design, policy,
 contracts, task specifications, exceptions, or final delivery. Missing,
@@ -343,13 +346,20 @@ Authors respond to comments with a change, evidence-backed explanation, or a
 recorded follow-up accepted by the reviewer. Do not resolve substantive comments
 without addressing them.
 
-When the project permits fresh-context agent review, use the canonical
+At every PR review gate, use the canonical
 [review packet and receipt](../reviews/fresh-context-agent-review.md). The
 original agent creates the reviewer without author-conversation inheritance,
 waits for its receipt, and remains responsible for addressing findings or
 running the merge gate. The reviewer is read-only and reviews the complete
 exact candidate. Any new commit invalidates the result and requires a new fresh
 reviewer.
+
+Persist every requested-change finding without overwriting it. A PR finding
+links its inline or summary comment and records the governing statement,
+expected and observed behavior, impact, requested correction, author response,
+resolved revision, and reviewer disposition. A revised head starts a new review
+round with a newly created fresh reviewer; the prior finding remains immutable
+audit history.
 
 Fresh context does not create a second GitHub identity. Record whether the
 result is workflow evidence, a PR comment, or a formal review made through
@@ -360,9 +370,10 @@ a branch-protection approval from another actor.
 
 Before merge:
 
-- required checks are current; per-PR approval is current in
-  `HUMAN_REVIEW_BEFORE_MERGE`, while `AGENT_AUTO_MERGE` requires recorded user
-  authority and remains subject to every repository-enforced approval;
+- required checks and exact-head fresh-context approval are current; per-PR
+  human approval is current in `HUMAN_REVIEW_BEFORE_MERGE`, while
+  `AGENT_AUTO_MERGE` requires recorded user authority and remains subject to
+  every repository-enforced approval;
 - unresolved blocking comments are closed;
 - branch protection and dependency order are satisfied;
 - the PR source and target match the approved integration model;
@@ -379,7 +390,8 @@ conflict, unresolved comment or change request, stale input, unexpected diff,
 ambiguity, inconsistency, new semantic decision, scope expansion, mode change,
 or repository refusal. Never use administrator bypass or weaken protections.
 After merging, record the PR head, merge commit, mode authority, self-review,
-checks, and `PENDING` post-merge human review before continuing.
+fresh-context review, checks, and `PENDING` post-merge human review before
+continuing.
 
 Define stale-approval, merge-queue, auto-merge, administrator bypass, and
 required up-to-date-branch rules: `<rules>`.

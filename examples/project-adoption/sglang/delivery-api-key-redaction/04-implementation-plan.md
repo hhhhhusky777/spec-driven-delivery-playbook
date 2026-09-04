@@ -14,6 +14,12 @@
 | Self-review state | `NOT_STARTED` |
 | Self-review candidate revision | `Not recorded` |
 | Self-review evidence | `Not recorded` |
+| Fresh-context review state | `NOT_STARTED` |
+| Fresh-context reviewed revision | `Not recorded` |
+| Fresh-context review evidence | `Not recorded` |
+| Human review state | `NOT_STARTED` |
+| Human reviewed revision | `Not recorded` |
+| Human review evidence | `Not recorded` |
 | Implementation continuation mode | Read live from workflow; currently `NOT_SELECTED` |
 | Primary issue | [SGLang #37457](https://github.com/sgl-project/sglang/issues/37457) |
 | Target source boundary | SGLang at `9a05b470fa849b349e384ef3c1381f9a85c6c550`; refresh before approval |
@@ -23,7 +29,7 @@
 | Task PR target | Feature integration branch |
 | Final PR target | Protected branch selected by SGLang policy |
 | Protected-branch synchronization | Project owner must define before `READY` |
-| Blockers | Agent self-review plus allowlist, compatibility, exact sources/tests, owners, and branch values |
+| Blockers | Self-review, fresh-context review, human approval, allowlist, compatibility, exact sources/tests, owners, and branch values |
 
 Discovery, planning, validation-only, and archive-only rows do not count as
 implementation tasks. T01 and T02 task branches start from and their task PRs

@@ -1,6 +1,6 @@
 # Spec-Driven Agile Implementation Plan Template
 
-<!-- sdd-schema: implementation-plan@1; mode: SELECT -->
+<!-- sdd-schema: implementation-plan@2; mode: SELECT -->
 
 Use this template for a non-trivial feature, refactor, migration, or reliability
 change. The completed document is the plan of record: it defines intended
@@ -49,6 +49,12 @@ section.
 | Self-review state | `<NOT_STARTED / SELF_REVIEW_PASSED / SELF_REVIEW_FAILED>` |
 | Self-review candidate revision | `<exact commit/version or Not applicable>` |
 | Self-review evidence | `<record/link or Not applicable>` |
+| Fresh-context review state | `<NOT_STARTED / IN_REVIEW / APPROVED / CHANGES_REQUESTED / BLOCKED>` |
+| Fresh-context reviewed revision | `<exact commit/version or Not recorded>` |
+| Fresh-context review evidence | `<packet/receipt link or Not recorded>` |
+| Human review state | `<NOT_STARTED / IN_REVIEW / APPROVED / CHANGES_REQUESTED>` |
+| Human reviewed revision | `<exact commit/version or Not recorded>` |
+| Human review evidence | `<review link or Not recorded>` |
 | Created | `<YYYY-MM-DD and timezone>` |
 | Last updated | `<YYYY-MM-DD HH:MM and timezone>` |
 | Primary issue | `<canonical URL>` |
@@ -105,19 +111,20 @@ that are not in this state machine.
 
 ### 0.2 Artifact review gate
 
-Submit the plan for human or independent-agent review before `READY`. The
-author or generating runner must not self-approve unless a documented project
-rule allows a low-risk exception. First complete the
+Before `READY`, first complete the
 [agent self-review](../reviews/agent-self-review.md) against the exact candidate
-revision and record `SELF_REVIEW_PASSED`; any candidate change invalidates that
-evidence. Resolve `CHANGES_REQUESTED`, update affected contracts/tasks, repeat
-self-review, and repeat independent review. If comments invalidate the accepted
+revision and record `SELF_REVIEW_PASSED`, then complete a newly created
+[fresh-context agent review](../reviews/fresh-context-agent-review.md), and
+finally obtain human approval of that same revision. Any candidate change
+invalidates both reviews. Resolve `CHANGES_REQUESTED`, update affected
+contracts/tasks, repeat self-review, create a new fresh reviewer, and repeat
+human review. If comments invalidate the accepted
 solution or manifest, return to the owning upstream artifact instead of fixing
 the contradiction only in this plan. Self-review is evidence, not approval.
 
-| Round | Self-review evidence | Reviewer | Type | Result | Comments/link | Resolved version |
+| Round | Candidate | Self-review | Fresh-context review | Human review | Durable findings/resolution | Result |
 | --- | --- | --- | --- | --- | --- | --- |
-| `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<value>` | `<version>` |
+| `1` | `<exact revision>` | `<SELF_REVIEW_PASSED link>` | `<APPROVED/CHANGES_REQUESTED/BLOCKED + receipt>` | `<APPROVED/CHANGES_REQUESTED + link>` | `<per-round record/None>` | `<APPROVED/CHANGES_REQUESTED/BLOCKED>` |
 
 ### 0.3 How to use this document
 
@@ -476,8 +483,11 @@ Apply the active development policy's task context receipt after a task becomes
 add a workflow state. Complete the receipt in that task's execution record;
 reference stable IDs and canonical links instead of duplicating policy text.
 
-An independent reviewer reconciles the receipt against the complete approved
-source set and records a disposition. If a governing source revision changes,
+After author self-review, a new fresh-context reviewer reconciles the receipt
+against the complete approved source set and records a disposition. Under
+`HUMAN_REVIEW_BEFORE_MERGE`, human review follows; under a live scoped
+`AGENT_AUTO_MERGE` action, fresh approval may continue only through the normal
+live gates. If a governing source revision changes,
 mark the receipt `STALE`, pause affected work at the next safe boundary, and
 refresh it before continuing. `READY -> IN_PROGRESS` is permitted only when the
 receipt is `APPROVED`, or `NOT_APPLICABLE` with a policy-valid reason.

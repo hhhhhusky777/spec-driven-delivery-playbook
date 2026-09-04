@@ -13,11 +13,17 @@
 | Self-review state | `NOT_STARTED` |
 | Self-review candidate revision | `Not recorded` |
 | Self-review evidence | `Not recorded` |
+| Fresh-context review state | `NOT_STARTED` |
+| Fresh-context reviewed revision | `Not recorded` |
+| Fresh-context review evidence | `Not recorded` |
+| Human review state | `NOT_STARTED` |
+| Human reviewed revision | `Not recorded` |
+| Human review evidence | `Not recorded` |
 | Implementation continuation mode | `NOT_SELECTED` |
 | Implementation mode authority | `Not selected` |
 | Implementation mode scope | `Not selected` |
 | Implementation mode selected at | `Not selected` |
-| Next action | Complete agent self-review, then request independent review and resolve project-owned unknowns |
+| Next action | Complete self-review, fresh-context review, and human review; resolve project-owned unknowns |
 | Allowed write scope | This example packet only |
 | Review mode | `EXPLICIT_REVIEW` |
 | Automation boundary | `Not applicable` |
@@ -53,7 +59,7 @@
 | Copying approved IDs/links into the workflow | `AUTO_CONTINUE` | Only exact mechanical transfer; fail closed on mismatch |
 | Running deterministic documentation checks | `REVIEW_ON_EXCEPTION` | Continue only when every declared gate passes |
 | Plan approval, allowlist, compatibility, and task specifications | `EXPLICIT_REVIEW` | Project-owner decisions |
-| Fresh-context plan review | `EXPLICIT_REVIEW` | Available after self-review; freeze an exact-revision packet, create a read-only reviewer without authoring context, and record its receipt |
+| Plan review | `EXPLICIT_REVIEW` | Self-review, a new fresh-context reviewer, then human approval of the exact candidate |
 
 Missing or invalid mode data, ambiguity, drift, stale inputs, a failed gate, an
 unknown impact, or scope expansion fails closed to `EXPLICIT_REVIEW`.
@@ -61,10 +67,11 @@ unknown impact, or scope expansion fails closed to `EXPLICIT_REVIEW`.
 Before the plan enters `IN_REVIEW`, the producing agent must audit the exact
 candidate and record `SELF_REVIEW_PASSED`. Any change invalidates that result;
 self-review cannot approve, merge, or continue the delivery.
-If SGLang project policy selects a fresh-context independent reviewer, that
-reviewer must derive expectations from the SGLang authorities and full plan
-before reconciling author annotations. This example does not invent a reviewer,
-receipt, GitHub identity, or approval that has not occurred.
+A newly created fresh-context reviewer must derive expectations from the SGLang
+authorities and full plan before reconciling author annotations. After its
+approval, human review remains mandatory because the plan is design. This
+example does not invent a reviewer, receipt, GitHub identity, or approval that
+has not occurred.
 
 The implementation continuation mode remains `NOT_SELECTED` while this example
 is in design. After the plan and a complete next-task specification are

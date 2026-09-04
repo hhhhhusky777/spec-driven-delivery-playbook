@@ -207,9 +207,15 @@ against the exact candidate revision and records `SELF_REVIEW_PASSED` or
 review evidence but cannot approve adoption, satisfy reviewer independence,
 authorize merge, or authorize continuation.
 
-**Review stop A:** an authorized reviewer verifies facts and authority links.
-On approval, the reviewer records the review and moves `DISCOVERY -> MAPPED`.
-Comments keep the manifest in `DISCOVERY`.
+It then creates a new fresh-context reviewer for the exact candidate using the
+canonical protocol. Requested changes remain durable audit history. After fresh
+approval, adoption still stops for mandatory human review; a changed candidate
+requires a new self-review and a new fresh reviewer.
+
+**Review stop A:** after fresh-context approval, an authorized human reviewer
+verifies facts and authority links. Human approval records the review and moves
+`DISCOVERY -> MAPPED`. Comments keep the manifest in `DISCOVERY` and start a new
+review round after correction.
 
 ### Step 4 — Install one selected artifact at a time
 
@@ -237,10 +243,11 @@ that checker marks the entry point `STALE`. The checker action still stops for
 its own review. After approval, updating only the entry point becomes the next
 action; final installation verification waits for that correction and review.
 
-**Review stop B:** review that artifact against the complete mapped project
-authority and verify the impact audit. Keep the manifest `MAPPED` while
-selected or stale artifacts remain. Repeat Prompt B only after the previous
-artifact is approved.
+**Review stop B:** a new fresh-context reviewer checks that artifact against the
+complete mapped project authority and verifies the impact audit; after it
+approves, a human reviewer makes the adoption decision. Keep the manifest
+`MAPPED` while selected or stale artifacts remain. Repeat Prompt B only after
+both reviews approve the previous artifact.
 
 ### Step 5 — Verify the installed integration
 

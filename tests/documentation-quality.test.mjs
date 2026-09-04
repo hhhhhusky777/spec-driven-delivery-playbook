@@ -662,7 +662,8 @@ test("upgrade mode preserves the active pin until reviewed validation and cutove
   for (const content of [readme, runbook, skill, assessment, example]) {
     assert.match(content, /current (?:revision|pin)|previous pin/i);
     assert.match(content, /candidate revision|immutable candidate/i);
-    assert.match(content, /independent (?:approval|review)/i);
+    assert.match(content, /fresh-context (?:approval|review)/i);
+    assert.match(content, /human (?:approval|review)/i);
     assert.match(content, /cutover/i);
     assert.match(content, /rollback|restore/i);
   }
@@ -675,7 +676,7 @@ test("upgrade mode preserves the active pin until reviewed validation and cutove
   assert.match(skill, /Never approve the assessment you generated/);
   assert.match(skill, /task is `IN_PROGRESS` or `VERIFYING`/);
   assert.match(assessment, /ACCEPT.*ADAPT.*REJECT.*NOT_APPLICABLE/s);
-  assert.match(assessment, /The manifest's current revision\s+remains authoritative/);
+  assert.match(assessment, /The manifest's\s+current revision remains authoritative/);
 });
 
 test("SGLang example demonstrates automated adoption through an empty whiteboard", async () => {
@@ -843,7 +844,7 @@ test("every review gate requires exact-revision agent self-review without granti
   assert.match(prTemplate, /Contract-to-change map and author annotations/);
   assert.match(prTemplate, /Agent self-review/);
   assert.match(exampleManifest, /\| Self-review state \| `NOT_STARTED` \|/);
-  assert.match(exampleManifest, /Complete agent self-review, then request independent review/);
+  assert.match(exampleManifest, /Complete self-review, then fresh-context review, then request human review/);
 });
 
 test("fresh-context review isolates author context and returns an exact-revision receipt", async () => {
@@ -872,28 +873,66 @@ test("fresh-context review isolates author context and returns an exact-revision
   assert.match(readme, /^### Fresh-context agent review design$/m);
   assert.match(readme, /create_agent\(inherit_author_conversation = false/);
   assert.match(readme, /process independence, not account independence/i);
-  assert.match(protocol, /^## 1\. Review packet$/m);
-  assert.match(protocol, /^## 2\. Fresh-context creation contract$/m);
-  assert.match(protocol, /^## 4\. Review receipt$/m);
-  assert.match(protocol, /^## 5\. Coordinator resume gate$/m);
+  assert.match(protocol, /^## 1\. Phase and continuation policy$/m);
+  assert.match(protocol, /^## 2\. Review packet$/m);
+  assert.match(protocol, /^## 3\. Fresh-context creation contract$/m);
+  assert.match(protocol, /^## 5\. Durable findings and resolution history$/m);
+  assert.match(protocol, /^## 6\. Review receipt$/m);
+  assert.match(protocol, /^## 7\. Coordinator resume gate$/m);
   assert.match(protocol, /must not edit files, push commits/);
   assert.match(protocol, /`ISOLATION_UNVERIFIED` and return `BLOCKED`/);
   assert.match(
     protocol,
     /Any candidate change.*requires a newly created\s+fresh-context reviewer/is,
   );
-  assert.match(workflow, /fresh-context packet \+ receipt links/);
+  assert.match(protocol, /design and manual implementation stop for human review/i);
+  assert.match(protocol, /Never overwrite a request for changes/i);
+  assert.match(workflow, /Record its packet\/receipt, exact revision/);
   assert.match(workflowSkill, /no\s+inherited authoring conversation/i);
   assert.match(
     workflowSkill,
     /Keep the original task waiting for the structured receipt/,
   );
   assert.match(prPolicy, /Fresh context does not create a second GitHub identity/);
-  assert.match(prTemplate, /^## Independent review$/m);
-  assert.match(prTemplate, /Review packet and receipt/);
+  assert.match(prTemplate, /^## Fresh-context and human review$/m);
+  assert.match(prTemplate, /Fresh-context packet and receipt/);
   assert.match(prTemplate, /same-actor comment is not represented as a formal approval/i);
   assert.match(catalog, /fresh-context agent review/);
-  assert.match(example, /This example does not invent a reviewer/);
+  assert.match(example, /This\s+example does not invent a reviewer/);
+});
+
+test("every review gate requires fresh-context review before its phase continuation", async () => {
+  const paths = [
+    "templates/discovery/solution-whiteboard.md",
+    "templates/handoffs/whiteboard-to-workflow.md",
+    "templates/decisions/architecture-decision-record.md",
+    "templates/delivery/implementation-plan.md",
+    "templates/policies/development-policy.md",
+    "templates/policies/pull-request-policy.md",
+    "templates/policies/specialized-policy.md",
+    "templates/testing/test-strategy.md",
+    "templates/adoption/playbook-upgrade-assessment.md",
+    "templates/workflows/sdd-delivery-workflow.md",
+  ];
+  const documents = await Promise.all(
+    paths.map((relativePath) =>
+      readFile(path.join(REPOSITORY_ROOT, relativePath), "utf8"),
+    ),
+  );
+
+  for (const [index, document] of documents.entries()) {
+    assert.match(document, /fresh-context/i, paths[index]);
+    assert.match(document, /human review|human approval/i, paths[index]);
+  }
+
+  const protocol = await readFile(
+    path.join(REPOSITORY_ROOT, "templates/reviews/fresh-context-agent-review.md"),
+    "utf8",
+  );
+  assert.match(protocol, /Every review round uses a newly created fresh-context reviewer/);
+  assert.match(protocol, /AGENT_AUTO_MERGE/);
+  assert.match(protocol, /`AUTO_CONTINUE` and `REVIEW_ON_EXCEPTION`/);
+  assert.match(protocol, /deterministic actions that are not review gates/i);
 });
 
 test("implementation auto-merge is human-selected, implementation-only, and rechecked", async () => {
@@ -939,6 +978,7 @@ test("implementation auto-merge is human-selected, implementation-only, and rech
   }
   assert.match(developmentPolicy, /The agent must never infer or select\s+`AGENT_AUTO_MERGE`/);
   assert.match(prPolicy, /must not\s+bypass a repository-required approval/);
+  assert.match(prPolicy, /exact-head self-review and a new fresh-context review pass/);
   assert.match(prPolicy, /final feature PR[\s\S]*final validation has its required approval/);
   assert.match(workflowSkill, /Never weaken checks, use\s+administrator bypass/);
   assert.match(workflowSkill, /final feature PR only[\s\S]*final validation is already approved/);

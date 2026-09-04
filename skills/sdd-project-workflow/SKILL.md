@@ -87,9 +87,9 @@ After that one edit and its applicable checks:
 3. Classify the change `CONTROL_ONLY`, `MATERIAL`, or `UNKNOWN` and compute
    transitive `CURRENT`, `STALE`, or `BLOCKED` state from structured dependency
    IDs. Do not infer the graph from prose.
-4. For `EXPLICIT_REVIEW`, keep independent review of the current change as the
-   immediate next action. Do not correct a newly stale second artifact in the
-   same invocation.
+4. For `EXPLICIT_REVIEW`, complete fresh-context review of the current exact
+   candidate, then keep human review as the immediate next action. Do not
+   correct a newly stale second artifact in the same invocation.
 5. For `AUTO_CONTINUE` or `REVIEW_ON_EXCEPTION`, verify approved/current inputs,
    no semantic decision, every declared gate passing on the output revision, no
    exception, and an audit entry. Continue only until the next mandatory
@@ -105,8 +105,7 @@ After that one edit and its applicable checks:
 
 ## Fresh-context independent review
 
-When the current gate selects an independent-agent reviewer and the project
-policy permits fresh-context review:
+At every review gate:
 
 1. Read the playbook's `templates/reviews/fresh-context-agent-review.md` from
    the verified read-only checkout recorded by the generated guide.
@@ -123,11 +122,15 @@ policy permits fresh-context review:
    workflow state, or resolve its own comments.
 5. On receipt, verify the review ID, exact subject/base/candidate, isolation,
    published comments, and that the candidate is unchanged. Record the receipt
-   in the artifact review ledger.
+   and its immutable findings in the artifact review ledger or linked per-round
+   review record. Never overwrite the original finding when adding an author
+   response or later reviewer disposition.
 6. For `CHANGES_REQUESTED`, address or justify every finding; any candidate
    change requires a newly created fresh reviewer. For `BLOCKED`, restore
-   reviewability. For `APPROVED`, reread all live workflow and merge gates
-   before proceeding.
+   reviewability. For `APPROVED`, stop for human review in design, governance,
+   adoption, upgrade, validation, archive, and manual implementation. Only a
+   scoped implementation `AGENT_AUTO_MERGE` flow may proceed after rereading
+   every live workflow and merge gate.
 
 Fresh context is not a distinct GitHub actor. Unless the project separately
 provides authorized review credentials, publish the result as ledger evidence
@@ -148,12 +151,12 @@ broaden its scope, and run lifecycle validation after recording it.
 For every implementation task, reread the canonical mode before the task edit,
 self-review gate, PR opening, merge attempt, and next-task continuation:
 
-- `HUMAN_REVIEW_BEFORE_MERGE`: open the annotated, exact-head self-reviewed PR
-  and stop for required human review and merge authority.
-- `AGENT_AUTO_MERGE`: open the annotated, exact-head self-reviewed PR, wait for
-  all required checks and repository protections, reread the mode, then merge
-  without bypass and record the merge and post-merge review row before
-  continuing to the next dependency-ready task.
+- `HUMAN_REVIEW_BEFORE_MERGE`: after exact-head self-review and fresh-context
+  approval, stop for required human review and merge authority.
+- `AGENT_AUTO_MERGE`: after exact-head self-review and fresh-context approval,
+  wait for all required checks and repository protections, reread the mode,
+  then merge without bypass and record the merge and post-merge review row
+  before continuing to the next dependency-ready task.
 
 Self-review does not authorize the merge; the user's current scoped mode choice
 does. Stop on missing/invalid/stale/out-of-scope mode data, a failed/missing
