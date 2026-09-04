@@ -986,6 +986,8 @@ test("implementation auto-merge is human-selected, implementation-only, and rech
   assert.match(prPolicy, /final feature PR[\s\S]*final validation has its required approval/);
   assert.match(workflow, /sdd-section: implementation-review-ledger/);
   assert.match(workflow, /exact table headers present even before/);
+  assert.match(workflow, /Every merged row requires fresh-context `APPROVED`/);
+  assert.match(workflow, /`COMPLETE` and `ARCHIVED` require at least one/);
   assert.match(workflowSkill, /Never weaken checks, use\s+administrator bypass/);
   assert.match(workflowSkill, /final feature PR only[\s\S]*final validation is already approved/);
   assert.match(testStrategy, /Negative fixtures must block missing\/invalid mode data/);

@@ -370,6 +370,7 @@ function workflow({
   postMergeHumanReview = null,
   postMergeFreshReview = "APPROVED / fresh-review-1",
   postMergeResult = "MERGED",
+  postMergeMode = "AGENT_AUTO_MERGE / user",
   includeReviewLedger = true,
   reviewLedgerHumanHeader = "Human review",
 } = {}) {
@@ -452,7 +453,7 @@ ${dependencyRows}
 <!-- sdd-section: implementation-review-ledger -->
 ${includeReviewLedger ? `| Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | ${reviewLedgerHumanHeader} | Findings/follow-up |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-${postMergeHumanReview === null ? "" : `| T01 / PR-1 | head-1 / merge-1 | AGENT_AUTO_MERGE / user | review-1 | ${postMergeFreshReview} | checks-1 | ${postMergeResult} | ${postMergeHumanReview} | None |`}` : ""}
+${postMergeHumanReview === null ? "" : `| T01 / PR-1 | head-1 / merge-1 | ${postMergeMode} | review-1 | ${postMergeFreshReview} | checks-1 | ${postMergeResult} | ${postMergeHumanReview} | None |`}` : ""}
 `;
 }
 
@@ -586,7 +587,7 @@ test("implementation review requires fresh approval in both continuation modes",
   );
   assert.ok(
     mergedWithoutFreshDiagnostics.some(
-      (item) => item.rule === "SDD_AUTO_MERGE_FRESH_REVIEW",
+      (item) => item.rule === "SDD_MERGED_FRESH_REVIEW",
     ),
   );
 
@@ -609,7 +610,7 @@ test("implementation review requires fresh approval in both continuation modes",
   );
   assert.ok(
     annotatedMergeDiagnostics.some(
-      (item) => item.rule === "SDD_AUTO_MERGE_FRESH_REVIEW",
+      (item) => item.rule === "SDD_MERGED_FRESH_REVIEW",
     ),
   );
 
@@ -630,6 +631,92 @@ test("implementation review requires fresh approval in both continuation modes",
     SCHEMAS,
   );
   assert.ok(invalidMergeDiagnostics.some((item) => item.rule === "SDD_MERGE_RESULT"));
+
+  const manualMergeWithoutFresh = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      artifactReviewState: "IN_REVIEW",
+      postMergeHumanReview: "APPROVED / human-review-1",
+      postMergeFreshReview: "NOT_APPROVED",
+      postMergeMode: "HUMAN_REVIEW_BEFORE_MERGE / user",
+    }),
+  );
+  const manualMergeDiagnostics = await checkSddLifecycleDocument(
+    manualMergeWithoutFresh.file,
+    manualMergeWithoutFresh.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    manualMergeDiagnostics.some(
+      (item) => item.rule === "SDD_MERGED_FRESH_REVIEW",
+    ),
+  );
+
+  const unknownRowMode = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      artifactReviewState: "IN_REVIEW",
+      postMergeHumanReview: "PENDING",
+      postMergeFreshReview: "NOT_APPROVED",
+      postMergeMode: "AGENT_AUTO_MERG / user",
+    }),
+  );
+  const unknownModeDiagnostics = await checkSddLifecycleDocument(
+    unknownRowMode.file,
+    unknownRowMode.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    unknownModeDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_MODE",
+    ),
+  );
+
+  const manualMergeWithoutHuman = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      artifactReviewState: "IN_REVIEW",
+      postMergeHumanReview: "PENDING",
+      postMergeMode: "HUMAN_REVIEW_BEFORE_MERGE / user",
+    }),
+  );
+  const manualHumanDiagnostics = await checkSddLifecycleDocument(
+    manualMergeWithoutHuman.file,
+    manualMergeWithoutHuman.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    manualHumanDiagnostics.some(
+      (item) => item.rule === "SDD_MANUAL_MERGE_HUMAN_REVIEW",
+    ),
+  );
+
+  for (const [state, previousState] of [
+    ["COMPLETE", "VALIDATING"],
+    ["ARCHIVED", "COMPLETE"],
+  ]) {
+    const emptyClosureLedger = await fixture(
+      t,
+      workflow({ state, previousState, postMergeHumanReview: null }),
+    );
+    const emptyClosureDiagnostics = await checkSddLifecycleDocument(
+      emptyClosureLedger.file,
+      emptyClosureLedger.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      emptyClosureDiagnostics.some(
+        (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_EMPTY",
+      ),
+      `${state} must reject an empty implementation review ledger`,
+    );
+  }
 
   const missingLedger = await fixture(t, workflow({ includeReviewLedger: false }));
   const missingLedgerDiagnostics = await checkSddLifecycleDocument(

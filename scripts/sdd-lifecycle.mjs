@@ -388,6 +388,22 @@ function checkImplementationContinuation(file, fields, tables) {
       ),
     );
   }
+  const invalidModeRows = (reviewLedger?.rows || []).filter(
+    (row) =>
+      !["HUMAN_REVIEW_BEFORE_MERGE", "AGENT_AUTO_MERGE"].includes(
+        leadingDisposition(row["Implementation mode/authority"]),
+      ),
+  );
+  if (invalidModeRows.length > 0) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        reviewLedger.line,
+        "SDD_IMPLEMENTATION_REVIEW_MODE",
+        "implementation review ledger mode must lead with HUMAN_REVIEW_BEFORE_MERGE or AGENT_AUTO_MERGE",
+      ),
+    );
+  }
   const invalidMergeRows = (reviewLedger?.rows || []).filter(
     (row) => !["MERGED", "STOPPED"].includes(leadingDisposition(row["Merge result"])),
   );
@@ -401,25 +417,47 @@ function checkImplementationContinuation(file, fields, tables) {
       ),
     );
   }
-  const mergedAutoRows = (reviewLedger?.rows || []).filter(
-    (row) =>
-      /AGENT_AUTO_MERGE/.test(normalizeValue(row["Implementation mode/authority"])) &&
-      leadingDisposition(row["Merge result"]) === "MERGED",
+  const mergedRows = (reviewLedger?.rows || []).filter(
+    (row) => leadingDisposition(row["Merge result"]) === "MERGED",
   );
-  for (const row of mergedAutoRows) {
+  for (const row of mergedRows) {
     if (leadingDisposition(row["Fresh-context review"]) !== "APPROVED") {
       diagnostics.push(
         diagnostic(
           file,
           reviewLedger.line,
-          "SDD_AUTO_MERGE_FRESH_REVIEW",
-          "an AGENT_AUTO_MERGE row cannot be merged without fresh-context APPROVED evidence",
+          "SDD_MERGED_FRESH_REVIEW",
+          "an implementation row cannot be merged without fresh-context APPROVED evidence",
+        ),
+      );
+    }
+    if (
+      leadingDisposition(row["Implementation mode/authority"]) ===
+        "HUMAN_REVIEW_BEFORE_MERGE" &&
+      leadingDisposition(row["Human review"]) !== "APPROVED"
+    ) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          reviewLedger.line,
+          "SDD_MANUAL_MERGE_HUMAN_REVIEW",
+          "a HUMAN_REVIEW_BEFORE_MERGE row cannot be merged without human APPROVED evidence",
         ),
       );
     }
   }
 
   if (["COMPLETE", "ARCHIVED"].includes(state)) {
+    if ((reviewLedger?.rows || []).length === 0) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          reviewLedger?.line || 1,
+          "SDD_IMPLEMENTATION_REVIEW_EMPTY",
+          `${state} requires at least one implementation PR review-ledger row`,
+        ),
+      );
+    }
     const invalidRows = (reviewLedger?.rows || []).filter((row) => {
       const disposition = leadingDisposition(row["Human review"]);
       return !["APPROVED", "ACCEPTED", "FOLLOW_UP_COMPLETE"].includes(disposition);

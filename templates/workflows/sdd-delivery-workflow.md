@@ -424,18 +424,19 @@ the ledger fails closed because it would erase implementation review duties.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `<task + PR link>` | `<commits>` | `<mode + authority link>` | `<record>` | `<APPROVED / packet-or-receipt-link>` | `<evidence>` | `<MERGED/STOPPED>` | `<APPROVED / evidence for manual mode, or PENDING/ACCEPTED/FOLLOW_UP_REQUIRED/FOLLOW_UP_COMPLETE / evidence for auto mode>` | `<links or None>` |
 
-In `HUMAN_REVIEW_BEFORE_MERGE`, record the human review before merge. In
+Every row's mode must lead with exactly `HUMAN_REVIEW_BEFORE_MERGE` or
+`AGENT_AUTO_MERGE`. Every merged row requires fresh-context `APPROVED`. In
+`HUMAN_REVIEW_BEFORE_MERGE`, it also requires human `APPROVED` before merge. In
 `AGENT_AUTO_MERGE`, create the row immediately after merge with human review
 `PENDING`; later record `ACCEPTED` or `FOLLOW_UP_REQUIRED` without rewriting the
 merge evidence. A finding that affects active or future work marks those
-dependencies stale or blocked. Every row must be accepted, or have completed
-follow-up recorded as `FOLLOW_UP_COMPLETE`, before `COMPLETE` and archive.
+dependencies stale or blocked. `COMPLETE` and `ARCHIVED` require at least one
+ledger row, and every row must be accepted or have completed follow-up recorded
+as `FOLLOW_UP_COMPLETE`.
 
 Use the exact leading disposition shown above, optionally followed by ` / ` and
-an evidence link. Unknown values fail closed. A merged `AGENT_AUTO_MERGE` row
-requires leading fresh-context disposition `APPROVED`; at `COMPLETE` or
-`ARCHIVED`, human review must lead with `APPROVED`, `ACCEPTED`, or
-`FOLLOW_UP_COMPLETE`.
+an evidence link. Unknown values fail closed. At `COMPLETE` or `ARCHIVED`, human
+review must lead with `APPROVED`, `ACCEPTED`, or `FOLLOW_UP_COMPLETE`.
 
 ## 10. Feedback and rerouting rules
 
