@@ -235,6 +235,27 @@ test("plan lifecycle and review gates reject illegal READY transitions", async (
     ),
   );
 
+  const oneReviewerChangesRequested = await fixture(
+    t,
+    plan({
+      reviewState: "CHANGES_REQUESTED",
+      freshReviewState: "CHANGES_REQUESTED",
+      freshAssignedReviewers: "reviewer-1",
+      freshRequiredApprovals: "1",
+      freshApprovedReviewers: "Not recorded",
+    }),
+  );
+  const oneReviewerChangesRequestedDiagnostics = await checkSddLifecycleDocument(
+    oneReviewerChangesRequested.file,
+    oneReviewerChangesRequested.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    oneReviewerChangesRequestedDiagnostics.some(
+      (item) => item.rule === "SDD_FRESH_REVIEW_SESSION",
+    ),
+  );
+
   const missingSelfReview = await fixture(
     t,
     plan({ selfReviewState: "NOT_STARTED", selfReviewRevision: "Not recorded" }),
@@ -862,6 +883,39 @@ test("GATES_READY rejects stale prerequisites and only scoped blockers", async (
   assert.ok(
     invalidReviewDiagnostics.some((item) => item.rule === "SDD_WORKFLOW_REVIEW_STATE"),
   );
+});
+
+test("active or retained workflow review sessions require both reviewers", async (t) => {
+  for (const stateOverride of [
+    {
+      state: "ARTIFACT_IN_REVIEW",
+      previousState: "MANIFEST_REVIEWED",
+      artifactReviewState: "NOT_STARTED",
+    },
+    {
+      state: "BLOCKED",
+      previousState: "ARTIFACT_IN_REVIEW",
+      artifactReviewState: "NOT_STARTED",
+    },
+  ]) {
+    const oneReviewer = await fixture(
+      t,
+      workflow({
+        ...stateOverride,
+        freshAssignedReviewers: "reviewer-1",
+        freshRequiredApprovals: "1",
+        freshApprovedReviewers: "Not recorded",
+      }),
+    );
+    const diagnostics = await checkSddLifecycleDocument(
+      oneReviewer.file,
+      oneReviewer.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      diagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_SESSION"),
+    );
+  }
 });
 
 test("implementation review requires fresh approval in both continuation modes", async (t) => {

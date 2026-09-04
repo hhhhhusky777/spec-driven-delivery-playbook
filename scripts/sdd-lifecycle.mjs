@@ -1007,7 +1007,9 @@ function checkImplementationPlan(file, marker, text, tables, fields, schema) {
     ...checkReviewSessionRoster(
       file,
       fields,
-      ["IN_REVIEW", "APPROVED"].includes(fields.get("Review state")),
+      ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED"].includes(
+        fields.get("Review state"),
+      ) || hasRecordedValue(fields.get("Fresh-context review session ID") || ""),
     ),
   );
   diagnostics.push(
@@ -1408,7 +1410,9 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     ...checkReviewSessionRoster(
       file,
       fields,
-      ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED"].includes(artifactReviewState),
+      ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED"].includes(artifactReviewState) ||
+        ["MANIFEST_IN_REVIEW", "ARTIFACT_IN_REVIEW"].includes(fields.get("State")) ||
+        hasRecordedValue(fields.get("Fresh-context review session ID") || ""),
     ),
   );
   const reviewPhase = fields.get("Current review phase");

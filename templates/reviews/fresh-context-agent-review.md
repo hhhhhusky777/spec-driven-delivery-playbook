@@ -82,6 +82,7 @@ round, freeze it before initializing the assigned reviewer(s):
 | --- | --- |
 | Review session ID | `<stable ID for the whole review gate>` |
 | Review round | `<R01, R02, ...>` |
+| Reviewer seat | `<R1 or R2; stable for this session>` |
 | Assigned reviewers | `<stable reviewer IDs>` |
 | Required approvals | `2` |
 | Approved reviewers | `<aggregate session record; Not recorded in an individual packet>` |
@@ -128,7 +129,8 @@ and the immutable session findings/responses. The reviewer may use its own
 prior review context to verify that requested changes were actually resolved.
 If an assigned reviewer becomes unavailable, record `REVIEWER_REPLACED`, the
 reason, and a handoff to a newly isolated reviewer. The replacement reads the
-complete candidate and immutable session history; it is not a shortcut around
+complete candidate and immutable session history, inherits the replaced
+reviewer's stable seat and next finding sequence, and is not a shortcut around
 an unresolved finding.
 
 ## 4. Independent review procedure
@@ -194,6 +196,7 @@ finding.
 | --- | --- |
 | Review session ID | `<packet session ID>` |
 | Review round | `<packet round>` |
+| Reviewer seat | `<packet R1 or R2>` |
 | Assigned reviewer ID | `<stable reviewer ID>` |
 | Reviewer agent/runtime | `<identity and runtime>` |
 | Context isolation | `<FRESH_CONTEXT / ISOLATION_UNVERIFIED>` |

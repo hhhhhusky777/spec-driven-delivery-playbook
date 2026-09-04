@@ -888,6 +888,8 @@ test("fresh-context review isolates author context and returns an exact-revision
   assert.match(protocol, /Required approvals \| `2`/);
   assert.match(protocol, /session, reviewer seat, and reviewer-local sequence/i);
   assert.match(protocol, /S1-R1-F01/);
+  assert.match(protocol, /Reviewer seat \| `<R1 or R2; stable for this session>`/);
+  assert.match(protocol, /inherits the replaced\s+reviewer's stable seat/i);
   assert.match(protocol, /`ISOLATION_UNVERIFIED` and return `BLOCKED`/);
   assert.match(
     protocol,
