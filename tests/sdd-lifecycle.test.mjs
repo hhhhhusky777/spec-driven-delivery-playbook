@@ -253,20 +253,6 @@ test("plan lifecycle and review gates reject illegal READY transitions", async (
     humanReviewDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
   );
 
-  const misleadingPrerequisite = await fixture(
-    t,
-    workflow({ manifestReviewState: "NOT_APPROVED" }),
-  );
-  const misleadingPrerequisiteDiagnostics = await checkSddLifecycleDocument(
-    misleadingPrerequisite.file,
-    misleadingPrerequisite.root,
-    SCHEMAS,
-  );
-  assert.ok(
-    misleadingPrerequisiteDiagnostics.some(
-      (item) => item.rule === "SDD_UNAPPROVED_PREREQUISITE",
-    ),
-  );
   assert.ok(
     humanReviewDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_EVIDENCE"),
   );
@@ -368,6 +354,9 @@ function workflow({
   automaticGateResult = "NOT_APPLICABLE",
   automationBoundary = "task-1",
   automationException = "None",
+  includeManifestTable = true,
+  includeDependencyTable = true,
+  includeBlockerTable = true,
   artifactReviewState = "APPROVED",
   selfReviewState = "SELF_REVIEW_PASSED",
   selfReviewRevision = "candidate-v1",
@@ -407,9 +396,6 @@ function workflow({
     (resolvedHumanReviewState === "NOT_APPLICABLE"
       ? "Not applicable"
       : "reviews/human-review.md");
-  const manifestRow = includePlan
-    ? `| 1 | Plan | GENERATE_FULL | ${manifestReviewState} |`
-    : `| 1 | Documentation | REUSE | ${manifestReviewState} |`;
   const dependencyRows = includePlan
     ? `| plan | ${planLink} | None | ${planConsumed} | ${planCurrent} | ${impact} | ${freshness} | None |
 | task-1 | Task 1 | plan | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`
@@ -451,19 +437,19 @@ function workflow({
 | Automation audit record | \`docs/automation-audit.md\` |
 
 <!-- sdd-section: delivery-manifest -->
-| Order | Artifact | Decision | Review state/link |
-| --- | --- | --- | --- |
-${manifestRow}
+${includeManifestTable ? `| Order | Artifact | Decision | Reason/trigger | Template or authority | Owner | Review owner | Review state/link |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+${includePlan ? `| 1 | Plan | GENERATE_FULL | Required | plan.md | Author | Reviewer | ${manifestReviewState} |` : `| 1 | Documentation | REUSE | Current | docs.md | Author | Reviewer | ${manifestReviewState} |`}` : ""}
 
 <!-- sdd-section: artifact-dependencies -->
-| Artifact ID | Artifact/link | Depends on | Consumed version | Current version | Change impact | Freshness | Blocked by |
+${includeDependencyTable ? `| Artifact ID | Artifact/link | Depends on | Consumed version | Current version | Change impact | Freshness | Blocked by |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-${dependencyRows}
+${dependencyRows}` : ""}
 
 <!-- sdd-section: blocker-register -->
-| Blocker ID | Blocks | State |
-| --- | --- | --- |
-| B-01 | ${blockerBlocks} | OPEN |
+${includeBlockerTable ? `| Blocker ID | Evidence/unblock condition | Blocks | State | Owner |
+| --- | --- | --- | --- | --- |
+| B-01 | evidence | ${blockerBlocks} | OPEN | owner |` : ""}
 
 <!-- sdd-section: delivery-state -->
 | Field | Current value |
@@ -534,6 +520,40 @@ test("GATES_READY rejects stale prerequisites and only scoped blockers", async (
   assert.ok(
     humanReviewDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
   );
+
+  const misleadingPrerequisite = await fixture(
+    t,
+    workflow({ manifestReviewState: "NOT_APPROVED" }),
+  );
+  const misleadingPrerequisiteDiagnostics = await checkSddLifecycleDocument(
+    misleadingPrerequisite.file,
+    misleadingPrerequisite.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    misleadingPrerequisiteDiagnostics.some(
+      (item) => item.rule === "SDD_UNAPPROVED_PREREQUISITE",
+    ),
+  );
+
+  for (const [name, override] of [
+    ["delivery manifest", { includeManifestTable: false }],
+    ["artifact dependency and freshness register", { includeDependencyTable: false }],
+    ["scoped blocker register", { includeBlockerTable: false }],
+  ]) {
+    const missingCoreTable = await fixture(t, workflow(override));
+    const missingCoreTableDiagnostics = await checkSddLifecycleDocument(
+      missingCoreTable.file,
+      missingCoreTable.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      missingCoreTableDiagnostics.some(
+        (item) => item.rule === "SDD_REQUIRED_TABLE" && item.message.includes(name),
+      ),
+      `workflow must reject a missing ${name} table even when its marker remains`,
+    );
+  }
 
   const prematureReady = await fixture(
     t,

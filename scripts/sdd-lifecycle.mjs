@@ -901,6 +901,50 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
       "workflow",
     ),
   );
+
+  const deliveryManifest = findTable(tables, [
+    "Order",
+    "Artifact",
+    "Decision",
+    "Reason/trigger",
+    "Template or authority",
+    "Owner",
+    "Review owner",
+    "Review state/link",
+  ]);
+  const freshnessTable = findTable(tables, [
+    "Artifact ID",
+    "Artifact/link",
+    "Depends on",
+    "Consumed version",
+    "Current version",
+    "Change impact",
+    "Freshness",
+    "Blocked by",
+  ]);
+  const blockerTable = findTable(tables, [
+    "Blocker ID",
+    "Evidence/unblock condition",
+    "Blocks",
+    "State",
+    "Owner",
+  ]);
+  for (const [name, table] of [
+    ["delivery manifest", deliveryManifest],
+    ["artifact dependency and freshness register", freshnessTable],
+    ["scoped blocker register", blockerTable],
+  ]) {
+    if (!table) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          1,
+          "SDD_REQUIRED_TABLE",
+          `workflow requires the canonical ${name} table and exact headers`,
+        ),
+      );
+    }
+  }
   diagnostics.push(
     ...checkSelfReviewGate(
       file,
@@ -1033,15 +1077,6 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     }
   }
 
-  const freshnessTable = findTable(tables, [
-    "Artifact ID",
-    "Depends on",
-    "Consumed version",
-    "Current version",
-    "Change impact",
-    "Freshness",
-    "Blocked by",
-  ]);
   const freshnessRows = freshnessTable?.rows || [];
   const computed = computeTransitiveFreshness(freshnessRows);
   for (const row of freshnessRows) {
@@ -1065,7 +1100,6 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     }
   }
 
-  const blockerTable = findTable(tables, ["Blocker ID", "Blocks", "State"]);
   const targetIds = new Set(splitIdentifiers(fields.get("Next action target IDs") || ""));
   for (const blocker of blockerTable?.rows || []) {
     if (normalizeValue(blocker.State) !== "OPEN") {
@@ -1103,8 +1137,17 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
         diagnostic(file, 1, "SDD_GATES_NOT_READY", `GATES_READY has non-current artifacts: ${nonCurrent.map(([id]) => id).join(", ")}`),
       );
     }
-    const manifest = findTable(tables, ["Order", "Artifact", "Decision", "Review state/link"]);
-    for (const row of manifest?.rows || []) {
+    if ((deliveryManifest?.rows || []).length === 0) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          deliveryManifest?.line || 1,
+          "SDD_DELIVERY_MANIFEST_EMPTY",
+          "GATES_READY requires at least one reviewed delivery-manifest row",
+        ),
+      );
+    }
+    for (const row of deliveryManifest?.rows || []) {
       const decision = normalizeValue(row.Decision);
       if (["SKIP", "DEFER", "BLOCKED"].includes(decision)) {
         continue;
@@ -1112,7 +1155,7 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
       const review = leadingDisposition(row["Review state/link"]);
       if (!["APPROVED", "CURRENT", "JUSTIFIED"].includes(review)) {
         diagnostics.push(
-          diagnostic(file, manifest.line, "SDD_UNAPPROVED_PREREQUISITE", `${normalizeValue(row.Artifact)} is not approved/current`),
+          diagnostic(file, deliveryManifest.line, "SDD_UNAPPROVED_PREREQUISITE", `${normalizeValue(row.Artifact)} is not approved/current`),
         );
       }
     }

@@ -73,7 +73,8 @@
         "Next action",
         "Next action target IDs",
         "Allowed write scope",
-        "Next action write targets"
+        "Next action write targets",
+        "Stale artifacts"
       ],
       "transitions": {
         "AWAITING_HANDOFF": ["ROUTING", "BLOCKED"],
