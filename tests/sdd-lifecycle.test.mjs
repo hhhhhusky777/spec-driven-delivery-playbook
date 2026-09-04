@@ -377,7 +377,9 @@ function workflow({
   implementationModeScope = "task-1",
   implementationModeSelectedAt = "2026-09-03 10:00 UTC",
   manifestReviewState = "APPROVED",
+  manifestArtifactId,
   manifestArtifact,
+  taskDependsOn,
   postMergeHumanReview = null,
   postMergeFreshReview = "APPROVED / [fresh review](reviews/fresh-review.md)",
   postMergeResult = "MERGED / [merge](https://github.com/example/project/commit/2222222222222222222222222222222222222222)",
@@ -416,12 +418,17 @@ function workflow({
     (resolvedReviewPhase === "IMPLEMENTATION"
       ? `[task-1 PR #1](https://github.com/example/project/pull/1)`
       : `[plan](implementation-plan.md)`);
+  const resolvedManifestArtifactId =
+    manifestArtifactId ?? (includePlan ? "plan" : "documentation");
   const dependencyRows = includePlan
-    ? `| workflow | Workflow | None | v1 | v1 | CONTROL_ONLY | CURRENT | None |
+    ? `| whiteboard | Whiteboard | None | v1 | v1 | CONTROL_ONLY | CURRENT | None |
+| workflow | Workflow | whiteboard | v1 | v1 | CONTROL_ONLY | CURRENT | None |
 | plan | ${planLink} | workflow | ${planConsumed} | ${planCurrent} | ${impact} | ${freshness} | None |
-| task-1 | Task 1 | plan | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`
-    : `| workflow | Workflow | None | v1 | v1 | CONTROL_ONLY | CURRENT | None |
-| task-1 | Task 1 | workflow | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`;
+| task-1 | Task 1 | ${taskDependsOn ?? "plan"} | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`
+    : `| whiteboard | Whiteboard | None | v1 | v1 | CONTROL_ONLY | CURRENT | None |
+| workflow | Workflow | whiteboard | v1 | v1 | CONTROL_ONLY | CURRENT | None |
+| documentation | Documentation | workflow | v1 | v1 | CONTROL_ONLY | CURRENT | None |
+| task-1 | Task 1 | ${taskDependsOn ?? "workflow"} | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`;
   const resolvedManifestArtifact =
     manifestArtifact ?? (includePlan ? "Plan" : "Documentation");
   return `# Delivery Workflow
@@ -463,9 +470,9 @@ function workflow({
 | Automation audit record | \`docs/automation-audit.md\` |
 
 <!-- sdd-section: delivery-manifest -->
-${includeManifestTable ? `| Order | Artifact | Decision | Reason/trigger | Template or authority | Owner | Review owner | Review state/link |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | ${resolvedManifestArtifact} | ${includePlan ? "GENERATE_FULL" : "REUSE"} | Required | artifact.md | Author | Reviewer | ${manifestReviewState} |` : ""}
+${includeManifestTable ? `| Order | Artifact ID | Artifact | Decision | Reason/trigger | Template or authority | Owner | Review owner | Review state/link |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | ${resolvedManifestArtifactId} | ${resolvedManifestArtifact} | ${includePlan ? "GENERATE_FULL" : "REUSE"} | Required | artifact.md | Author | Reviewer | ${manifestReviewState} |` : ""}
 
 <!-- sdd-section: artifact-dependencies -->
 ${includeDependencyTable ? `| Artifact ID | Artifact/link | Depends on | Consumed version | Current version | Change impact | Freshness | Blocked by |
@@ -613,7 +620,7 @@ test("GATES_READY rejects stale prerequisites and only scoped blockers", async (
 
   const uncoveredManifestArtifact = await fixture(
     t,
-    workflow({ manifestArtifact: "Policy" }),
+    workflow({ manifestArtifactId: "policy", manifestArtifact: "Policy" }),
   );
   const uncoveredManifestDiagnostics = await checkSddLifecycleDocument(
     uncoveredManifestArtifact.file,
@@ -623,6 +630,21 @@ test("GATES_READY rejects stale prerequisites and only scoped blockers", async (
   assert.ok(
     uncoveredManifestDiagnostics.some(
       (item) => item.rule === "SDD_DEPENDENCY_COVERAGE",
+    ),
+  );
+
+  const danglingDependency = await fixture(
+    t,
+    workflow({ taskDependsOn: "missing-plan" }),
+  );
+  const danglingDependencyDiagnostics = await checkSddLifecycleDocument(
+    danglingDependency.file,
+    danglingDependency.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    danglingDependencyDiagnostics.some(
+      (item) => item.rule === "SDD_DEPENDENCY_REFERENCE",
     ),
   );
 

@@ -337,10 +337,10 @@ Justification: `<why this is the smallest safe route>`.
 
 This is the workflow's primary output and the entry point for continuation.
 
-| Order | Artifact | Decision | Reason/trigger | Template or authority | Owner | Review owner | Review state/link |
+| Order | Artifact ID | Artifact | Decision | Reason/trigger | Template or authority | Owner | Review owner | Review state/link |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `0` | Approved handoff | `REUSE` | Reviewed workflow input | `<link>` | `<owner>` | `<reviewer>` | `APPROVED / <link>` |
-| `1` | `<artifact>` | `<decision>` | `<reason>` | `<template/link>` | `<owner>` | `<reviewer>` | `<state/link>` |
+| `0` | `handoff` | Approved handoff | `REUSE` | Reviewed workflow input | `<link>` | `<owner>` | `<reviewer>` | `APPROVED / <link>` |
+| `1` | `<stable ID>` | `<artifact>` | `<decision>` | `<reason>` | `<template/link>` | `<owner>` | `<reviewer>` | `<state/link>` |
 
 Every `SKIP`, `DEFER`, and `BLOCKED` decision must be justified. Missing rows do
 not mean not applicable. Review and approve the manifest itself before
@@ -358,6 +358,7 @@ risk, or evidence. `UNKNOWN` fails closed like `MATERIAL`.
 
 | Artifact ID | Artifact/link | Depends on | Consumed version | Current version | Change impact | Freshness | Blocked by |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| `whiteboard` | `<link>` | `None` | `<version>` | `<version>` | `<CONTROL_ONLY/MATERIAL/UNKNOWN>` | `<CURRENT/STALE/BLOCKED>` | `<IDs/None>` |
 | `handoff` | `<link>` | `whiteboard` | `<version>` | `<version>` | `<CONTROL_ONLY/MATERIAL/UNKNOWN>` | `<CURRENT/STALE/BLOCKED>` | `<IDs/None>` |
 | `workflow` | This workflow | `handoff` | `<version>` | `<version>` | `<CONTROL_ONLY/MATERIAL/UNKNOWN>` | `<CURRENT/STALE/BLOCKED>` | `<IDs/None>` |
 | `plan` | `<link>` | `workflow` | `<version>` | `<version>` | `<CONTROL_ONLY/MATERIAL/UNKNOWN>` | `<CURRENT/STALE/BLOCKED>` | `<IDs/None>` |
@@ -367,8 +368,9 @@ or blocking propagates only to transitive dependants. A control-only navigation
 update does not invalidate frozen content. Review the current change first;
 after approval, the earliest dependency-ready stale correction takes priority.
 At `GATES_READY`, the register must be non-empty and cover the workflow, every
-selected delivery-manifest artifact, and every next-action target ID. A marker
-and header-only table cannot prove freshness.
+selected delivery-manifest `Artifact ID`, every next-action target ID, and every
+ID named by `Depends on`. A marker and header-only table or dangling dependency
+cannot prove freshness.
 When this workflow enters `VALIDATING`, the `plan` row's Markdown link is the
 machine-readable parent/child state reference. It must resolve inside the
 project to a `CURRENT` SDD implementation plan in `VALIDATING`. Route 0 may omit

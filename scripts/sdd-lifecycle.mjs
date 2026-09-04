@@ -173,7 +173,10 @@ function hasTaskAndPrEvidence(value) {
 
 function hasReviewTargetLink(value, targetId) {
   const normalized = normalizeValue(value || "").toLowerCase();
-  return hasMarkdownLink(value) && normalized.includes(normalizeValue(targetId).toLowerCase());
+  return normalized.includes(normalizeValue(targetId).toLowerCase()) &&
+    /\]\(https:\/\/github\.com\/[^)\s]+\/pull\/\d+(?:[?#][^)]*)?\)/i.test(
+      String(value || ""),
+    );
 }
 
 function hasHeadAndMergeEvidence(value) {
@@ -934,6 +937,7 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
 
   const deliveryManifest = findTable(tables, [
     "Order",
+    "Artifact ID",
     "Artifact",
     "Decision",
     "Reason/trigger",
@@ -1146,6 +1150,9 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
 
   const freshnessRows = freshnessTable?.rows || [];
   const computed = computeTransitiveFreshness(freshnessRows);
+  const freshnessIds = new Set(
+    freshnessRows.map((row) => normalizeValue(row["Artifact ID"]).toLowerCase()),
+  );
   for (const row of freshnessRows) {
     const id = normalizeValue(row["Artifact ID"]);
     const declared = normalizeValue(row.Freshness);
@@ -1154,6 +1161,18 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
       diagnostics.push(
         diagnostic(file, freshnessTable.line, "SDD_FRESHNESS_MISMATCH", `${id} declares ${declared}; dependency graph requires ${expected}`),
       );
+    }
+    for (const dependency of splitIdentifiers(row["Depends on"] || "None")) {
+      if (!freshnessIds.has(dependency.toLowerCase())) {
+        diagnostics.push(
+          diagnostic(
+            file,
+            freshnessTable.line,
+            "SDD_DEPENDENCY_REFERENCE",
+            `${id} depends on missing artifact ID ${dependency}`,
+          ),
+        );
+      }
     }
   }
 
@@ -1227,12 +1246,6 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     const selectedManifestRows = (deliveryManifest?.rows || []).filter((row) =>
       !["SKIP", "DEFER", "BLOCKED"].includes(normalizeValue(row.Decision)),
     );
-    const freshnessIds = new Set(
-      freshnessRows.map((row) => normalizeValue(row["Artifact ID"]).toLowerCase()),
-    );
-    const freshnessArtifacts = new Set(
-      freshnessRows.map((row) => normalizeValue(row["Artifact/link"]).toLowerCase()),
-    );
     const uncovered = [];
     if (!freshnessIds.has("workflow")) {
       uncovered.push("workflow");
@@ -1243,10 +1256,9 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
       }
     }
     for (const row of selectedManifestRows) {
-      const artifact = normalizeValue(row.Artifact);
-      const key = artifact.toLowerCase();
-      if (!freshnessIds.has(key) && !freshnessArtifacts.has(key)) {
-        uncovered.push(`manifest artifact ${artifact}`);
+      const artifactId = normalizeValue(row["Artifact ID"]);
+      if (!freshnessIds.has(artifactId.toLowerCase())) {
+        uncovered.push(`manifest artifact ${artifactId}`);
       }
     }
     if (uncovered.length > 0) {
