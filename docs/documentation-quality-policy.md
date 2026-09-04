@@ -42,16 +42,19 @@ cross-document consistency, freshness, duplication, attention mapping, scope,
 and applicable automated evidence. Any candidate change invalidates the result.
 `SELF_REVIEW_PASSED` is review input only; it cannot approve the artifact,
 satisfy reviewer independence, authorize merge, or authorize continuation.
-Next create a new fresh-context reviewer for the exact candidate under the
+Next open a review session and initialize its fresh-context reviewer(s) for the exact candidate under the
 [canonical protocol](../templates/reviews/fresh-context-agent-review.md).
-Preserve requested changes and resolutions as immutable findings. After fresh
-approval, mandatory human review decides the documentation gate; any candidate
-change requires a new self-review and a new fresh reviewer.
+Preserve requested changes, author dispositions, and resolutions as immutable
+findings. After all assigned reviewers approve the same exact candidate,
+mandatory human review decides the documentation gate. Any candidate change
+requires a new self-review and re-review by the same session reviewer(s).
 
 ## 2. Required semantic review
 
-The reviewer records a change, an evidence-backed explanation, or an accepted
-follow-up for every material problem.
+The author records `ACCEPT`, `PARTIALLY_ACCEPT`,
+`REJECT_WITH_JUSTIFICATION`, or `DEFER_WITH_AUTHORITY` for every material
+finding. The same assigned reviewer then verifies the response; unresolved
+author-reviewer disagreement is a human decision, not an automatic code edit.
 
 ### 2.1 Correctness and evidence
 

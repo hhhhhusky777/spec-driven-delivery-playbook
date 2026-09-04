@@ -33,17 +33,59 @@ deterministic actions that are not review gates. They cannot publish or approve
 semantic content. Reaching a review-gated artifact ends that automatic segment
 and starts the shared review prefix above.
 
-Every review round uses a newly created fresh-context reviewer. Human-requested
-changes also return to author work and require a new self-review and fresh
-review before human re-review.
+Every review gate opens one stable review session and assigns one or more
+reviewers. Each reviewer is created without authoring context when first
+assigned, then remains assigned for every revision round in that session. A
+candidate change invalidates the prior revision disposition, requires a new
+author self-review, and returns the exact revised candidate to the same assigned
+reviewers. Human-requested changes use that same session before human
+re-review. Do not replace reviewers merely to obtain a new opinion.
 
-## 2. Review packet
+### 1.1 Session control record
 
-The coordinating agent freezes this packet before creating the reviewer:
+Create one durable session record when the gate first enters review. For a PR,
+the PR body or a linked review record owns it; for a non-PR artifact, use a
+project-defined path such as `reviews/<artifact-id>/<session-id>.md`. Append
+rounds and findings to that record instead of replacing it.
 
 | Field | Value |
 | --- | --- |
-| Review ID | `<stable ID>` |
+| Review session ID | `<stable ID>` |
+| Subject and base | `<artifact/PR + exact base>` |
+| State | `<OPEN/CHANGES_REQUESTED/APPROVED/BLOCKED/HUMAN_DECISION_REQUIRED/CLOSED>` |
+| Assigned reviewers | `<stable reviewer IDs>` |
+| Required approvals | `<all assigned reviewers>` |
+| Approved reviewers | `<same reviewer IDs only after each approves Current candidate>` |
+| Current candidate | `<exact revision>` |
+| Current round | `<R01, R02, ...>` |
+| Replacement history | `<reviewer + reason + handoff, or None>` |
+
+One reviewer is the normal minimum. Assign two or more when project policy,
+risk, or the human owner requires independent specialties or redundant review.
+All assigned reviewers independently review the initial candidate and must
+approve the same final candidate. If any reviewer requests changes, every prior
+approval becomes stale when the candidate changes, and all assigned reviewers
+review the revised exact candidate.
+
+Freeze the roster when the session opens. Project policy or the human owner may
+add a required specialist; initialize that reviewer without author context and
+require them to review the complete current candidate and session history. Do
+not remove or replace a reviewer to bypass a finding. Removal is allowed only
+for recorded unavailability or authority change and follows the replacement
+handoff in Section 3.
+
+## 2. Review packet
+
+The coordinating agent freezes this packet before every round. For the first
+round, freeze it before initializing the assigned reviewer(s):
+
+| Field | Value |
+| --- | --- |
+| Review session ID | `<stable ID for the whole review gate>` |
+| Review round | `<R01, R02, ...>` |
+| Assigned reviewers | `<stable reviewer IDs>` |
+| Required approvals | `<count; all assigned reviewers by default>` |
+| Approved reviewers | `<aggregate session record; Not recorded in an individual packet>` |
 | Subject | `<artifact path or PR URL>` |
 | Project root | `<absolute runtime path>` |
 | Candidate revision | `<exact commit, content hash, or immutable version>` |
@@ -62,8 +104,9 @@ summary that hides the governing documents or complete diff.
 
 ## 3. Fresh-context creation contract
 
-The coordinating agent uses the runtime's isolated-agent mechanism with
-conversation inheritance disabled. Give the reviewer only:
+At session creation, the coordinating agent uses the runtime's isolated-agent
+mechanism with conversation inheritance disabled for every assigned reviewer.
+Give each reviewer only:
 
 1. this protocol;
 2. the frozen review packet;
@@ -80,9 +123,19 @@ The coordinating agent remains responsible for waiting for the receipt and
 resuming the original delivery. The reviewer does not need to recover or
 trigger the original conversation.
 
+For later rounds, resume the same assigned reviewer rather than creating a new
+one. Provide the new exact candidate, its author self-review, the changed diff,
+and the immutable session findings/responses. The reviewer may use its own
+prior review context to verify that requested changes were actually resolved.
+If an assigned reviewer becomes unavailable, record `REVIEWER_REPLACED`, the
+reason, and a handoff to a newly isolated reviewer. The replacement reads the
+complete candidate and immutable session history; it is not a shortcut around
+an unresolved finding.
+
 ## 4. Independent review procedure
 
-1. Verify the subject, base, and candidate revision still match the packet.
+1. Verify the session, round, subject, base, and candidate revision match the
+   packet.
 2. Read the governing inputs and independently derive the expected behavior,
    constraints, scope, and required evidence.
 3. Inspect the complete candidate and relevant unchanged surroundings before
@@ -90,10 +143,13 @@ trigger the original conversation.
 4. Reconcile the candidate with tests/checks, author annotations, and the
    self-review record. Treat missing, stale, or contradictory evidence as a
    finding.
-5. Record every actionable problem in the durable findings format below. Add
+5. On a later round, re-evaluate every open, partially accepted, or rejected
+   finding against the author's response and revised exact candidate before
+   searching for regressions or new findings.
+6. Record every actionable problem in the durable findings format below. Add
    inline comments only where a specific line or hunk needs correction; put
    cross-cutting findings in the summary.
-6. Return exactly one disposition: `APPROVED`, `CHANGES_REQUESTED`, or
+7. Return exactly one disposition: `APPROVED`, `CHANGES_REQUESTED`, or
    `BLOCKED`.
 
 `APPROVED` means the independent review gate passed under project policy. It
@@ -106,17 +162,22 @@ could not be verified.
 
 For a PR, publish line-specific findings as inline comments and link them from
 the receipt. For a non-PR artifact, return the exact receipt to the original
-agent, which stores it without semantic rewriting at a project-defined path
-such as `reviews/<artifact-id>/round-<NN>.md`. A review record is evidence and
-does not create another review gate.
+agent, which appends it without semantic rewriting to the stable session record
+defined in Section 1.1. A review record is evidence and does not create another
+review gate.
 
-Never overwrite a request for changes. Append the author's response and the
-next reviewer's disposition so a later audit can reconstruct what was wrong,
-why it mattered, and how it was resolved.
+Never overwrite a request for changes. The author/coordinator evaluates every
+finding and records exactly one response: `ACCEPT`, `PARTIALLY_ACCEPT`,
+`REJECT_WITH_JUSTIFICATION`, or `DEFER_WITH_AUTHORITY`. Append the response,
+evidence, and the same assigned reviewer's next-round disposition so a later
+audit can reconstruct what was wrong, why it mattered, and how it was resolved.
+The author must reject an incorrect comment rather than modifying the product
+to satisfy it. A reviewer either accepts that justification, keeps the finding
+open with contrary contract evidence, or records a conflict for human decision.
 
 | Finding ID | Location | Governing statement | Expected | Observed | Impact/severity | Requested correction | Author response and revision | Reviewer disposition |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `<R1-F01>` | `<file/section/line/hunk>` | `<requirement/contract/plan/policy ID>` | `<required result>` | `<actual result>` | `<blocking/non-blocking and consequence>` | `<required outcome, without unnecessary implementation prescription>` | `<fix/evidence/justification + exact revision or Pending>` | `<OPEN/RESOLVED/REJECTED_JUSTIFICATION>` |
+| `<S1-F01>` | `<file/section/line/hunk>` | `<requirement/contract/plan/policy ID>` | `<required result>` | `<actual result>` | `<blocking/non-blocking and consequence>` | `<required outcome, without unnecessary implementation prescription>` | `<ACCEPT/PARTIALLY_ACCEPT/REJECT_WITH_JUSTIFICATION/DEFER_WITH_AUTHORITY + evidence + exact revision>` | `<OPEN/RESOLVED/JUSTIFICATION_ACCEPTED/HUMAN_DECISION_REQUIRED>` |
 
 The original agent must answer each finding with a fix, an evidence-backed
 justification, or an accepted follow-up allowed by project policy. It must not
@@ -127,7 +188,9 @@ finding.
 
 | Field | Value |
 | --- | --- |
-| Review ID | `<packet Review ID>` |
+| Review session ID | `<packet session ID>` |
+| Review round | `<packet round>` |
+| Assigned reviewer ID | `<stable reviewer ID>` |
 | Reviewer agent/runtime | `<identity and runtime>` |
 | Context isolation | `<FRESH_CONTEXT / ISOLATION_UNVERIFIED>` |
 | Subject | `<artifact path or PR URL>` |
@@ -146,17 +209,22 @@ finding.
 
 Before using the receipt, the original agent verifies:
 
-- review ID, subject, base, and candidate revision match the frozen packet;
+- review session, round, assigned reviewer, subject, base, and candidate
+  revision match the frozen packet;
 - the reviewer attested `FRESH_CONTEXT` and stayed read-only;
 - published comments and the receipt agree;
 - no commit or artifact change occurred after review; and
 - the live workflow mode, repository gates, blockers, and write scope still
   permit the next action.
 
-On `CHANGES_REQUESTED`, the original agent addresses or justifies each finding.
-Any candidate change invalidates the receipt and requires a newly created
-fresh-context reviewer. On `BLOCKED`, restore reviewability before retrying. On
-`APPROVED`, design and manual implementation stop for human review. Only a
+On `CHANGES_REQUESTED`, the original agent evaluates every finding and records
+its accepted fix, partial acceptance, evidence-backed rejection, or authorized
+deferral. Any candidate change invalidates the prior revision disposition,
+requires another exact-head self-review, and returns to every assigned reviewer
+in the same session. The session passes only when all required reviewers approve
+the same exact candidate. An unresolved author-reviewer conflict requires human
+decision. On `BLOCKED`, restore reviewability before retrying. On `APPROVED`,
+design and manual implementation stop for human review. Only a
 scoped implementation `AGENT_AUTO_MERGE` flow may proceed without pre-merge
 human review, and only after every live merge gate passes. The receipt supplies
 review evidence, not merge authority.

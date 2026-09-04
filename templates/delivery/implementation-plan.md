@@ -50,6 +50,10 @@ section.
 | Self-review candidate revision | `<exact commit/version or Not applicable>` |
 | Self-review evidence | `<record/link or Not applicable>` |
 | Fresh-context review state | `<NOT_STARTED / IN_REVIEW / APPROVED / CHANGES_REQUESTED / BLOCKED>` |
+| Fresh-context review session ID | `<stable ID or Not recorded>` |
+| Fresh-context assigned reviewers | `<comma-separated stable reviewer IDs or Not recorded>` |
+| Fresh-context required approvals | `<all assigned reviewer count or Not recorded>` |
+| Fresh-context approved reviewers | `<same reviewer IDs after all approve this exact revision, or Not recorded>` |
 | Fresh-context reviewed revision | `<exact commit/version or Not recorded>` |
 | Fresh-context review evidence | `<packet/receipt link or Not recorded>` |
 | Human review state | `<NOT_STARTED / IN_REVIEW / APPROVED / CHANGES_REQUESTED>` |
@@ -113,12 +117,13 @@ that are not in this state machine.
 
 Before `READY`, first complete the
 [agent self-review](../reviews/agent-self-review.md) against the exact candidate
-revision and record `SELF_REVIEW_PASSED`, then complete a newly created
+revision and record `SELF_REVIEW_PASSED`, then open a stable session with
 [fresh-context agent review](../reviews/fresh-context-agent-review.md), and
 finally obtain human approval of that same revision. Any candidate change
 invalidates both reviews. Resolve `CHANGES_REQUESTED`, update affected
-contracts/tasks, repeat self-review, create a new fresh reviewer, and repeat
-human review. If comments invalidate the accepted
+contracts/tasks, record the author's disposition, repeat self-review, return to
+the same assigned session reviewer(s), and repeat human review. If comments
+invalidate the accepted
 solution or manifest, return to the owning upstream artifact instead of fixing
 the contradiction only in this plan. Self-review is evidence, not approval.
 
@@ -483,8 +488,9 @@ Apply the active development policy's task context receipt after a task becomes
 add a workflow state. Complete the receipt in that task's execution record;
 reference stable IDs and canonical links instead of duplicating policy text.
 
-After author self-review, a new fresh-context reviewer reconciles the receipt
-against the complete approved source set and records a disposition. Under
+After author self-review, the session's assigned fresh-context reviewer(s)
+reconcile the receipt against the complete approved source set and record a
+disposition. Under
 `HUMAN_REVIEW_BEFORE_MERGE`, human review follows; under a live scoped
 `AGENT_AUTO_MERGE` action, fresh approval may continue only through the normal
 live gates. If a governing source revision changes,
@@ -629,6 +635,7 @@ Task context receipt (complete after `READY` and before `IN_PROGRESS`):
 | Ambiguities / conflicts / map omissions | `<None or blocking details>` |
 | Self-review state / evidence | `<SELF_REVIEW_PASSED/SELF_REVIEW_FAILED + link>` |
 | Fresh-context review state / revision / receipt | `<APPROVED/CHANGES_REQUESTED/BLOCKED + exact revision + link>` |
+| Fresh-context session / assigned reviewers | `<stable session ID + assigned and approved reviewer IDs + required approval count>` |
 | Human review state / revision / evidence | `<APPROVED/CHANGES_REQUESTED + exact revision + link, or NOT_APPLICABLE only for scoped AGENT_AUTO_MERGE>` |
 | Final receipt disposition | `<APPROVED/CHANGES_REQUESTED/BLOCKED>` |
 

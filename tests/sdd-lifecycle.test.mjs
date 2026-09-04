@@ -53,6 +53,10 @@ function plan({
   selfReviewRevision = "candidate-v1",
   selfReviewEvidence = "reviews/self-review.md",
   freshReviewState = "APPROVED",
+  freshReviewSessionId = "RS-01",
+  freshAssignedReviewers = "reviewer-1",
+  freshRequiredApprovals = "1",
+  freshApprovedReviewers = "reviewer-1",
   freshReviewRevision = "candidate-v1",
   freshReviewEvidence = "reviews/fresh-review.md",
   humanReviewState = "APPROVED",
@@ -75,6 +79,10 @@ function plan({
 | Self-review candidate revision | \`${selfReviewRevision}\` |
 | Self-review evidence | \`${selfReviewEvidence}\` |
 | Fresh-context review state | \`${freshReviewState}\` |
+| Fresh-context review session ID | \`${freshReviewSessionId}\` |
+| Fresh-context assigned reviewers | \`${freshAssignedReviewers}\` |
+| Fresh-context required approvals | \`${freshRequiredApprovals}\` |
+| Fresh-context approved reviewers | \`${freshApprovedReviewers}\` |
 | Fresh-context reviewed revision | \`${freshReviewRevision}\` |
 | Fresh-context review evidence | \`${freshReviewEvidence}\` |
 | Human review state | \`${humanReviewState}\` |
@@ -114,6 +122,10 @@ function validatingPlan({
 | Self-review candidate revision | \`candidate-v1\` |
 | Self-review evidence | \`reviews/self-review.md\` |
 | Fresh-context review state | \`APPROVED\` |
+| Fresh-context review session ID | \`RS-01\` |
+| Fresh-context assigned reviewers | \`reviewer-1\` |
+| Fresh-context required approvals | \`1\` |
+| Fresh-context approved reviewers | \`reviewer-1\` |
 | Fresh-context reviewed revision | \`candidate-v1\` |
 | Fresh-context review evidence | \`reviews/fresh-review.md\` |
 | Human review state | \`APPROVED\` |
@@ -373,6 +385,10 @@ function workflow({
   selfReviewRevision = "candidate-v1",
   selfReviewEvidence = "reviews/self-review.md",
   freshReviewState = "APPROVED",
+  freshReviewSessionId = "RS-01",
+  freshAssignedReviewers = "reviewer-1",
+  freshRequiredApprovals = "1",
+  freshApprovedReviewers = "reviewer-1",
   freshReviewRevision = "candidate-v1",
   freshReviewEvidence = "reviews/fresh-review.md",
   humanReviewState,
@@ -455,6 +471,10 @@ function workflow({
 | Self-review candidate revision | \`${selfReviewRevision}\` |
 | Self-review evidence | \`${selfReviewEvidence}\` |
 | Fresh-context review state | \`${freshReviewState}\` |
+| Fresh-context review session ID | \`${freshReviewSessionId}\` |
+| Fresh-context assigned reviewers | \`${freshAssignedReviewers}\` |
+| Fresh-context required approvals | \`${freshRequiredApprovals}\` |
+| Fresh-context approved reviewers | \`${freshApprovedReviewers}\` |
 | Fresh-context reviewed revision | \`${freshReviewRevision}\` |
 | Fresh-context review evidence | \`${freshReviewEvidence}\` |
 | Human review state | \`${resolvedHumanReviewState}\` |
@@ -508,6 +528,50 @@ ${postMergeHumanReview === null ? "" : `| ${postMergeTaskPr} | ${postMergeRevisi
 test("GATES_READY rejects stale prerequisites and only scoped blockers", async (t) => {
   const valid = await fixture(t, workflow());
   assert.deepEqual(await checkSddLifecycleDocument(valid.file, valid.root, SCHEMAS), []);
+
+  const twoReviewerSession = await fixture(
+    t,
+    workflow({
+      freshAssignedReviewers: "reviewer-1, reviewer-2",
+      freshRequiredApprovals: "2",
+      freshApprovedReviewers: "reviewer-1, reviewer-2",
+    }),
+  );
+  assert.deepEqual(
+    await checkSddLifecycleDocument(
+      twoReviewerSession.file,
+      twoReviewerSession.root,
+      SCHEMAS,
+    ),
+    [],
+  );
+
+  for (const sessionOverride of [
+    { freshReviewSessionId: "Pending" },
+    { freshAssignedReviewers: "reviewer-1, reviewer-1", freshRequiredApprovals: "2" },
+    {
+      freshAssignedReviewers: "reviewer-1, reviewer-2",
+      freshRequiredApprovals: "1",
+      freshApprovedReviewers: "reviewer-1, reviewer-2",
+    },
+    {
+      freshAssignedReviewers: "reviewer-1, reviewer-2",
+      freshRequiredApprovals: "2",
+      freshApprovedReviewers: "reviewer-1",
+    },
+  ]) {
+    const invalidSession = await fixture(t, workflow(sessionOverride));
+    const invalidSessionDiagnostics = await checkSddLifecycleDocument(
+      invalidSession.file,
+      invalidSession.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      invalidSessionDiagnostics.some(
+        (item) => item.rule === "SDD_FRESH_REVIEW_SESSION",
+      ),
+    );
+  }
 
   const stale = await fixture(
     t,

@@ -64,18 +64,22 @@
 ## Fresh-context and human review
 
 - Exact reviewed PR head:
-- Fresh-context packet and receipt:
+- Fresh-context session, round, assigned reviewer(s), packets, and receipts:
+- Approved reviewer roster for this exact head:
 - Fresh-context result: `NOT_STARTED / APPROVED / CHANGES_REQUESTED / BLOCKED`
 - Human review: `NOT_STARTED / APPROVED / CHANGES_REQUESTED / NOT_APPLICABLE_FOR_SCOPED_AGENT_AUTO_MERGE`
 - Publication channel and identity boundary:
 - Durable findings and resolutions: `links / None`
 
-- [ ] A newly created fresh-context reviewer received no authoring
-      conversation, stayed read-only, and returned an exact-revision receipt.
+- [ ] Each session reviewer was initially created without authoring context,
+      stayed read-only, and returned an exact-revision receipt; revised heads
+      returned to the same assigned reviewer(s).
 - [ ] A same-actor comment is not represented as a formal approval from a
       different GitHub identity.
-- [ ] Any commit after independent review invalidates that result and triggers
-      a new review.
+- [ ] Any commit after independent review invalidates that revision result and
+      triggers author self-review plus another round in the same session.
+- [ ] Every finding has an explicit author disposition; rejected comments carry
+      evidence and unresolved conflicts are routed to human decision.
 - [ ] Human review follows fresh approval unless this is a live, scoped
       implementation `AGENT_AUTO_MERGE` PR.
 

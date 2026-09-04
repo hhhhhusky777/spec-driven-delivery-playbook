@@ -121,8 +121,8 @@ unknowns, proposes routing decisions, and stops.
 Compare the agent result with
 [the completed example manifest](01-project-adoption-manifest.md). An authorized
 real-project reviewer would review only after the agent records
-`SELF_REVIEW_PASSED` against that exact candidate. A new fresh-context reviewer
-then checks the candidate; after it approves, a human corrects facts or approves
+`SELF_REVIEW_PASSED` against that exact candidate. A stable session's
+fresh-context reviewer(s) then check the candidate; after all approve, a human corrects facts or approves
 `DISCOVERY -> MAPPED`. Neither agent review grants adoption approval. This
 teaching example records no SGLang approval and therefore leaves self-review,
 fresh-context review, and human review `NOT_STARTED`.

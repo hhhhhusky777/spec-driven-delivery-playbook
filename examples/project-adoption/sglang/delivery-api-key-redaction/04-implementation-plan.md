@@ -15,6 +15,10 @@
 | Self-review candidate revision | `Not recorded` |
 | Self-review evidence | `Not recorded` |
 | Fresh-context review state | `NOT_STARTED` |
+| Fresh-context review session ID | `Not recorded` |
+| Fresh-context assigned reviewers | `Not recorded` |
+| Fresh-context required approvals | `Not recorded` |
+| Fresh-context approved reviewers | `Not recorded` |
 | Fresh-context reviewed revision | `Not recorded` |
 | Fresh-context review evidence | `Not recorded` |
 | Human review state | `NOT_STARTED` |

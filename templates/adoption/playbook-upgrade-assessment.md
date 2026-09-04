@@ -20,15 +20,17 @@ paths; do not commit machine-local paths.
 | Allowed write scope | `<exact paths>` |
 | Self-review state / evidence | `<state and link>` |
 | Fresh-context review state / evidence | `<state + exact-revision receipt>` |
+| Fresh-context review session / assigned reviewers | `<stable session ID + assigned and approved reviewer IDs + required approval count>` |
 | Human review state / evidence | `<state + reviewer/link>` |
 | Current blocker | `None` |
 | Next action | `<one dependency-ready action>` |
 
 States: `DRAFT -> IN_REVIEW -> APPROVED -> APPLYING -> VALIDATING -> COMPLETE`.
 Review comments return to `DRAFT`; any state may enter `BLOCKED`. Exact-candidate
-self-review must be followed by a new fresh-context reviewer and mandatory human
-approval before entering `APPROVED`. Preserve requested-change findings and
-their resolutions; any candidate change starts a new round. The manifest's
+self-review must be followed by a stable session whose reviewer(s) were
+initialized without author context, then mandatory human approval before
+entering `APPROVED`. Preserve requested-change findings, author dispositions,
+and resolutions; any candidate change starts a same-reviewer session round. The manifest's
 current revision remains authoritative through assessment and migration
 validation.
 

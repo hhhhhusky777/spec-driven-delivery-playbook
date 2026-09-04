@@ -35,6 +35,10 @@ instantiated workflow record.
 | Self-review candidate revision | `<exact commit/version or Not applicable>` |
 | Self-review evidence | `<record/link or Not applicable>` |
 | Fresh-context review state | `<NOT_STARTED / IN_REVIEW / APPROVED / CHANGES_REQUESTED / BLOCKED>` |
+| Fresh-context review session ID | `<stable ID or Not recorded>` |
+| Fresh-context assigned reviewers | `<comma-separated stable reviewer IDs or Not recorded>` |
+| Fresh-context required approvals | `<all assigned reviewer count or Not recorded>` |
+| Fresh-context approved reviewers | `<same reviewer IDs after all approve this exact revision, or Not recorded>` |
 | Fresh-context reviewed revision | `<exact commit/version or Not recorded>` |
 | Fresh-context review evidence | `<packet/receipt link or Not recorded>` |
 | Human review state | `<NOT_STARTED / IN_REVIEW / APPROVED / CHANGES_REQUESTED / NOT_APPLICABLE>` |
@@ -103,10 +107,12 @@ only to deterministic non-review actions and cannot approve normative content.
   candidate revision. Review may begin only with `SELF_REVIEW_PASSED` and linked
   evidence. Any candidate change invalidates that result and requires another
   self-review.
-- Then create a new read-only reviewer through the
+- Then open or resume the gate's stable review session through the
   [fresh-context review protocol](../reviews/fresh-context-agent-review.md).
-  Record its packet/receipt, exact revision, and immutable findings. Any
-  candidate change requires a new self-review and newly created fresh reviewer.
+  Initially create its assigned read-only reviewer(s) without author context.
+  Record packets/receipts, exact revisions, immutable findings, and author
+  dispositions. Any candidate change requires a new self-review and re-review
+  by the same assigned session reviewer(s).
 - After fresh-context `APPROVED`, design, governance, adoption, upgrade,
   validation, archive, and manual implementation stop for human review. Only a
   scoped implementation `AGENT_AUTO_MERGE` action may proceed without

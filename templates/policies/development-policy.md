@@ -45,8 +45,10 @@ evidence, then use the canonical
 [fresh-context review](../reviews/fresh-context-agent-review.md). After fresh
 approval, stop for mandatory human review before changing the policy to
 `ACTIVE`. Any candidate change invalidates both prior results; resolve
-`CHANGES_REQUESTED`, repeat self-review, and create a new fresh reviewer. Agent
-review is evidence, not policy approval.
+`CHANGES_REQUESTED`, record `ACCEPT`, `PARTIALLY_ACCEPT`,
+`REJECT_WITH_JUSTIFICATION`, or `DEFER_WITH_AUTHORITY`, repeat self-review, and
+return to the same session reviewer(s). Agent review is evidence, not policy
+approval.
 
 | Round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -130,7 +132,7 @@ or its authority is absent, the default review mode is `EXPLICIT_REVIEW`.
 
 | Mode | Behavior | Permitted use |
 | --- | --- | --- |
-| `EXPLICIT_REVIEW` | Exact-revision self-review, new fresh-context agent review, then mandatory human review | Any semantic decision, approval, exception, or risk boundary |
+| `EXPLICIT_REVIEW` | Exact-revision self-review, stable fresh-context review session, then mandatory human review | Any semantic decision, approval, exception, or risk boundary |
 | `AUTO_CONTINUE` | Run deterministic work and continue while every condition passes | Mechanical generation, state/evidence synchronization, and deterministic validation |
 | `REVIEW_ON_EXCEPTION` | Continue through a pre-authorized repeatable action; stop on any exception | Known low-risk operations with objective success/failure gates |
 
@@ -198,22 +200,25 @@ continuation by itself.
 
 ### Mandatory fresh-context and human review
 
-After self-review passes, every review gate creates a new fresh-context
-subagent using the canonical protocol: `<link>`. The reviewer receives a frozen
-exact-revision packet without the author's conversation or proposed result,
-derives expectations from approved sources, remains read-only, and returns
-`APPROVED`, `CHANGES_REQUESTED`, or `BLOCKED` with durable findings.
+After self-review passes, every review gate opens a stable review session and
+initializes one or more fresh-context subagents using the canonical protocol:
+`<link>`. Each reviewer receives a frozen exact-revision packet without the
+author's conversation or proposed result, derives expectations from approved
+sources, remains read-only, and returns `APPROVED`, `CHANGES_REQUESTED`, or
+`BLOCKED` with durable findings.
 
 Every finding records its location, governing statement, expected and observed
-result, impact, requested outcome, author response, resolution revision, and
+result, impact, requested outcome, author disposition, resolution revision, and
 reviewer disposition. Preserve the original finding. A changed candidate
-invalidates the receipt and requires a new self-review and newly created fresh
-reviewer.
+invalidates its prior disposition and requires a new self-review plus re-review
+by the same assigned session reviewer(s). Incorrect comments are rejected with
+contract evidence; unresolved disagreement stops for human decision.
 
 For design, governance, adoption, upgrade, validation, and archive gates,
 fresh-context approval is followed by mandatory human review. Human-requested
-changes repeat the author -> self-review -> new fresh-review cycle before human
-re-review. An agent approval cannot replace human design authority.
+changes repeat the author -> self-review -> same-session fresh-review cycle before human
+re-review, using the same session reviewer(s). An agent approval cannot replace
+human design authority.
 
 Implementation uses the same sequence in `HUMAN_REVIEW_BEFORE_MERGE`. Only a
 user-authorized, scoped `AGENT_AUTO_MERGE` implementation PR may continue after
@@ -577,8 +582,8 @@ their canonical text:
 - human review disposition and required specialty when the live implementation
   mode is `HUMAN_REVIEW_BEFORE_MERGE`.
 
-After the author self-review, a newly created fresh-context reviewer reconciles
-the receipt with the approved source set and records `APPROVED` or
+After the author self-review, the gate's assigned fresh-context reviewer(s)
+reconcile the receipt with the approved source set and record `APPROVED` or
 `CHANGES_REQUESTED`. The receipt author cannot satisfy that requirement. Under
 `HUMAN_REVIEW_BEFORE_MERGE`, a qualified human or specialist then reviews it;
 under scoped `AGENT_AUTO_MERGE`, fresh approval may continue only through the

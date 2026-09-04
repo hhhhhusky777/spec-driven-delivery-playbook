@@ -56,8 +56,9 @@ evidence, then use the canonical
 approval, stop for mandatory human review before a `PROPOSED` rule governs
 new/changed work and again before changing the policy to `ACTIVE` when the
 activation evidence differs. Any candidate change invalidates both prior
-results and requires a new self-review and fresh reviewer. Agent review is
-evidence, not policy approval.
+results and requires a new self-review plus re-review by the same assigned
+session reviewer(s). The author may reject an incorrect finding only with
+recorded evidence. Agent review is evidence, not policy approval.
 
 | Round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
 | --- | --- | --- | --- | --- | --- | --- |

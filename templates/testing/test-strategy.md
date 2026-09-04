@@ -40,8 +40,9 @@ revision, then use the canonical
 [fresh-context review](../reviews/fresh-context-agent-review.md). After fresh
 approval, stop for mandatory human review before activating the strategy. Any
 candidate change invalidates both prior results; resolve `CHANGES_REQUESTED`,
-repeat self-review, and create a new fresh reviewer. Agent review is evidence,
-not policy approval.
+record an explicit author disposition, repeat self-review, and return to the
+same assigned session reviewer(s). Agent review is evidence, not policy
+approval.
 
 | Round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
 | --- | --- | --- | --- | --- | --- | --- |

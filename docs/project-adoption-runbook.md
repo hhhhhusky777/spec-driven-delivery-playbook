@@ -207,10 +207,12 @@ against the exact candidate revision and records `SELF_REVIEW_PASSED` or
 review evidence but cannot approve adoption, satisfy reviewer independence,
 authorize merge, or authorize continuation.
 
-It then creates a new fresh-context reviewer for the exact candidate using the
-canonical protocol. Requested changes remain durable audit history. After fresh
-approval, adoption still stops for mandatory human review; a changed candidate
-requires a new self-review and a new fresh reviewer.
+It then opens a stable review session and initializes its fresh-context
+reviewer(s) for the exact candidate using the canonical protocol. Requested
+changes and author dispositions remain durable audit history. After all
+assigned reviewers approve, adoption still stops for mandatory human review; a
+changed candidate requires a new self-review and re-review by the same session
+reviewer(s).
 
 **Review stop A:** after fresh-context approval, an authorized human reviewer
 verifies facts and authority links. Human approval records the review and moves
@@ -243,8 +245,8 @@ that checker marks the entry point `STALE`. The checker action still stops for
 its own review. After approval, updating only the entry point becomes the next
 action; final installation verification waits for that correction and review.
 
-**Review stop B:** a new fresh-context reviewer checks that artifact against the
-complete mapped project authority and verifies the impact audit; after it
+**Review stop B:** a newly opened session's fresh-context reviewer(s) check that
+artifact against the complete mapped project authority and verify the impact audit; after all
 approves, a human reviewer makes the adoption decision. Keep the manifest
 `MAPPED` while selected or stale artifacts remain. Repeat Prompt B only after
 both reviews approve the previous artifact.

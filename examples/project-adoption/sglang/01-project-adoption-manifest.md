@@ -31,6 +31,7 @@
 | Self-review candidate revision | `Not recorded` |
 | Self-review evidence | `Not recorded` |
 | Fresh-context review state / evidence | `NOT_STARTED / Not recorded` |
+| Fresh-context review session / assigned reviewers | `Not started` |
 | Human review state / evidence | `NOT_STARTED / Not recorded` |
 | Automation boundary | `Not applicable` |
 | Required automatic gates | `Not applicable` |

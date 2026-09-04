@@ -887,11 +887,11 @@ test("fresh-context review isolates author context and returns an exact-revision
   assert.match(protocol, /`ISOLATION_UNVERIFIED` and return `BLOCKED`/);
   assert.match(
     protocol,
-    /Any candidate change.*requires a newly created\s+fresh-context reviewer/is,
+    /candidate change.*same assigned\s+reviewer/is,
   );
   assert.match(protocol, /design and manual implementation stop for human review/i);
   assert.match(protocol, /Never overwrite a request for changes/i);
-  assert.match(workflow, /Record its packet\/receipt, exact revision/);
+  assert.match(workflow, /Record packets\/receipts, exact revisions/);
   assert.match(workflowSkill, /no\s+inherited authoring conversation/i);
   assert.match(
     workflowSkill,
@@ -899,10 +899,14 @@ test("fresh-context review isolates author context and returns an exact-revision
   );
   assert.match(prPolicy, /Fresh context does not create a second GitHub identity/);
   assert.match(prTemplate, /^## Fresh-context and human review$/m);
-  assert.match(prTemplate, /Fresh-context packet and receipt/);
+  assert.match(prTemplate, /Fresh-context session.*assigned reviewer/i);
   assert.match(prTemplate, /same-actor comment is not represented as a formal approval/i);
   assert.match(catalog, /fresh-context agent review/);
   assert.match(example, /This\s+example does not invent a reviewer/);
+  assert.match(readme, /same assigned reviewer/i);
+  assert.match(workflowSkill, /same assigned session reviewer/i);
+  assert.match(prPolicy, /REJECT_WITH_JUSTIFICATION/);
+  assert.match(prTemplate, /same assigned reviewer/i);
 });
 
 test("every review gate requires fresh-context review before its phase continuation", async () => {
@@ -933,7 +937,12 @@ test("every review gate requires fresh-context review before its phase continuat
     path.join(REPOSITORY_ROOT, "templates/reviews/fresh-context-agent-review.md"),
     "utf8",
   );
-  assert.match(protocol, /Every review round uses a newly created fresh-context reviewer/);
+  assert.match(protocol, /Every review gate opens one stable review session/);
+  assert.match(protocol, /same assigned reviewer/i);
+  assert.match(protocol, /REJECT_WITH_JUSTIFICATION/);
+  assert.match(protocol, /all required reviewers approve\s+the same exact candidate/i);
+  assert.match(protocol, /^### 1\.1 Session control record$/m);
+  assert.match(protocol, /REVIEWER_REPLACED/);
   assert.match(protocol, /AGENT_AUTO_MERGE/);
   assert.match(protocol, /`AUTO_CONTINUE` and `REVIEW_ON_EXCEPTION`/);
   assert.match(protocol, /deterministic actions that are not review gates/i);
@@ -982,7 +991,7 @@ test("implementation auto-merge is human-selected, implementation-only, and rech
   }
   assert.match(developmentPolicy, /The agent must never infer or select\s+`AGENT_AUTO_MERGE`/);
   assert.match(prPolicy, /must not\s+bypass a repository-required approval/);
-  assert.match(prPolicy, /exact-head self-review and a new fresh-context review pass/);
+  assert.match(prPolicy, /exact-head self-review and the assigned session reviewer/);
   assert.match(prPolicy, /final feature PR[\s\S]*final validation has its required approval/);
   assert.match(workflow, /sdd-section: implementation-review-ledger/);
   assert.match(workflow, /exact table headers present even before/);

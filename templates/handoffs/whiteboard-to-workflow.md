@@ -47,12 +47,13 @@ material source-whiteboard change -> STALE -> regenerate and review
 
 The handoff must not trigger routing merely because the file exists. Only an
 explicit transition to `APPROVED` can trigger the workflow. The author first
-self-reviews the exact candidate, then a newly created fresh-context agent
-reviews it using the canonical
+self-reviews the exact candidate, then opens a stable session whose assigned
+fresh-context reviewer(s) review it using the canonical
 [review protocol](../reviews/fresh-context-agent-review.md). After fresh
 approval, mandatory human review decides whether the design handoff becomes
 `APPROVED`. Any candidate change invalidates both prior results and starts a new
-self-review and fresh-review round. Neither agent may approve this design gate.
+self-review and same-reviewer session round. Neither agent may approve this
+design gate.
 
 ## 2. Normalized whiteboard conclusion
 

@@ -7,16 +7,20 @@ adopted.
 ## Unreleased — updated 2026-09-04
 
 - Made fresh-context agent review mandatory at every review gate. The author
-  freezes an exact-revision packet after self-review, creates a new read-only
-  reviewer without inherited author conversation, and preserves requested
-  changes and resolutions as immutable audit history. Design, governance,
+  freezes an exact-revision packet after self-review and opens a stable review
+  session whose assigned reviewer(s) are initially isolated from author
+  conversation and retained across revision rounds. The author records
+  accepted, partially accepted, evidence-rejected, or authorized-deferred
+  dispositions for every finding; unresolved reviewer disagreement routes to a
+  human. Requested changes and resolutions remain immutable audit history. Design, governance,
   adoption, upgrade, validation, archive, and manual implementation then require
   human review; only scoped implementation `AGENT_AUTO_MERGE` may proceed after
   fresh approval and all live gates pass. Added the phase sequence to the README,
   templates, skills, PR policy, and SGLang examples, while retaining the
   distinction between process isolation and a different formal GitHub identity.
   Lifecycle schema 2 adds fresh-context and human-review state, exact revision,
-  and evidence fields, plus the canonical implementation PR and post-merge
+  session/assigned-and-approved-roster, exact revision, and evidence fields,
+  plus the canonical implementation PR and post-merge
   review ledger. The checker requires exact core workflow tables and ledger
   headers, recognized row modes, exact per-PR head/merge and review/check
   receipts, fresh approval for every merged row, exact prerequisite

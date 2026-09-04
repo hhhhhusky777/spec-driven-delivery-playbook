@@ -43,10 +43,12 @@ Create or resume the guide's assessment destination from the candidate
 Perform the standard agent self-review against the exact assessment candidate.
 Record `SELF_REVIEW_PASSED` only when every assertion is supported. Then read
 the candidate's canonical fresh-context review protocol, freeze the exact
-assessment packet, create a new read-only reviewer without inherited author
-conversation, and wait for its receipt. Preserve requested changes as
-immutable per-round findings. Any assessment change requires a new self-review
-and newly created fresh reviewer. After fresh-context `APPROVED`, stop for
+assessment packet, open a stable session, and initialize its read-only
+reviewer(s) without inherited author conversation. Preserve requested changes
+and explicit author dispositions as immutable per-round findings. Any
+assessment change requires a new self-review and re-review by the same assigned
+session reviewer(s). After all assigned reviewers record fresh-context
+`APPROVED`, stop for
 mandatory human upgrade review. Never approve the assessment you generated or
 treat agent approval as human upgrade authority.
 

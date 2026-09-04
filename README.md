@@ -377,9 +377,10 @@ and [upgrade assessment template](templates/adoption/playbook-upgrade-assessment
 Each agent invocation stops at the next mandatory review checkpoint. It may
 perform more than one dependency-ready deterministic action only inside a
 pre-approved, fail-closed automation boundary. The original agent first
-self-reviews the exact candidate, then creates a new fresh-context reviewer.
-After that reviewer approves, an authorized human may use this prompt to record
-approval and resume:
+self-reviews the exact candidate, then opens a review session with reviewer(s)
+initialized without author context. The same assigned reviewer(s) handle every
+revision round in that session. After all approve one exact candidate, an
+authorized human may use this prompt to record approval and resume:
 
 ```text
 Fresh-context review is APPROVED for <ARTIFACT_PATH> at <VERSION_OR_COMMIT>.
@@ -652,39 +653,42 @@ authorize continuation by itself.
 
 ### Fresh-context agent review design
 
-Every review gate uses a fresh reviewer context to reduce anchoring
+Every review gate opens a review session with fresh reviewer context to reduce anchoring
 on the author's conversation and reasoning. The original agent acts as the
-coordinator: it freezes a bounded review packet, creates a reviewer with
-conversation inheritance disabled, waits for a structured receipt, and then
-resumes the delivery. The reviewer reads the approved documents, complete diff,
-checks, and repository state directly. It performs review only; it does not
-edit, merge, resolve its own comments, or continue implementation.
+coordinator: it freezes a bounded review packet, assigns one or more reviewers
+with conversation inheritance disabled, waits for their structured receipts,
+triages every finding, and then resumes the delivery. The same reviewer(s)
+verify fixes in later rounds. They read the approved documents, complete diff,
+checks, and repository state directly. They perform review only; they do not
+edit, merge, resolve their own comments, or continue implementation.
 
 ```mermaid
 sequenceDiagram
     participant U as Human
     participant A as Original agent
-    participant R as Fresh-context reviewer
+    participant R as Assigned fresh-context reviewer(s)
     participant P as Project and PR
 
     U->>A: Start or continue delivery
     A->>P: Implement, test, annotate, and self-review exact revision
     A->>A: Freeze review packet without author conversation or proposed result
-    A->>R: Create isolated reviewer with packet and read-only review protocol
+    A->>R: Open session and initialize reviewer(s) with no author context
     R->>P: Read contracts, base, exact candidate, full diff, and gate evidence
     R->>R: Derive expectations independently, then reconcile author evidence
     R->>P: Publish summary and actionable inline comments
     R-->>A: Return structured receipt
     A->>A: Verify isolation, revisions, comments, and live workflow mode
     alt Changes requested
-        A->>P: Address findings and create revision
-        A->>R: Create fresh reviewer because prior receipt is stale
+        A->>A: Accept, partly accept, reject with evidence, or defer with authority
+        A->>P: Apply accepted fixes and self-review the new exact revision
+        A->>R: Resume same session reviewer(s) to verify responses and revision
     else Approved in design or manual implementation
         A-->>U: Stop for human review
         alt Human requests changes
             U->>A: Return durable findings
-            A->>P: Address findings and create revision
-            A->>R: Create a new fresh reviewer before human re-review
+            A->>A: Triage every human finding
+            A->>P: Apply accepted fixes and self-review the new exact revision
+            A->>R: Resume same session reviewer(s) before human re-review
         else Human approves
             U->>A: Authorize next workflow action
         end

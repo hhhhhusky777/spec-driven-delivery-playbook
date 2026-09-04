@@ -38,8 +38,9 @@ before `ACCEPTED`. First complete the
 revision and record `SELF_REVIEW_PASSED`, then use the canonical
 [fresh-context review](../reviews/fresh-context-agent-review.md). After fresh
 approval, stop for mandatory human review. Any candidate change invalidates
-both results; resolve `CHANGES_REQUESTED`, repeat self-review, and create a new
-fresh reviewer. Return to the handoff or whiteboard if comments invalidate the
+both results; resolve `CHANGES_REQUESTED`, record an explicit author
+disposition, repeat self-review, and return to the same assigned session
+reviewer(s). Return to the handoff or whiteboard if comments invalidate the
 accepted requirements or solution. Agent review is evidence, not design
 approval.
 

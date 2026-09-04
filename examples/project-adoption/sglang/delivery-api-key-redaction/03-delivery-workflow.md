@@ -14,6 +14,10 @@
 | Self-review candidate revision | `Not recorded` |
 | Self-review evidence | `Not recorded` |
 | Fresh-context review state | `NOT_STARTED` |
+| Fresh-context review session ID | `Not recorded` |
+| Fresh-context assigned reviewers | `Not recorded` |
+| Fresh-context required approvals | `Not recorded` |
+| Fresh-context approved reviewers | `Not recorded` |
 | Fresh-context reviewed revision | `Not recorded` |
 | Fresh-context review evidence | `Not recorded` |
 | Human review state | `NOT_STARTED` |
@@ -60,7 +64,7 @@
 | Copying approved IDs/links into the workflow | `AUTO_CONTINUE` | Only exact mechanical transfer; fail closed on mismatch |
 | Running deterministic documentation checks | `REVIEW_ON_EXCEPTION` | Continue only when every declared gate passes |
 | Plan approval, allowlist, compatibility, and task specifications | `EXPLICIT_REVIEW` | Project-owner decisions |
-| Plan review | `EXPLICIT_REVIEW` | Self-review, a new fresh-context reviewer, then human approval of the exact candidate |
+| Plan review | `EXPLICIT_REVIEW` | Self-review, stable fresh-context review session, then human approval of the exact candidate |
 
 Missing or invalid mode data, ambiguity, drift, stale inputs, a failed gate, an
 unknown impact, or scope expansion fails closed to `EXPLICIT_REVIEW`.
@@ -68,9 +72,10 @@ unknown impact, or scope expansion fails closed to `EXPLICIT_REVIEW`.
 Before the plan enters `IN_REVIEW`, the producing agent must audit the exact
 candidate and record `SELF_REVIEW_PASSED`. Any change invalidates that result;
 self-review cannot approve, merge, or continue the delivery.
-A newly created fresh-context reviewer must derive expectations from the SGLang
-authorities and full plan before reconciling author annotations. After its
-approval, human review remains mandatory because the plan is design. This
+A review session's assigned fresh-context reviewer(s) must initially derive
+expectations from the SGLang authorities and full plan without author context,
+then remain assigned to verify later-round responses. After all approve, human
+review remains mandatory because the plan is design. This
 example does not invent a reviewer, receipt, GitHub identity, or approval that
 has not occurred.
 

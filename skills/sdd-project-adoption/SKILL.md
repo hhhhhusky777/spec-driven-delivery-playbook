@@ -64,12 +64,14 @@ playbook checkout, immutable revision, manifest path, and cleanup record.
    `SELF_REVIEW_FAILED`. Any candidate change invalidates the result. A passing
    self-review is evidence only and cannot approve, merge, or continue the work.
 10. At every review gate, read the canonical fresh-context review protocol from
-   the verified checkout. Freeze the exact candidate packet, create a new
-   read-only reviewer without inherited author conversation, and wait for its
-   receipt. Preserve requested changes as immutable per-round findings with
+   the verified checkout. Freeze the exact candidate packet, open a stable
+   review session, initialize its read-only reviewer(s) without inherited author
+   conversation, and wait for their receipts. Preserve requested changes as immutable per-round findings with
    governing statement, expected/observed result, impact, requested outcome,
-   author response, resolution revision, and reviewer disposition. Any change
-   requires a new self-review and newly created fresh reviewer.
+   explicit author disposition, resolution revision, and reviewer disposition.
+   Any change requires a new self-review and re-review by the same assigned
+   session reviewer(s). Reject incorrect findings with evidence; escalate an
+   unresolved conflict to human review.
 11. After fresh-context `APPROVED`, stop for mandatory human adoption review.
    Fresh review prepares that decision and cannot replace human authority.
 12. Stop at an `EXPLICIT_REVIEW` action, the recorded automation boundary, or the

@@ -141,11 +141,13 @@ write scope. Apply its pre-approved `EXPLICIT_REVIEW`, `AUTO_CONTINUE`, or
   consistency; and
 - record `SELF_REVIEW_PASSED` or `SELF_REVIEW_FAILED`; any candidate change
   invalidates the result, and a pass cannot approve, merge, or continue work;
-- after self-review passes, create a new reviewer with no inherited authoring
-  conversation, follow the canonical fresh-context review protocol, and
-  preserve requested-change findings without overwriting them; and
+- after self-review passes, open a stable session and initialize its reviewer(s)
+  with no inherited authoring conversation, follow the canonical fresh-context
+  review protocol, and preserve requested-change findings plus explicit author
+  dispositions without overwriting them; and
 - after fresh-context approval, stop for mandatory human adoption review. Any
-  candidate change requires a new self-review and a new fresh reviewer.
+  candidate change requires a new self-review and re-review by the same assigned
+  session reviewer(s).
 
 Do not advance Adoption state without recorded explicit reviewer authority.
 Do not approve your own work, use `AUTO_CONTINUED` as approval, cross an

@@ -113,9 +113,10 @@ At every review gate:
    governing inputs, scope/non-scope, gates, annotations, self-review evidence,
    and publication channel. Do not include this conversation, hidden reasoning,
    a proposed disposition, or an advocacy summary.
-3. Use the runtime's isolated-agent mechanism to create a reviewer with no
-   inherited authoring conversation. Give it only the protocol, packet, and
-   bounded read/review permissions. If isolation cannot be verified, record
+3. Open a stable review session and use the runtime's isolated-agent mechanism
+   to initialize its reviewer(s) with no inherited authoring conversation. Keep
+   those reviewer(s) assigned for later rounds. Give them only the protocol,
+   packet, and bounded read/review permissions. If isolation cannot be verified, record
    `ISOLATION_UNVERIFIED` and fail closed.
 4. Keep the original task waiting for the structured receipt. The reviewer
    must remain read-only and must not implement, edit, merge, close, alter live
@@ -125,8 +126,10 @@ At every review gate:
    and its immutable findings in the artifact review ledger or linked per-round
    review record. Never overwrite the original finding when adding an author
    response or later reviewer disposition.
-6. For `CHANGES_REQUESTED`, address or justify every finding; any candidate
-   change requires a newly created fresh reviewer. For `BLOCKED`, restore
+6. For `CHANGES_REQUESTED`, record `ACCEPT`, `PARTIALLY_ACCEPT`,
+   `REJECT_WITH_JUSTIFICATION`, or `DEFER_WITH_AUTHORITY` for every finding;
+   any candidate change requires exact-head self-review and re-review by the
+   same assigned session reviewer(s). For `BLOCKED`, restore
    reviewability. For `APPROVED`, stop for human review in design, governance,
    adoption, upgrade, validation, archive, and manual implementation. Only a
    scoped implementation `AGENT_AUTO_MERGE` flow may proceed after rereading

@@ -282,6 +282,22 @@ function parseStableIdentifierList(value) {
   return identifiers.map((item) => item.toLowerCase());
 }
 
+function parseReviewerRoster(value) {
+  const normalized = normalizeValue(value || "");
+  if (!hasRecordedValue(normalized)) {
+    return null;
+  }
+  const reviewers = normalized.split(",").map((item) => item.trim());
+  if (
+    reviewers.length === 0 ||
+    reviewers.some((item) => !/^\/?[A-Za-z0-9][A-Za-z0-9_.:/-]*$/.test(item)) ||
+    new Set(reviewers.map((item) => item.toLowerCase())).size !== reviewers.length
+  ) {
+    return null;
+  }
+  return reviewers;
+}
+
 function splitIdentifiers(value) {
   if (isNone(value)) {
     return [];
@@ -368,6 +384,38 @@ function checkIndependentReviewGate(file, fields, approvalRequired, humanRequire
         1,
         "SDD_FRESH_REVIEW_STATE",
         "approval requires Fresh-context review state APPROVED",
+      ),
+    );
+  }
+  const reviewSessionId = fields.get("Fresh-context review session ID") || "";
+  const assignedReviewers = parseReviewerRoster(
+    fields.get("Fresh-context assigned reviewers") || "",
+  );
+  const approvedReviewers = parseReviewerRoster(
+    fields.get("Fresh-context approved reviewers") || "",
+  );
+  const requiredApprovals = fields.get("Fresh-context required approvals") || "";
+  const assignedReviewerSet = new Set(
+    (assignedReviewers || []).map((item) => item.toLowerCase()),
+  );
+  const approvedReviewerSet = new Set(
+    (approvedReviewers || []).map((item) => item.toLowerCase()),
+  );
+  if (
+    !isStableIdentifier(reviewSessionId) ||
+    !assignedReviewers ||
+    !approvedReviewers ||
+    !/^[1-9]\d*$/.test(requiredApprovals) ||
+    Number(requiredApprovals) !== assignedReviewers.length ||
+    assignedReviewerSet.size !== approvedReviewerSet.size ||
+    [...assignedReviewerSet].some((item) => !approvedReviewerSet.has(item))
+  ) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_FRESH_REVIEW_SESSION",
+        "approval requires a stable review-session ID, unique assigned reviewer IDs, and approval from every assigned reviewer",
       ),
     );
   }

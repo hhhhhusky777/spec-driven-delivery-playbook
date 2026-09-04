@@ -71,9 +71,10 @@ revision and record `SELF_REVIEW_PASSED`, then run the canonical
 [fresh-context agent review](../reviews/fresh-context-agent-review.md). After
 fresh-context approval, stop for mandatory human review before setting the
 state to `CONCLUDED`. Any candidate change invalidates both review results;
-resolve `CHANGES_REQUESTED`, repeat self-review with the revised candidate, and
-create a new fresh reviewer before returning to human review. Self-review and
-fresh-context review are evidence; neither replaces human design approval.
+resolve `CHANGES_REQUESTED`, record an explicit author disposition, repeat
+self-review with the revised candidate, and return to the same assigned session
+reviewer(s) before human review. Self-review and fresh-context review are
+evidence; neither replaces human design approval.
 
 | Round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
 | --- | --- | --- | --- | --- | --- | --- |

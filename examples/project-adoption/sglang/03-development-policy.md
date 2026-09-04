@@ -91,8 +91,10 @@ flaky-test/CI rules permit it and the underlying result is understood.
   annotations for material or non-obvious changes. Any candidate change
   invalidates the result. A pass is evidence, not approval or authorization to
   merge or continue.
-- After self-review passes, create a new fresh-context reviewer for the exact
-  candidate and preserve its findings. Design and manual implementation then
+- After self-review passes, open a stable session and initialize its
+  fresh-context reviewer(s) for the exact candidate. Preserve findings and
+  author dispositions, and retain those reviewer(s) across revisions. Design
+  and manual implementation then
   stop for human review; only scoped `AGENT_AUTO_MERGE` implementation may
   continue after fresh approval and all live gates pass.
 - Keep implementation continuation `NOT_SELECTED` throughout design. After all

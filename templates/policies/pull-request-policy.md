@@ -34,7 +34,8 @@ evidence, then use the canonical
 [fresh-context review](../reviews/fresh-context-agent-review.md). After fresh
 approval, stop for mandatory human review before activating the policy. Any
 candidate change invalidates both prior results; resolve `CHANGES_REQUESTED`,
-repeat self-review, and create a new fresh reviewer. Agent review is evidence,
+record an explicit author disposition for every finding, repeat self-review,
+and return to the same assigned session reviewer(s). Agent review is evidence,
 not policy approval.
 
 | Round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
@@ -313,7 +314,7 @@ attempt, and continuation.
 - `AGENT_AUTO_MERGE`: the user's recorded mode selection supplies merge
   authorization for only the listed stable implementation target IDs in the
   recorded repository. The agent may merge only
-  after its exact-head self-review and a new fresh-context review pass,
+  after its exact-head self-review and the assigned session reviewer(s)' pass,
   annotations are current, all checks and repository protections pass, and no
   stop condition exists. It must not bypass a repository-required approval.
 
@@ -350,24 +351,30 @@ Define approval rules by risk:
 | --- | --- | --- |
 | `<domain>` | `<role>` | `<gate>` |
 
-Authors respond to comments with a change, evidence-backed explanation, or a
-recorded follow-up accepted by the reviewer. Do not resolve substantive comments
-without addressing them.
+Authors classify every comment as `ACCEPT`, `PARTIALLY_ACCEPT`,
+`REJECT_WITH_JUSTIFICATION`, or `DEFER_WITH_AUTHORITY`, with a change,
+evidence-backed explanation, or authorized follow-up as applicable. Do not
+resolve substantive comments without reviewer reconciliation; unresolved
+disagreement requires human decision.
 
 At every PR review gate, use the canonical
 [review packet and receipt](../reviews/fresh-context-agent-review.md). The
 original agent creates the reviewer without author-conversation inheritance,
 waits for its receipt, and remains responsible for addressing findings or
 running the merge gate. The reviewer is read-only and reviews the complete
-exact candidate. Any new commit invalidates the result and requires a new fresh
-reviewer.
+exact candidate. The reviewer remains assigned throughout the review session;
+any new commit invalidates the prior revision disposition and requires the same
+reviewer to review the new exact head after author self-review.
 
 Persist every requested-change finding without overwriting it. A PR finding
 links its inline or summary comment and records the governing statement,
 expected and observed behavior, impact, requested correction, author response,
 resolved revision, and reviewer disposition. A revised head starts a new review
-round with a newly created fresh reviewer; the prior finding remains immutable
-audit history.
+round with the same assigned reviewer(s); the prior finding remains immutable
+audit history. The author marks every comment `ACCEPT`, `PARTIALLY_ACCEPT`,
+`REJECT_WITH_JUSTIFICATION`, or `DEFER_WITH_AUTHORITY`. An unresolved conflict
+is escalated to human review rather than forcing a change or silently resolving
+the comment.
 
 Fresh context does not create a second GitHub identity. Record whether the
 result is workflow evidence, a PR comment, or a formal review made through
