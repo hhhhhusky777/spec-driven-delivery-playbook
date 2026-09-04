@@ -56,6 +56,8 @@
         "State",
         "Previous state",
         "Current artifact/gate",
+        "Current review phase",
+        "Current review target ID",
         "Current artifact review state",
         "Self-review state",
         "Self-review candidate revision",

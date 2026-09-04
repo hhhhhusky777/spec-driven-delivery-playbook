@@ -85,6 +85,19 @@ function extractControlFields(tables) {
   return fields;
 }
 
+function rawControlField(tables, field) {
+  for (const table of tables) {
+    if (table.headers.length !== 2 || table.headers[0] !== "Field") {
+      continue;
+    }
+    const row = table.rows.find((item) => normalizeValue(item.Field) === field);
+    if (row) {
+      return row[table.headers[1]];
+    }
+  }
+  return "";
+}
+
 function extractMarker(text) {
   const match = text.match(
     /<!--\s*sdd-schema:\s*([a-z-]+)@(\d+)(?:;\s*mode:\s*([A-Z]+))?\s*-->/,
@@ -135,20 +148,37 @@ function hasRecordedValue(value) {
   );
 }
 
+function hasMarkdownLink(value) {
+  return /\[[^\]]+\]\([^)]+\)/.test(String(value || ""));
+}
+
 function hasDispositionEvidence(value, allowedDispositions) {
   const normalized = normalizeValue(value || "");
   const match = /^([A-Z_]+)\s+\/\s+(.+)$/.exec(normalized);
   return Boolean(
     match &&
       allowedDispositions.includes(match[1]) &&
-      hasRecordedValue(match[2]),
+      hasRecordedValue(match[2]) &&
+      hasMarkdownLink(value),
   );
+}
+
+function hasTaskAndPrEvidence(value) {
+  const normalized = normalizeValue(value || "");
+  return /^[A-Z][A-Z0-9_-]*\s+\/\s+PR\s+#?\d+$/i.test(normalized) &&
+    /\]\(https:\/\/github\.com\/[^)\s]+\/pull\/\d+(?:[?#][^)]*)?\)/i.test(
+      String(value || ""),
+    );
+}
+
+function hasReviewTargetLink(value, targetId) {
+  const normalized = normalizeValue(value || "").toLowerCase();
+  return hasMarkdownLink(value) && normalized.includes(normalizeValue(targetId).toLowerCase());
 }
 
 function hasHeadAndMergeEvidence(value) {
   const normalized = normalizeValue(value || "");
-  const match = /^HEAD\s+(.+?)\s+\/\s+MERGE\s+(.+)$/.exec(normalized);
-  return Boolean(match && hasRecordedValue(match[1]) && hasRecordedValue(match[2]));
+  return /^HEAD\s+[0-9a-f]{40}\s+\/\s+MERGE\s+[0-9a-f]{40}$/i.test(normalized);
 }
 
 function splitIdentifiers(value) {
@@ -211,7 +241,7 @@ function checkSelfReviewGate(file, fields, reviewRequired) {
   }
   for (const field of ["Self-review candidate revision", "Self-review evidence"]) {
     const value = fields.get(field) || "";
-    if (isNone(value) || /^not recorded$/i.test(normalizeValue(value))) {
+    if (!hasRecordedValue(value)) {
       diagnostics.push(
         diagnostic(
           file,
@@ -242,7 +272,7 @@ function checkIndependentReviewGate(file, fields, approvalRequired, humanRequire
   }
   for (const field of ["Fresh-context reviewed revision", "Fresh-context review evidence"]) {
     const value = fields.get(field) || "";
-    if (isNone(value) || /^not recorded$/i.test(normalizeValue(value))) {
+    if (!hasRecordedValue(value)) {
       diagnostics.push(
         diagnostic(file, 1, "SDD_FRESH_REVIEW_EVIDENCE", `approval requires a recorded ${field}`),
       );
@@ -274,7 +304,7 @@ function checkIndependentReviewGate(file, fields, approvalRequired, humanRequire
     }
     for (const field of ["Human reviewed revision", "Human review evidence"]) {
       const value = fields.get(field) || "";
-      if (isNone(value) || /^not recorded$/i.test(normalizeValue(value))) {
+      if (!hasRecordedValue(value)) {
         diagnostics.push(
           diagnostic(file, 1, "SDD_HUMAN_REVIEW_EVIDENCE", `approval requires a recorded ${field}`),
         );
@@ -447,7 +477,7 @@ function checkImplementationContinuation(file, fields, tables) {
   );
   for (const row of mergedRows) {
     const requiredEvidence = [
-      ["Task/PR", hasRecordedValue(row["Task/PR"])],
+      ["Task/PR", hasTaskAndPrEvidence(row["Task/PR"])],
       ["Head and merge commit", hasHeadAndMergeEvidence(row["Head and merge commit"])],
       [
         "Implementation mode/authority",
@@ -988,9 +1018,46 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     );
   }
   const artifactApproved = artifactReviewState === "APPROVED";
+  const reviewPhase = fields.get("Current review phase");
+  const allowedReviewPhases = new Set([
+    "DESIGN",
+    "IMPLEMENTATION",
+    "VALIDATION",
+    "ARCHIVE",
+  ]);
+  if (!allowedReviewPhases.has(reviewPhase)) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_REVIEW_PHASE",
+        `unsupported Current review phase: ${reviewPhase || "missing"}`,
+      ),
+    );
+  }
+  const reviewTarget = fields.get("Current review target ID") || "";
+  const implementationScope = new Set(
+    splitIdentifiers(fields.get("Implementation mode scope") || ""),
+  );
+  const implementationReviewInScope =
+    reviewPhase === "IMPLEMENTATION" &&
+    hasRecordedValue(reviewTarget) &&
+    implementationScope.has(normalizeValue(reviewTarget)) &&
+    hasReviewTargetLink(rawControlField(tables, "Current artifact/gate"), reviewTarget);
+  if (reviewPhase === "IMPLEMENTATION" && !implementationReviewInScope) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_IMPLEMENTATION_REVIEW_SCOPE",
+        "implementation review requires a linked Current artifact/gate whose recorded target ID is inside Implementation mode scope",
+      ),
+    );
+  }
   const agentAutoMergeReview =
     fields.get("State") === "DELIVERY_ACTIVE" &&
-    fields.get("Implementation continuation mode") === "AGENT_AUTO_MERGE";
+    fields.get("Implementation continuation mode") === "AGENT_AUTO_MERGE" &&
+    implementationReviewInScope;
   diagnostics.push(
     ...checkIndependentReviewGate(
       file,
@@ -1144,6 +1211,51 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
           deliveryManifest?.line || 1,
           "SDD_DELIVERY_MANIFEST_EMPTY",
           "GATES_READY requires at least one reviewed delivery-manifest row",
+        ),
+      );
+    }
+    if (freshnessRows.length === 0) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          freshnessTable?.line || 1,
+          "SDD_DEPENDENCY_REGISTER_EMPTY",
+          "GATES_READY requires a non-empty dependency and freshness register",
+        ),
+      );
+    }
+    const selectedManifestRows = (deliveryManifest?.rows || []).filter((row) =>
+      !["SKIP", "DEFER", "BLOCKED"].includes(normalizeValue(row.Decision)),
+    );
+    const freshnessIds = new Set(
+      freshnessRows.map((row) => normalizeValue(row["Artifact ID"]).toLowerCase()),
+    );
+    const freshnessArtifacts = new Set(
+      freshnessRows.map((row) => normalizeValue(row["Artifact/link"]).toLowerCase()),
+    );
+    const uncovered = [];
+    if (!freshnessIds.has("workflow")) {
+      uncovered.push("workflow");
+    }
+    for (const targetId of targetIds) {
+      if (!freshnessIds.has(targetId.toLowerCase())) {
+        uncovered.push(`next target ${targetId}`);
+      }
+    }
+    for (const row of selectedManifestRows) {
+      const artifact = normalizeValue(row.Artifact);
+      const key = artifact.toLowerCase();
+      if (!freshnessIds.has(key) && !freshnessArtifacts.has(key)) {
+        uncovered.push(`manifest artifact ${artifact}`);
+      }
+    }
+    if (uncovered.length > 0) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          freshnessTable?.line || 1,
+          "SDD_DEPENDENCY_COVERAGE",
+          `GATES_READY dependency register does not cover: ${uncovered.join(", ")}`,
         ),
       );
     }

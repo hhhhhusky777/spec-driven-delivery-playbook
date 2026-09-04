@@ -28,6 +28,8 @@ instantiated workflow record.
 | Selected route | `Not selected` |
 | Manifest review state | `NOT_STARTED` |
 | Current artifact/gate | `<value>` |
+| Current review phase | `<DESIGN/IMPLEMENTATION/VALIDATION/ARCHIVE>` |
+| Current review target ID | `<stable artifact/task/PR ID>` |
 | Current artifact review state | `<value>` |
 | Self-review state | `<NOT_STARTED / SELF_REVIEW_PASSED / SELF_REVIEW_FAILED>` |
 | Self-review candidate revision | `<exact commit/version or Not applicable>` |
@@ -142,6 +144,10 @@ task specification are approved.
   task.
 
 Record the user's identity/instruction, selection time, and exact task/PR scope.
+At each review gate, record its phase and stable target ID. Auto-merge can omit
+pre-merge human review only when `Current review phase` is `IMPLEMENTATION`, the
+target ID is in that scope, and `Current artifact/gate` links that same target's
+PR. A design, validation, or archive gate always requires human review.
 The user may change the mode at any time. Before each task edit, self-review
 gate, PR opening, merge attempt, and continuation, reread these live fields;
 never rely on an earlier prompt or cached value. A missing, invalid, stale, or
@@ -360,6 +366,9 @@ A material or unknown version difference makes that artifact `STALE`. Staleness
 or blocking propagates only to transitive dependants. A control-only navigation
 update does not invalidate frozen content. Review the current change first;
 after approval, the earliest dependency-ready stale correction takes priority.
+At `GATES_READY`, the register must be non-empty and cover the workflow, every
+selected delivery-manifest artifact, and every next-action target ID. A marker
+and header-only table cannot prove freshness.
 When this workflow enters `VALIDATING`, the `plan` row's Markdown link is the
 machine-readable parent/child state reference. It must resolve inside the
 project to a `CURRENT` SDD implementation plan in `VALIDATING`. Route 0 may omit
@@ -422,7 +431,7 @@ the ledger fails closed because it would erase implementation review duties.
 
 | Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | Human review | Findings/follow-up |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `<task ID + PR link>` | `HEAD <exact revision> / MERGE <exact revision>` | `<mode> / <authority link>` | `SELF_REVIEW_PASSED / <record>` | `APPROVED / <packet-or-receipt-link>` | `PASS / <evidence>` | `<MERGED/STOPPED> / <evidence>` | `<APPROVED / evidence for manual mode, or PENDING/ACCEPTED/FOLLOW_UP_REQUIRED/FOLLOW_UP_COMPLETE / evidence for auto mode>` | `<links or None>` |
+| `<task ID> / <PR Markdown link>` | `HEAD <full 40-character commit SHA> / MERGE <full 40-character commit SHA>` | `<mode> / <authority link>` | `SELF_REVIEW_PASSED / <record link>` | `APPROVED / <packet-or-receipt link>` | `PASS / <checks link>` | `<MERGED/STOPPED> / <evidence link>` | `<APPROVED / evidence for manual mode, or PENDING/ACCEPTED/FOLLOW_UP_REQUIRED/FOLLOW_UP_COMPLETE / evidence for auto mode>` | `<links or None>` |
 
 Every row's mode must lead with exactly `HUMAN_REVIEW_BEFORE_MERGE` or
 `AGENT_AUTO_MERGE`. Every merged row requires fresh-context `APPROVED`. In

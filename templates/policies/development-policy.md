@@ -249,8 +249,10 @@ The user may change the mode at any time. The new value applies before the next
 irreversible action; it cannot undo a completed merge. Before each task edit,
 self-review gate, PR opening, merge attempt, and next-task continuation, the
 agent rereads the canonical workflow and verifies the current mode, authority,
-scope, and revision. Missing, invalid, stale, or out-of-scope mode data stops
-for user direction.
+scope, revision, `Current review phase`, and `Current review target ID`. Only an
+`IMPLEMENTATION` target inside that scope can omit pre-merge human review;
+design, validation, and archive gates cannot. Missing, invalid, stale, or
+out-of-scope mode data stops for user direction.
 
 `AGENT_AUTO_MERGE` does not relax the approved task, tests, self-review,
 fresh-context review, PR

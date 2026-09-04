@@ -20,11 +20,12 @@ adopted.
   review ledger. The checker requires exact core workflow tables and ledger
   headers, recognized row modes, exact per-PR head/merge and review/check
   receipts, fresh approval for every merged row, exact prerequisite
-  dispositions, and non-empty closure evidence.
-  Active schema-1 plans and workflows must add those six fields; workflows must
-  also add the ledger section and exact headers before changing their markers
-  to `@2` at their next review gate. Existing approvals remain historical
-  evidence and do not satisfy the new gate.
+  dispositions, phase-and-scope proof for the implementation-only human-review
+  exception, and non-empty dependency and closure evidence. Active schema-1
+  plans and workflows must add the review fields; workflows must also add the
+  current review phase/target fields and ledger section with exact headers
+  before changing their markers to `@2` at their next review gate. Existing
+  approvals remain historical evidence and do not satisfy the new gate.
 
 - Added `install-sdd.sh --upgrade` for fail-closed, between-task preparation of
   an immutable candidate without changing the active manifest pin. Added a

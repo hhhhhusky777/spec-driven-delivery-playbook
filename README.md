@@ -632,6 +632,11 @@ implementation-only `AGENT_AUTO_MERGE` choice is different: it may continue
 after fresh-context approval without pre-merge human review, subject to its
 exact scope and every live merge gate.
 
+The live workflow proves that exception with `Current review phase =
+IMPLEMENTATION` and a `Current review target ID` contained in the recorded mode
+scope. A selected auto-merge mode never waives human review for a design,
+validation, or archive gate encountered during implementation.
+
 Before every review gate, the generating or implementing agent self-reviews the
 exact candidate revision against its approved inputs, scope, acceptance
 criteria, policies, tests, risks, and surrounding context. For a PR, it also

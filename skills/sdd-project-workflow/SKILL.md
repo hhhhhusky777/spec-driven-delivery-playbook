@@ -151,6 +151,10 @@ broaden its scope, and run lifecycle validation after recording it.
 For every implementation task, reread the canonical mode before the task edit,
 self-review gate, PR opening, merge attempt, and next-task continuation:
 
+- Require `Current review phase` to be `IMPLEMENTATION` and `Current review
+  target ID` to be inside the recorded mode scope. Any design, validation, or
+  archive phase still requires human review even while auto-merge is selected.
+
 - `HUMAN_REVIEW_BEFORE_MERGE`: after exact-head self-review and fresh-context
   approval, stop for required human review and merge authority.
 - `AGENT_AUTO_MERGE`: after exact-head self-review and fresh-context approval,

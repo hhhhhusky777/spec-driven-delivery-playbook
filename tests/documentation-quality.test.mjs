@@ -989,6 +989,11 @@ test("implementation auto-merge is human-selected, implementation-only, and rech
   assert.match(workflow, /Every merged row requires fresh-context `APPROVED`/);
   assert.match(workflow, /`COMPLETE` and `ARCHIVED` require at least one/);
   assert.match(workflow, /bare disposition does not pass that gate/);
+  assert.match(workflow, /Current review phase/);
+  assert.match(workflow, /Current review target ID/);
+  assert.match(workflow, /full 40-character commit SHA/);
+  assert.match(developmentPolicy, /Only an\s+`IMPLEMENTATION` target inside that scope/);
+  assert.match(workflowSkill, /Current review\s+target ID.*recorded mode scope/s);
   assert.match(workflowSkill, /Never weaken checks, use\s+administrator bypass/);
   assert.match(workflowSkill, /final feature PR only[\s\S]*final validation is already approved/);
   assert.match(testStrategy, /Negative fixtures must block missing\/invalid mode data/);

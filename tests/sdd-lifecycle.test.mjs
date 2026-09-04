@@ -346,6 +346,7 @@ function workflow({
   impact = "CONTROL_ONLY",
   freshness = "CURRENT",
   blockerBlocks = "other-task",
+  nextActionTargetIds = "task-1",
   writeTarget = "docs/plan.md",
   planLink = "[Plan](implementation-plan.md)",
   includePlan = true,
@@ -356,8 +357,12 @@ function workflow({
   automationException = "None",
   includeManifestTable = true,
   includeDependencyTable = true,
+  includeDependencyRows = true,
   includeBlockerTable = true,
   artifactReviewState = "APPROVED",
+  currentReviewPhase,
+  currentReviewTargetId = "task-1",
+  currentArtifactGate,
   selfReviewState = "SELF_REVIEW_PASSED",
   selfReviewRevision = "candidate-v1",
   selfReviewEvidence = "reviews/self-review.md",
@@ -372,14 +377,15 @@ function workflow({
   implementationModeScope = "task-1",
   implementationModeSelectedAt = "2026-09-03 10:00 UTC",
   manifestReviewState = "APPROVED",
+  manifestArtifact,
   postMergeHumanReview = null,
-  postMergeFreshReview = "APPROVED / fresh-review-1",
-  postMergeResult = "MERGED / merge-evidence",
-  postMergeMode = "AGENT_AUTO_MERGE / user",
-  postMergeTaskPr = "T01 / PR-1",
-  postMergeRevisions = "HEAD head-1 / MERGE merge-1",
-  postMergeSelfReview = "SELF_REVIEW_PASSED / self-review-1",
-  postMergeChecks = "PASS / checks-1",
+  postMergeFreshReview = "APPROVED / [fresh review](reviews/fresh-review.md)",
+  postMergeResult = "MERGED / [merge](https://github.com/example/project/commit/2222222222222222222222222222222222222222)",
+  postMergeMode = "AGENT_AUTO_MERGE / [authority](delivery-workflow.md)",
+  postMergeTaskPr = "T01 / [PR #1](https://github.com/example/project/pull/1)",
+  postMergeRevisions = "HEAD 1111111111111111111111111111111111111111 / MERGE 2222222222222222222222222222222222222222",
+  postMergeSelfReview = "SELF_REVIEW_PASSED / [self review](reviews/self-review.md)",
+  postMergeChecks = "PASS / [checks](https://github.com/example/project/actions/runs/1)",
   includeReviewLedger = true,
   reviewLedgerHumanHeader = "Human review",
 } = {}) {
@@ -396,10 +402,28 @@ function workflow({
     (resolvedHumanReviewState === "NOT_APPLICABLE"
       ? "Not applicable"
       : "reviews/human-review.md");
+  const resolvedReviewPhase =
+    currentReviewPhase ??
+    (state === "DELIVERY_ACTIVE"
+      ? "IMPLEMENTATION"
+      : state === "VALIDATING"
+        ? "VALIDATION"
+        : ["COMPLETE", "ARCHIVED"].includes(state)
+          ? "ARCHIVE"
+          : "DESIGN");
+  const resolvedArtifactGate =
+    currentArtifactGate ??
+    (resolvedReviewPhase === "IMPLEMENTATION"
+      ? `[task-1 PR #1](https://github.com/example/project/pull/1)`
+      : `[plan](implementation-plan.md)`);
   const dependencyRows = includePlan
-    ? `| plan | ${planLink} | None | ${planConsumed} | ${planCurrent} | ${impact} | ${freshness} | None |
+    ? `| workflow | Workflow | None | v1 | v1 | CONTROL_ONLY | CURRENT | None |
+| plan | ${planLink} | workflow | ${planConsumed} | ${planCurrent} | ${impact} | ${freshness} | None |
 | task-1 | Task 1 | plan | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`
-    : `| task-1 | Task 1 | None | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`;
+    : `| workflow | Workflow | None | v1 | v1 | CONTROL_ONLY | CURRENT | None |
+| task-1 | Task 1 | workflow | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`;
+  const resolvedManifestArtifact =
+    manifestArtifact ?? (includePlan ? "Plan" : "Documentation");
   return `# Delivery Workflow
 
 <!-- sdd-schema: delivery-workflow@2 -->
@@ -408,7 +432,9 @@ function workflow({
 | --- | --- |
 | State | \`${state}\` |
 | Previous state | \`${previousState}\` |
-| Current artifact/gate | \`plan\` |
+| Current artifact/gate | ${resolvedArtifactGate} |
+| Current review phase | \`${resolvedReviewPhase}\` |
+| Current review target ID | \`${currentReviewTargetId}\` |
 | Current artifact review state | \`${artifactReviewState}\` |
 | Self-review state | \`${selfReviewState}\` |
 | Self-review candidate revision | \`${selfReviewRevision}\` |
@@ -424,7 +450,7 @@ function workflow({
 | Implementation mode scope | \`${implementationModeScope}\` |
 | Implementation mode selected at | \`${implementationModeSelectedAt}\` |
 | Next action | Prepare task |
-| Next action target IDs | \`task-1\` |
+| Next action target IDs | \`${nextActionTargetIds}\` |
 | Allowed write scope | \`docs\` |
 | Next action write targets | \`${writeTarget}\` |
 | Review mode | \`${reviewMode}\` |
@@ -439,12 +465,12 @@ function workflow({
 <!-- sdd-section: delivery-manifest -->
 ${includeManifestTable ? `| Order | Artifact | Decision | Reason/trigger | Template or authority | Owner | Review owner | Review state/link |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-${includePlan ? `| 1 | Plan | GENERATE_FULL | Required | plan.md | Author | Reviewer | ${manifestReviewState} |` : `| 1 | Documentation | REUSE | Current | docs.md | Author | Reviewer | ${manifestReviewState} |`}` : ""}
+| 1 | ${resolvedManifestArtifact} | ${includePlan ? "GENERATE_FULL" : "REUSE"} | Required | artifact.md | Author | Reviewer | ${manifestReviewState} |` : ""}
 
 <!-- sdd-section: artifact-dependencies -->
 ${includeDependencyTable ? `| Artifact ID | Artifact/link | Depends on | Consumed version | Current version | Change impact | Freshness | Blocked by |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-${dependencyRows}` : ""}
+${includeDependencyRows ? dependencyRows : ""}` : ""}
 
 <!-- sdd-section: blocker-register -->
 ${includeBlockerTable ? `| Blocker ID | Evidence/unblock condition | Blocks | State | Owner |
@@ -555,6 +581,85 @@ test("GATES_READY rejects stale prerequisites and only scoped blockers", async (
     );
   }
 
+  const emptyDependencies = await fixture(
+    t,
+    workflow({ includeDependencyRows: false }),
+  );
+  const emptyDependencyDiagnostics = await checkSddLifecycleDocument(
+    emptyDependencies.file,
+    emptyDependencies.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    emptyDependencyDiagnostics.some(
+      (item) => item.rule === "SDD_DEPENDENCY_REGISTER_EMPTY",
+    ),
+  );
+
+  const uncoveredTarget = await fixture(
+    t,
+    workflow({ nextActionTargetIds: "task-2" }),
+  );
+  const uncoveredTargetDiagnostics = await checkSddLifecycleDocument(
+    uncoveredTarget.file,
+    uncoveredTarget.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    uncoveredTargetDiagnostics.some(
+      (item) => item.rule === "SDD_DEPENDENCY_COVERAGE",
+    ),
+  );
+
+  const uncoveredManifestArtifact = await fixture(
+    t,
+    workflow({ manifestArtifact: "Policy" }),
+  );
+  const uncoveredManifestDiagnostics = await checkSddLifecycleDocument(
+    uncoveredManifestArtifact.file,
+    uncoveredManifestArtifact.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    uncoveredManifestDiagnostics.some(
+      (item) => item.rule === "SDD_DEPENDENCY_COVERAGE",
+    ),
+  );
+
+  for (const pendingValue of ["Pending", "<placeholder>"]) {
+    const pendingReviewEvidence = await fixture(
+      t,
+      workflow({
+        selfReviewRevision: pendingValue,
+        selfReviewEvidence: pendingValue,
+        freshReviewRevision: pendingValue,
+        freshReviewEvidence: pendingValue,
+        humanReviewRevision: pendingValue,
+        humanReviewEvidence: pendingValue,
+      }),
+    );
+    const pendingReviewDiagnostics = await checkSddLifecycleDocument(
+      pendingReviewEvidence.file,
+      pendingReviewEvidence.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      pendingReviewDiagnostics.some(
+        (item) => item.rule === "SDD_SELF_REVIEW_EVIDENCE",
+      ),
+    );
+    assert.ok(
+      pendingReviewDiagnostics.some(
+        (item) => item.rule === "SDD_FRESH_REVIEW_EVIDENCE",
+      ),
+    );
+    assert.ok(
+      pendingReviewDiagnostics.some(
+        (item) => item.rule === "SDD_HUMAN_REVIEW_EVIDENCE",
+      ),
+    );
+  }
+
   const prematureReady = await fixture(
     t,
     workflow({ artifactReviewState: "IN_REVIEW" }),
@@ -592,6 +697,70 @@ test("implementation review requires fresh approval in both continuation modes",
     }),
   );
   assert.deepEqual(await checkSddLifecycleDocument(auto.file, auto.root, SCHEMAS), []);
+
+  const designGateInAutoMode = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      currentReviewPhase: "DESIGN",
+    }),
+  );
+  const designGateDiagnostics = await checkSddLifecycleDocument(
+    designGateInAutoMode.file,
+    designGateInAutoMode.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    designGateDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
+  );
+
+  const outOfScopeImplementationGate = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      currentReviewTargetId: "task-2",
+    }),
+  );
+  const outOfScopeDiagnostics = await checkSddLifecycleDocument(
+    outOfScopeImplementationGate.file,
+    outOfScopeImplementationGate.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    outOfScopeDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_SCOPE",
+    ),
+  );
+  assert.ok(
+    outOfScopeDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
+  );
+
+  const nonPrImplementationGate = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      currentArtifactGate: "[plan](implementation-plan.md)",
+    }),
+  );
+  const nonPrGateDiagnostics = await checkSddLifecycleDocument(
+    nonPrImplementationGate.file,
+    nonPrImplementationGate.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    nonPrGateDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_SCOPE",
+    ),
+  );
+  assert.ok(
+    nonPrGateDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
+  );
 
   const autoWithoutFresh = await fixture(
     t,
@@ -640,7 +809,7 @@ test("implementation review requires fresh approval in both continuation modes",
       artifactReviewState: "IN_REVIEW",
       postMergeHumanReview: "PENDING",
       postMergeFreshReview: "NOT_APPROVED",
-      postMergeResult: "MERGED / merge-evidence",
+      postMergeResult: "MERGED / [merge](https://github.com/example/project/commit/2222222222222222222222222222222222222222)",
     }),
   );
   const annotatedMergeDiagnostics = await checkSddLifecycleDocument(
@@ -662,7 +831,7 @@ test("implementation review requires fresh approval in both continuation modes",
       implementationMode: "AGENT_AUTO_MERGE",
       artifactReviewState: "IN_REVIEW",
       postMergeHumanReview: "PENDING",
-      postMergeResult: "UNKNOWN / merge-evidence",
+      postMergeResult: "UNKNOWN / [evidence](reviews/merge.md)",
     }),
   );
   const invalidMergeDiagnostics = await checkSddLifecycleDocument(
@@ -678,9 +847,9 @@ test("implementation review requires fresh approval in both continuation modes",
       state: "DELIVERY_ACTIVE",
       previousState: "GATES_READY",
       artifactReviewState: "IN_REVIEW",
-      postMergeHumanReview: "APPROVED / human-review-1",
+      postMergeHumanReview: "APPROVED / [human review](reviews/human.md)",
       postMergeFreshReview: "NOT_APPROVED",
-      postMergeMode: "HUMAN_REVIEW_BEFORE_MERGE / user",
+      postMergeMode: "HUMAN_REVIEW_BEFORE_MERGE / [authority](delivery-workflow.md)",
     }),
   );
   const manualMergeDiagnostics = await checkSddLifecycleDocument(
@@ -723,7 +892,7 @@ test("implementation review requires fresh approval in both continuation modes",
       previousState: "GATES_READY",
       artifactReviewState: "IN_REVIEW",
       postMergeHumanReview: "PENDING",
-      postMergeMode: "HUMAN_REVIEW_BEFORE_MERGE / user",
+      postMergeMode: "HUMAN_REVIEW_BEFORE_MERGE / [authority](delivery-workflow.md)",
     }),
   );
   const manualHumanDiagnostics = await checkSddLifecycleDocument(
@@ -739,7 +908,12 @@ test("implementation review requires fresh approval in both continuation modes",
 
   for (const [field, override] of [
     ["Task/PR", { postMergeTaskPr: "None" }],
+    ["Task/PR", { postMergeTaskPr: "bananas" }],
     ["Head and merge commit", { postMergeRevisions: "None" }],
+    [
+      "Head and merge commit",
+      { postMergeRevisions: "HEAD potato / MERGE turnip" },
+    ],
     ["Implementation mode/authority", { postMergeMode: "AGENT_AUTO_MERGE" }],
     ["Self-review", { postMergeSelfReview: "SELF_REVIEW_PASSED" }],
     ["Fresh-context review", { postMergeFreshReview: "APPROVED" }],
@@ -751,7 +925,7 @@ test("implementation review requires fresh approval in both continuation modes",
       workflow({
         state: "COMPLETE",
         previousState: "VALIDATING",
-        postMergeHumanReview: "ACCEPTED / human-review-1",
+        postMergeHumanReview: "ACCEPTED / [human review](reviews/human.md)",
         ...override,
       }),
     );
@@ -1073,7 +1247,7 @@ test("implementation continuation is user-selected, implementation-only, and fai
       state: "COMPLETE",
       previousState: "VALIDATING",
       implementationMode: "AGENT_AUTO_MERGE",
-      postMergeHumanReview: "ACCEPTED / human-review-1",
+      postMergeHumanReview: "ACCEPTED / [human review](reviews/human.md)",
     }),
   );
   assert.deepEqual(
