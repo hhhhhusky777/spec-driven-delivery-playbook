@@ -351,7 +351,8 @@ generating the first selected artifact.
 <!-- sdd-section: artifact-dependencies -->
 
 This table is the machine-readable dependency source for transitive freshness.
-Use stable IDs. `Consumed version` is the last approved input used downstream;
+Use non-sentinel, case-insensitively unique stable IDs in this table and the
+delivery manifest. `Consumed version` is the last approved input used downstream;
 `Current version` is the version now presented. Classify a difference as
 `CONTROL_ONLY` only when it cannot alter requirements, contracts, dependencies,
 risk, or evidence. `UNKNOWN` fails closed like `MATERIAL`.
@@ -448,7 +449,8 @@ as `FOLLOW_UP_COMPLETE`.
 A merged row records its task/PR identity; exact head and merge revisions;
 mode authority; `SELF_REVIEW_PASSED`, fresh `APPROVED`, and required-check
 `PASS` receipts; and merge evidence. A bare disposition without its ` / `
-evidence does not satisfy the per-PR record.
+evidence does not satisfy the per-PR record. The displayed PR number and the
+single GitHub PR link must identify the same PR.
 
 Use the exact leading dispositions shown above. Where the ledger requires
 evidence, record it after ` / `; a bare disposition does not pass that gate.

@@ -359,6 +359,8 @@ function workflow({
   includeDependencyTable = true,
   includeDependencyRows = true,
   includeBlockerTable = true,
+  workflowArtifactId = "workflow",
+  extraDependencyRows = "",
   artifactReviewState = "APPROVED",
   currentReviewPhase,
   currentReviewTargetId = "task-1",
@@ -422,13 +424,13 @@ function workflow({
     manifestArtifactId ?? (includePlan ? "plan" : "documentation");
   const dependencyRows = includePlan
     ? `| whiteboard | Whiteboard | None | v1 | v1 | CONTROL_ONLY | CURRENT | None |
-| workflow | Workflow | whiteboard | v1 | v1 | CONTROL_ONLY | CURRENT | None |
+| ${workflowArtifactId} | Workflow | whiteboard | v1 | v1 | CONTROL_ONLY | CURRENT | None |
 | plan | ${planLink} | workflow | ${planConsumed} | ${planCurrent} | ${impact} | ${freshness} | None |
-| task-1 | Task 1 | ${taskDependsOn ?? "plan"} | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`
+| task-1 | Task 1 | ${taskDependsOn ?? "plan"} | v1 | v1 | CONTROL_ONLY | ${freshness} | None |${extraDependencyRows}`
     : `| whiteboard | Whiteboard | None | v1 | v1 | CONTROL_ONLY | CURRENT | None |
-| workflow | Workflow | whiteboard | v1 | v1 | CONTROL_ONLY | CURRENT | None |
+| ${workflowArtifactId} | Workflow | whiteboard | v1 | v1 | CONTROL_ONLY | CURRENT | None |
 | documentation | Documentation | workflow | v1 | v1 | CONTROL_ONLY | CURRENT | None |
-| task-1 | Task 1 | ${taskDependsOn ?? "workflow"} | v1 | v1 | CONTROL_ONLY | ${freshness} | None |`;
+| task-1 | Task 1 | ${taskDependsOn ?? "workflow"} | v1 | v1 | CONTROL_ONLY | ${freshness} | None |${extraDependencyRows}`;
   const resolvedManifestArtifact =
     manifestArtifact ?? (includePlan ? "Plan" : "Documentation");
   return `# Delivery Workflow
@@ -648,7 +650,30 @@ test("GATES_READY rejects stale prerequisites and only scoped blockers", async (
     ),
   );
 
-  for (const pendingValue of ["Pending", "<placeholder>"]) {
+  for (const invalidIdFixture of [
+    workflow({ manifestArtifactId: "None" }),
+    workflow({ workflowArtifactId: "None" }),
+    workflow({
+      extraDependencyRows:
+        "\n| plan | Duplicate plan | workflow | v1 | v1 | CONTROL_ONLY | CURRENT | None |",
+    }),
+  ]) {
+    const invalidArtifactIds = await fixture(t, invalidIdFixture);
+    const invalidIdDiagnostics = await checkSddLifecycleDocument(
+      invalidArtifactIds.file,
+      invalidArtifactIds.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      invalidIdDiagnostics.some((item) => item.rule === "SDD_ARTIFACT_ID"),
+    );
+  }
+
+  for (const pendingValue of [
+    "Pending",
+    "<placeholder>",
+    "Pending / [receipt](reviews/pending.md)",
+  ]) {
     const pendingReviewEvidence = await fixture(
       t,
       workflow({
@@ -952,6 +977,13 @@ test("implementation review requires fresh approval in both continuation modes",
   for (const [field, override] of [
     ["Task/PR", { postMergeTaskPr: "None" }],
     ["Task/PR", { postMergeTaskPr: "bananas" }],
+    [
+      "Task/PR",
+      {
+        postMergeTaskPr:
+          "T01 / [PR #1](https://github.com/example/project/pull/2)",
+      },
+    ],
     ["Head and merge commit", { postMergeRevisions: "None" }],
     [
       "Head and merge commit",

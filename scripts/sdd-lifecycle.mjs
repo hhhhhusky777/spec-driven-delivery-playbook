@@ -143,7 +143,9 @@ function hasRecordedValue(value) {
   const normalized = normalizeValue(value || "");
   return !(
     isNone(normalized) ||
-    /^(?:not recorded|pending)$/i.test(normalized) ||
+    /^(?:not recorded|not available|pending|placeholder|tbd|todo|unknown)(?:\s*\/|$)/i.test(
+      normalized,
+    ) ||
     /<[^>]+>/.test(normalized)
   );
 }
@@ -165,10 +167,19 @@ function hasDispositionEvidence(value, allowedDispositions) {
 
 function hasTaskAndPrEvidence(value) {
   const normalized = normalizeValue(value || "");
-  return /^[A-Z][A-Z0-9_-]*\s+\/\s+PR\s+#?\d+$/i.test(normalized) &&
-    /\]\(https:\/\/github\.com\/[^)\s]+\/pull\/\d+(?:[?#][^)]*)?\)/i.test(
-      String(value || ""),
-    );
+  const identity = /^[A-Z][A-Z0-9_-]*\s+\/\s+PR\s+#?(\d+)$/i.exec(normalized);
+  const links = [
+    ...String(value || "").matchAll(/\[[^\]]+\]\(([^)]+)\)/g),
+  ];
+  const pull = links.length === 1
+    ? /https:\/\/github\.com\/[^)\s]+\/pull\/(\d+)(?:[?#][^)]*)?$/i.exec(links[0][1])
+    : null;
+  return Boolean(identity && pull && identity[1] === pull[1]);
+}
+
+function isStableIdentifier(value) {
+  const normalized = normalizeValue(value || "");
+  return hasRecordedValue(normalized) && /^[A-Za-z][A-Za-z0-9_-]*$/.test(normalized);
 }
 
 function hasReviewTargetLink(value, targetId) {
@@ -978,6 +989,36 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
           `workflow requires the canonical ${name} table and exact headers`,
         ),
       );
+    }
+  }
+  for (const [name, table, field] of [
+    ["delivery manifest", deliveryManifest, "Artifact ID"],
+    ["dependency register", freshnessTable, "Artifact ID"],
+  ]) {
+    const seen = new Set();
+    for (const row of table?.rows || []) {
+      const id = normalizeValue(row[field]);
+      const key = id.toLowerCase();
+      if (!isStableIdentifier(id)) {
+        diagnostics.push(
+          diagnostic(
+            file,
+            table.line,
+            "SDD_ARTIFACT_ID",
+            `${name} requires a non-sentinel stable ${field}: ${id || "missing"}`,
+          ),
+        );
+      } else if (seen.has(key)) {
+        diagnostics.push(
+          diagnostic(
+            file,
+            table.line,
+            "SDD_ARTIFACT_ID",
+            `${name} contains duplicate ${field}: ${id}`,
+          ),
+        );
+      }
+      seen.add(key);
     }
   }
   diagnostics.push(

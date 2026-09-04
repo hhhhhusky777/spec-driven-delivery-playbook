@@ -994,6 +994,8 @@ test("implementation auto-merge is human-selected, implementation-only, and rech
   assert.match(workflow, /full 40-character commit SHA/);
   assert.match(workflow, /\| Order \| Artifact ID \| Artifact \|/);
   assert.match(workflow, /ID named by `Depends on`/);
+  assert.match(workflow, /case-insensitively unique stable IDs/);
+  assert.match(workflow, /single GitHub PR link must identify the same PR/);
   assert.match(developmentPolicy, /Only an\s+`IMPLEMENTATION` target inside that scope/);
   assert.match(workflowSkill, /Current review\s+target ID.*recorded mode scope/s);
   assert.match(workflowSkill, /Never weaken checks, use\s+administrator bypass/);
