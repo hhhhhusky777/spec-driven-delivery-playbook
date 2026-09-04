@@ -830,6 +830,27 @@ test("implementation review requires fresh approval in both continuation modes",
     ),
   );
 
+  const mismatchedPrIdentity = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      currentArtifactGate:
+        "[task-1 PR #1](https://github.com/example/project/pull/2)",
+    }),
+  );
+  const mismatchedPrDiagnostics = await checkSddLifecycleDocument(
+    mismatchedPrIdentity.file,
+    mismatchedPrIdentity.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    mismatchedPrDiagnostics.some(
+      (item) => item.rule === "SDD_IMPLEMENTATION_REVIEW_SCOPE",
+    ),
+  );
+
   const autoWithoutFresh = await fixture(
     t,
     workflow({

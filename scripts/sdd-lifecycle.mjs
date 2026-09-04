@@ -183,12 +183,19 @@ function isStableIdentifier(value) {
 }
 
 function hasReviewTargetLink(value, targetId) {
-  const normalized = normalizeValue(value || "").toLowerCase();
-  const labelIds = normalized.split(/[^a-z0-9_-]+/).filter(Boolean);
+  const links = [
+    ...String(value || "").matchAll(
+      /\[([^\]]+)\]\((https:\/\/github\.com\/[^)\s]+\/pull\/(\d+)(?:[?#][^)]*)?)\)/gi,
+    ),
+  ];
+  if (links.length !== 1) {
+    return false;
+  }
+  const label = normalizeValue(links[0][1]).toLowerCase();
+  const labelIds = label.split(/[^a-z0-9_-]+/).filter(Boolean);
+  const labelPr = /(?:^|\s)PR\s+#?(\d+)(?:$|\s)/i.exec(label);
   return labelIds.includes(normalizeValue(targetId).toLowerCase()) &&
-    /\]\(https:\/\/github\.com\/[^)\s]+\/pull\/\d+(?:[?#][^)]*)?\)/i.test(
-      String(value || ""),
-    );
+    Boolean(labelPr && labelPr[1] === links[0][3]);
 }
 
 function hasHeadAndMergeEvidence(value) {
