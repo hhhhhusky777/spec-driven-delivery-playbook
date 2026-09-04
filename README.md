@@ -20,7 +20,7 @@ governance without forcing every project to generate every document.
 | TDD and failure triage | Use tests to find product defects and justify failures before changing either code or tests |
 | Safe incremental delivery | Ship the smallest self-contained change that keeps its integration target working |
 | Parallel-delivery isolation | Keep multi-task features independent through feature and task branch boundaries |
-| Two-agent review sessions | Start each gate with two fresh reviewers in stable seats and preserve their context across revision rounds, with recorded replacement only when a reviewer is unavailable |
+| Two-agent review sessions | Start each gate with two fresh reviewers in stable seats and preserve their context across revision rounds, with controlled replacement only for recorded unavailability, authority, or specialty need |
 | Controlled automation | Continue deterministic steps automatically and optionally merge scoped implementation PRs after every gate passes |
 | Evolving governance | Add or strengthen specialized policies when real delivery evidence exposes a systemic gap |
 | Versioned upgrades | Assess and migrate a project's pinned playbook revision without silently changing active contracts |
@@ -419,10 +419,11 @@ perform more than one dependency-ready deterministic action only inside a
 pre-approved, fail-closed automation boundary. The original agent first
 self-reviews the exact candidate, then opens a review session with exactly two
 reviewer seats initialized without author context. The assigned reviewers retain
-their context through every revision round. If one becomes unavailable, the
-coordinator records the canonical replacement handoff without resetting that
-seat's unresolved findings. After both seats approve one exact candidate, an
-authorized human may use this prompt to record approval and resume:
+their context through every revision round. Replacement is limited to recorded
+unavailability, authority, or specialty need and follows the canonical handoff
+without resetting that seat's unresolved findings. After both seats approve one
+exact candidate, an authorized human may use this prompt to record approval and
+resume:
 
 ```text
 Fresh-context review is APPROVED for <ARTIFACT_PATH> at <VERSION_OR_COMMIT>.
@@ -704,12 +705,13 @@ on the author's conversation and reasoning. The original agent acts as the
 coordinator: it freezes a bounded review packet, assigns exactly two reviewers
 with conversation inheritance disabled, waits for their structured receipts,
 triages every finding, and then resumes the delivery. The assigned reviewers
-verify fixes in later rounds. If one becomes unavailable, the coordinator records
-`REVIEWER_REPLACED` and gives a newly isolated reviewer the full immutable
-session history, stable seat, and next finding sequence. They read the approved
-documents, complete diff, checks, and repository state directly. They perform
-review only; they do not edit, merge, resolve their own comments, or continue
-implementation.
+verify fixes in later rounds. Replacement is allowed only for recorded
+unavailability, authority, or specialty need. The coordinator records
+`REVIEWER_REPLACED` and gives the newly isolated reviewer the full immutable
+session history, stable seat, and next finding sequence; replacement cannot
+bypass an unresolved finding. Reviewers read the approved documents, complete
+diff, checks, and repository state directly. They perform review only; they do
+not edit, merge, resolve their own comments, or continue implementation.
 
 ```mermaid
 sequenceDiagram

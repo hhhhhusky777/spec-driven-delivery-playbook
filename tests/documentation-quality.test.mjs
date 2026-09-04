@@ -157,9 +157,18 @@ test("README leads with value and groups details into reader-oriented chapters",
     const contentsStart = candidate.indexOf("## Contents");
     const contentsEnd = candidate.indexOf("\n## ", contentsStart + 1);
     const contents = candidate.slice(contentsStart, contentsEnd);
-    const actualContents = [...contents.matchAll(/^\s*- \[([^\]]+)\]\(#([^)]+)\)$/gm)]
-      .map((match) => [match[1], match[2]]);
-    assert.deepEqual(actualContents, expectedContents, "contents must map the reader hierarchy");
+    const actualContents = [...contents.matchAll(/^([ ]*)- \[([^\]]+)\]\(#([^)]+)\)$/gm)]
+      .map((match) => [match[1].length, match[2], match[3]]);
+    const expectedContentsWithDepth = expectedContents.map(([title, anchor]) => {
+      const heading = headings.find((candidateHeading) => candidateHeading.title === title);
+      assert.ok(heading, `contents target must exist: ${title}`);
+      return [(heading.level - 2) * 2, title, anchor];
+    });
+    assert.deepEqual(
+      actualContents,
+      expectedContentsWithDepth,
+      "contents must map the reader hierarchy",
+    );
   }
 
   assert.match(readme, /^# Spec-Driven Delivery Playbook$/m);
@@ -177,7 +186,7 @@ test("README leads with value and groups details into reader-oriented chapters",
   assert.throws(
     () => assertReaderJourney(readme.replace(
       "  - [Risk-based review gates](#risk-based-review-gates)\n",
-      "",
+      "- [Risk-based review gates](#risk-based-review-gates)\n",
     )),
     /contents must map the reader hierarchy/,
   );
@@ -1058,6 +1067,7 @@ test("fresh-context review isolates author context and returns an exact-revision
   assert.match(example, /This\s+example does not invent a reviewer/);
   assert.match(readme, /assigned reviewers retain\s+their context through every revision round/i);
   assert.match(readme, /REVIEWER_REPLACED/);
+  assert.match(readme, /Replacement is allowed only for recorded\s+unavailability, authority, or specialty need/i);
   assert.match(workflowSkill, /same assigned session reviewer/i);
   assert.match(workflowSkill, /initialize exactly two reviewers/i);
   assert.match(prPolicy, /REJECT_WITH_JUSTIFICATION/);
