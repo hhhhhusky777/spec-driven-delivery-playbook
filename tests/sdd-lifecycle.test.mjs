@@ -572,7 +572,7 @@ test("implementation review requires fresh approval in both continuation modes",
       implementationMode: "AGENT_AUTO_MERGE",
       artifactReviewState: "IN_REVIEW",
       postMergeHumanReview: "PENDING",
-      postMergeFreshReview: "NOT_STARTED",
+      postMergeFreshReview: "NOT_APPROVED",
     }),
   );
   const mergedWithoutFreshDiagnostics = await checkSddLifecycleDocument(
@@ -789,6 +789,46 @@ test("implementation continuation is user-selected, implementation-only, and fai
   );
   assert.ok(
     pendingDiagnostics.some((item) => item.rule === "SDD_POST_MERGE_REVIEW_OPEN"),
+  );
+
+  const annotatedPendingReview = await fixture(
+    t,
+    workflow({
+      state: "COMPLETE",
+      previousState: "VALIDATING",
+      implementationMode: "AGENT_AUTO_MERGE",
+      postMergeHumanReview: "PENDING / reviews/human.md",
+    }),
+  );
+  const annotatedPendingDiagnostics = await checkSddLifecycleDocument(
+    annotatedPendingReview.file,
+    annotatedPendingReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    annotatedPendingDiagnostics.some(
+      (item) => item.rule === "SDD_POST_MERGE_REVIEW_OPEN",
+    ),
+  );
+
+  const invalidHumanReview = await fixture(
+    t,
+    workflow({
+      state: "COMPLETE",
+      previousState: "VALIDATING",
+      implementationMode: "AGENT_AUTO_MERGE",
+      postMergeHumanReview: "UNKNOWN / reviews/human.md",
+    }),
+  );
+  const invalidHumanDiagnostics = await checkSddLifecycleDocument(
+    invalidHumanReview.file,
+    invalidHumanReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    invalidHumanDiagnostics.some(
+      (item) => item.rule === "SDD_POST_MERGE_REVIEW_OPEN",
+    ),
   );
 
   const reviewed = await fixture(

@@ -416,7 +416,7 @@ concise inventory of the automatic actions and their evidence.
 
 | Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | Human review | Findings/follow-up |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `<task + PR link>` | `<commits>` | `<mode + authority link>` | `<record>` | `<packet/receipt + disposition>` | `<evidence>` | `<merged/stopped>` | `<pre-merge approval or PENDING/ACCEPTED/FOLLOW_UP_REQUIRED/FOLLOW_UP_COMPLETE>` | `<links or None>` |
+| `<task + PR link>` | `<commits>` | `<mode + authority link>` | `<record>` | `<APPROVED / packet-or-receipt-link>` | `<evidence>` | `<MERGED/STOPPED>` | `<APPROVED / evidence for manual mode, or PENDING/ACCEPTED/FOLLOW_UP_REQUIRED/FOLLOW_UP_COMPLETE / evidence for auto mode>` | `<links or None>` |
 
 In `HUMAN_REVIEW_BEFORE_MERGE`, record the human review before merge. In
 `AGENT_AUTO_MERGE`, create the row immediately after merge with human review
@@ -424,6 +424,12 @@ In `HUMAN_REVIEW_BEFORE_MERGE`, record the human review before merge. In
 merge evidence. A finding that affects active or future work marks those
 dependencies stale or blocked. Every row must be accepted, or have completed
 follow-up recorded as `FOLLOW_UP_COMPLETE`, before `COMPLETE` and archive.
+
+Use the exact leading disposition shown above, optionally followed by ` / ` and
+an evidence link. Unknown values fail closed. A merged `AGENT_AUTO_MERGE` row
+requires leading fresh-context disposition `APPROVED`; at `COMPLETE` or
+`ARCHIVED`, human review must lead with `APPROVED`, `ACCEPTED`, or
+`FOLLOW_UP_COMPLETE`.
 
 ## 10. Feedback and rerouting rules
 

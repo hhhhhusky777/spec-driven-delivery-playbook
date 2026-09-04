@@ -120,6 +120,12 @@ function isNone(value) {
   return /^(?:|none|not applicable|—|-)$/.test(normalizeValue(value).toLowerCase());
 }
 
+function leadingDisposition(value) {
+  const normalized = normalizeValue(value || "");
+  const match = /^([A-Z_]+)(?:\s+\/\s+.+)?$/.exec(normalized);
+  return match ? match[1] : null;
+}
+
 function splitIdentifiers(value) {
   if (isNone(value)) {
     return [];
@@ -378,7 +384,7 @@ function checkImplementationContinuation(file, fields, tables) {
       normalizeValue(row["Merge result"]).toUpperCase() === "MERGED",
   );
   for (const row of mergedAutoRows) {
-    if (!/APPROVED/.test(normalizeValue(row["Fresh-context review"]))) {
+    if (leadingDisposition(row["Fresh-context review"]) !== "APPROVED") {
       diagnostics.push(
         diagnostic(
           file,
@@ -391,16 +397,17 @@ function checkImplementationContinuation(file, fields, tables) {
   }
 
   if (["COMPLETE", "ARCHIVED"].includes(state)) {
-    const openRows = (reviewLedger?.rows || []).filter((row) =>
-      ["PENDING", "FOLLOW_UP_REQUIRED"].includes(normalizeValue(row["Human review"])),
-    );
-    if (openRows.length > 0) {
+    const invalidRows = (reviewLedger?.rows || []).filter((row) => {
+      const disposition = leadingDisposition(row["Human review"]);
+      return !["APPROVED", "ACCEPTED", "FOLLOW_UP_COMPLETE"].includes(disposition);
+    });
+    if (invalidRows.length > 0) {
       diagnostics.push(
         diagnostic(
           file,
           reviewLedger.line,
           "SDD_POST_MERGE_REVIEW_OPEN",
-          `${state} cannot retain pending post-merge human review`,
+          `${state} requires each human-review row to be APPROVED, ACCEPTED, or FOLLOW_UP_COMPLETE`,
         ),
       );
     }

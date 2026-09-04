@@ -250,7 +250,11 @@ test("task context receipt remains a READY-to-IN_PROGRESS gate", async () => {
   assert.match(developmentPolicy, /mark the receipt `STALE`/);
   assert.match(implementationPlan, /^### 6\.4 Pre-start task context receipt gate$/m);
   assert.match(implementationPlan, /\| Context source revision \|/);
-  assert.match(implementationPlan, /\| Review disposition \|/);
+  assert.match(implementationPlan, /\| Receipt candidate revision \|/);
+  assert.match(implementationPlan, /\| Self-review state \/ evidence \|/);
+  assert.match(implementationPlan, /\| Fresh-context review state \/ revision \/ receipt \|/);
+  assert.match(implementationPlan, /\| Human review state \/ revision \/ evidence \|/);
+  assert.match(implementationPlan, /\| Final receipt disposition \|/);
   assert.match(pullRequest, /approved, current pre-start\s+context receipt/);
   assert.match(workedExample, /All task context receipts remain `NOT_STARTED`\./);
 });

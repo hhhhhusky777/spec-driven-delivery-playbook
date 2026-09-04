@@ -619,6 +619,7 @@ Task context receipt (complete after `READY` and before `IN_PROGRESS`):
 | --- | --- |
 | Implementer / type / timestamp | `<human or agent identity; type; timestamp>` |
 | Approved source set / revision | `<links and immutable commit/version>` |
+| Receipt candidate revision | `<exact commit/version>` |
 | Outcome / non-scope | `<concise reconciliation>` |
 | Contracts / decisions | `<stable IDs and canonical links>` |
 | Critical obligations / prohibitions | `<IDs, links, and local consequence>` |
@@ -626,7 +627,10 @@ Task context receipt (complete after `READY` and before `IN_PROGRESS`):
 | Dependencies / data phase | `<predecessors and phase>` |
 | Required completion evidence | `<acceptance, tests, and other gates>` |
 | Ambiguities / conflicts / map omissions | `<None or blocking details>` |
-| Review disposition | `<APPROVED/CHANGES_REQUESTED/NOT_APPLICABLE; reviewer; reason>` |
+| Self-review state / evidence | `<SELF_REVIEW_PASSED/SELF_REVIEW_FAILED + link>` |
+| Fresh-context review state / revision / receipt | `<APPROVED/CHANGES_REQUESTED/BLOCKED + exact revision + link>` |
+| Human review state / revision / evidence | `<APPROVED/CHANGES_REQUESTED + exact revision + link, or NOT_APPLICABLE only for scoped AGENT_AUTO_MERGE>` |
+| Final receipt disposition | `<APPROVED/CHANGES_REQUESTED/BLOCKED>` |
 
 Delivery guide:
 
