@@ -375,6 +375,14 @@ function checkSelfReviewGate(file, fields, reviewRequired) {
   return diagnostics;
 }
 
+function hasActiveFreshReviewSession(fields) {
+  const state = normalizeValue(fields.get("Fresh-context review state") || "").toUpperCase();
+  return (
+    hasRecordedValue(fields.get("Fresh-context review session ID") || "") ||
+    (hasRecordedValue(state) && !["NOT_STARTED", "NOT_APPLICABLE"].includes(state))
+  );
+}
+
 function checkReviewSessionRoster(file, fields, reviewRequired) {
   if (!reviewRequired) {
     return [];
@@ -1009,7 +1017,7 @@ function checkImplementationPlan(file, marker, text, tables, fields, schema) {
       fields,
       ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED"].includes(
         fields.get("Review state"),
-      ) || hasRecordedValue(fields.get("Fresh-context review session ID") || ""),
+      ) || hasActiveFreshReviewSession(fields),
     ),
   );
   diagnostics.push(
@@ -1412,7 +1420,7 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
       fields,
       ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED"].includes(artifactReviewState) ||
         ["MANIFEST_IN_REVIEW", "ARTIFACT_IN_REVIEW"].includes(fields.get("State")) ||
-        hasRecordedValue(fields.get("Fresh-context review session ID") || ""),
+        hasActiveFreshReviewSession(fields),
     ),
   );
   const reviewPhase = fields.get("Current review phase");

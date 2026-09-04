@@ -256,6 +256,30 @@ test("plan lifecycle and review gates reject illegal READY transitions", async (
     ),
   );
 
+  for (const freshReviewState of ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED", "BLOCKED"]) {
+    const missingSession = await fixture(
+      t,
+      plan({
+        status: "CONTRACT_REVIEW",
+        previousStatus: "DRAFT",
+        reviewState: "NOT_STARTED",
+        freshReviewState,
+        freshReviewSessionId: "Not recorded",
+        freshAssignedReviewers: "reviewer-1",
+        freshRequiredApprovals: "1",
+        freshApprovedReviewers: "Not recorded",
+      }),
+    );
+    const diagnostics = await checkSddLifecycleDocument(
+      missingSession.file,
+      missingSession.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      diagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_SESSION"),
+    );
+  }
+
   const missingSelfReview = await fixture(
     t,
     plan({ selfReviewState: "NOT_STARTED", selfReviewRevision: "Not recorded" }),
@@ -910,6 +934,30 @@ test("active or retained workflow review sessions require both reviewers", async
     const diagnostics = await checkSddLifecycleDocument(
       oneReviewer.file,
       oneReviewer.root,
+      SCHEMAS,
+    );
+    assert.ok(
+      diagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_SESSION"),
+    );
+  }
+
+  for (const freshReviewState of ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED", "BLOCKED"]) {
+    const missingSession = await fixture(
+      t,
+      workflow({
+        state: "MANIFEST_REVIEWED",
+        previousState: "MANIFEST_IN_REVIEW",
+        artifactReviewState: "NOT_STARTED",
+        freshReviewState,
+        freshReviewSessionId: "Not recorded",
+        freshAssignedReviewers: "reviewer-1",
+        freshRequiredApprovals: "1",
+        freshApprovedReviewers: "Not recorded",
+      }),
+    );
+    const diagnostics = await checkSddLifecycleDocument(
+      missingSession.file,
+      missingSession.root,
       SCHEMAS,
     );
     assert.ok(
