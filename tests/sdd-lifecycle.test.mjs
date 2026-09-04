@@ -214,6 +214,27 @@ test("plan lifecycle and review gates reject illegal READY transitions", async (
   const reviewDiagnostics = await checkSddLifecycleDocument(unapproved.file, unapproved.root, SCHEMAS);
   assert.ok(reviewDiagnostics.some((item) => item.rule === "SDD_PLAN_REVIEW"));
 
+  const oneReviewerInReview = await fixture(
+    t,
+    plan({
+      reviewState: "IN_REVIEW",
+      freshReviewState: "NOT_STARTED",
+      freshAssignedReviewers: "reviewer-1",
+      freshRequiredApprovals: "1",
+      freshApprovedReviewers: "Not recorded",
+    }),
+  );
+  const oneReviewerInReviewDiagnostics = await checkSddLifecycleDocument(
+    oneReviewerInReview.file,
+    oneReviewerInReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    oneReviewerInReviewDiagnostics.some(
+      (item) => item.rule === "SDD_FRESH_REVIEW_SESSION",
+    ),
+  );
+
   const missingSelfReview = await fixture(
     t,
     plan({ selfReviewState: "NOT_STARTED", selfReviewRevision: "Not recorded" }),
@@ -554,6 +575,16 @@ test("GATES_READY rejects stale prerequisites and only scoped blockers", async (
       freshApprovedReviewers: "reviewer-1",
     },
     { freshAssignedReviewers: "reviewer-1, reviewer-1", freshRequiredApprovals: "2" },
+    {
+      freshAssignedReviewers: "/root/reviewer-1, root/reviewer-1",
+      freshRequiredApprovals: "2",
+      freshApprovedReviewers: "/root/reviewer-1, root/reviewer-1",
+    },
+    {
+      freshAssignedReviewers: "reviewer-1, reviewer-2, reviewer-3",
+      freshRequiredApprovals: "2",
+      freshApprovedReviewers: "reviewer-1, reviewer-2, reviewer-3",
+    },
     {
       freshAssignedReviewers: "reviewer-1, reviewer-2",
       freshRequiredApprovals: "1",

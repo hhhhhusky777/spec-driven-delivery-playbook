@@ -288,14 +288,17 @@ function parseReviewerRoster(value) {
     return null;
   }
   const reviewers = normalized.split(",").map((item) => item.trim());
+  const canonicalReviewers = reviewers.map((item) =>
+    item.replace(/^\/+/, "").toLowerCase(),
+  );
   if (
     reviewers.length === 0 ||
     reviewers.some((item) => !/^\/?[A-Za-z0-9][A-Za-z0-9_.:/-]*$/.test(item)) ||
-    new Set(reviewers.map((item) => item.toLowerCase())).size !== reviewers.length
+    new Set(canonicalReviewers).size !== reviewers.length
   ) {
     return null;
   }
-  return reviewers;
+  return canonicalReviewers;
 }
 
 function splitIdentifiers(value) {
@@ -372,6 +375,33 @@ function checkSelfReviewGate(file, fields, reviewRequired) {
   return diagnostics;
 }
 
+function checkReviewSessionRoster(file, fields, reviewRequired) {
+  if (!reviewRequired) {
+    return [];
+  }
+  const reviewSessionId = fields.get("Fresh-context review session ID") || "";
+  const assignedReviewers = parseReviewerRoster(
+    fields.get("Fresh-context assigned reviewers") || "",
+  );
+  const requiredApprovals = fields.get("Fresh-context required approvals") || "";
+  if (
+    !isStableIdentifier(reviewSessionId) ||
+    !assignedReviewers ||
+    requiredApprovals !== "2" ||
+    assignedReviewers.length !== 2
+  ) {
+    return [
+      diagnostic(
+        file,
+        1,
+        "SDD_FRESH_REVIEW_SESSION",
+        "review requires a stable session with exactly two unique assigned reviewers and two required approvals",
+      ),
+    ];
+  }
+  return [];
+}
+
 function checkIndependentReviewGate(file, fields, approvalRequired, humanRequired = true) {
   if (!approvalRequired) {
     return [];
@@ -387,14 +417,12 @@ function checkIndependentReviewGate(file, fields, approvalRequired, humanRequire
       ),
     );
   }
-  const reviewSessionId = fields.get("Fresh-context review session ID") || "";
   const assignedReviewers = parseReviewerRoster(
     fields.get("Fresh-context assigned reviewers") || "",
   );
   const approvedReviewers = parseReviewerRoster(
     fields.get("Fresh-context approved reviewers") || "",
   );
-  const requiredApprovals = fields.get("Fresh-context required approvals") || "";
   const assignedReviewerSet = new Set(
     (assignedReviewers || []).map((item) => item.toLowerCase()),
   );
@@ -402,11 +430,8 @@ function checkIndependentReviewGate(file, fields, approvalRequired, humanRequire
     (approvedReviewers || []).map((item) => item.toLowerCase()),
   );
   if (
-    !isStableIdentifier(reviewSessionId) ||
     !assignedReviewers ||
     !approvedReviewers ||
-    requiredApprovals !== "2" ||
-    assignedReviewers.length !== 2 ||
     assignedReviewerSet.size !== approvedReviewerSet.size ||
     [...assignedReviewerSet].some((item) => !approvedReviewerSet.has(item))
   ) {
@@ -415,7 +440,7 @@ function checkIndependentReviewGate(file, fields, approvalRequired, humanRequire
         file,
         1,
         "SDD_FRESH_REVIEW_SESSION",
-        "approval requires a stable review-session ID, exactly two unique assigned reviewers, and approval from both reviewers",
+        "approval requires both assigned reviewers to approve the exact candidate",
       ),
     );
   }
@@ -979,6 +1004,13 @@ function checkImplementationPlan(file, marker, text, tables, fields, schema) {
     ),
   );
   diagnostics.push(
+    ...checkReviewSessionRoster(
+      file,
+      fields,
+      ["IN_REVIEW", "APPROVED"].includes(fields.get("Review state")),
+    ),
+  );
+  diagnostics.push(
     ...checkIndependentReviewGate(
       file,
       fields,
@@ -1372,6 +1404,13 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     );
   }
   const artifactApproved = artifactReviewState === "APPROVED";
+  diagnostics.push(
+    ...checkReviewSessionRoster(
+      file,
+      fields,
+      ["IN_REVIEW", "CHANGES_REQUESTED", "APPROVED"].includes(artifactReviewState),
+    ),
+  );
   const reviewPhase = fields.get("Current review phase");
   const allowedReviewPhases = new Set([
     "DESIGN",

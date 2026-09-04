@@ -875,7 +875,7 @@ test("fresh-context review isolates author context and returns an exact-revision
     ]);
 
   assert.match(readme, /^### Fresh-context agent review design$/m);
-  assert.match(readme, /create_agent\(inherit_author_conversation = false/);
+  assert.match(readme, /create_agents\(count = 2, inherit_author_conversation = false/);
   assert.match(readme, /process independence, not account independence/i);
   assert.match(protocol, /^## 1\. Phase and continuation policy$/m);
   assert.match(protocol, /^## 2\. Review packet$/m);

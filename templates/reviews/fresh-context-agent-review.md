@@ -66,12 +66,12 @@ candidate and must approve the same final candidate. If any reviewer requests ch
 approval becomes stale when the candidate changes, and all assigned reviewers
 review the revised exact candidate.
 
-Freeze the roster when the session opens. Project policy or the human owner may
-add a required specialist; initialize that reviewer without author context and
-require them to review the complete current candidate and session history. Do
-not remove or replace a reviewer to bypass a finding. Removal is allowed only
-for recorded unavailability or authority change and follows the replacement
-handoff in Section 3.
+Freeze the two-person roster when the session opens; it cannot expand. Select
+required specialties when assigning those two seats. If a newly discovered
+specialty is mandatory, record `HUMAN_DECISION_REQUIRED`; an authorized human
+may replace one reviewer, but cannot add a third. Do not replace a reviewer to
+bypass a finding. Replacement is allowed only for recorded unavailability,
+authority, or specialty need and follows the handoff in Section 3.
 
 ## 2. Review packet
 

@@ -83,7 +83,7 @@ Generate or update one selected artifact, then move it through
 `IN_REVIEW -> CHANGES_REQUESTED -> IN_REVIEW` until it is `APPROVED`. Do not
 generate a dependent artifact from an unapproved draft. The author or
 generating runner must not self-approve. Every review gate requires a stable
-session with newly isolated reviewer(s), retained across its revision rounds.
+session with exactly two newly isolated reviewers, retained across its revision rounds.
 Design, governance, adoption, upgrade, validation,
 archive, and implementation under `HUMAN_REVIEW_BEFORE_MERGE` then stop for
 mandatory human review. Only a user-authorized, scoped implementation
@@ -91,8 +91,8 @@ mandatory human review. Only a user-authorized, scoped implementation
 human review, subject to every live gate and repository protection.
 
 For a fresh-context independent review, the original agent freezes the review
-packet and creates a read-only reviewer with author-conversation inheritance
-disabled. The reviewer returns a structured receipt; it never edits, merges,
+packet and creates exactly two read-only reviewers with author-conversation
+inheritance disabled. Both return structured receipts; they never edit, merge,
 or continues delivery. A candidate change invalidates the prior revision
 disposition and returns to the same session reviewer(s) after author
 self-review. Shared GitHub credentials do not constitute a distinct formal

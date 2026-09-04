@@ -721,9 +721,9 @@ performs:
 
 ```text
 packet = freeze_review_packet(exact_candidate)
-reviewer = create_agent(inherit_author_conversation = false, input = packet)
-receipt = wait_for(reviewer)
-resume_original_agent(receipt)
+reviewers = create_agents(count = 2, inherit_author_conversation = false, input = packet)
+receipts = wait_for_all(reviewers)
+resume_original_agent(receipts)
 ```
 
 Design, governance, adoption, upgrade, validation, and archive artifacts always
