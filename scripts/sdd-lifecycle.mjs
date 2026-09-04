@@ -361,18 +361,36 @@ function checkImplementationContinuation(file, fields, tables) {
     }
   }
 
+  const reviewLedger = findTable(tables, [
+    "Task/PR",
+    "Head and merge commit",
+    "Implementation mode/authority",
+    "Self-review",
+    "Fresh-context review",
+    "Required checks",
+    "Merge result",
+    "Human review",
+    "Findings/follow-up",
+  ]);
+  const mergedAutoRows = (reviewLedger?.rows || []).filter(
+    (row) =>
+      /AGENT_AUTO_MERGE/.test(normalizeValue(row["Implementation mode/authority"])) &&
+      normalizeValue(row["Merge result"]).toUpperCase() === "MERGED",
+  );
+  for (const row of mergedAutoRows) {
+    if (!/APPROVED/.test(normalizeValue(row["Fresh-context review"]))) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          reviewLedger.line,
+          "SDD_AUTO_MERGE_FRESH_REVIEW",
+          "an AGENT_AUTO_MERGE row cannot be merged without fresh-context APPROVED evidence",
+        ),
+      );
+    }
+  }
+
   if (["COMPLETE", "ARCHIVED"].includes(state)) {
-    const reviewLedger = findTable(tables, [
-      "Task/PR",
-      "Head and merge commit",
-      "Implementation mode/authority",
-      "Self-review",
-      "Fresh-context review",
-      "Required checks",
-      "Merge result",
-      "Human review",
-      "Findings/follow-up",
-    ]);
     const openRows = (reviewLedger?.rows || []).filter((row) =>
       ["PENDING", "FOLLOW_UP_REQUIRED"].includes(normalizeValue(row["Human review"])),
     );
@@ -764,7 +782,39 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
         ),
     ),
   );
-  const artifactApproved = fields.get("Current artifact review state") === "APPROVED";
+  const artifactReviewState = fields.get("Current artifact review state");
+  const allowedArtifactReviewStates = new Set([
+    "NOT_STARTED",
+    "IN_REVIEW",
+    "CHANGES_REQUESTED",
+    "APPROVED",
+    "BLOCKED",
+    "STALE",
+  ]);
+  if (artifactReviewState && !allowedArtifactReviewStates.has(artifactReviewState)) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_WORKFLOW_REVIEW_STATE",
+        `unsupported Current artifact review state: ${artifactReviewState}`,
+      ),
+    );
+  }
+  const reviewApprovedRequired = ["GATES_READY", "COMPLETE", "ARCHIVED"].includes(
+    fields.get("State"),
+  );
+  if (reviewApprovedRequired && artifactReviewState !== "APPROVED") {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_WORKFLOW_REVIEW_STATE",
+        `${fields.get("State")} requires Current artifact review state APPROVED`,
+      ),
+    );
+  }
+  const artifactApproved = artifactReviewState === "APPROVED";
   const agentAutoMergeReview =
     fields.get("State") === "DELIVERY_ACTIVE" &&
     fields.get("Implementation continuation mode") === "AGENT_AUTO_MERGE";
@@ -772,7 +822,7 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     ...checkIndependentReviewGate(
       file,
       fields,
-      artifactApproved,
+      artifactApproved || reviewApprovedRequired,
       !agentAutoMergeReview,
     ),
   );

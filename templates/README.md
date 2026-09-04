@@ -81,8 +81,7 @@ each artifact is or is not required.
 Generate or update one selected artifact, then move it through
 `IN_REVIEW -> CHANGES_REQUESTED -> IN_REVIEW` until it is `APPROVED`. Do not
 generate a dependent artifact from an unapproved draft. The author or
-generating runner must not self-approve unless an active project policy grants
-a documented low-risk exception. Every review gate requires a new
+generating runner must not self-approve. Every review gate requires a new
 fresh-context reviewer. Design, governance, adoption, upgrade, validation,
 archive, and implementation under `HUMAN_REVIEW_BEFORE_MERGE` then stop for
 mandatory human review. Only a user-authorized, scoped implementation

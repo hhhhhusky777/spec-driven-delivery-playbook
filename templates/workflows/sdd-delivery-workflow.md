@@ -523,7 +523,9 @@ Record the reroute in the workflow change history and current-state table:
 dependency-register entry required by the first task is `CURRENT`, no open
 blocker affects that task, the approved plan has one task that satisfies its
 Definition of Ready and is marked `NEXT`, and the next action's write targets
-are inside the allowed write scope.
+are inside the allowed write scope. Its `Current artifact review state` must be
+`APPROVED`; invalid review-state values fail closed. `COMPLETE` and `ARCHIVED`
+also require the current validation or closure gate to be `APPROVED`.
 
 At `GATES_READY`, `NOT_SELECTED` is a valid waiting state whose next action is
 to ask the user for the implementation continuation mode. The workflow cannot

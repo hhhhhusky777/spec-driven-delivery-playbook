@@ -568,14 +568,18 @@ their canonical text:
   compatibility boundaries;
 - required acceptance, test, and other completion evidence;
 - unresolved ambiguity or conflict, including attention-map omissions; and
-- independent review disposition, reviewer, and required specialty.
+- fresh-context review disposition and receipt; and
+- human review disposition and required specialty when the live implementation
+  mode is `HUMAN_REVIEW_BEFORE_MERGE`.
 
-The reviewer reconciles the receipt with the approved source set and records
-`APPROVED` or `CHANGES_REQUESTED`. The receipt author cannot satisfy an
-independent-review requirement. Configure qualified human or specialist review
-for security, privacy, billing, destructive data, concurrency, or other
-project-defined high-risk work; an independent agent may review lower-risk work
-when project policy permits it.
+After the author self-review, a newly created fresh-context reviewer reconciles
+the receipt with the approved source set and records `APPROVED` or
+`CHANGES_REQUESTED`. The receipt author cannot satisfy that requirement. Under
+`HUMAN_REVIEW_BEFORE_MERGE`, a qualified human or specialist then reviews it;
+under scoped `AGENT_AUTO_MERGE`, fresh approval may continue only through the
+live implementation gates. Security, privacy, billing, destructive data,
+concurrency, and other project-defined high-risk work may still require a
+human specialist even in auto mode.
 
 Before `READY`, the task identifies its canonical source boundary and confirms
 that the required sources and a current revision are available. After `READY`

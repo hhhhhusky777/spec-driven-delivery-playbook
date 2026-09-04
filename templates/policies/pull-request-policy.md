@@ -443,8 +443,9 @@ a reviewed documentation PR and update dependent templates/automation.
 - [ ] Link development and test policies.
 - [ ] Define issue/task/plan integration.
 - [ ] Define required PR sections and risk reviewers.
-- [ ] Define permitted independent-agent review methods, context-isolation
-      evidence, publication channel, and formal identity boundary.
+- [ ] Define the mandatory fresh-context review runtime, context-isolation
+      evidence, publication channel, durable findings, and formal identity
+      boundary.
 - [ ] Define merge, emergency, exception, and post-merge behavior.
 - [ ] Assign owner and review cadence.
 

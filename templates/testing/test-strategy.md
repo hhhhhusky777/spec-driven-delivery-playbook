@@ -143,7 +143,7 @@ When triggered, require a concise attention map near the beginning:
 | Outcome and scope | `<one coherent outcome and explicit boundary>` |
 | Changed decisions/obligations | `<stable IDs and canonical section links>` |
 | Blockers/questions/risks/exceptions | `<IDs, state, owner, and section links>` |
-| Review routing | `<item -> required human/specialty/independent agent>` |
+| Review routing | `<item -> fresh-context reviewer -> required human/specialty reviewer>` |
 | Reading order | `<dependency-ordered section/evidence links>` |
 
 The reviewer first inventories material items from the complete artifact or

@@ -118,9 +118,9 @@ approval.
 - [ ] No secrets, private credentials, customer data, or transient signed URLs
       are included.
 
-| Review round | Self-review evidence | Reviewer | Type | Result | Comments/link | Resolved in version |
+| Review round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
 | --- | --- | --- | --- | --- | --- | --- |
-| `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<summary/link>` | `<version>` |
+| `1` | `<exact revision>` | `<record>` | `<receipt>` | `<links/None>` | `<identity + evidence>` | `<APPROVED/CHANGES_REQUESTED>` |
 
 Approval statement:
 

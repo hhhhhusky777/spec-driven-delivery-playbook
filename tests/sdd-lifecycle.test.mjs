@@ -368,6 +368,7 @@ function workflow({
   implementationModeScope = "task-1",
   implementationModeSelectedAt = "2026-09-03 10:00 UTC",
   postMergeHumanReview = null,
+  postMergeFreshReview = "APPROVED / fresh-review-1",
 } = {}) {
   const resolvedHumanReviewState =
     humanReviewState ??
@@ -447,7 +448,7 @@ ${dependencyRows}
 
 ${postMergeHumanReview === null ? "" : `| Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | Human review | Findings/follow-up |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| T01 / PR-1 | head-1 / merge-1 | AGENT_AUTO_MERGE / user | review-1 | fresh-review-1 | checks-1 | merged | ${postMergeHumanReview} | None |`}
+| T01 / PR-1 | head-1 / merge-1 | AGENT_AUTO_MERGE / user | review-1 | ${postMergeFreshReview} | checks-1 | merged | ${postMergeHumanReview} | None |`}
 `;
 }
 
@@ -508,6 +509,32 @@ test("GATES_READY rejects stale prerequisites and only scoped blockers", async (
   assert.ok(
     humanReviewDiagnostics.some((item) => item.rule === "SDD_HUMAN_REVIEW_STATE"),
   );
+
+  const prematureReady = await fixture(
+    t,
+    workflow({ artifactReviewState: "IN_REVIEW" }),
+  );
+  const prematureReadyDiagnostics = await checkSddLifecycleDocument(
+    prematureReady.file,
+    prematureReady.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    prematureReadyDiagnostics.some((item) => item.rule === "SDD_WORKFLOW_REVIEW_STATE"),
+  );
+
+  const invalidReviewState = await fixture(
+    t,
+    workflow({ state: "ARTIFACT_GENERATING", artifactReviewState: "PASSED" }),
+  );
+  const invalidReviewDiagnostics = await checkSddLifecycleDocument(
+    invalidReviewState.file,
+    invalidReviewState.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    invalidReviewDiagnostics.some((item) => item.rule === "SDD_WORKFLOW_REVIEW_STATE"),
+  );
 });
 
 test("implementation review requires fresh approval in both continuation modes", async (t) => {
@@ -536,6 +563,28 @@ test("implementation review requires fresh approval in both continuation modes",
     SCHEMAS,
   );
   assert.ok(autoDiagnostics.some((item) => item.rule === "SDD_FRESH_REVIEW_STATE"));
+
+  const mergedWithoutFreshReview = await fixture(
+    t,
+    workflow({
+      state: "DELIVERY_ACTIVE",
+      previousState: "GATES_READY",
+      implementationMode: "AGENT_AUTO_MERGE",
+      artifactReviewState: "IN_REVIEW",
+      postMergeHumanReview: "PENDING",
+      postMergeFreshReview: "NOT_STARTED",
+    }),
+  );
+  const mergedWithoutFreshDiagnostics = await checkSddLifecycleDocument(
+    mergedWithoutFreshReview.file,
+    mergedWithoutFreshReview.root,
+    SCHEMAS,
+  );
+  assert.ok(
+    mergedWithoutFreshDiagnostics.some(
+      (item) => item.rule === "SDD_AUTO_MERGE_FRESH_REVIEW",
+    ),
+  );
 
   const manualWithoutHuman = await fixture(
     t,
