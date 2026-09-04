@@ -39,6 +39,7 @@ the distinction between stable policies and feature delivery records.
 - [Small, self-contained delivery](#small-self-contained-delivery)
 - [Branch isolation for parallel deliveries](#branch-isolation-for-parallel-deliveries)
 - [Risk-based review gates](#risk-based-review-gates)
+  - [Fresh-context agent review design](#fresh-context-agent-review-design)
 - [Dependency-first data sequencing](#dependency-first-data-sequencing)
 - [Test evidence, not test theater](#test-evidence-not-test-theater)
 - [Progressive policy discovery](#progressive-policy-discovery)
@@ -630,6 +631,69 @@ candidate change and records `SELF_REVIEW_PASSED` or `SELF_REVIEW_FAILED`.
 `SELF_REVIEW_PASSED` is pre-review evidence, never approval. It does not satisfy
 reviewer independence, change the selected review mode, authorize merge, or
 authorize continuation by itself.
+
+### Fresh-context agent review design
+
+An independent-agent gate may use a fresh reviewer context to reduce anchoring
+on the author's conversation and reasoning. The original agent acts as the
+coordinator: it freezes a bounded review packet, creates a reviewer with
+conversation inheritance disabled, waits for a structured receipt, and then
+resumes the delivery. The reviewer reads the approved documents, complete diff,
+checks, and repository state directly. It performs review only; it does not
+edit, merge, resolve its own comments, or continue implementation.
+
+```mermaid
+sequenceDiagram
+    participant U as Human
+    participant A as Original agent
+    participant R as Fresh-context reviewer
+    participant P as Project and PR
+
+    U->>A: Start or continue delivery
+    A->>P: Implement, test, annotate, and self-review exact revision
+    A->>A: Freeze review packet without author conversation or proposed result
+    A->>R: Create isolated reviewer with packet and read-only review protocol
+    R->>P: Read contracts, base, exact candidate, full diff, and gate evidence
+    R->>R: Derive expectations independently, then reconcile author evidence
+    R->>P: Publish summary and actionable inline comments
+    R-->>A: Return structured receipt
+    A->>A: Verify isolation, revisions, comments, and live workflow mode
+    alt Changes requested
+        A->>P: Address findings and create revision
+        A->>R: Create fresh reviewer because prior receipt is stale
+    else Approved and all live gates pass
+        A->>P: Follow existing continuation and merge rules
+    else Blocked or inconsistent
+        A-->>U: Stop with the exact blocker
+    end
+```
+
+The durable connector is the
+[fresh-context review packet and receipt](templates/reviews/fresh-context-agent-review.md).
+The packet contains the exact subject and revision, governing inputs, scope,
+evidence, and publication channel. It must not include the authoring chat,
+private reasoning, or a recommended disposition. The reviewer first derives
+expectations from source documents and the complete candidate, then reconciles
+the author's annotations and self-review in a second pass.
+
+The reviewer returns `APPROVED`, `CHANGES_REQUESTED`, or `BLOCKED`. Any new
+candidate revision invalidates the receipt. The original agent, not the
+reviewer, waits for the result and performs the next action after rechecking the
+live workflow. Conceptually, a compatible agent runtime performs:
+
+```text
+packet = freeze_review_packet(exact_candidate)
+reviewer = create_agent(inherit_author_conversation = false, input = packet)
+receipt = wait_for(reviewer)
+resume_original_agent(receipt)
+```
+
+Fresh context is process independence, not account independence. With the same
+GitHub identity, the result can be recorded in the workflow ledger or a PR
+comment but must not be represented as a repository-required approval from a
+different actor. A separately authorized GitHub App and restricted review
+gateway can provide that formal identity later; they are not required for this
+review method to improve the current delivery loop.
 
 After every design artifact and complete task specification is approved, the
 user chooses the implementation continuation mode in the live delivery

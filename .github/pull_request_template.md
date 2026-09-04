@@ -61,6 +61,21 @@
 - [ ] No blocking finding, unexplained change, or missing required gate remains.
 - [ ] This result is presented as pre-review evidence, not approval or merge authority.
 
+## Independent review
+
+- Method: `HUMAN / FRESH_CONTEXT_AGENT / OTHER_INDEPENDENT_AGENT`
+- Exact reviewed PR head:
+- Review packet and receipt: `links / NOT_APPLICABLE`
+- Publication channel and identity boundary:
+- Result: `NOT_STARTED / APPROVED / CHANGES_REQUESTED / BLOCKED`
+
+- [ ] A fresh-context reviewer, when selected, received no authoring
+      conversation, stayed read-only, and returned an exact-revision receipt.
+- [ ] A same-actor comment is not represented as a formal approval from a
+      different GitHub identity.
+- [ ] Any commit after independent review invalidates that result and triggers
+      a new review.
+
 ## Implementation continuation
 
 - Phase: `DESIGN / IMPLEMENTATION`

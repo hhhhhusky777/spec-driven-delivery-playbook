@@ -6,6 +6,15 @@ adopted.
 
 ## Unreleased — updated 2026-09-04
 
+- Added a tool-neutral fresh-context independent-agent review protocol. The
+  original agent now freezes an exact-revision packet, creates a read-only
+  reviewer without inherited author conversation, waits for a structured
+  receipt, and resumes through existing gates. Added a README design sequence,
+  workflow/PR policy integration, SGLang teaching use, and explicit separation
+  between context isolation and a different formal GitHub review identity.
+  Existing projects may opt in by updating their canonical PR policy at its
+  next review gate; active artifacts do not require a schema migration.
+
 - Added `install-sdd.sh --upgrade` for fail-closed, between-task preparation of
   an immutable candidate without changing the active manifest pin. Added a
   dedicated upgrade skill, generated guide, reviewed assessment template,

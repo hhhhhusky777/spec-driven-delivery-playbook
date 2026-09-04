@@ -103,6 +103,37 @@ After that one edit and its applicable checks:
 8. Report the invariant results separately from Markdown/test results. Passing
    automation is not semantic approval.
 
+## Fresh-context independent review
+
+When the current gate selects an independent-agent reviewer and the project
+policy permits fresh-context review:
+
+1. Read the playbook's `templates/reviews/fresh-context-agent-review.md` from
+   the verified read-only checkout recorded by the generated guide.
+2. Freeze its review packet with the exact candidate and base revisions,
+   governing inputs, scope/non-scope, gates, annotations, self-review evidence,
+   and publication channel. Do not include this conversation, hidden reasoning,
+   a proposed disposition, or an advocacy summary.
+3. Use the runtime's isolated-agent mechanism to create a reviewer with no
+   inherited authoring conversation. Give it only the protocol, packet, and
+   bounded read/review permissions. If isolation cannot be verified, record
+   `ISOLATION_UNVERIFIED` and fail closed.
+4. Keep the original task waiting for the structured receipt. The reviewer
+   must remain read-only and must not implement, edit, merge, close, alter live
+   workflow state, or resolve its own comments.
+5. On receipt, verify the review ID, exact subject/base/candidate, isolation,
+   published comments, and that the candidate is unchanged. Record the receipt
+   in the artifact review ledger.
+6. For `CHANGES_REQUESTED`, address or justify every finding; any candidate
+   change requires a newly created fresh reviewer. For `BLOCKED`, restore
+   reviewability. For `APPROVED`, reread all live workflow and merge gates
+   before proceeding.
+
+Fresh context is not a distinct GitHub actor. Unless the project separately
+provides authorized review credentials, publish the result as ledger evidence
+or a PR comment and never claim it satisfies branch protection requiring
+another account's formal approval.
+
 ## Implementation task continuation
 
 Keep `NOT_SELECTED` throughout design. At `GATES_READY`, ask the user to choose

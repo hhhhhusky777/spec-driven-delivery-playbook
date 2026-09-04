@@ -54,6 +54,10 @@ and update the active workflow manifest instead of bypassing its review gates.
 Before every review gate, use the
 [agent self-review record](reviews/agent-self-review.md) as a separate record or
 embed its fields in the owning artifact.
+When an independent-agent gate uses a reviewer without the author's
+conversation, use the
+[fresh-context agent review](reviews/fresh-context-agent-review.md) packet and
+receipt to connect the original agent, isolated reviewer, and exact candidate.
 
 1. Always begin inside the installed project's empty
    [solution whiteboard](discovery/solution-whiteboard.md).
@@ -81,6 +85,13 @@ generating runner must not self-approve unless an active project policy grants
 a documented low-risk exception. A reviewer may be a human or an independent
 review agent; high-risk or externally accountable decisions require a human
 when project policy says so.
+
+For a fresh-context independent review, the original agent freezes the review
+packet and creates a read-only reviewer with author-conversation inheritance
+disabled. The reviewer returns a structured receipt; it never edits, merges,
+or continues delivery. A candidate change invalidates the receipt and requires
+a new fresh reviewer. Shared GitHub credentials do not constitute a distinct
+formal approval identity.
 
 Before submission, the generating or implementing agent must record
 `SELF_REVIEW_PASSED` against the exact candidate revision. Any later change

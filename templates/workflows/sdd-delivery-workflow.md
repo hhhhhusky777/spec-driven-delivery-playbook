@@ -97,6 +97,11 @@ expansion, or a mandatory semantic checkpoint.
 - Review may be performed by a human or an independent review agent. Human
   approval is required when project policy, risk, or external accountability
   requires it.
+- When an independent-agent review uses fresh context, create it through the
+  [fresh-context review protocol](../reviews/fresh-context-agent-review.md).
+  Record its packet/receipt link and exact revision in the artifact review
+  ledger. The reviewer stays read-only; any candidate change requires a new
+  fresh reviewer.
 - `CHANGES_REQUESTED` returns to the same artifact for refinement and another
   review round.
 - A local documentation problem returns to the current artifact; an incorrect
@@ -384,9 +389,9 @@ Normative generated content, interpretation, or a new decision always uses
 
 ### 9.2 Artifact review ledger
 
-| Artifact | Version | Round | Self-review evidence | Reviewer | Type | Result | Comments/resolution | Next action |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `<link>` | `<version>` | `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/independent agent>` | `<APPROVED/CHANGES_REQUESTED>` | `<summary/link>` | `<value>` |
+| Artifact | Version | Round | Self-review evidence | Reviewer | Type | Independent review evidence | Result | Comments/resolution | Next action |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `<link>` | `<version>` | `1` | `<SELF_REVIEW_PASSED record + candidate revision>` | `<identity>` | `<human/fresh-context agent/other independent agent>` | `<fresh-context packet + receipt links or Not applicable>` | `<APPROVED/CHANGES_REQUESTED/BLOCKED>` | `<summary/link>` | `<value>` |
 
 ### 9.3 Automation audit ledger
 

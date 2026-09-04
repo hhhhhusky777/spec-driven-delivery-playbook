@@ -846,6 +846,56 @@ test("every review gate requires exact-revision agent self-review without granti
   assert.match(exampleManifest, /Complete agent self-review, then request independent review/);
 });
 
+test("fresh-context review isolates author context and returns an exact-revision receipt", async () => {
+  const read = (relativePath) =>
+    readFile(path.join(REPOSITORY_ROOT, relativePath), "utf8");
+  const [
+    readme,
+    protocol,
+    workflow,
+    workflowSkill,
+    prPolicy,
+    prTemplate,
+    catalog,
+    example,
+  ] = await Promise.all([
+      read("README.md"),
+      read("templates/reviews/fresh-context-agent-review.md"),
+      read("templates/workflows/sdd-delivery-workflow.md"),
+      read("skills/sdd-project-workflow/SKILL.md"),
+      read("templates/policies/pull-request-policy.md"),
+      read(".github/pull_request_template.md"),
+      read("templates/README.md"),
+      read("examples/project-adoption/sglang/delivery-api-key-redaction/03-delivery-workflow.md"),
+    ]);
+
+  assert.match(readme, /^### Fresh-context agent review design$/m);
+  assert.match(readme, /create_agent\(inherit_author_conversation = false/);
+  assert.match(readme, /process independence, not account independence/i);
+  assert.match(protocol, /^## 1\. Review packet$/m);
+  assert.match(protocol, /^## 2\. Fresh-context creation contract$/m);
+  assert.match(protocol, /^## 4\. Review receipt$/m);
+  assert.match(protocol, /^## 5\. Coordinator resume gate$/m);
+  assert.match(protocol, /must not edit files, push commits/);
+  assert.match(protocol, /`ISOLATION_UNVERIFIED` and return `BLOCKED`/);
+  assert.match(
+    protocol,
+    /Any candidate change.*requires a newly created\s+fresh-context reviewer/is,
+  );
+  assert.match(workflow, /fresh-context packet \+ receipt links/);
+  assert.match(workflowSkill, /no\s+inherited authoring conversation/i);
+  assert.match(
+    workflowSkill,
+    /Keep the original task waiting for the structured receipt/,
+  );
+  assert.match(prPolicy, /Fresh context does not create a second GitHub identity/);
+  assert.match(prTemplate, /^## Independent review$/m);
+  assert.match(prTemplate, /Review packet and receipt/);
+  assert.match(prTemplate, /same-actor comment is not represented as a formal approval/i);
+  assert.match(catalog, /fresh-context agent review/);
+  assert.match(example, /This example does not invent a reviewer/);
+});
+
 test("implementation auto-merge is human-selected, implementation-only, and rechecked", async () => {
   const playbookReadme = await readFile(
     path.join(REPOSITORY_ROOT, "README.md"),

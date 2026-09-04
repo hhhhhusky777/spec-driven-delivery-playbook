@@ -52,6 +52,7 @@ review before activating the policy. Self-review is evidence, not approval.
 | Required reviewers | `<roles/count/CODEOWNERS>` | `<risk rules>` |
 | Required checks | `<CI/gates>` | `<authority>` |
 | Permitted implementation continuation modes | `<HUMAN_REVIEW_BEFORE_MERGE only / both modes>` | `<risk and repository-protection rule>` |
+| Permitted independent-agent review methods | `<fresh-context / other / Not permitted>` | `<risk, identity, and formal-approval boundary>` |
 | Deployment maturity | `<development/released>` | `<compatibility effect>` |
 | Increment boundary | `<smallest self-contained mergeable change>` | `<development policy>` |
 | Issue linkage | `<required threshold>` | `<tracker>` |
@@ -342,6 +343,19 @@ Authors respond to comments with a change, evidence-backed explanation, or a
 recorded follow-up accepted by the reviewer. Do not resolve substantive comments
 without addressing them.
 
+When the project permits fresh-context agent review, use the canonical
+[review packet and receipt](../reviews/fresh-context-agent-review.md). The
+original agent creates the reviewer without author-conversation inheritance,
+waits for its receipt, and remains responsible for addressing findings or
+running the merge gate. The reviewer is read-only and reviews the complete
+exact candidate. Any new commit invalidates the result and requires a new fresh
+reviewer.
+
+Fresh context does not create a second GitHub identity. Record whether the
+result is workflow evidence, a PR comment, or a formal review made through
+separately authorized credentials. Never count a same-actor advisory result as
+a branch-protection approval from another actor.
+
 ## 10. Merge policy
 
 Before merge:
@@ -417,6 +431,8 @@ a reviewed documentation PR and update dependent templates/automation.
 - [ ] Link development and test policies.
 - [ ] Define issue/task/plan integration.
 - [ ] Define required PR sections and risk reviewers.
+- [ ] Define permitted independent-agent review methods, context-isolation
+      evidence, publication channel, and formal identity boundary.
 - [ ] Define merge, emergency, exception, and post-merge behavior.
 - [ ] Assign owner and review cadence.
 
