@@ -236,9 +236,10 @@ The delivery workflow is the canonical live owner of one mode:
 | `AGENT_AUTO_MERGE` | After exact-revision self-review and fresh-context approval, recheck all live gates, merge the scoped implementation PR, and continue to the next dependency-ready task |
 
 Ask the user to choose after design approval and before the first task enters
-`IN_PROGRESS`. Record the user's identity/instruction, selected time, and exact
-task/PR scope in the workflow. The agent must never infer or select
-`AGENT_AUTO_MERGE`.
+`IN_PROGRESS`. Record the user's identity/instruction, selected time, exact
+implementation repository URL, and a comma-separated list of unique stable
+implementation target IDs in the workflow. Do not encode prose such as `task`
+or `PR` in that list. The agent must never infer or select `AGENT_AUTO_MERGE`.
 
 Recording an explicit user selection or change is a control-only workflow
 synchronization and needs no second semantic approval unless project policy
@@ -269,7 +270,9 @@ that PR's merge but cannot approve final validation or any other design,
 contract, risk, exception, or closure decision.
 
 Every automatically merged PR enters a post-merge human-review ledger with its
-head and merge commit, mode authority, self-review, checks, and disposition.
+registered target/PR identity, head and merge commit, mode authority,
+revision-bound self-review, fresh-review and check receipts, merge evidence,
+and disposition.
 Implementation may continue while those reviews are pending only when no
 finding affects the next task. Delivery cannot become `COMPLETE` or archive
 until every pending review is accepted or its required follow-up is resolved.

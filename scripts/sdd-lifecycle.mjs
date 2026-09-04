@@ -165,16 +165,43 @@ function hasDispositionEvidence(value, allowedDispositions) {
   );
 }
 
-function hasTaskAndPrEvidence(value) {
+function hasRevisionDispositionEvidence(
+  value,
+  allowedDispositions,
+  revisionKind,
+  expectedRevision,
+) {
   const normalized = normalizeValue(value || "");
-  const identity = /^[A-Z][A-Z0-9_-]*\s+\/\s+PR\s+#?(\d+)$/i.exec(normalized);
+  const match = /^([A-Z_]+)\s+(HEAD|MERGE)\s+([0-9a-f]{40})\s+\/\s+(.+)$/i.exec(
+    normalized,
+  );
+  return Boolean(
+    match &&
+    allowedDispositions.includes(match[1].toUpperCase()) &&
+    match[2].toUpperCase() === revisionKind &&
+    match[3].toLowerCase() === expectedRevision &&
+    hasRecordedValue(match[4]) &&
+    hasMarkdownLink(value),
+  );
+}
+
+function parseTaskAndPrEvidence(value) {
+  const normalized = normalizeValue(value || "");
+  const identity = /^([A-Z][A-Z0-9_-]*)\s+\/\s+PR\s+#?(\d+)$/i.exec(normalized);
   const links = [
     ...String(value || "").matchAll(/\[[^\]]+\]\(([^)]+)\)/g),
   ];
   const pull = links.length === 1
-    ? /https:\/\/github\.com\/[^)\s]+\/pull\/(\d+)(?:[?#][^)]*)?$/i.exec(links[0][1])
+    ? /https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)\/pull\/(\d+)(?:[?#][^)]*)?$/i.exec(links[0][1])
     : null;
-  return Boolean(identity && pull && identity[1] === pull[1]);
+  if (!identity || !pull || identity[2] !== pull[2]) {
+    return null;
+  }
+  return {
+    taskId: identity[1].toLowerCase(),
+    repository: pull[1].toLowerCase(),
+    pullNumber: pull[2],
+  };
 }
 
 function isStableIdentifier(value) {
@@ -182,10 +209,17 @@ function isStableIdentifier(value) {
   return hasRecordedValue(normalized) && /^[A-Za-z][A-Za-z0-9_-]*$/.test(normalized);
 }
 
-function hasReviewTargetLink(value, targetId) {
+function parseGitHubRepository(value) {
+  const match = /^https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)$/i.exec(
+    normalizeValue(value || ""),
+  );
+  return match ? match[1].toLowerCase() : null;
+}
+
+function hasReviewTargetLink(value, targetId, repository) {
   const links = [
     ...String(value || "").matchAll(
-      /\[([^\]]+)\]\((https:\/\/github\.com\/[^)\s]+\/pull\/(\d+)(?:[?#][^)]*)?)\)/gi,
+      /\[([^\]]+)\]\(https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)\/pull\/(\d+)(?:[?#][^)]*)?\)/gi,
     ),
   ];
   if (links.length !== 1) {
@@ -195,12 +229,57 @@ function hasReviewTargetLink(value, targetId) {
   const labelIds = label.split(/[^a-z0-9_-]+/).filter(Boolean);
   const labelPr = /(?:^|\s)PR\s+#?(\d+)(?:$|\s)/i.exec(label);
   return labelIds.includes(normalizeValue(targetId).toLowerCase()) &&
-    Boolean(labelPr && labelPr[1] === links[0][3]);
+    Boolean(
+      labelPr &&
+      labelPr[1] === links[0][3] &&
+      repository &&
+      links[0][2].toLowerCase() === repository,
+    );
 }
 
-function hasHeadAndMergeEvidence(value) {
+function parseHeadAndMergeEvidence(value) {
   const normalized = normalizeValue(value || "");
-  return /^HEAD\s+[0-9a-f]{40}\s+\/\s+MERGE\s+[0-9a-f]{40}$/i.test(normalized);
+  const match = /^HEAD\s+([0-9a-f]{40})\s+\/\s+MERGE\s+([0-9a-f]{40})$/i.exec(
+    normalized,
+  );
+  return match ? { head: match[1].toLowerCase(), merge: match[2].toLowerCase() } : null;
+}
+
+function mergeEvidenceMatches(value, repository, mergeRevision) {
+  if (!hasDispositionEvidence(value, ["MERGED"])) {
+    return false;
+  }
+  const links = [...String(value || "").matchAll(/\[[^\]]+\]\(([^)]+)\)/g)];
+  const commit = links.length === 1
+    ? /https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)\/commit\/([0-9a-f]{40})(?:[?#][^)]*)?$/i.exec(
+        links[0][1],
+      )
+    : null;
+  return Boolean(
+    commit &&
+    repository &&
+    mergeRevision &&
+    commit[1].toLowerCase() === repository &&
+    commit[2].toLowerCase() === mergeRevision,
+  );
+}
+
+function parseStableIdentifierList(value) {
+  const normalized = normalizeValue(value || "");
+  if (!hasRecordedValue(normalized)) {
+    return null;
+  }
+  const identifiers = normalized.split(",").map((item) => item.trim());
+  const reserved = new Set(["task", "pr", "pull", "branch", "feature", "main", "master"]);
+  if (
+    identifiers.length === 0 ||
+    identifiers.some((item) => !isStableIdentifier(item)) ||
+    identifiers.some((item) => reserved.has(item.toLowerCase())) ||
+    new Set(identifiers.map((item) => item.toLowerCase())).size !== identifiers.length
+  ) {
+    return null;
+  }
+  return identifiers.map((item) => item.toLowerCase());
 }
 
 function splitIdentifiers(value) {
@@ -429,6 +508,7 @@ function checkImplementationContinuation(file, fields, tables) {
     for (const field of [
       "Implementation mode authority",
       "Implementation mode scope",
+      "Implementation repository",
       "Implementation mode selected at",
     ]) {
       if (isUnselected(fields.get(field))) {
@@ -443,6 +523,49 @@ function checkImplementationContinuation(file, fields, tables) {
       }
     }
   }
+
+  const implementationScopeIds = parseStableIdentifierList(
+    fields.get("Implementation mode scope") || "",
+  );
+  if (mode !== "NOT_SELECTED" && !implementationScopeIds) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_IMPLEMENTATION_MODE_SCOPE",
+        "Implementation mode scope must be a comma-separated list of unique stable task IDs without prose",
+      ),
+    );
+  }
+  const implementationRepository = parseGitHubRepository(
+    fields.get("Implementation repository") || "",
+  );
+  if (mode !== "NOT_SELECTED" && !implementationRepository) {
+    diagnostics.push(
+      diagnostic(
+        file,
+        1,
+        "SDD_IMPLEMENTATION_REPOSITORY",
+        "Implementation repository must be an exact https://github.com/owner/repository URL",
+      ),
+    );
+  }
+
+  const dependencyTable = findTable(tables, [
+    "Artifact ID",
+    "Artifact/link",
+    "Depends on",
+    "Consumed version",
+    "Current version",
+    "Change impact",
+    "Freshness",
+    "Blocked by",
+  ]);
+  const registeredIds = new Set(
+    (dependencyTable?.rows || []).map((row) =>
+      normalizeValue(row["Artifact ID"] || "").toLowerCase(),
+    ),
+  );
 
   const reviewLedger = findTable(tables, [
     "Task/PR",
@@ -497,10 +620,11 @@ function checkImplementationContinuation(file, fields, tables) {
   const mergedRows = (reviewLedger?.rows || []).filter(
     (row) => leadingDisposition(row["Merge result"]) === "MERGED",
   );
-  for (const row of mergedRows) {
-    const requiredEvidence = [
-      ["Task/PR", hasTaskAndPrEvidence(row["Task/PR"])],
-      ["Head and merge commit", hasHeadAndMergeEvidence(row["Head and merge commit"])],
+  for (const row of reviewLedger?.rows || []) {
+    const mergeDisposition = leadingDisposition(row["Merge result"]);
+    const taskPr = parseTaskAndPrEvidence(row["Task/PR"]);
+    const commonEvidence = [
+      ["Task/PR", Boolean(taskPr)],
       [
         "Implementation mode/authority",
         hasDispositionEvidence(row["Implementation mode/authority"], [
@@ -509,15 +633,105 @@ function checkImplementationContinuation(file, fields, tables) {
         ]),
       ],
       [
+        "Merge result",
+        hasDispositionEvidence(row["Merge result"], ["MERGED", "STOPPED"]),
+      ],
+    ];
+    for (const [field, valid] of commonEvidence) {
+      if (!valid) {
+        diagnostics.push(
+          diagnostic(
+            file,
+            reviewLedger.line,
+            "SDD_IMPLEMENTATION_REVIEW_EVIDENCE",
+            `an implementation review row requires recorded ${field} evidence`,
+          ),
+        );
+      }
+    }
+    if (
+      taskPr &&
+      (!registeredIds.has(taskPr.taskId) ||
+        taskPr.repository !== implementationRepository)
+    ) {
+      diagnostics.push(
+        diagnostic(
+          file,
+          reviewLedger.line,
+          "SDD_IMPLEMENTATION_REVIEW_BINDING",
+          "implementation ledger task/PR must match the dependency register and implementation repository",
+        ),
+      );
+    }
+    if (mergeDisposition === "STOPPED") {
+      if (
+        !hasRecordedValue(row["Findings/follow-up"] || "") ||
+        !hasMarkdownLink(row["Findings/follow-up"])
+      ) {
+        diagnostics.push(
+          diagnostic(
+            file,
+            reviewLedger.line,
+            "SDD_STOPPED_REVIEW_EVIDENCE",
+            "a STOPPED implementation row requires linked findings/follow-up evidence",
+          ),
+        );
+      }
+      continue;
+    }
+    if (mergeDisposition !== "MERGED") {
+      continue;
+    }
+    const revisions = parseHeadAndMergeEvidence(row["Head and merge commit"]);
+    const requiredEvidence = [
+      ["Head and merge commit", Boolean(revisions)],
+      [
         "Self-review",
-        hasDispositionEvidence(row["Self-review"], ["SELF_REVIEW_PASSED"]),
+        Boolean(
+          revisions &&
+          hasRevisionDispositionEvidence(
+            row["Self-review"],
+            ["SELF_REVIEW_PASSED"],
+            "HEAD",
+            revisions.head,
+          ),
+        ),
       ],
       [
         "Fresh-context review",
-        hasDispositionEvidence(row["Fresh-context review"], ["APPROVED"]),
+        Boolean(
+          revisions &&
+          hasRevisionDispositionEvidence(
+            row["Fresh-context review"],
+            ["APPROVED"],
+            "HEAD",
+            revisions.head,
+          ),
+        ),
       ],
-      ["Required checks", hasDispositionEvidence(row["Required checks"], ["PASS"])],
-      ["Merge result", hasDispositionEvidence(row["Merge result"], ["MERGED"])],
+      [
+        "Required checks",
+        Boolean(
+          revisions &&
+          hasRevisionDispositionEvidence(
+            row["Required checks"],
+            ["PASS"],
+            "HEAD",
+            revisions.head,
+          ),
+        ),
+      ],
+      [
+        "Merge result",
+        Boolean(
+          revisions &&
+          mergeEvidenceMatches(
+            row["Merge result"],
+            implementationRepository,
+            revisions.merge,
+          ),
+        ),
+      ],
     ];
     for (const [field, valid] of requiredEvidence) {
       if (!valid) {
@@ -531,7 +745,15 @@ function checkImplementationContinuation(file, fields, tables) {
         );
       }
     }
-    if (leadingDisposition(row["Fresh-context review"]) !== "APPROVED") {
+    if (
+      !revisions ||
+      !hasRevisionDispositionEvidence(
+        row["Fresh-context review"],
+        ["APPROVED"],
+        "HEAD",
+        revisions.head,
+      )
+    ) {
       diagnostics.push(
         diagnostic(
           file,
@@ -544,7 +766,13 @@ function checkImplementationContinuation(file, fields, tables) {
     if (
       leadingDisposition(row["Implementation mode/authority"]) ===
         "HUMAN_REVIEW_BEFORE_MERGE" &&
-      !hasDispositionEvidence(row["Human review"], ["APPROVED"])
+      (!revisions ||
+        !hasRevisionDispositionEvidence(
+          row["Human review"],
+          ["APPROVED"],
+          "HEAD",
+          revisions.head,
+        ))
     ) {
       diagnostics.push(
         diagnostic(
@@ -558,22 +786,44 @@ function checkImplementationContinuation(file, fields, tables) {
   }
 
   if (["COMPLETE", "ARCHIVED"].includes(state)) {
-    if ((reviewLedger?.rows || []).length === 0) {
+    if (mergedRows.length === 0) {
       diagnostics.push(
         diagnostic(
           file,
           reviewLedger?.line || 1,
           "SDD_IMPLEMENTATION_REVIEW_EMPTY",
-          `${state} requires at least one implementation PR review-ledger row`,
+          `${state} requires at least one auditable MERGED implementation PR review-ledger row`,
         ),
       );
     }
     const invalidRows = (reviewLedger?.rows || []).filter((row) => {
-      return !hasDispositionEvidence(row["Human review"], [
-        "APPROVED",
-        "ACCEPTED",
-        "FOLLOW_UP_COMPLETE",
-      ]);
+      const mergeDisposition = leadingDisposition(row["Merge result"]);
+      if (mergeDisposition === "STOPPED") {
+        return !hasDispositionEvidence(row["Human review"], [
+          "APPROVED",
+          "ACCEPTED",
+          "FOLLOW_UP_COMPLETE",
+        ]);
+      }
+      const revisions = parseHeadAndMergeEvidence(row["Head and merge commit"]);
+      const modeDisposition = leadingDisposition(row["Implementation mode/authority"]);
+      if (!revisions) {
+        return true;
+      }
+      if (modeDisposition === "HUMAN_REVIEW_BEFORE_MERGE") {
+        return !hasRevisionDispositionEvidence(
+          row["Human review"],
+          ["APPROVED"],
+          "HEAD",
+          revisions.head,
+        );
+      }
+      return !hasRevisionDispositionEvidence(
+        row["Human review"],
+        ["ACCEPTED", "FOLLOW_UP_COMPLETE"],
+        "MERGE",
+        revisions.merge,
+      );
     });
     if (invalidRows.length > 0) {
       diagnostics.push(
@@ -581,7 +831,7 @@ function checkImplementationContinuation(file, fields, tables) {
           file,
           reviewLedger.line,
           "SDD_POST_MERGE_REVIEW_OPEN",
-          `${state} requires each human-review row to record APPROVED, ACCEPTED, or FOLLOW_UP_COMPLETE with evidence`,
+          `${state} requires each human-review row to record revision-bound APPROVED, ACCEPTED, or FOLLOW_UP_COMPLETE evidence`,
         ),
       );
     }
@@ -886,26 +1136,29 @@ function ownFreshness(row) {
 }
 
 export function computeTransitiveFreshness(rows) {
-  const byId = new Map(rows.map((row) => [normalizeValue(row["Artifact ID"]), row]));
+  const byId = new Map(
+    rows.map((row) => [normalizeValue(row["Artifact ID"]).toLowerCase(), row]),
+  );
   const result = new Map();
   function visit(id, stack = new Set()) {
-    if (result.has(id)) {
-      return result.get(id);
+    const normalizedId = normalizeValue(id).toLowerCase();
+    if (result.has(normalizedId)) {
+      return result.get(normalizedId);
     }
-    if (stack.has(id)) {
-      result.set(id, "BLOCKED");
+    if (stack.has(normalizedId)) {
+      result.set(normalizedId, "BLOCKED");
       return "BLOCKED";
     }
-    const row = byId.get(id);
+    const row = byId.get(normalizedId);
     if (!row) {
       return "CURRENT";
     }
     const own = ownFreshness(row);
     if (own !== "CURRENT") {
-      result.set(id, own);
+      result.set(normalizedId, own);
       return own;
     }
-    const nextStack = new Set(stack).add(id);
+    const nextStack = new Set(stack).add(normalizedId);
     const dependencies = splitIdentifiers(row["Depends on"] || "None");
     const dependencyStates = dependencies.map((dependency) => visit(dependency, nextStack));
     const state = dependencyStates.includes("BLOCKED")
@@ -913,7 +1166,7 @@ export function computeTransitiveFreshness(rows) {
       : dependencyStates.includes("STALE")
         ? "STALE"
         : "CURRENT";
-    result.set(id, state);
+    result.set(normalizedId, state);
     return state;
   }
   for (const id of byId.keys()) {
@@ -1090,20 +1343,33 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
   }
   const reviewTarget = fields.get("Current review target ID") || "";
   const implementationScope = new Set(
-    splitIdentifiers(fields.get("Implementation mode scope") || ""),
+    parseStableIdentifierList(fields.get("Implementation mode scope") || "") || [],
+  );
+  const implementationRepository = parseGitHubRepository(
+    fields.get("Implementation repository") || "",
+  );
+  const registeredImplementationTargets = new Set(
+    (freshnessTable?.rows || []).map((row) =>
+      normalizeValue(row["Artifact ID"] || "").toLowerCase(),
+    ),
   );
   const implementationReviewInScope =
     reviewPhase === "IMPLEMENTATION" &&
     hasRecordedValue(reviewTarget) &&
-    implementationScope.has(normalizeValue(reviewTarget)) &&
-    hasReviewTargetLink(rawControlField(tables, "Current artifact/gate"), reviewTarget);
+    implementationScope.has(normalizeValue(reviewTarget).toLowerCase()) &&
+    registeredImplementationTargets.has(normalizeValue(reviewTarget).toLowerCase()) &&
+    hasReviewTargetLink(
+      rawControlField(tables, "Current artifact/gate"),
+      reviewTarget,
+      implementationRepository,
+    );
   if (reviewPhase === "IMPLEMENTATION" && !implementationReviewInScope) {
     diagnostics.push(
       diagnostic(
         file,
         1,
         "SDD_IMPLEMENTATION_REVIEW_SCOPE",
-        "implementation review requires a linked Current artifact/gate whose recorded target ID is inside Implementation mode scope",
+        "implementation review requires a registered target ID inside Implementation mode scope and a linked PR in Implementation repository",
       ),
     );
   }
@@ -1205,7 +1471,7 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
   for (const row of freshnessRows) {
     const id = normalizeValue(row["Artifact ID"]);
     const declared = normalizeValue(row.Freshness);
-    const expected = computed.get(id);
+    const expected = computed.get(id.toLowerCase());
     if (declared !== expected) {
       diagnostics.push(
         diagnostic(file, freshnessTable.line, "SDD_FRESHNESS_MISMATCH", `${id} declares ${declared}; dependency graph requires ${expected}`),

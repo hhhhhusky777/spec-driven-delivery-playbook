@@ -43,6 +43,7 @@ instantiated workflow record.
 | Implementation continuation mode | `NOT_SELECTED` |
 | Implementation mode authority | `Not selected` |
 | Implementation mode scope | `Not selected` |
+| Implementation repository | `Not selected` |
 | Implementation mode selected at | `Not selected` |
 | Next action | `<value>` |
 | Next action target IDs | `<artifact/task IDs>` |
@@ -143,7 +144,10 @@ task specification are approved.
   without bypass, record the audit, and continue to the next dependency-ready
   task.
 
-Record the user's identity/instruction, selection time, and exact task/PR scope.
+Record the user's identity/instruction, selection time, exact implementation
+repository URL, and exact task scope as a comma-separated list of unique stable
+task IDs (for example, `T02, T03`). Do not put prose, `task`, `PR`, branch names,
+or the final feature PR in the scope field.
 At each review gate, record its phase and stable target ID. Auto-merge can omit
 pre-merge human review only when `Current review phase` is `IMPLEMENTATION`, the
 target ID is in that scope, and `Current artifact/gate` links that same target's
@@ -434,7 +438,7 @@ the ledger fails closed because it would erase implementation review duties.
 
 | Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | Human review | Findings/follow-up |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `<task ID> / <PR Markdown link>` | `HEAD <full 40-character commit SHA> / MERGE <full 40-character commit SHA>` | `<mode> / <authority link>` | `SELF_REVIEW_PASSED / <record link>` | `APPROVED / <packet-or-receipt link>` | `PASS / <checks link>` | `<MERGED/STOPPED> / <evidence link>` | `<APPROVED / evidence for manual mode, or PENDING/ACCEPTED/FOLLOW_UP_REQUIRED/FOLLOW_UP_COMPLETE / evidence for auto mode>` | `<links or None>` |
+| `<task ID> / <PR Markdown link>` | `HEAD <full 40-character commit SHA> / MERGE <full 40-character commit SHA>` | `<mode> / <authority link>` | `SELF_REVIEW_PASSED HEAD <head SHA> / <record link>` | `APPROVED HEAD <head SHA> / <packet-or-receipt link>` | `PASS HEAD <head SHA> / <checks link>` | `<MERGED/STOPPED> / <evidence link>` | `<APPROVED HEAD <head SHA> / evidence for manual mode, or PENDING/ACCEPTED/FOLLOW_UP_REQUIRED/FOLLOW_UP_COMPLETE MERGE <merge SHA> / evidence for auto mode>` | `<links or None>` |
 
 Every row's mode must lead with exactly `HUMAN_REVIEW_BEFORE_MERGE` or
 `AGENT_AUTO_MERGE`. Every merged row requires fresh-context `APPROVED`. In
@@ -443,14 +447,24 @@ Every row's mode must lead with exactly `HUMAN_REVIEW_BEFORE_MERGE` or
 `PENDING`; later record `ACCEPTED` or `FOLLOW_UP_REQUIRED` without rewriting the
 merge evidence. A finding that affects active or future work marks those
 dependencies stale or blocked. `COMPLETE` and `ARCHIVED` require at least one
-ledger row, and every row must be accepted or have completed follow-up recorded
-as `FOLLOW_UP_COMPLETE`.
+auditable `MERGED` row; a `STOPPED` row cannot satisfy delivery closure. Every
+row must be accepted or have completed follow-up recorded as
+`FOLLOW_UP_COMPLETE`. A `STOPPED` row is for an already-opened scoped PR that
+did not merge and requires linked findings/follow-up evidence.
 
 A merged row records its task/PR identity; exact head and merge revisions;
 mode authority; `SELF_REVIEW_PASSED`, fresh `APPROVED`, and required-check
 `PASS` receipts; and merge evidence. A bare disposition without its ` / `
 evidence does not satisfy the per-PR record. The displayed PR number and the
 single GitHub PR link must identify the same PR.
+The live review target must exist in the current mode scope. Every historical
+ledger task ID must exist in the dependency register; its linked authority
+preserves the mode scope that applied when that PR was reviewed.
+The PR and merge-evidence links must use `Implementation repository`, and the
+merge-evidence commit must equal the recorded full merge SHA.
+Self-review, fresh-review, and check receipts repeat the exact head SHA. Manual
+human approval repeats that head SHA; auto-mode post-merge review repeats the
+merge SHA. Contradictory revisions fail closed.
 
 Use the exact leading dispositions shown above. Where the ledger requires
 evidence, record it after ` / `; a bare disposition does not pass that gate.

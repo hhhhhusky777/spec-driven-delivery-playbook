@@ -141,8 +141,10 @@ another account's formal approval.
 
 Keep `NOT_SELECTED` throughout design. At `GATES_READY`, ask the user to choose
 `HUMAN_REVIEW_BEFORE_MERGE` or `AGENT_AUTO_MERGE` before the first task enters
-`IN_PROGRESS`; record the instruction and exact scope in the workflow. The user
-may change the mode at any time.
+`IN_PROGRESS`; record the instruction, exact implementation repository, and
+comma-separated stable target-ID scope in the workflow. Reject prose tokens,
+duplicate IDs, or a PR outside that repository. The user may change the mode at
+any time.
 
 Treat exact recording of the user's instruction as a control-only workflow
 update unless project policy requires another review. Do not reinterpret or
@@ -152,7 +154,8 @@ For every implementation task, reread the canonical mode before the task edit,
 self-review gate, PR opening, merge attempt, and next-task continuation:
 
 - Require `Current review phase` to be `IMPLEMENTATION` and `Current review
-  target ID` to be inside the recorded mode scope. Any design, validation, or
+  target ID` to be inside the recorded mode scope, with its PR in the recorded
+  implementation repository. Any design, validation, or
   archive phase still requires human review even while auto-merge is selected.
 
 - `HUMAN_REVIEW_BEFORE_MERGE`: after exact-head self-review and fresh-context

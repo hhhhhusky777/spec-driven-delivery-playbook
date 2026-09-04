@@ -22,6 +22,7 @@
 | Implementation continuation mode | `NOT_SELECTED` |
 | Implementation mode authority | `Not selected` |
 | Implementation mode scope | `Not selected` |
+| Implementation repository | `Not selected` |
 | Implementation mode selected at | `Not selected` |
 | Next action | Complete self-review, fresh-context review, and human review; resolve project-owned unknowns |
 | Allowed write scope | This example packet only |
@@ -76,8 +77,8 @@ has not occurred.
 The implementation continuation mode remains `NOT_SELECTED` while this example
 is in design. After the plan and a complete next-task specification are
 approved, a real adopting user chooses `HUMAN_REVIEW_BEFORE_MERGE` or
-`AGENT_AUTO_MERGE` with explicit task/PR scope. This teaching example does not
-make that choice for SGLang.
+`AGENT_AUTO_MERGE` with the exact repository and a comma-separated stable
+target-ID scope. This teaching example does not make that choice for SGLang.
 
 ### Automation audit ledger
 

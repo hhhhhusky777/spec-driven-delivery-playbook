@@ -20,14 +20,18 @@ adopted.
   review ledger. The checker requires exact core workflow tables and ledger
   headers, recognized row modes, exact per-PR head/merge and review/check
   receipts, fresh approval for every merged row, exact prerequisite
-  dispositions, phase-and-scope proof for the implementation-only human-review
-  exception, stable manifest-to-dependency IDs, and non-empty/non-dangling
-  dependency and closure evidence. Annotated sentinels, mismatched displayed
-  and linked PR numbers, and invalid or duplicate artifact IDs fail closed.
+  dispositions, structured phase/scope/repository proof for the
+  implementation-only human-review exception, stable manifest-to-dependency
+  IDs, cross-bound task/PR/head/merge receipts, case-normalized transitive
+  freshness, and non-empty/non-dangling dependency and merged closure evidence.
+  Annotated sentinels, free-text scope, wrong-repository PRs, mismatched
+  displayed and linked PR numbers, contradictory merge evidence, stopped-only
+  closure, and invalid or duplicate artifact IDs fail closed.
   Active schema-1 plans and workflows must add the review fields; workflows
-  must also add the current review phase/target fields, delivery-manifest
-  artifact IDs, complete dependency roots, and ledger section with exact
-  headers before changing their markers to `@2` at their next review gate.
+  must also add the current review phase/target fields, implementation
+  repository, delivery-manifest artifact IDs, complete dependency roots, and
+  ledger section with exact headers before changing their markers to `@2` at
+  their next review gate.
   Existing approvals remain historical evidence and do not satisfy the new
   gate.
 
@@ -43,7 +47,7 @@ adopted.
   `AGENT_AUTO_MERGE` permits merge and next-task continuation only after exact
   self-review and repository gates pass. Added per-checkpoint mode rereads,
   fail-closed lifecycle rules, post-merge human-review closure, tests, and
-  SGLang examples. Existing instantiated delivery workflows must add the four
+  SGLang examples. Existing instantiated delivery workflows must add the five
   implementation-mode control fields before their next lifecycle check.
 - Added mandatory exact-revision agent self-review before every review gate,
   contract-to-change author annotations for material PR changes, fail-closed

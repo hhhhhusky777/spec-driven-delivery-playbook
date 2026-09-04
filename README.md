@@ -634,7 +634,9 @@ exact scope and every live merge gate.
 
 The live workflow proves that exception with `Current review phase =
 IMPLEMENTATION` and a `Current review target ID` contained in the recorded mode
-scope. A selected auto-merge mode never waives human review for a design,
+scope, plus a PR link in the recorded implementation repository. Scope is a
+comma-separated stable-ID list, never free-text task/PR prose. A selected
+auto-merge mode never waives human review for a design,
 validation, or archive gate encountered during implementation.
 
 Before every review gate, the generating or implementing agent self-reviews the
@@ -766,7 +768,8 @@ The agent records the instruction in the live delivery workflow before editing
 | --- | --- |
 | Implementation continuation mode | `AGENT_AUTO_MERGE` |
 | Implementation mode authority | `Example user — instruction quoted above` |
-| Implementation mode scope | `T02 task PR; T03 task PR` |
+| Implementation mode scope | `T02, T03` |
+| Implementation repository | `https://github.com/example/project` |
 | Implementation mode selected at | `2026-09-03 15:00 Asia/Shanghai (example)` |
 
 Recording this exact instruction is a control-only update. The agent runs the

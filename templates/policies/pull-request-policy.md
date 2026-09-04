@@ -311,7 +311,8 @@ attempt, and continuation.
   approval, the agent opens the ready PR and stops until human review and merge
   authority are recorded.
 - `AGENT_AUTO_MERGE`: the user's recorded mode selection supplies merge
-  authorization for only the listed task/PR scope. The agent may merge only
+  authorization for only the listed stable implementation target IDs in the
+  recorded repository. The agent may merge only
   after its exact-head self-review and a new fresh-context review pass,
   annotations are current, all checks and repository protections pass, and no
   stop condition exists. It must not bypass a repository-required approval.
@@ -323,6 +324,13 @@ invalid, stale, or out-of-scope mode data stops for user direction.
 For multi-task delivery, the recorded scope may include the final feature PR
 only after final validation has its required approval. Auto-merge authority for
 that PR is merge authority, not validation or delivery approval.
+
+The live scope is a comma-separated list of unique stable target IDs, not
+free-text task/PR prose. The workflow records the exact implementation
+repository URL. Each ledger target must exist in the dependency register; its
+PR, merge evidence, and full merge SHA must agree. Self-review, fresh-review,
+required-check, and human-review evidence repeats the head or merge SHA defined
+by the workflow ledger contract.
 
 Reviewers evaluate:
 

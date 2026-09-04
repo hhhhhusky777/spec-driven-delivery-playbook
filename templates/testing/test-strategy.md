@@ -184,8 +184,10 @@ continuation. Positive fixtures require approved design inputs, in-scope user
 authority, exact-head `SELF_REVIEW_PASSED`, current annotations, all required
 checks, correct branch targets, and an append-only post-merge review row.
 Negative fixtures must block missing/invalid mode data, design-phase use,
-out-of-scope tasks, mode changes, conflicts, unresolved comments/change
-requests, failed or missing checks, stale inputs, unexpected diffs, repository
+free-text or duplicate scope IDs, out-of-scope tasks, wrong-repository PRs,
+mode changes, conflicts, unresolved comments/change requests, contradictory
+task/PR/head/merge receipts, stopped-only closure, failed or missing checks,
+stale inputs including case-varied dependencies, unexpected diffs, repository
 refusal, and completion with pending post-merge human review.
 For multi-task delivery, also reject automatic final-feature merge before final
 validation approval or when that PR is absent from the recorded user scope.
