@@ -84,6 +84,9 @@ test("batch preparation preserves bounded authority, dependencies and recovery",
     [{ "Transient retry count": "3" }, "SDD_BATCH_RECOVERY"],
     [{ State: "EXECUTING", "Previous state": "PREPARING" }, "SDD_ILLEGAL_TRANSITION"],
     [{ State: "ACCEPTED", "Previous state": "BLOCKED", "Resume state": "IN_REVIEW" }, "SDD_BATCH_RESUME"],
+    [{ State: "BLOCKED", "Previous state": "PREPARING", "Resume state": "EXECUTING" }, "SDD_BATCH_RESUME"],
+    [{ State: "BLOCKED", "Previous state": "BLOCKED", "Resume state": "CLOSED" }, "SDD_BATCH_RESUME"],
+    [{ State: "BLOCKED", "Previous state": "BLOCKED", "Resume state": "CANCELLED" }, "SDD_BATCH_RESUME"],
   ]) {
     const input = await fixture(t, reviewBatch(override));
     assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === rule));
@@ -92,6 +95,13 @@ test("batch preparation preserves bounded authority, dependencies and recovery",
     "| A01 | input.md | None | A01 | C01 | None | None |",
     "| C01 | policy.md | Acceptance | None | None |"));
   assert.ok((await checkSddLifecycleDocument(cycle.file, cycle.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_DEPENDENCY"));
+});
+
+test("blocked preparation can remain blocked and resume its recorded state", async (t) => {
+  for (const [state, previous] of [["BLOCKED", "PREPARING"], ["BLOCKED", "BLOCKED"], ["PREPARING", "BLOCKED"]]) {
+    const input = await fixture(t, reviewBatch({ State: state, "Previous state": previous, "Resume state": "PREPARING" }));
+    assert.deepEqual(await checkSddLifecycleDocument(input.file, input.root, SCHEMAS), []);
+  }
 });
 
 test("v3 ordinary workflow retains gates and future outputs are not readiness inputs", async (t) => {
@@ -218,10 +228,36 @@ test("batch auto-merge exception is bound to an actual matching workflow", async
     implementationMode: "AGENT_AUTO_MERGE", selfReviewRevision: head, freshReviewRevision: head });
   await writeFile(workflowPath, state);
   assert.deepEqual(await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS), []);
+  const v3 = state.replace("delivery-workflow@2", "delivery-workflow@3")
+    .replace("| State |", "| Review batch | None |\n| State |");
+  await writeFile(workflowPath, v3);
+  assert.deepEqual(await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS), []);
+  await writeFile(workflowPath, v3.replace("| Review batch | None |", "| Review batch | [Missing](missing.md) |"));
+  assert.ok((await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_EXECUTION"));
+  const linkedWorkflow = v3.replace("| Review batch | None |", "| Review batch | [Batch](batch.md) |");
+  await writeFile(workflowPath, linkedWorkflow);
+  const originalBatch = await readFile(batchPath, "utf8");
+  const workflowHash = createHash("sha256").update(linkedWorkflow).digest("hex");
+  const linkedBatch = originalBatch.replace("| Allowed paths | artifact.md |", "| Allowed paths | artifact.md; workflow.md |")
+    .replace("| A01 |", `| A02 | workflow.md | sha256:${workflowHash} | None | C01 | APPROVED | review.md |\n| A01 |`);
+  await writeFile(batchPath, linkedBatch);
+  assert.deepEqual(await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS), []);
+  assert.deepEqual(await checkSddLifecycleDocument(workflowPath, input.root, SCHEMAS), []);
+  await writeFile(workflowPath, linkedWorkflow.replace("| Review batch | [Batch](batch.md) |", "| Review batch | [Missing](missing.md) |"));
+  assert.ok((await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_EXECUTION"));
+  await writeFile(batchPath, originalBatch);
   await writeFile(workflowPath, state.replace("https://github.com/example/project/pull/1", "https://github.com/example/project/pull/2"));
   assert.ok((await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_EXECUTION"));
   await writeFile(workflowPath, state.replace("AGENT_AUTO_MERGE", "HUMAN_REVIEW_BEFORE_MERGE"));
   assert.ok((await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS)).some(item => item.rule === "SDD_HUMAN_REVIEW_STATE"));
+});
+
+test("review inventory rejects an in-root symlink outside its allowed scope", async (t) => {
+  const input = await batchedPlanFixture(t, "content\n");
+  await writeFile(path.join(input.root, "outside.md"), "content\n");
+  await rm(input.file);
+  await symlink(path.join(input.root, "outside.md"), input.file);
+  assert.ok((await checkSddLifecycleDocument(path.join(input.root, "batch.md"), input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_SCOPE"));
 });
 
 test("batch identity, inventory, scope and completion guards reject malformed evidence", async (t) => {

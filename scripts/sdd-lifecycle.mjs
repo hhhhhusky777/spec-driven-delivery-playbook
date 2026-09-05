@@ -1757,7 +1757,7 @@ function normativeProjection(text) {
   }).join("\n");
 }
 
-async function checkReviewBatch(file, root, tables, fields, schema, schemas) {
+async function checkReviewBatch(file, root, tables, fields, schema, schemas, ancestors) {
   const relative = path.relative(root, file);
   const errors = checkRequiredFields(relative, fields, schema.requiredFields);
   const fail = (rule, message) => errors.push(diagnostic(relative, 1, rule, message));
@@ -1768,7 +1768,8 @@ async function checkReviewBatch(file, root, tables, fields, schema, schemas) {
   if (previous === "BLOCKED" && state !== "BLOCKED" && state !== fields.get("Resume state")) {
     fail("SDD_BATCH_RESUME", "Resume must return to the recorded pre-block state");
   }
-  if (state === "BLOCKED" && (!Object.hasOwn(schema.transitions, fields.get("Resume state") || "") || fields.get("Resume state") === "BLOCKED")) {
+  if (state === "BLOCKED" && (!["PREPARING", "IN_REVIEW", "ACCEPTED", "EXECUTING", "VERIFIED"].includes(fields.get("Resume state")) ||
+      (previous !== "BLOCKED" && fields.get("Resume state") !== previous))) {
     fail("SDD_BATCH_RESUME", "BLOCKED requires a valid prior resume state");
   }
   for (const key of ["Batch ID", "Delivery ID"]) {
@@ -1797,9 +1798,8 @@ async function checkReviewBatch(file, root, tables, fields, schema, schemas) {
       const marker = extractMarker(workflowText);
       const workflowTables = parseMarkdownTables(workflowText);
       const workflowFields = extractControlFields(workflowTables);
-      const workflowSchema = marker?.version === 2 ? LEGACY_SCHEMAS.artifacts["delivery-workflow"] : schemas.artifacts["delivery-workflow"];
       const result = marker?.artifact === "delivery-workflow" && [2, 3].includes(marker.version)
-        ? await checkDeliveryWorkflow(path.relative(root, linked), linked, root, workflowText, workflowTables, workflowFields, workflowSchema) : ["invalid workflow"];
+        ? await checkSddLifecycleDocument(linked, root, schemas, ancestors) : ["invalid workflow"];
       const pr = markdownLinkTarget(rawControlField(tables, "PR"));
       const targetLink = markdownLinkTarget(rawControlField(workflowTables, "Current artifact/gate"));
       humanRequired = result.length !== 0 || workflowFields.get("State") !== "DELIVERY_ACTIVE" ||
@@ -1842,6 +1842,10 @@ async function checkReviewBatch(file, root, tables, fields, schema, schemas) {
     if (reviewed) {
       try {
         const absolute = await containedFile(root, path.join(root, "batch-root"), target);
+        const resolvedTarget = path.relative(await realpath(root), absolute).split(path.sep).join("/");
+        if (!allowed.some(scope => resolvedTarget === scope || resolvedTarget.startsWith(`${scope.replace(/\/$/, "")}/`))) {
+          fail("SDD_BATCH_SCOPE", `${id} resolved artifact is outside explicit allowed paths`);
+        }
         let content = await readFile(absolute);
         const snapshot = normalizeValue(row["Reviewed snapshot"] || "");
         if (!isNone(snapshot)) {
@@ -1879,7 +1883,7 @@ async function checkReviewBatch(file, root, tables, fields, schema, schemas) {
   return errors;
 }
 
-async function checkBatchReference(file, root, text, tables, schemas) {
+async function checkBatchReference(file, root, text, tables, schemas, ancestors) {
   const raw = rawControlField(tables, "Review batch");
   if (!raw || normalizeValue(raw) === "None") return [];
   const relative = path.relative(root, file);
@@ -1900,7 +1904,7 @@ async function checkBatchReference(file, root, text, tables, schemas) {
     if (marker?.artifact !== "review-batch" || marker.version !== 3 || !schemas.artifacts["review-batch"]) {
       return failure("Review batch must resolve to a supported review-batch@3 record");
     }
-    const result = await checkSddLifecycleDocument(absolute, root, schemas);
+    const result = await checkSddLifecycleDocument(absolute, root, schemas, ancestors);
     const batchTables = parseMarkdownTables(batchText);
     const batchFields = extractControlFields(batchTables);
     const callerFields = extractControlFields(tables);
@@ -1936,7 +1940,13 @@ async function checkBatchReference(file, root, text, tables, schemas) {
   }
 }
 
-export async function checkSddLifecycleDocument(file, root, schemas) {
+export async function checkSddLifecycleDocument(file, root, schemas, ancestors = new Set()) {
+  // Bidirectional workflow/batch links are expected. Validate each node once
+  // on this traversal path; callers still validate every edge and accumulate
+  // all node diagnostics before the outer validation can succeed.
+  const identity = await realpath(file);
+  if (ancestors.has(identity)) return [];
+  ancestors = new Set([...ancestors, identity]);
   const text = await readFile(file, "utf8");
   const marker = extractMarker(text);
   if (!marker) {
@@ -1959,9 +1969,9 @@ export async function checkSddLifecycleDocument(file, root, schemas) {
   }
   const tables = parseMarkdownTables(text);
   const fields = extractControlFields(tables);
-  if (marker.artifact === "review-batch") return checkReviewBatch(file, root, tables, fields, schema, schemas);
+  if (marker.artifact === "review-batch") return checkReviewBatch(file, root, tables, fields, schema, schemas, ancestors);
   const batchDiagnostics = marker.version === 3 && marker.artifact !== "review-batch"
-    ? await checkBatchReference(file, root, text, tables, schemas) : [];
+    ? await checkBatchReference(file, root, text, tables, schemas, ancestors) : [];
   if (marker.artifact === "implementation-plan") {
     return [...batchDiagnostics, ...checkImplementationPlan(relative, marker, text, tables, fields, schema)];
   }
