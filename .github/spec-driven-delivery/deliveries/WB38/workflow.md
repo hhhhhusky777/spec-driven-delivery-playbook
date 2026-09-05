@@ -28,16 +28,16 @@
 | Trigger identity/run ID | WB38-TRIGGER-01; 2026-09-05; owner manual invocation |
 | Selected route | Route 3 — systemic design/policy gap |
 | Manifest review state | APPROVED |
-| Current artifact/gate | [Readiness and triage amendment](readiness-triage-amendment.md) |
-| Current review phase | DESIGN |
-| Current review target ID | readiness-amendment |
-| Current artifact review state | IN_REVIEW |
-| Self-review state | SELF_REVIEW_PASSED |
+| Current artifact/gate | T04 phase-aware readiness implementation |
+| Current review phase | IMPLEMENTATION |
+| Current review target ID | T04 |
+| Current artifact review state | NOT_STARTED |
+| Self-review state | NOT_STARTED |
 | Self-review candidate revision | READINESS46-R02 |
 | Self-review evidence | [Amendment self-review](../../reviews/WB38-READINESS46-S01.md) |
-| Fresh-context review state | IN_REVIEW |
-| Fresh-context review session ID | WB38-READINESS46-S01 |
-| Fresh-context assigned reviewers | /root/wb38_readiness46_r1, /root/wb38_readiness46_r2 |
+| Fresh-context review state | NOT_STARTED |
+| Fresh-context review session ID | None |
+| Fresh-context assigned reviewers | None |
 | Fresh-context required approvals | 2 |
 | Fresh-context approved reviewers | None |
 | Fresh-context reviewed revision | None |
@@ -46,13 +46,13 @@
 | Human reviewed revision | None |
 | Human review evidence | None |
 | Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |
-| Implementation mode authority | Owner current-policy choice and final acceptance in WB38-READINESS |
-| Implementation mode scope | T01, T02 |
+| Implementation mode authority | Owner current-policy choice; T04/T05 design and implementation approved after PR48 review |
+| Implementation mode scope | T01, T02, T04, T05 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-05T17:22:26+08:00 |
-| Next action | Review proposed readiness/triage contract and tasks |
-| Next action target IDs | readiness-amendment |
-| Allowed write scope | .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
+| Next action | Implement accepted T04 with one consolidated readiness check |
+| Next action target IDs | T04 |
+| Allowed write scope | config; scripts/sdd-lifecycle.mjs; tests/sdd-lifecycle.test.mjs; templates/workflows/sdd-delivery-workflow.md; templates/delivery/implementation-plan.md; templates/reviews/review-batch.md; docs/batch-review-and-recovery.md; README.md; CHANGELOG.md; examples; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
 | Next action write targets | .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
 | Review mode | EXPLICIT_REVIEW |
 | Review mode authority | Owner scoped live-trial approval; linked above |
@@ -143,7 +143,8 @@ blocked until all task and target evidence exists.
 | T01 | T01 specification and substantive context in plan | plan, audit, contracts | WB38-P04-T01-spec | WB38-P04-T01-spec | CONTROL_ONLY | CURRENT | None |
 | T02 | T02 specification and substantive context in plan | T01, plan, contracts | WB38-P04-T02-spec | WB38-P04-T02-spec | CONTROL_ONLY | CURRENT | None |
 | T03 | [Brief amendment](review-brief-amendment.md) | plan, contracts | 07a717ca2ad66f8758c28603bb60c8baeb6bfe54 | 07a717ca2ad66f8758c28603bb60c8baeb6bfe54 | CONTROL_ONLY | CURRENT | None |
-| readiness-amendment | [Proposed contract](readiness-triage-amendment.md) | plan, contracts | READINESS46-R02 | None | MATERIAL | STALE | None |
+| readiness-amendment | [Accepted contract](readiness-triage-amendment.md) | plan, contracts | 02fb0458da012bffd0be0fdb2c12ba0c46988809 | 02fb0458da012bffd0be0fdb2c12ba0c46988809 | CONTROL_ONLY | CURRENT | None |
+| T04 | Accepted readiness specification | readiness-amendment, T01, T03 | 02fb0458da012bffd0be0fdb2c12ba0c46988809 | 02fb0458da012bffd0be0fdb2c12ba0c46988809 | CONTROL_ONLY | CURRENT | None |
 
 Draft predecessor identities are H02/W04/A02/C01/P04. Freeze actual content hashes
 before review; these labels alone are not immutable receipts. STALE here
@@ -188,15 +189,15 @@ is separately effective; PR publication may supplement them now.
 | Field | Current value |
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
-| Current artifact/task | Readiness and triage amendment |
-| Current artifact review | IN_REVIEW; READINESS46-R02 |
+| Current artifact/task | T04 |
+| Current artifact review | NOT_STARTED; T04 implementation |
 | Last approved artifact | WB38-READINESS-R01; W04/P04 and checkpoint |
-| Next ready action | Review proposed readiness/triage contract and tasks |
+| Next ready action | Implement accepted T04 with one consolidated readiness check |
 | Active blockers | None |
-| Stale artifacts | readiness-amendment |
+| Stale artifacts | None |
 | Validation complete | No delivery validation |
 | Validation remaining | T04/T05 amendment acceptance and implementation; final integrated validation and closure |
-| Branch/PR | codex/task-46-readiness-triage-design; amendment PR pending; target feature branch |
+| Branch/PR | codex/task-46-phase-readiness; task PR not yet opened; target feature branch |
 | Last updated | 2026-09-05 Asia/Shanghai |
 
 Require all active tasks terminal and required evidence current before parent
