@@ -107,6 +107,13 @@ author-reviewer disagreement is a human decision, not an automatic code edit.
 - If a workflow route, state, artifact trigger, or review gate changes, update
   its diagram, normative workflow text, template fields, and worked example
   together.
+- Treat README as a maintained user-facing contract summary. In the same PR,
+  reconcile its overview, procedures and diagrams with changed behavior, or
+  record a specific no-impact explanation after inspecting those sections.
+  A link to new guidance does not resolve contradictory existing instructions.
+  Label legacy and opt-in routes explicitly; preserve historical examples as
+  history rather than rewriting their recorded outcomes. Reviewers verify this
+  reconciliation before approval; syntax checks cannot prove semantic agreement.
 
 ### 2.4 Canonical ownership and emphasis
 
@@ -326,6 +333,8 @@ classification belongs in review evidence when they affect a changed source.
 - [ ] Every changed claim is correct and traceable to its governing source.
 - [ ] Wording is clear, concise, accessible, and has no material ambiguity.
 - [ ] Cross-document owners, states, terms, links, diagrams, and examples agree.
+- [ ] README overview, procedures and diagrams match the changed behavior, or
+      the PR records a reviewed, section-specific no-impact explanation.
 - [ ] Normative content has one owner; summaries link rather than compete.
 - [ ] Instantiated/generated content is project-specific and claims only real
       evidence.
