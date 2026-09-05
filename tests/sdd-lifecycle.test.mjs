@@ -144,6 +144,33 @@ async function v4Fixture(t) {
   return { ...f, w, p, output, table };
 }
 
+test("v4 ordinary bootstrap defers an explicitly absent plan only before readiness", async t => {
+  const f = await v4Fixture(t);
+  await rm(path.join(f.root, "implementation-plan.md"));
+  for (const state of ["AWAITING_HANDOFF", "ROUTING", "MANIFEST_IN_REVIEW", "ARTIFACTS_SELECTED", "ARTIFACT_GENERATING", "ARTIFACT_IN_REVIEW"]) {
+    const early = f.w.replace("| State | `GATES_READY` |", `| State | \`${state}\` |`)
+      .replace("| Implementation continuation mode | `HUMAN_REVIEW_BEFORE_MERGE` |", "| Implementation continuation mode | `NOT_SELECTED` |")
+      .replace("| Previous state | `ARTIFACT_IN_REVIEW` |", `| Previous state | \`${state}\` |`);
+    await writeFile(f.file, early.replace("| Implementation plan | [Plan](implementation-plan.md) |", "| Implementation plan | None |"));
+    assert.deepEqual(await checkSddLifecycleDocument(f.file, f.root, SCHEMAS), [], state);
+    const noPlan = early.replace("| Implementation plan | [Plan](implementation-plan.md) |", "| Implementation plan | None |");
+    await writeFile(f.file, noPlan.replace("| result | NOT_STARTED |", "| result | IN_PROGRESS |"));
+    assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(d => d.rule === "SDD_PHASE_READINESS"), "produced output cannot defer its plan");
+    await writeFile(f.file, noPlan.replace("| Review batch | None |", "| Review batch | [Batch](missing-batch.md) |"));
+    assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(d => d.rule === "SDD_PHASE_READINESS"), "batch cannot use ordinary deferral");
+    await writeFile(f.file, early);
+    assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(d => d.rule === "SDD_PHASE_READINESS"), "supplied missing plan must fail");
+  }
+  await writeFile(f.file, f.w.replace("| Implementation plan | [Plan](implementation-plan.md) |", "| Implementation plan | None |"));
+  assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(d => d.rule === "SDD_PHASE_READINESS"));
+  await writeFile(f.file, f.w.replace("| State | `GATES_READY` |", "| State | `BLOCKED` |")
+    .replace("| Implementation plan | [Plan](implementation-plan.md) |", "| Implementation plan | None |"));
+  assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(d => d.rule === "SDD_PHASE_READINESS"), "blocked recovery must not defer readiness");
+  await writeFile(f.file, f.w);
+  await writeFile(path.join(f.root, "implementation-plan.md"), f.p);
+  assert.deepEqual(await checkSddLifecycleDocument(f.file, f.root, SCHEMAS), []);
+});
+
 test("v4 real document route enforces reciprocal links and output bytes from either entry", async t => {
   const f = await v4Fixture(t);
   assert.deepEqual(await checkSddLifecycleDocument(f.file, f.root, SCHEMAS), []);

@@ -22,12 +22,19 @@ The workflow is an artifact router. It does not recreate every policy for every
 feature. Replace all `<placeholders>` and remove instructional text from an
 instantiated workflow record.
 
+For ordinary unbatched preparation, keep Implementation plan explicitly `None`
+until its owning action creates it, then record a local Markdown link to the
+matching v4 plan. A supplied link is validated immediately. `GATES_READY` and
+later require the reciprocal plan and full readiness checks; completed or
+in-progress outputs cannot use the no-plan preparation state. This exception
+does not apply to blocked recovery or an authorized batch.
+
 ## 1. Workflow control
 
 | Field | Value |
 | --- | --- |
 | Review batch | `None` |
-| Implementation plan | `<local Markdown link to matching v4 plan>` |
+| Implementation plan | `None` |
 | Delivery | `<short requirement/feature name>` |
 | State | `AWAITING_HANDOFF` |
 | Previous state | `AWAITING_HANDOFF` |

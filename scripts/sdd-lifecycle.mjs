@@ -1855,6 +1855,20 @@ async function checkV4Workflow(file, root, tables, fields, schemas, ancestors) {
   const errors = [];
   const fail = message => errors.push(diagnostic(relative, 1, "SDD_PHASE_READINESS", message));
   try {
+    // The ordinary router precedes plan generation. Only an explicit None in
+    // an early, unbatched workflow defers the reciprocal plan-dependent gate.
+    // Supplied links must always validate, and blocked/ready execution cannot
+    // use this preparation-only escape hatch.
+    const early = ["AWAITING_HANDOFF", "ROUTING", "MANIFEST_IN_REVIEW", "ARTIFACTS_SELECTED", "ARTIFACT_GENERATING", "ARTIFACT_IN_REVIEW"];
+    if (early.includes(fields.get("State")) &&
+        normalizeValue(rawControlField(tables, "Implementation plan") || "") === "None" &&
+        normalizeValue(rawControlField(tables, "Review batch") || "") === "None") {
+      const outputs = findTable(tables, ["Artifact ID", "State", "Current version", "Verified version", "Change impact", "Freshness", "Review state", "Review evidence", "Blocked by"]);
+      if (outputs?.rows.some(row => normalizeValue(row.State) !== "NOT_STARTED")) {
+        fail("A workflow with produced outputs requires its implementation plan");
+      }
+      return errors;
+    }
     const planLink = (rawControlField(tables, "Implementation plan") || "").match(/\]\(([^)]+)\)/)?.[1];
     const planFile = await containedFile(root, file, planLink);
     const planText = await readFile(planFile, "utf8");
