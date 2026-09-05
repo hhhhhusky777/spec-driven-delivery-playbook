@@ -9,6 +9,11 @@ adopted.
 
 ## Unreleased — updated 2026-09-05
 
+- Add opt-in lifecycle v4 phase-aware readiness: future implementation,
+  validation and closure outputs have separate deadlines, stable output
+  membership and exact predecessor-consumption evidence. Freeze v3 alongside
+  v2; installed projects migrate only through reviewed adoption/upgrade.
+
 - Add explicit version-3 batch review and recovery contracts with consolidated
   readiness, table-first owner briefs and draft-first discussion. Preserve v2
   validation through frozen schema data; migration is opt-in, never an installed

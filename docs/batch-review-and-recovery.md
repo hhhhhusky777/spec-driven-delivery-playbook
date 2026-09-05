@@ -1,6 +1,57 @@
 # Batched review and recovery
 
-This contract defines the optional version-3 batch route, subordinate to active
+## Version 4 phase-aware readiness
+
+New source plan/workflow/batch templates use v4. Existing v2/v3 instances keep
+their original schema and behavior, including the v3 batch protocol. Do not
+change installed pins or historical markers implicitly. Review a migration's
+role mapping, task graph and output evidence before selecting v4 in a project.
+Linked v4 plans, workflows and batches must use matching schema versions.
+
+| Artifact role / phase | Producer | Mandatory boundary |
+| --- | --- | --- |
+| PREREQUISITE / EXISTING | NONE | Approved/current at GATES_READY |
+| FUTURE_OUTPUT / IMPLEMENTATION | Real task ID | COMPLETE/current/approved before VALIDATING; earlier if consumed by a later task |
+| FUTURE_OUTPUT / VALIDATION | PHASE | May be pending on VALIDATING entry; required before COMPLETE |
+| FUTURE_OUTPUT / CLOSURE | PHASE | May be pending on COMPLETE entry; required before ARCHIVED |
+
+These are fixed pairs, not configurable deadlines. Classify every selected
+manifest artifact once in the workflow role inventory. The current-input
+register contains only prerequisites; the separate output register retains
+outputs throughout delivery. Never promote a result into both registers.
+Prerequisites cannot depend on future outputs. Artifact/task graphs must be
+acyclic; earlier phases cannot depend on later phases. Implementation outputs
+may depend only on predecessor-task outputs, not same/successor-task outputs.
+Same-phase validation/closure dependencies remain acyclic.
+
+The plan links its workflow through Delivery workflow, and the workflow links
+its plan through Implementation plan. Links must resolve within the project and
+point back to each other. Each task declares Required output IDs: None or unique
+predecessor implementation outputs. PLANNED tasks do not require those outputs
+to exist. READY/NEXT, IN_PROGRESS, VERIFYING and DONE consumers require a DONE
+producer plus complete, unblocked, current, exactly reviewed outputs. Record
+`output-id=full-hash` bindings in Consumed output versions; actual task context
+must match. A material/unknown change invalidates affected consumers without
+erasing their historical completion/review evidence.
+
+For a COMPLETE output, the role Evidence cell links to a local file. Current
+version and Verified version match its full Git blob SHA-1 or raw SHA-256 hash;
+the checker reads the bytes and rejects escaping paths and mismatches. Review
+state must be APPROVED with exact-revision Review evidence. Reviewers still
+verify that the evidence actually supports the claim: a hash is not approval.
+
+Keep actual input, task-context, human, validation and archive checks. This
+change removes a circular prerequisite, not an output obligation. An internally
+consistent but semantically false role declaration still requires independent
+review to detect. The tests use synthetic projects, not purported reproductions
+of private downstream incidents.
+
+Example: T1 starts with result NOT_STARTED; T2 stays PLANNED. After T1 is DONE
+and its result has matching content/review evidence, T2 binds that identity and
+can become READY. Changed result bytes block affected progression again. A
+validation report is created during VALIDATING, not required before that phase.
+
+This contract defines the optional version-3/4 batch route, subordinate to active
 project authority and the documentation quality policy. It changes review
 boundaries, not the controls satisfied at those boundaries. Projects must
 explicitly adopt it; installed pins and historical records never auto-migrate.

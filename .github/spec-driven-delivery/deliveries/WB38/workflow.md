@@ -28,20 +28,20 @@
 | Trigger identity/run ID | WB38-TRIGGER-01; 2026-09-05; owner manual invocation |
 | Selected route | Route 3 — systemic design/policy gap |
 | Manifest review state | APPROVED |
-| Current artifact/gate | T04 phase-aware readiness implementation |
+| Current artifact/gate | [T04 PR 49](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/49) |
 | Current review phase | IMPLEMENTATION |
 | Current review target ID | T04 |
-| Current artifact review state | NOT_STARTED |
-| Self-review state | NOT_STARTED |
-| Self-review candidate revision | READINESS46-R02 |
-| Self-review evidence | [Amendment self-review](../../reviews/WB38-READINESS46-S01.md) |
-| Fresh-context review state | NOT_STARTED |
-| Fresh-context review session ID | None |
-| Fresh-context assigned reviewers | None |
+| Current artifact review state | IN_REVIEW |
+| Self-review state | SELF_REVIEW_PASSED |
+| Self-review candidate revision | T04-R01 |
+| Self-review evidence | [T04 self-review](T04-evidence.md) |
+| Fresh-context review state | IN_REVIEW |
+| Fresh-context review session ID | WB38-T04-S01 |
+| Fresh-context assigned reviewers | /root/wb38_t04_r1, /root/wb38_t04_r2 |
 | Fresh-context required approvals | 2 |
 | Fresh-context approved reviewers | None |
 | Fresh-context reviewed revision | None |
-| Fresh-context review evidence | [Amendment review](../../reviews/WB38-READINESS46-S01.md) |
+| Fresh-context review evidence | [T04 packet](../../reviews/WB38-T04-S01.md) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | None |
 | Human review evidence | None |

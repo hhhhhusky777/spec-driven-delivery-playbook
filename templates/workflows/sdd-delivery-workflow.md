@@ -11,7 +11,7 @@ Record actual acceptance and consumption in legal order before execution.
 See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
 requirements. This route takes effect only through reviewed project adoption.
 
-<!-- sdd-schema: delivery-workflow@3 -->
+<!-- sdd-schema: delivery-workflow@4 -->
 
 Use this template after a generated whiteboard handoff is reviewed and reaches
 `APPROVED`. It consumes that exact handoff version, selects the smallest safe
@@ -27,6 +27,7 @@ instantiated workflow record.
 | Field | Value |
 | --- | --- |
 | Review batch | `None` |
+| Implementation plan | `<local Markdown link to matching v4 plan>` |
 | Delivery | `<short requirement/feature name>` |
 | State | `AWAITING_HANDOFF` |
 | Previous state | `AWAITING_HANDOFF` |
@@ -370,6 +371,25 @@ generating the first selected artifact.
 
 ### 8.1 Artifact dependency and freshness register
 
+Version 4 separates prerequisites from output obligations. Populate the role
+inventory and output register below as well as the current-input register.
+Follow the [phase readiness contract](../../docs/batch-review-and-recovery.md#version-4-phase-aware-readiness).
+Do not move completed outputs into this input register. Legacy v2/v3 documents
+retain their original behavior; migration requires reviewed adoption/upgrade.
+
+| Artifact ID | Role | Production phase | Required gate | Producer task | Depends on | Evidence |
+| --- | --- | --- | --- | --- | --- | --- |
+| `<stable ID>` | `<PREREQUISITE/FUTURE_OUTPUT>` | `<EXISTING/IMPLEMENTATION/VALIDATION/CLOSURE>` | `<GATES_READY/VALIDATING/COMPLETE/ARCHIVED>` | `<NONE/task ID/PHASE>` | `<IDs/None>` | `<local evidence link>` |
+
+| Artifact ID | State | Current version | Verified version | Change impact | Freshness | Review state | Review evidence | Blocked by |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `<output ID>` | `NOT_STARTED` | `None` | `None` | `MATERIAL` | `CURRENT` | `NOT_STARTED` | `None` | `None` |
+
+Pending outputs may have no content identity yet. COMPLETE outputs require a
+local file in the role Evidence cell, full Git blob SHA-1 or raw SHA-256 identity,
+matching verified identity and exact approved review evidence. The checker
+verifies bytes and path containment; reviewers verify semantic sufficiency.
+
 <!-- sdd-section: artifact-dependencies -->
 
 This table is the machine-readable dependency source for transitive freshness.
@@ -391,13 +411,15 @@ or blocking propagates only to transitive dependants. A control-only navigation
 update does not invalidate frozen content. Review the current change first;
 after approval, the earliest dependency-ready stale correction takes priority.
 At `GATES_READY`, the register must be non-empty and cover the workflow, every
-selected delivery-manifest `Artifact ID`, every next-action target ID, and every
+selected prerequisite `Artifact ID`, every next-action target ID, and every
 ID named by `Depends on`. A marker and header-only table or dangling dependency
 cannot prove freshness.
 When this workflow enters `VALIDATING`, the `plan` row's Markdown link is the
 machine-readable parent/child state reference. It must resolve inside the
 project to a `CURRENT` SDD implementation plan in `VALIDATING`. Route 0 may omit
-the row when no implementation plan was selected.
+the row in legacy versions when no implementation plan was selected. Version 4
+requires the reciprocal Implementation plan / Delivery workflow links; use a
+compact plan for a bounded editorial delivery.
 
 ### 8.2 Scoped blocker register
 

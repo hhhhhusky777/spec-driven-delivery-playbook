@@ -18,6 +18,9 @@ const DEFAULT_SCHEMA_PATH = path.join(
 const LEGACY_SCHEMAS = JSON.parse(await readFile(
   path.join(REPOSITORY_ROOT, "config", "sdd-lifecycle-schema-v2.json"), "utf8",
 ));
+const V3_SCHEMAS = JSON.parse(await readFile(
+  path.join(REPOSITORY_ROOT, "config", "sdd-lifecycle-schema-v3.json"), "utf8",
+));
 
 function diagnostic(file, line, rule, message) {
   return { file: file.split(path.sep).join("/"), line, rule, message };
@@ -1289,7 +1292,7 @@ function pathWithinScope(target, scope) {
   return normalizedScope === "*" || normalizedTarget === normalizedScope || normalizedTarget.startsWith(`${normalizedScope}/`);
 }
 
-async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fields, schema) {
+async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fields, schema, version) {
   const diagnostics = [];
   diagnostics.push(...checkRequiredFields(file, fields, schema.requiredFields));
   diagnostics.push(
@@ -1670,8 +1673,10 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
         ),
       );
     }
+    const outputIds = new Set(version === 4 ? (findTable(tables, ["Artifact ID", "Role", "Production phase"])?.rows || [])
+      .filter(row => normalizeValue(row.Role) === "FUTURE_OUTPUT").map(row => normalizeValue(row["Artifact ID"]).toLowerCase()) : []);
     const selectedManifestRows = (deliveryManifest?.rows || []).filter((row) =>
-      !["SKIP", "DEFER", "BLOCKED"].includes(normalizeValue(row.Decision)),
+      !["SKIP", "DEFER", "BLOCKED"].includes(normalizeValue(row.Decision)) && !outputIds.has(normalizeValue(row["Artifact ID"]).toLowerCase()),
     );
     const uncovered = [];
     if (!freshnessIds.has("workflow")) {
@@ -1703,6 +1708,7 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
       if (["SKIP", "DEFER", "BLOCKED"].includes(decision)) {
         continue;
       }
+      if (outputIds.has(normalizeValue(row["Artifact ID"]).toLowerCase())) continue;
       const review = leadingDisposition(row["Review state/link"]);
       if (!["APPROVED", "CURRENT", "JUSTIFIED"].includes(review)) {
         diagnostics.push(
@@ -1715,6 +1721,160 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     ...(await checkWorkflowValidatingPlan(file, absoluteFile, root, tables, fields, computed)),
   );
   return diagnostics;
+}
+
+// Version 4 keeps output obligations separate from existing inputs. Pure graph
+// validation is shared by workflow and plan entry points; disk bindings are
+// checked separately so neither entry point can bypass the consumption gate.
+export function evaluatePhaseReadiness(roles, inputs, outputs, tasks, state, selected = []) {
+  const errors = [];
+  const fail = message => errors.push(message);
+  const value = (row, key) => normalizeValue(row?.[key] || "");
+  const ids = raw => splitIdentifiers(raw || "None").map(id => id.toLowerCase());
+  const index = (rows, key, name) => {
+    const map = new Map();
+    for (const row of rows) {
+      const id = value(row, key).toLowerCase();
+      if (!/^[a-z0-9][a-z0-9_-]*$/i.test(id) || map.has(id)) fail(`${name}: missing/duplicate/invalid ID ${id}`);
+      map.set(id, row);
+    }
+    return map;
+  };
+  const roleMap = index(roles, "Artifact ID", "roles");
+  const inputMap = index(inputs, "Artifact ID", "inputs");
+  const outputMap = index(outputs, "Artifact ID", "outputs");
+  const taskMap = index(tasks, "ID", "tasks");
+  const dependencies = (map, label) => {
+    const closure = new Map();
+    const visit = (id, stack = new Set()) => {
+      if (stack.has(id)) { fail(`${label}: dependency cycle at ${id}`); return new Set(); }
+      if (closure.has(id)) return closure.get(id);
+      const result = new Set();
+      for (const dep of ids(map.get(id)?.["Depends on"])) {
+        if (!map.has(dep)) { fail(`${label}: missing dependency ${dep}`); continue; }
+        result.add(dep);
+        for (const ancestor of visit(dep, new Set([...stack, id]))) result.add(ancestor);
+      }
+      closure.set(id, result);
+      return result;
+    };
+    for (const id of map.keys()) visit(id);
+    return closure;
+  };
+  const taskDeps = dependencies(taskMap, "tasks");
+  dependencies(roleMap, "artifacts");
+  for (const id of selected.map(id => id.toLowerCase())) if (!roleMap.has(id)) fail(`Selected artifact ${id} lacks a role`);
+  for (const id of [...inputMap.keys(), ...outputMap.keys()]) if (!roleMap.has(id)) fail(`Register artifact ${id} lacks a role`);
+  const phases = { EXISTING: 0, IMPLEMENTATION: 1, VALIDATION: 2, CLOSURE: 3 };
+  const gates = { IMPLEMENTATION: "VALIDATING", VALIDATION: "COMPLETE", CLOSURE: "ARCHIVED" };
+  for (const [id, row] of roleMap) {
+    const phase = value(row, "Production phase");
+    const producer = value(row, "Producer task").toLowerCase();
+    const role = value(row, "Role");
+    if (role === "PREREQUISITE") {
+      if (phase !== "EXISTING" || value(row, "Required gate") !== "GATES_READY" || producer !== "none" || !inputMap.has(id) || outputMap.has(id)) fail(`${id}: invalid prerequisite membership/phase`);
+      const a = ids(row["Depends on"]).sort().join(",");
+      const b = ids(inputMap.get(id)?.["Depends on"]).sort().join(",");
+      if (a !== b) fail(`${id}: contradictory input dependencies`);
+    } else if (role === "FUTURE_OUTPUT") {
+      if (!(phase in gates) || value(row, "Required gate") !== gates[phase] || !outputMap.has(id) || inputMap.has(id)) fail(`${id}: invalid output membership/phase deadline`);
+      if (phase === "IMPLEMENTATION" ? !taskMap.has(producer) : producer !== "phase") fail(`${id}: invalid producer`);
+    } else fail(`${id}: unknown role`);
+    if (!hasRecordedValue(row.Evidence)) fail(`${id}: missing role evidence`);
+    for (const dep of ids(row["Depends on"])) {
+      const parent = roleMap.get(dep);
+      if (!parent) continue;
+      const parentPhase = value(parent, "Production phase");
+      if (phases[parentPhase] > phases[phase] || (role === "PREREQUISITE" && value(parent, "Role") === "FUTURE_OUTPUT")) fail(`${id}: dependency on later producer ${dep}`);
+      if (phase === "IMPLEMENTATION" && parentPhase === "IMPLEMENTATION" && !taskDeps.get(producer)?.has(value(parent, "Producer task").toLowerCase())) fail(`${id}: output producer is not a predecessor`);
+    }
+  }
+  const combined = [...inputs, ...outputs.map(row => ({
+    ...row, "Depends on": roleMap.get(value(row, "Artifact ID").toLowerCase())?.["Depends on"] || "None",
+    "Consumed version": row["Verified version"],
+  }))];
+  const freshness = computeTransitiveFreshness(combined);
+  const ready = id => {
+    const row = outputMap.get(id);
+    return row && value(row, "State") === "COMPLETE" && isNone(value(row, "Blocked by")) &&
+      value(row, "Freshness") === "CURRENT" && freshness.get(id) === "CURRENT" &&
+      /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(value(row, "Current version")) &&
+      value(row, "Current version") === value(row, "Verified version") &&
+      value(row, "Review state") === "APPROVED" && hasRecordedValue(row["Review evidence"]);
+  };
+  const boundary = { VALIDATING: 1, COMPLETE: 2, ARCHIVED: 3 }[state] || 0;
+  for (const [id, row] of outputMap) {
+    if (!["NOT_STARTED", "IN_PROGRESS", "COMPLETE"].includes(value(row, "State"))) fail(`${id}: invalid output state`);
+    if (value(row, "State") === "COMPLETE" && !ready(id)) fail(`${id}: COMPLETE output lacks exact approved/current evidence`);
+    const role = roleMap.get(id);
+    if (boundary >= phases[value(role, "Production phase")] && phases[value(role, "Production phase")] > 0) {
+      if (!ready(id)) fail(`${id}: output is required at ${state}`);
+      if (value(role, "Production phase") === "IMPLEMENTATION" && value(taskMap.get(value(role, "Producer task").toLowerCase()), "State") !== "DONE") fail(`${id}: producer is not DONE`);
+    }
+  }
+  for (const [id, task] of taskMap) {
+    if (!Object.hasOwn(task, "Required output IDs") || !value(task, "Required output IDs")) fail(`${id}: Required output IDs must be explicit`);
+    const required = ids(task["Required output IDs"]);
+    if (new Set(required).size !== required.length) fail(`${id}: duplicate required outputs`);
+    for (const output of required) {
+      const role = roleMap.get(output);
+      const producer = value(role, "Producer task").toLowerCase();
+      if (!outputMap.has(output) || value(role, "Production phase") !== "IMPLEMENTATION" || !taskDeps.get(id)?.has(producer)) fail(`${id}: required output ${output} is not from a predecessor`);
+      if (["READY", "IN_PROGRESS", "VERIFYING", "DONE"].includes(value(task, "State")) || value(task, "Next") === "NEXT") {
+        if (value(taskMap.get(producer), "State") !== "DONE" || !ready(output)) fail(`${id}: required output ${output} is not ready`);
+        const bindings = (task["Consumed output versions"] || "").split(",").map(item => item.trim().toLowerCase());
+        if (!bindings.includes(`${output}=${value(outputMap.get(output), "Current version")}`)) fail(`${id}: context does not bind ${output}`);
+      }
+    }
+  }
+  return errors;
+}
+
+async function checkV4Workflow(file, root, tables, fields, suppliedPlan) {
+  const relative = path.relative(root, file);
+  const errors = [];
+  const fail = message => errors.push(diagnostic(relative, 1, "SDD_PHASE_READINESS", message));
+  try {
+    const planLink = (rawControlField(tables, "Implementation plan") || "").match(/\]\(([^)]+)\)/)?.[1];
+    const planFile = await containedFile(root, file, planLink);
+    if (suppliedPlan && planFile !== suppliedPlan) throw new Error("plan/workflow links disagree");
+    const planText = await readFile(planFile, "utf8");
+    if (extractMarker(planText)?.artifact !== "implementation-plan" || extractMarker(planText)?.version !== 4) throw new Error("requires v4 implementation plan");
+    const planTables = parseMarkdownTables(planText);
+    errors.push(...checkImplementationPlan(path.relative(root, planFile), extractMarker(planText), planText, planTables, extractControlFields(planTables), V3_SCHEMAS.artifacts["implementation-plan"]));
+    const backLink = (rawControlField(planTables, "Delivery workflow") || "").match(/\]\(([^)]+)\)/)?.[1];
+    if (await containedFile(root, planFile, backLink) !== await realpath(file)) throw new Error("plan/workflow links disagree");
+    const roles = findTable(tables, ["Artifact ID", "Role", "Production phase", "Required gate", "Producer task", "Depends on", "Evidence"]);
+    const outputs = findTable(tables, ["Artifact ID", "State", "Current version", "Verified version", "Change impact", "Freshness", "Review state", "Review evidence", "Blocked by"]);
+    const inputs = findTable(tables, ["Artifact ID", "Artifact/link", "Consumed version", "Depends on"]);
+    if (!roles || !outputs || !inputs) throw new Error("required role/input/output register missing");
+    const manifest = findTable(tables, ["Artifact ID", "Decision", "Review state/link"]);
+    const selected = (manifest?.rows || []).filter(row => !["SKIP", "DEFER", "BLOCKED"].includes(normalizeValue(row.Decision))).map(row => normalizeValue(row["Artifact ID"]));
+    for (const message of evaluatePhaseReadiness(roles.rows, inputs.rows, outputs.rows, taskRows(planTables), fields.get("State"), selected)) fail(message);
+    for (const row of outputs.rows) {
+      if (normalizeValue(row.State) !== "COMPLETE") continue;
+      const role = roles.rows.find(item => normalizeValue(item["Artifact ID"]).toLowerCase() === normalizeValue(row["Artifact ID"]).toLowerCase());
+      const target = (role?.Evidence || "").match(/\]\(([^)]+)\)/)?.[1];
+      const bytes = await readFile(await containedFile(root, file, target));
+      const sha = normalizeValue(row["Current version"]);
+      const actual = sha.length === 40 ? createHash("sha1").update(`blob ${bytes.length}\0`).update(bytes).digest("hex") : createHash("sha256").update(bytes).digest("hex");
+      if (actual !== sha) fail(`${row["Artifact ID"]}: output bytes differ from verified identity`);
+    }
+  } catch (error) { fail(`Cannot validate phase readiness: ${error.message}`); }
+  return errors;
+}
+
+async function checkV4PlanLink(file, root, tables, fields) {
+  try {
+    const target = (rawControlField(tables, "Delivery workflow") || "").match(/\]\(([^)]+)\)/)?.[1];
+    const workflowFile = await containedFile(root, file, target);
+    const text = await readFile(workflowFile, "utf8");
+    if (extractMarker(text)?.artifact !== "delivery-workflow" || extractMarker(text)?.version !== 4) throw new Error("requires v4 workflow");
+    const workflowTables = parseMarkdownTables(text);
+    const workflowFields = extractControlFields(workflowTables);
+    return [...await checkDeliveryWorkflow(path.relative(root, workflowFile), workflowFile, root, text, workflowTables, workflowFields, V3_SCHEMAS.artifacts["delivery-workflow"], 4),
+      ...await checkV4Workflow(workflowFile, root, workflowTables, workflowFields, await realpath(file))];
+  } catch (error) { return [diagnostic(path.relative(root, file), 1, "SDD_PHASE_READINESS", error.message)]; }
 }
 
 async function containedFile(root, ownerFile, target) {
@@ -1798,7 +1958,8 @@ async function checkReviewBatch(file, root, tables, fields, schema, schemas, anc
       const marker = extractMarker(workflowText);
       const workflowTables = parseMarkdownTables(workflowText);
       const workflowFields = extractControlFields(workflowTables);
-      const result = marker?.artifact === "delivery-workflow" && [2, 3].includes(marker.version)
+      const batchVersion = extractMarker(await readFile(file, "utf8"))?.version;
+      const result = marker?.artifact === "delivery-workflow" && (batchVersion === 4 ? marker.version === 4 : [2, 3].includes(marker.version))
         ? await checkSddLifecycleDocument(linked, root, schemas, ancestors) : ["invalid workflow"];
       const pr = markdownLinkTarget(rawControlField(tables, "PR"));
       const targetLink = markdownLinkTarget(rawControlField(workflowTables, "Current artifact/gate"));
@@ -1901,8 +2062,8 @@ async function checkBatchReference(file, root, text, tables, schemas, ancestors)
     }
     const batchText = await readFile(absolute, "utf8");
     const marker = extractMarker(batchText);
-    if (marker?.artifact !== "review-batch" || marker.version !== 3 || !schemas.artifacts["review-batch"]) {
-      return failure("Review batch must resolve to a supported review-batch@3 record");
+    if (marker?.artifact !== "review-batch" || marker.version !== extractMarker(text)?.version || !schemas.artifacts["review-batch"]) {
+      return failure("Review batch must resolve to a supported matching-version review-batch record");
     }
     const result = await checkSddLifecycleDocument(absolute, root, schemas, ancestors);
     const batchTables = parseMarkdownTables(batchText);
@@ -1956,8 +2117,8 @@ export async function checkSddLifecycleDocument(file, root, schemas, ancestors =
   if (relative.split(path.sep)[0] === "templates") {
     return [];
   }
-  const selectedSchemas = marker.version === 2 && schemas.schemaVersion === 3
-    ? LEGACY_SCHEMAS : schemas;
+  const selectedSchemas = marker.version === 2 && schemas.schemaVersion >= 3
+    ? LEGACY_SCHEMAS : marker.version === 3 && schemas.schemaVersion >= 4 ? V3_SCHEMAS : schemas;
   if (marker.version !== selectedSchemas.schemaVersion) {
     return [
       diagnostic(relative, 1, "SDD_SCHEMA_VERSION", `artifact schema ${marker.version} does not match supported schema ${schemas.schemaVersion}`),
@@ -1970,13 +2131,15 @@ export async function checkSddLifecycleDocument(file, root, schemas, ancestors =
   const tables = parseMarkdownTables(text);
   const fields = extractControlFields(tables);
   if (marker.artifact === "review-batch") return checkReviewBatch(file, root, tables, fields, schema, schemas, ancestors);
-  const batchDiagnostics = marker.version === 3 && marker.artifact !== "review-batch"
+  const batchDiagnostics = marker.version >= 3 && marker.artifact !== "review-batch"
     ? await checkBatchReference(file, root, text, tables, schemas, ancestors) : [];
   if (marker.artifact === "implementation-plan") {
-    return [...batchDiagnostics, ...checkImplementationPlan(relative, marker, text, tables, fields, schema)];
+    return [...batchDiagnostics, ...checkImplementationPlan(relative, marker, text, tables, fields, schema),
+      ...(marker.version === 4 ? await checkV4PlanLink(file, root, tables, fields) : [])];
   }
   if (marker.artifact === "delivery-workflow") {
-    return [...batchDiagnostics, ...await checkDeliveryWorkflow(relative, file, root, text, tables, fields, schema)];
+    return [...batchDiagnostics, ...await checkDeliveryWorkflow(relative, file, root, text, tables, fields, schema, marker.version),
+      ...(marker.version === 4 ? await checkV4Workflow(file, root, tables, fields) : [])];
   }
   return [];
 }

@@ -22,3 +22,21 @@ Context receipt: APPROVED by accepted specification and owner continuation;
 CURRENT at 02fb0458da012bffd0be0fdb2c12ba0c46988809. No repeated full readiness
 review is introduced under the scoped trial. Implementation evidence follows
 as actually produced; no T04 completion or migration is claimed.
+
+## Candidate self-review
+
+SELF_REVIEW_PASSED for T04-R01, bound to the exact commit dispatched to reviewers.
+
+| Contract | Implementation / evidence |
+| --- | --- |
+| Compatibility | Frozen v3 JSON preserves former schema bytes; dispatch retains v2/v3 fixtures unchanged |
+| Phase obligations | Role/output registers, fixed deadlines and producer DAG checks; phase negative tests |
+| Consumption | Stable output IDs with exact context binding; two-task absence/current/stale tests |
+| File evidence | Contained real paths and Git-blob/SHA256 bytes checked from workflow and plan entry points |
+| Consumer consistency | Source templates, README explanation, canonical guidance and existing simulated example updated; diagram lifecycle unchanged |
+| Boundaries | No installed migration or external incident reproduction; T05 remains separate |
+
+All 85 tests and documentation checks are required before publication. A test
+initially rejected a new example path; it was consolidated into the existing
+approved example instead of weakening the path check. Full independent review
+and owner task merge acceptance remain outstanding.

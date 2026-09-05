@@ -15,7 +15,7 @@ task specification; do not infer a task's execution state from input freshness.
 See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
 requirements. This route takes effect only through reviewed project adoption.
 
-<!-- sdd-schema: implementation-plan@3; mode: SELECT -->
+<!-- sdd-schema: implementation-plan@4; mode: SELECT -->
 
 Use this template for a non-trivial feature, refactor, migration, or reliability
 change. The completed document is the plan of record: it defines intended
@@ -51,6 +51,7 @@ section.
 | Field | Value |
 | --- | --- |
 | Review batch | `None` |
+| Delivery workflow | `<local Markdown link to matching v4 workflow>` |
 | Plan | `<short descriptive name>` |
 | Status | `DRAFT` |
 | Previous status | `DRAFT` |
@@ -545,10 +546,15 @@ WIP policy. Use exactly one marker when the project requires a single-next-task
 model. `Data phase` is `NONE`, `FOUNDATION`, `CONSUMER`, `MIGRATION`, or
 `CLEANUP` under the active development policy.
 
-| ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Independent merge boundary | PR |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `T00` | `PLANNED` | | `None` | `None` | `CURRENT` | `SPEC_PENDING` | `NONE` | `<task outcome>` | `<IDs>` | `<why it is independently safe>` | `—` |
-| `T01` | `PLANNED` | | `T00` | `None` | `CURRENT` | `SPEC_PENDING` | `<phase>` | `<task outcome>` | `<IDs>` | `<why it is independently safe>` | `—` |
+| ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Independent merge boundary | PR | Required output IDs | Consumed output versions |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `T00` | `PLANNED` | | `None` | `None` | `CURRENT` | `SPEC_PENDING` | `NONE` | `<task outcome>` | `<IDs>` | `<why it is independently safe>` | `—` | `None` | `None` |
+| `T01` | `PLANNED` | | `T00` | `None` | `CURRENT` | `SPEC_PENDING` | `<phase>` | `<task outcome>` | `<IDs>` | `<why it is independently safe>` | `—` | `<output IDs/None>` | `None` |
+
+For v4, declare required predecessor output IDs even while PLANNED. Before
+READY/NEXT, bind each consumed identity as `output-id=full-hash` in Consumed
+output versions (comma-separated). The matching workflow owns output state,
+review and file evidence. See the [phase readiness contract](../../docs/batch-review-and-recovery.md#version-4-phase-aware-readiness).
 
 Task-ledger evolution rules:
 

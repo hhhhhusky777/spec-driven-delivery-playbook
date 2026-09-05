@@ -94,3 +94,28 @@ These are simulated choices, not authority for this repository. After acceptance
 ordinary coding/tests need no repeated owner confirmation unless a real decision
 or exception arises. Record observed sessions, rounds, interruptions and elapsed
 effort in real delivery evidence; this example makes no performance claim.
+
+## Simulated phase-aware readiness
+
+This is a synthetic adopting-project walkthrough, not evidence of an external
+installation. Its executable counterparts are in the
+[lifecycle tests](../../tests/sdd-lifecycle.test.mjs); use the
+[v4 contract](../../docs/batch-review-and-recovery.md#version-4-phase-aware-readiness)
+when instantiating real documents.
+
+| Step | Required evidence | Expected outcome |
+| --- | --- | --- |
+| Initial readiness | Accepted design/current prerequisites; T1 ready; result NOT_STARTED; T2 PLANNED | T1 may start; future result is not a prerequisite |
+| T2 requested early | T1/result incomplete | Block T2 only; no invented output or approval |
+| T1 finished | Producer DONE, result COMPLETE, exact file hash and approved review | T2 binds result identity in its context and may become READY |
+| Result changes | Current bytes no longer match verified identity | Block affected consumption and revalidate; retain historical receipts |
+| Enter VALIDATING | Implementation outputs complete/current/approved | Validation report may still be NOT_STARTED |
+| Enter COMPLETE | Validation outputs complete/current/approved plus ordinary acceptance | Closure record may still be NOT_STARTED |
+| Enter ARCHIVED | Closure outputs complete/current/approved plus existing archive controls | Archive only after actual acceptance |
+| Invalid dependency | Validation report depends on later closure record, even without a cycle | Reject during preparation |
+| Real input stale | Design changes materially before T1 | Existing prerequisite gate still blocks T1 |
+
+The same pattern applies to a service's implementation result and a
+documentation project's published-reference result. Different artifact names
+do not change timing or authority. No runtime migration, issue closure, merge
+or deletion follows from this simulated example.
