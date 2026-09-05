@@ -28,7 +28,7 @@
 | Trigger identity/run ID | WB38-TRIGGER-01; 2026-09-05; owner manual invocation |
 | Selected route | Route 3 — systemic design/policy gap |
 | Manifest review state | APPROVED |
-| Current artifact/gate | T02 implementation; PR pending |
+| Current artifact/gate | [T02 / PR 44](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/44) |
 | Current review phase | IMPLEMENTATION |
 | Current review target ID | T02 |
 | Current artifact review state | NOT_STARTED |
