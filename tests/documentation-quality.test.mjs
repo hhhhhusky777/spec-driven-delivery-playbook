@@ -17,6 +17,46 @@ test("human gate brief remains mandatory and linked from phase consumers", async
   }
 });
 
+test("one closure review owns a fail-closed post-merge control receipt", async () => {
+  const files = [
+    "docs/batch-review-and-recovery.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "templates/reviews/review-batch.md",
+    "templates/workflows/sdd-delivery-workflow.md",
+    "skills/sdd-project-workflow/SKILL.md",
+  ];
+  const bundle = new Map(await Promise.all(files.map(async (file) => [file, await readFile(path.join(REPOSITORY_ROOT, file), "utf8")])));
+  const canonical = bundle.get("docs/batch-review-and-recovery.md");
+  for (const value of [
+    "One closure review and a bounded post-merge receipt",
+    "PREAUTHORIZED_CONTROL_RECEIPT",
+    "without another two-agent or human review",
+    "cleanup without authority",
+    "returns the affected work to",
+    "EXPLICIT_REVIEW",
+  ]) assert.ok(canonical.includes(value), value);
+  for (const file of files.slice(1)) {
+    assert.match(bundle.get(file), /post-merge|control receipt/i, file);
+  }
+  const workflowFields = parseMarkdownTables(bundle.get("templates/workflows/sdd-delivery-workflow.md"))
+    .find((table) => table.headers.includes("Field"));
+  for (const field of [
+    "Post-merge control mode",
+    "Post-merge control authority",
+    "Post-merge control source revision",
+    "Post-merge control PR",
+    "Post-merge control allowed paths",
+    "Post-merge control changed paths",
+    "Post-merge control allowed fields",
+    "Post-merge control changed fields",
+    "Post-merge control required gates",
+    "Post-merge control evidence owner",
+    "Post-merge cleanup targets",
+    "Post-merge cleanup authority",
+  ]) assert.ok(workflowFields?.rows.some((row) => row.Field === field), field);
+});
+
 import {
   REPOSITORY_ROOT,
   checkLocalLinks,

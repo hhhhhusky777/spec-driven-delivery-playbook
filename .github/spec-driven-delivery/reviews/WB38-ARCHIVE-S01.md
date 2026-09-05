@@ -75,7 +75,7 @@ The repository owner accepted that exact candidate. PR55 merged as
 Post-merge docs:all passed 90 tests with zero failures or skips, and Markdown,
 links/structure, lifecycle and Mermaid checks passed. This closes the session.
 
-## Post-merge control reconciliation
+## Historical PR56 R01 control reconciliation
 
 The approved archive procedure permits one deterministic evidence synchronization
 after merge. The control candidate changes only mutable live status and evidence:
@@ -92,3 +92,41 @@ after merge. The control candidate changes only mutable live status and evidence
 Repository-wide current-state search and the complete documentation suite show
 no conflicting live archive status. `SELF_REVIEW_PASSED` for
 WB38-ARCHIVE-CONTROL-R01; the exact commit is bound by the PR review packet.
+
+Both retained reviewers approved exact PR56 head
+`c11834fd7148cf0172246b68177905d53531d427` with no findings:
+[R1](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/56#pullrequestreview-5121907819)
+and [R2](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/56#pullrequestreview-5121905363).
+The owner then identified that this was itself a third full archive/cleanup
+review gate. Issue [57](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/57)
+records the confirmed playbook gap. The R01 approvals became stale when the
+candidate expanded to correct that gap; they do not approve the revised head.
+
+## Issue57 corrective closure review
+
+| Field | Value |
+| --- | --- |
+| Review session ID | WB38-ARCHIVE-CONTROL-S01 |
+| Subject and base | PR56 issue57 corrective closure; base a97b6dd519f538c517b971013d2dea78ca9c51ca |
+| State | PREPARING |
+| Assigned reviewers | R1 /root/wb38_final_r1; R2 /root/wb38_final_r2 |
+| Required approvals | 2 |
+| Approved reviewers | None for revised candidate |
+| Current candidate | WB38-ARCHIVE-CONTROL-R02; exact commit supplied at dispatch |
+| Current round | R02 |
+| Replacement history | None |
+
+R02 makes the closure package the only full semantic archive review boundary.
+It adds a narrowly pre-authorized post-merge control receipt that performs
+self-review and automatic gates without another reviewer/human stop only when
+the accepted source revision, PR/evidence owner, changed paths, allowed fields,
+gate list and cleanup authority all match. New meaning, unlisted scope, failed
+evidence, ambiguity or cleanup without authority returns to explicit review.
+The workflow template, canonical contract, contributor policy, README diagram,
+workflow skill, lifecycle checker and positive/negative tests change together.
+
+The current archived conclusion and neutral EMPTY whiteboard bytes are unchanged.
+PR56 is the one-time semantic correction and final target-state publication;
+its PR owns post-merge verification, so no later full-review receipt PR is
+planned. `SELF_REVIEW_PASSED` for WB38-ARCHIVE-CONTROL-R02 after the complete
+diff and gates pass; the exact commit is bound at dispatch.

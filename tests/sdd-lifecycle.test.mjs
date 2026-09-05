@@ -928,6 +928,18 @@ function workflow({
   automaticGateResult = "NOT_APPLICABLE",
   automationBoundary = "task-1",
   automationException = "None",
+  postMergeControlMode = "NOT_SELECTED",
+  postMergeControlAuthority = "Not selected",
+  postMergeControlSourceRevision = "Not selected",
+  postMergeControlPr = "Not selected",
+  postMergeControlAllowedPaths = "Not selected",
+  postMergeControlChangedPaths = "Not selected",
+  postMergeControlAllowedFields = "Not selected",
+  postMergeControlChangedFields = "Not selected",
+  postMergeControlRequiredGates = "Not selected",
+  postMergeControlEvidenceOwner = "Not selected",
+  postMergeCleanupTargets = "None",
+  postMergeCleanupAuthority = "None",
   includeManifestTable = true,
   includeDependencyTable = true,
   includeDependencyRows = true,
@@ -1050,6 +1062,18 @@ function workflow({
 | Next action target IDs | \`${nextActionTargetIds}\` |
 | Allowed write scope | \`docs\` |
 | Next action write targets | \`${writeTarget}\` |
+| Post-merge control mode | \`${postMergeControlMode}\` |
+| Post-merge control authority | \`${postMergeControlAuthority}\` |
+| Post-merge control source revision | \`${postMergeControlSourceRevision}\` |
+| Post-merge control PR | ${postMergeControlPr} |
+| Post-merge control allowed paths | \`${postMergeControlAllowedPaths}\` |
+| Post-merge control changed paths | \`${postMergeControlChangedPaths}\` |
+| Post-merge control allowed fields | \`${postMergeControlAllowedFields}\` |
+| Post-merge control changed fields | \`${postMergeControlChangedFields}\` |
+| Post-merge control required gates | \`${postMergeControlRequiredGates}\` |
+| Post-merge control evidence owner | ${postMergeControlEvidenceOwner} |
+| Post-merge cleanup targets | \`${postMergeCleanupTargets}\` |
+| Post-merge cleanup authority | \`${postMergeCleanupAuthority}\` |
 | Review mode | \`${reviewMode}\` |
 | Review mode authority | \`docs/development-policy.md\` |
 | Automation boundary | \`${automationBoundary}\` |
@@ -1085,6 +1109,82 @@ ${includeReviewLedger ? `| Task/PR | Head and merge commit | Implementation mode
 ${postMergeHumanReview === null ? "" : `| ${postMergeTaskPr} | ${postMergeRevisions} | ${postMergeMode} | ${postMergeSelfReview} | ${postMergeFreshReview} | ${postMergeChecks} | ${postMergeResult} | ${postMergeHumanReview} | ${postMergeFindings} |`}` : ""}
 `;
 }
+
+test("pre-authorized post-merge control receipt avoids a second full archive review and fails closed", async (t) => {
+  const source = "a".repeat(40);
+  const valid = workflow({
+    state: "ARCHIVED",
+    previousState: "COMPLETE",
+    includePlan: false,
+    currentReviewPhase: "ARCHIVE",
+    currentReviewTargetId: "archive",
+    currentArtifactGate: "[approved archive PR](https://github.com/example/project/pull/5)",
+    selfReviewRevision: source,
+    freshReviewRevision: source,
+    humanReviewRevision: source,
+    reviewMode: "AUTO_CONTINUE",
+    automaticGateResult: "PASS",
+    automationBoundary: "archive-control-receipt",
+    semanticDecision: "NO",
+    automationException: "None",
+    postMergeControlMode: "PREAUTHORIZED_CONTROL_RECEIPT",
+    postMergeControlAuthority: "owner accepted the exact closure plan",
+    postMergeControlSourceRevision: source,
+    postMergeControlPr: "[control receipt PR](https://github.com/example/project/pull/6)",
+    postMergeControlAllowedPaths: "docs",
+    postMergeControlChangedPaths: "docs/record.md",
+    postMergeControlAllowedFields: "State, Previous state, merge evidence",
+    postMergeControlChangedFields: "State, Previous state, merge evidence",
+    postMergeControlRequiredGates: "docs:all",
+    postMergeControlEvidenceOwner: "[control receipt PR](https://github.com/example/project/pull/6)",
+    postMergeMode: "HUMAN_REVIEW_BEFORE_MERGE / [authority](delivery-workflow.md)",
+    postMergeHumanReview: "APPROVED HEAD 1111111111111111111111111111111111111111 / [owner review](reviews/human-review.md)",
+  });
+  const input = await fixture(t, valid);
+  assert.deepEqual(await checkSddLifecycleDocument(input.file, input.root, SCHEMAS), []);
+
+  const cases = [
+    ["PREAUTHORIZED_CONTROL_RECEIPT", "UNKNOWN", "SDD_POST_MERGE_CONTROL_MODE"],
+    [source, "b".repeat(40), "SDD_POST_MERGE_CONTROL_SOURCE"],
+    ["| State | `ARCHIVED` |", "| State | `COMPLETE` |", "SDD_POST_MERGE_CONTROL_BOUNDARY"],
+    ["https://github.com/example/project/pull/6", "https://github.com/example/other/pull/6", "SDD_POST_MERGE_CONTROL_PUBLICATION"],
+    ["docs/record.md", "other/record.md", "SDD_POST_MERGE_CONTROL_SCOPE"],
+    ["| Post-merge control changed fields | `State, Previous state, merge evidence` |", "| Post-merge control changed fields | `State, Previous state, new policy` |", "SDD_POST_MERGE_CONTROL_FIELDS"],
+    ["| Post-merge control required gates | `docs:all` |", "| Post-merge control required gates | `docs:check` |", "SDD_POST_MERGE_CONTROL_GATES"],
+    ["| Automatic gate result | `PASS` |", "| Automatic gate result | `FAIL` |", "SDD_AUTO_GATE_BLOCKED"],
+    ["| Semantic decision introduced | `NO` |", "| Semantic decision introduced | `YES` |", "SDD_AUTO_SEMANTIC_DECISION"],
+    ["| Automation exception | `None` |", "| Automation exception | `scope drift` |", "SDD_AUTO_EXCEPTION"],
+    ["| Post-merge cleanup targets | `None` |", "| Post-merge cleanup targets | `docs/old.md` |", "SDD_POST_MERGE_CLEANUP_AUTHORITY"],
+  ];
+  for (const [before, after, rule] of cases) {
+    await writeFile(input.file, valid.replace(before, after));
+    assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some((item) => item.rule === rule), rule);
+  }
+});
+
+test("existing v4 workflows without optional post-merge receipt fields remain compatible", async (t) => {
+  const receiptFields = [
+    "Post-merge control mode",
+    "Post-merge control authority",
+    "Post-merge control source revision",
+    "Post-merge control PR",
+    "Post-merge control allowed paths",
+    "Post-merge control changed paths",
+    "Post-merge control allowed fields",
+    "Post-merge control changed fields",
+    "Post-merge control required gates",
+    "Post-merge control evidence owner",
+    "Post-merge cleanup targets",
+    "Post-merge cleanup authority",
+  ];
+  const input = await v4Fixture(t);
+  const legacyV4 = receiptFields.reduce(
+    (text, field) => text.replace(new RegExp(`^\\| ${field} \\|.*\\n`, "m"), ""),
+    input.w,
+  );
+  await writeFile(input.file, legacyV4);
+  assert.deepEqual(await checkSddLifecycleDocument(input.file, input.root, SCHEMAS), []);
+});
 
 test("GATES_READY rejects stale prerequisites and only scoped blockers", async (t) => {
   const valid = await fixture(t, workflow());

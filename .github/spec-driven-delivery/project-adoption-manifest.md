@@ -366,9 +366,12 @@ No automatic action has run.
 The first owner-supplied need is WB38, admitted after verified installation.
 Its accepted conclusion is preserved in the [archive](archive/WB38/solution-whiteboard.md),
 and the stable [working whiteboard](solution-whiteboard.md) is neutral EMPTY for
-the next need. The [workflow](deliveries/WB38/workflow.md) is ARCHIVED after
-reviewed archive/reset PR55 merged as
-`a97b6dd519f538c517b971013d2dea78ca9c51ca` and passed post-merge checks. Pilot
+the next need. The [workflow](deliveries/WB38/workflow.md) reaches its ARCHIVED
+target state when the issue57 corrective closure candidate in PR56 is published.
+Reviewed archive/reset PR55 merged as
+`a97b6dd519f538c517b971013d2dea78ca9c51ca` and passed post-merge checks; PR56
+owns final exact-head review, publication and its external receipt, so no later
+full-review synchronization PR is required. Pilot
 delivery evidence is complete; a separate activation decision has not been
 made. Adoption remains INSTALLED, not ACTIVE. Earlier installation-only routing
 below is historical.
@@ -702,5 +705,8 @@ and neutral EMPTY working path were published through reviewed PR55. Both
 retained archive reviewers approved exact head
 `29d4974cf97f192ec2a0463df0b530ec2a76a77f`; the owner accepted it, and it merged
 as `a97b6dd519f538c517b971013d2dea78ca9c51ca` with an identical tree and passing
-post-merge checks. Adoption remains INSTALLED, not ACTIVE; runtime pin and
-checkout remain unchanged. Await the next owner-supplied need.
+post-merge checks. Issue57 corrects the repeated archive/control-receipt review
+boundary in PR56; the ARCHIVED target state in this candidate becomes authoritative
+only through that PR's merge, and the PR owns its later verification receipt.
+Adoption remains INSTALLED, not ACTIVE; runtime pin and checkout remain unchanged.
+After publication, await the next owner-supplied need.

@@ -1578,6 +1578,75 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     }
   }
 
+  const postMergeControlMode = fields.get("Post-merge control mode");
+  if (postMergeControlMode && !["NOT_SELECTED", "PREAUTHORIZED_CONTROL_RECEIPT"].includes(postMergeControlMode)) {
+    diagnostics.push(diagnostic(file, 1, "SDD_POST_MERGE_CONTROL_MODE", `unsupported post-merge control mode: ${postMergeControlMode}`));
+  }
+  if (postMergeControlMode === "PREAUTHORIZED_CONTROL_RECEIPT") {
+    const required = [
+      "Post-merge control authority",
+      "Post-merge control source revision",
+      "Post-merge control PR",
+      "Post-merge control allowed paths",
+      "Post-merge control changed paths",
+      "Post-merge control allowed fields",
+      "Post-merge control changed fields",
+      "Post-merge control required gates",
+      "Post-merge control evidence owner",
+    ];
+    diagnostics.push(...checkRequiredFields(file, fields, required));
+    for (const field of required) {
+      if (isNone(fields.get(field) || "")) {
+        diagnostics.push(diagnostic(file, 1, "SDD_POST_MERGE_CONTROL_AUTHORITY", `${field} must be predeclared`));
+      }
+    }
+    const sourceRevision = normalizeValue(fields.get("Post-merge control source revision") || "");
+    const reviewRevisions = [
+      fields.get("Self-review candidate revision"),
+      fields.get("Fresh-context reviewed revision"),
+      fields.get("Human reviewed revision"),
+    ].map((value) => normalizeValue(value || ""));
+    if (!/^[a-f0-9]{40}$/.test(sourceRevision) || reviewRevisions.some((value) => value !== sourceRevision)) {
+      diagnostics.push(diagnostic(file, 1, "SDD_POST_MERGE_CONTROL_SOURCE", "control receipt source must be the exact self-reviewed, independently approved, and human-approved closure revision"));
+    }
+    if (
+      fields.get("State") !== "ARCHIVED" ||
+      fields.get("Previous state") !== "COMPLETE" ||
+      fields.get("Current review phase") !== "ARCHIVE" ||
+      fields.get("Current artifact review state") !== "APPROVED" ||
+      fields.get("Fresh-context review state") !== "APPROVED" ||
+      fields.get("Human review state") !== "APPROVED" ||
+      fields.get("Review mode") !== "AUTO_CONTINUE"
+    ) {
+      diagnostics.push(diagnostic(file, 1, "SDD_POST_MERGE_CONTROL_BOUNDARY", "pre-authorized control receipts apply only to COMPLETE -> ARCHIVED after the accepted archive gate and use AUTO_CONTINUE"));
+    }
+    const repository = parseGitHubRepository(fields.get("Implementation repository") || "");
+    const sourcePr = markdownLinkTarget(rawControlField(tables, "Current artifact/gate"));
+    const receiptPr = markdownLinkTarget(rawControlField(tables, "Post-merge control PR"));
+    const evidenceOwner = markdownLinkTarget(rawControlField(tables, "Post-merge control evidence owner"));
+    const prPrefix = repository ? `https://github.com/${repository}/pull/` : "";
+    if (!sourcePr || !receiptPr || receiptPr === sourcePr || receiptPr !== evidenceOwner || !receiptPr.startsWith(prPrefix) || !/\/pull\/[1-9]\d*$/.test(receiptPr)) {
+      diagnostics.push(diagnostic(file, 1, "SDD_POST_MERGE_CONTROL_PUBLICATION", "control receipt requires a distinct same-repository PR that owns its immutable post-merge evidence"));
+    }
+    const allowedPaths = splitPaths(fields.get("Post-merge control allowed paths") || "");
+    const changedPaths = splitPaths(fields.get("Post-merge control changed paths") || "");
+    if (!allowedPaths.length || !changedPaths.length || allowedPaths.includes("*") || changedPaths.some((target) => !allowedPaths.some((scope) => pathWithinScope(target, scope)))) {
+      diagnostics.push(diagnostic(file, 1, "SDD_POST_MERGE_CONTROL_SCOPE", "every changed path must be enumerated inside a non-global pre-approved control scope"));
+    }
+    const allowedFields = splitPaths(fields.get("Post-merge control allowed fields") || "").map((field) => field.toLowerCase());
+    const changedFields = splitPaths(fields.get("Post-merge control changed fields") || "").map((field) => field.toLowerCase());
+    if (!allowedFields.length || !changedFields.length || changedFields.some((field) => !allowedFields.includes(field))) {
+      diagnostics.push(diagnostic(file, 1, "SDD_POST_MERGE_CONTROL_FIELDS", "every changed field must be enumerated in the pre-approved mutable control-field list"));
+    }
+    if (normalizeValue(fields.get("Post-merge control required gates") || "") !== normalizeValue(fields.get("Required automatic gates") || "")) {
+      diagnostics.push(diagnostic(file, 1, "SDD_POST_MERGE_CONTROL_GATES", "receipt gates must exactly match the predeclared automatic gates"));
+    }
+    const cleanupTargets = splitPaths(fields.get("Post-merge cleanup targets") || "");
+    if (cleanupTargets.length && (isNone(fields.get("Post-merge cleanup authority") || "") || cleanupTargets.some((target) => !allowedPaths.some((scope) => pathWithinScope(target, scope))))) {
+      diagnostics.push(diagnostic(file, 1, "SDD_POST_MERGE_CLEANUP_AUTHORITY", "cleanup requires explicit authority and targets inside the pre-approved scope"));
+    }
+  }
+
   const freshnessRows = freshnessTable?.rows || [];
   const computed = computeTransitiveFreshness(freshnessRows);
   const freshnessIds = new Set(

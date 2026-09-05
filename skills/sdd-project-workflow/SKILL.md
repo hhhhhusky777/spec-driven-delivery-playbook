@@ -131,6 +131,29 @@ After that one edit and its applicable checks:
 8. Report the invariant results separately from Markdown/test results. Passing
    automation is not semantic approval.
 
+### Post-merge closure receipt
+
+Treat the actual validation, record, retrospective, archive/reset bytes,
+cleanup plan, expected live-state fields and failure boundaries as one closure
+review package. After both reviewers and the owner accept that exact package,
+do not create another full review gate merely to record deterministic merge and
+verification evidence.
+
+A workflow may select `PREAUTHORIZED_CONTROL_RECEIPT` only when closure
+acceptance explicitly authorizes the receipt scope and its merge. Reread the
+source revision, receipt PR, allowed and changed paths, allowed fields, gates,
+evidence owner and cleanup authority before acting. Use `AUTO_CONTINUE` only for
+the exact `COMPLETE -> ARCHIVED` control transition, preserve the accepted
+archive and neutral working-path bytes, run every declared gate, and publish the
+receipt on its owning PR. This receipt is not an archive approval and does not
+need another two-reviewer or owner stop.
+
+Fail closed to `EXPLICIT_REVIEW` on a missing or mismatched source, unlisted
+path/field, normative change, new decision, unresolved finding, failed/missing
+gate, unknown effect, scope drift, cleanup without explicit ownership/deletion
+authority, or repository refusal. The receipt cannot activate adoption, change
+a runtime pin, expand cleanup, or carry authority into the next need.
+
 ## Fresh-context independent review
 
 At every review gate:
@@ -160,8 +183,10 @@ At every review gate:
    same assigned session reviewer(s). For `BLOCKED`, restore
    reviewability. For `APPROVED`, stop for human review in design, governance,
    adoption, upgrade, validation, archive, and manual implementation. Only a
-   scoped implementation `AGENT_AUTO_MERGE` flow may proceed after rereading
-   every live workflow and merge gate.
+   scoped implementation `AGENT_AUTO_MERGE` flow or an already owner-authorized
+   `PREAUTHORIZED_CONTROL_RECEIPT` may proceed after rereading every applicable
+   live workflow and merge gate. The receipt follows the preceding section and
+   never substitutes for archive approval.
 
 Fresh context is not a distinct GitHub actor. Unless the project separately
 provides authorized review credentials, publish the result as ledger evidence

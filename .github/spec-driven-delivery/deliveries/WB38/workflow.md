@@ -28,13 +28,13 @@
 | Trigger identity/run ID | WB38-TRIGGER-01; 2026-09-05; owner manual invocation |
 | Selected route | Route 3 — systemic design/policy gap |
 | Manifest review state | APPROVED |
-| Current artifact/gate | [Archive/reset PR #55](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/55) |
+| Current artifact/gate | [Approved archive/reset PR #55](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/55) |
 | Current review phase | ARCHIVE |
 | Current review target ID | archive |
 | Current artifact review state | APPROVED |
 | Self-review state | SELF_REVIEW_PASSED |
 | Self-review candidate revision | 29d4974cf97f192ec2a0463df0b530ec2a76a77f |
-| Self-review evidence | [Archive R02 review and control reconciliation](../../reviews/WB38-ARCHIVE-S01.md) |
+| Self-review evidence | [Approved archive R02](../../reviews/WB38-ARCHIVE-S01.md#r02-approval-and-publication) |
 | Fresh-context review state | APPROVED |
 | Fresh-context review session ID | WB38-ARCHIVE-S01 |
 | Fresh-context assigned reviewers | /root/wb38_final_r1, /root/wb38_final_r2 |
@@ -50,18 +50,18 @@
 | Implementation mode scope | T01, T02, T04, T05, T06 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-05T17:22:26+08:00 |
-| Next action | Await the next owner-supplied need at the neutral EMPTY whiteboard |
+| Next action | After PR56 publication, await the next owner-supplied need at the neutral EMPTY whiteboard |
 | Next action target IDs | None |
 | Allowed write scope | None until a new owner-supplied need is admitted |
 | Next action write targets | None |
 | Review mode | EXPLICIT_REVIEW |
-| Review mode authority | Owner scoped live-trial approval; linked above |
+| Review mode authority | Owner directed issue57 correction and renewed PR56 review after the live archive trial exposed duplicate full review gates |
 | Automation boundary | Not applicable |
 | Required automatic gates | Not applicable |
 | Automatic gate result | NOT_APPLICABLE |
-| Semantic decision introduced | NO |
-| Automation exception | None; archive/reset publication completed through explicit review and owner merge approval |
-| Automation audit record | PR55 reviewed head 29d4974cf97f192ec2a0463df0b530ec2a76a77f merged as a97b6dd519f538c517b971013d2dea78ca9c51ca; reviewed and merged trees match; post-merge docs:all passed 90/90 |
+| Semantic decision introduced | NO at this archive target; issue57 policy changes are reviewed as part of PR56, not auto-continued |
+| Automation exception | None; PR56 is the one-time corrective closure package, not a post-merge control receipt |
+| Automation audit record | PR55 reviewed head 29d4974cf97f192ec2a0463df0b530ec2a76a77f merged as a97b6dd519f538c517b971013d2dea78ca9c51ca; issue57 prevents a later full-review receipt PR |
 | Last routed | WB38-TRIGGER-01; 2026-09-05 |
 | Draft version | WB38-W04 |
 
@@ -207,17 +207,17 @@ is separately effective; PR publication may supplement them now.
 
 | Field | Current value |
 | --- | --- |
-| Workflow state | ARCHIVED |
-| Current artifact/task | Archived conclusion and neutral working whiteboard |
-| Current artifact review | APPROVED; WB38-ARCHIVE-R02; PR55 merged |
+| Workflow state | ARCHIVED when this target-state candidate is published through PR56 |
+| Current artifact/task | Archived conclusion, neutral working whiteboard and issue57 correction |
+| Current artifact review | PR56 owns the corrective exact-head review; PR55 archive package remains APPROVED |
 | Last approved artifact | Archive/reset publication; reviewed head 29d4974cf97f192ec2a0463df0b530ec2a76a77f |
-| Next ready action | Await the next owner-supplied need at the neutral EMPTY whiteboard |
+| Next ready action | After PR56 publication, await the next owner-supplied need at the neutral EMPTY whiteboard |
 | Active blockers | None |
 | Stale artifacts | None |
 | Validation complete | Yes; owner-approved PR53 merged and target verified |
-| Validation remaining | None |
-| Branch/PR | [PR55](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/55) merged as a97b6dd519f538c517b971013d2dea78ca9c51ca |
-| Last updated | 2026-09-05 Asia/Shanghai |
+| Validation remaining | PR56 exact-head review, owner acceptance, merge and one external post-merge verification receipt on that PR |
+| Branch/PR | [PR56](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/56); target state becomes authoritative only on merge |
+| Last updated | 2026-09-06 Asia/Shanghai |
 
 Require all active tasks terminal and required evidence current before parent
 validation. Resolve required post-merge human reviews before closure. Archive

@@ -474,11 +474,11 @@ PRs remain unrecorded. Completing a specification does not authorize task start.
 | Plan state | COMPLETE |
 | Current task | None |
 | Next ready task(s) | None |
-| Active branch / PR | None; archive/reset PR55 merged as a97b6dd519f538c517b971013d2dea78ca9c51ca |
+| Active branch / PR | PR56 issue57 corrective closure candidate |
 | Last completed task | T06; PR52 merged as 15a648f06e22db4b195af683f2f76d62c87dcdff; reviewed tree matched; 90 candidate tests passed |
 | Active blocker | None |
 | Last validation | Exact per-round checks and review recorded in the package session evidence |
-| Next action | None; delivery archived, await next need at the neutral EMPTY whiteboard |
+| Next action | Review and publish PR56; no later full-review control receipt |
 
 ## 10. Evidence, decisions and change history
 

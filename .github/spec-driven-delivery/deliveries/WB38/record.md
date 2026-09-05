@@ -10,11 +10,21 @@ candidate. Post-merge docs:all passed 90 tests with zero failures or skips, and
 Markdown, links/structure, lifecycle and Mermaid checks passed. The archived
 conclusion blob remains `ef69548551872676a704de291b4ec4371c6a5360`, its
 reciprocal record link is valid, and the stable working whiteboard is neutral
-EMPTY. The workflow is ARCHIVED.
+EMPTY. During the first control reconciliation, the owner identified that PR53,
+PR55 and PR56 had become three full two-agent archive/cleanup review gates. The
+confirmed playbook gap is tracked by
+[issue 57](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/57).
+
+PR56 is now the one-time corrective closure package: it adds the reusable
+pre-authorized control-receipt contract and fail-closed tests while recording
+the final ARCHIVED target state. That state becomes authoritative only when PR56
+merges. Its immutable PR review/check/merge history will own the post-merge
+receipt, so no further repository synchronization or full-review PR follows.
 
 Adoption remains INSTALLED, not ACTIVE. Runtime cleanup, pin migration, branch
 deletion, credentials and protection changes remain outside this closure. No
-trial or merge authority carries into the next owner-supplied need.
+trial or merge authority carries into the next owner-supplied need. The new
+control-receipt path requires its own pre-recorded authority in future closures.
 
 ## Accepted validation and archive execution
 
@@ -149,7 +159,7 @@ erased; final PR receipts resolve the earlier immutable requests for changes.
 | FC05; CP10 | Pure COMMENT publication planner/reconciler, idempotency/target/seat/checkpoint tests; authorized inline demo and real T02 receipts | Coordinator owns writes; agent labels are not independent GitHub identities |
 | FC06; CP05/06/07/14/15/16 | Context, scope, merge-mode, task dependency and parent-state tests; v4 pending-output/ancestry/hash/linked-authority regression cases | Genuine prerequisites and stale/blocked inputs still stop affected work |
 | FC07; CP03/12 | Bounded retries, unknown-write reconciliation, retained findings; E01-E02 triage and safe issue reporting with independent exercises | Issue filing does not approve workaround, recovery or merge |
-| FC08; CP08 | Premature validation/closure, open post-merge review and ownership checks; exact archive plan below | Archive/reset publication executed through PR55; cleanup remains excluded |
+| FC08; CP08 | Premature validation/closure, open post-merge review and ownership checks; exact archive plan below | Archive/reset publication executed through PR55; cleanup remains excluded; issue57 prevents a second full review for a pre-authorized receipt |
 | FC09; CP09 | Frozen v2/v3 schemas, legacy fixtures, unchanged installed source pin, explicit upgrade instructions | No automatic runtime migration or new pin activation |
 
 This reconciles [CP01-CP16](control-audit.md) and plan acceptance cases E01-E08

@@ -38,11 +38,13 @@ inferred from a timer or exhausted retry/review budget.
 ## Trial status
 
 COMPLETED; the scoped authority expired when WB38 implementation and final
-validation completed. The [WB38 workflow](deliveries/WB38/workflow.md) is
-ARCHIVED after reviewed archive/reset PR55 merged as
-`a97b6dd519f538c517b971013d2dea78ca9c51ca`. All six tasks and final validation
+validation completed. The [WB38 workflow](deliveries/WB38/workflow.md) targets
+ARCHIVED publication through issue57 corrective PR56 after reviewed archive/reset
+PR55 merged as `a97b6dd519f538c517b971013d2dea78ca9c51ca`.
+All six tasks and final validation
 are merged; the accepted conclusion is preserved in the
 [archive](archive/WB38/solution-whiteboard.md), and the stable working path is
-neutral EMPTY. No standing authority carries to the next need. Runtime cleanup,
+neutral EMPTY. PR56 owns its post-merge verification receipt; no later full-review
+control PR is planned. No standing authority carries to the next need. Runtime cleanup,
 pin upgrade, branch deletion and adoption activation were not authorized by
 this trial.

@@ -79,7 +79,49 @@ whole unit. Both initially isolated seats remain assigned across correction
 rounds. Consolidate findings and corrections; an urgent safety problem stops
 affected work immediately. A new head requires both seats' exact-head
 dispositions and current checks. A verified control-only delta permits a brief
-reconciliation, not reuse of an old head approval.
+reconciliation, not another full review of the already accepted archive package.
+It uses the old head only as the immutable source authority; it cannot approve
+new normative content.
+
+## One closure review and a bounded post-merge receipt
+
+The closure package is the single planned full review unit. Before that review,
+include actual validation, the delivery record and retrospective, the final
+archive and EMPTY-working-path bytes, every archive/link transformation, the
+exact cleanup targets, and the expected post-merge control fields. The two
+reviewers and owner accept that coherent package once. The candidate remains a
+proposal until its reviewed PR merges; target-state wording becomes authoritative
+through merge, not merely because it exists on the feature branch.
+
+After merge, verify target ancestry/tree identity, required checks, archive
+bytes and links, working-path state, and any separately authorized cleanup. Put
+the immutable result on the accepted archive PR whenever possible. If canonical
+repository controls must record the result, one narrowly pre-authorized control
+receipt PR may use `AUTO_CONTINUE` without another two-agent or human review
+stop. The owner must have authorized that receipt and its merge as part of the
+closure acceptance; ordinary archive approval is not inferred auto-merge authority.
+
+The live workflow records `PREAUTHORIZED_CONTROL_RECEIPT` and all fields below.
+The lifecycle checker fails closed unless the receipt is exactly the
+`COMPLETE -> ARCHIVED` control transition after the approved archive gate.
+
+| Required receipt input | Constraint |
+| --- | --- |
+| Source | One full 40-character revision shared by self-review, both reviewers and human closure acceptance |
+| Publication | A distinct same-repository PR; that PR owns the immutable post-merge receipt and status |
+| Scope | Non-global allowed paths, every changed path enumerated, and only the listed mutable control fields |
+| Gates | Exact predeclared automatic gates all pass; receipt and workflow gate lists match |
+| Semantics | `Semantic decision introduced` is `NO`; no exception, ambiguity, normative prose, contract, dependency, risk or scope change |
+| Cleanup | Exact targets remain inside scope and have separate explicit ownership/deletion authority; `None` grants nothing |
+| Evidence | Source merge/tree identity, gate results, effects and external IDs are reconciled on the receipt PR |
+
+The receipt performs self-review and automated verification, but it does not
+repeat fresh-context or owner review of unchanged semantic content. Any missing
+field, unlisted path, changed meaning, failed or missing gate, mismatched source,
+new decision, unresolved finding, unknown effect, cleanup without authority, or
+repository refusal ends `AUTO_CONTINUE` and returns the affected work to
+`EXPLICIT_REVIEW`. A receipt cannot activate adoption, change a runtime pin,
+expand cleanup, or carry authority into the next need.
 
 ## Explicit preparation and acceptance
 
@@ -360,7 +402,8 @@ Review actual validation, record, retrospective and exact archive/cleanup plan
 together only after terminal tasks, verified target integration and resolved
 required human follow-ups. After owner acceptance: publish immutable archive;
 verify copy and bidirectional links; create the new EMPTY whiteboard; perform
-only separately authorized owned cleanup. A failure stops dependent steps.
+only separately authorized owned cleanup; then use the bounded receipt above
+without a second full review. A failure stops dependent steps.
 Upgrade retains the old pin through validation and explicit cutover. Urgent fixes
 retain stricter emergency authority, rollback and follow-up obligations.
 
@@ -384,3 +427,8 @@ and only then adopt it. No installed skill, runtime pin or historic receipt is
 rewritten by this source change. Semantic control completeness, owner authority,
 remote evidence availability and actual execution remain coordinator/reviewer
 duties in addition to structural checker results.
+
+The post-merge control fields are a compatible optional v4 extension. Existing
+v4 workflows without them remain valid and grant no receipt authority. A
+workflow opts in only by adding the complete field set and selecting
+`PREAUTHORIZED_CONTROL_RECEIPT`; partial or mismatched opt-in data fails closed.
