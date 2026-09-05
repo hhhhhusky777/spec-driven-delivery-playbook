@@ -119,3 +119,28 @@ The same pattern applies to a service's implementation result and a
 documentation project's published-reference result. Different artifact names
 do not change timing or authority. No runtime migration, issue closure, merge
 or deletion follows from this simulated example.
+
+## Simulated exception triage
+
+These hypothetical inputs are behavioral review exercises, not executed
+incidents or filed issues. Apply the
+[shared contract](../../docs/batch-review-and-recovery.md#exception-triage-and-upstream-reporting)
+and preserve the original phase's authority in every case.
+
+| Case | Evidence supplied | Expected handling | Prohibited shortcut |
+| --- | --- | --- | --- |
+| Local defect | Required environment value absent; playbook contract is valid | PROJECT; project correction and checks | Blame upstream or weaken the check |
+| Adoption mismatch | Generated map omits an obligation present at its accepted pin | ADOPTION; reconcile project mapping under review | Open a playbook bug merely because adoption failed |
+| Old pin | Exact old pin and verified newer fix for this cause; matching closed issue | STALE_VERSION; link fix and separately assess upgrade | Change pin automatically or duplicate the fixed issue |
+| Confirmed source gap | Minimal sanitized case shows contradictory source rules; verified upstream differs from project origin; no matching issue; publication authorized | PLAYBOOK_GAP; open upstream issue and record actual returned identity | File against project origin or declare recovery complete |
+| Recurrence | Same cause/pin already reported; new safe evidence | Reuse matching issue, add new evidence once | New issue per retry |
+| Unknown cause | Failed check with insufficient source/config evidence | UNKNOWN; preserve next bounded diagnostic | Claim a confirmed playbook defect |
+| Sensitive report | Reproducer contains private data/security details; public route only | Sanitized PENDING draft; request safe private route/authority | Public issue or search containing sensitive material |
+| Offline or denied access | Confirmed gap, no verified API result | PENDING, owner and next action recorded | Claim an issue was filed |
+| Lost write response | Request sent; response lost | Inspect actual external effects before retry, retain counters | Blind duplicate issue or reset retry budget |
+| Reporting itself fails | API authentication failure while reporting original gap | Preserve original report as PENDING; request missing authority | Recursively file a reporting-failure issue |
+
+A normal authorized public report needs no extra approval prompt. A sensitive
+report, unknown destination or missing authority is different: surface the
+specific decision in a concise table. Unaffected authorized work can continue;
+an affected failed gate remains blocked even if an issue is successfully filed.

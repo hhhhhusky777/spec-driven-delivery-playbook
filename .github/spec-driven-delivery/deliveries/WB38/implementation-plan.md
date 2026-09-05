@@ -21,7 +21,7 @@
 | Previous status | READY |
 | Plan mode | FULL |
 | Current phase | IMPLEMENT |
-| Current task | T04 |
+| Current task | T05 |
 | Next ready task(s) | None |
 | Blockers | None |
 | Owner | Repository owner |
@@ -286,8 +286,8 @@ merely because code or review comments exist.
 | T01 | DONE | | None | None | CURRENT | COMPLETE | NONE | Core lifecycle batch contracts, consumers, tests and migration | FC01-FC09, BC01-BC08 | Core works with documented coordinator procedure; optional helper not required | — |
 | T02 | DONE | | T01 | None | CURRENT | COMPLETE | NONE | Read-only publication planner and reconciliation evidence | FC05, FC07, FC09, BC04-BC06 | Helper independently tested; no new credentials or hosted service | PR44 merged |
 | T03 | DONE | | T01 | None | CURRENT | COMPLETE | NONE | Phase-specific human review briefs and design/task comparison | BC07 amendment | Separate governance package; no added review gates | PR45 merged |
-| T04 | IN_PROGRESS | | T01, T03 | None | CURRENT | COMPLETE | NONE | Phase-aware prerequisite and future-output validation | R01-R03 amendment | Versioned reusable readiness fix | — |
-| T05 | PLANNED | | T04 | None | CURRENT | COMPLETE | NONE | Exception triage and upstream playbook reporting | E01-E02 amendment | Reusable guidance and evidence handling | — |
+| T04 | DONE | | T01, T03 | None | CURRENT | COMPLETE | NONE | Phase-aware prerequisite and future-output validation | R01-R03 amendment | Versioned reusable readiness fix | PR49 merged |
+| T05 | VERIFYING | | T04 | None | CURRENT | COMPLETE | NONE | Exception triage and upstream playbook reporting | E01-E02 amendment | Reusable guidance and evidence handling | PR50 |
 
 CURRENT records availability of the identified base, not approval of this draft.
 
@@ -461,13 +461,13 @@ PRs remain unrecorded. Completing a specification does not authorize task start.
 | Field | Current value |
 | --- | --- |
 | Plan state | IMPLEMENTING |
-| Current task | T04 |
+| Current task | T05 |
 | Next ready task(s) | None |
-| Active branch / PR | codex/task-46-readiness-triage-design; amendment PR pending |
-| Last completed task | T02; PR44 merged and 80 combined tests passed |
+| Active branch / PR | codex/task-47-exception-triage; PR50 |
+| Last completed task | T04; PR49 merged, target tree matched reviewed candidate, 88 tests passed |
 | Active blocker | None |
 | Last validation | Exact per-round checks and review recorded in the package session evidence |
-| Next action | Implement approved T04; T05 follows |
+| Next action | Implement accepted T05; final integrated validation follows all tasks |
 
 ## 10. Evidence, decisions and change history
 

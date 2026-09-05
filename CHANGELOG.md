@@ -9,6 +9,11 @@ adopted.
 
 ## Unreleased — updated 2026-09-05
 
+- Require reusable exception triage across all phases, with verified upstream
+  targeting, duplicate search, sanitized/private reporting and pending drafts
+  when reporting is unavailable. Source adoption/workflow/upgrade skills and
+  recovery templates route to one contract; issue filing grants no gate bypass.
+
 - Add opt-in lifecycle v4 phase-aware readiness: future implementation,
   validation and closure outputs have separate deadlines, stable output
   membership and exact predecessor-consumption evidence. Freeze v3 alongside

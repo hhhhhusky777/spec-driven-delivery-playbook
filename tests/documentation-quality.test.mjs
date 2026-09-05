@@ -29,6 +29,51 @@ import {
   runBlockingChecks,
 } from "../scripts/documentation-quality.mjs";
 import { validateMermaidBlocks } from "../scripts/check-mermaid.mjs";
+import { parseMarkdownTables } from "../scripts/sdd-lifecycle.mjs";
+
+test("exception triage consumers resolve one canonical contract and complete record", async () => {
+  const canonical = "docs/batch-review-and-recovery.md";
+  const template = "templates/reviews/exception-triage.md";
+  const anchor = "exception-triage-and-upstream-reporting";
+  const skills = ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade"].map(name => `skills/${name}/SKILL.md`);
+  const consumers = [...skills, "docs/documentation-quality-policy.md", "docs/project-adoption-runbook.md", "templates/reviews/review-batch.md", "templates/adoption/playbook-upgrade-assessment.md", "README.md"];
+  const bundle = new Map(await Promise.all([canonical, template, ...consumers].map(async file => [file, await readFile(path.join(REPOSITORY_ROOT, file), "utf8")])));
+  const validate = sources => {
+    const contract = sources.get(canonical);
+    const classification = parseMarkdownTables(contract).find(table => table.headers.includes("Classification") && table.headers.includes("Routing"));
+    assert.ok(classification);
+    assert.deepEqual(classification.rows.map(row => row.Classification).sort(), ["ADOPTION", "PLAYBOOK_GAP", "PROJECT", "STALE_VERSION", "UNKNOWN"]);
+    assert.ok(classification.rows.every(row => row["Evidence needed"] && row.Routing));
+    const record = parseMarkdownTables(sources.get(template)).find(table => table.headers.includes("Field"));
+    for (const required of ["Classification / cause evidence", "Verified upstream / duplicate search", "Disclosure authority / privacy assessment", "Reporting state", "Issue / pending draft / limitation", "External effect reconciliation", "Owner / next action / unblock condition"]) {
+      assert.ok(record?.rows.some(row => row.Field === required), required);
+    }
+    for (const file of consumers) {
+      const text = sources.get(file);
+      if (skills.includes(file)) {
+        const section = text.split("## Exception routing\n")[1]?.split("\n## ")[0];
+        assert.ok(section?.includes(`${canonical}#${anchor}`), `${file}: unconditional routing`);
+        assert.ok(section.includes(template), `${file}: record route`);
+      } else {
+        const links = extractMarkdownLinks(text);
+        assert.ok(links.some(link => {
+          const target = link.url || link.target || link.href;
+          return target && target.endsWith(`#${anchor}`) && path.posix.normalize(path.posix.join(path.posix.dirname(file), target.split("#")[0])) === canonical;
+        }), `${file}: canonical link`);
+      }
+    }
+  };
+  validate(bundle);
+  const missingRoute = new Map(bundle);
+  missingRoute.set(skills[0], bundle.get(skills[0]).replace(`${canonical}#${anchor}`, "missing.md"));
+  assert.throws(() => validate(missingRoute));
+  const missingClassification = new Map(bundle);
+  missingClassification.set(canonical, bundle.get(canonical).replace(/^\| UNKNOWN .*\n/m, ""));
+  assert.throws(() => validate(missingClassification));
+  const missingAuthority = new Map(bundle);
+  missingAuthority.set(template, bundle.get(template).replace(/^\| Disclosure authority .*\n/m, ""));
+  assert.throws(() => validate(missingAuthority));
+});
 
 const CONFIG = {
   templateRoots: ["templates"],

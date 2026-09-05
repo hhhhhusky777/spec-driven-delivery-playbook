@@ -28,20 +28,20 @@
 | Trigger identity/run ID | WB38-TRIGGER-01; 2026-09-05; owner manual invocation |
 | Selected route | Route 3 — systemic design/policy gap |
 | Manifest review state | APPROVED |
-| Current artifact/gate | [T04 PR 49](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/49) |
+| Current artifact/gate | [T05 PR 50](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/50) |
 | Current review phase | IMPLEMENTATION |
-| Current review target ID | T04 |
+| Current review target ID | T05 |
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | T04-R02 |
-| Self-review evidence | [T04 self-review](T04-evidence.md) |
+| Self-review candidate revision | T05-R01 |
+| Self-review evidence | [T05 self-review](T05-evidence.md) |
 | Fresh-context review state | IN_REVIEW |
-| Fresh-context review session ID | WB38-T04-S01 |
-| Fresh-context assigned reviewers | /root/wb38_t04_r1, /root/wb38_t04_r2 |
+| Fresh-context review session ID | WB38-T05-S01 |
+| Fresh-context assigned reviewers | /root/wb38_t05_r1, /root/wb38_t05_r2 |
 | Fresh-context required approvals | 2 |
 | Fresh-context approved reviewers | None |
 | Fresh-context reviewed revision | None |
-| Fresh-context review evidence | [T04 packet](../../reviews/WB38-T04-S01.md) |
+| Fresh-context review evidence | [T05 packet](../../reviews/WB38-T05-S01.md) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | None |
 | Human review evidence | None |
@@ -50,9 +50,9 @@
 | Implementation mode scope | T01, T02, T04, T05 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-05T17:22:26+08:00 |
-| Next action | Implement accepted T04 with one consolidated readiness check |
-| Next action target IDs | T04 |
-| Allowed write scope | config; scripts/sdd-lifecycle.mjs; tests/sdd-lifecycle.test.mjs; templates/workflows/sdd-delivery-workflow.md; templates/delivery/implementation-plan.md; templates/reviews/review-batch.md; docs/batch-review-and-recovery.md; README.md; CHANGELOG.md; examples; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
+| Next action | Implement accepted T05 exception triage and reporting |
+| Next action target IDs | T05 |
+| Allowed write scope | docs/batch-review-and-recovery.md; docs/documentation-quality-policy.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow; skills/sdd-project-adoption; skills/sdd-playbook-upgrade; templates/reviews; templates/adoption/playbook-upgrade-assessment.md; README.md; CHANGELOG.md; examples/batched-delivery/README.md; tests/documentation-quality.test.mjs; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
 | Next action write targets | .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
 | Review mode | EXPLICIT_REVIEW |
 | Review mode authority | Owner scoped live-trial approval; linked above |
@@ -145,6 +145,8 @@ blocked until all task and target evidence exists.
 | T03 | [Brief amendment](review-brief-amendment.md) | plan, contracts | 07a717ca2ad66f8758c28603bb60c8baeb6bfe54 | 07a717ca2ad66f8758c28603bb60c8baeb6bfe54 | CONTROL_ONLY | CURRENT | None |
 | readiness-amendment | [Accepted contract](readiness-triage-amendment.md) | plan, contracts | 02fb0458da012bffd0be0fdb2c12ba0c46988809 | 02fb0458da012bffd0be0fdb2c12ba0c46988809 | CONTROL_ONLY | CURRENT | None |
 | T04 | Accepted readiness specification | readiness-amendment, T01, T03 | 02fb0458da012bffd0be0fdb2c12ba0c46988809 | 02fb0458da012bffd0be0fdb2c12ba0c46988809 | CONTROL_ONLY | CURRENT | None |
+| T04-result | [Merged PR49](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/49) | T04 | 7387c6d787bc7146950f4a97fc1d893163aa1c8b | 7387c6d787bc7146950f4a97fc1d893163aa1c8b | CONTROL_ONLY | CURRENT | None |
+| T05 | Accepted reporting specification | readiness-amendment, T04-result | 7387c6d787bc7146950f4a97fc1d893163aa1c8b | 7387c6d787bc7146950f4a97fc1d893163aa1c8b | CONTROL_ONLY | CURRENT | None |
 
 Draft predecessor identities are H02/W04/A02/C01/P04. Freeze actual content hashes
 before review; these labels alone are not immutable receipts. STALE here
@@ -189,15 +191,15 @@ is separately effective; PR publication may supplement them now.
 | Field | Current value |
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
-| Current artifact/task | T04 |
-| Current artifact review | NOT_STARTED; T04 implementation |
-| Last approved artifact | WB38-READINESS-R01; W04/P04 and checkpoint |
-| Next ready action | Implement accepted T04 with one consolidated readiness check |
+| Current artifact/task | T05 |
+| Current artifact review | IN_REVIEW; T05-R01 |
+| Last approved artifact | T04; PR49 reviewed and merged |
+| Next ready action | Two retained T05 reviewers inspect exact PR50 candidate |
 | Active blockers | None |
 | Stale artifacts | None |
 | Validation complete | No delivery validation |
-| Validation remaining | T04/T05 amendment acceptance and implementation; final integrated validation and closure |
-| Branch/PR | codex/task-46-phase-readiness; task PR not yet opened; target feature branch |
+| Validation remaining | T05 review/merge; final integrated validation and closure |
+| Branch/PR | codex/task-47-exception-triage; PR50; target feature branch |
 | Last updated | 2026-09-05 Asia/Shanghai |
 
 Require all active tasks terminal and required evidence current before parent
