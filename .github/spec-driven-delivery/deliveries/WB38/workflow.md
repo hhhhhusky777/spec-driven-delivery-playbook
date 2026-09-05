@@ -17,8 +17,8 @@
 | Field | Value |
 | --- | --- |
 | Delivery | WB38 — full-lifecycle playbook efficiency |
-| State | VALIDATING |
-| Previous state | DELIVERY_ACTIVE |
+| State | DELIVERY_ACTIVE |
+| Previous state | VALIDATING |
 | Owner | Repository owner |
 | Concluded whiteboard | [WB38-R03](../../solution-whiteboard.md) |
 | Approved workflow handoff | [Accepted H02](handoff.md) |
@@ -28,9 +28,9 @@
 | Trigger identity/run ID | WB38-TRIGGER-01; 2026-09-05; owner manual invocation |
 | Selected route | Route 3 — systemic design/policy gap |
 | Manifest review state | APPROVED |
-| Current artifact/gate | [Final validation and closure package](record.md) |
-| Current review phase | VALIDATION |
-| Current review target ID | record |
+| Current artifact/gate | [Approved bootstrap correction](T06-evidence.md) |
+| Current review phase | IMPLEMENTATION |
+| Current review target ID | T06 |
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
 | Self-review candidate revision | WB38-FINAL-R01 |
@@ -46,14 +46,14 @@
 | Human reviewed revision | None |
 | Human review evidence | None |
 | Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |
-| Implementation mode authority | Owner current-policy choice; T04/T05 design and implementation approved after PR48 review |
-| Implementation mode scope | T01, T02, T04, T05 |
+| Implementation mode authority | Owner approved bounded T06 correction and renewed continuation after PR51 merge; T06-evidence.md |
+| Implementation mode scope | T01, T02, T04, T05, T06 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-05T17:22:26+08:00 |
-| Next action | Review integrated result and proposed closure mechanics |
-| Next action target IDs | record |
-| Allowed write scope | .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
-| Next action write targets | .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
+| Next action | Implement approved T06 correction, test and return to retained reviewers |
+| Next action target IDs | T06 |
+| Allowed write scope | scripts/sdd-lifecycle.mjs; tests/sdd-lifecycle.test.mjs; templates/workflows/sdd-delivery-workflow.md; docs/batch-review-and-recovery.md; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
+| Next action write targets | scripts/sdd-lifecycle.mjs; tests/sdd-lifecycle.test.mjs; templates/workflows/sdd-delivery-workflow.md; docs/batch-review-and-recovery.md; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
 | Review mode | EXPLICIT_REVIEW |
 | Review mode authority | Owner scoped live-trial approval; linked above |
 | Automation boundary | Not applicable |
@@ -106,16 +106,16 @@ acceptance. Global policy is not active before reviewed merge.
 ### Future output obligations
 
 The readiness manifest above selects design inputs, not future implementation
-results. The following required outputs remain in scope, unimplemented and
-unapproved. Moving their representation does not defer their delivery or remove
-their dependencies, owners or gates.
+results. Required implementation outputs are now reconciled below to their
+reviewed merges; final validation and closure remain pending. Their separate
+identities preserve dependencies, owners and gates.
 
 | Output ID | Obligation / owner | Required inputs or completed outputs | Satisfaction gate | Actual evidence |
 | --- | --- | --- | --- | --- |
-| policy | UPDATE_EXISTING policy/schema owners; maintainer | Accepted plan; BC01-BC08 and audit | T01 PR review and owner merge approval | NOT_STARTED |
-| consumers | UPDATE_EXISTING templates, skills, guidance, examples; maintainer | policy changes within the coherent T01 unit | Same T01 PR review and owner merge approval | NOT_STARTED |
-| T01-result | Core implementation; coordinator | Accepted T01 specification/context, plan, audit, contracts | T01 tests, PR reviews, owner merge and target verification | NOT_STARTED |
-| T02-result | Publication helper; coordinator | T01 DONE/current, accepted T02 specification, plan, contracts | T02 tests/live evidence, PR reviews, owner merge and target verification | NOT_STARTED |
+| policy | UPDATE_EXISTING policy/schema owners; maintainer | Accepted plan; BC01-BC08 and audit | T01 PR review and owner merge approval | COMPLETE / b5600e86914f2c14b1039427bfc5ef5a8a8826eb |
+| consumers | UPDATE_EXISTING templates, skills, guidance, examples; maintainer | policy changes within the coherent T01 unit | Same T01 PR review and owner merge approval | COMPLETE / b5600e86914f2c14b1039427bfc5ef5a8a8826eb |
+| T01-result | Core implementation; coordinator | Accepted T01 specification/context, plan, audit, contracts | T01 tests, PR reviews, owner merge and target verification | COMPLETE / b5600e86914f2c14b1039427bfc5ef5a8a8826eb |
+| T02-result | Publication helper; coordinator | T01 DONE/current, accepted T02 specification, plan, contracts | T02 tests/live evidence, PR reviews, owner merge and target verification | COMPLETE / 82c022cfced052f8bc8cc67def437219df8be067 |
 | record | GENERATE validation and closure packet; coordinator | T01-T05 terminal after amendment acceptance, integrated target verified | Two closure reviewers and owner acceptance | NOT_STARTED |
 
 At their actual review/consumption boundaries, register produced output evidence
@@ -148,7 +148,12 @@ blocked until all task and target evidence exists.
 | T04-result | [Merged PR49](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/49) | T04 | 7387c6d787bc7146950f4a97fc1d893163aa1c8b | 7387c6d787bc7146950f4a97fc1d893163aa1c8b | CONTROL_ONLY | CURRENT | None |
 | T05 | Accepted reporting specification | readiness-amendment, T04-result | 7387c6d787bc7146950f4a97fc1d893163aa1c8b | 7387c6d787bc7146950f4a97fc1d893163aa1c8b | CONTROL_ONLY | CURRENT | None |
 | T05-result | [Merged PR50](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/50) | T05 | 8c1a67a0d98b3e840af113433df715cb0e799456 | 8c1a67a0d98b3e840af113433df715cb0e799456 | CONTROL_ONLY | CURRENT | None |
-| record | [Final validation](record.md) | plan, T01, T02, T03, T04-result, T05-result | WB38-FINAL-R01 | WB38-FINAL-R01 | CONTROL_ONLY | CURRENT | None |
+| policy | [T01 policy output](T01-evidence.md) | T01 | b5600e86914f2c14b1039427bfc5ef5a8a8826eb | b5600e86914f2c14b1039427bfc5ef5a8a8826eb | CONTROL_ONLY | CURRENT | None |
+| consumers | [T01 consumer output](T01-evidence.md) | policy | b5600e86914f2c14b1039427bfc5ef5a8a8826eb | b5600e86914f2c14b1039427bfc5ef5a8a8826eb | CONTROL_ONLY | CURRENT | None |
+| T01-result | [T01 merged output](T01-evidence.md) | T01, policy, consumers | b5600e86914f2c14b1039427bfc5ef5a8a8826eb | b5600e86914f2c14b1039427bfc5ef5a8a8826eb | CONTROL_ONLY | CURRENT | None |
+| T03-result | [T03 merged brief output](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/45) | T03 | 07a717ca2ad66f8758c28603bb60c8baeb6bfe54 | 07a717ca2ad66f8758c28603bb60c8baeb6bfe54 | CONTROL_ONLY | CURRENT | None |
+| T02-result | [T02 merged output](T02-evidence.md) | T02, T01-result, T03-result | 82c022cfced052f8bc8cc67def437219df8be067 | 82c022cfced052f8bc8cc67def437219df8be067 | CONTROL_ONLY | CURRENT | None |
+| record | [Final validation](record.md) | plan, T01-result, T02-result, T03-result, T04-result, T05-result | WB38-FINAL-R01 | WB38-FINAL-R01 | CONTROL_ONLY | CURRENT | None |
 
 Draft predecessor identities are H02/W04/A02/C01/P04. Freeze actual content hashes
 before review; these labels alone are not immutable receipts. STALE here

@@ -17,11 +17,11 @@
 | Field | Value |
 | --- | --- |
 | Plan | WB38 — full-lifecycle playbook efficiency |
-| Status | VALIDATING |
-| Previous status | IMPLEMENTING |
+| Status | IMPLEMENTING |
+| Previous status | VALIDATING |
 | Plan mode | FULL |
-| Current phase | VALIDATE |
-| Current task | None |
+| Current phase | IMPLEMENT |
+| Current task | T06 |
 | Next ready task(s) | None |
 | Blockers | None |
 | Owner | Repository owner |
@@ -50,7 +50,7 @@
 | Development policy | [Contributing](../../../../CONTRIBUTING.md) |
 | Test strategy | [Quality policy](../../../../docs/documentation-quality-policy.md) |
 | PR/branch policy | Contributing branches and pull requests |
-| Delivery implementation task count | 5 |
+| Delivery implementation task count | 6 |
 | Integration model | multi-task feature integration |
 | Feature integration branch | codex/feature-38-playbook-efficiency; created from accepted merge 98757aca4d7a5ff00ef9d59b15a2ca5bee2f12ce |
 | Task PR target | codex/feature-38-playbook-efficiency |
@@ -288,6 +288,17 @@ merely because code or review comments exist.
 | T03 | DONE | | T01 | None | CURRENT | COMPLETE | NONE | Phase-specific human review briefs and design/task comparison | BC07 amendment | Separate governance package; no added review gates | PR45 merged |
 | T04 | DONE | | T01, T03 | None | CURRENT | COMPLETE | NONE | Phase-aware prerequisite and future-output validation | R01-R03 amendment | Versioned reusable readiness fix | PR49 merged |
 | T05 | DONE | | T04 | None | CURRENT | COMPLETE | NONE | Exception triage and upstream playbook reporting | E01-E02 amendment | Reusable guidance and evidence handling | PR50 merged |
+| T06 | IN_PROGRESS | | T04, T05 | None | CURRENT | COMPLETE | NONE | Restore ordinary v4 bootstrap and reconcile output evidence | R01-R03 amendment | Corrective PR to merged main | Pending |
+
+<!-- sdd-task-spec: T06 -->
+
+### T06 — Approved final-review correction
+
+See [bounded specification and readiness evidence](T06-evidence.md).
+PR51 merged before its final findings were resolved. This single corrective
+unit starts from merged main and targets main rather than the already merged
+feature branch. Historical task routing below remains evidence of the original
+five-task delivery, not the new corrective branch.
 
 CURRENT records availability of the identified base, not approval of this draft.
 
