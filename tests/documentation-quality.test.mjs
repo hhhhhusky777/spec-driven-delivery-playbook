@@ -14,6 +14,7 @@ import {
   extractMarkdownLinks,
   fetchWithRetry,
   parseFencedBlocks,
+  runBlockingChecks,
 } from "../scripts/documentation-quality.mjs";
 import { validateMermaidBlocks } from "../scripts/check-mermaid.mjs";
 
@@ -29,6 +30,21 @@ const CONFIG = {
     userAgent: "documentation-quality-test",
   },
 };
+
+test("runtime exclusion leaves governed adoption content checked", async (t) => {
+  const root = await temporaryDirectory(t);
+  await mkdir(path.join(root, ".sdd-runtime"));
+  await mkdir(path.join(root, ".github", "spec-driven-delivery"), { recursive: true });
+  await writeFile(path.join(root, ".sdd-runtime", "guide.md"), "[runtime](missing.md)\n");
+  const manifest = path.join(root, ".github", "spec-driven-delivery", "manifest.md");
+  await writeFile(manifest, "# Valid manifest\n");
+  assert.ok((await runBlockingChecks(root, CONFIG)).length > 0);
+  assert.deepEqual(await runBlockingChecks(root, CONFIG, [".sdd-runtime"]), []);
+  await writeFile(manifest, "[governed](missing.md)\n");
+  assert.ok((await runBlockingChecks(root, CONFIG, [".sdd-runtime"])).length > 0);
+  const pkg = JSON.parse(await readFile(path.join(REPOSITORY_ROOT, "package.json"), "utf8"));
+  assert.match(pkg.scripts["docs:structure"], /--exclude \.sdd-runtime(?:\s|$)/);
+});
 
 async function temporaryDirectory(t) {
   const directory = await mkdtemp(path.join(os.tmpdir(), "playbook-doc-test-"));

@@ -6,6 +6,13 @@
 - Affected canonical documents/templates:
 - Out of scope:
 
+For changes to this repository, apply [the project branch and review policy](../CONTRIBUTING.md#branches-and-pull-requests).
+
+- Integration model and implementation-unit count:
+- Source branch and target branch:
+- Owner approval or exact scoped implementation authority:
+- Hosted protection/check evidence and any policy-versus-hosting mismatch:
+
 ## Reviewer attention map
 
 - Gate: Required / Not applicable — single-focus reason

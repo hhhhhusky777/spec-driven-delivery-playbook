@@ -511,10 +511,11 @@ delivery record cycle.
 
 This repository can use its own SDD delivery workflow for future needs. After
 the installer and skills are merged to `main`, run `./install-sdd.sh` from this
-repository root and follow `.sdd-runtime/agent-guide.md`. Because this
-repository does not yet have an approved adoption manifest, that first run is a
-reviewed project-adoption delivery; it is not permission to self-approve or
-claim `ACTIVE`. Once its project-local manifest and empty whiteboard are
+repository root and follow `.sdd-runtime/agent-guide.md`. Consult the
+[project adoption manifest](.github/spec-driven-delivery/project-adoption-manifest.md)
+for the current adoption state, approved routing, and next action. Adoption
+requires independent and human review before claiming `ACTIVE`. Once its
+project-local manifest and empty whiteboard are
 approved, later needs use the recurring workflow above.
 
 The existing `CONTRIBUTING.md`, documentation-quality policy, template
