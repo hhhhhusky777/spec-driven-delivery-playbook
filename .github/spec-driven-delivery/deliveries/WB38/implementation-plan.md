@@ -17,12 +17,12 @@
 | Field | Value |
 | --- | --- |
 | Plan | WB38 — full-lifecycle playbook efficiency |
-| Status | READY |
-| Previous status | CONTRACT_REVIEW |
+| Status | IMPLEMENTING |
+| Previous status | READY |
 | Plan mode | FULL |
-| Current phase | READY |
-| Current task | None |
-| Next ready task(s) | T01 |
+| Current phase | IMPLEMENT |
+| Current task | T01 |
+| Next ready task(s) | None |
 | Blockers | None |
 | Owner | Repository owner |
 | Reviewers | Two isolated planning reviewers covering governance, security and tests |
@@ -283,7 +283,7 @@ merely because code or review comments exist.
 
 | ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Independent merge boundary | PR |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| T01 | READY | NEXT | None | None | CURRENT | COMPLETE | NONE | Core lifecycle batch contracts, consumers, tests and migration | FC01-FC09, BC01-BC08 | Core works with documented coordinator procedure; optional helper not required | — |
+| T01 | VERIFYING | | None | None | CURRENT | COMPLETE | NONE | Core lifecycle batch contracts, consumers, tests and migration | FC01-FC09, BC01-BC08 | Core works with documented coordinator procedure; optional helper not required | — |
 | T02 | PLANNED | | T01 | None | CURRENT | COMPLETE | NONE | Read-only publication planner and reconciliation evidence | FC05, FC07, FC09, BC04-BC06 | Helper independently tested; no new credentials or hosted service | — |
 
 CURRENT records availability of the identified base, not approval of this draft.
@@ -302,18 +302,22 @@ BC01-BC08; E01-E03 and E05-E08 supply acceptance evidence.
 
 | Field | Value |
 | --- | --- |
-| State | READY |
+| State | VERIFYING |
 | Depends on | None |
 | Data phase | NONE |
 | Owner | Coordinating implementer |
 | Source boundary | Exact file allowlist below and CP01-CP16 audit |
 | Compatibility before/after | v2 remains valid under its old gates; v3 opt-in under BC01 |
 | Contract IDs | FC01-FC09, BC01-BC08 |
-| Branch / PR | Future codex/task-38-core-batching; target feature branch |
+| Branch / PR | codex/task-38-core-batching; [PR42](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42); target codex/feature-38-playbook-efficiency |
 | Context receipt | APPROVED |
-| Context source revision | 98757aca4d7a5ff00ef9d59b15a2ca5bee2f12ce; fresh verification required before IN_PROGRESS |
+| Context verification | CURRENT |
+| Verified source revision | 98757aca4d7a5ff00ef9d59b15a2ca5bee2f12ce |
+| Verified at | 2026-09-05T17:22:26+08:00 |
+| Verification evidence | [Readiness and preflight](../../reviews/WB38-READINESS.md); current branch/source/runtime and tool versions inspected; source code unchanged from accepted base |
+| Context source revision | 98757aca4d7a5ff00ef9d59b15a2ca5bee2f12ce; accepted control reconciliation 7984d45 |
 | Self-contained boundary | Core procedure uses existing coordinator tools; no T02 dependency |
-| Actual change summary | Not started |
+| Actual change summary | Core v3 batch validation, frozen v2 compatibility, guidance/templates/skills and tests; [evidence](T01-evidence.md) |
 
 Exact expected write allowlist (paths relative to repo root):
 README.md; CHANGELOG.md; CONTRIBUTING.md; docs/documentation-quality-policy.md;
@@ -412,14 +416,14 @@ PRs remain unrecorded. Completing a specification does not authorize task start.
 
 | Field | Current value |
 | --- | --- |
-| Plan state | READY |
+| Plan state | IMPLEMENTING |
 | Current task | None |
 | Next ready task(s) | None |
-| Active branch / PR | codex/task-38-adoption-efficiency-design; [planning PR 41](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/41); same-seat review |
+| Active branch / PR | codex/task-38-core-batching; [draft PR42](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42) |
 | Last completed task | None |
 | Active blocker | None |
 | Last validation | Exact per-round checks and review recorded in the package session evidence |
-| Next action | Complete legal workflow readiness transitions and fresh T01 preflight |
+| Next action | Implement T01 under live manual merge mode |
 
 ## 10. Evidence, decisions and change history
 

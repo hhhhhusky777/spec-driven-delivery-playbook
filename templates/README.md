@@ -1,5 +1,14 @@
 # Template Catalog
 
+## Optional batched route
+
+The optional review-batch record groups exact artifacts and controls without
+changing their owners. Version-3 plan/workflow templates require an explicit
+Review batch selection; None retains ordinary per-artifact behavior.
+
+See [Batched review and recovery](../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 ## Project adoption
 
 Before instantiating project policies, follow the

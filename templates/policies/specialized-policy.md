@@ -1,5 +1,14 @@
 # Specialized Engineering Policy Template
 
+## Optional batched route
+
+A required policy change may share an authorized planning package with its
+consumers. It remains proposed until exact acceptance; no dependent execution
+uses unapproved policy. New systemic gaps still stop affected work.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Use this template when a discovered problem requires a new or updated durable
 cross-feature or cross-component rule. Update the canonical existing authority
 instead of creating a duplicate policy. Do not create a specialized policy for

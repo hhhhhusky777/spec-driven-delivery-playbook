@@ -17,8 +17,8 @@
 | Field | Value |
 | --- | --- |
 | Delivery | WB38 — full-lifecycle playbook efficiency |
-| State | GATES_READY |
-| Previous state | ARTIFACT_IN_REVIEW |
+| State | DELIVERY_ACTIVE |
+| Previous state | GATES_READY |
 | Owner | Repository owner |
 | Concluded whiteboard | [WB38-R03](../../solution-whiteboard.md) |
 | Approved workflow handoff | [Accepted H02](handoff.md) |
@@ -28,32 +28,32 @@
 | Trigger identity/run ID | WB38-TRIGGER-01; 2026-09-05; owner manual invocation |
 | Selected route | Route 3 — systemic design/policy gap |
 | Manifest review state | APPROVED |
-| Current artifact/gate | Accepted planning package; T01 PR preparation |
-| Current review phase | DESIGN |
-| Current review target ID | workflow |
-| Current artifact review state | APPROVED |
+| Current artifact/gate | [T01 / PR 42](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42) |
+| Current review phase | IMPLEMENTATION |
+| Current review target ID | T01 |
+| Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB38-READINESS-R01 |
-| Self-review evidence | [Package record](../../reviews/WB38-PLAN-S01.md) |
-| Fresh-context review state | APPROVED |
-| Fresh-context review session ID | WB38-PLAN-S01 |
-| Fresh-context assigned reviewers | /root/wb38_plan_r1, /root/wb38_plan_r2 |
+| Self-review candidate revision | T01-R01 |
+| Self-review evidence | [T01 self-review](../../reviews/WB38-T01-S01.md) |
+| Fresh-context review state | IN_REVIEW |
+| Fresh-context review session ID | WB38-T01-S01 |
+| Fresh-context assigned reviewers | /root/wb38_t01_r1, /root/wb38_t01_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | /root/wb38_plan_r1, /root/wb38_plan_r2 |
-| Fresh-context reviewed revision | WB38-READINESS-R01 |
-| Fresh-context review evidence | [Exact R03 receipts](../../reviews/WB38-READINESS.md) |
-| Human review state | APPROVED |
-| Human reviewed revision | WB38-READINESS-R01 |
-| Human review evidence | [Final owner acceptance](../../reviews/WB38-READINESS.md#final-owner-acceptance) |
+| Fresh-context approved reviewers | None |
+| Fresh-context reviewed revision | None |
+| Fresh-context review evidence | [T01 review](../../reviews/WB38-T01-S01.md) |
+| Human review state | NOT_STARTED |
+| Human reviewed revision | None |
+| Human review evidence | None |
 | Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |
 | Implementation mode authority | Owner current-policy choice and final acceptance in WB38-READINESS |
 | Implementation mode scope | T01, T02 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-05T17:22:26+08:00 |
-| Next action | Open T01 draft PR, record fresh context, then implement approved core contracts |
+| Next action | Two isolated reviewers inspect the complete T01 PR; consolidate corrections |
 | Next action target IDs | T01 |
-| Allowed write scope | .github/spec-driven-delivery |
-| Next action write targets | .github/spec-driven-delivery/deliveries/WB38 |
+| Allowed write scope | README.md; CHANGELOG.md; CONTRIBUTING.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/project-adoption-runbook.md; docs/task-specification-calibration.md; docs/batch-review-and-recovery.md; templates/README.md; templates/discovery/solution-whiteboard.md; templates/handoffs/whiteboard-to-workflow.md; templates/workflows/sdd-delivery-workflow.md; templates/delivery/implementation-plan.md; templates/policies/development-policy.md; templates/policies/pull-request-policy.md; templates/policies/specialized-policy.md; templates/testing/test-strategy.md; templates/decisions/architecture-decision-record.md; templates/reviews/agent-self-review.md; templates/reviews/fresh-context-agent-review.md; templates/reviews/review-batch.md; templates/adoption/project-adoption-manifest.md; templates/adoption/agent-adoption-trigger.md; templates/adoption/playbook-upgrade-assessment.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; config/sdd-lifecycle-schema.json; config/sdd-lifecycle-schema-v2.json; scripts/sdd-lifecycle.mjs; tests/sdd-lifecycle.test.mjs; tests/documentation-quality.test.mjs; .github/pull_request_template.md; .github/spec-driven-delivery/archive/README.md; examples/batched-delivery/README.md; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
+| Next action write targets | .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/deliveries/WB38 |
 | Review mode | EXPLICIT_REVIEW |
 | Review mode authority | Owner scoped live-trial approval; linked above |
 | Automation boundary | Not applicable |
@@ -185,16 +185,16 @@ is separately effective; PR publication may supplement them now.
 
 | Field | Current value |
 | --- | --- |
-| Workflow state | GATES_READY |
-| Current artifact/task | Accepted readiness amendment |
-| Current artifact review | APPROVED; R03 and final owner acceptance |
+| Workflow state | DELIVERY_ACTIVE |
+| Current artifact/task | T01 |
+| Current artifact review | IN_REVIEW; T01-R01 |
 | Last approved artifact | WB38-READINESS-R01; W04/P04 and checkpoint |
-| Next ready action | Legal readiness reconciliation |
+| Next ready action | Coherent T01 PR review |
 | Active blockers | None |
 | Stale artifacts | None |
 | Validation complete | No delivery validation |
 | Validation remaining | Planning checks/review; all implementation and closure evidence |
-| Branch/PR | codex/task-38-adoption-efficiency-design; [planning PR 41](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/41); combined same-seat review |
+| Branch/PR | codex/task-38-core-batching; [draft PR42](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42); target codex/feature-38-playbook-efficiency |
 | Last updated | 2026-09-05 Asia/Shanghai |
 
 Require all active tasks terminal and required evidence current before parent

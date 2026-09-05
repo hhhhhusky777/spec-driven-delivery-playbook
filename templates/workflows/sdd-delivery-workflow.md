@@ -1,6 +1,17 @@
 # SDD Delivery Workflow Template
 
-<!-- sdd-schema: delivery-workflow@2 -->
+## Optional batched route
+
+Inside an explicitly authorized batch, dependent drafts may be prepared
+and reviewed as one package instead of stopping after each artifact. Readiness
+registers contain accepted prerequisites/specifications, not future outputs;
+retain future obligations separately with their owners, dependencies and gates.
+Record actual acceptance and consumption in legal order before execution.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
+<!-- sdd-schema: delivery-workflow@3 -->
 
 Use this template after a generated whiteboard handoff is reviewed and reaches
 `APPROVED`. It consumes that exact handoff version, selects the smallest safe
@@ -15,6 +26,7 @@ instantiated workflow record.
 
 | Field | Value |
 | --- | --- |
+| Review batch | `None` |
 | Delivery | `<short requirement/feature name>` |
 | State | `AWAITING_HANDOFF` |
 | Previous state | `AWAITING_HANDOFF` |

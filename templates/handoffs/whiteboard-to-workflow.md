@@ -1,5 +1,15 @@
 # Whiteboard-to-Workflow Handoff Template
 
+## Optional batched route
+
+Inside an authorized planning batch this handoff may be drafted from a named
+provisional conclusion. It cannot trigger consumption until the exact conclusion
+and handoff receive joint acceptance. Preserve the exactly-once trigger and
+frozen normalized requirements.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Use this template when a solution whiteboard reaches `CONCLUDED`. The handoff
 is the reviewed data contract between discovery and delivery routing. It is not
 a second whiteboard, an implementation plan, or a runner-specific prompt.

@@ -1,5 +1,16 @@
 # Fresh-Context Agent Review — `<artifact or pull request>`
 
+## Optional batched route
+
+For an adopted batch, the packet covers the coherent package or completed PR.
+Retain exactly two initially isolated seats and consolidate findings before
+correction. Both seats bind every revised head; focus may narrow to verified
+affected deltas. Prospective PR-primary retention and bounded no-progress
+escalation follow the shared contract. All phase-specific human gates remain.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Use this protocol at every review gate. The authoring agent coordinates the
 fresh-context review but does not pass its conversation, hidden reasoning,
 conclusions, or proposed disposition to

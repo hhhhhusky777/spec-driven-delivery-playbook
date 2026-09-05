@@ -1,8 +1,9 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "artifacts": {
     "implementation-plan": {
       "requiredFields": [
+        "Review batch",
         "Status",
         "Previous status",
         "Plan mode",
@@ -24,12 +25,37 @@
         "Human review evidence"
       ],
       "transitions": {
-        "DRAFT": ["CONTRACT_REVIEW", "BLOCKED"],
-        "CONTRACT_REVIEW": ["DRAFT", "READY", "BLOCKED"],
-        "READY": ["CONTRACT_REVIEW", "IMPLEMENTING", "BLOCKED"],
-        "IMPLEMENTING": ["READY", "VALIDATING", "BLOCKED"],
-        "VALIDATING": ["IMPLEMENTING", "COMPLETE", "BLOCKED"],
-        "BLOCKED": ["DRAFT", "CONTRACT_REVIEW", "READY", "IMPLEMENTING", "VALIDATING"],
+        "DRAFT": [
+          "CONTRACT_REVIEW",
+          "BLOCKED"
+        ],
+        "CONTRACT_REVIEW": [
+          "DRAFT",
+          "READY",
+          "BLOCKED"
+        ],
+        "READY": [
+          "CONTRACT_REVIEW",
+          "IMPLEMENTING",
+          "BLOCKED"
+        ],
+        "IMPLEMENTING": [
+          "READY",
+          "VALIDATING",
+          "BLOCKED"
+        ],
+        "VALIDATING": [
+          "IMPLEMENTING",
+          "COMPLETE",
+          "BLOCKED"
+        ],
+        "BLOCKED": [
+          "DRAFT",
+          "CONTRACT_REVIEW",
+          "READY",
+          "IMPLEMENTING",
+          "VALIDATING"
+        ],
         "COMPLETE": []
       },
       "modes": {
@@ -57,6 +83,7 @@
     },
     "delivery-workflow": {
       "requiredFields": [
+        "Review batch",
         "State",
         "Previous state",
         "Current artifact/gate",
@@ -88,19 +115,75 @@
         "Stale artifacts"
       ],
       "transitions": {
-        "AWAITING_HANDOFF": ["ROUTING", "BLOCKED"],
-        "ROUTING": ["MANIFEST_IN_REVIEW", "RETURN_TO_WHITEBOARD", "BLOCKED"],
-        "MANIFEST_IN_REVIEW": ["ARTIFACTS_SELECTED", "CHANGES_REQUESTED", "BLOCKED"],
-        "CHANGES_REQUESTED": ["ROUTING", "ARTIFACT_GENERATING", "BLOCKED"],
-        "ARTIFACTS_SELECTED": ["ARTIFACT_GENERATING", "BLOCKED"],
-        "ARTIFACT_GENERATING": ["ARTIFACT_IN_REVIEW", "RETURN_TO_WHITEBOARD", "BLOCKED"],
-        "ARTIFACT_IN_REVIEW": ["GATES_READY", "CHANGES_REQUESTED", "RETURN_TO_WHITEBOARD", "BLOCKED"],
-        "GATES_READY": ["DELIVERY_ACTIVE", "RETURN_TO_WHITEBOARD", "BLOCKED"],
-        "DELIVERY_ACTIVE": ["VALIDATING", "RETURN_TO_WHITEBOARD", "BLOCKED"],
-        "VALIDATING": ["DELIVERY_ACTIVE", "COMPLETE", "RETURN_TO_WHITEBOARD", "BLOCKED"],
-        "COMPLETE": ["ARCHIVED"],
-        "RETURN_TO_WHITEBOARD": ["AWAITING_HANDOFF", "BLOCKED"],
-        "BLOCKED": ["AWAITING_HANDOFF", "ROUTING", "MANIFEST_IN_REVIEW", "ARTIFACTS_SELECTED", "ARTIFACT_GENERATING", "ARTIFACT_IN_REVIEW", "GATES_READY", "DELIVERY_ACTIVE", "VALIDATING", "RETURN_TO_WHITEBOARD"],
+        "AWAITING_HANDOFF": [
+          "ROUTING",
+          "BLOCKED"
+        ],
+        "ROUTING": [
+          "MANIFEST_IN_REVIEW",
+          "RETURN_TO_WHITEBOARD",
+          "BLOCKED"
+        ],
+        "MANIFEST_IN_REVIEW": [
+          "ARTIFACTS_SELECTED",
+          "CHANGES_REQUESTED",
+          "BLOCKED"
+        ],
+        "CHANGES_REQUESTED": [
+          "ROUTING",
+          "ARTIFACT_GENERATING",
+          "BLOCKED"
+        ],
+        "ARTIFACTS_SELECTED": [
+          "ARTIFACT_GENERATING",
+          "BLOCKED"
+        ],
+        "ARTIFACT_GENERATING": [
+          "ARTIFACT_IN_REVIEW",
+          "RETURN_TO_WHITEBOARD",
+          "BLOCKED"
+        ],
+        "ARTIFACT_IN_REVIEW": [
+          "GATES_READY",
+          "CHANGES_REQUESTED",
+          "RETURN_TO_WHITEBOARD",
+          "BLOCKED"
+        ],
+        "GATES_READY": [
+          "DELIVERY_ACTIVE",
+          "RETURN_TO_WHITEBOARD",
+          "BLOCKED"
+        ],
+        "DELIVERY_ACTIVE": [
+          "VALIDATING",
+          "RETURN_TO_WHITEBOARD",
+          "BLOCKED"
+        ],
+        "VALIDATING": [
+          "DELIVERY_ACTIVE",
+          "COMPLETE",
+          "RETURN_TO_WHITEBOARD",
+          "BLOCKED"
+        ],
+        "COMPLETE": [
+          "ARCHIVED"
+        ],
+        "RETURN_TO_WHITEBOARD": [
+          "AWAITING_HANDOFF",
+          "BLOCKED"
+        ],
+        "BLOCKED": [
+          "AWAITING_HANDOFF",
+          "ROUTING",
+          "MANIFEST_IN_REVIEW",
+          "ARTIFACTS_SELECTED",
+          "ARTIFACT_GENERATING",
+          "ARTIFACT_IN_REVIEW",
+          "GATES_READY",
+          "DELIVERY_ACTIVE",
+          "VALIDATING",
+          "RETURN_TO_WHITEBOARD"
+        ],
         "ARCHIVED": []
       },
       "requiredSections": [
@@ -110,6 +193,90 @@
         "delivery-state",
         "implementation-review-ledger"
       ]
+    },
+    "review-batch": {
+      "requiredFields": [
+        "Batch ID",
+        "Delivery ID",
+        "Repository",
+        "Phase",
+        "Owner",
+        "Preparation authority",
+        "Authority evidence",
+        "Allowed paths",
+        "Approval owner",
+        "Expiry/end condition",
+        "Authority status",
+        "State",
+        "Previous state",
+        "Resume state",
+        "Base revision",
+        "Candidate revision",
+        "PR",
+        "Self-review state",
+        "Self-review candidate revision",
+        "Self-review evidence",
+        "Fresh-context review state",
+        "Fresh-context review session ID",
+        "Fresh-context assigned reviewers",
+        "Fresh-context required approvals",
+        "Fresh-context approved reviewers",
+        "Fresh-context reviewed revision",
+        "Fresh-context review evidence",
+        "Human review state",
+        "Human reviewed revision",
+        "Human review evidence",
+        "Checkpoint",
+        "Transient retry limit",
+        "No-progress limit",
+        "Transient retry count",
+        "No-progress count",
+        "Unresolved finding IDs",
+        "Next action",
+        "Action owner",
+        "Execution authority",
+        "Inputs freshness",
+        "Phase prerequisites",
+        "Completion evidence",
+        "Closure acceptance"
+      ],
+      "transitions": {
+        "PREPARING": [
+          "IN_REVIEW",
+          "BLOCKED",
+          "CANCELLED"
+        ],
+        "IN_REVIEW": [
+          "PREPARING",
+          "ACCEPTED",
+          "BLOCKED",
+          "CANCELLED"
+        ],
+        "ACCEPTED": [
+          "PREPARING",
+          "EXECUTING",
+          "BLOCKED"
+        ],
+        "EXECUTING": [
+          "PREPARING",
+          "VERIFIED",
+          "BLOCKED"
+        ],
+        "VERIFIED": [
+          "PREPARING",
+          "CLOSED",
+          "BLOCKED"
+        ],
+        "BLOCKED": [
+          "PREPARING",
+          "IN_REVIEW",
+          "ACCEPTED",
+          "EXECUTING",
+          "VERIFIED"
+        ],
+        "CLOSED": [],
+        "CANCELLED": []
+      }
     }
   }
 }

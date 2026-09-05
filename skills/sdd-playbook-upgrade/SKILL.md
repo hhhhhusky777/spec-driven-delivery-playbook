@@ -5,6 +5,17 @@ description: Assess and apply a prepared Spec-Driven Delivery Playbook revision 
 
 # SDD Playbook Upgrade
 
+## Optional batched route
+
+Before using an explicitly approved upgrade batch, read
+`docs/batch-review-and-recovery.md` from the verified read-only playbook checkout.
+Group authorized preparation/migration review boundaries; retain current pin,
+between-task checks, actual validation, human cutover and owned cleanup. Never
+use batching to upgrade during active implementation or erase failure evidence.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Use this skill only from an installed project's root when
 `.sdd-runtime/playbook-upgrade-guide.md` exists.
 

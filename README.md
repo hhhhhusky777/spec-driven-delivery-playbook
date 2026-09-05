@@ -49,6 +49,10 @@ for the complete procedure.
 
 ## Contents
 
+For fewer repeated review stops, see the explicitly adopted
+[batched review and recovery route](docs/batch-review-and-recovery.md).
+It retains quality and human authority while grouping coherent work.
+
 - [What the playbook gives you](#what-the-playbook-gives-you)
 - [Understand the delivery model](#understand-the-delivery-model)
   - [The core idea](#the-core-idea)

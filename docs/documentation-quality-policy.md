@@ -1,5 +1,16 @@
 # Documentation Quality and Testing Policy
 
+## Optional batched route
+
+An explicitly adopted v3 batch may satisfy artifact-level review obligations
+in one exact coherent package. All semantic inventory, tests, retained reviewers
+and applicable human acceptance remain required. The linked contract owns the
+batch cadence, table-first brief and prospective PR evidence retention; ordinary
+unbatched review continues below.
+
+See [Batched review and recovery](../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 This policy governs documentation and reusable template changes in this
 repository. It also defines the minimum documentation-quality prompts that the
 test-strategy template carries into an instantiated project.
@@ -251,7 +262,7 @@ classifies a repeated advisory failure as:
 The official Mermaid parser validates every repository diagram in a minimal
 `jsdom` environment without launching Chromium. This is the selected equivalent
 to Mermaid CLI because the repository does not need image rendering in CI and
-should not carry Puppeteer/Chromium cost or sandbox risk merely to parse two
+should not carry Puppeteer/Chromium cost or sandbox risk merely to parse
 diagrams.
 
 ## 6. Freshness and methodology review
@@ -425,7 +436,11 @@ remove obsolete tests only through review, never to hide a defect.
 Record command, exact source/candidate hash, dirty-state classification,
 environment, start/end or duration, pass/fail/skip counts, changed-path coverage,
 failure classification, and limitations in the delivery evidence record.
-Keep review decisions and concise evidence permanently in Git. Retain bulky
+Keep concise evidence permanently in Git. Preserve historical full reviewer
+receipts; new reviews under the adopted batch route use
+[PR-primary retention](batch-review-and-recovery.md#pr-publication-and-retention)
+with permanent identities, digests and disposition pointers. Non-PR reviews
+retain exact local receipts. Retain bulky
 sanitized logs for 30 days; unresolved failure evidence remains until resolution
 and at least 30 days afterward. Summaries link logs or state that no separate
 log artifact was retained. Do not claim unavailable logs are archived.

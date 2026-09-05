@@ -1,6 +1,17 @@
 # Spec-Driven Agile Implementation Plan Template
 
-<!-- sdd-schema: implementation-plan@2; mode: SELECT -->
+## Optional batched route
+
+Inside an authorized batch, review this plan and substantive task context with
+the planning package. Use one consolidated fresh pre-start verification, then
+one planned full review per coherent implementation PR. Add Context verification,
+Verified source revision, Verification evidence and Verified at to each batched
+task specification; do not infer a task's execution state from input freshness.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
+<!-- sdd-schema: implementation-plan@3; mode: SELECT -->
 
 Use this template for a non-trivial feature, refactor, migration, or reliability
 change. The completed document is the plan of record: it defines intended
@@ -35,6 +46,7 @@ section.
 
 | Field | Value |
 | --- | --- |
+| Review batch | `None` |
 | Plan | `<short descriptive name>` |
 | Status | `DRAFT` |
 | Previous status | `DRAFT` |
