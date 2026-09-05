@@ -44,6 +44,47 @@ separate from readiness inputs, preserving their dependency and acceptance gates
 
 ## Human brief example
 
+These worked briefs follow the
+[phase-specific brief contract](../../docs/documentation-quality-policy.md#26-attention-and-reviewability-gate).
+All versions, tasks, results and owners below are fictional instructional data,
+not evidence or authority for a real project.
+
+### Simulated adoption acceptance
+
+| ID / type | Important item | Recommendation / consequence | Required response / evidence |
+| --- | --- | --- | --- |
+| A01 / ATTENTION | Package ADOPT-1: navigation and checks only; no product redesign | Accept only this installation scope | Package ADOPT-1 inventory |
+| A02 / ATTENTION | Discovered API contract: writes require authentication; schema contract: migrations preserve existing records | Reuse these contracts; API and data owners remain accountable | Contract inventory API-1 and DATA-1 |
+| A03 / ATTENTION | Reuse testing policy TEST-1; update PR policy to require manual merge acceptance | CI and two-agent review retained; owner controls merge | Conformance inventory POLICY-1 |
+| D01 / DECISION | Public smoke test has no reachable environment | Defer activation, or supply environment; recommend deferring activation | Choose; operations owner tracks the gap |
+| A04 / ATTENTION | Pin PIN-1 resolved; local checks pass in this scenario, public smoke unrun; runtime handoff pending | Installation evidence is not pilot/ACTIVE evidence; activation remains blocked | Runtime and validation inventory RUNTIME-1 |
+
+The decision is unresolved: do not request unconditional installation/activation
+acceptance or portray the passing local checks as complete evidence.
+
+### Simulated combined planning acceptance
+
+Scope: WB-7 plus PLAN-3 proposes authenticated CSV export; excludes scheduled
+exports. Data owner owns privacy risks. All tests below are planned, not run.
+
+| Design point / source | Task(s) and brief work | Validation | Consistency / gap |
+| --- | --- | --- | --- |
+| D01 / WB-7: only the requesting user can export their records | T1: implement scoped query and authorization; first PR | Cross-user rejection and own-record export tests | Aligned in plan, not yet implemented |
+| D02 / WB-7: exports are downloadable CSV | T2: add download UI after T1; second PR | CSV format and user-visible failure tests | Aligned in plan; scheduled exports excluded |
+| D03 / WB-7: export retention must protect privacy | No deletion task exists in PLAN-3 | Retention expiry test not specified | Missing coverage; do not accept plan as complete |
+| D04 / WB-7: publish support guidance | Documentation owner supplies runbook with T2 | Owner checks runbook against actual behavior | Explicit non-code obligation, not omitted work |
+
+| ID / type | Important item | Recommendation / risk | Required response |
+| --- | --- | --- | --- |
+| D01 / DECISION | PLAN-3 does not implement WB-7 retention | Add a retention task before readiness; privacy obligation otherwise unmet | Approve direction for correction, not acceptance of incomplete PLAN-3 |
+| A01 / ATTENTION | T2 depends on T1; no evidence of implementation yet | Keep dependency and tests in readiness review | Awareness |
+
+After correction, regenerate this brief against the revised exact plan, disclose
+any remaining gaps, and request acceptance only after the existing package
+review passes. No separate whiteboard gate is introduced.
+
+### Simulated merge-mode choice
+
 | ID | Type | Item | Recommendation | Consequence | Response |
 | --- | --- | --- | --- | --- | --- |
 | D01 | DECISION | Merge mode | Human approval before merge | No unattended merge | Choose mode |

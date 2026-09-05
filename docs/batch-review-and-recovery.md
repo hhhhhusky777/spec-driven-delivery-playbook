@@ -124,6 +124,12 @@ from a missing design choice. If none remain, state that explicitly. A checklist
 is an owner-selected simpler presentation. The full independent inventory still
 governs review; the table cannot hide risks or replace source inspection.
 
+At each existing human gate, use the required
+[phase-specific review brief](documentation-quality-policy.md#26-attention-and-reviewability-gate).
+For planning, show the whiteboard's key design points together with task IDs,
+brief work, validation and consistency gaps. Do not introduce a separate
+whiteboard gate or substitute a test-status table for design and risk summaries.
+
 ## PR publication and retention
 
 ### Optional publication planner

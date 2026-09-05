@@ -50,7 +50,7 @@
 | Development policy | [Contributing](../../../../CONTRIBUTING.md) |
 | Test strategy | [Quality policy](../../../../docs/documentation-quality-policy.md) |
 | PR/branch policy | Contributing branches and pull requests |
-| Delivery implementation task count | 2 |
+| Delivery implementation task count | 3 |
 | Integration model | multi-task feature integration |
 | Feature integration branch | codex/feature-38-playbook-efficiency; created from accepted merge 98757aca4d7a5ff00ef9d59b15a2ca5bee2f12ce |
 | Task PR target | codex/feature-38-playbook-efficiency |
@@ -284,9 +284,27 @@ merely because code or review comments exist.
 | ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Independent merge boundary | PR |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | T01 | DONE | | None | None | CURRENT | COMPLETE | NONE | Core lifecycle batch contracts, consumers, tests and migration | FC01-FC09, BC01-BC08 | Core works with documented coordinator procedure; optional helper not required | — |
-| T02 | VERIFYING | | T01 | None | CURRENT | COMPLETE | NONE | Read-only publication planner and reconciliation evidence | FC05, FC07, FC09, BC04-BC06 | Helper independently tested; no new credentials or hosted service | — |
+| T02 | VERIFYING | | T01 | None | CURRENT | COMPLETE | NONE | Read-only publication planner and reconciliation evidence | FC05, FC07, FC09, BC04-BC06 | Helper independently tested; no new credentials or hosted service | PR44 |
+| T03 | DONE | | T01 | None | CURRENT | COMPLETE | NONE | Phase-specific human review briefs and design/task comparison | BC07 amendment | Separate governance package; no added review gates | PR45 merged |
 
 CURRENT records availability of the identified base, not approval of this draft.
+
+T03 is added by the owner-requested [review-brief amendment](review-brief-amendment.md).
+T01 merge is verified at b5600e86914f2c14b1039427bfc5ef5a8a8826eb.
+T03 is approved and merged through PR45 at
+07a717ca2ad66f8758c28603bb60c8baeb6bfe54; target tree matched its reviewed
+candidate and 73 tests passed. T02 remains VERIFYING on PR44; this integrated
+candidate requires fresh exact-head dispositions before its authorized merge.
+The three-task ledger supersedes inherited feature-branch snapshots.
+
+<!-- sdd-task-spec: T03 -->
+
+### T03 — Human review brief follow-up
+
+Complete bounded specification, scope, compatibility, acceptance and consumer
+mapping are in the [amendment task specification](review-brief-amendment.md#follow-up-task-t03--required-phase-specific-human-briefs).
+No implementation or acceptance of T02 is a prerequisite for drafting this
+independent governance package. Final delivery closure requires all three tasks.
 
 ## 8. Task specification and execution record
 
@@ -421,13 +439,13 @@ PRs remain unrecorded. Completing a specification does not authorize task start.
 | Field | Current value |
 | --- | --- |
 | Plan state | IMPLEMENTING |
-| Current task | None |
+| Current task | T02 |
 | Next ready task(s) | None |
 | Active branch / PR | codex/task-38-publication-planner; [PR44](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/44) |
-| Last completed task | T01; PR42 merged and identical target tree verified |
+| Last completed task | T03; PR45 merged and verified |
 | Active blocker | None |
 | Last validation | Exact per-round checks and review recorded in the package session evidence |
-| Next action | Implement T02 under live manual merge mode |
+| Next action | Verify reconciled PR44 with retained reviewers, then authorized merge |
 
 ## 10. Evidence, decisions and change history
 
@@ -463,7 +481,7 @@ branch deletion, pin cutover or archive is authorized by this draft.
 API-level facts and verification date are recorded with primary GitHub links in
 BC05. No claim of industry-wide efficiency or measured savings is made.
 
-### Current accepted planning status
+### Historical accepted planning status
 
 The final owner acceptance of WB38-READINESS-R01 supersedes earlier preparation
 and pending-review narrative without changing the accepted task specifications.

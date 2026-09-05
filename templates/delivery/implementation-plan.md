@@ -1,5 +1,9 @@
 # Spec-Driven Agile Implementation Plan Template
 
+Human handoffs must include the
+[phase-specific review brief](../../docs/documentation-quality-policy.md#26-attention-and-reviewability-gate).
+Present task IDs and brief work beside their design basis, validation and uncovered gaps.
+
 ## Optional batched route
 
 Inside an authorized batch, review this plan and substantive task context with

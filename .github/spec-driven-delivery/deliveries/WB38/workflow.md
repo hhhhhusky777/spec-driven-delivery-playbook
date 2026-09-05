@@ -33,7 +33,7 @@
 | Current review target ID | T02 |
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | T02-R01 |
+| Self-review candidate revision | T02-R03 |
 | Self-review evidence | [T02 self-review](../../reviews/WB38-T02-S01.md) |
 | Fresh-context review state | IN_REVIEW |
 | Fresh-context review session ID | WB38-T02-S01 |
@@ -41,7 +41,7 @@
 | Fresh-context required approvals | 2 |
 | Fresh-context approved reviewers | None |
 | Fresh-context reviewed revision | None |
-| Fresh-context review evidence | None |
+| Fresh-context review evidence | [T02 retained review](../../reviews/WB38-T02-S01.md) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | None |
 | Human review evidence | None |
@@ -116,7 +116,7 @@ their dependencies, owners or gates.
 | consumers | UPDATE_EXISTING templates, skills, guidance, examples; maintainer | policy changes within the coherent T01 unit | Same T01 PR review and owner merge approval | NOT_STARTED |
 | T01-result | Core implementation; coordinator | Accepted T01 specification/context, plan, audit, contracts | T01 tests, PR reviews, owner merge and target verification | NOT_STARTED |
 | T02-result | Publication helper; coordinator | T01 DONE/current, accepted T02 specification, plan, contracts | T02 tests/live evidence, PR reviews, owner merge and target verification | NOT_STARTED |
-| record | GENERATE validation and closure packet; coordinator | T01 and T02 terminal, integrated target verified | Two closure reviewers and owner acceptance | NOT_STARTED |
+| record | GENERATE validation and closure packet; coordinator | T01, T02 and T03 terminal, integrated target verified | Two closure reviewers and owner acceptance | NOT_STARTED |
 
 At their actual review/consumption boundaries, register produced output evidence
 with its exact revision in the live dependency register before using it. Do not
@@ -142,6 +142,7 @@ blocked until all task and target evidence exists.
 | runtime | Deferred independent scope | None | None | None | CONTROL_ONLY | CURRENT | None |
 | T01 | T01 specification and substantive context in plan | plan, audit, contracts | WB38-P04-T01-spec | WB38-P04-T01-spec | CONTROL_ONLY | CURRENT | None |
 | T02 | T02 specification and substantive context in plan | T01, plan, contracts | WB38-P04-T02-spec | WB38-P04-T02-spec | CONTROL_ONLY | CURRENT | None |
+| T03 | [Brief amendment](review-brief-amendment.md) | plan, contracts | 07a717ca2ad66f8758c28603bb60c8baeb6bfe54 | 07a717ca2ad66f8758c28603bb60c8baeb6bfe54 | CONTROL_ONLY | CURRENT | None |
 
 Draft predecessor identities are H02/W04/A02/C01/P04. Freeze actual content hashes
 before review; these labels alone are not immutable receipts. STALE here
@@ -186,15 +187,15 @@ is separately effective; PR publication may supplement them now.
 | Field | Current value |
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
-| Current artifact/task | T01 |
-| Current artifact review | IN_REVIEW; T01-R01 |
+| Current artifact/task | T02 |
+| Current artifact review | IN_REVIEW; T02-R03 |
 | Last approved artifact | WB38-READINESS-R01; W04/P04 and checkpoint |
-| Next ready action | Coherent T01 PR review |
+| Next ready action | Retained review of reconciled PR44, then authorized merge |
 | Active blockers | None |
 | Stale artifacts | None |
 | Validation complete | No delivery validation |
-| Validation remaining | Planning checks/review; all implementation and closure evidence |
-| Branch/PR | codex/task-38-core-batching; [draft PR42](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42); target codex/feature-38-playbook-efficiency |
+| Validation remaining | Reconciled T02 review/checks/merge; final integrated validation and closure |
+| Branch/PR | codex/task-38-publication-planner; [PR44](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/44); target codex/feature-38-playbook-efficiency |
 | Last updated | 2026-09-05 Asia/Shanghai |
 
 Require all active tasks terminal and required evidence current before parent
