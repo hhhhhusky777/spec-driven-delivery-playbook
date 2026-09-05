@@ -9,6 +9,8 @@ import { fileURLToPath } from "node:url";
 import {
   checkSddLifecycleDocument,
   computeTransitiveFreshness,
+  evaluatePhaseReadiness,
+  parseMarkdownTables,
 } from "../scripts/sdd-lifecycle.mjs";
 
 const REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -19,6 +21,178 @@ const SCHEMAS = JSON.parse(
 const LEGACY_SCHEMAS = JSON.parse(
   await readFile(path.join(REPOSITORY_ROOT, "config", "sdd-lifecycle-schema-v2.json"), "utf8"),
 );
+
+function phaseFixture() {
+  const hash = "a".repeat(64);
+  return {
+    roles: [
+      { "Artifact ID": "design", Role: "PREREQUISITE", "Production phase": "EXISTING", "Required gate": "GATES_READY", "Producer task": "NONE", "Depends on": "None", Evidence: "design.md" },
+      { "Artifact ID": "result", Role: "FUTURE_OUTPUT", "Production phase": "IMPLEMENTATION", "Required gate": "VALIDATING", "Producer task": "T1", "Depends on": "design", Evidence: "result.md" },
+      { "Artifact ID": "validation", Role: "FUTURE_OUTPUT", "Production phase": "VALIDATION", "Required gate": "COMPLETE", "Producer task": "PHASE", "Depends on": "result", Evidence: "validation.md" },
+      { "Artifact ID": "closure", Role: "FUTURE_OUTPUT", "Production phase": "CLOSURE", "Required gate": "ARCHIVED", "Producer task": "PHASE", "Depends on": "validation", Evidence: "closure.md" },
+    ],
+    inputs: [{ "Artifact ID": "design", "Depends on": "None", "Current version": hash, "Consumed version": hash, "Change impact": "MATERIAL", Freshness: "CURRENT", "Blocked by": "None" }],
+    outputs: ["result", "validation", "closure"].map(id => ({ "Artifact ID": id, State: "NOT_STARTED", "Current version": "None", "Verified version": "None", "Change impact": "MATERIAL", Freshness: "CURRENT", "Review state": "NOT_STARTED", "Review evidence": "None", "Blocked by": "None" })),
+    tasks: [
+      { ID: "T1", State: "IN_PROGRESS", Next: "", "Depends on": "None", "Required output IDs": "None", "Consumed output versions": "None" },
+      { ID: "T2", State: "PLANNED", Next: "", "Depends on": "T1", "Required output IDs": "result", "Consumed output versions": "None" },
+    ],
+  };
+}
+
+function phaseCheck(f, state = "GATES_READY") {
+  return evaluatePhaseReadiness(f.roles, f.inputs, f.outputs, f.tasks, state, f.roles.map(row => row["Artifact ID"]));
+}
+
+function completeOutput(row) {
+  Object.assign(row, { State: "COMPLETE", "Current version": "a".repeat(64), "Verified version": "a".repeat(64), "Review state": "APPROVED", "Review evidence": "exact-review.md" });
+}
+
+test("v4 T1 starts without its future result, while T2 binds completed current output", () => {
+  const f = phaseFixture();
+  assert.deepEqual(phaseCheck(f), []);
+  f.tasks[1].State = "READY";
+  assert.ok(phaseCheck(f).some(message => message.includes("not ready")));
+  f.tasks[0].State = "DONE";
+  completeOutput(f.outputs[0]);
+  f.tasks[1]["Consumed output versions"] = `result=${"a".repeat(64)}`;
+  assert.deepEqual(phaseCheck(f), []);
+  f.outputs[0]["Current version"] = "b".repeat(64);
+  assert.ok(phaseCheck(f).some(message => message.includes("not ready")));
+});
+
+test("v4 validation and closure outputs have distinct completion deadlines", () => {
+  const f = phaseFixture();
+  f.tasks[0].State = "DONE";
+  completeOutput(f.outputs[0]);
+  assert.deepEqual(phaseCheck(f, "VALIDATING"), []);
+  assert.ok(phaseCheck(f, "COMPLETE").some(message => message.includes("validation: output is required")));
+  completeOutput(f.outputs[1]);
+  assert.deepEqual(phaseCheck(f, "COMPLETE"), []);
+  assert.ok(phaseCheck(f, "ARCHIVED").some(message => message.includes("closure: output is required")));
+  completeOutput(f.outputs[2]);
+  assert.deepEqual(phaseCheck(f, "ARCHIVED"), []);
+});
+
+test("v4 rejects impossible phase graphs and contradictory membership during preparation", () => {
+  for (const mutate of [
+    f => { f.roles[3]["Required gate"] = "VALIDATING"; },
+    f => { f.roles[2]["Depends on"] = "closure"; f.roles[3]["Depends on"] = "design"; },
+    f => { f.roles[0]["Depends on"] = "result"; },
+    f => { f.inputs.push({ ...f.inputs[0], "Artifact ID": "result" }); },
+    f => { f.roles.push({ ...f.roles[0] }); },
+    f => { f.roles[1]["Producer task"] = "missing"; },
+    f => { f.tasks[0]["Depends on"] = "T2"; },
+    f => { delete f.tasks[0]["Required output IDs"]; },
+    f => { f.tasks[1]["Required output IDs"] = "validation"; },
+  ]) {
+    const f = phaseFixture(); mutate(f);
+    assert.ok(phaseCheck(f).length > 0, mutate.toString());
+  }
+});
+
+test("v4 preserves freshness through output dependencies", () => {
+  const f = phaseFixture();
+  f.tasks[0].State = "DONE";
+  completeOutput(f.outputs[0]);
+  f.inputs[0]["Current version"] = "b".repeat(64);
+  assert.ok(phaseCheck(f, "VALIDATING").some(message => message.includes("required")));
+});
+
+test("v4 rejects contradictory bindings and absent transitive output evidence", () => {
+  const f = phaseFixture();
+  completeOutput(f.outputs[0]);
+  f.tasks[0].State = "DONE";
+  f.tasks[1].State = "READY";
+  f.tasks[1]["Consumed output versions"] = `result=${"b".repeat(64)},result=${"a".repeat(64)}`;
+  assert.ok(phaseCheck(f).some(message => message.includes("duplicate consumed")));
+  f.tasks[1]["Consumed output versions"] = "result=invalid";
+  assert.ok(phaseCheck(f).some(message => message.includes("malformed")));
+  f.tasks[1]["Consumed output versions"] = `result=${"a".repeat(64)}`;
+  const parent = { ...f.roles[1], "Artifact ID": "parent", "Producer task": "T0", "Depends on": "design" };
+  f.roles.push(parent);
+  f.roles[1]["Depends on"] = "parent";
+  f.outputs.push({ ...phaseFixture().outputs[0], "Artifact ID": "parent" });
+  f.tasks.unshift({ ID: "T0", State: "DONE", "Depends on": "None", "Required output IDs": "None", "Consumed output versions": "None" });
+  f.tasks[1]["Depends on"] = "T0";
+  assert.ok(phaseCheck(f).some(message => message.includes("must be declared")));
+  f.tasks[1]["Required output IDs"] = "parent";
+  f.tasks[1]["Consumed output versions"] = `parent=${"a".repeat(64)}`;
+  assert.ok(phaseCheck(f).some(message => message.includes("not ready")));
+  completeOutput(f.outputs.at(-1));
+  assert.deepEqual(phaseCheck(f), []);
+});
+
+async function v4Fixture(t) {
+  const f = await fixture(t, "");
+  const table = rows => `\n\n| ${Object.keys(rows[0]).join(" | ")} |\n| ${Object.keys(rows[0]).map(() => "---").join(" | ")} |\n` + rows.map(row => `| ${Object.values(row).join(" | ")} |`).join("\n");
+  let w = workflow().replace("delivery-workflow@2", "delivery-workflow@4")
+    .replace("| State |", "| Review batch | None |\n| Implementation plan | [Plan](implementation-plan.md) |\n| State |");
+  const inputs = parseMarkdownTables(w).find(t => t.headers.includes("Consumed version")).rows;
+  const roles = inputs.map(row => ({ "Artifact ID": row["Artifact ID"], Role: "PREREQUISITE", "Production phase": "EXISTING", "Required gate": "GATES_READY", "Producer task": "NONE", "Depends on": row["Depends on"], Evidence: "accepted-design.md" }));
+  roles.push({ "Artifact ID": "result", Role: "FUTURE_OUTPUT", "Production phase": "IMPLEMENTATION", "Required gate": "VALIDATING", "Producer task": "T01", "Depends on": "plan", Evidence: "[result](result.txt)" });
+  const output = { ...phaseFixture().outputs[0] };
+  w += table(roles) + table([output]);
+  const p = plan().replace("implementation-plan@2", "implementation-plan@4")
+    .replace("| Status |", "| Review batch | None |\n| Delivery workflow | [Workflow](artifact.md) |\n| Status |")
+    .replace("| Spec state |", "| Spec state | Required output IDs | Consumed output versions |")
+    .replace("| --- | --- | --- | --- | --- | --- | --- |", "| --- | --- | --- | --- | --- | --- | --- | --- | --- |")
+    .replace("| `COMPLETE` |", "| `COMPLETE` | None | None |");
+  // fixture() uses artifact.md as its stable entry point.
+  await writeFile(f.file, w);
+  await writeFile(path.join(f.root, "implementation-plan.md"), p);
+  return { ...f, w, p, output, table };
+}
+
+test("v4 real document route enforces reciprocal links and output bytes from either entry", async t => {
+  const f = await v4Fixture(t);
+  assert.deepEqual(await checkSddLifecycleDocument(f.file, f.root, SCHEMAS), []);
+  const planFile = path.join(f.root, "implementation-plan.md");
+  assert.deepEqual(await checkSddLifecycleDocument(planFile, f.root, SCHEMAS), []);
+  const bytes = "synthetic result\n";
+  const hash = createHash("sha256").update(bytes).digest("hex");
+  completeOutput(f.output);
+  f.output["Current version"] = hash;
+  f.output["Verified version"] = hash;
+  const updated = f.w.slice(0, f.w.lastIndexOf("\n\n| Artifact ID | State")) + f.table([f.output]);
+  await writeFile(f.file, updated);
+  await writeFile(path.join(f.root, "result.txt"), bytes);
+  assert.deepEqual(await checkSddLifecycleDocument(f.file, f.root, SCHEMAS), []);
+  await writeFile(path.join(f.root, "result.txt"), "changed");
+  for (const entry of [f.file, planFile]) assert.ok((await checkSddLifecycleDocument(entry, f.root, SCHEMAS)).some(item => item.message.includes("bytes differ")));
+  await writeFile(planFile, f.p.replace("[Workflow](artifact.md)", "[Workflow](missing.md)"));
+  assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(item => item.rule === "SDD_PHASE_READINESS"));
+});
+
+test("v4 traverses counterpart batch authority from either entry point", async t => {
+  for (const counterpart of ["plan", "workflow"]) {
+    const f = await v4Fixture(t);
+    const planFile = path.join(f.root, "implementation-plan.md");
+    await writeFile(counterpart === "plan" ? planFile : f.file,
+      (counterpart === "plan" ? f.p : f.w).replace("| Review batch | None |", "| Review batch | [Missing](missing-batch.md) |"));
+    for (const entry of [f.file, planFile]) assert.ok((await checkSddLifecycleDocument(entry, f.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_REFERENCE"));
+  }
+});
+
+test("v4 document entries reject a complete output with a pending ancestor", async t => {
+  const f = await v4Fixture(t);
+  const bytes = "synthetic result\n";
+  completeOutput(f.output);
+  f.output["Current version"] = f.output["Verified version"] = createHash("sha256").update(bytes).digest("hex");
+  let w = f.w.slice(0, f.w.lastIndexOf("\n\n| Artifact ID | State"));
+  w = w.replace("| T01 | plan | [result]", "| T01 | parent | [result]");
+  w += "\n| parent | FUTURE_OUTPUT | IMPLEMENTATION | VALIDATING | T00 | plan | [parent](parent.txt) |";
+  w += f.table([f.output, { ...phaseFixture().outputs[0], "Artifact ID": "parent" }]);
+  let p = f.p.replace("| `T01` | `READY` | `NEXT` | `None` |", "| `T01` | `READY` | `NEXT` | `T00` |");
+  p = p.replace("| `COMPLETE` | None | None |", `| \`COMPLETE\` | parent | parent=${"a".repeat(64)} |\n| T00 | DONE | | None | None | CURRENT | COMPLETE | None | None |`);
+  p += "\n<!-- sdd-task-spec: T00 -->\n";
+  await writeFile(f.file, w);
+  await writeFile(path.join(f.root, "implementation-plan.md"), p);
+  await writeFile(path.join(f.root, "result.txt"), bytes);
+  for (const entry of [f.file, path.join(f.root, "implementation-plan.md")]) {
+    assert.ok((await checkSddLifecycleDocument(entry, f.root, SCHEMAS)).some(item => item.message.includes("COMPLETE output lacks")));
+  }
+});
 
 test("v3 ordinary plans require explicit batch selection and retain approval gates", async (t) => {
   const content = plan().replace("implementation-plan@2", "implementation-plan@3");

@@ -21,7 +21,7 @@
 | Previous status | READY |
 | Plan mode | FULL |
 | Current phase | IMPLEMENT |
-| Current task | Readiness/triage amendment |
+| Current task | T04 |
 | Next ready task(s) | None |
 | Blockers | None |
 | Owner | Repository owner |
@@ -286,7 +286,7 @@ merely because code or review comments exist.
 | T01 | DONE | | None | None | CURRENT | COMPLETE | NONE | Core lifecycle batch contracts, consumers, tests and migration | FC01-FC09, BC01-BC08 | Core works with documented coordinator procedure; optional helper not required | — |
 | T02 | DONE | | T01 | None | CURRENT | COMPLETE | NONE | Read-only publication planner and reconciliation evidence | FC05, FC07, FC09, BC04-BC06 | Helper independently tested; no new credentials or hosted service | PR44 merged |
 | T03 | DONE | | T01 | None | CURRENT | COMPLETE | NONE | Phase-specific human review briefs and design/task comparison | BC07 amendment | Separate governance package; no added review gates | PR45 merged |
-| T04 | PLANNED | | T01, T03 | None | CURRENT | COMPLETE | NONE | Phase-aware prerequisite and future-output validation | R01-R03 amendment | Versioned reusable readiness fix | — |
+| T04 | IN_PROGRESS | | T01, T03 | None | CURRENT | COMPLETE | NONE | Phase-aware prerequisite and future-output validation | R01-R03 amendment | Versioned reusable readiness fix | — |
 | T05 | PLANNED | | T04 | None | CURRENT | COMPLETE | NONE | Exception triage and upstream playbook reporting | E01-E02 amendment | Reusable guidance and evidence handling | — |
 
 CURRENT records availability of the identified base, not approval of this draft.
@@ -317,7 +317,7 @@ T03 is approved and merged through PR45 at
 07a717ca2ad66f8758c28603bb60c8baeb6bfe54; target tree matched its reviewed
 candidate and 73 tests passed. T02 subsequently merged through PR44 after
 both retained reviewers approved its integrated head and all 80 tests passed.
-The five-task ledger now includes the provisional T04/T05 amendment.
+The five-task ledger includes T04/T05 accepted through PR48. T04 is in progress.
 
 <!-- sdd-task-spec: T03 -->
 
@@ -461,13 +461,13 @@ PRs remain unrecorded. Completing a specification does not authorize task start.
 | Field | Current value |
 | --- | --- |
 | Plan state | IMPLEMENTING |
-| Current task | Readiness/triage amendment |
+| Current task | T04 |
 | Next ready task(s) | None |
 | Active branch / PR | codex/task-46-readiness-triage-design; amendment PR pending |
 | Last completed task | T02; PR44 merged and 80 combined tests passed |
 | Active blocker | None |
 | Last validation | Exact per-round checks and review recorded in the package session evidence |
-| Next action | Review readiness/triage design and T04/T05 task specifications |
+| Next action | Implement approved T04; T05 follows |
 
 ## 10. Evidence, decisions and change history
 

@@ -99,13 +99,20 @@ The workflow selects the smallest safe route and reuses active project policies.
 | Route | Preparation and review boundary |
 | --- | --- |
 | Existing unbatched route | Review artifacts individually under the installed project's current rules |
-| Explicitly adopted version-3 batching | Prepare a coherent package under scoped authority, then review it with two isolated reviewers; retain both seats for consolidated corrections |
+| Explicitly adopted version-3/4 batching | Prepare a coherent package under scoped authority, then review it with two isolated reviewers; retain both seats for consolidated corrections |
 
 Batching is opt-in, not a silent upgrade of installed projects. See the
 [canonical batching contract](docs/batch-review-and-recovery.md) for controls,
 authority, exact-head evidence and recovery. The diagram below shows that route;
 the later step-by-step adoption and delivery instructions describe the unbatched
 route unless explicitly labeled otherwise.
+
+New v4 templates also separate current prerequisites from future outputs.
+Implementation outputs are due before validation, validation outputs before
+completion, and closure outputs before archive; dependent tasks still need
+exact reviewed/current predecessor results. See the [phase readiness contract](docs/batch-review-and-recovery.md#version-4-phase-aware-readiness)
+and [simulated walkthrough](examples/batched-delivery/README.md#simulated-phase-aware-readiness). Existing v2/v3
+records retain their original checks until an explicitly reviewed migration.
 
 ```mermaid
 flowchart TD

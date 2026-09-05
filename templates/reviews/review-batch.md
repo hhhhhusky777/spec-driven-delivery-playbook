@@ -1,6 +1,6 @@
 # Review batch — `<batch ID>`
 
-<!-- sdd-schema: review-batch@3 -->
+<!-- sdd-schema: review-batch@4 -->
 
 Use only with explicit project authority. Read the
 [batch contract](../../docs/batch-review-and-recovery.md) before preparing this
