@@ -5,6 +5,18 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
+test("human gate brief remains mandatory and linked from phase consumers", async () => {
+  const policy = await readFile(path.join(REPOSITORY_ROOT, "docs/documentation-quality-policy.md"), "utf8");
+  const required = ["At every human review gate", "Adoption acceptance", "Planning acceptance", "Implementation PR acceptance", "Validation and closure", "Upgrade acceptance", "Design point / source", "Task(s) and brief work", "Consistency / gap", "incomplete brief blocks the request for human acceptance"];
+  const assertContract = text => required.forEach(value => assert.ok(text.includes(value), value));
+  assertContract(policy);
+  for (const value of required) assert.throws(() => assertContract(policy.replaceAll(value, "")));
+  for (const file of ["templates/adoption/project-adoption-manifest.md", "templates/discovery/solution-whiteboard.md", "templates/delivery/implementation-plan.md", "templates/reviews/fresh-context-agent-review.md", "README.md", "docs/batch-review-and-recovery.md"]) {
+    const text = await readFile(path.join(REPOSITORY_ROOT, file), "utf8");
+    assert.ok(text.includes("documentation-quality-policy.md#26-attention-and-reviewability-gate"), file);
+  }
+});
+
 import {
   REPOSITORY_ROOT,
   checkLocalLinks,

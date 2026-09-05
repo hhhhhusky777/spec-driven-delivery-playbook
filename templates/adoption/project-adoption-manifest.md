@@ -1,5 +1,9 @@
 # Project Adoption Manifest — `<project>`
 
+Human handoffs must include the
+[phase-specific review brief](../../docs/documentation-quality-policy.md#26-attention-and-reviewability-gate).
+Surface discovered contracts, selected policies, gaps, owners and activation status.
+
 ## Optional batched route
 
 A project may authorize one installation preparation/review batch. Record its
