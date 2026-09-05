@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | Continue the first owner-supplied need through the WB38 workflow and scoped live-trial authority linked below |
+| Next action | Review and publish WB38 archive/reset control package, then await the next owner-supplied need through the verified workflow runtime |
 
 Adoption type: `real project`
 
@@ -687,3 +687,14 @@ under the [explicit scoped authority](live-trial.md). This supersedes the
 installation handoff's waiting-for-first-need next action, without rewriting
 its accepted evidence or changing the runtime pin. The workflow owns current
 planning gaps, dependency versions, write targets and the next review boundary.
+
+### WB38 closure candidate
+
+WB38 final validation was owner-approved and merged through PR53 as
+`c6c5ff3afc99bc228ccae8afd14582ffef8441ca`. The owner authorized the bounded
+archive/reset mechanics. The [archived conclusion](archive/WB38/solution-whiteboard.md),
+[delivery record](deliveries/WB38/record.md), completed workflow/plan and fresh
+neutral EMPTY working path form one control-only publication candidate. Until
+that package passes review, hosted checks, owner acceptance and merge, the
+published main branch remains authoritative. Adoption remains INSTALLED, not
+ACTIVE; runtime pin and checkout remain unchanged.
