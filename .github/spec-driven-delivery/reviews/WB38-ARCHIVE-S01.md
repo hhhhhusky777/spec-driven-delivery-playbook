@@ -112,8 +112,8 @@ candidate expanded to correct that gap; they do not approve the revised head.
 | Assigned reviewers | R1 /root/wb38_final_r1; R2 /root/wb38_final_r2 |
 | Required approvals | 2 |
 | Approved reviewers | None for revised candidate |
-| Current candidate | WB38-ARCHIVE-CONTROL-R03; exact commit supplied at dispatch |
-| Current round | R03 |
+| Current candidate | WB38-ARCHIVE-CONTROL-R04; exact commit supplied at dispatch |
+| Current round | R04 |
 | Replacement history | None |
 
 The corrective package makes the closure package the only full semantic archive review boundary.
@@ -128,7 +128,7 @@ workflow skill, lifecycle checker and positive/negative tests change together.
 The current archived conclusion and neutral EMPTY whiteboard bytes are unchanged.
 PR56 is the one-time semantic correction and final target-state publication;
 its PR owns post-merge verification, so no later full-review receipt PR is
-planned. `SELF_REVIEW_PASSED` for WB38-ARCHIVE-CONTROL-R03 after the complete
+planned. `SELF_REVIEW_PASSED` for WB38-ARCHIVE-CONTROL-R04 after the complete
 diff and gates pass; the exact commit is bound at dispatch.
 
 ### R02 findings and R03 response
@@ -142,3 +142,15 @@ Both reviewers requested changes on exact head
 | WB38-ARCHIVE-CONTROL-S01-R1-F02 | [R1 summary](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/56#pullrequestreview-5122015393) | ACCEPT; restrict the opt-in receipt route to v4, exercise a real v4 positive fixture, and reject v2 opt-in | Awaiting R1 re-review |
 | WB38-ARCHIVE-CONTROL-S01-R2-F01 | [R2 inline finding](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/56#discussion_r3941234173) | ACCEPT; normalize and reject global wildcard aliases such as `*/`, with regression coverage | Awaiting R2 re-review |
 | WB38-ARCHIVE-CONTROL-S01-R2-F02 | [R2 inline finding](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/56#discussion_r3941234180) | ACCEPT; require the complete cleanup field pair on opt-in while preserving no-opt-in v4 compatibility | Awaiting R2 re-review |
+
+### R03 finding and R04 response
+
+R1 approved exact R03 head
+`c49d9da8b42fec7fc89f4c699d15dd016ce07ce4`, but that approval becomes stale
+with R04. R2 kept WB38-ARCHIVE-CONTROL-S01-R2-F02 open because the exact
+underscore sentinel `NOT_SELECTED` still passed even though spaced `Not selected`
+was rejected.
+
+| Finding | Immutable review evidence | Author response and R04 correction | State |
+| --- | --- | --- | --- |
+| WB38-ARCHIVE-CONTROL-S01-R2-F02 | [R2 R03 summary](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/56#pullrequestreview-5122040599) | ACCEPT; reject spaced, underscore and hyphen `not selected` spellings and exercise the exact `NOT_SELECTED` receipt and cleanup cases | Awaiting both retained reviewers on R04 |

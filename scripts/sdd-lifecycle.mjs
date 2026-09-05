@@ -150,7 +150,7 @@ function hasRecordedValue(value) {
   const normalized = normalizeValue(value || "");
   return !(
     isNone(normalized) ||
-    /^(?:not recorded|not available|not selected|pending|placeholder|tbd|todo|unknown)(?:\s*\/|$)/i.test(
+    /^(?:not recorded|not available|not[ _-]+selected|pending|placeholder|tbd|todo|unknown)(?:\s*\/|$)/i.test(
       normalized,
     ) ||
     /<[^>]+>/.test(normalized)

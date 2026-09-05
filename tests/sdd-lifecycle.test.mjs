@@ -1160,6 +1160,7 @@ test("pre-authorized post-merge control receipt avoids a second full archive rev
   const cases = [
     ["PREAUTHORIZED_CONTROL_RECEIPT", "UNKNOWN", "SDD_POST_MERGE_CONTROL_MODE"],
     ["| Post-merge control authority | `owner accepted the exact closure plan` |", "| Post-merge control authority | `Not selected` |", "SDD_POST_MERGE_CONTROL_AUTHORITY"],
+    ["| Post-merge control authority | `owner accepted the exact closure plan` |", "| Post-merge control authority | `NOT_SELECTED` |", "SDD_POST_MERGE_CONTROL_AUTHORITY"],
     [source, "b".repeat(40), "SDD_POST_MERGE_CONTROL_SOURCE"],
     ["| State | `ARCHIVED` |", "| State | `COMPLETE` |", "SDD_POST_MERGE_CONTROL_BOUNDARY"],
     ["delivery-workflow@4", "delivery-workflow@2", "SDD_POST_MERGE_CONTROL_BOUNDARY"],
@@ -1172,7 +1173,7 @@ test("pre-authorized post-merge control receipt avoids a second full archive rev
     ["| Semantic decision introduced | `NO` |", "| Semantic decision introduced | `YES` |", "SDD_AUTO_SEMANTIC_DECISION"],
     ["| Automation exception | `None` |", "| Automation exception | `scope drift` |", "SDD_AUTO_EXCEPTION"],
     ["| Post-merge cleanup targets | `None` |\n| Post-merge cleanup authority | `None` |", "", "SDD_REQUIRED_FIELD"],
-    ["| Post-merge cleanup targets | `None` |\n| Post-merge cleanup authority | `None` |", "| Post-merge cleanup targets | `docs/old.md` |\n| Post-merge cleanup authority | `Not selected` |", "SDD_POST_MERGE_CLEANUP_AUTHORITY"],
+    ["| Post-merge cleanup targets | `None` |\n| Post-merge cleanup authority | `None` |", "| Post-merge cleanup targets | `docs/old.md` |\n| Post-merge cleanup authority | `NOT_SELECTED` |", "SDD_POST_MERGE_CLEANUP_AUTHORITY"],
   ];
   for (const [before, after, rule] of cases) {
     await writeFile(input.file, valid.replace(before, after));
