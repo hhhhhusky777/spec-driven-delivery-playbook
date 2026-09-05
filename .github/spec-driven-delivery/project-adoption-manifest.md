@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | Finish approved control publication; then await the owner's first need through the verified workflow runtime |
+| Next action | Continue the first owner-supplied need through the WB38 workflow and scoped live-trial authority linked below |
 
 Adoption type: `real project`
 
@@ -363,7 +363,13 @@ No automatic action has run.
 
 ## 9. Pilot delivery
 
-`NOT_STARTED`. A need must not enter during installation or discovery.
+The first owner-supplied need is WB38, admitted after verified installation.
+Its [whiteboard](solution-whiteboard.md) is CONCLUDED and owner accepted.
+The [workflow](deliveries/WB38/workflow.md) owns current delivery preparation;
+the [scoped live trial](live-trial.md) permits one provisional planning package.
+Pilot execution and activation evidence are NOT_STARTED. Adoption remains
+INSTALLED, not ACTIVE; neither draft presence nor planning approval proves a
+completed pilot. Earlier installation-only routing below is historical.
 
 ## 10. Adoption review
 
@@ -672,3 +678,12 @@ explicit batch instruction; independent review and final human authority remain.
 All installation checklist obligations are satisfied by the accepted package,
 reviewed merge, and target checks. Earlier unchecked installation boxes are
 retained as candidate history. ACTIVE still requires a real reviewed pilot.
+
+### Current first-delivery route
+
+The owner accepted WB38-R03 and authorized the following work to trial its
+concluded design. Continue through the [WB38 workflow](deliveries/WB38/workflow.md)
+under the [explicit scoped authority](live-trial.md). This supersedes the
+installation handoff's waiting-for-first-need next action, without rewriting
+its accepted evidence or changing the runtime pin. The workflow owns current
+planning gaps, dependency versions, write targets and the next review boundary.
