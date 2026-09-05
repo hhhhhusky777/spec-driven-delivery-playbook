@@ -21,7 +21,7 @@
 | Previous status | READY |
 | Plan mode | FULL |
 | Current phase | IMPLEMENT |
-| Current task | T02 |
+| Current task | Readiness/triage amendment |
 | Next ready task(s) | None |
 | Blockers | None |
 | Owner | Repository owner |
@@ -50,7 +50,7 @@
 | Development policy | [Contributing](../../../../CONTRIBUTING.md) |
 | Test strategy | [Quality policy](../../../../docs/documentation-quality-policy.md) |
 | PR/branch policy | Contributing branches and pull requests |
-| Delivery implementation task count | 3 |
+| Delivery implementation task count | 5 |
 | Integration model | multi-task feature integration |
 | Feature integration branch | codex/feature-38-playbook-efficiency; created from accepted merge 98757aca4d7a5ff00ef9d59b15a2ca5bee2f12ce |
 | Task PR target | codex/feature-38-playbook-efficiency |
@@ -284,18 +284,40 @@ merely because code or review comments exist.
 | ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Independent merge boundary | PR |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | T01 | DONE | | None | None | CURRENT | COMPLETE | NONE | Core lifecycle batch contracts, consumers, tests and migration | FC01-FC09, BC01-BC08 | Core works with documented coordinator procedure; optional helper not required | — |
-| T02 | VERIFYING | | T01 | None | CURRENT | COMPLETE | NONE | Read-only publication planner and reconciliation evidence | FC05, FC07, FC09, BC04-BC06 | Helper independently tested; no new credentials or hosted service | PR44 |
+| T02 | DONE | | T01 | None | CURRENT | COMPLETE | NONE | Read-only publication planner and reconciliation evidence | FC05, FC07, FC09, BC04-BC06 | Helper independently tested; no new credentials or hosted service | PR44 merged |
 | T03 | DONE | | T01 | None | CURRENT | COMPLETE | NONE | Phase-specific human review briefs and design/task comparison | BC07 amendment | Separate governance package; no added review gates | PR45 merged |
+| T04 | PLANNED | | T01, T03 | None | CURRENT | COMPLETE | NONE | Phase-aware prerequisite and future-output validation | R01-R03 amendment | Versioned reusable readiness fix | — |
+| T05 | PLANNED | | T04 | None | CURRENT | COMPLETE | NONE | Exception triage and upstream playbook reporting | E01-E02 amendment | Reusable guidance and evidence handling | — |
 
 CURRENT records availability of the identified base, not approval of this draft.
+
+T04/T05 are provisional additions under the owner-requested
+[readiness/triage amendment](readiness-triage-amendment.md). Their exact bounded
+specifications and acceptance tests are recorded there; no execution or
+approval is implied by these PLANNED rows. T02 merged at
+82c022cfced052f8bc8cc67def437219df8be067 and its reviewed tree passed 80 tests.
+
+<!-- sdd-task-spec: T04 -->
+
+### T04 — Versioned phase-aware readiness
+
+See the [R01-R03 contract](readiness-triage-amendment.md#r01-r03--proposed-readiness-contract)
+and bounded task table for complete proposed scope, behavior, tests and risks.
+
+<!-- sdd-task-spec: T05 -->
+
+### T05 — Exception triage and upstream reporting
+
+See the [E01-E02 contract](readiness-triage-amendment.md#e01-e02--proposed-exception-contract)
+and bounded task table for complete proposed scope, behavior, tests and risks.
 
 T03 is added by the owner-requested [review-brief amendment](review-brief-amendment.md).
 T01 merge is verified at b5600e86914f2c14b1039427bfc5ef5a8a8826eb.
 T03 is approved and merged through PR45 at
 07a717ca2ad66f8758c28603bb60c8baeb6bfe54; target tree matched its reviewed
-candidate and 73 tests passed. T02 remains VERIFYING on PR44; this integrated
-candidate requires fresh exact-head dispositions before its authorized merge.
-The three-task ledger supersedes inherited feature-branch snapshots.
+candidate and 73 tests passed. T02 subsequently merged through PR44 after
+both retained reviewers approved its integrated head and all 80 tests passed.
+The five-task ledger now includes the provisional T04/T05 amendment.
 
 <!-- sdd-task-spec: T03 -->
 
@@ -304,7 +326,7 @@ The three-task ledger supersedes inherited feature-branch snapshots.
 Complete bounded specification, scope, compatibility, acceptance and consumer
 mapping are in the [amendment task specification](review-brief-amendment.md#follow-up-task-t03--required-phase-specific-human-briefs).
 No implementation or acceptance of T02 is a prerequisite for drafting this
-independent governance package. Final delivery closure requires all three tasks.
+independent governance package. Final delivery closure requires all five tasks under the new amendment.
 
 ## 8. Task specification and execution record
 
@@ -389,7 +411,7 @@ using the existing account. T01 must be DONE/current before T02 starts.
 
 | Field | Value |
 | --- | --- |
-| State | VERIFYING |
+| State | DONE |
 | Depends on | T01 |
 | Data phase | NONE |
 | Owner | Coordinating implementer |
@@ -439,13 +461,13 @@ PRs remain unrecorded. Completing a specification does not authorize task start.
 | Field | Current value |
 | --- | --- |
 | Plan state | IMPLEMENTING |
-| Current task | T02 |
+| Current task | Readiness/triage amendment |
 | Next ready task(s) | None |
-| Active branch / PR | codex/task-38-publication-planner; [PR44](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/44) |
-| Last completed task | T03; PR45 merged and verified |
+| Active branch / PR | codex/task-46-readiness-triage-design; amendment PR pending |
+| Last completed task | T02; PR44 merged and 80 combined tests passed |
 | Active blocker | None |
 | Last validation | Exact per-round checks and review recorded in the package session evidence |
-| Next action | Verify reconciled PR44 with retained reviewers, then authorized merge |
+| Next action | Review readiness/triage design and T04/T05 task specifications |
 
 ## 10. Evidence, decisions and change history
 
