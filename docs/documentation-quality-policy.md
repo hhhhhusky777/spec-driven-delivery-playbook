@@ -350,6 +350,12 @@ dependency locks, documentation scripts/tests, and the workflow itself.
 
 ## 8. Failure handling and exceptions
 
+For every exception, apply the shared
+[exception triage and upstream reporting contract](batch-review-and-recovery.md#exception-triage-and-upstream-reporting).
+The layer classification below diagnoses documentation failures; the shared
+contract determines whether a confirmed playbook gap needs an upstream issue.
+Issue filing does not replace the exception approval requirements here.
+
 Treat a failed documentation test as evidence, not automatically as a test bug:
 
 1. Record the command, observed diagnostic, changed statement/file, and expected

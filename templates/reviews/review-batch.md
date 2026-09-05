@@ -79,6 +79,10 @@ substitute an unverified snapshot or use it to mask normative changes.
 
 ## Checkpoint and history
 
+On an exception, apply [triage and upstream reporting](../../docs/batch-review-and-recovery.md#exception-triage-and-upstream-reporting)
+and add the [triage fields](exception-triage.md) to the canonical checkpoint.
+Reporting has no separate retry budget and does not grant recovery authority.
+
 Link one canonical checkpoint with action/input IDs, prior verified state,
 failure class, persistent counters, affected IDs, valid/invalid evidence,
 observed external effects/IDs, next action, owner and unblock condition.

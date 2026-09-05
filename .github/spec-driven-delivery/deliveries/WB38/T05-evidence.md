@@ -16,3 +16,22 @@
 Context receipt APPROVED through accepted specification and owner continuation;
 CURRENT at the verified T04 merge. No new decision or extra readiness review.
 This record is not T05 implementation completion or final delivery validation.
+
+## Self-review and validation
+
+SELF_REVIEW_PASSED for T05-R01; exact published candidate supplied at dispatch.
+
+| Accepted contract | Change / evidence |
+| --- | --- |
+| E01 classification | Shared five-class triage table; all phases and ordinary/batch routes; existing safety/authority remains |
+| E02 reporting | Verified destination, open/closed duplicate search, safe report content, private disclosure, pending drafts and external effect reconciliation |
+| Agent consumers | Three source skills route explicitly to the canonical contract and record after verified source resolution |
+| Human consumers | Quality/adoption/upgrade/review guidance, README and template link the same owner; no copied normative procedure |
+| Failure evidence | Initial direct test invocation lacked Node PATH; corrected environment, not tests. Python skill utility lacked PyYAML; fallback YAML/name/description/scaffold checks passed for all three source skills |
+| Repository checks | docs:all passed 89 tests, zero failures/skips; lifecycle, Markdown, links, structure and Mermaid passed |
+| Coverage limits | New test validates classification/record completeness and consumer routing, including removed-route/class/authority negative mutations; independent scenario review still required |
+
+Installed skills/pin remain unchanged. No hypothetical example is an executed
+incident or filed issue; no new service, credential handling, migration or
+issue43 map enforcement was introduced. T05 merge and final delivery validation
+remain separate required gates.

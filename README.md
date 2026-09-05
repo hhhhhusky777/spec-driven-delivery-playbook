@@ -18,6 +18,7 @@ governance without forcing every project to generate every document.
 | Spec-driven routing | Select only the contracts, policies, decisions, plans, and runbooks a change actually needs |
 | Stateful delivery | Track the current gate, next action, blockers, dependencies, evidence, and immutable history |
 | TDD and failure triage | Use tests to find product defects and justify failures before changing either code or tests |
+| Upstream gap reporting | Triage exceptions and report confirmed playbook gaps safely, without duplicating issues or bypassing gates |
 | Safe incremental delivery | Ship the smallest self-contained change that keeps its integration target working |
 | Parallel-delivery isolation | Keep multi-task features independent through feature and task branch boundaries |
 | Two-agent review sessions | Review each authorized artifact or coherent batch with two initially isolated reviewers; retain their seats across correction rounds |
@@ -113,6 +114,11 @@ completion, and closure outputs before archive; dependent tasks still need
 exact reviewed/current predecessor results. See the [phase readiness contract](docs/batch-review-and-recovery.md#version-4-phase-aware-readiness)
 and [simulated walkthrough](examples/batched-delivery/README.md#simulated-phase-aware-readiness). Existing v2/v3
 records retain their original checks until an explicitly reviewed migration.
+
+Exceptions across all phases follow [shared triage and upstream reporting](docs/batch-review-and-recovery.md#exception-triage-and-upstream-reporting):
+diagnose the responsible layer, reuse or open a sanitized issue for a confirmed
+playbook gap, and keep a pending draft when access or disclosure authority is
+missing. Filing an issue never approves a workaround or resumes blocked work.
 
 ```mermaid
 flowchart TD

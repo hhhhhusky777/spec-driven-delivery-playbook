@@ -293,6 +293,67 @@ external IDs/effects, owner, next action and unblock condition. Keep failures
 and reconciliation history append-only. Batch counters link that checkpoint;
 structural validation does not prove that external effects were inspected.
 
+## Exception triage and upstream reporting
+
+This duty applies across adoption, planning, implementation, validation,
+archive, cleanup and upgrades, whether batched or unbatched. It does not grant
+new write, disclosure, recovery or merge authority. Before retrying or changing
+a failed gate, preserve the failure and diagnose its responsible layer. Use
+the [triage record](../templates/reviews/exception-triage.md) in the existing
+canonical checkpoint/manifest/assessment, not a second progress ledger.
+
+| Classification | Evidence needed | Routing |
+| --- | --- | --- |
+| PROJECT | Project code/configuration/environment explains the failure against a valid contract | Fix the project layer under its existing task and tests; no automatic playbook issue |
+| ADOPTION | Installed mappings or generated project artifacts conflict with the adopted source contract | Reconcile the adoption under review; do not blame upstream without source evidence |
+| STALE_VERSION | Exact pin differs from the intended version or a verified newer revision already fixes this cause | Link existing fix if available; assess an upgrade separately, never silently change the pin |
+| PLAYBOOK_GAP | Verified playbook contract/template/skill/checker is missing, contradictory or wrong; source evidence or a minimal reproducer distinguishes it from local misuse | Search canonical upstream and update a matching issue or open a sanitized issue |
+| UNKNOWN | Evidence cannot yet isolate responsibility | Preserve uncertainty and the next bounded diagnostic; do not label a confirmed upstream defect |
+
+Record expected versus observed behavior, exact playbook repository/pin,
+candidate/action/failing gate, affected IDs, diagnostic/reproducer and last safe
+checkpoint. Keep valid evidence and invalidate affected dependencies using the
+existing recovery rules. Multiple contributing causes may be recorded separately;
+an upstream defect and a local misconfiguration need not share one remedy.
+
+For PLAYBOOK_GAP, perform the following reporting action without an extra
+approval prompt when existing authority already covers that disclosure and
+destination. Otherwise keep a sanitized pending draft and request only the
+missing authority in the normal owner decision table.
+
+1. **Verify destination.** Resolve canonical upstream from the installed
+   manifest and verified runtime source; do not assume the project origin is
+   the playbook repository. Missing/mismatched provenance stops publishing.
+   Do not read an unverified checkout or modify a project whose runtime gate
+   forbids edits; return a sanitized pending handoff if no record write is allowed.
+2. **Deduplicate.** Search open and closed issues using sanitized cause,
+   diagnostic and version terms. Compare cause and affected version, not just
+   title. Reuse a matching issue and add only new evidence. If a verified fix
+   already covers the installed pin's defect, record STALE_VERSION and the
+   existing issue. A distinct regression may warrant a new issue linked to it.
+   Do not open a fresh issue for each retry or identical recurrence.
+3. **Publish safely.** Include expected/observed behavior, exact version,
+   minimal sanitized reproduction or clearly labeled evidence-only gap,
+   impact, affected controls and a safe workaround or None. Remove credentials,
+   private source/data and unnecessary personal information from both issue
+   text and search queries. Security-sensitive reports use the approved private
+   disclosure route, never a public issue; absent a verified safe route or
+   permission, preserve a sanitized pending draft instead.
+4. **Confirm and link.** Record the returned issue identity only after
+   verifying the actual result; link it in the canonical recovery record with
+   an owner and next action. With missing access, offline/API failure or denied
+   authority, mark reporting PENDING, not filed. After an ambiguous write,
+   inspect external effects before retrying; do not duplicate an issue because
+   the response was lost. Reporting failures do not recursively create reports
+   or reset retry/no-progress counters. Use remaining recovery budgets.
+
+An issue is tracking evidence, not a workaround approval or proof of recovery.
+It never weakens a quality/policy gate, changes scope, approves a migration,
+permits merge or resumes blocked work. Resume affected work only after its
+existing controls and authority are satisfied; independently authorized
+unaffected work may continue. Report important risks and required decisions
+in the owner attention table, with links rather than copied long documents.
+
 ## Closure and measurement
 
 Review actual validation, record, retrospective and exact archive/cleanup plan

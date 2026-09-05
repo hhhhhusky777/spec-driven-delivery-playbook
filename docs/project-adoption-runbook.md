@@ -530,6 +530,12 @@ is outside its authority.
 
 ## 10. Failure handling and rollback
 
+Apply [exception triage and upstream reporting](batch-review-and-recovery.md#exception-triage-and-upstream-reporting)
+to adoption and upgrade failures. Reuse a matching upstream issue for a
+confirmed source gap; local adoption errors and old pins need their own
+appropriate correction, not an automatic new playbook issue. Preserve the
+existing runtime-verification and rollback boundaries below.
+
 Before changing a document, test, configuration, or workflow after a failure,
 record what happened, what was expected, the relevant authority, and whether
 the cause is a project defect, adoption-design defect, configuration defect,

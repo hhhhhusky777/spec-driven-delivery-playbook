@@ -5,6 +5,20 @@ description: Assess and apply a prepared Spec-Driven Delivery Playbook revision 
 
 # SDD Playbook Upgrade
 
+## Exception routing
+
+When an exception occurs in any phase, read and apply
+`docs/batch-review-and-recovery.md#exception-triage-and-upstream-reporting`
+from the verified playbook checkout, using its
+`templates/reviews/exception-triage.md` fields in the canonical recovery record.
+This duty is not limited to batches. Diagnose before retrying; confirmed source
+gaps require deduplicated, authorized and sanitized upstream reporting, not an
+automatic project-origin issue. Missing access/authority leaves a pending draft;
+reporting never bypasses gates. If runtime verification itself fails, preserve
+the stop and sanitized diagnostic; do not read an unverified checkout or perform
+prohibited project writes. Installed copies use their approved pin, not latest
+source instructions.
+
 ## Optional batched route
 
 Before using an explicitly approved upgrade batch, read

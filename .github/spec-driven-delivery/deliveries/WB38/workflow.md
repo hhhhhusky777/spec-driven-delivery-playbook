@@ -28,20 +28,20 @@
 | Trigger identity/run ID | WB38-TRIGGER-01; 2026-09-05; owner manual invocation |
 | Selected route | Route 3 — systemic design/policy gap |
 | Manifest review state | APPROVED |
-| Current artifact/gate | [T04 PR 49](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/49) |
+| Current artifact/gate | [T05 PR 50](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/50) |
 | Current review phase | IMPLEMENTATION |
-| Current review target ID | T04 |
-| Current artifact review state | NOT_STARTED |
-| Self-review state | NOT_STARTED |
-| Self-review candidate revision | T04-R02 |
-| Self-review evidence | [T04 self-review](T04-evidence.md) |
-| Fresh-context review state | NOT_STARTED |
-| Fresh-context review session ID | None |
-| Fresh-context assigned reviewers | None |
+| Current review target ID | T05 |
+| Current artifact review state | IN_REVIEW |
+| Self-review state | SELF_REVIEW_PASSED |
+| Self-review candidate revision | T05-R01 |
+| Self-review evidence | [T05 self-review](T05-evidence.md) |
+| Fresh-context review state | IN_REVIEW |
+| Fresh-context review session ID | WB38-T05-S01 |
+| Fresh-context assigned reviewers | /root/wb38_t05_r1, /root/wb38_t05_r2 |
 | Fresh-context required approvals | 2 |
 | Fresh-context approved reviewers | None |
 | Fresh-context reviewed revision | None |
-| Fresh-context review evidence | [T04 packet](../../reviews/WB38-T04-S01.md) |
+| Fresh-context review evidence | [T05 packet](../../reviews/WB38-T05-S01.md) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | None |
 | Human review evidence | None |
@@ -192,14 +192,14 @@ is separately effective; PR publication may supplement them now.
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
 | Current artifact/task | T05 |
-| Current artifact review | NOT_STARTED; T04 implementation |
-| Last approved artifact | WB38-READINESS-R01; W04/P04 and checkpoint |
-| Next ready action | Implement accepted T04 with one consolidated readiness check |
+| Current artifact review | IN_REVIEW; T05-R01 |
+| Last approved artifact | T04; PR49 reviewed and merged |
+| Next ready action | Two retained T05 reviewers inspect exact PR50 candidate |
 | Active blockers | None |
 | Stale artifacts | None |
 | Validation complete | No delivery validation |
-| Validation remaining | T04/T05 amendment acceptance and implementation; final integrated validation and closure |
-| Branch/PR | codex/task-46-phase-readiness; task PR not yet opened; target feature branch |
+| Validation remaining | T05 review/merge; final integrated validation and closure |
+| Branch/PR | codex/task-47-exception-triage; PR50; target feature branch |
 | Last updated | 2026-09-05 Asia/Shanghai |
 
 Require all active tasks terminal and required evidence current before parent
