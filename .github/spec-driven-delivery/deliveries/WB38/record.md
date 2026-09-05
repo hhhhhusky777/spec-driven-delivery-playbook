@@ -1,5 +1,39 @@
 # WB38 final validation and proposed closure
 
+## Renewed final validation after T06
+
+This live section supersedes the historical R01 candidate below. PR51 merged
+as `1d667356d9a652c15fc197fbd97e0a977b2ef32d` before its findings were resolved.
+The owner subsequently approved corrective PR52 at
+`080cbf49e1fc353fb54b30551b6b08122fcc68a3`; it merged as
+`15a648f06e22db4b195af683f2f76d62c87dcdff`. The merged tree matches the reviewed
+candidate exactly. T06 restores early ordinary workflow startup and reconciles
+the output-evidence graph. Both original findings were resolved by the retained
+reviewers on PR52, not silently waived by the prior merge.
+
+| Type | Important result / decision | Evidence and boundary |
+| --- | --- | --- |
+| Attention | All six tasks are merged to main | T01-T05 history below; T06 PR52 and its two exact-head COMMENT receipts |
+| Attention | Startup defect and evidence links corrected | [T06 evidence](T06-evidence.md); no installed pin change |
+| Attention | Corrective candidate checks passed | 90 tests, documentation/lifecycle/Mermaid and hosted checks; post-merge revalidation recorded in final review |
+| Decision after review | Accept renewed final validation | This record and current plan/workflow; no further executable changes |
+| Decision after review | Authorize bounded archive/reset sequence below | Only after validation acceptance; no branch deletion, runtime cleanup or migration |
+
+Final validation remains IN_REVIEW. T06 approval is not approval of archive,
+reset or cleanup. The source installation remains INSTALLED, not ACTIVE.
+The original archive sequence below remains a proposal; no archive/reset has
+been performed. Review history remains on PR51 and PR52, including the premature
+merge and the corrective round. No performance-savings claim is introduced.
+
+Post-merge docs:all at `15a648f06e22db4b195af683f2f76d62c87dcdff` passed 90
+tests, zero failed/skipped, 6674.852084 ms; Markdown, structure, lifecycle and
+Mermaid checks passed. Self-review of this control-only reconciliation checks
+all six terminal tasks, exact T06 output dependency, main integration evidence,
+preserved historical receipts and the still-unapproved archive boundary:
+SELF_REVIEW_PASSED for WB38-FINAL-R03. Exact commit is bound in the PR packet.
+
+## Historical R01 candidate
+
 Status: VALIDATING; independent review and owner acceptance pending. This
 record links the [live workflow](workflow.md), [task plan](implementation-plan.md)
 and [immutable accepted conclusion](../../solution-whiteboard.md). It records
@@ -110,10 +144,26 @@ Only after final owner acceptance and verified main integration:
    `.github/spec-driven-delivery/solution-whiteboard.md` in
    `.github/spec-driven-delivery/archive/WB38/solution-whiteboard.md`.
    Add archival control metadata/state ARCHIVED and a link to this delivery
-   record without rewriting accepted Sections 3-14. Record source/archive
-   identities and verify the preserved body byte-for-byte.
+   record. Preserve accepted Sections 3-14 except for the link-only relocation
+   specified below. Record source/archive identities and verify preservation
+   by reversing exactly the recorded destination transformations.
    Current complete source blob is 19dd57ae9ea85b8a7dfd3a39636667c876bf59e3;
    any intervening change requires reconciliation before copying.
+
+   Link relocation: for each relative Markdown link destination in the source,
+   prefix `../../` because the archive is two directories deeper. Keep link
+   labels, fragments and substantive text unchanged; leave fragment-only,
+   repository-root and external URLs unchanged. Record each old/new destination
+   in an explicit relocation table in the delivery evidence. Resolve every
+   transformed link to the same repository target and anchor as the source.
+   For example, `project-contracts.md` becomes `../../project-contracts.md`,
+   and `../../CONTRIBUTING.md` becomes `../../../../CONTRIBUTING.md`.
+   Reject any unmatched, ambiguous or non-link change. After reversing only
+   the recorded destination changes, Sections 3-14 must match the source bytes
+   exactly. Preserve the original complete file through immutable Git commit
+   `15a648f06e22db4b195af683f2f76d62c87dcdff` and blob identity above; record the
+   archive blob separately. This is not permission to rewrite accepted meaning,
+   weaken link checks or create unrelated compatibility copies.
 3. Add the reciprocal archive link to this record, verify both links and the
    accepted body, then mark the workflow ARCHIVED. Keep task and review history.
 4. Only after archive verification, replace the stable working whiteboard with
