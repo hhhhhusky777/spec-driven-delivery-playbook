@@ -1,5 +1,15 @@
 # Project Adoption Manifest — `<project>`
 
+## Optional batched route
+
+A project may authorize one installation preparation/review batch. Record its
+scope, authority and evidence here; mappings and policies stay proposed until
+joint acceptance. Runtime verification, neutral whiteboard, pilot and activation
+remain separate obligations, not automatic consequences of file creation.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Use this template with the
 [Project Adoption Runbook](../../docs/project-adoption-runbook.md). Replace all
 applicable placeholders, remove these instructions, and keep the instantiated

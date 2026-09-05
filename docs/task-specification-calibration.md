@@ -1,5 +1,15 @@
 # Task-specification calibration guide
 
+## Optional batched route
+
+Batched planning accepts substantive task context with the complete plan.
+One consolidated fresh readiness check precedes coding; unchanged facts do not
+need another full reviewer session. Prove during planning that prerequisites
+are achievable without requiring future output approval.
+
+See [Batched review and recovery](../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 This guide calibrates the development policy's `COMPLETE` task-specification
 state. A complete specification lets an implementer proceed without inventing
 or changing product or system behavior. It is not a source-code blueprint.

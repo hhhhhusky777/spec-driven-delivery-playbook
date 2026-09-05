@@ -9,7 +9,9 @@ archived copy ARCHIVED, and link its delivery record bidirectionally. Verify
 the copy and links before creating a new EMPTY working whiteboard. Never
 overwrite accepted conclusions, decisions, or earlier evidence.
 
-Concise records and reviewer receipts stay in Git. Bulky logs follow the
+Historical reviewer receipts stay in Git; prospective review retention follows
+[the adopted PR evidence contract](../../../docs/batch-review-and-recovery.md#pr-publication-and-retention).
+Bulky logs follow the
 [quality policy](../../../docs/documentation-quality-policy.md#11-project-tooling-test-strategy)
 retention rules. No raw credentials, machine-local paths, or private data are
 archived. Cleanup removes only installer-owned runtime after delivery closure.

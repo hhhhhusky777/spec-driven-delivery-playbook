@@ -1,5 +1,14 @@
 # Development Policy Template
 
+## Optional batched route
+
+An explicitly adopted batch route consolidates preparation, readiness and
+review boundaries. It does not relax complete task specifications, WIP,
+dependency/data ordering, context freshness, Red closure or owner authority.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Use this template to create a repository-wide development policy. The policy
 defines durable engineering rules; it must not contain one feature's design,
 task ledger, test results, or delivery chronology.

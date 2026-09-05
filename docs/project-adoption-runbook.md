@@ -1,5 +1,17 @@
 # Project Adoption Runbook
 
+## Optional batched route
+
+For explicitly authorized batched adoption, review stops B/C and neutral
+whiteboard preparation may be assembled into one installation package. Mapping,
+policy decisions, conformance and final verification are still individually
+accounted for. Prepare the neutral whiteboard before final package acceptance;
+INSTALLED and runtime handoff follow actual acceptance and verification. A real
+pilot remains required before ACTIVE.
+
+See [Batched review and recovery](../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Use this runbook to integrate the playbook into an existing or new project.
 It owns the reusable adoption procedure. The
 [Project Adoption Manifest Template](../templates/adoption/project-adoption-manifest.md)

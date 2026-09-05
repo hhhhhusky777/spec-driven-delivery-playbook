@@ -1,5 +1,15 @@
 # Template Governance
 
+## Optional batched route
+
+Version 3 permits explicitly scoped provisional preparation and coherent review
+packages. A provisional dependency can support preparation, never execution or
+approval. Every retained obligation still needs a satisfaction point; the
+per-artifact review procedure below applies outside a valid batch.
+
+See [Batched review and recovery](../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 This document governs the reusable templates in this repository. It is not a
 project development policy; projects instantiate and approve their own policies.
 All repository changes also follow the

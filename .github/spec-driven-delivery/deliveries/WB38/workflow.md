@@ -17,43 +17,43 @@
 | Field | Value |
 | --- | --- |
 | Delivery | WB38 — full-lifecycle playbook efficiency |
-| State | AWAITING_HANDOFF |
-| Previous state | AWAITING_HANDOFF |
+| State | DELIVERY_ACTIVE |
+| Previous state | GATES_READY |
 | Owner | Repository owner |
 | Concluded whiteboard | [WB38-R03](../../solution-whiteboard.md) |
-| Approved workflow handoff | Not approved; [provisional H02](handoff.md) |
-| Consumed handoff version | None |
+| Approved workflow handoff | [Accepted H02](handoff.md) |
+| Consumed handoff version | WB38-H02 |
 | Whiteboard conclusion version/date | WB38-R03; 2026-09-05 |
 | Trigger mode | MANUAL_INVOCATION |
-| Trigger identity/run ID | Not triggered |
-| Selected route | Proposed Route 3 — systemic design/policy gap |
-| Manifest review state | NOT_STARTED |
-| Current artifact/gate | Provisional planning package |
-| Current review phase | DESIGN |
-| Current review target ID | workflow |
+| Trigger identity/run ID | WB38-TRIGGER-01; 2026-09-05; owner manual invocation |
+| Selected route | Route 3 — systemic design/policy gap |
+| Manifest review state | APPROVED |
+| Current artifact/gate | [T01 / PR 42](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42) |
+| Current review phase | IMPLEMENTATION |
+| Current review target ID | T01 |
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB38-PKG-R02 |
-| Self-review evidence | [Package record](../../reviews/WB38-PLAN-S01.md) |
+| Self-review candidate revision | T01-R01 |
+| Self-review evidence | [T01 self-review](../../reviews/WB38-T01-S01.md) |
 | Fresh-context review state | IN_REVIEW |
-| Fresh-context review session ID | WB38-PLAN-S01 |
-| Fresh-context assigned reviewers | /root/wb38_plan_r1, /root/wb38_plan_r2 |
+| Fresh-context review session ID | WB38-T01-S01 |
+| Fresh-context assigned reviewers | /root/wb38_t01_r1, /root/wb38_t01_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | Not recorded |
-| Fresh-context reviewed revision | Not recorded |
-| Fresh-context review evidence | [Package record](../../reviews/WB38-PLAN-S01.md); pending receipts |
+| Fresh-context approved reviewers | None |
+| Fresh-context reviewed revision | None |
+| Fresh-context review evidence | [T01 review](../../reviews/WB38-T01-S01.md) |
 | Human review state | NOT_STARTED |
-| Human reviewed revision | Not recorded |
-| Human review evidence | Not recorded |
-| Implementation continuation mode | NOT_SELECTED |
-| Implementation mode authority | Not selected |
-| Implementation mode scope | Not selected |
-| Implementation repository | Not selected |
-| Implementation mode selected at | Not selected |
-| Next action | Joint exact-package review, consolidated corrections and owner acceptance |
-| Next action target IDs | handoff, workflow, audit, contracts, plan |
-| Allowed write scope | .github/spec-driven-delivery |
-| Next action write targets | .github/spec-driven-delivery/deliveries/WB38 |
+| Human reviewed revision | None |
+| Human review evidence | None |
+| Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |
+| Implementation mode authority | Owner current-policy choice and final acceptance in WB38-READINESS |
+| Implementation mode scope | T01, T02 |
+| Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
+| Implementation mode selected at | 2026-09-05T17:22:26+08:00 |
+| Next action | Two isolated reviewers inspect the complete T01 PR; consolidate corrections |
+| Next action target IDs | T01 |
+| Allowed write scope | README.md; CHANGELOG.md; CONTRIBUTING.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/project-adoption-runbook.md; docs/task-specification-calibration.md; docs/batch-review-and-recovery.md; templates/README.md; templates/discovery/solution-whiteboard.md; templates/handoffs/whiteboard-to-workflow.md; templates/workflows/sdd-delivery-workflow.md; templates/delivery/implementation-plan.md; templates/policies/development-policy.md; templates/policies/pull-request-policy.md; templates/policies/specialized-policy.md; templates/testing/test-strategy.md; templates/decisions/architecture-decision-record.md; templates/reviews/agent-self-review.md; templates/reviews/fresh-context-agent-review.md; templates/reviews/review-batch.md; templates/adoption/project-adoption-manifest.md; templates/adoption/agent-adoption-trigger.md; templates/adoption/playbook-upgrade-assessment.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; config/sdd-lifecycle-schema.json; config/sdd-lifecycle-schema-v2.json; scripts/sdd-lifecycle.mjs; tests/sdd-lifecycle.test.mjs; tests/documentation-quality.test.mjs; .github/pull_request_template.md; .github/spec-driven-delivery/archive/README.md; examples/batched-delivery/README.md; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
+| Next action write targets | .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/deliveries/WB38 |
 | Review mode | EXPLICIT_REVIEW |
 | Review mode authority | Owner scoped live-trial approval; linked above |
 | Automation boundary | Not applicable |
@@ -62,11 +62,11 @@
 | Semantic decision introduced | YES |
 | Automation exception | Scoped provisional preparation only |
 | Automation audit record | No automatic execution or approval |
-| Last routed | Not routed; provisional preparation on 2026-09-05 |
-| Draft version | WB38-W03 |
+| Last routed | WB38-TRIGGER-01; 2026-09-05 |
+| Draft version | WB38-W04 |
 
-The legacy lifecycle remains AWAITING_HANDOFF. The trial permits drafting the
-combined package without pretending that routing or consumption occurred.
+The accepted H02 handoff was consumed once as WB38-TRIGGER-01. Current control
+fields and the final acceptance record supersede historical preparation wording.
 Freshness is not approval. No source-policy change is active merely because
 its proposed delivery has a plan.
 
@@ -91,20 +91,40 @@ No new architectural service is selected; a separate ADR is unnecessary.
 | Order | Artifact ID | Artifact | Decision | Reason/trigger | Template or authority | Owner | Review owner | Review state/link |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 0 | whiteboard | Accepted conclusion | REUSE | Owner accepted WB38-R03 | [Conclusion](../../solution-whiteboard.md) | Owner | Two WB38 reviewers and owner | APPROVED / WB38-S01 |
-| 1 | handoff | Handoff | GENERATE | Normalize accepted requirements | [H02](handoff.md) | Coordinator | Two planning reviewers and owner | NOT_STARTED |
-| 2 | workflow | Workflow manifest | GENERATE | Route systemic change | This document | Coordinator | Two planning reviewers and owner | NOT_STARTED |
-| 3 | audit | Clause/assertion inventory | GENERATE | PG-01 through PG-04 affect existing controls | [Audit](control-audit.md) | Coordinator | Governance and tests | NOT_STARTED |
-| 4 | plan | FULL implementation plan | GENERATE_FULL | Specify coherent changes and failure cases | [Plan](implementation-plan.md) | Coordinator | Governance and tests, then owner | NOT_STARTED |
-| 4a | contracts | Proposed system contracts | GENERATE | Specify BC01-BC08 for implementation | [Contracts](design-contracts.md) | Coordinator | Two planning reviewers and owner | NOT_STARTED |
-| 5 | policy | Existing policy/schema owners | UPDATE_EXISTING | Formalize PG-01 through PG-04 and G-04 | Audit source inventory | Maintainer | Two PR reviewers and owner | NOT_STARTED |
-| 6 | consumers | Templates, skills, guidance, examples | UPDATE_EXISTING | Prevent contradictory cadence | Plan T01 | Maintainer | Two PR reviewers and owner | NOT_STARTED |
+| 1 | handoff | Handoff | GENERATE | Normalize accepted requirements | [H02](handoff.md) | Coordinator | Two planning reviewers and owner | APPROVED / WB38-PLAN-S01 and final owner acceptance |
+| 2 | workflow | Workflow manifest | GENERATE | Route systemic change | This document | Coordinator | Two planning reviewers and owner | APPROVED / WB38-PLAN-S01 and final owner acceptance |
+| 3 | audit | Clause/assertion inventory | GENERATE | PG-01 through PG-04 affect existing controls | [Audit](control-audit.md) | Coordinator | Governance and tests | APPROVED / WB38-PLAN-S01 and final owner acceptance |
+| 4 | plan | FULL implementation plan | GENERATE_FULL | Specify coherent changes and failure cases | [Plan](implementation-plan.md) | Coordinator | Governance and tests, then owner | APPROVED / WB38-PLAN-S01 and final owner acceptance |
+| 4a | contracts | Proposed system contracts | GENERATE | Specify BC01-BC08 for implementation | [Contracts](design-contracts.md) | Coordinator | Two planning reviewers and owner | APPROVED / WB38-PLAN-S01 and final owner acceptance |
 | 7 | adr | Separate ADR | SKIP | No new service or difficult-to-reverse architecture selected | Plan inline decisions | Owner | Planning reviewers | NOT_STARTED |
 | 8 | runtime | Runtime fixes and pin upgrade | DEFER | Independent issues 33, 34 and 36; pin upgrade separately controlled | Whiteboard non-scope | Owner | Planning reviewers | NOT_STARTED |
-| 9 | record | Validation and closure packet | GENERATE | Final evidence, retrospective and archive plan | Registry/archive contract | Coordinator | Two closure reviewers and owner | NOT_STARTED |
 
 Artifact decisions remain proposals until joint acceptance. Shared policy
 changes are deliverables, not falsely active prerequisites. The audit and BC01-BC08 specify the proposed-adoption boundary for joint
 acceptance. Global policy is not active before reviewed merge.
+
+### Future output obligations
+
+The readiness manifest above selects design inputs, not future implementation
+results. The following required outputs remain in scope, unimplemented and
+unapproved. Moving their representation does not defer their delivery or remove
+their dependencies, owners or gates.
+
+| Output ID | Obligation / owner | Required inputs or completed outputs | Satisfaction gate | Actual evidence |
+| --- | --- | --- | --- | --- |
+| policy | UPDATE_EXISTING policy/schema owners; maintainer | Accepted plan; BC01-BC08 and audit | T01 PR review and owner merge approval | NOT_STARTED |
+| consumers | UPDATE_EXISTING templates, skills, guidance, examples; maintainer | policy changes within the coherent T01 unit | Same T01 PR review and owner merge approval | NOT_STARTED |
+| T01-result | Core implementation; coordinator | Accepted T01 specification/context, plan, audit, contracts | T01 tests, PR reviews, owner merge and target verification | NOT_STARTED |
+| T02-result | Publication helper; coordinator | T01 DONE/current, accepted T02 specification, plan, contracts | T02 tests/live evidence, PR reviews, owner merge and target verification | NOT_STARTED |
+| record | GENERATE validation and closure packet; coordinator | T01 and T02 terminal, integrated target verified | Two closure reviewers and owner acceptance | NOT_STARTED |
+
+At their actual review/consumption boundaries, register produced output evidence
+with its exact revision in the live dependency register before using it. Do not
+replace task-specification IDs with output meanings. T01-result/T02-result
+distinguish future results from the stable task IDs used for mode scope and PR
+history. The plan owns T02's execution dependency on completed T01; current
+specification inputs never certify that dependency complete. Closure remains
+blocked until all task and target evidence exists.
 
 ## 3. Dependencies and blockers
 
@@ -113,20 +133,17 @@ acceptance. Global policy is not active before reviewed merge.
 | Artifact ID | Artifact/link | Depends on | Consumed version | Current version | Change impact | Freshness | Blocked by |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | whiteboard | [Conclusion](../../solution-whiteboard.md) | None | WB38-R03 | WB38-R03 | CONTROL_ONLY | CURRENT | None |
-| handoff | [Handoff](handoff.md) | whiteboard | None | WB38-H02 | MATERIAL | STALE | None |
-| workflow | This document | handoff | None | WB38-W03 | MATERIAL | STALE | None |
-| audit | [Control audit](control-audit.md) | whiteboard | None | WB38-A02 | MATERIAL | STALE | None |
-| contracts | [BC01-BC08](design-contracts.md) | whiteboard | None | WB38-C01 | MATERIAL | STALE | None |
-| plan | [Plan](implementation-plan.md) | workflow, audit, contracts | None | WB38-P03 | MATERIAL | STALE | None |
-| policy | Proposed policy/schema change | plan | None | Not generated | UNKNOWN | STALE | None |
-| consumers | Proposed consumers | policy | None | Not generated | UNKNOWN | STALE | None |
+| handoff | [Handoff](handoff.md) | whiteboard | WB38-H02 | WB38-H02 | CONTROL_ONLY | CURRENT | None |
+| workflow | This document | handoff | WB38-W04 | WB38-W04 | CONTROL_ONLY | CURRENT | None |
+| audit | [Control audit](control-audit.md) | whiteboard | WB38-A02 | WB38-A02 | CONTROL_ONLY | CURRENT | None |
+| contracts | [BC01-BC08](design-contracts.md) | whiteboard | WB38-C01 | WB38-C01 | CONTROL_ONLY | CURRENT | None |
+| plan | [Plan](implementation-plan.md) | workflow, audit, contracts | WB38-P04 | WB38-P04 | CONTROL_ONLY | CURRENT | None |
 | adr | Not selected | None | None | None | CONTROL_ONLY | CURRENT | None |
 | runtime | Deferred independent scope | None | None | None | CONTROL_ONLY | CURRENT | None |
-| T01 | Core implementation unit | plan, audit, contracts | None | Not started | UNKNOWN | STALE | None |
-| T02 | Publication helper | T01, plan, contracts | None | Not started | UNKNOWN | STALE | None |
-| record | Future closure | T01, T02 | None | Not generated | UNKNOWN | STALE | None |
+| T01 | T01 specification and substantive context in plan | plan, audit, contracts | WB38-P04-T01-spec | WB38-P04-T01-spec | CONTROL_ONLY | CURRENT | None |
+| T02 | T02 specification and substantive context in plan | T01, plan, contracts | WB38-P04-T02-spec | WB38-P04-T02-spec | CONTROL_ONLY | CURRENT | None |
 
-Draft predecessor identities are H02/W03/A02/C01/P03. Freeze actual content hashes
+Draft predecessor identities are H02/W04/A02/C01/P04. Freeze actual content hashes
 before review; these labels alone are not immutable receipts. STALE here
 explicitly prohibits consumption; the trial permits only preparation against
 these known drafts. On material changes, invalidate transitive dependants;
@@ -168,16 +185,16 @@ is separately effective; PR publication may supplement them now.
 
 | Field | Current value |
 | --- | --- |
-| Workflow state | AWAITING_HANDOFF |
-| Current artifact/task | Complete proposed planning package |
-| Current artifact review | IN_REVIEW; receipts pending |
-| Last approved artifact | WB38-R03 whiteboard |
-| Next ready action | Joint exact-package review |
+| Workflow state | DELIVERY_ACTIVE |
+| Current artifact/task | T01 |
+| Current artifact review | IN_REVIEW; T01-R01 |
+| Last approved artifact | WB38-READINESS-R01; W04/P04 and checkpoint |
+| Next ready action | Coherent T01 PR review |
 | Active blockers | None |
-| Stale artifacts | handoff, workflow, audit, contracts, plan, policy, consumers, T01, T02, record |
+| Stale artifacts | None |
 | Validation complete | No delivery validation |
 | Validation remaining | Planning checks/review; all implementation and closure evidence |
-| Branch/PR | codex/task-38-adoption-efficiency-design; [planning PR 41](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/41); combined same-seat review |
+| Branch/PR | codex/task-38-core-batching; [draft PR42](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42); target codex/feature-38-playbook-efficiency |
 | Last updated | 2026-09-05 Asia/Shanghai |
 
 Require all active tasks terminal and required evidence current before parent
@@ -190,3 +207,18 @@ the working whiteboard; no deletion follows from this draft.
 | Date | Event | Effect | Authority |
 | --- | --- | --- | --- |
 | 2026-09-05 | Prepared provisional H02/W01/A01/P01 package | No approval, consumption or execution transition | Owner scoped live trial |
+| 2026-09-05 | W04 separates readiness inputs from future output obligations | Material representation amendment; all output duties preserved; no readiness transition yet | Owner approved correction; exact retained-seat review pending |
+
+### Accepted-state reconciliation
+
+Owner accepted the original merged planning package and exact W04/P04 readiness
+amendment. Earlier draft/pending narrative describes preparation history; current
+control tables and the R03 final acceptance record own live status. Normative
+requirements and output obligations are unchanged. ROUTING follows the actual
+AWAITING_HANDOFF state; subsequent transitions are recorded only as performed.
+
+Readiness reconciliation traversed ROUTING -> MANIFEST_IN_REVIEW ->
+ARTIFACTS_SELECTED -> ARTIFACT_GENERATING -> ARTIFACT_IN_REVIEW -> GATES_READY.
+The unchanged lifecycle checker passed after each actual transition. Shared
+exact acceptance supplies the selected prerequisite dispositions; future
+outputs remain NOT_STARTED. Owner manual mode was recorded at GATES_READY.

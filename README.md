@@ -20,7 +20,7 @@ governance without forcing every project to generate every document.
 | TDD and failure triage | Use tests to find product defects and justify failures before changing either code or tests |
 | Safe incremental delivery | Ship the smallest self-contained change that keeps its integration target working |
 | Parallel-delivery isolation | Keep multi-task features independent through feature and task branch boundaries |
-| Two-agent review sessions | Start each gate with two fresh reviewers in stable seats and preserve their context across revision rounds, with controlled replacement only for recorded unavailability, authority, or specialty need |
+| Two-agent review sessions | Review each authorized artifact or coherent batch with two initially isolated reviewers; retain their seats across correction rounds |
 | Controlled automation | Continue deterministic steps automatically and optionally merge scoped implementation PRs after every gate passes |
 | Evolving governance | Add or strengthen specialized policies when real delivery evidence exposes a systemic gap |
 | Versioned upgrades | Assess and migrate a project's pinned playbook revision without silently changing active contracts |
@@ -48,6 +48,10 @@ its first empty solution whiteboard. See [Adopt and use the playbook](#adopt-and
 for the complete procedure.
 
 ## Contents
+
+For fewer repeated review stops, see the explicitly adopted
+[batched review and recovery route](docs/batch-review-and-recovery.md).
+It retains quality and human authority while grouping coherent work.
 
 - [What the playbook gives you](#what-the-playbook-gives-you)
 - [Understand the delivery model](#understand-the-delivery-model)
@@ -88,73 +92,53 @@ for the complete procedure.
 
 ### The core idea
 
-Always begin with a solution whiteboard. Once discussion converges, generate a
-small handoff document from its structured conclusion and review it. Approval
-of that version triggers the delivery workflow automatically or through an
-explicit case-by-case invocation. The workflow classifies the change, selects
-the smallest safe route, reuses active project policies, and generates only the
-artifacts the delivery needs. Each action follows its pre-approved review mode;
-only deterministic, non-semantic steps may continue automatically before the
-next mandatory review checkpoint. Separately, after all design gates pass, the
-user may authorize scoped implementation PR auto-merge with exact-revision
-self-review, repository gates, and post-merge human review.
+Always begin with a solution whiteboard. Keep lightweight discussion notes,
+then conclude once requirements, decisions and open items are reconciled.
+The workflow selects the smallest safe route and reuses active project policies.
+
+| Route | Preparation and review boundary |
+| --- | --- |
+| Existing unbatched route | Review artifacts individually under the installed project's current rules |
+| Explicitly adopted version-3 batching | Prepare a coherent package under scoped authority, then review it with two isolated reviewers; retain both seats for consolidated corrections |
+
+Batching is opt-in, not a silent upgrade of installed projects. See the
+[canonical batching contract](docs/batch-review-and-recovery.md) for controls,
+authority, exact-head evidence and recovery. The diagram below shows that route;
+the later step-by-step adoption and delivery instructions describe the unbatched
+route unless explicitly labeled otherwise.
 
 ```mermaid
 flowchart TD
-    N["Need / Requirement / Issue / Defect"] --> W["Solution Whiteboard"]
-    W --> C{"Convergence gate passed?"}
-    C -->|"No"| W
-    C -->|"Yes"| H["Generate Whiteboard Handoff"]
-    H --> HR{"Handoff review approved?"}
-    HR -->|"Changes requested"| H
-    HR -->|"Yes: automatic or manual trigger"| R["SDD Delivery Workflow Router"]
-    R --> M["Generate Delivery Manifest"]
-    M --> MR{"Manifest review approved?"}
-    MR -->|"Changes requested"| R
-
-    MR -->|"Yes"| P{"Systemic policy gap?"}
-    P -->|"Yes"| SP["Select Specialized Policy + Existing-System Audit"]
-    P -->|"No"| A{"Significant architecture decision?"}
-    SP --> A
-    A -->|"Yes"| AS["Select Architecture Decision Record"]
-    A -->|"No"| G
-    AS --> G["Generate Next Selected Artifact"]
-    G --> AR{"Required review or automatic gate passed?"}
-    AR -->|"Comments, failure, or exception"| G
-    AR -->|"Manifest or routing problem"| R
-    AR -->|"Requirement or solution problem"| W
-    AR -->|"Yes, more artifacts"| G
-    AR -->|"Yes, all artifacts"| PG["Planning, Policy, and Decision Gates Ready"]
-
-    PG --> IM{"User selected implementation continuation mode?"}
-    IM -->|"Not selected"| IM
-    IM -->|"Human review or agent auto-merge"| T["Dependency-Ordered Agile Tasks or Scoped Change"]
-    T --> D["TDD + Small Self-Contained PR"]
-    D --> MP{"Mid-delivery issue reveals a systemic rule?"}
-    MP -->|"No"| V{"Required evidence passes?"}
-    MP -->|"Yes"| RP["Register POLICY_GAP + Reroute Manifest"]
-    RP --> R
-    V -->|"Failure"| F["Failure Justification and Classification"]
-    F -->|"Requirement/design gap"| W
-    F -->|"Plan/artifact/task gap"| G
-    F -->|"New systemic rule"| RP
-    F -->|"Product/test/config/environment"| D
-    V -->|"Pass"| MC{"Reread live implementation mode"}
-    MC -->|"Human review"| HP["Open PR and stop for review"]
-    MC -->|"Agent auto-merge"| AM["Open + merge PR; queue human post-review"]
-    HP --> NT{"More tasks?"}
-    AM --> NT
-    NT -->|"Yes"| T
-    NT -->|"No"| X["Plan-Level Validation + Retrospective"]
-    X --> PH{"Post-merge human reviews closed?"}
-    PH -->|"No: resolve findings"| D
-    PH -->|"Yes"| DR["Delivery Record + Archived Whiteboard"]
+    N["Need"] --> W["Draft-first whiteboard discussion"]
+    W --> Q{"New owner decision needed?"}
+    Q -->|"Yes"| O["Batch decision questions in a table"]
+    O --> W
+    Q -->|"No"| P["Prepare conclusion, handoff, routing, contracts and plan"]
+    P --> R["One full planning-package review: two isolated reviewers"]
+    R -->|"Findings: consolidate corrections"| P
+    R -->|"Both approve"| A["Required owner acceptance"]
+    A --> C["One consolidated fresh readiness check"]
+    C -->|"Affected prerequisite fails"| F["Diagnose and reconcile affected work"]
+    F --> C
+    F -->|"Changed design or authority"| W
+    C -->|"Pass"| I["Implement dependency-ready coherent change; test and self-review"]
+    I --> PR["Open PR; full two-agent review"]
+    PR -->|"Findings: same seats review corrections"| I
+    PR -->|"Both approve; checks pass"| M["Required merge authority and repository gates"]
+    M --> V["Merge and verify"]
+    V --> T{"More implementation units?"}
+    T -->|"Yes"| C
+    T -->|"No"| CL["Prepare actual validation, record, retrospective and archive plan"]
+    CL --> CR["One full closure-package review and owner acceptance"]
+    CR -->|"Findings"| CL
+    CR -->|"Accepted; follow-ups closed"| AR["Archive, then authorized cleanup and verification"]
 ```
 
-The workflow is intentionally not a one-way waterfall. Review and delivery
-evidence can return work to the upstream artifact that owns the problem. The
-diagram abbreviates selected policy, audit, ADR, contract, plan, and runbook
-documents as one-at-a-time artifacts in the generation/review loop.
+Each coherent PR gets its own review, even when one task needs several PRs.
+Required decisions, checks, policy controls and merge authority remain intact.
+Implementation auto-merge needs explicit current scope and post-merge human
+review; batching alone never grants it. Recovery preserves valid evidence and
+rechecks affected work, with bounded retries and escalation—not automatic approval.
 
 ### Mid-delivery policy-gap rerouting
 
@@ -345,6 +329,13 @@ not `ACTIVE`.
 
 #### First-time project adoption
 
+With explicitly adopted batching, prepare the complete mapped installation
+package, including the neutral whiteboard, under scoped preparation authority;
+use one planned full two-agent review and final owner acceptance. Preserve
+conformance, source/pin checks, runtime handoff and the later real-pilot boundary.
+Without that authority, follow the unbatched steps below. See the
+[adoption batch boundary](docs/batch-review-and-recovery.md#choose-a-coherent-unit).
+
 1. Copy [`install-sdd.sh`](install-sdd.sh) to the target project root and run
    it. By default it resolves the latest `main` to an immutable commit.
 2. Give the agent only the prompt printed by the installer: follow the
@@ -472,6 +463,12 @@ points link to those authorities instead of copying volatile values. After
 every artifact action, compute structured transitive freshness. An explicit
 action stops for review; an automatic action stops if that audit finds a stale
 dependant, unknown impact, or any other exception.
+
+For explicitly adopted batching, combine the conclusion, handoff, routing,
+contracts/audit and plan into the planning review package. After acceptance,
+perform one consolidated fresh readiness check before coding. Review complete
+implementation PRs, then the actual closure package; preserve all phase-specific
+controls and legal state transitions. The following is the unbatched sequence:
 
 1. Record the need in the installed project's empty
    [solution whiteboard](templates/discovery/solution-whiteboard.md) and move
@@ -655,7 +652,9 @@ unmerged work through a feature integration branch.
 
 ### Risk-based review gates
 
-The default is `EXPLICIT_REVIEW`. Every such review gate requires reviews from
+The unbatched default is `EXPLICIT_REVIEW`. Explicitly adopted batching groups
+the normative items below into coherent review packages; it does not waive their
+acceptance. Every full review gate requires reviews from
 two newly isolated subagents of the exact candidate, followed by human review.
 It remains mandatory for requirements,
 solution conclusions, handoffs, routing, policies, ADRs, contracts, complete
@@ -727,9 +726,10 @@ sequenceDiagram
     A->>R: Open session and initialize both reviewers with no author context
     R->>P: Read contracts, base, exact candidate, full diff, and gate evidence
     R->>R: Derive expectations independently, then reconcile author evidence
-    R->>P: Publish summary and actionable inline comments
-    R-->>A: Return structured receipt
-    A->>A: Verify isolation, revisions, comments, and live workflow mode
+    R-->>A: Return exact structured receipts and actionable findings
+    A->>A: Verify isolation, reviewer identity, exact head, and live authority
+    A->>P: Publish labeled agent comments through authorized access
+    A->>A: Reconcile publication IDs and current head before continuation
     alt Changes requested
         A->>A: Accept, partly accept, reject with evidence, or defer with authority
         A->>P: Apply accepted fixes and self-review the new exact revision
@@ -941,6 +941,10 @@ implementer converts the applicable approved sources and attention-map items
 into the development policy's reviewed task context receipt. This pre-start
 gate makes the task's obligations, prohibitions, boundaries, and required
 evidence explicit without adding another workflow state.
+
+For adopted batching, substantive context is accepted in the planning package;
+the single fresh readiness check verifies current prerequisites before coding.
+Unchanged accepted context does not trigger another full two-agent review.
 
 Run the same blocking checks locally:
 

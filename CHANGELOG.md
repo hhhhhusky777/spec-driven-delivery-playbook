@@ -7,7 +7,13 @@ This project has not published a formal versioned release. Significant template
 and workflow changes are recorded here until a release/versioning policy is
 adopted.
 
-## Unreleased — updated 2026-09-04
+## Unreleased — updated 2026-09-05
+
+- Add explicit version-3 batch review and recovery contracts with consolidated
+  readiness, table-first owner briefs and draft-first discussion. Preserve v2
+  validation through frozen schema data; migration is opt-in, never an installed
+  runtime or historical-record rewrite. New PR evidence uses durable pointers
+  under the adopted retention policy; required human merge authority remains.
 
 - Made fresh-context agent review mandatory at every review gate. The author
   freezes an exact-revision packet after self-review and opens a stable review

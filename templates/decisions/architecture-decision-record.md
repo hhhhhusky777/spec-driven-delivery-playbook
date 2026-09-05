@@ -1,5 +1,14 @@
 # ADR `<number>`: `<decision title>`
 
+## Optional batched route
+
+An ADR may be prepared and reviewed within an authorized planning package.
+Its decision, alternatives and consequences still receive explicit acceptance;
+accepted decision history stays immutable.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 > **Template instructions:** Use an ADR for an architecturally significant or
 > difficult-to-reverse decision. An ADR records context, options, the accepted
 > decision, and consequences; it is not a design guide, task plan, policy, or

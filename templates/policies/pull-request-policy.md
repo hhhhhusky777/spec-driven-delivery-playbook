@@ -1,5 +1,15 @@
 # Pull Request and Branch Policy Template
 
+## Optional batched route
+
+For the adopted batch route, open the complete candidate PR before its full
+two-agent review. Existing-account comments must label agent seats and exact
+heads; textual dispositions are not formal GitHub approvals. Keep all required
+human approval, checks, protection and feature-branch rules.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Use this template to create a project-specific policy for branches, pull
 requests, review, merge, and post-merge responsibility. Replace every
 `<placeholder>`, apply the task-count routing rule, and write

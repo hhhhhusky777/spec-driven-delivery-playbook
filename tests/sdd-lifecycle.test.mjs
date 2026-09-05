@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -14,6 +15,288 @@ const REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)
 const SCHEMAS = JSON.parse(
   await readFile(path.join(REPOSITORY_ROOT, "config", "sdd-lifecycle-schema.json"), "utf8"),
 );
+
+const LEGACY_SCHEMAS = JSON.parse(
+  await readFile(path.join(REPOSITORY_ROOT, "config", "sdd-lifecycle-schema-v2.json"), "utf8"),
+);
+
+test("v3 ordinary plans require explicit batch selection and retain approval gates", async (t) => {
+  const content = plan().replace("implementation-plan@2", "implementation-plan@3");
+  const valid = await fixture(t, content.replace("| Status |", "| Review batch | None |\n| Status |"));
+  assert.deepEqual(await checkSddLifecycleDocument(valid.file, valid.root, SCHEMAS), []);
+  const missing = await fixture(t, content);
+  assert.ok((await checkSddLifecycleDocument(missing.file, missing.root, SCHEMAS))
+    .some((item) => item.rule === "SDD_REQUIRED_FIELD"));
+  const unapproved = await fixture(t, plan({ reviewState: "IN_REVIEW" })
+    .replace("implementation-plan@2", "implementation-plan@3")
+    .replace("| Status |", "| Review batch | None |\n| Status |"));
+  assert.ok((await checkSddLifecycleDocument(unapproved.file, unapproved.root, SCHEMAS))
+    .some((item) => item.rule === "SDD_PLAN_REVIEW"));
+});
+
+test("v3 batch references fail closed for unavailable, escaping and wrong-type evidence", async (t) => {
+  for (const reference of ["[batch](missing.md)", "[batch](../outside.md)", "not-a-link"]) {
+    const input = await fixture(t, plan().replace("implementation-plan@2", "implementation-plan@3")
+      .replace("| Status |", `| Review batch | ${reference} |\n| Status |`));
+    assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS))
+      .some((item) => item.rule === "SDD_BATCH_REFERENCE"), reference);
+  }
+  const content = plan().replace("implementation-plan@2", "implementation-plan@3")
+    .replace("| Status |", "| Review batch | [B01](batch.md) |\n| Status |");
+  const wrong = await fixture(t, content);
+  await writeFile(path.join(wrong.root, "batch.md"), plan());
+  assert.ok((await checkSddLifecycleDocument(wrong.file, wrong.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_REFERENCE"));
+  const escaped = await fixture(t, content);
+  await symlink(wrong.file, path.join(escaped.root, "batch.md"));
+  assert.ok((await checkSddLifecycleDocument(escaped.file, escaped.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_REFERENCE"));
+});
+
+test("review batches reject empty records rather than granting authority by type alone", async (t) => {
+  const input = await fixture(t, "<!-- sdd-schema: review-batch@3 -->\n");
+  const result = await checkSddLifecycleDocument(input.file, input.root, SCHEMAS);
+  assert.ok(result.some((item) => item.rule === "SDD_REQUIRED_FIELD"));
+});
+
+function reviewBatch(overrides = {}, artifactRows = "", controlRows = "") {
+  const fields = Object.fromEntries(SCHEMAS.artifacts["review-batch"].requiredFields.map(key => [key, "None"]));
+  Object.assign(fields, {
+    "Batch ID": "B01", "Delivery ID": "D01", Repository: "https://github.com/example/project",
+    Phase: "PLANNING", Owner: "owner", "Preparation authority": "Owner instruction 1",
+    "Authority evidence": "owner-record.md", "Allowed paths": "input.md", "Approval owner": "owner",
+    "Expiry/end condition": "Until D01 closes", "Authority status": "CURRENT", State: "PREPARING",
+    "Previous state": "PREPARING", "Transient retry limit": "2", "No-progress limit": "2",
+    "Transient retry count": "0", "No-progress count": "0", Checkpoint: "checkpoint.md",
+    "Next action": "Prepare candidate", "Action owner": "owner",
+  }, overrides);
+  return `<!-- sdd-schema: review-batch@3 -->\n\n| Field | Value |\n| --- | --- |\n` +
+    Object.entries(fields).map(([key, value]) => `| ${key} | ${value} |`).join("\n") +
+    "\n\n| Artifact ID | Path | Candidate hash | Depends on | Required control IDs | Disposition | Evidence |\n| --- | --- | --- | --- | --- | --- | --- |\n" + artifactRows +
+    "\n\n| Control ID | Owning source | Satisfaction point | Evidence | Disposition |\n| --- | --- | --- | --- | --- |\n" + controlRows;
+}
+
+test("batch preparation preserves bounded authority, dependencies and recovery", async (t) => {
+  const valid = await fixture(t, reviewBatch());
+  assert.deepEqual(await checkSddLifecycleDocument(valid.file, valid.root, SCHEMAS), []);
+  for (const [override, rule] of [
+    [{ "Authority status": "EXPIRED" }, "SDD_BATCH_AUTHORITY"],
+    [{ "Authority evidence": "NOT_STARTED" }, "SDD_BATCH_AUTHORITY"],
+    [{ "No-progress count": "2" }, "SDD_BATCH_RECOVERY"],
+    [{ "Transient retry count": "3" }, "SDD_BATCH_RECOVERY"],
+    [{ State: "EXECUTING", "Previous state": "PREPARING" }, "SDD_ILLEGAL_TRANSITION"],
+    [{ State: "ACCEPTED", "Previous state": "BLOCKED", "Resume state": "IN_REVIEW" }, "SDD_BATCH_RESUME"],
+    [{ State: "BLOCKED", "Previous state": "PREPARING", "Resume state": "EXECUTING" }, "SDD_BATCH_RESUME"],
+    [{ State: "BLOCKED", "Previous state": "BLOCKED", "Resume state": "CLOSED" }, "SDD_BATCH_RESUME"],
+    [{ State: "BLOCKED", "Previous state": "BLOCKED", "Resume state": "CANCELLED" }, "SDD_BATCH_RESUME"],
+  ]) {
+    const input = await fixture(t, reviewBatch(override));
+    assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === rule));
+  }
+  const cycle = await fixture(t, reviewBatch({},
+    "| A01 | input.md | None | A01 | C01 | None | None |",
+    "| C01 | policy.md | Acceptance | None | None |"));
+  assert.ok((await checkSddLifecycleDocument(cycle.file, cycle.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_DEPENDENCY"));
+});
+
+test("blocked preparation can remain blocked and resume its recorded state", async (t) => {
+  for (const [state, previous] of [["BLOCKED", "PREPARING"], ["BLOCKED", "BLOCKED"], ["PREPARING", "BLOCKED"]]) {
+    const input = await fixture(t, reviewBatch({ State: state, "Previous state": previous, "Resume state": "PREPARING" }));
+    assert.deepEqual(await checkSddLifecycleDocument(input.file, input.root, SCHEMAS), []);
+  }
+});
+
+test("v3 ordinary workflow retains gates and future outputs are not readiness inputs", async (t) => {
+  const content = workflow().replace("delivery-workflow@2", "delivery-workflow@3")
+    .replace("| State |", "| Review batch | None |\n| State |") +
+    "\n\n| Future output | Depends on | State |\n| --- | --- | --- |\n| Implementation result | task-1 completed | NOT_STARTED |\n";
+  const valid = await fixture(t, content);
+  assert.deepEqual(await checkSddLifecycleDocument(valid.file, valid.root, SCHEMAS), []);
+  const unavailableInput = await fixture(t, workflow({ planCurrent: "v2", impact: "MATERIAL", freshness: "STALE" })
+    .replace("delivery-workflow@2", "delivery-workflow@3").replace("| State |", "| Review batch | None |\n| State |"));
+  assert.ok((await checkSddLifecycleDocument(unavailableInput.file, unavailableInput.root, SCHEMAS)).some(item => item.rule === "SDD_GATES_NOT_READY"));
+  const legacy = await fixture(t, plan({ reviewState: "IN_REVIEW" })
+    .replace("| Status |", "| Review batch | [B01](batch.md) |\n| Status |"));
+  assert.ok((await checkSddLifecycleDocument(legacy.file, legacy.root, SCHEMAS)).some(item => item.rule === "SDD_PLAN_REVIEW"));
+});
+
+test("frozen review inventory verifies bytes and cannot manufacture acceptance", async (t) => {
+  const content = "approved candidate content\n";
+  const digest = createHash("sha256").update(content).digest("hex");
+  const override = {
+    State: "IN_REVIEW", "Previous state": "PREPARING", "Candidate revision": "B01-R01",
+    "Self-review state": "SELF_REVIEW_PASSED", "Self-review candidate revision": "B01-R01",
+    "Self-review evidence": "self.md", "Fresh-context review state": "IN_REVIEW",
+    "Fresh-context review session ID": "S01", "Fresh-context assigned reviewers": "r1, r2",
+    "Fresh-context required approvals": "2",
+  };
+  const input = await fixture(t, reviewBatch(override,
+    `| A01 | input.md | sha256:${digest} | None | C01 | IN_REVIEW | None |`,
+    "| C01 | policy.md | Acceptance | None | IN_REVIEW |"));
+  await writeFile(path.join(input.root, "input.md"), content);
+  assert.deepEqual(await checkSddLifecycleDocument(input.file, input.root, SCHEMAS), []);
+  await writeFile(path.join(input.root, "input.md"), "changed content");
+  assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_HASH"));
+  const accepted = await fixture(t, reviewBatch({ ...override, State: "ACCEPTED", "Previous state": "IN_REVIEW" }));
+  const errors = await checkSddLifecycleDocument(accepted.file, accepted.root, SCHEMAS);
+  assert.ok(errors.some(item => item.rule === "SDD_BATCH_INVENTORY"));
+  assert.ok(errors.some(item => item.rule === "SDD_FRESH_REVIEW_STATE"));
+});
+
+async function batchedPlanFixture(t, content, overrides = {}) {
+  const input = await fixture(t, content);
+  const digest = createHash("sha256").update(content).digest("hex");
+  const batch = reviewBatch({
+    "Allowed paths": "artifact.md", State: "ACCEPTED", "Previous state": "IN_REVIEW",
+    "Candidate revision": "B01-R01", "Self-review state": "SELF_REVIEW_PASSED",
+    "Self-review candidate revision": "B01-R01", "Self-review evidence": "self.md",
+    "Fresh-context review state": "APPROVED", "Fresh-context review session ID": "S01",
+    "Fresh-context assigned reviewers": "r1, r2", "Fresh-context required approvals": "2",
+    "Fresh-context approved reviewers": "r1, r2", "Fresh-context reviewed revision": "B01-R01",
+    "Fresh-context review evidence": "review.md", "Human review state": "APPROVED",
+    "Human reviewed revision": "B01-R01", "Human review evidence": "owner.md", ...overrides,
+  }, `| A01 | artifact.md | sha256:${digest} | None | C01 | APPROVED | review.md |`,
+  "| C01 | policy.md | Acceptance | review.md | SATISFIED |");
+  await writeFile(path.join(input.root, "batch.md"), batch);
+  return input;
+}
+
+test("accepted linked batch retains ordinary plan gates and binds its exact artifact", async (t) => {
+  const content = plan().replace("implementation-plan@2", "implementation-plan@3")
+    .replace("| Status |", "| Review batch | [B01](batch.md) |\n| Status |");
+  const valid = await batchedPlanFixture(t, content);
+  assert.deepEqual(await checkSddLifecycleDocument(valid.file, valid.root, SCHEMAS), []);
+  const draft = await batchedPlanFixture(t, content, { State: "IN_REVIEW", "Previous state": "PREPARING" });
+  assert.ok((await checkSddLifecycleDocument(draft.file, draft.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_REFERENCE"));
+  const unapproved = await batchedPlanFixture(t, content, { "Human review state": "NOT_STARTED" });
+  assert.ok((await checkSddLifecycleDocument(unapproved.file, unapproved.root, SCHEMAS)).some(item => item.rule === "SDD_HUMAN_REVIEW_STATE"));
+  await writeFile(valid.file, content + "\nchanged semantic content\n");
+  assert.ok((await checkSddLifecycleDocument(valid.file, valid.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_HASH"));
+});
+
+test("each batched active task needs its own current verified context", async (t) => {
+  const context = `\n| Field | Value |
+| --- | --- |
+| Context receipt | APPROVED |
+| Context verification | CURRENT |
+| Verified source revision | ${"a".repeat(40)} |
+| Verification evidence | preflight.md |
+| Verified at | 2026-01-01T00:00:00Z |\n`;
+  const content = plan({ status: "IMPLEMENTING", previousStatus: "READY", taskState: "IN_PROGRESS", next: "" })
+    .replace("implementation-plan@2", "implementation-plan@3")
+    .replace("| Status |", "| Review batch | [B01](batch.md) |\n| Status |") + context;
+  const valid = await batchedPlanFixture(t, content);
+  assert.deepEqual(await checkSddLifecycleDocument(valid.file, valid.root, SCHEMAS), []);
+  for (const bad of [content.replace("Context verification | CURRENT", "Context verification | STALE"),
+    content.replace("2026-01-01T00:00:00Z", "2999-01-01T00:00:00Z"),
+    content.replace("<!-- sdd-task-spec: T01 -->", "<!-- sdd-task-spec: T02 -->")]) {
+    const input = await batchedPlanFixture(t, bad);
+    assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_TASK_CONTEXT"));
+  }
+});
+
+test("immutable reviewed snapshots allow only enumerated control deltas", async (t) => {
+  const source = plan().replace("implementation-plan@2", "implementation-plan@3")
+    .replace("| Status |", "| Review batch | [B01](batch.md) |\n| Status |");
+  const input = await batchedPlanFixture(t, source);
+  await writeFile(path.join(input.root, "snapshot.md"), source);
+  const batchPath = path.join(input.root, "batch.md");
+  let batch = await readFile(batchPath, "utf8");
+  batch = batch.replace("| Disposition | Evidence |", "| Disposition | Evidence | Reviewed snapshot | Control delta evidence |")
+    .replace("| --- | --- | --- | --- | --- | --- | --- |", "| --- | --- | --- | --- | --- | --- | --- | --- | --- |")
+    .replace(/(\| A01 \| artifact.md .*? \| APPROVED \| review.md) \|/, "$1 | snapshot.md | delta.md |");
+  await writeFile(batchPath, batch);
+  await writeFile(input.file, source.replace("| Previous status | `CONTRACT_REVIEW` |", "| Previous status | `READY` |"));
+  assert.deepEqual(await checkSddLifecycleDocument(input.file, input.root, SCHEMAS), []);
+  await writeFile(input.file, source + "\nNew unapproved requirement\n");
+  assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
+  await writeFile(input.file, source);
+  await writeFile(path.join(input.root, "snapshot.md"), source + "\nmodified frozen evidence\n");
+  assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_HASH"));
+});
+
+test("batch auto-merge exception is bound to an actual matching workflow", async (t) => {
+  const head = "b".repeat(40);
+  const input = await batchedPlanFixture(t, "implementation candidate\n", {
+    Phase: "IMPLEMENTATION", "Candidate revision": head, "Base revision": "a".repeat(40),
+    PR: "[PR1](https://github.com/example/project/pull/1)",
+    "Self-review candidate revision": head, "Fresh-context reviewed revision": head,
+    "Human review state": "NOT_APPLICABLE", "Human reviewed revision": "None",
+    "Implementation workflow": "[Workflow](workflow.md)",
+  });
+  const batchPath = path.join(input.root, "batch.md");
+  const workflowPath = path.join(input.root, "workflow.md");
+  const state = workflow({ state: "DELIVERY_ACTIVE", previousState: "GATES_READY",
+    implementationMode: "AGENT_AUTO_MERGE", selfReviewRevision: head, freshReviewRevision: head });
+  await writeFile(workflowPath, state);
+  assert.deepEqual(await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS), []);
+  const v3 = state.replace("delivery-workflow@2", "delivery-workflow@3")
+    .replace("| State |", "| Review batch | None |\n| State |");
+  await writeFile(workflowPath, v3);
+  assert.deepEqual(await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS), []);
+  await writeFile(workflowPath, v3.replace("| Review batch | None |", "| Review batch | [Missing](missing.md) |"));
+  assert.ok((await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_EXECUTION"));
+  const linkedWorkflow = v3.replace("| Review batch | None |", "| Review batch | [Batch](batch.md) |");
+  await writeFile(workflowPath, linkedWorkflow);
+  const originalBatch = await readFile(batchPath, "utf8");
+  const workflowHash = createHash("sha256").update(linkedWorkflow).digest("hex");
+  const linkedBatch = originalBatch.replace("| Allowed paths | artifact.md |", "| Allowed paths | artifact.md; workflow.md |")
+    .replace("| A01 |", `| A02 | workflow.md | sha256:${workflowHash} | None | C01 | APPROVED | review.md |\n| A01 |`);
+  await writeFile(batchPath, linkedBatch);
+  assert.deepEqual(await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS), []);
+  assert.deepEqual(await checkSddLifecycleDocument(workflowPath, input.root, SCHEMAS), []);
+  await writeFile(workflowPath, linkedWorkflow.replace("| Review batch | [Batch](batch.md) |", "| Review batch | [Missing](missing.md) |"));
+  assert.ok((await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_EXECUTION"));
+  await writeFile(batchPath, originalBatch);
+  await writeFile(workflowPath, state.replace("https://github.com/example/project/pull/1", "https://github.com/example/project/pull/2"));
+  assert.ok((await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_EXECUTION"));
+  await writeFile(workflowPath, state.replace("AGENT_AUTO_MERGE", "HUMAN_REVIEW_BEFORE_MERGE"));
+  assert.ok((await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS)).some(item => item.rule === "SDD_HUMAN_REVIEW_STATE"));
+});
+
+test("review inventory rejects an in-root symlink outside its allowed scope", async (t) => {
+  const input = await batchedPlanFixture(t, "content\n");
+  await writeFile(path.join(input.root, "outside.md"), "content\n");
+  await rm(input.file);
+  await symlink(path.join(input.root, "outside.md"), input.file);
+  assert.ok((await checkSddLifecycleDocument(path.join(input.root, "batch.md"), input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_SCOPE"));
+});
+
+test("batch identity, inventory, scope and completion guards reject malformed evidence", async (t) => {
+  const cases = [
+    [{ "Batch ID": "None" }, "SDD_BATCH_ID"],
+    [{ Repository: "not-a-repository" }, "SDD_BATCH_REPOSITORY"],
+    [{ Phase: "UNKNOWN" }, "SDD_BATCH_PHASE"],
+    [{ State: "invented" }, "SDD_BATCH_STATE"],
+    [{ State: "VERIFIED", "Previous state": "EXECUTING" }, "SDD_BATCH_COMPLETION"],
+    [{ State: "EXECUTING", "Previous state": "ACCEPTED" }, "SDD_BATCH_EXECUTION"],
+    [{ State: "ACCEPTED", "Previous state": "IN_REVIEW", "Unresolved finding IDs": "F01" }, "SDD_BATCH_FINDINGS"],
+    [{ State: "IN_REVIEW", "Previous state": "PREPARING", "Candidate revision": "R01", "Self-review candidate revision": "R02" }, "SDD_BATCH_CANDIDATE"],
+  ];
+  for (const [values, rule] of cases) {
+    const input = await fixture(t, reviewBatch(values));
+    assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === rule), rule);
+  }
+  for (const [row, rule] of [
+    ["| A01 | ../escape.md | None | None | C01 | None | None |", "SDD_BATCH_SCOPE"],
+    ["| A01 | input.md | None | missing | C01 | None | None |", "SDD_BATCH_DEPENDENCY"],
+    ["| A01 | input.md | None | None | absent | None | None |", "SDD_BATCH_CONTROL"],
+    ["| A01 | input.md | None | None | C01 | None | None |\n| a01 | input.md | None | None | C01 | None | None |", "SDD_BATCH_INVENTORY"],
+  ]) {
+    const input = await fixture(t, reviewBatch({}, row, "| C01 | policy.md | Acceptance | None | None |"));
+    assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === rule), rule);
+  }
+});
+
+test("frozen v2 schema retains legacy readiness and rejects unsupported versions", async (t) => {
+  assert.equal(LEGACY_SCHEMAS.schemaVersion, 2);
+  const valid = await fixture(t, plan());
+  assert.deepEqual(await checkSddLifecycleDocument(valid.file, valid.root, LEGACY_SCHEMAS), []);
+  const invalid = await fixture(t, plan({ taskState: "PLANNED", next: "" }));
+  assert.ok((await checkSddLifecycleDocument(invalid.file, invalid.root, LEGACY_SCHEMAS))
+    .some((item) => item.rule === "SDD_PLAN_NOT_READY"));
+  const unsupported = await fixture(t, plan().replace("implementation-plan@2", "implementation-plan@999"));
+  assert.ok((await checkSddLifecycleDocument(unsupported.file, unsupported.root, LEGACY_SCHEMAS))
+    .some((item) => item.rule === "SDD_SCHEMA_VERSION"));
+});
 
 async function fixture(t, content) {
   const root = await mkdtemp(path.join(os.tmpdir(), "sdd-lifecycle-test-"));

@@ -1,5 +1,14 @@
 # Playbook Upgrade Assessment — `<project>`
 
+## Optional batched route
+
+An authorized upgrade package may group dependent migration preparation and
+review. Keep current pin, between-task restrictions, actual migration checks,
+owner cutover and rollback; batching does not authorize early activation.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Use this project-owned artifact to assess one exact playbook revision before
 changing the active manifest pin. The generated upgrade guide supplies runtime
 paths; do not commit machine-local paths.

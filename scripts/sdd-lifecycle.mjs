@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { readFile } from "node:fs/promises";
+import { readFile, realpath } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
@@ -14,6 +15,9 @@ const DEFAULT_SCHEMA_PATH = path.join(
   "config",
   "sdd-lifecycle-schema.json",
 );
+const LEGACY_SCHEMAS = JSON.parse(await readFile(
+  path.join(REPOSITORY_ROOT, "config", "sdd-lifecycle-schema-v2.json"), "utf8",
+));
 
 function diagnostic(file, line, rule, message) {
   return { file: file.split(path.sep).join("/"), line, rule, message };
@@ -1713,7 +1717,236 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
   return diagnostics;
 }
 
-export async function checkSddLifecycleDocument(file, root, schemas) {
+async function containedFile(root, ownerFile, target) {
+  if (!target || /^[a-z][a-z0-9+.-]*:/i.test(target) || path.isAbsolute(target)) throw new Error("invalid local path");
+  const absoluteRoot = await realpath(root);
+  const absolute = await realpath(path.resolve(path.dirname(ownerFile), decodeURIComponent(target)));
+  const relative = path.relative(absoluteRoot, absolute);
+  if (relative === ".." || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) throw new Error("scope escape");
+  return absolute;
+}
+
+function hasBatchValue(value) {
+  return hasRecordedValue(value) && !/^(?:NOT_STARTED|NOT_SELECTED|NOT_VERIFIED|DRAFT|IN_REVIEW|STALE|BLOCKED)$/i.test(normalizeValue(value || ""));
+}
+
+// Compare only explicitly enumerated live controls. Scope, dependencies,
+// contracts, risk, acceptance criteria and ordinary prose remain byte-bound.
+function normativeProjection(text) {
+  const controls = new Set([
+    "State", "Previous state", "Status", "Previous status", "Current phase",
+    "Current task", "Next ready task(s)", "Review state", "Current artifact review state",
+    "Self-review state", "Self-review candidate revision", "Self-review evidence",
+    "Fresh-context review state",
+    "Fresh-context approved reviewers", "Fresh-context reviewed revision", "Fresh-context review evidence",
+    "Human review state", "Human reviewed revision", "Human review evidence",
+    "Context receipt", "Context verification", "Context source revision", "Verified source revision",
+    "Verification evidence", "Verified at", "Last updated", "Actual change summary",
+  ]);
+  let headers = [];
+  return text.split(/\r?\n/).map(line => {
+    if (!/^\s*\|/.test(line)) { headers = []; return line; }
+    const cells = splitMarkdownRow(line);
+    if (!headers.length) { headers = cells; return line; }
+    if (isSeparatorRow(cells)) return line;
+    if (headers.length === 2 && headers[0] === "Field" && controls.has(normalizeValue(cells[0]))) return `| ${cells[0]} | CONTROL |`;
+    if (headers.includes("ID") && headers.includes("State") && headers.includes("Depends on")) {
+      return cells.map((value, index) => ["State", "Next", "Source freshness", "PR"].includes(headers[index]) ? "CONTROL" : value).join("|");
+    }
+    return line;
+  }).join("\n");
+}
+
+async function checkReviewBatch(file, root, tables, fields, schema, schemas, ancestors) {
+  const relative = path.relative(root, file);
+  const errors = checkRequiredFields(relative, fields, schema.requiredFields);
+  const fail = (rule, message) => errors.push(diagnostic(relative, 1, rule, message));
+  const state = fields.get("State");
+  const previous = fields.get("Previous state");
+  errors.push(...checkTransition(relative, previous, state, schema.transitions, "batch"));
+  if (!Object.hasOwn(schema.transitions, state || "")) fail("SDD_BATCH_STATE", "Unknown batch state");
+  if (previous === "BLOCKED" && state !== "BLOCKED" && state !== fields.get("Resume state")) {
+    fail("SDD_BATCH_RESUME", "Resume must return to the recorded pre-block state");
+  }
+  if (state === "BLOCKED" && (!["PREPARING", "IN_REVIEW", "ACCEPTED", "EXECUTING", "VERIFIED"].includes(fields.get("Resume state")) ||
+      (previous !== "BLOCKED" && fields.get("Resume state") !== previous))) {
+    fail("SDD_BATCH_RESUME", "BLOCKED requires a valid prior resume state");
+  }
+  for (const key of ["Batch ID", "Delivery ID"]) {
+    if (!isStableIdentifier(fields.get(key))) fail("SDD_BATCH_ID", `${key} requires a stable identity`);
+  }
+  if (!parseGitHubRepository(fields.get("Repository"))) fail("SDD_BATCH_REPOSITORY", "Repository requires an exact GitHub repository URL");
+  if (!["ADOPTION", "PLANNING", "IMPLEMENTATION", "CLOSURE", "UPGRADE"].includes(fields.get("Phase"))) fail("SDD_BATCH_PHASE", "Unsupported batch phase");
+  const active = !["BLOCKED", "CANCELLED", "CLOSED"].includes(state);
+  if (active && (fields.get("Authority status") !== "CURRENT" || ["Preparation authority", "Authority evidence", "Allowed paths", "Owner", "Approval owner", "Expiry/end condition", "Checkpoint", "Next action", "Action owner"].some(key => !hasBatchValue(fields.get(key))))) {
+    fail("SDD_BATCH_AUTHORITY", "Active batch requires current, explicit scoped authority and expiry/end condition");
+  }
+  const expiry = fields.get("Expiry/end condition") || "";
+  if (/^\d{4}-\d{2}-\d{2}T/.test(expiry) && (!Number.isFinite(Date.parse(expiry)) || Date.parse(expiry) <= Date.now()) && active) fail("SDD_BATCH_AUTHORITY", "Batch authority has expired");
+  for (const [limit, count] of [["Transient retry limit", "Transient retry count"], ["No-progress limit", "No-progress count"]]) {
+    if (fields.get(limit) !== "2" || !/^\d+$/.test(fields.get(count) || "")) fail("SDD_BATCH_RECOVERY", `${limit} must be 2 and ${count} a nonnegative integer`);
+    if (active && Number(fields.get(count)) > 2) fail("SDD_BATCH_RECOVERY", "Exhausted recovery budget cannot authorize continuation");
+  }
+  if (active && Number(fields.get("No-progress count")) >= 2) fail("SDD_BATCH_RECOVERY", "Two no-progress rounds require escalation");
+  const reviewed = ["IN_REVIEW", "ACCEPTED", "EXECUTING", "VERIFIED", "CLOSED"].includes(state);
+  const accepted = ["ACCEPTED", "EXECUTING", "VERIFIED", "CLOSED"].includes(state);
+  let humanRequired = true;
+  if (fields.get("Phase") === "IMPLEMENTATION" && state !== "CLOSED" && fields.get("Human review state") === "NOT_APPLICABLE") {
+    try {
+      const linked = await containedFile(root, file, markdownLinkTarget(rawControlField(tables, "Implementation workflow")));
+      const workflowText = await readFile(linked, "utf8");
+      const marker = extractMarker(workflowText);
+      const workflowTables = parseMarkdownTables(workflowText);
+      const workflowFields = extractControlFields(workflowTables);
+      const result = marker?.artifact === "delivery-workflow" && [2, 3].includes(marker.version)
+        ? await checkSddLifecycleDocument(linked, root, schemas, ancestors) : ["invalid workflow"];
+      const pr = markdownLinkTarget(rawControlField(tables, "PR"));
+      const targetLink = markdownLinkTarget(rawControlField(workflowTables, "Current artifact/gate"));
+      humanRequired = result.length !== 0 || workflowFields.get("State") !== "DELIVERY_ACTIVE" ||
+        workflowFields.get("Current review phase") !== "IMPLEMENTATION" || workflowFields.get("Implementation continuation mode") !== "AGENT_AUTO_MERGE" ||
+        workflowFields.get("Implementation repository") !== fields.get("Repository") || !pr || pr !== targetLink;
+      if (humanRequired) fail("SDD_BATCH_EXECUTION", "Automatic implementation batch lacks matching valid live workflow authority");
+    } catch { fail("SDD_BATCH_EXECUTION", "Automatic implementation batch requires an available scoped workflow"); }
+  }
+  errors.push(...checkSelfReviewGate(relative, fields, reviewed));
+  errors.push(...checkReviewSessionRoster(relative, fields, reviewed));
+  errors.push(...checkIndependentReviewGate(relative, fields, accepted, humanRequired));
+  if (reviewed && fields.get("Self-review candidate revision") !== fields.get("Candidate revision")) fail("SDD_BATCH_CANDIDATE", "Self-review must name this batch candidate");
+  if (accepted && (fields.get("Fresh-context reviewed revision") !== fields.get("Candidate revision") || (humanRequired && fields.get("Human reviewed revision") !== fields.get("Candidate revision")))) fail("SDD_BATCH_CANDIDATE", "Acceptance must bind the exact batch candidate");
+  if (reviewed && !isNone(fields.get("PR") || "")) {
+    const repo = parseGitHubRepository(fields.get("Repository"));
+    const pr = markdownLinkTarget(rawControlField(tables, "PR"));
+    if (!pr || !pr.startsWith(`https://github.com/${repo}/pull/`) || !/\/pull\/[1-9]\d*$/.test(pr) || !/^[a-f0-9]{40}$/.test(fields.get("Base revision") || "") || !/^[a-f0-9]{40}$/.test(fields.get("Candidate revision") || "")) {
+      fail("SDD_BATCH_CANDIDATE", "PR review requires matching repository/PR and full base/head hashes");
+    }
+  }
+  const artifacts = findTable(tables, ["Artifact ID", "Path", "Candidate hash", "Depends on", "Required control IDs", "Disposition", "Evidence"]);
+  const controls = findTable(tables, ["Control ID", "Owning source", "Satisfaction point", "Evidence", "Disposition"]);
+  if (!artifacts || !controls || (reviewed && (!artifacts.rows.length || !controls.rows.length))) fail("SDD_BATCH_INVENTORY", "Batch requires artifact and control inventories; reviewed inventories cannot be empty");
+  const ids = new Map(), controlIds = new Set();
+  for (const row of controls?.rows || []) {
+    const id = normalizeValue(row["Control ID"]).toLowerCase();
+    if (!isStableIdentifier(id) || controlIds.has(id)) fail("SDD_BATCH_INVENTORY", "Control IDs must be unique stable identities");
+    controlIds.add(id);
+    if (["Owning source", "Satisfaction point"].some(k => !hasBatchValue(row[k]))) fail("SDD_BATCH_CONTROL", `${id} lacks its owner or satisfaction point`);
+    if (accepted && (!hasBatchValue(row.Evidence) || !["APPROVED", "SATISFIED"].includes(normalizeValue(row.Disposition)))) fail("SDD_BATCH_CONTROL", `${id} lacks accepted control evidence`);
+  }
+  for (const row of artifacts?.rows || []) {
+    const id = normalizeValue(row["Artifact ID"]).toLowerCase();
+    if (!isStableIdentifier(id) || ids.has(id)) fail("SDD_BATCH_INVENTORY", "Artifact IDs must be unique stable identities");
+    ids.set(id, splitIdentifiers(row["Depends on"]).map(x => x.toLowerCase()));
+    if (!splitIdentifiers(row["Required control IDs"]).length || splitIdentifiers(row["Required control IDs"]).some(x => !controlIds.has(x.toLowerCase()))) fail("SDD_BATCH_CONTROL", `${id} must reference known required controls`);
+    const target = normalizeValue(row.Path);
+    const allowed = splitPaths(fields.get("Allowed paths") || "");
+    if (!target || target.split(/[\\/]/).includes("..") || path.isAbsolute(target) || !allowed.some(scope => target === scope || target.startsWith(`${scope.replace(/\/$/, "")}/`))) fail("SDD_BATCH_SCOPE", `${id} path is outside explicit allowed paths`);
+    if (reviewed) {
+      try {
+        const absolute = await containedFile(root, path.join(root, "batch-root"), target);
+        const resolvedTarget = path.relative(await realpath(root), absolute).split(path.sep).join("/");
+        if (!allowed.some(scope => resolvedTarget === scope || resolvedTarget.startsWith(`${scope.replace(/\/$/, "")}/`))) {
+          fail("SDD_BATCH_SCOPE", `${id} resolved artifact is outside explicit allowed paths`);
+        }
+        let content = await readFile(absolute);
+        const snapshot = normalizeValue(row["Reviewed snapshot"] || "");
+        if (!isNone(snapshot)) {
+          const snapshotFile = await containedFile(root, path.join(root, "batch-root"), snapshot);
+          const original = await readFile(snapshotFile);
+          if (!hasBatchValue(row["Control delta evidence"]) || normativeProjection(content.toString("utf8")) !== normativeProjection(original.toString("utf8"))) {
+            fail("SDD_BATCH_CONTROL_DELTA", `${id} changed normative content or lacks exact control-delta evidence`);
+          }
+          content = original;
+        }
+        const declared = normalizeValue(row["Candidate hash"]);
+        const sha256 = createHash("sha256").update(content).digest("hex");
+        const blob = createHash("sha1").update(`blob ${content.length}\0`).update(content).digest("hex");
+        if (declared !== `sha256:${sha256}` && declared !== `git:${blob}`) fail("SDD_BATCH_HASH", `${id} candidate hash does not match its current content`);
+      } catch { fail("SDD_BATCH_SCOPE", `${id} candidate is unavailable or escapes the root`); }
+    }
+    if (accepted && (normalizeValue(row.Disposition) !== "APPROVED" || !hasBatchValue(row.Evidence))) fail("SDD_BATCH_CONTROL", `${id} lacks exact approval evidence`);
+  }
+  const visited = new Set(), stack = new Set();
+  const visit = id => {
+    if (stack.has(id)) { fail("SDD_BATCH_DEPENDENCY", "Artifact dependency cycle"); return; }
+    if (visited.has(id)) return;
+    visited.add(id); stack.add(id);
+    for (const dependency of ids.get(id) || []) {
+      if (!ids.has(dependency)) fail("SDD_BATCH_DEPENDENCY", `${id} depends on unknown ${dependency}`);
+      else visit(dependency);
+    }
+    stack.delete(id);
+  };
+  for (const id of ids.keys()) visit(id);
+  if (accepted && !isNone(fields.get("Unresolved finding IDs") || "")) fail("SDD_BATCH_FINDINGS", "Unresolved findings prevent acceptance");
+  if (["EXECUTING", "VERIFIED", "CLOSED"].includes(state) && (!hasBatchValue(fields.get("Execution authority")) || fields.get("Inputs freshness") !== "CURRENT" || fields.get("Phase prerequisites") !== "SATISFIED")) fail("SDD_BATCH_EXECUTION", "Execution requires explicit authority, current inputs and phase prerequisites");
+  if (["VERIFIED", "CLOSED"].includes(state) && !hasBatchValue(fields.get("Completion evidence"))) fail("SDD_BATCH_COMPLETION", "Verified state requires actual completion evidence");
+  if (["CLOSED", "CANCELLED"].includes(state) && !hasBatchValue(fields.get("Closure acceptance"))) fail("SDD_BATCH_COMPLETION", "Closure/cancellation requires owner acceptance");
+  return errors;
+}
+
+async function checkBatchReference(file, root, text, tables, schemas, ancestors) {
+  const raw = rawControlField(tables, "Review batch");
+  if (!raw || normalizeValue(raw) === "None") return [];
+  const relative = path.relative(root, file);
+  const failure = (message) => [diagnostic(relative, 1, "SDD_BATCH_REFERENCE", message)];
+  const target = markdownLinkTarget(raw);
+  if (!target || /^[a-z][a-z0-9+.-]*:/i.test(target) || path.isAbsolute(target)) {
+    return failure("Review batch requires None or one local project-contained Markdown link");
+  }
+  try {
+    const absoluteRoot = await realpath(root);
+    const absolute = await realpath(path.resolve(path.dirname(file), decodeURIComponent(target)));
+    const within = path.relative(absoluteRoot, absolute);
+    if (within === ".." || within.startsWith(`..${path.sep}`) || path.isAbsolute(within)) {
+      return failure("Review batch escapes the project root");
+    }
+    const batchText = await readFile(absolute, "utf8");
+    const marker = extractMarker(batchText);
+    if (marker?.artifact !== "review-batch" || marker.version !== 3 || !schemas.artifacts["review-batch"]) {
+      return failure("Review batch must resolve to a supported review-batch@3 record");
+    }
+    const result = await checkSddLifecycleDocument(absolute, root, schemas, ancestors);
+    const batchTables = parseMarkdownTables(batchText);
+    const batchFields = extractControlFields(batchTables);
+    const callerFields = extractControlFields(tables);
+    const advanced = ["READY", "IMPLEMENTING", "VALIDATING", "COMPLETE"].includes(callerFields.get("Status")) ||
+      ["GATES_READY", "DELIVERY_ACTIVE", "VALIDATING", "COMPLETE", "ARCHIVED"].includes(callerFields.get("State"));
+    if (advanced && !["ACCEPTED", "EXECUTING", "VERIFIED", "CLOSED"].includes(batchFields.get("State"))) {
+      result.push(...failure("Caller cannot advance using an unaccepted batch"));
+    }
+    const inventory = findTable(batchTables, ["Artifact ID", "Path", "Candidate hash"]);
+    const callerPath = path.relative(absoluteRoot, await realpath(file)).split(path.sep).join("/");
+    if (!(inventory?.rows || []).some(row => normalizeValue(row.Path) === callerPath)) {
+      result.push(...failure("Batch inventory does not contain this governed artifact"));
+    }
+    const callerMarker = extractMarker(text);
+    if (callerMarker?.artifact === "implementation-plan") {
+      for (const task of taskRows(tables)) {
+        if (!["IN_PROGRESS", "VERIFYING", "DONE"].includes(normalizeValue(task.State))) continue;
+        const id = normalizeValue(task.ID);
+        const parts = text.split(/<!--\s*sdd-task-spec:\s*([A-Za-z0-9_-]+)\s*-->/);
+        const position = parts.findIndex((part, index) => index % 2 === 1 && part === id);
+        const context = extractControlFields(parseMarkdownTables(position < 0 ? "" : parts[position + 1]));
+        const verified = Date.parse(context.get("Verified at") || "");
+        if (context.get("Context receipt") !== "APPROVED" || context.get("Context verification") !== "CURRENT" ||
+            !/^[a-f0-9]{40}$/.test(context.get("Verified source revision") || "") ||
+            !hasBatchValue(context.get("Verification evidence")) || !Number.isFinite(verified) || verified > Date.now()) {
+          result.push(diagnostic(relative, 1, "SDD_BATCH_TASK_CONTEXT", `${id} requires its own approved context and actual current source verification`));
+        }
+      }
+    }
+    return result;
+  } catch {
+    return failure("Review batch path is invalid, unavailable or unreadable");
+  }
+}
+
+export async function checkSddLifecycleDocument(file, root, schemas, ancestors = new Set()) {
+  // Bidirectional workflow/batch links are expected. Validate each node once
+  // on this traversal path; callers still validate every edge and accumulate
+  // all node diagnostics before the outer validation can succeed.
+  const identity = await realpath(file);
+  if (ancestors.has(identity)) return [];
+  ancestors = new Set([...ancestors, identity]);
   const text = await readFile(file, "utf8");
   const marker = extractMarker(text);
   if (!marker) {
@@ -1723,22 +1956,27 @@ export async function checkSddLifecycleDocument(file, root, schemas) {
   if (relative.split(path.sep)[0] === "templates") {
     return [];
   }
-  if (marker.version !== schemas.schemaVersion) {
+  const selectedSchemas = marker.version === 2 && schemas.schemaVersion === 3
+    ? LEGACY_SCHEMAS : schemas;
+  if (marker.version !== selectedSchemas.schemaVersion) {
     return [
       diagnostic(relative, 1, "SDD_SCHEMA_VERSION", `artifact schema ${marker.version} does not match supported schema ${schemas.schemaVersion}`),
     ];
   }
-  const schema = schemas.artifacts[marker.artifact];
+  const schema = selectedSchemas.artifacts[marker.artifact];
   if (!schema) {
     return [diagnostic(relative, 1, "SDD_SCHEMA_UNKNOWN", `unknown artifact schema: ${marker.artifact}`)];
   }
   const tables = parseMarkdownTables(text);
   const fields = extractControlFields(tables);
+  if (marker.artifact === "review-batch") return checkReviewBatch(file, root, tables, fields, schema, schemas, ancestors);
+  const batchDiagnostics = marker.version === 3 && marker.artifact !== "review-batch"
+    ? await checkBatchReference(file, root, text, tables, schemas, ancestors) : [];
   if (marker.artifact === "implementation-plan") {
-    return checkImplementationPlan(relative, marker, text, tables, fields, schema);
+    return [...batchDiagnostics, ...checkImplementationPlan(relative, marker, text, tables, fields, schema)];
   }
   if (marker.artifact === "delivery-workflow") {
-    return checkDeliveryWorkflow(relative, file, root, text, tables, fields, schema);
+    return [...batchDiagnostics, ...await checkDeliveryWorkflow(relative, file, root, text, tables, fields, schema)];
   }
   return [];
 }

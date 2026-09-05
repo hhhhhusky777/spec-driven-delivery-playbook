@@ -1,5 +1,16 @@
 # Contributing
 
+## Optional batched route
+
+Projects may explicitly adopt the version-3 batch route below; this repository's
+owner-authorized WB38 trial remains separately scoped. Mandatory quality,
+semantic acceptance, branch and merge rules stay in force. Per-artifact
+preparation/review stops become coherent-package stops only inside valid batch
+authority; no general implementation auto-merge permission is introduced.
+
+See [Batched review and recovery](docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Changes are welcome when they make the workflow clearer, safer, more
 evidence-driven, or less burdensome without weakening necessary controls.
 
@@ -74,8 +85,9 @@ until reconciled. Reassess policy after defects, incidents, or quarterly review.
 
 Use exact-candidate self-review and exactly two isolated read-only reviewers
 under the [review protocol](templates/reviews/fresh-context-agent-review.md).
-Retain reviewer seats across revisions and preserve exact receipts/findings in
-the delivery review ledger. Human decisions belong to the repository owner;
+Retain reviewer seats across revisions. Preserve historical exact receipts;
+new adopted batch reviews use the shared PR-primary retention contract, with
+exact local receipts for non-PR review. Human decisions belong to the repository owner;
 agent receipts are not formal approvals by a different GitHub identity.
 
 Default implementation mode is HUMAN_REVIEW_BEFORE_MERGE. Both modes are

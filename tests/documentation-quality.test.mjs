@@ -930,7 +930,7 @@ test("SGLang example demonstrates automated adoption through an empty whiteboard
   assert.match(upgradeExample, /Follow \.sdd-runtime\/playbook-upgrade-guide\.md exactly/);
 });
 
-test("canonical playbook URL and examples use the transferred repository and SGLang only", async () => {
+test("canonical URL and examples preserve approved history and bounded batching scenario", async () => {
   const installer = await readFile(path.join(REPOSITORY_ROOT, "install-sdd.sh"), "utf8");
   const readme = await readFile(path.join(REPOSITORY_ROOT, "README.md"), "utf8");
   const trackedFiles = await collectFiles(REPOSITORY_ROOT);
@@ -952,9 +952,11 @@ test("canonical playbook URL and examples use the transferred repository and SGL
     .map((file) => path.relative(REPOSITORY_ROOT, file))
     .filter((file) => file.startsWith("examples/"));
   assert.ok(
-    examplePaths.every((file) => file.startsWith("examples/project-adoption/sglang/")),
-    "every maintained example must use SGLang",
+    examplePaths.every((file) => file.startsWith("examples/project-adoption/sglang/") || file === "examples/batched-delivery/README.md"),
+    "examples remain confined to historical SGLang evidence and the approved batching scenario",
   );
+  const batchingExample = await readFile(path.join(REPOSITORY_ROOT, "examples/batched-delivery/README.md"), "utf8");
+  assert.match(batchingExample, /instructional scenario, not a record of executed work/);
   assert.match(readme, /SGLang API-key redaction delivery/);
 });
 

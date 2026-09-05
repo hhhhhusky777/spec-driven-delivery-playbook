@@ -1,5 +1,15 @@
 # Test Strategy and Quality Evidence Template
 
+## Optional batched route
+
+Batching consolidates review sessions, never test obligations. Preserve the
+first failure, perform Red-Green verification and rerun required final checks.
+Only unaffected valid evidence survives scoped recovery; mocks do not establish
+live publication or external authority.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Use this template to create a project-specific, normative test strategy. It
 supports TDD, early defect discovery, risk-based system evidence, performance
 validation, and evidence-backed failure triage.
