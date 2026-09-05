@@ -28,13 +28,13 @@
 | Trigger identity/run ID | WB38-TRIGGER-01; 2026-09-05; owner manual invocation |
 | Selected route | Route 3 — systemic design/policy gap |
 | Manifest review state | APPROVED |
-| Current artifact/gate | [Approved bootstrap correction](T06-evidence.md) |
+| Current artifact/gate | [T06 corrective PR #52](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/52) |
 | Current review phase | IMPLEMENTATION |
 | Current review target ID | T06 |
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB38-FINAL-R01 |
-| Self-review evidence | [Final self-review](record.md) |
+| Self-review candidate revision | WB38-T06-R01 |
+| Self-review evidence | [Corrective self-review](T06-evidence.md) |
 | Fresh-context review state | IN_REVIEW |
 | Fresh-context review session ID | WB38-FINAL-S01 |
 | Fresh-context assigned reviewers | /root/wb38_final_r1, /root/wb38_final_r2 |
@@ -148,6 +148,7 @@ blocked until all task and target evidence exists.
 | T04-result | [Merged PR49](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/49) | T04 | 7387c6d787bc7146950f4a97fc1d893163aa1c8b | 7387c6d787bc7146950f4a97fc1d893163aa1c8b | CONTROL_ONLY | CURRENT | None |
 | T05 | Accepted reporting specification | readiness-amendment, T04-result | 7387c6d787bc7146950f4a97fc1d893163aa1c8b | 7387c6d787bc7146950f4a97fc1d893163aa1c8b | CONTROL_ONLY | CURRENT | None |
 | T05-result | [Merged PR50](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/50) | T05 | 8c1a67a0d98b3e840af113433df715cb0e799456 | 8c1a67a0d98b3e840af113433df715cb0e799456 | CONTROL_ONLY | CURRENT | None |
+| T06 | [Corrective PR52](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/52) | readiness-amendment, T04-result, T05-result | WB38-T06-approved-scope | WB38-T06-approved-scope | CONTROL_ONLY | CURRENT | None |
 | policy | [T01 policy output](T01-evidence.md) | T01 | b5600e86914f2c14b1039427bfc5ef5a8a8826eb | b5600e86914f2c14b1039427bfc5ef5a8a8826eb | CONTROL_ONLY | CURRENT | None |
 | consumers | [T01 consumer output](T01-evidence.md) | policy | b5600e86914f2c14b1039427bfc5ef5a8a8826eb | b5600e86914f2c14b1039427bfc5ef5a8a8826eb | CONTROL_ONLY | CURRENT | None |
 | T01-result | [T01 merged output](T01-evidence.md) | T01, policy, consumers | b5600e86914f2c14b1039427bfc5ef5a8a8826eb | b5600e86914f2c14b1039427bfc5ef5a8a8826eb | CONTROL_ONLY | CURRENT | None |

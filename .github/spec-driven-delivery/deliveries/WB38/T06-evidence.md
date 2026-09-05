@@ -30,5 +30,26 @@ T04/T05 are merged. No dependency, credentials, external service, or product
 decision is introduced. The owner-approved observable correction above is the
 task specification; internal implementation remains bounded by it.
 
-Implementation and regression validation are pending. This record is not a
-review approval or delivery-completion claim.
+## Candidate validation and self-review
+
+Candidate WB38-T06-R01 is published through [PR52](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/52).
+The exact committed revision is supplied in the retained review packet.
+
+| Control | Evidence |
+| --- | --- |
+| Startup | All six early states pass the complete lifecycle checker with explicit None and no plan file |
+| Failure boundaries | Supplied missing plan, batch deferral, produced output and blocked recovery reject no-plan state; readiness requires reciprocal plan |
+| Compatibility | Existing v2/v3 and v4 reciprocal authority/output tests pass; frozen schemas unchanged |
+| Full checks | docs:all: 90 passed, zero failed/skipped; Markdown, structure, lifecycle and Mermaid passed |
+| Evidence graph | Original R2 finding accepted; final record now consumes separate T01/T02/T03 output identities, policy/consumer rows reconciled |
+| Incomplete gates | Both retained reviewer receipts, human acceptance, corrective merge and final closure remain pending |
+
+Self-review: SELF_REVIEW_PASSED for the candidate scope, source boundary,
+startup behavior and preserved readiness failures. Original PR51 findings are
+not marked resolved by the author; both are ACCEPT with correction pending
+review. No new external-link claim or README lifecycle diagram changes are
+introduced: the existing ordinary sequence is restored, not redesigned.
+
+PR51 merged while final review requested changes. Final record R01 is historical
+candidate evidence, not proof of accepted validation. No archive or cleanup is
+authorized by that merge. This record is not a review approval or completion claim.
