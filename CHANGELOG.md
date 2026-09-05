@@ -9,6 +9,11 @@ adopted.
 
 ## Unreleased — updated 2026-09-05
 
+- Make upgrade preflight honor the installed manifest's reviewed local
+  `Start contributing` entry point. Retain the legacy adoption-root README
+  fallback for older manifests and fail closed on missing, external,
+  out-of-project, or symbolic-link recorded targets.
+
 - Require reusable exception triage across all phases, with verified upstream
   targeting, duplicate search, sanitized/private reporting and pending drafts
   when reporting is unavailable. Source adoption/workflow/upgrade skills and
