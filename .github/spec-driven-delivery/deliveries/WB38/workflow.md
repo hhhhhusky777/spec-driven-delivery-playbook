@@ -10,15 +10,15 @@
 | W02 / Attention | [Route and manifest](#2-routing-and-delivery-manifest) | Systemic policy change needs complete control audit | Governance and tests |
 | W03 / Attention | [Freshness](#3-dependencies-and-blockers) | Version binding and affected-dependency invalidation | Both |
 | W04 / Attention | [Implementation plan](implementation-plan.md) | No READY or task start before package acceptance and fresh preflight | Both |
-| W05 / Decision later | [Review boundary](#4-action-and-review-order) | One package acceptance after both reviewers pass | Owner |
+| W05 / Complete | [Archive closure](record.md#final-archive-closure) | Package accepted, merged and post-merge verified | Owner |
 
 ## 1. Workflow control
 
 | Field | Value |
 | --- | --- |
 | Delivery | WB38 — full-lifecycle playbook efficiency |
-| State | COMPLETE |
-| Previous state | VALIDATING |
+| State | ARCHIVED |
+| Previous state | COMPLETE |
 | Owner | Repository owner |
 | Concluded whiteboard | [Archived WB38-R03](../../archive/WB38/solution-whiteboard.md) |
 | Approved workflow handoff | [Accepted H02](handoff.md) |
@@ -28,40 +28,40 @@
 | Trigger identity/run ID | WB38-TRIGGER-01; 2026-09-05; owner manual invocation |
 | Selected route | Route 3 — systemic design/policy gap |
 | Manifest review state | APPROVED |
-| Current artifact/gate | [Final validation PR #53](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/53) |
-| Current review phase | VALIDATION |
-| Current review target ID | record |
+| Current artifact/gate | [Archive/reset PR #55](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/55) |
+| Current review phase | ARCHIVE |
+| Current review target ID | archive |
 | Current artifact review state | APPROVED |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | ed1e4cfd9449bae420877958ed820c94f2e25299 |
-| Self-review evidence | [Renewed final validation](record.md#accepted-validation-and-archive-execution) |
+| Self-review candidate revision | 29d4974cf97f192ec2a0463df0b530ec2a76a77f |
+| Self-review evidence | [Archive R02 review and control reconciliation](../../reviews/WB38-ARCHIVE-S01.md) |
 | Fresh-context review state | APPROVED |
-| Fresh-context review session ID | WB38-FINAL-S01 |
+| Fresh-context review session ID | WB38-ARCHIVE-S01 |
 | Fresh-context assigned reviewers | /root/wb38_final_r1, /root/wb38_final_r2 |
 | Fresh-context required approvals | 2 |
 | Fresh-context approved reviewers | /root/wb38_final_r1, /root/wb38_final_r2 |
-| Fresh-context reviewed revision | ed1e4cfd9449bae420877958ed820c94f2e25299 |
-| Fresh-context review evidence | [PR53 R04 R1](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/53#pullrequestreview-5121810331); [R2](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/53#pullrequestreview-5121810496) |
+| Fresh-context reviewed revision | 29d4974cf97f192ec2a0463df0b530ec2a76a77f |
+| Fresh-context review evidence | [PR55 R02 R1](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/55#pullrequestreview-5121854190); [R2](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/55#pullrequestreview-5121855052) |
 | Human review state | APPROVED |
-| Human reviewed revision | ed1e4cfd9449bae420877958ed820c94f2e25299 |
-| Human review evidence | Owner approved final validation and bounded archive/reset; PR53 merged as c6c5ff3afc99bc228ccae8afd14582ffef8441ca |
+| Human reviewed revision | 29d4974cf97f192ec2a0463df0b530ec2a76a77f |
+| Human review evidence | Owner approved exact PR55 archive candidate; merged as a97b6dd519f538c517b971013d2dea78ca9c51ca |
 | Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |
 | Implementation mode authority | Owner approved bounded T06 correction and renewed continuation after PR51 merge; T06-evidence.md |
 | Implementation mode scope | T01, T02, T04, T05, T06 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-05T17:22:26+08:00 |
-| Next action | Review archive/reset publication package |
-| Next action target IDs | archive |
-| Allowed write scope | .github/spec-driven-delivery/archive/WB38; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/live-trial.md |
-| Next action write targets | .github/spec-driven-delivery/archive/WB38; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/live-trial.md |
+| Next action | Await the next owner-supplied need at the neutral EMPTY whiteboard |
+| Next action target IDs | None |
+| Allowed write scope | None until a new owner-supplied need is admitted |
+| Next action write targets | None |
 | Review mode | EXPLICIT_REVIEW |
 | Review mode authority | Owner scoped live-trial approval; linked above |
 | Automation boundary | Not applicable |
 | Required automatic gates | Not applicable |
 | Automatic gate result | NOT_APPLICABLE |
 | Semantic decision introduced | NO |
-| Automation exception | Owner-approved deterministic archive/reset sequence; review before publication retained |
-| Automation audit record | Final validation PR53 merged as c6c5ff3afc99bc228ccae8afd14582ffef8441ca; archive verification in record |
+| Automation exception | None; archive/reset publication completed through explicit review and owner merge approval |
+| Automation audit record | PR55 reviewed head 29d4974cf97f192ec2a0463df0b530ec2a76a77f merged as a97b6dd519f538c517b971013d2dea78ca9c51ca; reviewed and merged trees match; post-merge docs:all passed 90/90 |
 | Last routed | WB38-TRIGGER-01; 2026-09-05 |
 | Draft version | WB38-W04 |
 
@@ -107,7 +107,7 @@ acceptance. Global policy is not active before reviewed merge.
 
 The readiness manifest above selects design inputs, not future implementation
 results. Required implementation outputs are now reconciled below to their
-reviewed merges; final validation and closure remain pending. Their separate
+reviewed merges; final validation and closure are complete. Their separate
 identities preserve dependencies, owners and gates.
 
 | Output ID | Obligation / owner | Required inputs or completed outputs | Satisfaction gate | Actual evidence |
@@ -117,15 +117,15 @@ identities preserve dependencies, owners and gates.
 | T01-result | Core implementation; coordinator | Accepted T01 specification/context, plan, audit, contracts | T01 tests, PR reviews, owner merge and target verification | COMPLETE / b5600e86914f2c14b1039427bfc5ef5a8a8826eb |
 | T02-result | Publication helper; coordinator | T01 DONE/current, accepted T02 specification, plan, contracts | T02 tests/live evidence, PR reviews, owner merge and target verification | COMPLETE / 82c022cfced052f8bc8cc67def437219df8be067 |
 | T06-result | Corrective bootstrap and evidence links; coordinator | Approved bounded T06, merged T04/T05 | PR52 tests, two reviews, owner acceptance and verified main tree | COMPLETE / 15a648f06e22db4b195af683f2f76d62c87dcdff |
-| record | GENERATE validation and closure packet; coordinator | T01-T06 terminal, integrated main verified | Two closure reviewers and owner acceptance | IN_PROGRESS / WB38-FINAL-R03 |
+| record | GENERATE validation and closure packet; coordinator | T01-T06 terminal, integrated main verified | Two closure reviewers and owner acceptance | COMPLETE / PR53 and PR55 |
 
 At their actual review/consumption boundaries, register produced output evidence
 with its exact revision in the live dependency register before using it. Do not
 replace task-specification IDs with output meanings. T01-result/T02-result
 distinguish future results from the stable task IDs used for mode scope and PR
 history. The plan owns T02's execution dependency on completed T01; current
-specification inputs never certify that dependency complete. Closure remains
-blocked until all task and target evidence exists.
+specification inputs never certify that dependency complete. All closure task
+and target evidence now exists; the next need starts from the neutral EMPTY path.
 
 ## 3. Dependencies and blockers
 
@@ -185,8 +185,8 @@ normal gates, not claims of missing user authority.
 | C01 closure | Verified target, evidence, retrospective, record and archive plan | Combined closure review and owner acceptance |
 | C02 mechanics | Only approved exact archive/link/reset/cleanup targets | Ordered verification; stop on mismatch or missing deletion authority |
 
-No automatic action has executed. Current authorizations do not approve
-future implementation, merge, archive, deletion, or runtime cutover.
+No automatic merge has executed. The reviewed archive/reset action is complete;
+no authority carries to future implementation, merge, deletion, or runtime cutover.
 Review findings and exact receipts remain in Git until the retention change
 is separately effective; PR publication may supplement them now.
 
@@ -207,22 +207,23 @@ is separately effective; PR publication may supplement them now.
 
 | Field | Current value |
 | --- | --- |
-| Workflow state | COMPLETE; archive publication candidate in review |
+| Workflow state | ARCHIVED |
 | Current artifact/task | Archived conclusion and neutral working whiteboard |
-| Current artifact review | IN_REVIEW; WB38-ARCHIVE-R01 |
-| Last approved artifact | Final validation; PR53 reviewed, owner-approved and merged |
-| Next ready action | Two retained archive reviewers inspect the exact publication package |
+| Current artifact review | APPROVED; WB38-ARCHIVE-R02; PR55 merged |
+| Last approved artifact | Archive/reset publication; reviewed head 29d4974cf97f192ec2a0463df0b530ec2a76a77f |
+| Next ready action | Await the next owner-supplied need at the neutral EMPTY whiteboard |
 | Active blockers | None |
 | Stale artifacts | None |
 | Validation complete | Yes; owner-approved PR53 merged and target verified |
-| Validation remaining | None; archive publication review and merge remain |
-| Branch/PR | codex/wb38-archive; archive/reset publication; target main |
+| Validation remaining | None |
+| Branch/PR | [PR55](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/55) merged as a97b6dd519f538c517b971013d2dea78ca9c51ca |
 | Last updated | 2026-09-05 Asia/Shanghai |
 
 Require all active tasks terminal and required evidence current before parent
 validation. Resolve required post-merge human reviews before closure. Archive
 the immutable conclusion and verify bidirectional record links before replacing
-the working whiteboard; no deletion follows from this draft.
+the working whiteboard. That sequence is now verified and published; no deletion,
+activation, runtime cleanup or pin change followed from it.
 
 ## 6. Change history
 
@@ -230,6 +231,7 @@ the working whiteboard; no deletion follows from this draft.
 | --- | --- | --- | --- |
 | 2026-09-05 | Prepared provisional H02/W01/A01/P01 package | No approval, consumption or execution transition | Owner scoped live trial |
 | 2026-09-05 | W04 separates readiness inputs from future output obligations | Material representation amendment; all output duties preserved; no readiness transition yet | Owner approved correction; exact retained-seat review pending |
+| 2026-09-05 | Archive/reset publication merged and post-merge gates passed | Workflow ARCHIVED; immutable conclusion preserved; stable working path is neutral EMPTY | PR55 R02 reviewers and owner acceptance; merge a97b6dd519f538c517b971013d2dea78ca9c51ca |
 
 ### Accepted-state reconciliation
 

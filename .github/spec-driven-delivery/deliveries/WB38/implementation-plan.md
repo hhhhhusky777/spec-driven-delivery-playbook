@@ -474,19 +474,19 @@ PRs remain unrecorded. Completing a specification does not authorize task start.
 | Plan state | COMPLETE |
 | Current task | None |
 | Next ready task(s) | None |
-| Active branch / PR | codex/wb38-archive; archive/reset publication candidate |
+| Active branch / PR | None; archive/reset PR55 merged as a97b6dd519f538c517b971013d2dea78ca9c51ca |
 | Last completed task | T06; PR52 merged as 15a648f06e22db4b195af683f2f76d62c87dcdff; reviewed tree matched; 90 candidate tests passed |
 | Active blocker | None |
 | Last validation | Exact per-round checks and review recorded in the package session evidence |
-| Next action | Archive/reset publication review; see record.md |
+| Next action | None; delivery archived, await next need at the neutral EMPTY whiteboard |
 
 ## 10. Evidence, decisions and change history
 
 FC01-FC09 map to T01 and E01-E08; publication automation additionally maps to
-T02 and E02/E04/E05/E08. Final implementation evidence is NOT_RUN.
-No test failure, independent planning receipt or implementation result is
-claimed. Append each future failure, disposition, exact revision and result
-without replacing the original.
+T02 and E02/E04/E05/E08. At plan acceptance, final implementation evidence was
+NOT_RUN and no implementation result was claimed. The terminal task ledger and
+[delivery record](record.md) now own the completed results. Historical failures,
+dispositions, exact revisions and results remain preserved.
 
 | Date | Event | Contract/task impact | Authority |
 | --- | --- | --- | --- |

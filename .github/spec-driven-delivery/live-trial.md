@@ -39,8 +39,10 @@ inferred from a timer or exhausted retry/review budget.
 
 COMPLETED; the scoped authority expired when WB38 implementation and final
 validation completed. The [WB38 workflow](deliveries/WB38/workflow.md) is
-COMPLETE while its archive/reset publication package is reviewed. All six tasks
-and final validation are merged; the accepted conclusion is preserved in the
-[archive candidate](archive/WB38/solution-whiteboard.md). No standing authority
-carries to the next need. Runtime cleanup, pin upgrade, branch deletion and
-adoption activation were not authorized by this trial.
+ARCHIVED after reviewed archive/reset PR55 merged as
+`a97b6dd519f538c517b971013d2dea78ca9c51ca`. All six tasks and final validation
+are merged; the accepted conclusion is preserved in the
+[archive](archive/WB38/solution-whiteboard.md), and the stable working path is
+neutral EMPTY. No standing authority carries to the next need. Runtime cleanup,
+pin upgrade, branch deletion and adoption activation were not authorized by
+this trial.

@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | Review and publish WB38 archive/reset control package, then await the next owner-supplied need through the verified workflow runtime |
+| Next action | Await the next owner-supplied need at the neutral EMPTY whiteboard through the verified workflow runtime |
 
 Adoption type: `real project`
 
@@ -364,12 +364,14 @@ No automatic action has run.
 ## 9. Pilot delivery
 
 The first owner-supplied need is WB38, admitted after verified installation.
-Its accepted conclusion is preserved in the [archive candidate](archive/WB38/solution-whiteboard.md),
-and the stable [working whiteboard](solution-whiteboard.md) is a neutral EMPTY
-candidate for the next need. The [workflow](deliveries/WB38/workflow.md) is
-COMPLETE pending archive publication review and merge. Pilot delivery evidence
-is complete; a separate activation decision has not been made. Adoption remains
-INSTALLED, not ACTIVE. Earlier installation-only routing below is historical.
+Its accepted conclusion is preserved in the [archive](archive/WB38/solution-whiteboard.md),
+and the stable [working whiteboard](solution-whiteboard.md) is neutral EMPTY for
+the next need. The [workflow](deliveries/WB38/workflow.md) is ARCHIVED after
+reviewed archive/reset PR55 merged as
+`a97b6dd519f538c517b971013d2dea78ca9c51ca` and passed post-merge checks. Pilot
+delivery evidence is complete; a separate activation decision has not been
+made. Adoption remains INSTALLED, not ACTIVE. Earlier installation-only routing
+below is historical.
 
 ## 10. Adoption review
 
@@ -687,16 +689,18 @@ under the [explicit scoped authority](live-trial.md). This supersedes the
 installation handoff's waiting-for-first-need next action, without rewriting
 its accepted evidence or changing the runtime pin. The workflow owns current
 planning gaps, dependency versions, write targets and the next review boundary.
-This paragraph records the prior active route; the closure candidate below now
+This paragraph records the prior active route; the closure record below now
 owns current navigation.
 
-### WB38 closure candidate
+### WB38 closure
 
 WB38 final validation was owner-approved and merged through PR53 as
 `c6c5ff3afc99bc228ccae8afd14582ffef8441ca`. The owner authorized the bounded
 archive/reset mechanics. The [archived conclusion](archive/WB38/solution-whiteboard.md),
-[delivery record](deliveries/WB38/record.md), completed workflow/plan and fresh
-neutral EMPTY working path form one control-only publication candidate. Until
-that package passes review, hosted checks, owner acceptance and merge, the
-published main branch remains authoritative. Adoption remains INSTALLED, not
-ACTIVE; runtime pin and checkout remain unchanged.
+[delivery record](deliveries/WB38/record.md), archived workflow, complete plan
+and neutral EMPTY working path were published through reviewed PR55. Both
+retained archive reviewers approved exact head
+`29d4974cf97f192ec2a0463df0b530ec2a76a77f`; the owner accepted it, and it merged
+as `a97b6dd519f538c517b971013d2dea78ca9c51ca` with an identical tree and passing
+post-merge checks. Adoption remains INSTALLED, not ACTIVE; runtime pin and
+checkout remain unchanged. Await the next owner-supplied need.

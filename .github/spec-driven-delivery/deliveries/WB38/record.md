@@ -1,4 +1,20 @@
-# WB38 final validation and proposed closure
+# WB38 final validation and closure
+
+## Final archive closure
+
+Archive/reset PR55 was reviewed at exact head
+`29d4974cf97f192ec2a0463df0b530ec2a76a77f` by both retained archive reviewers
+and accepted by the repository owner. It merged as
+`a97b6dd519f538c517b971013d2dea78ca9c51ca`; the merged tree matches the reviewed
+candidate. Post-merge docs:all passed 90 tests with zero failures or skips, and
+Markdown, links/structure, lifecycle and Mermaid checks passed. The archived
+conclusion blob remains `ef69548551872676a704de291b4ec4371c6a5360`, its
+reciprocal record link is valid, and the stable working whiteboard is neutral
+EMPTY. The workflow is ARCHIVED.
+
+Adoption remains INSTALLED, not ACTIVE. Runtime cleanup, pin migration, branch
+deletion, credentials and protection changes remain outside this closure. No
+trial or merge authority carries into the next owner-supplied need.
 
 ## Accepted validation and archive execution
 
@@ -10,9 +26,9 @@ reviewed candidate and hosted checks passed. Final validation is APPROVED.
 
 The preserved conclusion is [archived here](../../archive/WB38/solution-whiteboard.md).
 Its source is immutable commit `c6c5ff3afc99bc228ccae8afd14582ffef8441ca`,
-blob `19dd57ae9ea85b8a7dfd3a39636667c876bf59e3`. The archive candidate records a
-separate blob after publication. The stable working path is reset only after
-the reversible transformation and reciprocal link checks below pass.
+blob `19dd57ae9ea85b8a7dfd3a39636667c876bf59e3`. The archived copy records a
+separate blob after publication. The stable working path was reset only after
+the reversible transformation and reciprocal link checks below passed.
 
 ### Archive link-relocation evidence
 
@@ -48,13 +64,16 @@ candidate links back to this record, carries source blob
 `19dd57ae9ea85b8a7dfd3a39636667c876bf59e3`, and has distinct blob
 `ef69548551872676a704de291b4ec4371c6a5360`. Only after that verification passed
 was the stable path replaced with the accepted neutral EMPTY project instance.
-Workflow remains COMPLETE while the archive candidate is in review; the plan is
-COMPLETE. Full checks, independent archive review, owner publication acceptance and merge remain; no
-runtime cleanup, pin migration or branch deletion was performed.
+Workflow remained COMPLETE while the archive candidate was in review; the plan
+was COMPLETE. Full checks, independent archive review, owner publication
+acceptance and merge subsequently completed through PR55. No runtime cleanup,
+pin migration or branch deletion was performed.
 
-## Renewed final validation after T06
+## Historical renewed final-validation candidate after T06
 
-This live section supersedes the historical R01 candidate below. PR51 merged
+This section records the accepted candidate state before final validation and
+archive publication completed; the final archive closure above supersedes its
+pending status. PR51 merged
 as `1d667356d9a652c15fc197fbd97e0a977b2ef32d` before its findings were resolved.
 The owner subsequently approved corrective PR52 at
 `080cbf49e1fc353fb54b30551b6b08122fcc68a3`; it merged as
@@ -71,11 +90,11 @@ reviewers on PR52, not silently waived by the prior merge.
 | Decision after review | Accept renewed final validation | This record and current plan/workflow; no further executable changes |
 | Decision after review | Authorize bounded archive/reset sequence below | Only after validation acceptance; no branch deletion, runtime cleanup or migration |
 
-Final validation remains IN_REVIEW. T06 approval is not approval of archive,
-reset or cleanup. The source installation remains INSTALLED, not ACTIVE.
-The original archive sequence below remains a proposal; no archive/reset has
-been performed. Review history remains on PR51 and PR52, including the premature
-merge and the corrective round. No performance-savings claim is introduced.
+At this historical boundary, final validation remained IN_REVIEW. T06 approval
+was not approval of archive, reset or cleanup. The source installation remained
+INSTALLED, not ACTIVE. The original archive sequence below was still a proposal;
+review history remains on PR51 and PR52, including the premature merge and the
+corrective round. No performance-savings claim is introduced.
 
 Post-merge docs:all at `15a648f06e22db4b195af683f2f76d62c87dcdff` passed 90
 tests, zero failed/skipped, 6674.852084 ms; Markdown, structure, lifecycle and
@@ -130,7 +149,7 @@ erased; final PR receipts resolve the earlier immutable requests for changes.
 | FC05; CP10 | Pure COMMENT publication planner/reconciler, idempotency/target/seat/checkpoint tests; authorized inline demo and real T02 receipts | Coordinator owns writes; agent labels are not independent GitHub identities |
 | FC06; CP05/06/07/14/15/16 | Context, scope, merge-mode, task dependency and parent-state tests; v4 pending-output/ancestry/hash/linked-authority regression cases | Genuine prerequisites and stale/blocked inputs still stop affected work |
 | FC07; CP03/12 | Bounded retries, unknown-write reconciliation, retained findings; E01-E02 triage and safe issue reporting with independent exercises | Issue filing does not approve workaround, recovery or merge |
-| FC08; CP08 | Premature validation/closure, open post-merge review and ownership checks; exact archive plan below | Actual archive/reset/cleanup is not yet executed |
+| FC08; CP08 | Premature validation/closure, open post-merge review and ownership checks; exact archive plan below | Archive/reset publication executed through PR55; cleanup remains excluded |
 | FC09; CP09 | Frozen v2/v3 schemas, legacy fixtures, unchanged installed source pin, explicit upgrade instructions | No automatic runtime migration or new pin activation |
 
 This reconciles [CP01-CP16](control-audit.md) and plan acceptance cases E01-E08
@@ -182,10 +201,11 @@ and owner interruption counts before claiming efficiency improvement.
 Open unrelated scope remains owned by the maintainer: issues 33/34/36 runtime
 reliability and issue43 reusable cross-document impact-map enforcement. GitHub
 Apps, branch protection configuration and installed-project upgrades are not
-delivered here. Issues 35/37/38/46/47 are addressed by this feature but remain
-open until reviewed main integration. No unresolved task review finding remains.
+delivered here. Issues 35/37/38/46/47 are addressed by reviewed main integration
+and remain open only for explicit issue-tracker closure. Issue 43 remains
+separate open work. No unresolved task review finding remains.
 
-## Proposed post-merge archive and reset
+## Historical approved post-merge archive/reset procedure
 
 Only after final owner acceptance and verified main integration:
 
@@ -228,7 +248,7 @@ credential removal, main protection changes, installed pin upgrade and broader
 filesystem cleanup are excluded. If any target already exists or verification
 fails, preserve it and stop the affected operation for reconciliation.
 
-## Self-review and current handoff
+## Historical final-validation self-review and handoff
 
 SELF_REVIEW_PASSED for WB38-FINAL-R01: reconciled all task merges and contracts,
 preserved history/pin, checked source consumers and explicit limitations, and
