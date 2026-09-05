@@ -5,14 +5,14 @@
 | Field | Value |
 | --- | --- |
 | Review session ID | WB38-PLAN-S01 |
-| State | OPEN |
+| State | APPROVED; awaiting human package acceptance |
 | Round | R02 |
 | Candidate version | WB38-PKG-R02; exact file inventory recorded per round below |
 | Base revision | 4f44eff2ca4468b75069bdb2b47a5b681bb888b7 |
 | Subject | WB38 handoff, workflow, control audit, design contracts and FULL plan, plus current manifest/whiteboard/trial control changes |
 | Assigned reviewers | R1 /root/wb38_plan_r1; R2 /root/wb38_plan_r2 |
 | Required approvals | 2 |
-| Approved reviewers | None |
+| Approved reviewers | /root/wb38_plan_r1, /root/wb38_plan_r2 on R02 |
 | Replacement history | None |
 | Governing inputs | Accepted WB38-R03 and WB38-S01 receipts; explicit live-trial authority; base CONTRIBUTING, quality policy and Template Governance; verified pinned handoff/workflow/plan/review templates |
 | Allowed changes | Project adoption root planning/control/review evidence only; no executable implementation |
@@ -236,3 +236,121 @@ structure/lifecycle/Mermaid PASS, 58 tests passed and zero failed/skipped.
 R01 external 42/42 evidence is retained for unchanged methodology URLs; new
 PR/review links were directly verified through GitHub. No implementation test
 or publisher-helper validation is claimed. Same-seat R02 review is next.
+
+## R02 exact R1 receipt
+
+```text
+| Field | Value |
+| --- | --- |
+| Review session ID | WB38-PLAN-S01 |
+| Review round | R02 |
+| Reviewer seat | R1 |
+| Assigned reviewer ID | /root/wb38_plan_r1 |
+| Reviewer agent/runtime | Codex isolated reviewer; retained R1 seat; read-only |
+| Context isolation | FRESH_CONTEXT; original isolation preserved, using only retained review context and bounded revision packet; no writes, credential inspection or external state changes |
+| Subject | https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/41 |
+| Reviewed candidate revision | 5d85551324378a32082ed13a1cb76695feadc70e; WB38-PKG-R02; all eight frozen inventory blobs verified |
+| Reviewed base revision | 4f44eff2ca4468b75069bdb2b47a5b681bb888b7 |
+| Governing inputs inspected | R01 governing inputs retained: accepted WB38-R03, scoped trial, contributor/quality/template authorities, registry, archive contract, verified pinned workflow/review sources and baseline schema obligations. Reconciled CP10-a, BC06, T01 scope and current workflow/plan controls against their unchanged sources. |
+| Gates/evidence inspected | Complete three-file R01-to-R02 delta and unchanged candidate inventory; immutable R01 receipts, published COMMENTED review identities and author ACCEPT responses; R02 exact self-review; recorded local docs:all 58/58, not independently rerun; independently clean worktree and passing git diff --check; actual OPEN PR head/base verified; hosted Blocking documentation checks PASS at https://github.com/hhhhhusky777/spec-driven-delivery-playbook/actions/runs/33952560336/job/101269945413 |
+| Summary comment | R1-F01 is resolved: T01 now explicitly includes the project archive authority for the prospective retention sentence and canonical link, preserving archive ordering and history. Current PR navigation and draft-version corrections also resolve the R2-reported inconsistency. The remaining contracts and approved whiteboard are unchanged. No new actionable finding. |
+| Inline comments | No new inline findings. Original R1 finding: https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/41#discussion_r3939853154 |
+| Durable findings | WB38-PLAN-S01-R1-F01 RESOLVED at this exact candidate; resolution below |
+| Disposition | APPROVED |
+| Recommended next action | HUMAN_REVIEW |
+| Reviewed at | 2026-09-05T15:27:12+08:00 |
+
+| Finding ID | Author response and revision | Reviewer disposition |
+| --- | --- | --- |
+| WB38-PLAN-S01-R1-F01 | ACCEPT at 5d85551324378a32082ed13a1cb76695feadc70e. T01 explicitly allows .github/spec-driven-delivery/archive/README.md changes limited to its prospective retention sentence and canonical BC06 link; archive ordering and history remain preserved. | RESOLVED. CP10-a and the exact implementation scope now agree. |
+| WB38-PLAN-S01-R2-F01 | ACCEPT at the same candidate. Current workflow and both plan PR rows identify actual planning PR 41; stale current draft labels were reconciled. | Correction independently verified by R1; formal R2 finding disposition remains with its owning seat. |
+
+| Material item | Disposition |
+| --- | --- |
+| REQ-01–REQ-18 projection, exclusions and scoped preparation authority | APPROVED as planning content |
+| BC01 compatibility and version-3 opt-in | APPROVED |
+| BC02 provisional dependencies and exact-candidate acceptance | APPROVED |
+| BC03 substantive context and fresh per-task verification | APPROVED; scoped v2 trial equivalence still requires the stated explicit owner acceptance |
+| BC04 bounded recovery and checkpoints | APPROVED |
+| BC05 publication planning, reconciliation and attribution | APPROVED |
+| BC06 retention and canonical-source scope | APPROVED; F01 resolved |
+| BC07 draft-first discussion and table-default brief | APPROVED |
+| BC08 closure, upgrade safeguards and measurement | APPROVED |
+| CP control inventory and baseline diagnostic preservation | APPROVED as proposed obligations; implementation conformance remains NOT_RUN |
+| T01/T02 specifications, independent merge boundaries and feature integration | APPROVED as planning content |
+| Live PR identity, draft versions and immutable review history | APPROVED |
+| Evidence and implementation/publication/performance limitations | APPROVED as accurately bounded planning evidence |
+
+This agent-generated receipt approves planning review readiness only. It does not authorize implementation, merge, policy activation, cleanup or archive.
+```
+
+## R02 exact R2 receipt
+
+```text
+| Field | Value |
+| --- | --- |
+| Review session ID | WB38-PLAN-S01 |
+| Review round | R02 |
+| Reviewer seat | R2 |
+| Assigned reviewer ID | /root/wb38_plan_r2 |
+| Reviewer agent/runtime | Codex isolated reviewer; retained seat, read-only |
+| Context isolation | FRESH_CONTEXT; original isolation retained; no files, comments or external state changed |
+| Subject | https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/41 |
+| Reviewed candidate revision | 5d85551324378a32082ed13a1cb76695feadc70e; WB38-PKG-R02; frozen inventory matches |
+| Reviewed base revision | 4f44eff2ca4468b75069bdb2b47a5b681bb888b7 |
+| Governing inputs inspected | R01 governing sources retained; accepted WB38-R03, scoped trial, quality-policy accuracy/consistency requirements, archive retention authority, CP10-a, BC06, T01 scope and workflow/plan live-state ownership |
+| Gates/evidence inspected | Complete R01-to-R02 three-file delta and unchanged governing context; exact R01 receipts, both ACCEPT responses, R02 self-review and inventory; independently verified clean worktree, exact HEAD and passing diff whitespace check; recorded local docs:all 58/58, not independently rerun; independently verified OPEN PR with exact base/head and successful hosted Blocking documentation checks, run 33952560336/job/101269945413; verified both R01 COMMENTED review identities and R2 inline body/original head/location |
+| Summary comment | Agent-generated R2 review: R2-F01 is resolved by accurate PR 41 links in the workflow and both plan control rows. R1-F01’s correction provides a narrowly bounded prospective archive-retention change without authorizing archive operations or historical rewrites. Draft versions and review identity agree. No regression or new actionable finding identified. |
+| Inline comments | No new inline findings. Original R2 finding: https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/41#discussion_r3939853187 |
+| Durable findings | WB38-PLAN-S01-R2-F01 RESOLVED below; no new findings |
+| Disposition | APPROVED |
+| Recommended next action | HUMAN_REVIEW |
+| Reviewed at | 2026-09-05T15:27:27+08:00 |
+
+| Material item | Disposition |
+| --- | --- |
+| Handoff, accepted requirements, exclusions and scoped preparation authority | APPROVED as planning content |
+| BC01–BC03 compatibility, batch acceptance and fresh task verification | APPROVED as planning content |
+| BC04–BC05 recovery and publication contracts | APPROVED as planning content |
+| BC06 and CP10-a prospective retention, including corrected archive-authority scope | APPROVED as planning content |
+| BC07–BC08 discussion, owner brief, closure, upgrade and measurement boundaries | APPROVED as planning content |
+| CP inventory, FC/E mappings and independently green T01/T02 scopes | APPROVED as planning content |
+| Live PR navigation, draft identities and preserved historical receipts | APPROVED |
+| Implementation conformance, live publisher demonstration, measured savings, activation and merge authority | NOT_APPLICABLE to this planning approval; remain uncertified |
+
+| Finding ID | Author response and revision | Reviewer disposition |
+| --- | --- | --- |
+| WB38-PLAN-S01-R2-F01 | ACCEPT; R02 links actual PR 41 from workflow.md and both implementation-plan.md current PR rows, preserving historical preparation evidence | RESOLVED at 5d85551324378a32082ed13a1cb76695feadc70e |
+| WB38-PLAN-S01-R1-F01 | ACCEPT; R02 adds archive/README.md to T01’s scope for its prospective retention sentence and canonical link only, preserving archive ordering and history | Correction independently verified by R2; R1 owns its finding’s formal disposition |
+
+This receipt approves the exact planning candidate only. It is agent-generated review evidence, not formal GitHub approval or implementation, merge, activation, archive or deletion authority.
+```
+
+## R02 coordinator resume and acceptance boundary
+
+Both retained seats APPROVED the identical PR head
+5d85551324378a32082ed13a1cb76695feadc70e. Both original findings are RESOLVED;
+no new findings. Full local suite 58/58 and hosted blocking checks passed.
+Coordinator verified exact published receipt bodies, original finding IDs and
+unchanged PR head; both reviewed finding threads are resolved after their
+owning reviewers confirmed the corrections.
+
+| Evidence | Published result |
+| --- | --- |
+| R1 final receipt | [5120326907](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/41#pullrequestreview-5120326907) |
+| R2 final receipt | [5120326935](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/41#pullrequestreview-5120326935) |
+| Hosted exact-head checks | [Blocking documentation checks](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/actions/runs/33952560336/job/101269945413) |
+
+These final receipts are appended locally outside the frozen candidate and
+published durably on the PR. This append is not yet committed to the PR head;
+Git retention reconciliation remains part of the subsequent authorized control
+publication. Do not claim the current PR commit already contains these final
+receipts. Any changed PR head must be reconciled with the same reviewers before
+merge. Existing R01 receipts and corrections are already committed.
+
+Immediate next action: repository owner accepts or rejects exact WB38-PKG-R02.
+The acceptance brief must include the proposed v3/legacy boundary, two task
+units, retry/no-progress bounds, prospective retention change and scoped
+substantive-context/fresh-verification equivalence for this v2 trial. Human
+implementation mode is NOT_SELECTED until supplied at the readiness boundary.
+No merge, task start, policy activation, archive or deletion has occurred.
