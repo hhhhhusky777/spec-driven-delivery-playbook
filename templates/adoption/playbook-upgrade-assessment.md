@@ -1,5 +1,14 @@
 # Playbook Upgrade Assessment — `<project>`
 
+## Optional batched route
+
+An authorized upgrade package may group dependent migration preparation and
+review. Keep current pin, between-task restrictions, actual migration checks,
+owner cutover and rollback; batching does not authorize early activation.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Use this project-owned artifact to assess one exact playbook revision before
 changing the active manifest pin. The generated upgrade guide supplies runtime
 paths; do not commit machine-local paths.
@@ -64,6 +73,11 @@ Transitive freshness impact: `<artifact graph and required refresh order>`
 Continuation-mode impact: `<UNCHANGED, or reset to EXPLICIT_REVIEW and required reconfirmation>`
 
 ## 5. Validation and cutover
+
+On an exception, follow the [shared triage contract](../../docs/batch-review-and-recovery.md#exception-triage-and-upstream-reporting)
+and link the [triage record](../reviews/exception-triage.md) from this assessment.
+Reporting an upstream issue neither approves migration nor changes the active
+pin; keep the last approved rollback authority until validated cutover.
 
 - [ ] Every material candidate change has a decision and evidence.
 - [ ] Affected artifacts, policies, skills, gates, and active delivery inputs are

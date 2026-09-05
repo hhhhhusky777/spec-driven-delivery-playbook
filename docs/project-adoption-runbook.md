@@ -1,5 +1,17 @@
 # Project Adoption Runbook
 
+## Optional batched route
+
+For explicitly authorized batched adoption, review stops B/C and neutral
+whiteboard preparation may be assembled into one installation package. Mapping,
+policy decisions, conformance and final verification are still individually
+accounted for. Prepare the neutral whiteboard before final package acceptance;
+INSTALLED and runtime handoff follow actual acceptance and verification. A real
+pilot remains required before ACTIVE.
+
+See [Batched review and recovery](../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Use this runbook to integrate the playbook into an existing or new project.
 It owns the reusable adoption procedure. The
 [Project Adoption Manifest Template](../templates/adoption/project-adoption-manifest.md)
@@ -517,6 +529,12 @@ study instead enters `EXAMPLE_REVIEWED` and records why real project activation
 is outside its authority.
 
 ## 10. Failure handling and rollback
+
+Apply [exception triage and upstream reporting](batch-review-and-recovery.md#exception-triage-and-upstream-reporting)
+to adoption and upgrade failures. Reuse a matching upstream issue for a
+confirmed source gap; local adoption errors and old pins need their own
+appropriate correction, not an automatic new playbook issue. Preserve the
+existing runtime-verification and rollback boundaries below.
 
 Before changing a document, test, configuration, or workflow after a failure,
 record what happened, what was expected, the relevant authority, and whether

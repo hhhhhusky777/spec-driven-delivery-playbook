@@ -1,5 +1,15 @@
 # Agent Adoption Trigger
 
+## Optional batched route
+
+When project authority explicitly selects the batch route, assemble only the
+named installation inputs and review one coherent package. Do not stop after
+each document merely for another full review; stop for missing decisions,
+failed controls or scope/authority changes.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Use these prompts with the
 [Project Adoption Runbook](../../docs/project-adoption-runbook.md). The manifest
 is the state/data connector; these prompts trigger one bounded action. Replace

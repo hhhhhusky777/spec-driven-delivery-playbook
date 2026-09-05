@@ -17,48 +17,48 @@
 | Field | Value |
 | --- | --- |
 | Plan | WB38 — full-lifecycle playbook efficiency |
-| Status | CONTRACT_REVIEW |
-| Previous status | DRAFT |
+| Status | VALIDATING |
+| Previous status | IMPLEMENTING |
 | Plan mode | FULL |
-| Current phase | SPECIFY |
+| Current phase | VALIDATE |
 | Current task | None |
 | Next ready task(s) | None |
 | Blockers | None |
 | Owner | Repository owner |
 | Reviewers | Two isolated planning reviewers covering governance, security and tests |
-| Review state | IN_REVIEW |
+| Review state | APPROVED |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB38-PKG-R02 |
+| Self-review candidate revision | WB38-READINESS-R01 |
 | Self-review evidence | [Package record](../../reviews/WB38-PLAN-S01.md) |
-| Fresh-context review state | IN_REVIEW |
+| Fresh-context review state | APPROVED |
 | Fresh-context review session ID | WB38-PLAN-S01 |
 | Fresh-context assigned reviewers | /root/wb38_plan_r1, /root/wb38_plan_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | Not recorded |
-| Fresh-context reviewed revision | Not recorded |
-| Fresh-context review evidence | [Package record](../../reviews/WB38-PLAN-S01.md); pending receipts |
-| Human review state | NOT_STARTED |
-| Human reviewed revision | Not recorded |
-| Human review evidence | Not recorded |
+| Fresh-context approved reviewers | /root/wb38_plan_r1, /root/wb38_plan_r2 |
+| Fresh-context reviewed revision | WB38-READINESS-R01 |
+| Fresh-context review evidence | [R03 exact receipts](../../reviews/WB38-READINESS.md) |
+| Human review state | APPROVED |
+| Human reviewed revision | WB38-READINESS-R01 |
+| Human review evidence | [Final owner acceptance](../../reviews/WB38-READINESS.md#final-owner-acceptance) |
 | Created | 2026-09-05 Asia/Shanghai |
 | Last updated | 2026-09-05 Asia/Shanghai |
 | Primary issue | [Issue 38](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/38) |
 | Concluded whiteboard | [WB38-R03](../../solution-whiteboard.md) |
-| Approved workflow handoff | Not approved; [H02 draft](handoff.md) |
-| Delivery workflow/manifest | [W03 draft](workflow.md) |
+| Approved workflow handoff | [Accepted H02](handoff.md) |
+| Delivery workflow/manifest | [W04 readiness amendment](workflow.md) |
 | Implementation continuation mode | Read live from delivery workflow; do not copy |
 | Development policy | [Contributing](../../../../CONTRIBUTING.md) |
 | Test strategy | [Quality policy](../../../../docs/documentation-quality-policy.md) |
 | PR/branch policy | Contributing branches and pull requests |
-| Delivery implementation task count | 2 |
+| Delivery implementation task count | 5 |
 | Integration model | multi-task feature integration |
-| Feature integration branch | codex/feature-38-playbook-efficiency; create after planning acceptance |
+| Feature integration branch | codex/feature-38-playbook-efficiency; created from accepted merge 98757aca4d7a5ff00ef9d59b15a2ca5bee2f12ce |
 | Task PR target | codex/feature-38-playbook-efficiency |
 | Final PR target | main |
 | Protected-branch synchronization | Reconcile target before task start and before merge; manual policy applies even without hosted protection |
 | Branch / PR | codex/task-38-adoption-efficiency-design; [planning PR 41](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/41); combined review |
 | Archived record | Not archived |
-| Draft version | WB38-P03 |
+| Draft version | WB38-P04 |
 
 ## 1. Governing inputs and feature authority
 
@@ -223,6 +223,17 @@ automatically or modify the read-only runtime.
 
 ## 6. Delivery strategy and task gates
 
+The W04 readiness register represents approved design inputs and task
+specifications, not future implementation results. Its T01/T02 identifiers refer
+to the specifications and substantive context in this plan. CURRENT for those
+inputs does not mean a task is READY, IN_PROGRESS or DONE. Actual task state,
+fresh pre-start verification and the T02-depends-on-completed-T01 condition remain
+owned by this plan. The workflow's separate future-output register retains all
+policy, consumer, implementation and closure duties and their review gates.
+Produced evidence enters the live dependency register at its actual gate before
+consumption, with distinct output IDs and exact revisions. No missing output
+is approved as part of planning acceptance.
+
 Use two independently green implementation units. T01 delivers the inseparable
 policy/schema/template/skill/test contract and documented coordinator procedure;
 it works through existing tools without the optional helper. T02 adds the pure
@@ -272,10 +283,50 @@ merely because code or review comments exist.
 
 | ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Independent merge boundary | PR |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| T01 | PLANNED | | None | None | CURRENT | COMPLETE | NONE | Core lifecycle batch contracts, consumers, tests and migration | FC01-FC09, BC01-BC08 | Core works with documented coordinator procedure; optional helper not required | — |
-| T02 | PLANNED | | T01 | None | CURRENT | COMPLETE | NONE | Read-only publication planner and reconciliation evidence | FC05, FC07, FC09, BC04-BC06 | Helper independently tested; no new credentials or hosted service | — |
+| T01 | DONE | | None | None | CURRENT | COMPLETE | NONE | Core lifecycle batch contracts, consumers, tests and migration | FC01-FC09, BC01-BC08 | Core works with documented coordinator procedure; optional helper not required | — |
+| T02 | DONE | | T01 | None | CURRENT | COMPLETE | NONE | Read-only publication planner and reconciliation evidence | FC05, FC07, FC09, BC04-BC06 | Helper independently tested; no new credentials or hosted service | PR44 merged |
+| T03 | DONE | | T01 | None | CURRENT | COMPLETE | NONE | Phase-specific human review briefs and design/task comparison | BC07 amendment | Separate governance package; no added review gates | PR45 merged |
+| T04 | DONE | | T01, T03 | None | CURRENT | COMPLETE | NONE | Phase-aware prerequisite and future-output validation | R01-R03 amendment | Versioned reusable readiness fix | PR49 merged |
+| T05 | DONE | | T04 | None | CURRENT | COMPLETE | NONE | Exception triage and upstream playbook reporting | E01-E02 amendment | Reusable guidance and evidence handling | PR50 merged |
 
 CURRENT records availability of the identified base, not approval of this draft.
+
+T04/T05 are provisional additions under the owner-requested
+[readiness/triage amendment](readiness-triage-amendment.md). Their exact bounded
+specifications and acceptance tests are recorded there; no execution or
+approval is implied by these PLANNED rows. T02 merged at
+82c022cfced052f8bc8cc67def437219df8be067 and its reviewed tree passed 80 tests.
+
+<!-- sdd-task-spec: T04 -->
+
+### T04 — Versioned phase-aware readiness
+
+See the [R01-R03 contract](readiness-triage-amendment.md#r01-r03--proposed-readiness-contract)
+and bounded task table for complete proposed scope, behavior, tests and risks.
+
+<!-- sdd-task-spec: T05 -->
+
+### T05 — Exception triage and upstream reporting
+
+See the [E01-E02 contract](readiness-triage-amendment.md#e01-e02--proposed-exception-contract)
+and bounded task table for complete proposed scope, behavior, tests and risks.
+
+T03 is added by the owner-requested [review-brief amendment](review-brief-amendment.md).
+T01 merge is verified at b5600e86914f2c14b1039427bfc5ef5a8a8826eb.
+T03 is approved and merged through PR45 at
+07a717ca2ad66f8758c28603bb60c8baeb6bfe54; target tree matched its reviewed
+candidate and 73 tests passed. T02 subsequently merged through PR44 after
+both retained reviewers approved its integrated head and all 80 tests passed.
+The five-task ledger includes T04/T05 accepted through PR48. T04 is in progress.
+
+<!-- sdd-task-spec: T03 -->
+
+### T03 — Human review brief follow-up
+
+Complete bounded specification, scope, compatibility, acceptance and consumer
+mapping are in the [amendment task specification](review-brief-amendment.md#follow-up-task-t03--required-phase-specific-human-briefs).
+No implementation or acceptance of T02 is a prerequisite for drafting this
+independent governance package. Final delivery closure requires all five tasks under the new amendment.
 
 ## 8. Task specification and execution record
 
@@ -291,18 +342,22 @@ BC01-BC08; E01-E03 and E05-E08 supply acceptance evidence.
 
 | Field | Value |
 | --- | --- |
-| State | PLANNED |
+| State | DONE |
 | Depends on | None |
 | Data phase | NONE |
 | Owner | Coordinating implementer |
 | Source boundary | Exact file allowlist below and CP01-CP16 audit |
 | Compatibility before/after | v2 remains valid under its old gates; v3 opt-in under BC01 |
 | Contract IDs | FC01-FC09, BC01-BC08 |
-| Branch / PR | Future codex/task-38-core-batching; target feature branch |
-| Context receipt | NOT_STARTED |
-| Context source revision | Not recorded; freeze at readiness |
+| Branch / PR | codex/task-38-core-batching; [PR42](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42); target codex/feature-38-playbook-efficiency |
+| Context receipt | APPROVED |
+| Context verification | CURRENT |
+| Verified source revision | 98757aca4d7a5ff00ef9d59b15a2ca5bee2f12ce |
+| Verified at | 2026-09-05T17:22:26+08:00 |
+| Verification evidence | [Readiness and preflight](../../reviews/WB38-READINESS.md); current branch/source/runtime and tool versions inspected; source code unchanged from accepted base |
+| Context source revision | 98757aca4d7a5ff00ef9d59b15a2ca5bee2f12ce; accepted control reconciliation 7984d45 |
 | Self-contained boundary | Core procedure uses existing coordinator tools; no T02 dependency |
-| Actual change summary | Not started |
+| Actual change summary | Core v3 batch validation, frozen v2 compatibility, guidance/templates/skills and tests; [evidence](T01-evidence.md) |
 
 Exact expected write allowlist (paths relative to repo root):
 README.md; CHANGELOG.md; CONTRIBUTING.md; docs/documentation-quality-policy.md;
@@ -356,18 +411,22 @@ using the existing account. T01 must be DONE/current before T02 starts.
 
 | Field | Value |
 | --- | --- |
-| State | PLANNED |
+| State | DONE |
 | Depends on | T01 |
 | Data phase | NONE |
 | Owner | Coordinating implementer |
 | Source boundary | scripts/review-publication.mjs; tests/review-publication.test.mjs; docs/batch-review-and-recovery.md; this delivery evidence |
 | Compatibility before/after | Additive optional CLI schema 1; existing coordinator route unchanged |
 | Contract IDs | FC05, FC07, FC09, BC04-BC06 |
-| Branch / PR | Future codex/task-38-review-publication; target feature branch |
-| Context receipt | NOT_STARTED |
-| Context source revision | Not recorded; freeze after T01 merge |
+| Branch / PR | codex/task-38-publication-planner; [PR44](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/44); target codex/feature-38-playbook-efficiency |
+| Context receipt | APPROVED |
+| Context verification | CURRENT |
+| Verified source revision | b5600e86914f2c14b1039427bfc5ef5a8a8826eb |
+| Verified at | 2026-09-05T10:43:47Z |
+| Verification evidence | [T02 start](T02-evidence.md) |
+| Context source revision | b5600e86914f2c14b1039427bfc5ef5a8a8826eb; accepted P04 substantive context |
 | Self-contained boundary | Pure helper and tests; no hosted or credential changes |
-| Actual change summary | Not started |
+| Actual change summary | Pure planner, deterministic/failure tests and live author demonstration complete; pending review |
 
 Implement BC05's complete stdin/stdout and failure contract, exported pure
 functions, negative/malformed fixtures, duplicate/partial/crash/head-drift cases.
@@ -401,14 +460,14 @@ PRs remain unrecorded. Completing a specification does not authorize task start.
 
 | Field | Current value |
 | --- | --- |
-| Plan state | CONTRACT_REVIEW |
+| Plan state | VALIDATING |
 | Current task | None |
 | Next ready task(s) | None |
-| Active branch / PR | codex/task-38-adoption-efficiency-design; [planning PR 41](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/41); same-seat review |
-| Last completed task | None |
+| Active branch / PR | codex/feature-38-playbook-efficiency; final PR preparation |
+| Last completed task | T05; PR50 merged as 8c1a67a0d98b3e840af113433df715cb0e799456; reviewed tree matched; 89 integrated tests passed |
 | Active blocker | None |
 | Last validation | Exact per-round checks and review recorded in the package session evidence |
-| Next action | Freeze joint planning candidate, self-review, then two-agent review and owner acceptance |
+| Next action | Combined final validation/closure review; see record.md |
 
 ## 10. Evidence, decisions and change history
 
@@ -443,3 +502,12 @@ branch deletion, pin cutover or archive is authorized by this draft.
 
 API-level facts and verification date are recorded with primary GitHub links in
 BC05. No claim of industry-wide efficiency or measured savings is made.
+
+### Historical accepted planning status
+
+The final owner acceptance of WB38-READINESS-R01 supersedes earlier preparation
+and pending-review narrative without changing the accepted task specifications.
+T01 is READY/NEXT with accepted substantive context under BC03's scoped trial;
+actual current-environment verification still precedes IN_PROGRESS. T02 remains
+PLANNED and cannot execute before T01 is DONE/current. No implementation result
+is certified by this control update.

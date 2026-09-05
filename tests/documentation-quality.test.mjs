@@ -5,6 +5,18 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
+test("human gate brief remains mandatory and linked from phase consumers", async () => {
+  const policy = await readFile(path.join(REPOSITORY_ROOT, "docs/documentation-quality-policy.md"), "utf8");
+  const required = ["At every human review gate", "Adoption acceptance", "Planning acceptance", "Implementation PR acceptance", "Validation and closure", "Upgrade acceptance", "Design point / source", "Task(s) and brief work", "Consistency / gap", "incomplete brief blocks the request for human acceptance"];
+  const assertContract = text => required.forEach(value => assert.ok(text.includes(value), value));
+  assertContract(policy);
+  for (const value of required) assert.throws(() => assertContract(policy.replaceAll(value, "")));
+  for (const file of ["templates/adoption/project-adoption-manifest.md", "templates/discovery/solution-whiteboard.md", "templates/delivery/implementation-plan.md", "templates/reviews/fresh-context-agent-review.md", "README.md", "docs/batch-review-and-recovery.md"]) {
+    const text = await readFile(path.join(REPOSITORY_ROOT, file), "utf8");
+    assert.ok(text.includes("documentation-quality-policy.md#26-attention-and-reviewability-gate"), file);
+  }
+});
+
 import {
   REPOSITORY_ROOT,
   checkLocalLinks,
@@ -17,6 +29,51 @@ import {
   runBlockingChecks,
 } from "../scripts/documentation-quality.mjs";
 import { validateMermaidBlocks } from "../scripts/check-mermaid.mjs";
+import { parseMarkdownTables } from "../scripts/sdd-lifecycle.mjs";
+
+test("exception triage consumers resolve one canonical contract and complete record", async () => {
+  const canonical = "docs/batch-review-and-recovery.md";
+  const template = "templates/reviews/exception-triage.md";
+  const anchor = "exception-triage-and-upstream-reporting";
+  const skills = ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade"].map(name => `skills/${name}/SKILL.md`);
+  const consumers = [...skills, "docs/documentation-quality-policy.md", "docs/project-adoption-runbook.md", "templates/reviews/review-batch.md", "templates/adoption/playbook-upgrade-assessment.md", "README.md"];
+  const bundle = new Map(await Promise.all([canonical, template, ...consumers].map(async file => [file, await readFile(path.join(REPOSITORY_ROOT, file), "utf8")])));
+  const validate = sources => {
+    const contract = sources.get(canonical);
+    const classification = parseMarkdownTables(contract).find(table => table.headers.includes("Classification") && table.headers.includes("Routing"));
+    assert.ok(classification);
+    assert.deepEqual(classification.rows.map(row => row.Classification).sort(), ["ADOPTION", "PLAYBOOK_GAP", "PROJECT", "STALE_VERSION", "UNKNOWN"]);
+    assert.ok(classification.rows.every(row => row["Evidence needed"] && row.Routing));
+    const record = parseMarkdownTables(sources.get(template)).find(table => table.headers.includes("Field"));
+    for (const required of ["Classification / cause evidence", "Verified upstream / duplicate search", "Disclosure authority / privacy assessment", "Reporting state", "Issue / pending draft / limitation", "External effect reconciliation", "Owner / next action / unblock condition"]) {
+      assert.ok(record?.rows.some(row => row.Field === required), required);
+    }
+    for (const file of consumers) {
+      const text = sources.get(file);
+      if (skills.includes(file)) {
+        const section = text.split("## Exception routing\n")[1]?.split("\n## ")[0];
+        assert.ok(section?.includes(`${canonical}#${anchor}`), `${file}: unconditional routing`);
+        assert.ok(section.includes(template), `${file}: record route`);
+      } else {
+        const links = extractMarkdownLinks(text);
+        assert.ok(links.some(link => {
+          const target = link.url || link.target || link.href;
+          return target && target.endsWith(`#${anchor}`) && path.posix.normalize(path.posix.join(path.posix.dirname(file), target.split("#")[0])) === canonical;
+        }), `${file}: canonical link`);
+      }
+    }
+  };
+  validate(bundle);
+  const missingRoute = new Map(bundle);
+  missingRoute.set(skills[0], bundle.get(skills[0]).replace(`${canonical}#${anchor}`, "missing.md"));
+  assert.throws(() => validate(missingRoute));
+  const missingClassification = new Map(bundle);
+  missingClassification.set(canonical, bundle.get(canonical).replace(/^\| UNKNOWN .*\n/m, ""));
+  assert.throws(() => validate(missingClassification));
+  const missingAuthority = new Map(bundle);
+  missingAuthority.set(template, bundle.get(template).replace(/^\| Disclosure authority .*\n/m, ""));
+  assert.throws(() => validate(missingAuthority));
+});
 
 const CONFIG = {
   templateRoots: ["templates"],
@@ -930,7 +987,7 @@ test("SGLang example demonstrates automated adoption through an empty whiteboard
   assert.match(upgradeExample, /Follow \.sdd-runtime\/playbook-upgrade-guide\.md exactly/);
 });
 
-test("canonical playbook URL and examples use the transferred repository and SGLang only", async () => {
+test("canonical URL and examples preserve approved history and bounded batching scenario", async () => {
   const installer = await readFile(path.join(REPOSITORY_ROOT, "install-sdd.sh"), "utf8");
   const readme = await readFile(path.join(REPOSITORY_ROOT, "README.md"), "utf8");
   const trackedFiles = await collectFiles(REPOSITORY_ROOT);
@@ -952,9 +1009,11 @@ test("canonical playbook URL and examples use the transferred repository and SGL
     .map((file) => path.relative(REPOSITORY_ROOT, file))
     .filter((file) => file.startsWith("examples/"));
   assert.ok(
-    examplePaths.every((file) => file.startsWith("examples/project-adoption/sglang/")),
-    "every maintained example must use SGLang",
+    examplePaths.every((file) => file.startsWith("examples/project-adoption/sglang/") || file === "examples/batched-delivery/README.md"),
+    "examples remain confined to historical SGLang evidence and the approved batching scenario",
   );
+  const batchingExample = await readFile(path.join(REPOSITORY_ROOT, "examples/batched-delivery/README.md"), "utf8");
+  assert.match(batchingExample, /instructional scenario, not a record of executed work/);
   assert.match(readme, /SGLang API-key redaction delivery/);
 });
 

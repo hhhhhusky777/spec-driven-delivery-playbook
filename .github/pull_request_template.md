@@ -1,5 +1,15 @@
 # Pull request
 
+## Optional batched route
+
+For a batched change, link its exact artifact/control inventory and include a
+table of DECISION and ATTENTION items. Record the stable reviewer seats, exact
+head, findings and receipt links; same-account comments are agent-generated
+review evidence, not formal self-approval. Existing gates below remain required.
+
+See [Batched review and recovery](../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 ## Outcome and scope
 
 - Problem and expected improvement:

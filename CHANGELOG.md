@@ -7,7 +7,23 @@ This project has not published a formal versioned release. Significant template
 and workflow changes are recorded here until a release/versioning policy is
 adopted.
 
-## Unreleased — updated 2026-09-04
+## Unreleased — updated 2026-09-05
+
+- Require reusable exception triage across all phases, with verified upstream
+  targeting, duplicate search, sanitized/private reporting and pending drafts
+  when reporting is unavailable. Source adoption/workflow/upgrade skills and
+  recovery templates route to one contract; issue filing grants no gate bypass.
+
+- Add opt-in lifecycle v4 phase-aware readiness: future implementation,
+  validation and closure outputs have separate deadlines, stable output
+  membership and exact predecessor-consumption evidence. Freeze v3 alongside
+  v2; installed projects migrate only through reviewed adoption/upgrade.
+
+- Add explicit version-3 batch review and recovery contracts with consolidated
+  readiness, table-first owner briefs and draft-first discussion. Preserve v2
+  validation through frozen schema data; migration is opt-in, never an installed
+  runtime or historical-record rewrite. New PR evidence uses durable pointers
+  under the adopted retention policy; required human merge authority remains.
 
 - Made fresh-context agent review mandatory at every review gate. The author
   freezes an exact-revision packet after self-review and opens a stable review

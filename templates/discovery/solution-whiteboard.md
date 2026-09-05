@@ -1,5 +1,20 @@
 # Solution Whiteboard Template
 
+Human handoffs must include the
+[phase-specific review brief](../../docs/documentation-quality-policy.md#26-attention-and-reviewability-gate).
+Supply key design points for the combined design/task comparison; do not add a separate batched whiteboard gate.
+
+## Optional batched route
+
+With explicit batch authority, persist meaningful lightweight discussion notes
+while exploring, then synthesize the complete formal conclusion for the joint
+planning review. Do not treat notes as an accepted conclusion. Preserve one
+active need and immutable accepted history; new requirements use a linked
+amendment.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Use this document to turn a requirement, issue, defect, or architectural concern
 into an evidence-backed solution before generating the reviewed workflow
 handoff. It is a structured discussion surface, not a system contract and not a

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 3,
   "artifacts": {
     "implementation-plan": {
       "requiredFields": [
@@ -22,8 +22,7 @@
         "Fresh-context review evidence",
         "Human review state",
         "Human reviewed revision",
-        "Human review evidence",
-        "Delivery workflow"
+        "Human review evidence"
       ],
       "transitions": {
         "DRAFT": [
@@ -113,8 +112,7 @@
         "Next action target IDs",
         "Allowed write scope",
         "Next action write targets",
-        "Stale artifacts",
-        "Implementation plan"
+        "Stale artifacts"
       ],
       "transitions": {
         "AWAITING_HANDOFF": [

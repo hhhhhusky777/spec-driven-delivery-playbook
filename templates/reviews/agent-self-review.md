@@ -1,5 +1,14 @@
 # Agent Self-Review Record — `<artifact or change>`
 
+## Optional batched route
+
+For a batch, self-review the complete exact inventory and each required control.
+A delta invalidates the earlier candidate result. Control-only reconciliation
+requires an exact delta and preserved normative content, not a blanket pass.
+
+See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
+requirements. This route takes effect only through reviewed project adoption.
+
 Use this record before every fresh-context and human review sequence. It is the
 authoring agent's pre-review audit, not approval and not a substitute for the
 reviewer required by project policy. Embed the same fields in the owning
