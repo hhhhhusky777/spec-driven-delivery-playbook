@@ -106,3 +106,35 @@ test("summary findings and untrusted text remain literal data", () => {
   assert.ok(plan.actions[0].payload.body.includes("$(do-not-execute)"));
   assert.ok(plan.actions[0].payload.body.includes("CHANGES_NEEDED"));
 });
+
+test("durable checkpoint candidate, digest, duplicate and unknown action conflicts block", () => {
+  for (const [rule, mutate] of [
+    ["CHECKPOINT_CANDIDATE", c => { c.candidate = "wrong-candidate"; }],
+    ["CHECKPOINT_CONFLICT", c => { c.publications[0].digest = "wrong-digest"; }],
+    ["CHECKPOINT_CONFLICT", c => { c.publications.push(structuredClone(c.publications[0])); }],
+    ["CHECKPOINT_UNKNOWN_ACTION", c => { c.publications.push({ actionId: "unknown", digest: "unknown", state: "PLANNED" }); }],
+  ]) {
+    const data = input(); const plan = evaluatePublication(data);
+    publish(data, plan);
+    data.checkpoint = plan.checkpoint;
+    mutate(data.checkpoint);
+    const result = evaluatePublication(data);
+    assert.equal(result.exitCode, 1, rule);
+    assert.equal(result.status, "BLOCKED", rule);
+    assert.deepEqual(result.actions, [], rule);
+    assert.ok(result.discrepancies.some(d => d.rule === rule), rule);
+  }
+});
+
+test("receipt input cannot request formal approval or request-changes events", () => {
+  for (const event of ["APPROVE", "REQUEST_CHANGES"]) {
+    const data = input(); data.receipts[0].event = event;
+    const result = evaluatePublication(data);
+    assert.equal(result.exitCode, 2);
+    assert.equal(result.status, "INVALID");
+    assert.deepEqual(result.actions, []);
+    assert.ok(result.discrepancies.some(d => d.rule === "RECEIPT_EVENT"));
+  }
+  const data = input(); data.receipts[0].event = "COMMENT";
+  assert.equal(evaluatePublication(data).status, "PLANNED");
+});
