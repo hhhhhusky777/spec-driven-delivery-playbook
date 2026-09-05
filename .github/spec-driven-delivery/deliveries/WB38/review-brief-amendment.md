@@ -61,7 +61,7 @@ new review boundary is introduced.
 | Outcome | Every human gate supplies a concise, current decision/attention brief; planning compares design and tasks |
 | Dependency | T01 merged/current; independent of T02 helper implementation |
 | Source | Accepted BC07 plus the owner's latest amendment; original conclusion stays immutable |
-| Write scope | README.md; docs/documentation-quality-policy.md; docs/batch-review-and-recovery.md; templates/adoption/project-adoption-manifest.md; templates/discovery/solution-whiteboard.md; templates/delivery/implementation-plan.md; templates/reviews/fresh-context-agent-review.md; tests/documentation-quality.test.mjs; WB38 delivery and review records |
+| Write scope | README.md; docs/documentation-quality-policy.md; docs/batch-review-and-recovery.md; templates/adoption/project-adoption-manifest.md; templates/discovery/solution-whiteboard.md; templates/delivery/implementation-plan.md; templates/reviews/fresh-context-agent-review.md; tests/documentation-quality.test.mjs; examples/batched-delivery/README.md; WB38 delivery and review records |
 | Non-scope | Extra review gates, T02 changes, issue43 impact-map checker, credentials, runtime pins, archive or cleanup |
 | Acceptance | Canonical phase requirements and fail-closed human-handoff rule; consumers linked; README reconciled; tests and two independent reviews; owner acceptance before merge |
 | Compatibility | Presentation and semantic review obligation; existing state machines and batching boundaries unchanged; existing installed pins are not silently updated |

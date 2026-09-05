@@ -34,14 +34,14 @@
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
 | Self-review candidate revision | BRIEF-R01 |
-| Self-review evidence | [T01 self-review](../../reviews/WB38-BRIEF-S01.md) |
+| Self-review evidence | [Brief self-review](../../reviews/WB38-BRIEF-S01.md) |
 | Fresh-context review state | IN_REVIEW |
 | Fresh-context review session ID | WB38-BRIEF-S01 |
 | Fresh-context assigned reviewers | /root/wb38_brief_r1, /root/wb38_brief_r2 |
 | Fresh-context required approvals | 2 |
 | Fresh-context approved reviewers | None |
 | Fresh-context reviewed revision | None |
-| Fresh-context review evidence | [T01 review](../../reviews/WB38-BRIEF-S01.md) |
+| Fresh-context review evidence | [Brief review](../../reviews/WB38-BRIEF-S01.md) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | None |
 | Human review evidence | None |
@@ -52,7 +52,7 @@
 | Implementation mode selected at | 2026-09-05T17:22:26+08:00 |
 | Next action | Review owner-authorized phase-specific brief governance package |
 | Next action target IDs | T03 |
-| Allowed write scope | README.md; docs/documentation-quality-policy.md; docs/batch-review-and-recovery.md; templates/adoption/project-adoption-manifest.md; templates/discovery/solution-whiteboard.md; templates/delivery/implementation-plan.md; templates/reviews/fresh-context-agent-review.md; tests/documentation-quality.test.mjs; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
+| Allowed write scope | README.md; docs/documentation-quality-policy.md; docs/batch-review-and-recovery.md; templates/adoption/project-adoption-manifest.md; templates/discovery/solution-whiteboard.md; templates/delivery/implementation-plan.md; templates/reviews/fresh-context-agent-review.md; tests/documentation-quality.test.mjs; examples/batched-delivery/README.md; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
 | Next action write targets | .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/deliveries/WB38 |
 | Review mode | EXPLICIT_REVIEW |
 | Review mode authority | Owner scoped live-trial approval; linked above |
@@ -187,15 +187,15 @@ is separately effective; PR publication may supplement them now.
 | Field | Current value |
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
-| Current artifact/task | T01 |
+| Current artifact/task | T03 governance package |
 | Current artifact review | IN_REVIEW; BRIEF-R01 |
 | Last approved artifact | WB38-READINESS-R01; W04/P04 and checkpoint |
-| Next ready action | Coherent T01 PR review |
+| Next ready action | Coherent T03 governance PR review |
 | Active blockers | None |
 | Stale artifacts | T03 |
 | Validation complete | No delivery validation |
-| Validation remaining | Planning checks/review; all implementation and closure evidence |
-| Branch/PR | codex/task-38-core-batching; [draft PR42](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42); target codex/feature-38-playbook-efficiency |
+| Validation remaining | T03 review/acceptance; separate T02 PR44 merge; final integrated validation and closure |
+| Branch/PR | codex/task-38-review-briefs; [draft PR45](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/45); target codex/feature-38-playbook-efficiency |
 | Last updated | 2026-09-05 Asia/Shanghai |
 
 Require all active tasks terminal and required evidence current before parent
