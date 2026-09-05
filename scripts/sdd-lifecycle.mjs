@@ -150,7 +150,7 @@ function hasRecordedValue(value) {
   const normalized = normalizeValue(value || "");
   return !(
     isNone(normalized) ||
-    /^(?:not recorded|not available|pending|placeholder|tbd|todo|unknown)(?:\s*\/|$)/i.test(
+    /^(?:not recorded|not available|not selected|pending|placeholder|tbd|todo|unknown)(?:\s*\/|$)/i.test(
       normalized,
     ) ||
     /<[^>]+>/.test(normalized)
@@ -1593,10 +1593,12 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
       "Post-merge control changed fields",
       "Post-merge control required gates",
       "Post-merge control evidence owner",
+      "Post-merge cleanup targets",
+      "Post-merge cleanup authority",
     ];
     diagnostics.push(...checkRequiredFields(file, fields, required));
-    for (const field of required) {
-      if (isNone(fields.get(field) || "")) {
+    for (const field of required.slice(0, -2)) {
+      if (!hasRecordedValue(fields.get(field) || "")) {
         diagnostics.push(diagnostic(file, 1, "SDD_POST_MERGE_CONTROL_AUTHORITY", `${field} must be predeclared`));
       }
     }
@@ -1610,6 +1612,7 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
       diagnostics.push(diagnostic(file, 1, "SDD_POST_MERGE_CONTROL_SOURCE", "control receipt source must be the exact self-reviewed, independently approved, and human-approved closure revision"));
     }
     if (
+      version !== 4 ||
       fields.get("State") !== "ARCHIVED" ||
       fields.get("Previous state") !== "COMPLETE" ||
       fields.get("Current review phase") !== "ARCHIVE" ||
@@ -1630,7 +1633,10 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     }
     const allowedPaths = splitPaths(fields.get("Post-merge control allowed paths") || "");
     const changedPaths = splitPaths(fields.get("Post-merge control changed paths") || "");
-    if (!allowedPaths.length || !changedPaths.length || allowedPaths.includes("*") || changedPaths.some((target) => !allowedPaths.some((scope) => pathWithinScope(target, scope)))) {
+    const globalPathScope = allowedPaths.some((scope) =>
+      path.posix.normalize(normalizeValue(scope).replace(/\\/g, "/")).replace(/\/$/, "") === "*"
+    );
+    if (!allowedPaths.length || !changedPaths.length || globalPathScope || changedPaths.some((target) => !allowedPaths.some((scope) => pathWithinScope(target, scope)))) {
       diagnostics.push(diagnostic(file, 1, "SDD_POST_MERGE_CONTROL_SCOPE", "every changed path must be enumerated inside a non-global pre-approved control scope"));
     }
     const allowedFields = splitPaths(fields.get("Post-merge control allowed fields") || "").map((field) => field.toLowerCase());
@@ -1642,7 +1648,7 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
       diagnostics.push(diagnostic(file, 1, "SDD_POST_MERGE_CONTROL_GATES", "receipt gates must exactly match the predeclared automatic gates"));
     }
     const cleanupTargets = splitPaths(fields.get("Post-merge cleanup targets") || "");
-    if (cleanupTargets.length && (isNone(fields.get("Post-merge cleanup authority") || "") || cleanupTargets.some((target) => !allowedPaths.some((scope) => pathWithinScope(target, scope))))) {
+    if (cleanupTargets.length && (!hasRecordedValue(fields.get("Post-merge cleanup authority") || "") || cleanupTargets.some((target) => !allowedPaths.some((scope) => pathWithinScope(target, scope))))) {
       diagnostics.push(diagnostic(file, 1, "SDD_POST_MERGE_CLEANUP_AUTHORITY", "cleanup requires explicit authority and targets inside the pre-approved scope"));
     }
   }

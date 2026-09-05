@@ -108,15 +108,15 @@ candidate expanded to correct that gap; they do not approve the revised head.
 | --- | --- |
 | Review session ID | WB38-ARCHIVE-CONTROL-S01 |
 | Subject and base | PR56 issue57 corrective closure; base a97b6dd519f538c517b971013d2dea78ca9c51ca |
-| State | PREPARING |
+| State | IN_REVIEW |
 | Assigned reviewers | R1 /root/wb38_final_r1; R2 /root/wb38_final_r2 |
 | Required approvals | 2 |
 | Approved reviewers | None for revised candidate |
-| Current candidate | WB38-ARCHIVE-CONTROL-R02; exact commit supplied at dispatch |
-| Current round | R02 |
+| Current candidate | WB38-ARCHIVE-CONTROL-R03; exact commit supplied at dispatch |
+| Current round | R03 |
 | Replacement history | None |
 
-R02 makes the closure package the only full semantic archive review boundary.
+The corrective package makes the closure package the only full semantic archive review boundary.
 It adds a narrowly pre-authorized post-merge control receipt that performs
 self-review and automatic gates without another reviewer/human stop only when
 the accepted source revision, PR/evidence owner, changed paths, allowed fields,
@@ -128,5 +128,17 @@ workflow skill, lifecycle checker and positive/negative tests change together.
 The current archived conclusion and neutral EMPTY whiteboard bytes are unchanged.
 PR56 is the one-time semantic correction and final target-state publication;
 its PR owns post-merge verification, so no later full-review receipt PR is
-planned. `SELF_REVIEW_PASSED` for WB38-ARCHIVE-CONTROL-R02 after the complete
+planned. `SELF_REVIEW_PASSED` for WB38-ARCHIVE-CONTROL-R03 after the complete
 diff and gates pass; the exact commit is bound at dispatch.
+
+### R02 findings and R03 response
+
+Both reviewers requested changes on exact head
+`b9e49cf4fa08959c26c216bf3203edce3cfe56fc`; no R02 approval remains current.
+
+| Finding | Immutable review evidence | Author response and R03 correction | State |
+| --- | --- | --- | --- |
+| WB38-ARCHIVE-CONTROL-S01-R1-F01 | [R1 summary](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/56#pullrequestreview-5122015393) | ACCEPT; reject unset/sentinel receipt and cleanup authority, and add negative coverage | Awaiting R1 re-review |
+| WB38-ARCHIVE-CONTROL-S01-R1-F02 | [R1 summary](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/56#pullrequestreview-5122015393) | ACCEPT; restrict the opt-in receipt route to v4, exercise a real v4 positive fixture, and reject v2 opt-in | Awaiting R1 re-review |
+| WB38-ARCHIVE-CONTROL-S01-R2-F01 | [R2 inline finding](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/56#discussion_r3941234173) | ACCEPT; normalize and reject global wildcard aliases such as `*/`, with regression coverage | Awaiting R2 re-review |
+| WB38-ARCHIVE-CONTROL-S01-R2-F02 | [R2 inline finding](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/56#discussion_r3941234180) | ACCEPT; require the complete cleanup field pair on opt-in while preserving no-opt-in v4 compatibility | Awaiting R2 re-review |
