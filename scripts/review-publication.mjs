@@ -26,7 +26,7 @@ function validate(input) {
   require(Array.isArray(input.seats) && input.seats.length === 2, "TWO_SEATS");
   if (Array.isArray(input.seats)) {
     require(input.seats.every(s => object(s) && id(s.seat) && text(s.agent)), "SEAT_IDENTITY");
-    require(new Set(input.seats.map(s => s?.seat?.toLowerCase())).size === 2 && new Set(input.seats.map(s => s?.agent)).size === 2, "UNIQUE_SEATS");
+    require(new Set(input.seats.map(s => typeof s?.seat === "string" ? s.seat.toLowerCase() : null)).size === 2 && new Set(input.seats.map(s => s?.agent)).size === 2, "UNIQUE_SEATS");
   }
   require(Array.isArray(input.receipts) && input.receipts.length === 2, "TWO_RECEIPTS");
   for (const r of Array.isArray(input.receipts) ? input.receipts : []) {

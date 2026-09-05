@@ -31,13 +31,13 @@
 | Current artifact/gate | [T02 / PR 44](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/44) |
 | Current review phase | IMPLEMENTATION |
 | Current review target ID | T02 |
-| Current artifact review state | NOT_STARTED |
-| Self-review state | NOT_STARTED |
-| Self-review candidate revision | None |
-| Self-review evidence | None |
-| Fresh-context review state | NOT_STARTED |
-| Fresh-context review session ID | None |
-| Fresh-context assigned reviewers | None |
+| Current artifact review state | IN_REVIEW |
+| Self-review state | SELF_REVIEW_PASSED |
+| Self-review candidate revision | T02-R01 |
+| Self-review evidence | [T02 self-review](../../reviews/WB38-T02-S01.md) |
+| Fresh-context review state | IN_REVIEW |
+| Fresh-context review session ID | WB38-T02-S01 |
+| Fresh-context assigned reviewers | /root/wb38_t02_r1, /root/wb38_t02_r2 |
 | Fresh-context required approvals | 2 |
 | Fresh-context approved reviewers | None |
 | Fresh-context reviewed revision | None |
@@ -50,7 +50,7 @@
 | Implementation mode scope | T01, T02 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-05T17:22:26+08:00 |
-| Next action | Implement and test T02 publication planner |
+| Next action | Two isolated T02 reviewers inspect complete PR; consolidate corrections |
 | Next action target IDs | T02 |
 | Allowed write scope | scripts/review-publication.mjs; tests/review-publication.test.mjs; docs/batch-review-and-recovery.md; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
 | Next action write targets | scripts/review-publication.mjs; tests/review-publication.test.mjs; docs/batch-review-and-recovery.md; .github/spec-driven-delivery/deliveries/WB38 |

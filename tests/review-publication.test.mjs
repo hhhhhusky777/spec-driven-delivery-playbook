@@ -42,7 +42,7 @@ test("deterministic COMMENT plans reconcile and replay without duplicate writes"
 });
 
 test("malformed input and CLI return sanitized schema errors", () => {
-  for (const value of [null, [], {}, { schemaVersion: 2 }, { ...input(), receipts: [null, {}] }, { ...input(), seats: [null, null] }]) assert.equal(evaluatePublication(value).exitCode, 2);
+  for (const value of [null, [], {}, { schemaVersion: 2 }, { ...input(), receipts: [null, {}] }, { ...input(), seats: [null, null] }, { ...input(), seats: [{ seat: 3 }, { seat: {} }] }]) assert.equal(evaluatePublication(value).exitCode, 2);
   assert.equal(runCli("not json secret-value").exitCode, 2);
   assert.ok(!JSON.stringify(runCli("secret-value")).includes("secret-value"));
   assert.equal(runCli(JSON.stringify(input()), ["--write"]).exitCode, 2);

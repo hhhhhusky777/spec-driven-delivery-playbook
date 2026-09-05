@@ -284,7 +284,7 @@ merely because code or review comments exist.
 | ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Independent merge boundary | PR |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | T01 | DONE | | None | None | CURRENT | COMPLETE | NONE | Core lifecycle batch contracts, consumers, tests and migration | FC01-FC09, BC01-BC08 | Core works with documented coordinator procedure; optional helper not required | — |
-| T02 | IN_PROGRESS | | T01 | None | CURRENT | COMPLETE | NONE | Read-only publication planner and reconciliation evidence | FC05, FC07, FC09, BC04-BC06 | Helper independently tested; no new credentials or hosted service | — |
+| T02 | VERIFYING | | T01 | None | CURRENT | COMPLETE | NONE | Read-only publication planner and reconciliation evidence | FC05, FC07, FC09, BC04-BC06 | Helper independently tested; no new credentials or hosted service | — |
 
 CURRENT records availability of the identified base, not approval of this draft.
 
@@ -371,14 +371,14 @@ using the existing account. T01 must be DONE/current before T02 starts.
 
 | Field | Value |
 | --- | --- |
-| State | IN_PROGRESS |
+| State | VERIFYING |
 | Depends on | T01 |
 | Data phase | NONE |
 | Owner | Coordinating implementer |
 | Source boundary | scripts/review-publication.mjs; tests/review-publication.test.mjs; docs/batch-review-and-recovery.md; this delivery evidence |
 | Compatibility before/after | Additive optional CLI schema 1; existing coordinator route unchanged |
 | Contract IDs | FC05, FC07, FC09, BC04-BC06 |
-| Branch / PR | codex/task-38-publication-planner; target codex/feature-38-playbook-efficiency; PR not yet opened |
+| Branch / PR | codex/task-38-publication-planner; [PR44](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/44); target codex/feature-38-playbook-efficiency |
 | Context receipt | APPROVED |
 | Context verification | CURRENT |
 | Verified source revision | b5600e86914f2c14b1039427bfc5ef5a8a8826eb |
@@ -386,7 +386,7 @@ using the existing account. T01 must be DONE/current before T02 starts.
 | Verification evidence | [T02 start](T02-evidence.md) |
 | Context source revision | b5600e86914f2c14b1039427bfc5ef5a8a8826eb; accepted P04 substantive context |
 | Self-contained boundary | Pure helper and tests; no hosted or credential changes |
-| Actual change summary | Readiness complete; implementing pure publication planner |
+| Actual change summary | Pure planner, deterministic/failure tests and live author demonstration complete; pending review |
 
 Implement BC05's complete stdin/stdout and failure contract, exported pure
 functions, negative/malformed fixtures, duplicate/partial/crash/head-drift cases.
@@ -423,7 +423,7 @@ PRs remain unrecorded. Completing a specification does not authorize task start.
 | Plan state | IMPLEMENTING |
 | Current task | None |
 | Next ready task(s) | None |
-| Active branch / PR | codex/task-38-core-batching; [draft PR42](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42) |
+| Active branch / PR | codex/task-38-publication-planner; [PR44](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/44) |
 | Last completed task | T01; PR42 merged and identical target tree verified |
 | Active blocker | None |
 | Last validation | Exact per-round checks and review recorded in the package session evidence |
