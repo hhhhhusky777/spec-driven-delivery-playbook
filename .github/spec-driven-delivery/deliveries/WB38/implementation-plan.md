@@ -17,11 +17,11 @@
 | Field | Value |
 | --- | --- |
 | Plan | WB38 — full-lifecycle playbook efficiency |
-| Status | IMPLEMENTING |
-| Previous status | READY |
+| Status | VALIDATING |
+| Previous status | IMPLEMENTING |
 | Plan mode | FULL |
-| Current phase | IMPLEMENT |
-| Current task | T05 |
+| Current phase | VALIDATE |
+| Current task | None |
 | Next ready task(s) | None |
 | Blockers | None |
 | Owner | Repository owner |
@@ -287,7 +287,7 @@ merely because code or review comments exist.
 | T02 | DONE | | T01 | None | CURRENT | COMPLETE | NONE | Read-only publication planner and reconciliation evidence | FC05, FC07, FC09, BC04-BC06 | Helper independently tested; no new credentials or hosted service | PR44 merged |
 | T03 | DONE | | T01 | None | CURRENT | COMPLETE | NONE | Phase-specific human review briefs and design/task comparison | BC07 amendment | Separate governance package; no added review gates | PR45 merged |
 | T04 | DONE | | T01, T03 | None | CURRENT | COMPLETE | NONE | Phase-aware prerequisite and future-output validation | R01-R03 amendment | Versioned reusable readiness fix | PR49 merged |
-| T05 | VERIFYING | | T04 | None | CURRENT | COMPLETE | NONE | Exception triage and upstream playbook reporting | E01-E02 amendment | Reusable guidance and evidence handling | PR50 |
+| T05 | DONE | | T04 | None | CURRENT | COMPLETE | NONE | Exception triage and upstream playbook reporting | E01-E02 amendment | Reusable guidance and evidence handling | PR50 merged |
 
 CURRENT records availability of the identified base, not approval of this draft.
 
@@ -460,14 +460,14 @@ PRs remain unrecorded. Completing a specification does not authorize task start.
 
 | Field | Current value |
 | --- | --- |
-| Plan state | IMPLEMENTING |
-| Current task | T05 |
+| Plan state | VALIDATING |
+| Current task | None |
 | Next ready task(s) | None |
-| Active branch / PR | codex/task-47-exception-triage; PR50 |
-| Last completed task | T04; PR49 merged, target tree matched reviewed candidate, 88 tests passed |
+| Active branch / PR | codex/feature-38-playbook-efficiency; final PR preparation |
+| Last completed task | T05; PR50 merged as 8c1a67a0d98b3e840af113433df715cb0e799456; reviewed tree matched; 89 integrated tests passed |
 | Active blocker | None |
 | Last validation | Exact per-round checks and review recorded in the package session evidence |
-| Next action | Implement accepted T05; final integrated validation follows all tasks |
+| Next action | Combined final validation/closure review; see record.md |
 
 ## 10. Evidence, decisions and change history
 
