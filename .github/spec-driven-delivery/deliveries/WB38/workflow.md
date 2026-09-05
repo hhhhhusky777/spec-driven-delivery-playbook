@@ -33,7 +33,7 @@
 | Current review target ID | readiness-amendment |
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | READINESS46-R01 |
+| Self-review candidate revision | READINESS46-R02 |
 | Self-review evidence | [Amendment self-review](../../reviews/WB38-READINESS46-S01.md) |
 | Fresh-context review state | IN_REVIEW |
 | Fresh-context review session ID | WB38-READINESS46-S01 |
@@ -143,7 +143,7 @@ blocked until all task and target evidence exists.
 | T01 | T01 specification and substantive context in plan | plan, audit, contracts | WB38-P04-T01-spec | WB38-P04-T01-spec | CONTROL_ONLY | CURRENT | None |
 | T02 | T02 specification and substantive context in plan | T01, plan, contracts | WB38-P04-T02-spec | WB38-P04-T02-spec | CONTROL_ONLY | CURRENT | None |
 | T03 | [Brief amendment](review-brief-amendment.md) | plan, contracts | 07a717ca2ad66f8758c28603bb60c8baeb6bfe54 | 07a717ca2ad66f8758c28603bb60c8baeb6bfe54 | CONTROL_ONLY | CURRENT | None |
-| readiness-amendment | [Proposed contract](readiness-triage-amendment.md) | plan, contracts | READINESS46-R01 | None | MATERIAL | STALE | None |
+| readiness-amendment | [Proposed contract](readiness-triage-amendment.md) | plan, contracts | READINESS46-R02 | None | MATERIAL | STALE | None |
 
 Draft predecessor identities are H02/W04/A02/C01/P04. Freeze actual content hashes
 before review; these labels alone are not immutable receipts. STALE here
@@ -189,7 +189,7 @@ is separately effective; PR publication may supplement them now.
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
 | Current artifact/task | Readiness and triage amendment |
-| Current artifact review | IN_REVIEW; READINESS46-R01 |
+| Current artifact review | IN_REVIEW; READINESS46-R02 |
 | Last approved artifact | WB38-READINESS-R01; W04/P04 and checkpoint |
 | Next ready action | Review proposed readiness/triage contract and tasks |
 | Active blockers | None |

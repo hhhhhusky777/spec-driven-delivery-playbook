@@ -39,35 +39,79 @@ version-4 markers; legacy documents and historical fixtures remain unchanged.
 Version migration requires explicit reviewed project adoption/upgrade.
 
 The v4 workflow distinguishes the current prerequisite register from a required
-future-output register. Add a required artifact-role inventory with columns
-Artifact ID, Role, Required gate, Producer task, Depends on, Evidence.
-Role is PREREQUISITE or FUTURE_OUTPUT; Required gate is IMPLEMENTATION,
-VALIDATION or CLOSURE. Every selected manifest artifact has exactly one role;
-IDs are unique, references resolve and dependency graphs are acyclic.
+output register. Add a required role inventory with columns Artifact ID, Role,
+Production phase, Required gate, Producer task, Depends on, Evidence. Role is
+PREREQUISITE or FUTURE_OUTPUT. Every selected manifest artifact has exactly one
+role; IDs are unique, references resolve, and the combined artifact dependency
+graph is acyclic. Membership and phase fields cannot conflict across tables.
 
-PREREQUISITE rows belong to the normal current-input register and cannot name
-an uncompleted producer. FUTURE_OUTPUT rows belong to the separate output
-register, with explicit producer, owning gate and NOT_STARTED/IN_PROGRESS/
-COMPLETE state. Task-produced results name a real planned task; phase-produced
-validation/closure records use the explicit PHASE producer sentinel. Full
-output verification/review evidence is required at the declared owning gate.
-No future output is counted as an approved readiness input. A prerequisite
-depending directly or transitively on a declared future output is invalid.
+PREREQUISITE has Production phase EXISTING, Required gate GATES_READY and
+Producer task NONE. It appears only in the current-input register, with the
+existing exact revision, currentness and review requirements. Such a row cannot
+depend on a FUTURE_OUTPUT: accepted design inputs cannot require in-delivery
+results. Previously delivered outputs may be existing inputs only through an
+explicit accepted external source/version, never an invented completed producer.
 
-At implementation readiness, validate current approved design/task inputs and
-the first task's actual execution dependencies; future validation/closure
-outputs remain obligations, not start requirements. A future output claiming
-Required gate IMPLEMENTATION is invalid: an earlier task result needed by a
-later task is an execution dependency, verified by that task's own readiness,
-not a universal prerequisite for starting the delivery. Preserve task-to-task
-DONE/current requirements and all existing context, authority and merge gates.
+FUTURE_OUTPUT keeps that role for the whole delivery, even after completion.
+It appears only in the output register, not the input freshness register.
+Its dependencies may name existing prerequisites or outputs produced no later
+than itself. The output register requires Artifact ID, State, Current version,
+Verified version, Change impact, Freshness, Review state, Review evidence and
+Blocked by; State is NOT_STARTED, IN_PROGRESS or COMPLETE. Version values are
+full Git/SHA256 content identities. COMPLETE requires exact verified/current
+content and APPROVED review evidence; missing, changed, unknown or blocked
+evidence never counts as ready. Use the existing transitive freshness rules
+over the combined graph, including output-to-output dependencies.
 
-Role/reference/phase contradictions fail during preparation checks rather than
-waiting for GATES_READY. At VALIDATING require implementation-produced outputs
-complete with exact evidence; at COMPLETE/ARCHIVED require all selected outputs
-complete and their owning reviews accepted. Schema validation does not prove
-the truth of a declaration; reviewers independently compare roles/production
-timing against the task specifications and source behavior.
+| Production phase | Producer task | Required gate | Exact timing |
+| --- | --- | --- | --- |
+| IMPLEMENTATION | A real ledger task ID | VALIDATING | Require COMPLETE/current/approved when entering workflow VALIDATING, after producer task is DONE |
+| VALIDATION | PHASE | COMPLETE | May remain NOT_STARTED when entering VALIDATING; generate/review during validation, require COMPLETE/current/approved when entering COMPLETE |
+| CLOSURE | PHASE | ARCHIVED | May remain NOT_STARTED when entering COMPLETE; generate/review during closure, require COMPLETE/current/approved when entering ARCHIVED |
+
+These are the only valid phase/gate pairs. COMPLETE does not mean archived:
+closure work and acceptance still occur before ARCHIVED. Existing mandatory
+validation, human approval and archive prerequisites remain required at their
+own transitions. A CLOSURE output with Required gate VALIDATING is rejected
+during preparation, not accepted as a configurable earlier deadline.
+
+For dependencies within IMPLEMENTATION, a producer output can depend only on
+outputs of transitive predecessor tasks, never itself or a successor task;
+the task DAG must be acyclic. VALIDATION outputs may depend on implementation
+outputs or acyclic validation outputs. CLOSURE outputs may depend on earlier
+phases or acyclic closure outputs. No earlier production phase may depend on
+a later phase. Required-gate and producer identities are checked structurally
+during preparation, before GATES_READY.
+
+Add a required v4 per-task field Required output IDs (None or unique output
+IDs). This is the only in-delivery task-consumption route: do not move completed
+outputs into PREREQUISITE or duplicate their register membership. Each listed
+output must have Production phase IMPLEMENTATION and a producer that is a
+transitive predecessor in that task's dependency graph. At a task's READY/NEXT,
+IN_PROGRESS, VERIFYING or DONE gate, require its producer DONE and each consumed
+output COMPLETE, unblocked, CURRENT, with matching Current/Verified version and
+APPROVED exact review evidence. Bind actual task context to those identities.
+A later material or unknown change invalidates the consumer transitively and
+blocks affected advancement/review, even when the producer still says DONE.
+
+At initial GATES_READY, check all real prerequisites and only the selected
+first-ready task's required outputs/execution dependencies; do not require the
+outputs of future PLANNED tasks to exist. Subsequent tasks use their own fresh
+readiness check. This v4 route explicitly supersedes the legacy instruction to
+insert every produced output into the current-input register before consumption;
+legacy v2/v3 routes remain unchanged.
+
+Required fixtures include: T1 starts with its result NOT_STARTED and T2 PLANNED;
+T2 cannot become READY with that result absent; T1 DONE and its exact approved
+current output permit T2 readiness; changing those bytes invalidates T2 again.
+Also test a validation-produced result absent at entry to VALIDATING but required
+at COMPLETE, and a closure-produced result improperly required at VALIDATING.
+A stale genuine existing input must still block T1. No synthetic fixture is
+evidence of another project's actual installation.
+
+Reviewers independently compare declared production timing, producer identity
+and task inputs to the specifications. Structural checks cannot detect an
+intentionally false but internally consistent role declaration.
 
 ## E01-E02 — proposed exception contract
 
