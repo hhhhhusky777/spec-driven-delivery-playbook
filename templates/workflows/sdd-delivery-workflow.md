@@ -18,6 +18,12 @@ Use this template after a generated whiteboard handoff is reviewed and reaches
 delivery route, determines which existing policies to reuse and which artifacts
 to generate, and records each review gate through implementation and archive.
 
+The `PREAUTHORIZED_CONTROL_RECEIPT` mode is closure-only. Select it only in the
+same owner acceptance that approves the complete archive/reset/cleanup package.
+It permits one enumerated post-merge control PR to verify and record that exact
+accepted action without repeating semantic review. Any mismatch returns to
+`EXPLICIT_REVIEW`; `NOT_SELECTED` grants no receipt or merge authority.
+
 The workflow is an artifact router. It does not recreate every policy for every
 feature. Replace all `<placeholders>` and remove instructional text from an
 instantiated workflow record.
@@ -73,6 +79,18 @@ does not apply to blocked recovery or an authorized batch.
 | Next action target IDs | `<artifact/task IDs>` |
 | Allowed write scope | `<semicolon-separated repository-relative paths>` |
 | Next action write targets | `<semicolon-separated repository-relative paths>` |
+| Post-merge control mode | `NOT_SELECTED` |
+| Post-merge control authority | `Not selected` |
+| Post-merge control source revision | `Not selected` |
+| Post-merge control PR | `Not selected` |
+| Post-merge control allowed paths | `Not selected` |
+| Post-merge control changed paths | `Not selected` |
+| Post-merge control allowed fields | `Not selected` |
+| Post-merge control changed fields | `Not selected` |
+| Post-merge control required gates | `Not selected` |
+| Post-merge control evidence owner | `Not selected` |
+| Post-merge cleanup targets | `None` |
+| Post-merge cleanup authority | `None` |
 | Review mode | `<EXPLICIT_REVIEW / AUTO_CONTINUE / REVIEW_ON_EXCEPTION>` |
 | Review mode authority | `<development-policy section and approved action-control row>` |
 | Automation boundary | `<last permitted action ID or Not applicable>` |

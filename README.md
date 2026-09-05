@@ -144,7 +144,8 @@ flowchart TD
     T -->|"No"| CL["Prepare actual validation, record, retrospective and archive plan"]
     CL --> CR["One full closure-package review and owner acceptance"]
     CR -->|"Findings"| CL
-    CR -->|"Accepted; follow-ups closed"| AR["Archive, then authorized cleanup and verification"]
+    CR -->|"Accepted; follow-ups closed"| AR["Merge archive, then authorized cleanup and verification"]
+    AR --> RC["Publish bounded post-merge receipt; no second full review"]
 ```
 
 Each coherent PR gets its own review, even when one task needs several PRs.
@@ -152,6 +153,10 @@ Required decisions, checks, policy controls and merge authority remain intact.
 Implementation auto-merge needs explicit current scope and post-merge human
 review; batching alone never grants it. Recovery preserves valid evidence and
 rechecks affected work, with bounded retries and escalation—not automatic approval.
+For closure, the accepted package may separately pre-authorize one strictly
+control-only receipt and its merge. That receipt repeats automated verification,
+not the two-agent/human semantic archive review; any unlisted or uncertain change
+returns to explicit review.
 
 ### Mid-delivery policy-gap rerouting
 

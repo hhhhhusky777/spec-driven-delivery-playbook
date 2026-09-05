@@ -108,6 +108,15 @@ Routine deterministic state/evidence synchronization may continue within an
 approved action's exact scope, with input/output hashes and gate evidence;
 new semantic decisions end that automatic segment.
 
+For closure, prefer one full review of actual validation, archive/reset bytes,
+cleanup plan and expected control transitions. After owner acceptance and merge,
+publish verification on that PR. A separately needed repository control receipt
+may auto-continue and merge only under explicit pre-recorded owner authority and
+the fail-closed `PREAUTHORIZED_CONTROL_RECEIPT` contract in
+[Batched review and recovery](docs/batch-review-and-recovery.md#one-closure-review-and-a-bounded-post-merge-receipt).
+It is not a second archive approval and cannot change normative content, expand
+cleanup, activate adoption or change a runtime pin.
+
 ### Branches and pull requests
 
 The canonical repository is `hhhhhusky777/spec-driven-delivery-playbook`;

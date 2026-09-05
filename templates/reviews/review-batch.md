@@ -6,6 +6,11 @@ Use only with explicit project authority. Read the
 [batch contract](../../docs/batch-review-and-recovery.md) before preparing this
 record. Replace instructional values; the template itself grants no authority.
 A batch groups review, never approves future outputs or overrides phase gates.
+For `CLOSURE`, inventory the final archive/reset/cleanup plan and expected live
+control fields in this one package. If the owner also pre-authorizes a later
+control receipt, record its strict scope in the linked workflow using the
+[post-merge receipt contract](../../docs/batch-review-and-recovery.md#one-closure-review-and-a-bounded-post-merge-receipt).
+The receipt is not another semantic review and cannot include unseen content.
 
 ## Control
 
