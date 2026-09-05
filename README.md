@@ -726,9 +726,10 @@ sequenceDiagram
     A->>R: Open session and initialize both reviewers with no author context
     R->>P: Read contracts, base, exact candidate, full diff, and gate evidence
     R->>R: Derive expectations independently, then reconcile author evidence
-    R->>P: Publish summary and actionable inline comments
-    R-->>A: Return structured receipt
-    A->>A: Verify isolation, revisions, comments, and live workflow mode
+    R-->>A: Return exact structured receipts and actionable findings
+    A->>A: Verify isolation, reviewer identity, exact head, and live authority
+    A->>P: Publish labeled agent comments through authorized access
+    A->>A: Reconcile publication IDs and current head before continuation
     alt Changes requested
         A->>A: Accept, partly accept, reject with evidence, or defer with authority
         A->>P: Apply accepted fixes and self-review the new exact revision
