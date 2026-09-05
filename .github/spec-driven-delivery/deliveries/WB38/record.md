@@ -144,10 +144,26 @@ Only after final owner acceptance and verified main integration:
    `.github/spec-driven-delivery/solution-whiteboard.md` in
    `.github/spec-driven-delivery/archive/WB38/solution-whiteboard.md`.
    Add archival control metadata/state ARCHIVED and a link to this delivery
-   record without rewriting accepted Sections 3-14. Record source/archive
-   identities and verify the preserved body byte-for-byte.
+   record. Preserve accepted Sections 3-14 except for the link-only relocation
+   specified below. Record source/archive identities and verify preservation
+   by reversing exactly the recorded destination transformations.
    Current complete source blob is 19dd57ae9ea85b8a7dfd3a39636667c876bf59e3;
    any intervening change requires reconciliation before copying.
+
+   Link relocation: for each relative Markdown link destination in the source,
+   prefix `../../` because the archive is two directories deeper. Keep link
+   labels, fragments and substantive text unchanged; leave fragment-only,
+   repository-root and external URLs unchanged. Record each old/new destination
+   in an explicit relocation table in the delivery evidence. Resolve every
+   transformed link to the same repository target and anchor as the source.
+   For example, `project-contracts.md` becomes `../../project-contracts.md`,
+   and `../../CONTRIBUTING.md` becomes `../../../../CONTRIBUTING.md`.
+   Reject any unmatched, ambiguous or non-link change. After reversing only
+   the recorded destination changes, Sections 3-14 must match the source bytes
+   exactly. Preserve the original complete file through immutable Git commit
+   `15a648f06e22db4b195af683f2f76d62c87dcdff` and blob identity above; record the
+   archive blob separately. This is not permission to rewrite accepted meaning,
+   weaken link checks or create unrelated compatibility copies.
 3. Add the reciprocal archive link to this record, verify both links and the
    accepted body, then mark the workflow ARCHIVED. Keep task and review history.
 4. Only after archive verification, replace the stable working whiteboard with
