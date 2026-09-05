@@ -152,6 +152,81 @@ frozen files; review ledger appends do not alter candidate identity.
 | `.github/spec-driven-delivery/project-contracts.md` | `d349af0c12c5a78212790c188ed6588fb5b079f0` |
 | `.github/spec-driven-delivery/solution-whiteboard.md` | `28808e209b784579589145608084c214e396dcce` |
 
+## R04 control reconciliation packet and self-review
+
+Base: merged installation 3b4fb91150469e01d5b5b283d08f62a880683853.
+Same B01 session and two retained seats; no new policy or need is in scope.
+Owner authority is the final acceptance and execution instruction above.
+This records its state transition and observed results, not a new installation
+proposal. The ledger remains append-only publication evidence outside the
+candidate.
+
+| File | Git blob |
+| --- | --- |
+| project-adoption-manifest.md | 7ab4fc6c5d2beb4b848fca4d95806a0e9d27a48c |
+| project-contracts.md | aec39d704bd0a37666c13d82508c986046955d07 |
+| agent-trigger.md | e400d78fb9bca2fbe7f6d82c87b3be10f903284c |
+| solution-whiteboard.md | 838cec581c829bb5ad9e3fc9e9fc331bf87223d0 |
+
+All four files are under this adoption root. The complete diff against the
+merged base maps to the runbook installation transition and runtime handoff,
+the accepted B01 activation prerequisite, and Contributing's scoped control
+synchronization rule. Historical pending statements are explicitly retained as
+candidate history; live control and final handoff supersede them. No policy
+semantics, playbook pin, whiteboard topic, or product artifact changes.
+
+SELF_REVIEW_PASSED for these hashes: full diff, historical/live distinction,
+approval evidence, main merge and target success verified. PR and target
+Documentation quality checks passed. Local docs:all passed 58/58 after runtime
+replacement; docs:check rerun after final control wording passed all gates.
+Whitespace passed. Runtime replacement selected sdd-project-workflow at the
+unchanged pin and --validate returned CURRENT. Independent reviewers may
+verify the narrow delta and retained evidence without rerunning unrelated tests.
+
+### R04 R1 receipt
+
+| Field | Value |
+| --- | --- |
+| Review session ID | `ADOPTION-B01-S01` |
+| Review round | `R04` |
+| Reviewer seat | `R1` |
+| Assigned reviewer ID | `adoption_b01_r1` |
+| Reviewer agent/runtime | Codex isolated reviewer `/root/adoption_b01_r1`; read-only throughout |
+| Context isolation | `FRESH_CONTEXT`; same assigned seat retained |
+| Subject | Four-file post-merge control reconciliation under `.github/spec-driven-delivery/` |
+| Reviewed candidate revision | `ADOPTION-B01-R04`: manifest `7ab4fc6c5d2beb4b848fca4d95806a0e9d27a48c`; registry `aec39d704bd0a37666c13d82508c986046955d07`; trigger `e400d78fb9bca2fbe7f6d82c87b3be10f903284c`; whiteboard `838cec581c829bb5ad9e3fc9e9fc331bf87223d0` |
+| Reviewed base revision | `3b4fb91150469e01d5b5b283d08f62a880683853` |
+| Governing inputs inspected | Retained governing inputs and prior findings; complete four-file delta and surrounding authority; recorded final owner acceptance and execution authority; R04 packet/self-review; replacement runtime guide |
+| Gates/evidence inspected | All four hashes match. Local HEAD and origin/main match the merged base. Independently ran `./install-sdd.sh --validate`: `CURRENT`; workflow profile and immutable pin match. Tracked whitespace passed. Inspected recorded PR/target checks and local 58/58 plus subsequent documentation checks; hosted checks and full tests were not independently rerun. |
+| Summary comment | The delta records the authorized post-merge installation transition and runtime result, preserves historical candidate evidence, and removes provisional labels from the accepted navigation and neutral whiteboard. No policy, pin, need, or delivery semantics changed. Both prior R1 findings remain resolved; no new findings. |
+| Inline comments | None |
+| Durable findings | None open; R1-F01 and R1-F02 remain `RESOLVED` |
+| Disposition | `APPROVED` |
+| Recommended next action | `MERGE_GATE` for the authorized control-publication PR after both retained seats approve the identical candidate and exact-head checks pass; existing owner execution authority governs continuation |
+| Reviewed at | `2026-09-05 12:35:45 Asia/Shanghai (UTC+08:00)` |
+
+### R04 R2 receipt
+
+| Field | Value |
+| --- | --- |
+| Review session ID | ADOPTION-B01-S01 |
+| Review round | R04 |
+| Reviewer seat | R2 |
+| Assigned reviewer ID | adoption_b01_r2 |
+| Reviewer agent/runtime | Codex isolated subagent `/root/adoption_b01_r2`; read-only throughout |
+| Context isolation | FRESH_CONTEXT; same assigned seat resumed |
+| Subject | Four-file post-merge control reconciliation in the frozen R04 packet |
+| Reviewed candidate revision | ADOPTION-B01-R04; all four file hashes independently verified against the packet |
+| Reviewed base revision | 3b4fb91150469e01d5b5b283d08f62a880683853; independently verified local HEAD |
+| Governing inputs inspected | Retained governing inputs and prior findings; final owner acceptance/execution authority; full four-file delta and surrounding activation, historical-evidence and runtime instructions |
+| Gates/evidence inspected | Independently verified hashes, clean tracked whitespace, replacement runtime SHA and `./install-sdd.sh --validate`: CURRENT. Inspected recorded PR/target CI success, local 58/58 and final documentation-check pass; full tests and hosted checks not independently repeated. |
+| Summary comment | The delta records the authorized installation outcome without changing policy semantics or admitting a need. Live INSTALLED state and final handoff explicitly supersede retained historical pending states. The replacement workflow runtime preserves the immutable pin; ACTIVE still requires a reviewed pilot. |
+| Inline comments | None |
+| Durable findings | R2-F01 remains RESOLVED; prior corrections preserved; no new findings |
+| Disposition | APPROVED |
+| Recommended next action | Complete the already authorized control-publication PR/checks and merge after both seats approve this exact candidate; then await the owner's first need |
+| Reviewed at | 2026-09-05 12:36:06 Asia/Shanghai |
+
 ## R03 receipt — R1
 
 | Field | Value |
