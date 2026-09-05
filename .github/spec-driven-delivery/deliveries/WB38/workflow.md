@@ -33,7 +33,7 @@
 | Current review target ID | T04 |
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | T04-R01 |
+| Self-review candidate revision | T04-R02 |
 | Self-review evidence | [T04 self-review](T04-evidence.md) |
 | Fresh-context review state | IN_REVIEW |
 | Fresh-context review session ID | WB38-T04-S01 |

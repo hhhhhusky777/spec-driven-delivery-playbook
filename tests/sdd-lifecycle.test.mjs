@@ -99,6 +99,30 @@ test("v4 preserves freshness through output dependencies", () => {
   assert.ok(phaseCheck(f, "VALIDATING").some(message => message.includes("required")));
 });
 
+test("v4 rejects contradictory bindings and absent transitive output evidence", () => {
+  const f = phaseFixture();
+  completeOutput(f.outputs[0]);
+  f.tasks[0].State = "DONE";
+  f.tasks[1].State = "READY";
+  f.tasks[1]["Consumed output versions"] = `result=${"b".repeat(64)},result=${"a".repeat(64)}`;
+  assert.ok(phaseCheck(f).some(message => message.includes("duplicate consumed")));
+  f.tasks[1]["Consumed output versions"] = "result=invalid";
+  assert.ok(phaseCheck(f).some(message => message.includes("malformed")));
+  f.tasks[1]["Consumed output versions"] = `result=${"a".repeat(64)}`;
+  const parent = { ...f.roles[1], "Artifact ID": "parent", "Producer task": "T0", "Depends on": "design" };
+  f.roles.push(parent);
+  f.roles[1]["Depends on"] = "parent";
+  f.outputs.push({ ...phaseFixture().outputs[0], "Artifact ID": "parent" });
+  f.tasks.unshift({ ID: "T0", State: "DONE", "Depends on": "None", "Required output IDs": "None", "Consumed output versions": "None" });
+  f.tasks[1]["Depends on"] = "T0";
+  assert.ok(phaseCheck(f).some(message => message.includes("must be declared")));
+  f.tasks[1]["Required output IDs"] = "parent";
+  f.tasks[1]["Consumed output versions"] = `parent=${"a".repeat(64)}`;
+  assert.ok(phaseCheck(f).some(message => message.includes("not ready")));
+  completeOutput(f.outputs.at(-1));
+  assert.deepEqual(phaseCheck(f), []);
+});
+
 async function v4Fixture(t) {
   const f = await fixture(t, "");
   const table = rows => `\n\n| ${Object.keys(rows[0]).join(" | ")} |\n| ${Object.keys(rows[0]).map(() => "---").join(" | ")} |\n` + rows.map(row => `| ${Object.values(row).join(" | ")} |`).join("\n");
@@ -138,6 +162,36 @@ test("v4 real document route enforces reciprocal links and output bytes from eit
   for (const entry of [f.file, planFile]) assert.ok((await checkSddLifecycleDocument(entry, f.root, SCHEMAS)).some(item => item.message.includes("bytes differ")));
   await writeFile(planFile, f.p.replace("[Workflow](artifact.md)", "[Workflow](missing.md)"));
   assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(item => item.rule === "SDD_PHASE_READINESS"));
+});
+
+test("v4 traverses counterpart batch authority from either entry point", async t => {
+  for (const counterpart of ["plan", "workflow"]) {
+    const f = await v4Fixture(t);
+    const planFile = path.join(f.root, "implementation-plan.md");
+    await writeFile(counterpart === "plan" ? planFile : f.file,
+      (counterpart === "plan" ? f.p : f.w).replace("| Review batch | None |", "| Review batch | [Missing](missing-batch.md) |"));
+    for (const entry of [f.file, planFile]) assert.ok((await checkSddLifecycleDocument(entry, f.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_REFERENCE"));
+  }
+});
+
+test("v4 document entries reject a complete output with a pending ancestor", async t => {
+  const f = await v4Fixture(t);
+  const bytes = "synthetic result\n";
+  completeOutput(f.output);
+  f.output["Current version"] = f.output["Verified version"] = createHash("sha256").update(bytes).digest("hex");
+  let w = f.w.slice(0, f.w.lastIndexOf("\n\n| Artifact ID | State"));
+  w = w.replace("| T01 | plan | [result]", "| T01 | parent | [result]");
+  w += "\n| parent | FUTURE_OUTPUT | IMPLEMENTATION | VALIDATING | T00 | plan | [parent](parent.txt) |";
+  w += f.table([f.output, { ...phaseFixture().outputs[0], "Artifact ID": "parent" }]);
+  let p = f.p.replace("| `T01` | `READY` | `NEXT` | `None` |", "| `T01` | `READY` | `NEXT` | `T00` |");
+  p = p.replace("| `COMPLETE` | None | None |", `| \`COMPLETE\` | parent | parent=${"a".repeat(64)} |\n| T00 | DONE | | None | None | CURRENT | COMPLETE | None | None |`);
+  p += "\n<!-- sdd-task-spec: T00 -->\n";
+  await writeFile(f.file, w);
+  await writeFile(path.join(f.root, "implementation-plan.md"), p);
+  await writeFile(path.join(f.root, "result.txt"), bytes);
+  for (const entry of [f.file, path.join(f.root, "implementation-plan.md")]) {
+    assert.ok((await checkSddLifecycleDocument(entry, f.root, SCHEMAS)).some(item => item.message.includes("COMPLETE output lacks")));
+  }
 });
 
 test("v3 ordinary plans require explicit batch selection and retain approval gates", async (t) => {

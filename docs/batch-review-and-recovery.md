@@ -34,6 +34,13 @@ producer plus complete, unblocked, current, exactly reviewed outputs. Record
 must match. A material/unknown change invalidates affected consumers without
 erasing their historical completion/review evidence.
 
+Bindings form a unique mapping: duplicate, malformed or undeclared output
+bindings are invalid. A producer task must declare the predecessor outputs
+used by its own outputs. Readiness follows output ancestry, so an incomplete
+ancestor cannot become ready merely because both absent identities are None.
+Both document entry points traverse counterpart batch/context authority with
+cycle protection; checking only one file cannot omit those linked gates.
+
 For a COMPLETE output, the role Evidence cell links to a local file. Current
 version and Verified version match its full Git blob SHA-1 or raw SHA-256 hash;
 the checker reads the bytes and rejects escaping paths and mismatches. Review
