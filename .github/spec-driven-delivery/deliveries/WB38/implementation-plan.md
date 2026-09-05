@@ -28,7 +28,7 @@
 | Reviewers | Two isolated planning reviewers covering governance, security and tests |
 | Review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB38-PKG-R01 |
+| Self-review candidate revision | WB38-PKG-R02 |
 | Self-review evidence | [Package record](../../reviews/WB38-PLAN-S01.md) |
 | Fresh-context review state | IN_REVIEW |
 | Fresh-context review session ID | WB38-PLAN-S01 |
@@ -44,8 +44,8 @@
 | Last updated | 2026-09-05 Asia/Shanghai |
 | Primary issue | [Issue 38](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/38) |
 | Concluded whiteboard | [WB38-R03](../../solution-whiteboard.md) |
-| Approved workflow handoff | Not approved; [H01 draft](handoff.md) |
-| Delivery workflow/manifest | [W01 draft](workflow.md) |
+| Approved workflow handoff | Not approved; [H02 draft](handoff.md) |
+| Delivery workflow/manifest | [W03 draft](workflow.md) |
 | Implementation continuation mode | Read live from delivery workflow; do not copy |
 | Development policy | [Contributing](../../../../CONTRIBUTING.md) |
 | Test strategy | [Quality policy](../../../../docs/documentation-quality-policy.md) |
@@ -56,15 +56,15 @@
 | Task PR target | codex/feature-38-playbook-efficiency |
 | Final PR target | main |
 | Protected-branch synchronization | Reconcile target before task start and before merge; manual policy applies even without hosted protection |
-| Branch / PR | codex/task-38-adoption-efficiency-design; not opened |
+| Branch / PR | codex/task-38-adoption-efficiency-design; [planning PR 41](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/41); combined review |
 | Archived record | Not archived |
-| Draft version | WB38-P02 |
+| Draft version | WB38-P03 |
 
 ## 1. Governing inputs and feature authority
 
 Apply the registry's authority order: external obligations, quality policy,
 Template Governance, Contributing, then approved delivery contracts.
-The accepted whiteboard supplies REQ-01 through REQ-18. H02/W02/A02/P02 are
+The accepted whiteboard supplies REQ-01 through REQ-18. H02/W03/A02/C01/P03 are
 provisional dependencies permitted by the [scoped trial](../../live-trial.md),
 not approved policy. Keep installed runtime and historical records unchanged.
 
@@ -325,6 +325,8 @@ skills/sdd-playbook-upgrade/SKILL.md; config/sdd-lifecycle-schema.json;
 config/sdd-lifecycle-schema-v2.json (new frozen compatibility data);
 scripts/sdd-lifecycle.mjs; tests/sdd-lifecycle.test.mjs;
 tests/documentation-quality.test.mjs; .github/pull_request_template.md;
+.github/spec-driven-delivery/archive/README.md (prospective retention sentence
+and its canonical BC06 link only; preserve all existing archive ordering and history);
 examples/batched-delivery/README.md (new worked scenario).
 Project delivery evidence/control files under this WB38 delivery are allowed
 only for actual state/evidence, not historical approval rewrites.
@@ -402,10 +404,10 @@ PRs remain unrecorded. Completing a specification does not authorize task start.
 | Plan state | CONTRACT_REVIEW |
 | Current task | None |
 | Next ready task(s) | None |
-| Active branch / PR | codex/task-38-adoption-efficiency-design; no PR |
+| Active branch / PR | codex/task-38-adoption-efficiency-design; [planning PR 41](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/41); same-seat review |
 | Last completed task | None |
 | Active blocker | None |
-| Last validation | Exact P02 checks and review recorded in linked session evidence |
+| Last validation | Exact per-round checks and review recorded in the package session evidence |
 | Next action | Freeze joint planning candidate, self-review, then two-agent review and owner acceptance |
 
 ## 10. Evidence, decisions and change history

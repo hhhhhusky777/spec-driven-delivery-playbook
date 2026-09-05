@@ -33,7 +33,7 @@
 | Current review target ID | workflow |
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB38-PKG-R01 |
+| Self-review candidate revision | WB38-PKG-R02 |
 | Self-review evidence | [Package record](../../reviews/WB38-PLAN-S01.md) |
 | Fresh-context review state | IN_REVIEW |
 | Fresh-context review session ID | WB38-PLAN-S01 |
@@ -63,7 +63,7 @@
 | Automation exception | Scoped provisional preparation only |
 | Automation audit record | No automatic execution or approval |
 | Last routed | Not routed; provisional preparation on 2026-09-05 |
-| Draft version | WB38-W02 |
+| Draft version | WB38-W03 |
 
 The legacy lifecycle remains AWAITING_HANDOFF. The trial permits drafting the
 combined package without pretending that routing or consumption occurred.
@@ -114,10 +114,10 @@ acceptance. Global policy is not active before reviewed merge.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | whiteboard | [Conclusion](../../solution-whiteboard.md) | None | WB38-R03 | WB38-R03 | CONTROL_ONLY | CURRENT | None |
 | handoff | [Handoff](handoff.md) | whiteboard | None | WB38-H02 | MATERIAL | STALE | None |
-| workflow | This document | handoff | None | WB38-W02 | MATERIAL | STALE | None |
+| workflow | This document | handoff | None | WB38-W03 | MATERIAL | STALE | None |
 | audit | [Control audit](control-audit.md) | whiteboard | None | WB38-A02 | MATERIAL | STALE | None |
 | contracts | [BC01-BC08](design-contracts.md) | whiteboard | None | WB38-C01 | MATERIAL | STALE | None |
-| plan | [Plan](implementation-plan.md) | workflow, audit, contracts | None | WB38-P02 | MATERIAL | STALE | None |
+| plan | [Plan](implementation-plan.md) | workflow, audit, contracts | None | WB38-P03 | MATERIAL | STALE | None |
 | policy | Proposed policy/schema change | plan | None | Not generated | UNKNOWN | STALE | None |
 | consumers | Proposed consumers | policy | None | Not generated | UNKNOWN | STALE | None |
 | adr | Not selected | None | None | None | CONTROL_ONLY | CURRENT | None |
@@ -126,7 +126,7 @@ acceptance. Global policy is not active before reviewed merge.
 | T02 | Publication helper | T01, plan, contracts | None | Not started | UNKNOWN | STALE | None |
 | record | Future closure | T01, T02 | None | Not generated | UNKNOWN | STALE | None |
 
-Draft predecessor identities are H02/W02/A02/C01/P02. Freeze actual content hashes
+Draft predecessor identities are H02/W03/A02/C01/P03. Freeze actual content hashes
 before review; these labels alone are not immutable receipts. STALE here
 explicitly prohibits consumption; the trial permits only preparation against
 these known drafts. On material changes, invalidate transitive dependants;
@@ -177,7 +177,7 @@ is separately effective; PR publication may supplement them now.
 | Stale artifacts | handoff, workflow, audit, contracts, plan, policy, consumers, T01, T02, record |
 | Validation complete | No delivery validation |
 | Validation remaining | Planning checks/review; all implementation and closure evidence |
-| Branch/PR | codex/task-38-adoption-efficiency-design; no PR opened |
+| Branch/PR | codex/task-38-adoption-efficiency-design; [planning PR 41](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/41); combined same-seat review |
 | Last updated | 2026-09-05 Asia/Shanghai |
 
 Require all active tasks terminal and required evidence current before parent
