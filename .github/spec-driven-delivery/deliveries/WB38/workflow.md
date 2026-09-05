@@ -20,7 +20,7 @@
 | State | COMPLETE |
 | Previous state | VALIDATING |
 | Owner | Repository owner |
-| Concluded whiteboard | [WB38-R03](../../solution-whiteboard.md) |
+| Concluded whiteboard | [Archived WB38-R03](../../archive/WB38/solution-whiteboard.md) |
 | Approved workflow handoff | [Accepted H02](handoff.md) |
 | Consumed handoff version | WB38-H02 |
 | Whiteboard conclusion version/date | WB38-R03; 2026-09-05 |
@@ -52,8 +52,8 @@
 | Implementation mode selected at | 2026-09-05T17:22:26+08:00 |
 | Next action | Review archive/reset publication package |
 | Next action target IDs | archive |
-| Allowed write scope | .github/spec-driven-delivery/archive/WB38; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/project-adoption-manifest.md |
-| Next action write targets | .github/spec-driven-delivery/archive/WB38; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/project-adoption-manifest.md |
+| Allowed write scope | .github/spec-driven-delivery/archive/WB38; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/live-trial.md |
+| Next action write targets | .github/spec-driven-delivery/archive/WB38; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/live-trial.md |
 | Review mode | EXPLICIT_REVIEW |
 | Review mode authority | Owner scoped live-trial approval; linked above |
 | Automation boundary | Not applicable |
@@ -90,7 +90,7 @@ No new architectural service is selected; a separate ADR is unnecessary.
 
 | Order | Artifact ID | Artifact | Decision | Reason/trigger | Template or authority | Owner | Review owner | Review state/link |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0 | whiteboard | Accepted conclusion | REUSE | Owner accepted WB38-R03 | [Conclusion](../../solution-whiteboard.md) | Owner | Two WB38 reviewers and owner | APPROVED / WB38-S01 |
+| 0 | whiteboard | Accepted conclusion | REUSE | Owner accepted WB38-R03 | [Archived conclusion](../../archive/WB38/solution-whiteboard.md) | Owner | Two WB38 reviewers and owner | APPROVED / WB38-S01 |
 | 1 | handoff | Handoff | GENERATE | Normalize accepted requirements | [H02](handoff.md) | Coordinator | Two planning reviewers and owner | APPROVED / WB38-PLAN-S01 and final owner acceptance |
 | 2 | workflow | Workflow manifest | GENERATE | Route systemic change | This document | Coordinator | Two planning reviewers and owner | APPROVED / WB38-PLAN-S01 and final owner acceptance |
 | 3 | audit | Clause/assertion inventory | GENERATE | PG-01 through PG-04 affect existing controls | [Audit](control-audit.md) | Coordinator | Governance and tests | APPROVED / WB38-PLAN-S01 and final owner acceptance |
@@ -133,7 +133,7 @@ blocked until all task and target evidence exists.
 
 | Artifact ID | Artifact/link | Depends on | Consumed version | Current version | Change impact | Freshness | Blocked by |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| whiteboard | [Conclusion](../../solution-whiteboard.md) | None | WB38-R03 | WB38-R03 | CONTROL_ONLY | CURRENT | None |
+| whiteboard | [Archived conclusion](../../archive/WB38/solution-whiteboard.md) | None | WB38-R03 | WB38-R03 | CONTROL_ONLY | CURRENT | None |
 | handoff | [Handoff](handoff.md) | whiteboard | WB38-H02 | WB38-H02 | CONTROL_ONLY | CURRENT | None |
 | workflow | This document | handoff | WB38-W04 | WB38-W04 | CONTROL_ONLY | CURRENT | None |
 | audit | [Control audit](control-audit.md) | whiteboard | WB38-A02 | WB38-A02 | CONTROL_ONLY | CURRENT | None |

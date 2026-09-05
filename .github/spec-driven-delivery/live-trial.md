@@ -37,8 +37,10 @@ inferred from a timer or exhausted retry/review budget.
 
 ## Trial status
 
-AUTHORIZED; provisional planning is in progress in the
-[WB38 workflow](deliveries/WB38/workflow.md). The handoff, workflow, audit and
-FULL plan exist as drafts; complete specification and exact-package review
-remain. No implementation, merge, cleanup, archive or runtime upgrade has
-been executed under this authority.
+COMPLETED; the scoped authority expired when WB38 implementation and final
+validation completed. The [WB38 workflow](deliveries/WB38/workflow.md) is
+COMPLETE while its archive/reset publication package is reviewed. All six tasks
+and final validation are merged; the accepted conclusion is preserved in the
+[archive candidate](archive/WB38/solution-whiteboard.md). No standing authority
+carries to the next need. Runtime cleanup, pin upgrade, branch deletion and
+adoption activation were not authorized by this trial.

@@ -6,7 +6,7 @@
 
 | ID / type | Important item | Recommendation / consequence | Evidence / owner |
 | --- | --- | --- | --- |
-| P01 / Attention | Entire lifecycle scope | Keep REQ-01 through REQ-18; runtime fixes and Apps excluded | [Conclusion](../../solution-whiteboard.md); both reviewers |
+| P01 / Attention | Entire lifecycle scope | Keep REQ-01 through REQ-18; runtime fixes and Apps excluded | [Archived conclusion](../../archive/WB38/solution-whiteboard.md); both reviewers |
 | P02 / Attention | Control preservation | No implementation until clause/assertion map is complete | [Audit](control-audit.md); governance/test reviewers |
 | P03 / Attention | Two coherent merge units | Core workflow first; optional publication automation second; task PRs use a feature branch | Section 6; both reviewers |
 | P04 / Attention | Versioning, bounds and publication | Proposed BC01-BC08 are specified for joint acceptance | [Contracts](design-contracts.md); coordinator/reviewers |
@@ -43,7 +43,7 @@
 | Created | 2026-09-05 Asia/Shanghai |
 | Last updated | 2026-09-05 Asia/Shanghai |
 | Primary issue | [Issue 38](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/38) |
-| Concluded whiteboard | [WB38-R03](../../solution-whiteboard.md) |
+| Concluded whiteboard | [Archived WB38-R03](../../archive/WB38/solution-whiteboard.md) |
 | Approved workflow handoff | [Accepted H02](handoff.md) |
 | Delivery workflow/manifest | [W04 readiness amendment](workflow.md) |
 | Implementation continuation mode | Read live from delivery workflow; do not copy |
@@ -471,7 +471,7 @@ PRs remain unrecorded. Completing a specification does not authorize task start.
 
 | Field | Current value |
 | --- | --- |
-| Plan state | VALIDATING |
+| Plan state | COMPLETE |
 | Current task | None |
 | Next ready task(s) | None |
 | Active branch / PR | codex/wb38-archive; archive/reset publication candidate |

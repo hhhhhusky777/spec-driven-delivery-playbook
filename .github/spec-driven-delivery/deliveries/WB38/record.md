@@ -48,8 +48,8 @@ candidate links back to this record, carries source blob
 `19dd57ae9ea85b8a7dfd3a39636667c876bf59e3`, and has distinct blob
 `ef69548551872676a704de291b4ec4371c6a5360`. Only after that verification passed
 was the stable path replaced with the accepted neutral EMPTY project instance.
-Workflow is ARCHIVED and the plan COMPLETE in this candidate. Full checks,
-independent archive review, owner publication acceptance and merge remain; no
+Workflow remains COMPLETE while the archive candidate is in review; the plan is
+COMPLETE. Full checks, independent archive review, owner publication acceptance and merge remain; no
 runtime cleanup, pin migration or branch deletion was performed.
 
 ## Renewed final validation after T06
@@ -88,7 +88,7 @@ SELF_REVIEW_PASSED for WB38-FINAL-R03. Exact commit is bound in the PR packet.
 
 Status: VALIDATING; independent review and owner acceptance pending. This
 record links the [live workflow](workflow.md), [task plan](implementation-plan.md)
-and [immutable accepted conclusion](../../solution-whiteboard.md). It records
+and [immutable accepted conclusion](../../archive/WB38/solution-whiteboard.md). It records
 completed implementation and proposed closure separately. It does not claim
 main integration, archive, activation or cleanup has occurred.
 
