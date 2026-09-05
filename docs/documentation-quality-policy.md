@@ -144,7 +144,49 @@ review and human approval before the artifact passes its review gate.
 
 ### 2.6 Attention and reviewability gate
 
-Use this gate when a document or change contains multiple material decisions,
+At every human review gate, the coordinator must present a current, concise
+table in the handoff or PR description before requesting acceptance. This
+human-facing brief is required even when the optional detailed attention map
+below is unnecessary. Do not assume the human will read every source document.
+Agents still inspect the complete candidate; the brief supports informed human
+judgment and cannot replace independent review or hide a material concern.
+
+| Required brief content | What the human must see |
+| --- | --- |
+| Acceptance scope | Outcome, scope/non-scope, exact candidate and source versions, and the action acceptance authorizes |
+| Key decisions | Important choices and consequences; alternatives and recommendation for unsettled choices |
+| Risks and limits | Compatibility/security/operational risks, exceptions, deferred obligations, assumptions and owners |
+| Evidence | Passed checks and their scope, failed/unrun checks, uncertainty and residual limitations |
+| Required response | DECISION versus ATTENTION, specific questions or exact-package acceptance; explicitly state when no open design decisions remain |
+
+Include the following phase-specific content in that same brief:
+
+| Existing gate | Required phase-specific summary |
+| --- | --- |
+| Adoption acceptance | Discovered system contracts and sources; policies reused, changed or added and why; gaps/conflicts, exceptions and deferred items; owners; test/review/merge rules; pin/runtime and activation status |
+| Planning acceptance | Whiteboard design key points together with task IDs, brief work/outcome per task, dependency/order, validation and PR boundaries; show design-to-task alignment and gaps |
+| Implementation PR acceptance | Delivered behavior, deviations from accepted design/plan, compatibility and operational effects, evidence and exact merge target |
+| Validation and closure | Planned versus actual outcomes, unresolved follow-ups, evidence limits, archive/cleanup targets and required permissions |
+| Upgrade acceptance | Old/new source pins, contract/policy impact, migration, rollback, validation and explicit cutover authority |
+
+At combined planning review, present a comparison table with columns
+`Design point / source`, `Task(s) and brief work`, `Validation`, and
+`Consistency / gap`. Include uncovered design points, tasks without a design
+basis, deviations and justified non-code obligations—not only successful
+mappings. Task presence is not proof of implementation or design fulfillment.
+The existing batched boundary is unchanged: no separate whiteboard review stop
+is introduced. Ordinary projects retain their adopted review boundaries.
+
+Reconcile the brief after candidate changes and before the human handoff.
+Reviewers independently compare it with the complete candidate and report
+omissions or misleading statements as findings. A missing, stale or materially
+incomplete brief blocks the request for human acceptance until corrected;
+corrections stay within the existing review session. Source links offer detail,
+not a substitute for surfacing important information. Keep one canonical brief
+for the gate and link it from other records. Automated syntax checks alone do
+not establish completeness or semantic consistency.
+
+Use the additional detailed attention map when a document or change contains multiple material decisions,
 normative obligations, risks, exceptions, lifecycle states, open questions, or
 reviewer specialties. Do not use a fixed line, word, or page count as the
 trigger; generated text, tables, diagrams, and short high-risk contracts have
@@ -340,6 +382,9 @@ classification belongs in review evidence when they affect a changed source.
       evidence.
 - [ ] When the attention gate applies, its map matches an independent inventory
       of material items and every item has a recorded reviewer disposition.
+- [ ] The human-facing brief is current, complete for this phase, distinguishes
+      decisions from attention, and states exact acceptance scope and unverified
+      evidence; planning shows design points alongside task summaries and gaps.
 - [ ] Freshness, compatibility, adoption, and historical-record impact are
       addressed.
 - [ ] Every new blocking rule has an intentional failure regression test.

@@ -50,7 +50,7 @@
 | Development policy | [Contributing](../../../../CONTRIBUTING.md) |
 | Test strategy | [Quality policy](../../../../docs/documentation-quality-policy.md) |
 | PR/branch policy | Contributing branches and pull requests |
-| Delivery implementation task count | 2 |
+| Delivery implementation task count | 3 |
 | Integration model | multi-task feature integration |
 | Feature integration branch | codex/feature-38-playbook-efficiency; created from accepted merge 98757aca4d7a5ff00ef9d59b15a2ca5bee2f12ce |
 | Task PR target | codex/feature-38-playbook-efficiency |
@@ -285,8 +285,23 @@ merely because code or review comments exist.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | T01 | VERIFYING | | None | None | CURRENT | COMPLETE | NONE | Core lifecycle batch contracts, consumers, tests and migration | FC01-FC09, BC01-BC08 | Core works with documented coordinator procedure; optional helper not required | — |
 | T02 | PLANNED | | T01 | None | CURRENT | COMPLETE | NONE | Read-only publication planner and reconciliation evidence | FC05, FC07, FC09, BC04-BC06 | Helper independently tested; no new credentials or hosted service | — |
+| T03 | PLANNED | | T01 | None | CURRENT | COMPLETE | NONE | Phase-specific human review briefs and design/task comparison | BC07 amendment | Separate governance package; no added review gates | — |
 
 CURRENT records availability of the identified base, not approval of this draft.
+
+T03 is added by the owner-requested [review-brief amendment](review-brief-amendment.md).
+Its governance changes are provisional in this package until review and owner
+acceptance; the original two-task plan remains historical baseline. T02's
+separate PR44 and exact-head reviews are not changed by this branch.
+
+<!-- sdd-task-spec: T03 -->
+
+### T03 — Human review brief follow-up
+
+Complete bounded specification, scope, compatibility, acceptance and consumer
+mapping are in the [amendment task specification](review-brief-amendment.md#follow-up-task-t03--required-phase-specific-human-briefs).
+No implementation or acceptance of T02 is a prerequisite for drafting this
+independent governance package. Final delivery closure requires all three tasks.
 
 ## 8. Task specification and execution record
 

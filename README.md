@@ -936,6 +936,14 @@ a concise map routes reviewers to changed obligations, blockers, risks,
 exceptions, owners, and evidence. Reviewers reconcile it against the complete
 artifact; the map never replaces full review or canonical text.
 
+Every human acceptance handoff includes a
+[phase-specific summary table](docs/documentation-quality-policy.md#26-attention-and-reviewability-gate)
+of scope, key decisions, risks, evidence and required response. Adoption shows
+discovered contracts and selected policies; planning shows design key points
+beside task summaries and gaps so humans can compare them. This changes the
+brief, not the review boundaries shown in the diagrams. Agents still review the
+complete documents; humans need not discover important details line by line.
+
 Before an implementation task moves from `READY` to `IN_PROGRESS`, its
 implementer converts the applicable approved sources and attention-map items
 into the development policy's reviewed task context receipt. This pre-start

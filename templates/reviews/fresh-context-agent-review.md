@@ -1,5 +1,9 @@
 # Fresh-Context Agent Review — `<artifact or pull request>`
 
+Human handoffs must include the
+[phase-specific review brief](../../docs/documentation-quality-policy.md#26-attention-and-reviewability-gate).
+Before human handoff, independently verify the brief against the whole candidate; missing, stale or materially incomplete summaries block acceptance requests.
+
 ## Optional batched route
 
 For an adopted batch, the packet covers the coherent package or completed PR.

@@ -28,20 +28,20 @@
 | Trigger identity/run ID | WB38-TRIGGER-01; 2026-09-05; owner manual invocation |
 | Selected route | Route 3 — systemic design/policy gap |
 | Manifest review state | APPROVED |
-| Current artifact/gate | [T01 / PR 42](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42) |
-| Current review phase | IMPLEMENTATION |
-| Current review target ID | T01 |
+| Current artifact/gate | [T03 governance amendment](review-brief-amendment.md) |
+| Current review phase | DESIGN |
+| Current review target ID | T03 |
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | T01-R01 |
-| Self-review evidence | [T01 self-review](../../reviews/WB38-T01-S01.md) |
+| Self-review candidate revision | BRIEF-R01 |
+| Self-review evidence | [T01 self-review](../../reviews/WB38-BRIEF-S01.md) |
 | Fresh-context review state | IN_REVIEW |
-| Fresh-context review session ID | WB38-T01-S01 |
-| Fresh-context assigned reviewers | /root/wb38_t01_r1, /root/wb38_t01_r2 |
+| Fresh-context review session ID | WB38-BRIEF-S01 |
+| Fresh-context assigned reviewers | /root/wb38_brief_r1, /root/wb38_brief_r2 |
 | Fresh-context required approvals | 2 |
 | Fresh-context approved reviewers | None |
 | Fresh-context reviewed revision | None |
-| Fresh-context review evidence | [T01 review](../../reviews/WB38-T01-S01.md) |
+| Fresh-context review evidence | [T01 review](../../reviews/WB38-BRIEF-S01.md) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | None |
 | Human review evidence | None |
@@ -50,9 +50,9 @@
 | Implementation mode scope | T01, T02 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-05T17:22:26+08:00 |
-| Next action | Two isolated reviewers inspect the complete T01 PR; consolidate corrections |
-| Next action target IDs | T01 |
-| Allowed write scope | README.md; CHANGELOG.md; CONTRIBUTING.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/project-adoption-runbook.md; docs/task-specification-calibration.md; docs/batch-review-and-recovery.md; templates/README.md; templates/discovery/solution-whiteboard.md; templates/handoffs/whiteboard-to-workflow.md; templates/workflows/sdd-delivery-workflow.md; templates/delivery/implementation-plan.md; templates/policies/development-policy.md; templates/policies/pull-request-policy.md; templates/policies/specialized-policy.md; templates/testing/test-strategy.md; templates/decisions/architecture-decision-record.md; templates/reviews/agent-self-review.md; templates/reviews/fresh-context-agent-review.md; templates/reviews/review-batch.md; templates/adoption/project-adoption-manifest.md; templates/adoption/agent-adoption-trigger.md; templates/adoption/playbook-upgrade-assessment.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; config/sdd-lifecycle-schema.json; config/sdd-lifecycle-schema-v2.json; scripts/sdd-lifecycle.mjs; tests/sdd-lifecycle.test.mjs; tests/documentation-quality.test.mjs; .github/pull_request_template.md; .github/spec-driven-delivery/archive/README.md; examples/batched-delivery/README.md; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
+| Next action | Review owner-authorized phase-specific brief governance package |
+| Next action target IDs | T03 |
+| Allowed write scope | README.md; docs/documentation-quality-policy.md; docs/batch-review-and-recovery.md; templates/adoption/project-adoption-manifest.md; templates/discovery/solution-whiteboard.md; templates/delivery/implementation-plan.md; templates/reviews/fresh-context-agent-review.md; tests/documentation-quality.test.mjs; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
 | Next action write targets | .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/deliveries/WB38 |
 | Review mode | EXPLICIT_REVIEW |
 | Review mode authority | Owner scoped live-trial approval; linked above |
@@ -116,7 +116,7 @@ their dependencies, owners or gates.
 | consumers | UPDATE_EXISTING templates, skills, guidance, examples; maintainer | policy changes within the coherent T01 unit | Same T01 PR review and owner merge approval | NOT_STARTED |
 | T01-result | Core implementation; coordinator | Accepted T01 specification/context, plan, audit, contracts | T01 tests, PR reviews, owner merge and target verification | NOT_STARTED |
 | T02-result | Publication helper; coordinator | T01 DONE/current, accepted T02 specification, plan, contracts | T02 tests/live evidence, PR reviews, owner merge and target verification | NOT_STARTED |
-| record | GENERATE validation and closure packet; coordinator | T01 and T02 terminal, integrated target verified | Two closure reviewers and owner acceptance | NOT_STARTED |
+| record | GENERATE validation and closure packet; coordinator | T01, T02 and T03 terminal, integrated target verified | Two closure reviewers and owner acceptance | NOT_STARTED |
 
 At their actual review/consumption boundaries, register produced output evidence
 with its exact revision in the live dependency register before using it. Do not
@@ -142,6 +142,7 @@ blocked until all task and target evidence exists.
 | runtime | Deferred independent scope | None | None | None | CONTROL_ONLY | CURRENT | None |
 | T01 | T01 specification and substantive context in plan | plan, audit, contracts | WB38-P04-T01-spec | WB38-P04-T01-spec | CONTROL_ONLY | CURRENT | None |
 | T02 | T02 specification and substantive context in plan | T01, plan, contracts | WB38-P04-T02-spec | WB38-P04-T02-spec | CONTROL_ONLY | CURRENT | None |
+| T03 | [Brief amendment](review-brief-amendment.md) | plan, contracts | BRIEF-R01 | None | MATERIAL | STALE | None |
 
 Draft predecessor identities are H02/W04/A02/C01/P04. Freeze actual content hashes
 before review; these labels alone are not immutable receipts. STALE here
@@ -187,11 +188,11 @@ is separately effective; PR publication may supplement them now.
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
 | Current artifact/task | T01 |
-| Current artifact review | IN_REVIEW; T01-R01 |
+| Current artifact review | IN_REVIEW; BRIEF-R01 |
 | Last approved artifact | WB38-READINESS-R01; W04/P04 and checkpoint |
 | Next ready action | Coherent T01 PR review |
 | Active blockers | None |
-| Stale artifacts | None |
+| Stale artifacts | T03 |
 | Validation complete | No delivery validation |
 | Validation remaining | Planning checks/review; all implementation and closure evidence |
 | Branch/PR | codex/task-38-core-batching; [draft PR42](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42); target codex/feature-38-playbook-efficiency |

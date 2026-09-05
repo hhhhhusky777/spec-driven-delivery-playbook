@@ -1,5 +1,9 @@
 # Solution Whiteboard Template
 
+Human handoffs must include the
+[phase-specific review brief](../../docs/documentation-quality-policy.md#26-attention-and-reviewability-gate).
+Supply key design points for the combined design/task comparison; do not add a separate batched whiteboard gate.
+
 ## Optional batched route
 
 With explicit batch authority, persist meaningful lightweight discussion notes
