@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | Continue the first owner-supplied need through the WB38 workflow and scoped live-trial authority linked below |
+| Next action | Review and publish WB38 archive/reset control package, then await the next owner-supplied need through the verified workflow runtime |
 
 Adoption type: `real project`
 
@@ -355,7 +355,7 @@ Classified integration evidence:
 | `ADOPTION-A02` | Bounded repository discovery | `EXPLICIT_REVIEW` | Pinned adoption runbook | Locked blocking suite with `.sdd-runtime` excluded from content scans | `Not applicable` | `YES` | `COMPLETE` |
 | `ADOPTION-A03` | Correct stale README self-adoption statement | `EXPLICIT_REVIEW` | A02 approval and freshness register | Documentation suite | `Not applicable` | `YES` | `COMPLETE` |
 | `ADOPTION-A04` | Contributor entry point, routing 0 | `EXPLICIT_REVIEW` | A02 routing and A03 human approval | Documentation suite | `Not applicable` | `YES` | `COMPLETE` |
-| `ADOPTION-B01` | Remaining installation package | `EXPLICIT_REVIEW` | Explicit owner batch authority | Canonical documentation suite and two reviewers | One final human acceptance | `YES` | `ACTIVE` |
+| `ADOPTION-B01` | Remaining installation package | `EXPLICIT_REVIEW` | Explicit owner batch authority | Canonical documentation suite and two reviewers | One final human acceptance | `YES` | `COMPLETE` |
 
 ### 8.2 Automation audit ledger
 
@@ -364,12 +364,12 @@ No automatic action has run.
 ## 9. Pilot delivery
 
 The first owner-supplied need is WB38, admitted after verified installation.
-Its [whiteboard](solution-whiteboard.md) is CONCLUDED and owner accepted.
-The [workflow](deliveries/WB38/workflow.md) owns current delivery preparation;
-the [scoped live trial](live-trial.md) permits one provisional planning package.
-Pilot execution and activation evidence are NOT_STARTED. Adoption remains
-INSTALLED, not ACTIVE; neither draft presence nor planning approval proves a
-completed pilot. Earlier installation-only routing below is historical.
+Its accepted conclusion is preserved in the [archive candidate](archive/WB38/solution-whiteboard.md),
+and the stable [working whiteboard](solution-whiteboard.md) is a neutral EMPTY
+candidate for the next need. The [workflow](deliveries/WB38/workflow.md) is
+COMPLETE pending archive publication review and merge. Pilot delivery evidence
+is complete; a separate activation decision has not been made. Adoption remains
+INSTALLED, not ACTIVE. Earlier installation-only routing below is historical.
 
 ## 10. Adoption review
 
@@ -679,7 +679,7 @@ All installation checklist obligations are satisfied by the accepted package,
 reviewed merge, and target checks. Earlier unchecked installation boxes are
 retained as candidate history. ACTIVE still requires a real reviewed pilot.
 
-### Current first-delivery route
+### Historical first-delivery route
 
 The owner accepted WB38-R03 and authorized the following work to trial its
 concluded design. Continue through the [WB38 workflow](deliveries/WB38/workflow.md)
@@ -687,3 +687,16 @@ under the [explicit scoped authority](live-trial.md). This supersedes the
 installation handoff's waiting-for-first-need next action, without rewriting
 its accepted evidence or changing the runtime pin. The workflow owns current
 planning gaps, dependency versions, write targets and the next review boundary.
+This paragraph records the prior active route; the closure candidate below now
+owns current navigation.
+
+### WB38 closure candidate
+
+WB38 final validation was owner-approved and merged through PR53 as
+`c6c5ff3afc99bc228ccae8afd14582ffef8441ca`. The owner authorized the bounded
+archive/reset mechanics. The [archived conclusion](archive/WB38/solution-whiteboard.md),
+[delivery record](deliveries/WB38/record.md), completed workflow/plan and fresh
+neutral EMPTY working path form one control-only publication candidate. Until
+that package passes review, hosted checks, owner acceptance and merge, the
+published main branch remains authoritative. Adoption remains INSTALLED, not
+ACTIVE; runtime pin and checkout remain unchanged.

@@ -17,10 +17,10 @@
 | Field | Value |
 | --- | --- |
 | Delivery | WB38 — full-lifecycle playbook efficiency |
-| State | VALIDATING |
-| Previous state | DELIVERY_ACTIVE |
+| State | COMPLETE |
+| Previous state | VALIDATING |
 | Owner | Repository owner |
-| Concluded whiteboard | [WB38-R03](../../solution-whiteboard.md) |
+| Concluded whiteboard | [Archived WB38-R03](../../archive/WB38/solution-whiteboard.md) |
 | Approved workflow handoff | [Accepted H02](handoff.md) |
 | Consumed handoff version | WB38-H02 |
 | Whiteboard conclusion version/date | WB38-R03; 2026-09-05 |
@@ -28,40 +28,40 @@
 | Trigger identity/run ID | WB38-TRIGGER-01; 2026-09-05; owner manual invocation |
 | Selected route | Route 3 — systemic design/policy gap |
 | Manifest review state | APPROVED |
-| Current artifact/gate | [Renewed final validation](record.md) |
+| Current artifact/gate | [Final validation PR #53](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/53) |
 | Current review phase | VALIDATION |
 | Current review target ID | record |
-| Current artifact review state | IN_REVIEW |
+| Current artifact review state | APPROVED |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB38-FINAL-R03 |
-| Self-review evidence | [Renewed final validation](record.md) |
-| Fresh-context review state | IN_REVIEW |
+| Self-review candidate revision | ed1e4cfd9449bae420877958ed820c94f2e25299 |
+| Self-review evidence | [Renewed final validation](record.md#accepted-validation-and-archive-execution) |
+| Fresh-context review state | APPROVED |
 | Fresh-context review session ID | WB38-FINAL-S01 |
 | Fresh-context assigned reviewers | /root/wb38_final_r1, /root/wb38_final_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | None |
-| Fresh-context reviewed revision | None |
-| Fresh-context review evidence | [Final packet](../../reviews/WB38-FINAL-S01.md) |
-| Human review state | NOT_STARTED |
-| Human reviewed revision | None |
-| Human review evidence | None |
+| Fresh-context approved reviewers | /root/wb38_final_r1, /root/wb38_final_r2 |
+| Fresh-context reviewed revision | ed1e4cfd9449bae420877958ed820c94f2e25299 |
+| Fresh-context review evidence | [PR53 R04 R1](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/53#pullrequestreview-5121810331); [R2](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/53#pullrequestreview-5121810496) |
+| Human review state | APPROVED |
+| Human reviewed revision | ed1e4cfd9449bae420877958ed820c94f2e25299 |
+| Human review evidence | Owner approved final validation and bounded archive/reset; PR53 merged as c6c5ff3afc99bc228ccae8afd14582ffef8441ca |
 | Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |
 | Implementation mode authority | Owner approved bounded T06 correction and renewed continuation after PR51 merge; T06-evidence.md |
 | Implementation mode scope | T01, T02, T04, T05, T06 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-05T17:22:26+08:00 |
-| Next action | Review renewed final validation and bounded closure proposal |
-| Next action target IDs | record |
-| Allowed write scope | .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
-| Next action write targets | .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews |
+| Next action | Review archive/reset publication package |
+| Next action target IDs | archive |
+| Allowed write scope | .github/spec-driven-delivery/archive/WB38; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/live-trial.md |
+| Next action write targets | .github/spec-driven-delivery/archive/WB38; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/deliveries/WB38; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/live-trial.md |
 | Review mode | EXPLICIT_REVIEW |
 | Review mode authority | Owner scoped live-trial approval; linked above |
 | Automation boundary | Not applicable |
 | Required automatic gates | Not applicable |
 | Automatic gate result | NOT_APPLICABLE |
-| Semantic decision introduced | YES |
-| Automation exception | Scoped provisional preparation only |
-| Automation audit record | No automatic execution or approval |
+| Semantic decision introduced | NO |
+| Automation exception | Owner-approved deterministic archive/reset sequence; review before publication retained |
+| Automation audit record | Final validation PR53 merged as c6c5ff3afc99bc228ccae8afd14582ffef8441ca; archive verification in record |
 | Last routed | WB38-TRIGGER-01; 2026-09-05 |
 | Draft version | WB38-W04 |
 
@@ -90,7 +90,7 @@ No new architectural service is selected; a separate ADR is unnecessary.
 
 | Order | Artifact ID | Artifact | Decision | Reason/trigger | Template or authority | Owner | Review owner | Review state/link |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0 | whiteboard | Accepted conclusion | REUSE | Owner accepted WB38-R03 | [Conclusion](../../solution-whiteboard.md) | Owner | Two WB38 reviewers and owner | APPROVED / WB38-S01 |
+| 0 | whiteboard | Accepted conclusion | REUSE | Owner accepted WB38-R03 | [Archived conclusion](../../archive/WB38/solution-whiteboard.md) | Owner | Two WB38 reviewers and owner | APPROVED / WB38-S01 |
 | 1 | handoff | Handoff | GENERATE | Normalize accepted requirements | [H02](handoff.md) | Coordinator | Two planning reviewers and owner | APPROVED / WB38-PLAN-S01 and final owner acceptance |
 | 2 | workflow | Workflow manifest | GENERATE | Route systemic change | This document | Coordinator | Two planning reviewers and owner | APPROVED / WB38-PLAN-S01 and final owner acceptance |
 | 3 | audit | Clause/assertion inventory | GENERATE | PG-01 through PG-04 affect existing controls | [Audit](control-audit.md) | Coordinator | Governance and tests | APPROVED / WB38-PLAN-S01 and final owner acceptance |
@@ -133,7 +133,7 @@ blocked until all task and target evidence exists.
 
 | Artifact ID | Artifact/link | Depends on | Consumed version | Current version | Change impact | Freshness | Blocked by |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| whiteboard | [Conclusion](../../solution-whiteboard.md) | None | WB38-R03 | WB38-R03 | CONTROL_ONLY | CURRENT | None |
+| whiteboard | [Archived conclusion](../../archive/WB38/solution-whiteboard.md) | None | WB38-R03 | WB38-R03 | CONTROL_ONLY | CURRENT | None |
 | handoff | [Handoff](handoff.md) | whiteboard | WB38-H02 | WB38-H02 | CONTROL_ONLY | CURRENT | None |
 | workflow | This document | handoff | WB38-W04 | WB38-W04 | CONTROL_ONLY | CURRENT | None |
 | audit | [Control audit](control-audit.md) | whiteboard | WB38-A02 | WB38-A02 | CONTROL_ONLY | CURRENT | None |
@@ -157,6 +157,7 @@ blocked until all task and target evidence exists.
 | T02-result | [T02 merged output](T02-evidence.md) | T02, T01-result, T03-result | 82c022cfced052f8bc8cc67def437219df8be067 | 82c022cfced052f8bc8cc67def437219df8be067 | CONTROL_ONLY | CURRENT | None |
 | T06-result | [Merged PR52](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/52) | T06 | 15a648f06e22db4b195af683f2f76d62c87dcdff | 15a648f06e22db4b195af683f2f76d62c87dcdff | CONTROL_ONLY | CURRENT | None |
 | record | [Final validation](record.md) | plan, T01-result, T02-result, T03-result, T04-result, T05-result, T06-result | WB38-FINAL-R03 | WB38-FINAL-R03 | CONTROL_ONLY | CURRENT | None |
+| archive | [Archived conclusion](../../archive/WB38/solution-whiteboard.md) | record | ef69548551872676a704de291b4ec4371c6a5360 | ef69548551872676a704de291b4ec4371c6a5360 | CONTROL_ONLY | CURRENT | None |
 
 Draft predecessor identities are H02/W04/A02/C01/P04. Freeze actual content hashes
 before review; these labels alone are not immutable receipts. STALE here
@@ -193,6 +194,12 @@ is separately effective; PR publication may supplement them now.
 
 | Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | Human review | Findings/follow-up |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [T01 / PR #42](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42) | HEAD 15304f867b3f75ab00b75d6cf5f54f85828ebd7c / MERGE b5600e86914f2c14b1039427bfc5ef5a8a8826eb | HUMAN_REVIEW_BEFORE_MERGE / [authority](T01-evidence.md) | SELF_REVIEW_PASSED HEAD 15304f867b3f75ab00b75d6cf5f54f85828ebd7c / [evidence](T01-evidence.md) | APPROVED HEAD 15304f867b3f75ab00b75d6cf5f54f85828ebd7c / [R04](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42#pullrequestreview-5120889584) | PASS HEAD 15304f867b3f75ab00b75d6cf5f54f85828ebd7c / [checks](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42) | MERGED / [commit](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/commit/b5600e86914f2c14b1039427bfc5ef5a8a8826eb) | APPROVED HEAD 15304f867b3f75ab00b75d6cf5f54f85828ebd7c / [owner merge](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42) | [Resolved reviews](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/42) |
+| [T02 / PR #44](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/44) | HEAD 1e5960516877d5ba305fbb1aa541a95852777a74 / MERGE 82c022cfced052f8bc8cc67def437219df8be067 | HUMAN_REVIEW_BEFORE_MERGE / [authority](T02-evidence.md) | SELF_REVIEW_PASSED HEAD 1e5960516877d5ba305fbb1aa541a95852777a74 / [evidence](T02-evidence.md) | APPROVED HEAD 1e5960516877d5ba305fbb1aa541a95852777a74 / [R03](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/44#pullrequestreview-5121227523) | PASS HEAD 1e5960516877d5ba305fbb1aa541a95852777a74 / [checks](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/44) | MERGED / [commit](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/commit/82c022cfced052f8bc8cc67def437219df8be067) | APPROVED HEAD 1e5960516877d5ba305fbb1aa541a95852777a74 / [owner merge](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/44) | [Resolved reviews](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/44) |
+| [T03 / PR #45](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/45) | HEAD 08551dd643ca22e7de302fc93bb7ac75413e8a05 / MERGE 07a717ca2ad66f8758c28603bb60c8baeb6bfe54 | HUMAN_REVIEW_BEFORE_MERGE / [authority](review-brief-amendment.md) | SELF_REVIEW_PASSED HEAD 08551dd643ca22e7de302fc93bb7ac75413e8a05 / [evidence](review-brief-amendment.md) | APPROVED HEAD 08551dd643ca22e7de302fc93bb7ac75413e8a05 / [renewed review](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/45#issuecomment-5551628068) | PASS HEAD 08551dd643ca22e7de302fc93bb7ac75413e8a05 / [checks](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/45) | MERGED / [commit](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/commit/07a717ca2ad66f8758c28603bb60c8baeb6bfe54) | APPROVED HEAD 08551dd643ca22e7de302fc93bb7ac75413e8a05 / [owner merge](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/45) | [Resolved reviews](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/45) |
+| [T04 / PR #49](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/49) | HEAD c2a87f32a917e098d42c15090ae8ee7fcb15587c / MERGE 7387c6d787bc7146950f4a97fc1d893163aa1c8b | HUMAN_REVIEW_BEFORE_MERGE / [authority](T04-evidence.md) | SELF_REVIEW_PASSED HEAD c2a87f32a917e098d42c15090ae8ee7fcb15587c / [evidence](T04-evidence.md) | APPROVED HEAD c2a87f32a917e098d42c15090ae8ee7fcb15587c / [R02](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/49#pullrequestreview-5121339960) | PASS HEAD c2a87f32a917e098d42c15090ae8ee7fcb15587c / [checks](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/49) | MERGED / [commit](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/commit/7387c6d787bc7146950f4a97fc1d893163aa1c8b) | APPROVED HEAD c2a87f32a917e098d42c15090ae8ee7fcb15587c / [owner merge](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/49) | [Resolved reviews](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/49) |
+| [T05 / PR #50](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/50) | HEAD fbe14a49dab9fe4253e84f6a0a0b59f104a016f6 / MERGE 8c1a67a0d98b3e840af113433df715cb0e799456 | HUMAN_REVIEW_BEFORE_MERGE / [authority](T05-evidence.md) | SELF_REVIEW_PASSED HEAD fbe14a49dab9fe4253e84f6a0a0b59f104a016f6 / [evidence](T05-evidence.md) | APPROVED HEAD fbe14a49dab9fe4253e84f6a0a0b59f104a016f6 / [R01](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/50#pullrequestreview-5121407768) | PASS HEAD fbe14a49dab9fe4253e84f6a0a0b59f104a016f6 / [checks](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/50) | MERGED / [commit](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/commit/8c1a67a0d98b3e840af113433df715cb0e799456) | APPROVED HEAD fbe14a49dab9fe4253e84f6a0a0b59f104a016f6 / [owner merge](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/50) | [No findings](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/50) |
+| [T06 / PR #52](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/52) | HEAD 080cbf49e1fc353fb54b30551b6b08122fcc68a3 / MERGE 15a648f06e22db4b195af683f2f76d62c87dcdff | HUMAN_REVIEW_BEFORE_MERGE / [authority](T06-evidence.md) | SELF_REVIEW_PASSED HEAD 080cbf49e1fc353fb54b30551b6b08122fcc68a3 / [evidence](T06-evidence.md) | APPROVED HEAD 080cbf49e1fc353fb54b30551b6b08122fcc68a3 / [R02](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/52#pullrequestreview-5121675321) | PASS HEAD 080cbf49e1fc353fb54b30551b6b08122fcc68a3 / [checks](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/52) | MERGED / [commit](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/commit/15a648f06e22db4b195af683f2f76d62c87dcdff) | APPROVED HEAD 080cbf49e1fc353fb54b30551b6b08122fcc68a3 / [owner merge](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/52) | [Resolved final findings](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/52) |
 
 ## 5. Live delivery state and closure
 
@@ -200,16 +207,16 @@ is separately effective; PR publication may supplement them now.
 
 | Field | Current value |
 | --- | --- |
-| Workflow state | VALIDATING |
-| Current artifact/task | Final validation and closure record |
-| Current artifact review | IN_REVIEW; WB38-FINAL-R01 |
-| Last approved artifact | T05; PR50 reviewed and merged |
-| Next ready action | Two retained final reviewers inspect integrated package |
+| Workflow state | COMPLETE; archive publication candidate in review |
+| Current artifact/task | Archived conclusion and neutral working whiteboard |
+| Current artifact review | IN_REVIEW; WB38-ARCHIVE-R01 |
+| Last approved artifact | Final validation; PR53 reviewed, owner-approved and merged |
+| Next ready action | Two retained archive reviewers inspect the exact publication package |
 | Active blockers | None |
 | Stale artifacts | None |
-| Validation complete | No delivery validation |
-| Validation remaining | Final review/owner acceptance, main integration verification, archive mechanics |
-| Branch/PR | codex/feature-38-playbook-efficiency; final PR preparation; target main |
+| Validation complete | Yes; owner-approved PR53 merged and target verified |
+| Validation remaining | None; archive publication review and merge remain |
+| Branch/PR | codex/wb38-archive; archive/reset publication; target main |
 | Last updated | 2026-09-05 Asia/Shanghai |
 
 Require all active tasks terminal and required evidence current before parent

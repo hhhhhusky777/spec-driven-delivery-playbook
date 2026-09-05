@@ -6,7 +6,7 @@
 
 | ID / type | Important item | Recommendation / consequence | Evidence / owner |
 | --- | --- | --- | --- |
-| P01 / Attention | Entire lifecycle scope | Keep REQ-01 through REQ-18; runtime fixes and Apps excluded | [Conclusion](../../solution-whiteboard.md); both reviewers |
+| P01 / Attention | Entire lifecycle scope | Keep REQ-01 through REQ-18; runtime fixes and Apps excluded | [Archived conclusion](../../archive/WB38/solution-whiteboard.md); both reviewers |
 | P02 / Attention | Control preservation | No implementation until clause/assertion map is complete | [Audit](control-audit.md); governance/test reviewers |
 | P03 / Attention | Two coherent merge units | Core workflow first; optional publication automation second; task PRs use a feature branch | Section 6; both reviewers |
 | P04 / Attention | Versioning, bounds and publication | Proposed BC01-BC08 are specified for joint acceptance | [Contracts](design-contracts.md); coordinator/reviewers |
@@ -17,10 +17,10 @@
 | Field | Value |
 | --- | --- |
 | Plan | WB38 — full-lifecycle playbook efficiency |
-| Status | VALIDATING |
-| Previous status | IMPLEMENTING |
+| Status | COMPLETE |
+| Previous status | VALIDATING |
 | Plan mode | FULL |
-| Current phase | VALIDATE |
+| Current phase | CLOSE |
 | Current task | None |
 | Next ready task(s) | None |
 | Blockers | None |
@@ -43,7 +43,7 @@
 | Created | 2026-09-05 Asia/Shanghai |
 | Last updated | 2026-09-05 Asia/Shanghai |
 | Primary issue | [Issue 38](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/38) |
-| Concluded whiteboard | [WB38-R03](../../solution-whiteboard.md) |
+| Concluded whiteboard | [Archived WB38-R03](../../archive/WB38/solution-whiteboard.md) |
 | Approved workflow handoff | [Accepted H02](handoff.md) |
 | Delivery workflow/manifest | [W04 readiness amendment](workflow.md) |
 | Implementation continuation mode | Read live from delivery workflow; do not copy |
@@ -57,7 +57,7 @@
 | Final PR target | main |
 | Protected-branch synchronization | Reconcile target before task start and before merge; manual policy applies even without hosted protection |
 | Branch / PR | codex/task-38-adoption-efficiency-design; [planning PR 41](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/41); combined review |
-| Archived record | Not archived |
+| Archived record | [WB38 archived conclusion](../../archive/WB38/solution-whiteboard.md) |
 | Draft version | WB38-P04 |
 
 ## 1. Governing inputs and feature authority
@@ -471,14 +471,14 @@ PRs remain unrecorded. Completing a specification does not authorize task start.
 
 | Field | Current value |
 | --- | --- |
-| Plan state | VALIDATING |
+| Plan state | COMPLETE |
 | Current task | None |
 | Next ready task(s) | None |
-| Active branch / PR | codex/wb38-final-validation; renewed validation reconciliation |
+| Active branch / PR | codex/wb38-archive; archive/reset publication candidate |
 | Last completed task | T06; PR52 merged as 15a648f06e22db4b195af683f2f76d62c87dcdff; reviewed tree matched; 90 candidate tests passed |
 | Active blocker | None |
 | Last validation | Exact per-round checks and review recorded in the package session evidence |
-| Next action | Combined final validation/closure review; see record.md |
+| Next action | Archive/reset publication review; see record.md |
 
 ## 10. Evidence, decisions and change history
 

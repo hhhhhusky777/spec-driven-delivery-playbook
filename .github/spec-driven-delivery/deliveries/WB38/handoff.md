@@ -7,9 +7,9 @@ handoff. Read the table, normalized inputs, then the linked source requirements.
 
 | Type / ID | Item | Recommendation / consequence | Owner / evidence |
 | --- | --- | --- | --- |
-| Attention / H01 | Full lifecycle, not only adoption | Carry every REQ-01 through REQ-18 into planning | Both reviewers; [conclusion](../../solution-whiteboard.md#6-needs-and-candidate-requirements) |
+| Attention / H01 | Full lifecycle, not only adoption | Carry every REQ-01 through REQ-18 into planning | Both reviewers; [archived conclusion](../../archive/WB38/solution-whiteboard.md#6-needs-and-candidate-requirements) |
 | Attention / H02 | Provisional dependency preparation | One package; no draft consumption or task start | Governance reviewer; [trial authority](../../live-trial.md) |
-| Attention / H03 | Policy and evidence changes | Formalize existing owners; retain old records and pins | Governance and test reviewers; [gaps](../../solution-whiteboard.md#7-current-system-and-gap-analysis) |
+| Attention / H03 | Policy and evidence changes | Formalize existing owners; retain old records and pins | Governance and test reviewers; [archived gaps](../../archive/WB38/solution-whiteboard.md#7-current-system-and-gap-analysis) |
 | Attention / H04 | Unproven results | Tests, live PR publication and effort measurements remain delivery work | Test reviewer; [plan](implementation-plan.md) |
 | Decision / H05 | Package acceptance | Request only when complete package passes both reviewers | Repository owner; not requested yet |
 
@@ -19,7 +19,7 @@ handoff. Read the table, normalized inputs, then the linked source requirements.
 | --- | --- |
 | Delivery | WB38 — full-lifecycle playbook efficiency |
 | State | CONSUMED |
-| Source whiteboard | [Accepted WB38-R03](../../solution-whiteboard.md) |
+| Source whiteboard | [Archived accepted WB38-R03](../../archive/WB38/solution-whiteboard.md) |
 | Whiteboard state | CONCLUDED |
 | Whiteboard conclusion version | WB38-R03; reviewed blob f0d879c8c016435ab3e90d2f26d8a4dcec9dd117; owner acceptance in WB38-S01 |
 | Target project/repository | [Playbook repository](https://github.com/hhhhhusky777/spec-driven-delivery-playbook) |
@@ -61,7 +61,7 @@ recorded owner acceptance, not rewritten here.
 
 ### Accepted requirements
 
-The authoritative [REQ-01 through REQ-18](../../solution-whiteboard.md#6-needs-and-candidate-requirements)
+The authoritative [REQ-01 through REQ-18](../../archive/WB38/solution-whiteboard.md#6-needs-and-candidate-requirements)
 are incorporated by reference without abbreviation of their acceptance criteria.
 They cover batched preparation/questions/corrections, retained independent
 review, PR-primary evidence, honest same-account attribution, table-default

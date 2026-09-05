@@ -1,5 +1,57 @@
 # WB38 final validation and proposed closure
 
+## Accepted validation and archive execution
+
+The repository owner accepted exact final-validation candidate
+`ed1e4cfd9449bae420877958ed820c94f2e25299` after both retained R04 reviewers
+approved and authorized the bounded archive/reset sequence. PR53 merged to main
+as `c6c5ff3afc99bc228ccae8afd14582ffef8441ca`; the merged tree matches the
+reviewed candidate and hosted checks passed. Final validation is APPROVED.
+
+The preserved conclusion is [archived here](../../archive/WB38/solution-whiteboard.md).
+Its source is immutable commit `c6c5ff3afc99bc228ccae8afd14582ffef8441ca`,
+blob `19dd57ae9ea85b8a7dfd3a39636667c876bf59e3`. The archive candidate records a
+separate blob after publication. The stable working path is reset only after
+the reversible transformation and reciprocal link checks below pass.
+
+### Archive link-relocation evidence
+
+Every relative Markdown destination in the source is listed. Counts distinguish
+repeated occurrences; labels, fragments and all non-link accepted content stay
+unchanged. External and fragment-only links have no transformation.
+
+| Occurrences | Source destination | Archive destination |
+| --- | --- | --- |
+| 4 | `reviews/WB38-S01.md` | `../../reviews/WB38-S01.md` |
+| 1 | `live-trial.md` | `../../live-trial.md` |
+| 1 | `installation-batch.md` | `../../installation-batch.md` |
+| 1 | `../../CONTRIBUTING.md#project-delivery-policy` | `../../../../CONTRIBUTING.md#project-delivery-policy` |
+| 1 | `deliveries/WB38/handoff.md` | `../../deliveries/WB38/handoff.md` |
+| 1 | `deliveries/WB38/workflow.md` | `../../deliveries/WB38/workflow.md` |
+| 1 | `deliveries/WB38/implementation-plan.md` | `../../deliveries/WB38/implementation-plan.md` |
+| 2 | `project-contracts.md` | `../../project-contracts.md` |
+| 1 | `project-adoption-manifest.md` | `../../project-adoption-manifest.md` |
+| 1 | `../../CONTRIBUTING.md` | `../../../../CONTRIBUTING.md` |
+| 1 | `../../docs/documentation-quality-policy.md` | `../../../../docs/documentation-quality-policy.md` |
+| 1 | `../../docs/template-governance.md` | `../../../../docs/template-governance.md` |
+| 1 | `archive/README.md` | `../../archive/README.md` |
+
+Verification requires 17 transformed occurrences, identical normalized targets
+and fragments, a reverse-transform byte match for Sections 3-14, source and
+archive record links in both directions, and the complete documentation suite.
+Any mismatch blocks the working-whiteboard reset and publication.
+
+Archive preparation verification passed: all 17 source destinations resolve to
+the same repository targets and fragments after relocation; reversing only
+those destinations produces a byte-identical Sections 3-14 body. The archived
+candidate links back to this record, carries source blob
+`19dd57ae9ea85b8a7dfd3a39636667c876bf59e3`, and has distinct blob
+`ef69548551872676a704de291b4ec4371c6a5360`. Only after that verification passed
+was the stable path replaced with the accepted neutral EMPTY project instance.
+Workflow remains COMPLETE while the archive candidate is in review; the plan is
+COMPLETE. Full checks, independent archive review, owner publication acceptance and merge remain; no
+runtime cleanup, pin migration or branch deletion was performed.
+
 ## Renewed final validation after T06
 
 This live section supersedes the historical R01 candidate below. PR51 merged
@@ -36,7 +88,7 @@ SELF_REVIEW_PASSED for WB38-FINAL-R03. Exact commit is bound in the PR packet.
 
 Status: VALIDATING; independent review and owner acceptance pending. This
 record links the [live workflow](workflow.md), [task plan](implementation-plan.md)
-and [immutable accepted conclusion](../../solution-whiteboard.md). It records
+and [immutable accepted conclusion](../../archive/WB38/solution-whiteboard.md). It records
 completed implementation and proposed closure separately. It does not claim
 main integration, archive, activation or cleanup has occurred.
 
