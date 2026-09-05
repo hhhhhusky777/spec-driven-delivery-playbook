@@ -17,11 +17,11 @@
 | Field | Value |
 | --- | --- |
 | Plan | WB38 — full-lifecycle playbook efficiency |
-| Status | IMPLEMENTING |
-| Previous status | VALIDATING |
+| Status | VALIDATING |
+| Previous status | IMPLEMENTING |
 | Plan mode | FULL |
-| Current phase | IMPLEMENT |
-| Current task | T06 |
+| Current phase | VALIDATE |
+| Current task | None |
 | Next ready task(s) | None |
 | Blockers | None |
 | Owner | Repository owner |
@@ -288,7 +288,7 @@ merely because code or review comments exist.
 | T03 | DONE | | T01 | None | CURRENT | COMPLETE | NONE | Phase-specific human review briefs and design/task comparison | BC07 amendment | Separate governance package; no added review gates | PR45 merged |
 | T04 | DONE | | T01, T03 | None | CURRENT | COMPLETE | NONE | Phase-aware prerequisite and future-output validation | R01-R03 amendment | Versioned reusable readiness fix | PR49 merged |
 | T05 | DONE | | T04 | None | CURRENT | COMPLETE | NONE | Exception triage and upstream playbook reporting | E01-E02 amendment | Reusable guidance and evidence handling | PR50 merged |
-| T06 | IN_PROGRESS | | T04, T05 | None | CURRENT | COMPLETE | NONE | Restore ordinary v4 bootstrap and reconcile output evidence | R01-R03 amendment | Corrective PR to merged main | Pending |
+| T06 | DONE | | T04, T05 | None | CURRENT | COMPLETE | NONE | Restore ordinary v4 bootstrap and reconcile output evidence | R01-R03 amendment | Corrective PR to merged main | PR52 merged |
 
 <!-- sdd-task-spec: T06 -->
 
@@ -474,8 +474,8 @@ PRs remain unrecorded. Completing a specification does not authorize task start.
 | Plan state | VALIDATING |
 | Current task | None |
 | Next ready task(s) | None |
-| Active branch / PR | codex/feature-38-playbook-efficiency; final PR preparation |
-| Last completed task | T05; PR50 merged as 8c1a67a0d98b3e840af113433df715cb0e799456; reviewed tree matched; 89 integrated tests passed |
+| Active branch / PR | codex/wb38-final-validation; renewed validation reconciliation |
+| Last completed task | T06; PR52 merged as 15a648f06e22db4b195af683f2f76d62c87dcdff; reviewed tree matched; 90 candidate tests passed |
 | Active blocker | None |
 | Last validation | Exact per-round checks and review recorded in the package session evidence |
 | Next action | Combined final validation/closure review; see record.md |

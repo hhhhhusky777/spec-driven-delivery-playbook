@@ -1,5 +1,14 @@
 # T06 — Restore ordinary v4 workflow bootstrap
 
+## Completion
+
+The owner accepted PR52 after both retained R02 reviewers approved exact
+`080cbf49e1fc353fb54b30551b6b08122fcc68a3`. Squash merge
+`15a648f06e22db4b195af683f2f76d62c87dcdff` is verified on main with an identical
+tree. Post-merge docs:all passed 90 tests, zero failures/skips, plus Markdown,
+structure, lifecycle and Mermaid checks. T06 is DONE. Earlier pending statements
+below preserve candidate history. Renewed final validation remains separate.
+
 ## Approved corrective scope
 
 The owner approved this bounded corrective task after final review and renewed
