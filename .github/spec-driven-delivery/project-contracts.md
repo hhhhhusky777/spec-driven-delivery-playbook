@@ -1,8 +1,8 @@
 # Project contract registry
 
-Status: PROPOSED in the [installation batch](installation-batch.md). This is
-navigation to canonical authority, not a second policy. Activation requires
-final owner acceptance and reviewed merge under the batch contract. The
+Accepted through the [installation batch](installation-batch.md). This is
+navigation to canonical authority, not a second policy. Final owner acceptance
+and reviewed merge are recorded in the manifest. The
 [manifest](project-adoption-manifest.md) owns current adoption status.
 
 | Reader need | Canonical source | Owner |

@@ -1,7 +1,7 @@
 # Project agent trigger
 
-Status: PROPOSED in the installation batch; activation requires final acceptance
-and reviewed merge, followed by target verification and INSTALLED recording.
+Installation acceptance, reviewed merge, target verification, and current
+runtime handoff state are recorded in the manifest.
 
 From the repository root:
 

@@ -1,10 +1,15 @@
 # Project Adoption Manifest — Spec-Driven Delivery Playbook
 
-This manifest records the in-progress adoption of the Spec-Driven Delivery
+This manifest records the installation and adoption of the Spec-Driven Delivery
 Playbook into its own source repository. It supplements, and does not replace,
 the repository authorities linked below.
 
-## Review attention map
+The live control table and final handoff are authoritative. Earlier discovery,
+review attention, gap, checklist, and B01 preparation statements below are
+historical snapshots of the approved candidate; their pending states do not
+override the final acceptance and merge evidence.
+
+## Historical B01 review attention map
 
 | Focus | Review input | State / risk | Required reviewer |
 | --- | --- | --- | --- |
@@ -27,7 +32,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | --- | --- |
 | Project / repository | [hhhhhusky777/spec-driven-delivery-playbook](https://github.com/hhhhhusky777/spec-driven-delivery-playbook); local origin updated with owner authorization |
 | Adoption scope | This repository's contributor-facing delivery workflow and documentation gates |
-| Adoption state | `MAPPED` |
+| Adoption state | `INSTALLED` |
 | State before block | `None` |
 | Playbook source repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook.git` |
 | Playbook revision | `d213114f99dc2186d6f4e50a85fe962de0e1afa9` |
@@ -39,11 +44,11 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Inspection date | `2026-09-05` |
 | Adoption owner | Playbook maintainers |
 | Required reviewers | Exactly two isolated agent reviewers, followed by an authorized repository maintainer |
-| Project contract registry | [Project contracts](project-contracts.md); batch draft pending final acceptance |
+| Project contract registry | [Project contracts](project-contracts.md); accepted B01 R03 |
 | Project adoption root | `.github/spec-driven-delivery` |
 | Bootstrap trigger source | `templates/adoption/agent-adoption-trigger.md` at the pinned playbook revision |
-| Installed project trigger | [Agent trigger](agent-trigger.md); batch draft pending final acceptance |
-| Branch / PR | `codex/sdd-self-adoption`; PR not opened |
+| Installed project trigger | [Agent trigger](agent-trigger.md); accepted B01 R03 |
+| Branch / PR | [Installation PR](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/39), merged; control reconciliation on codex/sdd-installation-finalize |
 | Allowed write scope | CONTRIBUTING.md; docs/documentation-quality-policy.md; .github/pull_request_template.md; package.json; .markdownlint-cli2.jsonc; tests/documentation-quality.test.mjs; AGENTS.md; project adoption root and review evidence |
 | Required documentation checks | Canonical npm run docs:all; external-link advisory; exact tracked/untracked whitespace; semantic package review |
 | Review mode | `EXPLICIT_REVIEW` |
@@ -51,16 +56,16 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Self-review state | `SELF_REVIEW_PASSED` |
 | Self-review candidate revision | `ADOPTION-B01-R03` |
 | Self-review evidence | Batch review ledger records exact joint file inventory and self-review before independent review |
-| Fresh-context review state / evidence | A04 approved; B01 pending |
+| Fresh-context review state / evidence | B01 R03 APPROVED by both assigned seats; exact receipts in B01 ledger |
 | Fresh-context review session / assigned reviewers | ADOPTION-B01-S01; R1 adoption_b01_r1 and R2 adoption_b01_r2; two approvals required |
-| Human review state / evidence | A04 approved; batch preparation and policy directions authorized; final B01 acceptance pending |
+| Human review state / evidence | B01 APPROVED; owner authorized PR, merge, post-merge validation and installation completion on 2026-09-05; B01 ledger |
 | Automation boundary | `Not applicable` |
 | Required automatic gates | `Not applicable` |
 | Automatic gate result | `NOT_APPLICABLE` |
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | Complete B01 checks and two independent reviews, then one final human acceptance |
+| Next action | Finish approved control publication; then await the owner's first need through the verified workflow runtime |
 
 Adoption type: `real project`
 
@@ -630,7 +635,7 @@ No automatic action ran. After A04 approval, routing 1 updates the existing
 contributor authority with project development decisions. No empty whiteboard
 exists; installation is not complete.
 
-### Current B01 handoff
+### Historical B01 preparation handoff
 
 | Field | Value |
 | --- | --- |
@@ -648,3 +653,22 @@ The latest handoff above supersedes historical snapshots. Read the
 [batch index](installation-batch.md) for decisions, runtime boundary, and hosted
 limitations. Per-artifact human stops are replaced only by this owner's
 explicit batch instruction; independent review and final human authority remain.
+
+### Final installation handoff
+
+| Field | Value |
+| --- | --- |
+| Current adoption state | INSTALLED; not ACTIVE |
+| Authority | Both B01 R03 reviewers approved all selected artifacts including neutral EMPTY whiteboard; owner accepted and authorized merge and installation completion |
+| Merge evidence | Installation PR merged as 3b4fb91150469e01d5b5b283d08f62a880683853; synchronized target has the identical reviewed package |
+| Gates | PR blocking documentation checks passed; target documentation workflow passed; local canonical docs:all passed 58/58 before publication |
+| Freshness and gaps | All applicable B01 inventory entries CURRENT; package acceptance resolves installation policy/navigation gaps; upstream symbolic-label validator defect remains tracked but does not affect the replacement pinned workflow runtime |
+| Residual limitations | Hosted main protection absent and manually enforced as accepted; no pilot performed |
+| Whiteboard | Approved EMPTY; no need, handoff, plan, or delivery inferred |
+| Allowed remaining work | Control-only state/evidence reconciliation, its PR/checks, and owned-runtime replacement at the unchanged manifest pin |
+| Runtime evidence | Owned adoption checkout cleaned; replacement detects INSTALLED, selects sdd-project-workflow, preserves the manifest pin; install-sdd.sh --validate reports CURRENT |
+| Next action | Complete control publication, then await the owner's first need through the verified workflow runtime |
+
+All installation checklist obligations are satisfied by the accepted package,
+reviewed merge, and target checks. Earlier unchecked installation boxes are
+retained as candidate history. ACTIVE still requires a real reviewed pilot.

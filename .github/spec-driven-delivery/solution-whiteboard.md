@@ -1,8 +1,7 @@
 # Project solution whiteboard
 
-Installation draft: PROPOSED. This neutral copy is prepared under the
-[batch authority](installation-batch.md), pending final installation acceptance.
-Final acceptance must be followed by reviewed merge and target verification.
+This neutral copy was accepted under the [batch authority](installation-batch.md).
+The manifest records installation approval, reviewed merge and target verification.
 EMPTY does not authorize intake until the manifest records INSTALLED and the
 verified runtime selects the workflow skill.
 
