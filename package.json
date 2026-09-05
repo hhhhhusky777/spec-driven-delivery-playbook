@@ -8,7 +8,7 @@
   },
   "scripts": {
     "docs:lint": "markdownlint-cli2",
-    "docs:structure": "node scripts/documentation-quality.mjs check",
+    "docs:structure": "node scripts/documentation-quality.mjs check --exclude .sdd-runtime",
     "docs:sdd": "node scripts/sdd-lifecycle.mjs check",
     "docs:mermaid": "node scripts/check-mermaid.mjs",
     "docs:check": "npm run docs:lint && npm run docs:structure && npm run docs:sdd && npm run docs:mermaid",

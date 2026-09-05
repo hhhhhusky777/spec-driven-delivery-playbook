@@ -338,3 +338,100 @@ These sources inform this repository policy but do not override it:
 - [GitHub Actions secure-use reference](https://docs.github.com/en/actions/reference/security/secure-use)
 - [Mermaid syntax validation API](https://mermaid.js.org/config/usage.html#syntax-validation-without-rendering)
 - [npm package-lock documentation](https://docs.npmjs.com/cli/configuring-npm/package-lock-json)
+
+## 11. Project tooling test strategy
+
+This supplement is proposed under the owner-authorized
+[installation batch](../.github/spec-driven-delivery/installation-batch.md).
+It becomes active after final acceptance and reviewed merge of that exact
+package, as required by Section 1. Sections 1-10
+retain their existing authority; this section supplies missing Node/Bash
+tooling decisions, rather than creating another test policy.
+
+### Scope, levels, and coverage
+
+Production tooling means `install-sdd.sh` and executable `scripts/` code.
+Tests and fixtures are test code; dependencies and machine-generated runtime
+files are excluded from production coverage. Local macOS and CI Linux use
+Node.js 24, Bash, Git, and locked npm dependencies. Tests needing a missing
+platform capability must report the unsupported boundary explicitly.
+
+| Change | Required evidence | Scope/claim |
+| --- | --- | --- |
+| Documentation only | Full docs:all and semantic review | No runtime behavior claim |
+| Test or harness | Full regression plus intentional failure proof for changed assertions | Test detects the failure it claims |
+| Checker/configuration | Focused positive/negative fixtures and full regression | Changed input, validation, and error paths |
+| Installer/runtime | Isolated subprocess/Git/filesystem scenarios and full regression | Install, resume, validation, cleanup, and upgrade paths affected |
+| Security/state/compatibility | Boundary/fault tests plus owner review | Ownership, scope escape, stale pin, partial state, and incompatible transitions as applicable |
+
+Unit tests cover pure parsing and local functions; contract tests cover schema
+and documentation invariants; integration tests exercise real child processes,
+temporary repositories, and filesystem effects. Fake remote repositories and
+HTTP responses are permitted for deterministic failures; they do not prove
+live authentication, network, or GitHub protection. The installer lifecycle
+suite is tooling end-to-end evidence. Product-service smoke, billing, database,
+and production-topology tests are inapplicable to this repository.
+
+Every changed observable branch, required rejection, and recovery path must
+map to a named assertion in the PR/plan evidence. Uncovered material paths
+require a documented exception. This is behavioral coverage, not a claimed
+line-coverage percentage. Numeric aggregate and line/branch coverage are
+informational: no percentage threshold is imposed in this initial strategy.
+The denominator for any future metric must name the changed-file/diff scope,
+exclusions, runtime, and collection command; aggregate results cannot replace
+changed-path evidence. Characterize existing behavior before refactoring it.
+
+Use Red-Green-Refactor for executable changes: capture the expected initial
+failure, fix the responsible behavior, then run the complete suite. Required
+tests must be green before merge. Documentation-only changes do not need an
+invented failing runtime test. Use boundary, malformed-input, state, fault, and
+property/seeded-random tests when the changed risk warrants them; no blanket
+fuzzing, mutation, load, or soak gate is imposed without a contract.
+
+### Determinism and environments
+
+Each integration test owns a uniquely created temporary directory and registers
+teardown. Use temporary Git repositories and fake remotes; never alter the
+developer checkout, real credentials, or shared runtime. Tests must run in any
+order without shared writable fixtures. Control clocks/randomness or preserve
+seeds and minimal reproducers. Do not rely on arbitrary sleeps or live data.
+Cleanup errors fail the test and identify the owned path; do not broaden cleanup
+targets. Sensitive production data and real tokens are prohibited.
+
+Preflight verifies Node/Bash/Git versions and `npm ci --ignore-scripts`, cleanly
+classifies the worktree, and scopes temporary ownership. It is not test evidence.
+Local and CI results are named separately. No live network is required for
+blocking tests; external links remain advisory under Section 4.
+
+No measured performance budget currently exists. New capacity/latency claims
+require an owner-approved workload, environment, metric, threshold, baseline,
+and repeatable benchmark before such claims pass review. Parser and installer
+resource risks still receive normal code and bounded-test review.
+
+### Defects, flaky tests, and evidence
+
+Apply Section 8 triage before changing failures. Create a durable issue for any
+unresolved required behavior, repeated regression, cross-task ownership,
+security impact, deferred correction, or release risk. Fixed executable defects
+need the lowest-level stable reproducer plus affected integration evidence.
+
+Reruns diagnose flakes; they do not erase a failed required gate. Preserve the
+first failure, seed, logs, environment, and reproducer. Quarantine requires an
+owner-approved issue with compensating evidence and an expiry within seven
+days. Required behavior with no equivalent passing evidence blocks merge.
+Restoration requires reproducer resolution and reviewed repeatable tests;
+remove obsolete tests only through review, never to hide a defect.
+
+Record command, exact source/candidate hash, dirty-state classification,
+environment, start/end or duration, pass/fail/skip counts, changed-path coverage,
+failure classification, and limitations in the delivery evidence record.
+Keep review decisions and concise evidence permanently in Git. Retain bulky
+sanitized logs for 30 days; unresolved failure evidence remains until resolution
+and at least 30 days afterward. Summaries link logs or state that no separate
+log artifact was retained. Do not claim unavailable logs are archived.
+
+All existing Section 8 exception fields apply. Maintainers review this strategy
+quarterly and after escaped defects, recurring flakes, platform changes, or
+new tooling boundaries; include feedback latency and false confidence from
+mocks in that review. Future automation gates require positive and negative
+state/scope/mode fixtures; this batch does not grant implementation auto-merge.
