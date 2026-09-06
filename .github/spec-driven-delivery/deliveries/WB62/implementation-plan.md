@@ -34,14 +34,14 @@ the one-time current-project cutover after PR #65 target verification.
 | Reviewers | Two isolated planning reviewers, then owner |
 | Review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P02-R03 |
+| Self-review candidate revision | d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 |
 | Self-review evidence | [Package evidence](../../reviews/WB62-P01.md) |
-| Fresh-context review state | NOT_STARTED |
+| Fresh-context review state | APPROVED |
 | Fresh-context review session ID | WB62-P02 |
 | Fresh-context assigned reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | None |
-| Fresh-context reviewed revision | None |
+| Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
+| Fresh-context reviewed revision | d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 |
 | Fresh-context review evidence | [Package evidence](../../reviews/WB62-P01.md) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | None |
@@ -482,7 +482,7 @@ started.
 | Last completed task | T01 |
 | Active blocker | None |
 | Last validation | Accepted reset design `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30`; two design reviewers approved; 103 tests and documentation gates passed |
-| Next action | Review P02 planning amendment; after owner acceptance and mode selection, make T02 READY |
+| Next action | Owner accepts exact P02 candidate and selects mode for T02/T04; then make T02 READY |
 
 ## 10. Evidence and history
 
