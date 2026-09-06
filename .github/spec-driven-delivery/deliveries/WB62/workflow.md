@@ -32,7 +32,7 @@
 | Trigger identity/run ID | Coordinating agent / WB62-ROUTE-20260906-01 |
 | Selected route | Route 3 — systemic guidance change using existing authorities and FULL plan |
 | Manifest review state | APPROVED |
-| Current artifact/gate | [WB62 P02 planning amendment](implementation-plan.md) |
+| Current artifact/gate | [Accepted WB62 P02 planning amendment](implementation-plan.md) |
 | Current review phase | DESIGN |
 | Current review target ID | plan |
 | Current artifact review state | APPROVED |
@@ -54,10 +54,10 @@
 | Implementation mode scope | T02, T04 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-06T23:54:35+08:00 |
-| Next action | Perform one consolidated T02 readiness/context check, then start implementation |
+| Next action | Implement T02 and run focused and full gates; publish the complete candidate to PR #65 for review |
 | Next action target IDs | T02 |
 | Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/upgrades/U64.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; .github/pull_request_template.md; .github/workflows/documentation-quality.yml; CONTRIBUTING.md; README.md; CHANGELOG.md; package.json; config; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/README.md; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/handoffs; templates/policies; templates/testing; templates/workflows; examples; scripts/sdd-lifecycle.mjs; scripts/review-publication.mjs; scripts/verify-pr-evidence.mjs; tests |
-| Next action write targets | .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
+| Next action write targets | CONTRIBUTING.md; README.md; CHANGELOG.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/README.md; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/handoffs; templates/policies; templates/testing; templates/workflows; .github/pull_request_template.md; .github/workflows/documentation-quality.yml; package.json; config; examples; scripts/sdd-lifecycle.mjs; scripts/review-publication.mjs; scripts/verify-pr-evidence.mjs; tests; .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
 | Post-merge control mode | NOT_SELECTED |
 | Post-merge control authority | Not selected; PR #65 cannot preauthorize T04's future exact-SHA reset/upgrade candidate |
 | Post-merge control source revision | Not selected |
@@ -208,7 +208,7 @@ owns the correction and unblock evidence; the live blocker register is empty.
 | T01 | Coherent source implementation PR | EXPLICIT_REVIEW | Approved plan/context and recorded mode | Focused scenarios, full checks, two reviewers and owner merge authority | Not applicable | YES | DONE |
 | D02 | PR-evidence/reset design amendment | EXPLICIT_REVIEW | Owner-supplied closure correction | Exact conclusion, two reviewers and owner acceptance | Not applicable | YES | DONE |
 | P02 | T02/T04 FULL plan amendment | EXPLICIT_REVIEW | Accepted D02 conclusion | Completeness, phase-aware prerequisites, exact reviewers then owner | Not applicable | YES | DONE |
-| T02 | PR-owned evidence/reset contract and enforcement in PR #65 | EXPLICIT_REVIEW | Accepted P02 and selected live implementation mode | Focused/API/schema/docs/full checks, two reviewers and owner merge authority | Not applicable | YES | NOT_STARTED |
+| T02 | PR-owned evidence/reset contract and enforcement in PR #65 | EXPLICIT_REVIEW | Accepted P02 and selected live implementation mode | Focused/API/schema/docs/full checks, two reviewers and owner merge authority | Not applicable | YES | IN_PROGRESS |
 | T04 | Exact-SHA WB62 reset/upgrade PR | EXPLICIT_REVIEW | PR #65 target receipt and accepted P02 | Complete inventory/ownership, migration/runtime checks, two reviewers and fresh owner cutover acceptance | Not applicable | YES | NOT_STARTED |
 | V02 | Final target/reset validation | EXPLICIT_REVIEW | T02 and T04 complete | PR target receipts, `EMPTY`, runtime `CURRENT`, preserved adoption/reusable output | Not applicable | YES | NOT_STARTED |
 
@@ -254,14 +254,14 @@ unknown destructive identity or unresolved delivery-owned item prevents closure.
 | Field | Current value |
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
-| Current artifact/task | T02 readiness; no implementation task active |
-| Current artifact review | P02 APPROVED / exact candidate d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 |
+| Current artifact/task | T02 implementation in progress |
+| Current artifact review | NOT_STARTED; completed PR #65 candidate not yet published |
 | Last approved artifact | P02 plan `d8d7fd707e1ca31f2d413c86479f51fe7864c6d8` |
-| Next ready action | Consolidated T02 readiness/context verification, then implementation |
+| Next ready action | Implement T02, run focused/full gates and review complete PR #65 |
 | Active blockers | None |
 | Stale artifacts | None |
 | Validation complete | T01/PR64 integration and current v4 runtime verified; D02 design accepted |
-| Validation remaining | P02 review/acceptance; T02 PR #65 implementation/merge/target receipt; T04 exact-SHA reset/upgrade; final reset/runtime proof |
+| Validation remaining | T02 PR #65 implementation/review/merge/target receipt; T04 exact-SHA reset/upgrade; final reset/runtime proof |
 | Branch/PR | `codex/upgrade-37653ee`; T02 [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) open; T04 PR not created |
 | Last updated | 2026-09-06 Asia/Shanghai |
 

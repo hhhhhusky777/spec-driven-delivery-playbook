@@ -26,9 +26,9 @@ the one-time current-project cutover after PR #65 target verification.
 | Status | IMPLEMENTING |
 | Previous status | VALIDATING |
 | Plan mode | FULL |
-| Current phase | READINESS |
-| Current task | None |
-| Next ready task(s) | T02 |
+| Current phase | IMPLEMENTATION |
+| Current task | T02 |
+| Next ready task(s) | None |
 | Blockers | None |
 | Owner | Repository owner |
 | Reviewers | Two isolated planning reviewers, then owner |
@@ -298,7 +298,7 @@ grew to 103 passing tests; the external-link advisory was not rerun.
 
 | Field | Value |
 | --- | --- |
-| State | READY |
+| State | IN_PROGRESS |
 | Depends on | T01 |
 | Data phase | NONE |
 | Source boundary | Canonical documentation, diagrams, skills, installer-generated guidance, whiteboard/handoff/plan/workflow/review/adoption templates, PR template, lifecycle schemas/dispatcher, GitHub-aware evidence verifier/action, package scripts, examples, changelog and corresponding tests identified by the accepted design consumer matrix |
@@ -306,10 +306,10 @@ grew to 103 passing tests; the external-link advisory was not rerun.
 | Contract IDs | FC07, FC08, FC09, FC10, FC11, FC12 |
 | Owner | Coordinating implementer |
 | Branch / PR | [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) from `codex/upgrade-37653ee` to `main` |
-| Context receipt | NOT_STARTED |
-| Context source revision | Not recorded |
-| Implementation mode at task start | Not selected for T02; live workflow authority currently covers T01 only |
-| Implementation mode at PR/merge | Recheck live workflow after plan acceptance |
+| Context receipt | APPROVED |
+| Context source revision | 231b51efc6e2d0d65e39c93ec7a24c6fd1001855 |
+| Implementation mode at task start | HUMAN_REVIEW_BEFORE_MERGE / [P02 owner acceptance](../../reviews/WB62-P01.md#p02-owner-acceptance) / scope `T02, T04` |
+| Implementation mode at PR/merge | Recheck the live workflow before publication, review and merge |
 | Post-merge human review | NOT_APPLICABLE when human review occurs before merge; otherwise not authorized |
 | Self-contained boundary | The whiteboard's T02 contract and T03 enforcement packages merge together so no policy/checker mismatch reaches `main` |
 | Actual change summary | Not recorded |
@@ -347,21 +347,21 @@ Task context receipt (complete after `READY` and before `IN_PROGRESS`):
 
 | Receipt field | Recorded value |
 | --- | --- |
-| Implementer / type / timestamp | Not recorded |
-| Approved source set / revision | Accepted design and P02 plan; exact revisions not recorded |
-| Receipt candidate revision | Not recorded |
-| Outcome / non-scope | Reconcile against this task specification |
+| Implementer / type / timestamp | Coordinating agent / implementation / 2026-09-06T23:58:36+08:00 |
+| Approved source set / revision | Design `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30`; plan `d8d7fd707e1ca31f2d413c86479f51fe7864c6d8`; owner control revision `231b51efc6e2d0d65e39c93ec7a24c6fd1001855` |
+| Receipt candidate revision | 231b51efc6e2d0d65e39c93ec7a24c6fd1001855 |
+| Outcome / non-scope | Implement T02's reusable PR-evidence/reset contract and v5 enforcement; exclude T04 destructive reset/cutover, WB38 deletion and runtime defects #33/#34/#36 |
 | Contracts / decisions | FC07–FC12; accepted design C01–C06 |
 | Critical obligations / prohibitions | Preserve adoption/reusable output; no destructive T04 action; no fabricated GitHub evidence |
 | Risks / exceptions / boundaries | Exact inventory, compatibility and cross-document consistency |
-| Dependencies / data phase | T01/source at `9e8f79af50ed3bad2d512301e03943506f7421f0` / NONE |
+| Dependencies / data phase | T01/source blob `9e8f79af50ed3bad2d512301e03943506f7421f0`; current main and runtime pin `37653eec1d980e3ea5ed858922ab97894395fab9`; PR #65 identity verified / NONE |
 | Required completion evidence | Focused fixtures, v2–v5 compatibility, docs gates, full tests, exact PR review and target receipt |
-| Ambiguities / conflicts / map omissions | None known; recheck at readiness |
-| Self-review state / evidence | NOT_STARTED / Not recorded |
-| Fresh-context review state / revision / receipt | NOT_STARTED / Not recorded |
-| Fresh-context session / assigned reviewers | Not recorded |
-| Human review state / revision / evidence | NOT_STARTED / Not recorded |
-| Final receipt disposition | NOT_STARTED |
+| Ambiguities / conflicts / map omissions | None. PR #65's remote head intentionally remains the earlier published revision until the complete T02 candidate is ready for review |
+| Self-review state / evidence | SELF_REVIEW_PASSED / [T02 readiness evidence](../../reviews/WB62-P01.md#t02-consolidated-readiness-evidence) |
+| Fresh-context review state / revision / receipt | NOT_APPLICABLE / accepted context unchanged; one consolidated readiness verification is the approved route |
+| Fresh-context session / assigned reviewers | Not applicable until the completed T02 implementation review boundary |
+| Human review state / revision / evidence | APPROVED / plan `d8d7fd707e1ca31f2d413c86479f51fe7864c6d8` / [P02 owner acceptance](../../reviews/WB62-P01.md#p02-owner-acceptance) |
+| Final receipt disposition | APPROVED |
 
 Delivery guide: implement canonical owners first; add schemas/verifier and
 negative tests; reconcile every mapped consumer and diagram; inspect the full
@@ -476,13 +476,13 @@ started.
 | Field | Current value |
 | --- | --- |
 | Plan state | IMPLEMENTING |
-| Current task | None |
-| Next ready task(s) | T02 |
+| Current task | T02 |
+| Next ready task(s) | None |
 | Active branch / PR | `codex/upgrade-37653ee`; [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
 | Last completed task | T01 |
 | Active blocker | None |
-| Last validation | Accepted reset design `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30`; two design reviewers approved; 103 tests and documentation gates passed |
-| Next action | Perform one consolidated T02 readiness/context check, then start implementation |
+| Last validation | T02 context approved at `231b51efc6e2d0d65e39c93ec7a24c6fd1001855`; accepted design/plan current; PR #65 identity, T01 evidence, branch/base, locked environment and runtime verified |
+| Next action | Implement T02 canonical contract, schemas, verifier, mapped consumers and tests; then review complete PR #65 |
 
 ## 10. Evidence and history
 
