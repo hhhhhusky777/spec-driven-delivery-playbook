@@ -37,14 +37,14 @@
 | Current review target ID | workflow |
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P01-R04; exact identity in review record |
+| Self-review candidate revision | WB62-P01-R04 |
 | Self-review evidence | [Routing review](../../reviews/WB62-P01.md) |
-| Fresh-context review state | NOT_STARTED |
+| Fresh-context review state | APPROVED |
 | Fresh-context review session ID | WB62-P01 |
 | Fresh-context assigned reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | Not recorded |
-| Fresh-context reviewed revision | Not recorded |
+| Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
+| Fresh-context reviewed revision | WB62-P01-R04 |
 | Fresh-context review evidence | [Routing review](../../reviews/WB62-P01.md) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | Not recorded |
@@ -54,7 +54,7 @@
 | Implementation mode scope | Not selected |
 | Implementation repository | Not selected |
 | Implementation mode selected at | Not selected |
-| Next action | Complete coherent planning package review, then owner acceptance |
+| Next action | Owner acceptance of exact R04 package |
 | Next action target IDs | workflow |
 | Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; CONTRIBUTING.md; README.md; CHANGELOG.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/workflows; examples; scripts/sdd-lifecycle.mjs; tests |
 | Next action write targets | .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/planning-batch.md; .github/spec-driven-delivery/reviews/WB62-P01.md |

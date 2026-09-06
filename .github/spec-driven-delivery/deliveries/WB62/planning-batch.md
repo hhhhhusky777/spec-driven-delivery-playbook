@@ -27,12 +27,12 @@
 | Self-review state | SELF_REVIEW_PASSED |
 | Self-review candidate revision | WB62-P01-R04 |
 | Self-review evidence | [Review record](../../reviews/WB62-P01.md) |
-| Fresh-context review state | IN_REVIEW |
+| Fresh-context review state | APPROVED |
 | Fresh-context review session ID | WB62-P01 |
 | Fresh-context assigned reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | None |
-| Fresh-context reviewed revision | None |
+| Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
+| Fresh-context reviewed revision | WB62-P01-R04 |
 | Fresh-context review evidence | [Review record](../../reviews/WB62-P01.md) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | None |
@@ -42,8 +42,8 @@
 | No-progress limit | 2 |
 | Transient retry count | 0 |
 | No-progress count | 0 |
-| Unresolved finding IDs | WB62-P01-R1-F03, WB62-P01-R2-F04 |
-| Next action | Remove Verification-evidence precedence overlap, rerun gates, and retained-reviewer R04 |
+| Unresolved finding IDs | None |
+| Next action | Owner review and acceptance of exact R04 planning and issue63 correction package |
 | Action owner | Coordinator |
 | Execution authority | None |
 | Inputs freshness | CURRENT |

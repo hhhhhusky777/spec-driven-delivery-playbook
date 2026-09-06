@@ -35,14 +35,14 @@ measurement or CI pass is claimed yet.
 | Reviewers | Two isolated planning reviewers, then owner |
 | Review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P01-R04; exact identity in review record |
+| Self-review candidate revision | WB62-P01-R04 |
 | Self-review evidence | [Package evidence](../../reviews/WB62-P01.md) |
-| Fresh-context review state | NOT_STARTED |
+| Fresh-context review state | APPROVED |
 | Fresh-context review session ID | WB62-P01 |
 | Fresh-context assigned reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | Not recorded |
-| Fresh-context reviewed revision | Not recorded |
+| Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
+| Fresh-context reviewed revision | WB62-P01-R04 |
 | Fresh-context review evidence | [Package evidence](../../reviews/WB62-P01.md) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | Not recorded |
@@ -265,7 +265,7 @@ not yet produced.
 | Last completed task | None |
 | Active blocker | None |
 | Last validation | Package checks pending |
-| Next action | Complete package checks and two-agent review, then owner acceptance |
+| Next action | Owner acceptance of exact R04 package |
 
 ## 10. Evidence and history
 
