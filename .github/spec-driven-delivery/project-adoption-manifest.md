@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | Await the next owner-supplied need at the neutral EMPTY whiteboard through the verified workflow runtime |
+| Next action | Continue WB62 design for issues 62 and 54; prior WB33 working draft discarded by owner; runtime recovered at unchanged pin |
 
 Adoption type: `real project`
 
@@ -710,3 +710,23 @@ boundary in PR56; the ARCHIVED target state in this candidate becomes authoritat
 only through that PR's merge, and the PR owns its later verification receipt.
 Adoption remains INSTALLED, not ACTIVE; runtime pin and checkout remain unchanged.
 After publication, await the next owner-supplied need.
+
+### WB62 priority and runtime recovery
+
+On 2026-09-06 the owner explicitly requested discarding the current whiteboard,
+recovering runtime and starting issues 62 and 54; other issues will be revisited
+later. The uncommitted WB33 draft was replaced, not archived as a completed
+delivery. A temporary local recovery copy and stale guide were retained; no
+tracked history or unverifiable checkout was deleted.
+
+The old guide referenced an absent temporary checkout. Under this bounded owner
+recovery authority it was moved aside without marking cleanup successful or
+fabricating ownership. Installer regeneration at the unchanged full pin
+`d213114f99dc2186d6f4e50a85fe962de0e1afa9` succeeded; validation reported CURRENT.
+Adoption remains INSTALLED, not ACTIVE. This restores access, not persistence.
+The U84 upgrade branch remains pending and separate, not silently applied.
+
+The [working whiteboard](solution-whiteboard.md) now owns WB62. Current scope is
+owner-requested intake/design for #62/#54 with project checks/reviews retained.
+No implementation or automatic merge authority is inferred. Runtime issues
+33/34/36 remain deferred open work; their former local draft is no longer active.
