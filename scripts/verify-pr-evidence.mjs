@@ -92,29 +92,18 @@ const unsafeExternalParents = new Set([
   "/opt", "/etc", "/Applications", "/Library", "/System", "/Volumes",
 ]);
 const recorded = value => Boolean(normalize(value)) && !/^(?:none|not applicable|n\/a|—|-)$/i.test(normalize(value));
-const exactToken = (value, expected) => {
-  const escaped = expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`(^|[\\s'"\x60=:;,])${escaped}(?=$|[\\s'"\x60;,])`).test(String(value ?? ""));
-};
-
 const ownershipToken = (value, expected) => {
   const escaped = expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   return new RegExp(`(^|[\\s'"\x60=:;,])${escaped}(?:/\\.sdd-owned-checkout)?(?=$|[\\s'"\x60;,])`).test(String(value ?? ""));
 };
 
-const unresolvedOperation = value => /[*?\[\]{}]|\$\{|\$[A-Za-z_]|(?:^|[\\s/])\.\.(?=$|[\\s/])|(?:^|\s)~(?:\/|$)/.test(String(value ?? ""));
-
-function operationTargetsOnlyIdentity(value, expected) {
-  const escaped = expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  let matched = 0;
-  const withoutExpected = String(value ?? "").replace(
-    new RegExp(`(^|[\\s'"\x60=:;,])${escaped}(?=$|[\\s'"\x60;,])`, "g"),
-    (_, prefix) => {
-      matched += 1;
-      return `${prefix}<EXACT_RESET_IDENTITY>`;
-    },
-  );
-  return matched > 0 && !withoutExpected.includes("/");
+function validExternalOperation(value, identity, disposition) {
+  const entries = assignments(value, ["ACTION", "TARGET"]);
+  if (!entries || entries.get("TARGET") !== identity) return false;
+  const allowedActions = disposition === "REMOVE"
+    ? new Set(["DELETE", "CLEANUP"])
+    : new Set(["RESET", "REGENERATE", "CLEANUP_AND_REGENERATE"]);
+  return allowedActions.has(entries.get("ACTION").toUpperCase());
 }
 
 function pathAliases(value) {
@@ -166,8 +155,7 @@ function resetInventory(body) {
         (disposition === "KEEP" ? (!recorded(reuseReason) || normalize(operation).toUpperCase() !== "NONE") :
           (normalize(reuseReason).toUpperCase() !== "NONE" || !recorded(operation))) ||
         (["WORKTREE", "RUNTIME"].includes(kind) && disposition !== "KEEP" &&
-          (!ownershipToken(ownership, identity) || !exactToken(operation, identity) || unresolvedOperation(operation) ||
-            !operationTargetsOnlyIdentity(operation, identity)))) return null;
+          (!ownershipToken(ownership, identity) || !validExternalOperation(operation, identity, disposition)))) return null;
     itemIds.add(itemId.toLowerCase());
     identities.add(identity);
     result[disposition].push(identity);

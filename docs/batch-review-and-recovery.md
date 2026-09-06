@@ -63,8 +63,10 @@ state. Every repository file uses one exact repository-relative path; every bran
 uses one full `refs/heads/...` identity; every worktree/runtime item uses one
 exact absolute path and ownership evidence. A destructive external row binds
 its ownership proof to that exact path or its exact `.sdd-owned-checkout`
-marker, and binds its authorized operation to the exact path without a child or
-traversal suffix, URI, or any other slash-bearing target; repository, temporary,
+marker. Its authorized operation uses only `Action=ACTION; Target=EXACT_PATH`:
+`REMOVE` permits `DELETE` or `CLEANUP`, while `RESET` permits `RESET`,
+`REGENERATE` or `CLEANUP_AND_REGENERATE`. Extra fields, prose, child targets,
+traversal, URIs, or a different target fail closed. Repository, temporary,
 user-home, and system parent
 directories are never valid targets.
 Globs, classes, unresolved paths, unknown effects, or descriptive examples grant no deletion authority. Create

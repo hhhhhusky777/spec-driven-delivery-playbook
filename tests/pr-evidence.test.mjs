@@ -25,7 +25,7 @@ const inventoryBody = `# Reset inventory
 | Item ID | Kind | Exact identity | Ownership evidence | Disposition | Reuse reason | Authorized operation | State |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | delivery | FILE | delivery.md | Git tracked | REMOVE | None | Delete in reset PR | PLANNED |
-| runtime | RUNTIME | /srv/project/runtime | marker=/srv/project/runtime | RESET | None | reset /srv/project/runtime | PLANNED |
+| runtime | RUNTIME | /srv/project/runtime | marker=/srv/project/runtime | RESET | None | Action=RESET; Target=/srv/project/runtime | PLANNED |
 | policy | FILE | policy.md | Git tracked | KEEP | Reused policy | None | PLANNED |`;
 const comment = (id, body, author = "owner") => ({ id, url: `${baseUrl}#issuecomment-${id}`, author, body });
 const review = (id, body, author) => ({ id, url: `${baseUrl}#pullrequestreview-${id}`, author, body });
@@ -247,12 +247,13 @@ test("reset plan is bound to retrievable exact-head inventory content", () => {
     data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("| policy.md | Git tracked | KEEP | Reused policy | None | PLANNED |", "| policy.md | Git tracked | KEEP | None | None | PLANNED |"); },
     data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("| delivery.md | Git tracked | REMOVE | None | Delete in reset PR | PLANNED |", "| delivery.md | Git tracked | REMOVE | None | None | PLANNED |"); },
     data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replaceAll("PLANNED", "UNKNOWN"); },
-    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("reset /srv/project/runtime", "reset /srv/project/runtime/only-child"); },
-    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("reset /srv/project/runtime", "delete /srv/project/runtime/../../etc"); },
-    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("reset /srv/project/runtime", "reset /srv/project/runtime and delete /etc"); },
-    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("reset /srv/project/runtime", "reset /srv/project/runtime and delete //etc"); },
-    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("reset /srv/project/runtime", "reset /srv/project/runtime and delete(/etc)"); },
-    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("reset /srv/project/runtime", `reset /srv/project/runtime and open file:${"/".repeat(3)}etc/passwd`); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("Action=RESET; Target=/srv/project/runtime", "Action=RESET; Target=/srv/project/runtime/only-child"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("Action=RESET; Target=/srv/project/runtime", "Action=DELETE; Target=/srv/project/runtime/../../etc"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("Action=RESET; Target=/srv/project/runtime", "Action=RESET; Target=/srv/project/runtime; Extra=/etc"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("Action=RESET; Target=/srv/project/runtime", "Action=RESET; Target=//etc"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("Action=RESET; Target=/srv/project/runtime", "Action=RESET; Target=delete(/etc)"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("Action=RESET; Target=/srv/project/runtime", `Action=RESET; Target=file:${"/".repeat(3)}etc/passwd`); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("Action=RESET; Target=/srv/project/runtime", "Action=CALL; Target=https:example.com"); },
     data => { data.snapshot.changedFiles.push("unclassified.md"); },
   ]) {
     const data = fixture();
