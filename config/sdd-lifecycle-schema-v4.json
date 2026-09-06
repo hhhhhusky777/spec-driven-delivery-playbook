@@ -1,14 +1,6 @@
 {
-  "schemaVersion": 5,
+  "schemaVersion": 4,
   "artifacts": {
-    "project-adoption-manifest": {
-      "requiredFields": [
-        "Adoption state",
-        "Playbook source repository",
-        "Playbook revision",
-        "Last delivery receipt"
-      ]
-    },
     "implementation-plan": {
       "requiredFields": [
         "Review batch",
@@ -121,11 +113,6 @@
         "Next action target IDs",
         "Allowed write scope",
         "Next action write targets",
-        "PR evidence state",
-        "PR evidence",
-        "Reset inventory",
-        "Reset authority",
-        "Reset state",
         "Stale artifacts",
         "Implementation plan"
       ],
@@ -181,11 +168,7 @@
           "BLOCKED"
         ],
         "COMPLETE": [
-          "RESETTING"
-        ],
-        "RESETTING": [
-          "RESET",
-          "BLOCKED"
+          "ARCHIVED"
         ],
         "RETURN_TO_WHITEBOARD": [
           "AWAITING_HANDOFF",
@@ -201,18 +184,16 @@
           "GATES_READY",
           "DELIVERY_ACTIVE",
           "VALIDATING",
-          "RESETTING",
           "RETURN_TO_WHITEBOARD"
         ],
-        "RESET": []
+        "ARCHIVED": []
       },
       "requiredSections": [
         "artifact-dependencies",
         "blocker-register",
         "delivery-manifest",
         "delivery-state",
-        "implementation-review-ledger",
-        "reset-inventory"
+        "implementation-review-ledger"
       ]
     },
     "review-batch": {

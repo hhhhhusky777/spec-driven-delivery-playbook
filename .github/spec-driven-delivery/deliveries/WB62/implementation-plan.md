@@ -47,7 +47,7 @@ the one-time current-project cutover after PR #65 target verification.
 | Human reviewed revision | d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 |
 | Human review evidence | [P02 owner acceptance](../../reviews/WB62-P01.md#p02-owner-acceptance) |
 | Created | 2026-09-06 Asia/Shanghai |
-| Last updated | 2026-09-06 Asia/Shanghai |
+| Last updated | 2026-09-07 Asia/Shanghai |
 | Primary issue | [Issue 62](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/62) |
 | Concluded whiteboard | [Accepted PR-evidence/reset design](../../solution-whiteboard.md), semantic candidate `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30` |
 | Approved workflow handoff | [Handoff](handoff.md), 4b18100a722aa06baba7643b67e01185108a8635 |
@@ -55,7 +55,7 @@ the one-time current-project cutover after PR #65 target verification.
 | Development policy | [Contributing](../../../../CONTRIBUTING.md) |
 | Test strategy | [Quality policy](../../../../docs/documentation-quality-policy.md) |
 | PR/branch policy | [Contributing](../../../../CONTRIBUTING.md#branches-and-pull-requests) |
-| Delivery implementation task count | 3 total; T01 complete, T02 and T04 planned |
+| Delivery implementation task count | 3 total; T01 complete, T02 verifying, T04 planned |
 | Integration model | Existing PR #65 combines design packages T02/T03 in lifecycle task T02; later exact-SHA reset/upgrade PR is T04 |
 | Feature integration branch | Not applicable |
 | Task PR target | main |
@@ -237,7 +237,7 @@ or lost reusable output.
 | ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Independent merge boundary | PR | Required output IDs | Consumed output versions |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | T01 | DONE | | None | None | CURRENT | COMPLETE | NONE | Bounded agent judgment and essential evidence with U84 publication | FC01, FC02, FC03, FC04, FC05, FC06 | One consistent source/policy/consumer PR | None | None | None |
-| T02 | READY | NEXT | T01 | None | CURRENT | COMPLETE | NONE | PR-owned evidence, reset contract, v5 enforcement and compatibility in PR #65 | FC07, FC08, FC09, FC10, FC11, FC12 | One coherent policy/consumer/checker PR; design packages T02/T03 cannot merge separately | [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) | source | source=9e8f79af50ed3bad2d512301e03943506f7421f0 |
+| T02 | VERIFYING | | T01 | None | CURRENT | COMPLETE | NONE | PR-owned evidence, reset contract, v5 enforcement and compatibility in PR #65 | FC07, FC08, FC09, FC10, FC11, FC12 | One coherent policy/consumer/checker PR; design packages T02/T03 cannot merge separately | [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) | source | source=9e8f79af50ed3bad2d512301e03943506f7421f0 |
 | T04 | PLANNED | | T02 | None | CURRENT | COMPLETE | CLEANUP | Exact-SHA current-project v5 cutover, complete WB62 reset and runtime regeneration | FC08, FC09, FC10, FC11 | One separately reviewed reset/upgrade PR after PR #65 target proof | Not created | pr65-v5 | None |
 
 ## 8. Task specification and context
@@ -298,7 +298,7 @@ grew to 103 passing tests; the external-link advisory was not rerun.
 
 | Field | Value |
 | --- | --- |
-| State | IN_PROGRESS |
+| State | VERIFYING |
 | Depends on | T01 |
 | Data phase | NONE |
 | Source boundary | Canonical documentation, diagrams, skills, installer-generated guidance, whiteboard/handoff/plan/workflow/review/adoption templates, PR template, lifecycle schemas/dispatcher, GitHub-aware evidence verifier/action, package scripts, examples, changelog and corresponding tests identified by the accepted design consumer matrix |
@@ -312,7 +312,7 @@ grew to 103 passing tests; the external-link advisory was not rerun.
 | Implementation mode at PR/merge | Recheck the live workflow before publication, review and merge |
 | Post-merge human review | NOT_APPLICABLE when human review occurs before merge; otherwise not authorized |
 | Self-contained boundary | The whiteboard's T02 contract and T03 enforcement packages merge together so no policy/checker mismatch reaches `main` |
-| Actual change summary | Not recorded |
+| Actual change summary | Added opt-in v5 PR-owned evidence/reset semantics, frozen v4 dispatch, exact reset inventory and fixed-size locator validation, a read-only GitHub evidence/tree verifier, deterministic reviewer body digests, CI/package wiring, mapped source guidance/templates/examples and positive/negative regressions |
 
 Outcome: PR #65 delivers one consistent reusable v5 contract in which GitHub PR
 evidence replaces permanent per-delivery archives and verified closure removes
@@ -370,14 +370,14 @@ then complete two-agent and human review.
 
 Acceptance criteria:
 
-- [ ] One canonical contract owns PR evidence and reset semantics; consumers link
+- [x] One canonical contract owns PR evidence and reset semantics; consumers link
       it without contradictory archive rules.
-- [ ] Exact inventory and ownership validation reject omitted, ambiguous, broad
+- [x] Exact inventory and ownership validation reject omitted, ambiguous, broad
       or unauthorized destructive targets.
-- [ ] v2–v4 regressions pass and v5 selection is explicit.
-- [ ] GitHub-aware tests cover pagination, mutation, missing evidence, body
+- [x] v2–v4 regressions pass and v5 selection is explicit.
+- [x] GitHub-aware tests cover pagination, mutation, missing evidence, body
       digests, checks, merge identity and target proof.
-- [ ] README, diagrams, policies, skills, templates, examples and changelog agree.
+- [x] README, diagrams, policies, skills, templates, examples and changelog agree.
 - [ ] All required checks and exact-head reviews pass on PR #65.
 
 Required tests and evidence: focused schema/evidence/reset/installer fixtures;
@@ -468,8 +468,11 @@ Acceptance criteria:
 Required tests and evidence: exact tree/path/ref/worktree/runtime inventory;
 GitHub evidence verification; v4-to-v5 migration tests; installer cleanup,
 install and validate; lifecycle, documentation and full regression gates;
-post-merge target receipt on PR #65. Implementation and validation record: not
-started.
+post-merge target receipt on PR #65. Local implementation validation: focused
+schema/evidence/reset/publication tests pass 59/59; Markdown, structure,
+lifecycle, Mermaid and whitespace gates pass; the full Node suite passes
+113/113. The external-link advisory was not rerun because no external factual
+claim changed. Exact-head PR checks and implementation reviews remain pending.
 
 ## 9. Live snapshot
 
@@ -481,8 +484,8 @@ started.
 | Active branch / PR | `codex/upgrade-37653ee`; [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
 | Last completed task | T01 |
 | Active blocker | None |
-| Last validation | T02 context approved at `231b51efc6e2d0d65e39c93ec7a24c6fd1001855`; accepted design/plan current; PR #65 identity, T01 evidence, branch/base, locked environment and runtime verified |
-| Next action | Implement T02 canonical contract, schemas, verifier, mapped consumers and tests; then review complete PR #65 |
+| Last validation | T02 implementation complete locally; focused tests 59/59, full Node suite 113/113, Markdown, structure, lifecycle, Mermaid and whitespace gates pass |
+| Next action | Freeze and publish the exact PR #65 head, then run self-review and two implementation reviews |
 
 ## 10. Evidence and history
 

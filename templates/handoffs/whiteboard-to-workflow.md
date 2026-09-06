@@ -19,6 +19,10 @@ whiteboard for discussion history instead of copying the full conversation.
 Replace all `<placeholders>` and remove instructional text from an instantiated
 handoff.
 
+In v5 this is active working state, not permanent delivery evidence. Before its
+eventual reset, publish its normalized requirements, source identity and owner
+decision on the feature PR and verify the merged target and evidence digests.
+
 ## 1. Handoff control
 
 | Field | Value |

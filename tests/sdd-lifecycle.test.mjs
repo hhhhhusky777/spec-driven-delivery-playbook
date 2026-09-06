@@ -40,8 +40,8 @@ function phaseFixture() {
   };
 }
 
-function phaseCheck(f, state = "GATES_READY") {
-  return evaluatePhaseReadiness(f.roles, f.inputs, f.outputs, f.tasks, state, f.roles.map(row => row["Artifact ID"]));
+function phaseCheck(f, state = "GATES_READY", schemaVersion = 4) {
+  return evaluatePhaseReadiness(f.roles, f.inputs, f.outputs, f.tasks, state, f.roles.map(row => row["Artifact ID"]), schemaVersion);
 }
 
 function completeOutput(row) {
@@ -72,6 +72,18 @@ test("v4 validation and closure outputs have distinct completion deadlines", () 
   assert.ok(phaseCheck(f, "ARCHIVED").some(message => message.includes("closure: output is required")));
   completeOutput(f.outputs[2]);
   assert.deepEqual(phaseCheck(f, "ARCHIVED"), []);
+});
+
+test("v5 requires closure output at RESET instead of ARCHIVED", () => {
+  const f = phaseFixture();
+  f.roles[3]["Required gate"] = "RESET";
+  f.tasks[0].State = "DONE";
+  completeOutput(f.outputs[0]);
+  completeOutput(f.outputs[1]);
+  assert.deepEqual(phaseCheck(f, "COMPLETE", 5), []);
+  assert.ok(phaseCheck(f, "RESET", 5).some(message => message.includes("closure: output is required")));
+  completeOutput(f.outputs[2]);
+  assert.deepEqual(phaseCheck(f, "RESET", 5), []);
 });
 
 test("v4 rejects impossible phase graphs and contradictory membership during preparation", () => {
@@ -143,6 +155,63 @@ async function v4Fixture(t) {
   await writeFile(path.join(f.root, "implementation-plan.md"), p);
   return { ...f, w, p, output, table };
 }
+
+async function v5Fixture(t) {
+  const f = await v4Fixture(t);
+  const controls = `| PR evidence state | NOT_STARTED |
+| PR evidence | None |
+| Reset inventory | This workflow |
+| Reset authority | None |
+| Reset state | NOT_STARTED |`;
+  const inventory = `
+
+<!-- sdd-section: reset-inventory -->
+
+| Item ID | Kind | Exact identity | Ownership evidence | Disposition | Reuse reason | Authorized operation | State |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| stable-doc | FILE | docs/stable.md | Git tracked | KEEP | Reusable project documentation | None | PLANNED |`;
+  f.w = f.w.replace("delivery-workflow@4", "delivery-workflow@5")
+    .replace("| Stale artifacts |", `${controls}\n| Stale artifacts |`) + inventory;
+  f.p = f.p.replace("implementation-plan@4", "implementation-plan@5");
+  await writeFile(f.file, f.w);
+  await writeFile(path.join(f.root, "implementation-plan.md"), f.p);
+  return f;
+}
+
+test("v5 dispatch preserves v4 links and validates exact reset inventory", async t => {
+  const f = await v5Fixture(t);
+  assert.deepEqual(await checkSddLifecycleDocument(f.file, f.root, SCHEMAS), []);
+  for (const [needle, replacement, rule] of [
+    ["docs/stable.md", "docs/*.md", "SDD_RESET_IDENTITY"],
+    ["Reusable project documentation", "None", "SDD_RESET_KEEP_REASON"],
+    ["KEEP | Reusable project documentation | None", "REMOVE | None | None", "SDD_RESET_AUTHORITY"],
+    ["FILE | docs/stable.md", "BRANCH | main", "SDD_RESET_BRANCH_IDENTITY"],
+    ["docs/stable.md", ".git/config", "SDD_RESET_FILE_IDENTITY"],
+  ]) {
+    await writeFile(f.file, f.w.replace(needle, replacement));
+    assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(item => item.rule === rule), rule);
+  }
+  await writeFile(f.file, f.w.replace("KEEP | Reusable project documentation | None", "REMOVE | None | Delete reviewed delivery file").replace("docs/stable.md", "scripts/transient.mjs"));
+  assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(item => item.rule === "SDD_RESET_SCOPE"));
+});
+
+test("v5 adoption receipt locator is fixed-size and exact", async t => {
+  const f = await fixture(t, `# Manifest
+
+<!-- sdd-schema: project-adoption-manifest@5 -->
+
+| Field | Value |
+| --- | --- |
+| Adoption state | INSTALLED |
+| Playbook source repository | https://github.com/example/playbook.git |
+| Playbook revision | ${"a".repeat(40)} |
+| Last delivery receipt | feature_pr=https://github.com/example/project/pull/1; feature_merge=${"b".repeat(40)}; reset_pr=https://github.com/example/project/pull/2; reset_head=${"c".repeat(40)}; bundle=sha256:${"d".repeat(64)} |
+`);
+  assert.deepEqual(await checkSddLifecycleDocument(f.file, f.root, SCHEMAS), []);
+  const invalid = (await readFile(f.file, "utf8")).replace("reset_head=", "reset_branch=main; reset_head=");
+  await writeFile(f.file, invalid);
+  assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(item => item.rule === "SDD_LAST_DELIVERY_RECEIPT"));
+});
 
 test("v4 ordinary bootstrap defers an explicitly absent plan only before readiness", async t => {
   const f = await v4Fixture(t);

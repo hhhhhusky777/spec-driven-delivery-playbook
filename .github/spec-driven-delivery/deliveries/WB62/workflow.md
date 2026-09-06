@@ -6,10 +6,10 @@
 
 | Type | Item | Meaning |
 | --- | --- | --- |
-| DECISION | P02 plan acceptance and implementation mode | After two exact-head planning approvals, accept T02/T04 and select a continuation mode explicitly covering them |
+| DECISION | T02 implementation acceptance | After exact-head self-review, two implementation reviews and required checks, approve or request changes on PR #65 |
 | ATTENTION | Delivered behavior | T01 implements the five goals, canonical recovery and Git-first essential evidence; PR #64 is reviewed, merged and target-verified |
 | ATTENTION | Design alignment | Accepted PR-evidence/reset conclusion makes PRs durable evidence, removes all non-reusable delivery state, restores `EMPTY` and regenerates runtime |
-| ATTENTION | Planned work | T02 combines the whiteboard's contract/enforcement packages in PR #65; T04 is the later exact-SHA reset/upgrade PR |
+| ATTENTION | Delivered candidate | T02 combines the whiteboard's contract/enforcement packages in PR #65; local focused/full gates pass and exact-head review is next |
 | ATTENTION | Compatibility | v2–v4 remain supported; this project stays on v4 through PR #65 target proof and cannot preapprove the future v5 cutover candidate |
 | ATTENTION | Deferred / limits | Runtime #33/#34/#36 remain deferred; no measured performance claim or external-link advisory rerun |
 | ATTENTION | Evidence | PR #65 and the later reset/upgrade PR will own durable evidence; working WB62 files remain only until the verified reset |
@@ -32,29 +32,29 @@
 | Trigger identity/run ID | Coordinating agent / WB62-ROUTE-20260906-01 |
 | Selected route | Route 3 — systemic guidance change using existing authorities and FULL plan |
 | Manifest review state | APPROVED |
-| Current artifact/gate | [Accepted WB62 P02 planning amendment](implementation-plan.md) |
-| Current review phase | DESIGN |
-| Current review target ID | plan |
-| Current artifact review state | APPROVED |
-| Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 |
-| Self-review evidence | [Planning review](../../reviews/WB62-P01.md#p02-pr-evidence-reset-amendment) |
-| Fresh-context review state | APPROVED |
-| Fresh-context review session ID | WB62-P02 |
-| Fresh-context assigned reviewers | wb62_planning_r1, wb62_planning_r2 |
+| Current artifact/gate | [T02 PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
+| Current review phase | IMPLEMENTATION |
+| Current review target ID | T02 |
+| Current artifact review state | NOT_STARTED |
+| Self-review state | NOT_STARTED |
+| Self-review candidate revision | Not recorded |
+| Self-review evidence | Not recorded; publish on PR #65 after the exact head is frozen |
+| Fresh-context review state | NOT_STARTED |
+| Fresh-context review session ID | Not recorded |
+| Fresh-context assigned reviewers | Not recorded |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
-| Fresh-context reviewed revision | d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 |
-| Fresh-context review evidence | [Planning review](../../reviews/WB62-P01.md#p02-pr-evidence-reset-amendment) |
-| Human review state | APPROVED |
-| Human reviewed revision | d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 |
-| Human review evidence | [P02 owner acceptance](../../reviews/WB62-P01.md#p02-owner-acceptance) |
+| Fresh-context approved reviewers | Not recorded |
+| Fresh-context reviewed revision | Not recorded |
+| Fresh-context review evidence | Not recorded |
+| Human review state | NOT_STARTED |
+| Human reviewed revision | Not recorded |
+| Human review evidence | Not recorded |
 | Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |
 | Implementation mode authority | [P02 owner acceptance](../../reviews/WB62-P01.md#p02-owner-acceptance) |
 | Implementation mode scope | T02, T04 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-06T23:54:35+08:00 |
-| Next action | Implement T02 and run focused and full gates; publish the complete candidate to PR #65 for review |
+| Next action | Freeze and publish the complete T02 candidate to PR #65, then run exact-head self-review and two implementation reviews |
 | Next action target IDs | T02 |
 | Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/upgrades/U64.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; .github/pull_request_template.md; .github/workflows/documentation-quality.yml; CONTRIBUTING.md; README.md; CHANGELOG.md; package.json; config; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/README.md; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/handoffs; templates/policies; templates/testing; templates/workflows; examples; scripts/sdd-lifecycle.mjs; scripts/review-publication.mjs; scripts/verify-pr-evidence.mjs; tests |
 | Next action write targets | CONTRIBUTING.md; README.md; CHANGELOG.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/README.md; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/handoffs; templates/policies; templates/testing; templates/workflows; .github/pull_request_template.md; .github/workflows/documentation-quality.yml; package.json; config; examples; scripts/sdd-lifecycle.mjs; scripts/review-publication.mjs; scripts/verify-pr-evidence.mjs; tests; .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
@@ -78,7 +78,7 @@
 | Semantic decision introduced | YES |
 | Automation exception | None |
 | Automation audit record | Not applicable |
-| Last routed | 2026-09-06 Asia/Shanghai |
+| Last routed | 2026-09-07 Asia/Shanghai |
 
 The review ledger records exact candidate self-review and subsequent receipts
 outside frozen candidate bytes. CURRENT means reconciled, not approved. Earlier
@@ -126,8 +126,8 @@ reset/upgrade and does not require either future output before its producer.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 0 | whiteboard | Concluded reset design | UPDATE_EXISTING | Owner accepted PR-owned evidence and complete post-delivery reset | [Working conclusion](../../solution-whiteboard.md) | Owner | Two reviewers then owner | APPROVED / `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30` |
 | 1 | handoff | Original normalized input | REUSE | Historical input remains valid for T01; accepted amendment directly updates active WB62 | [Handoff](handoff.md) | Owner | Owner | APPROVED / WB62-H01 |
-| 2 | workflow | Live routing | UPDATE_EXISTING | Return from validation for accepted new implementation work | Pinned workflows/sdd-delivery-workflow.md | Coordinator | P02 reviewers then owner | IN_REVIEW / WB62-P02 |
-| 3 | plan | FULL P02 amendment | UPDATE_EXISTING | T02 and T04 complete specifications plus source impact audit | Pinned delivery/implementation-plan.md | Coordinator | Two reviewers then owner | IN_REVIEW / WB62-P02 |
+| 2 | workflow | Live routing | UPDATE_EXISTING | Return from validation for accepted new implementation work | Pinned workflows/sdd-delivery-workflow.md | Coordinator | P02 reviewers then owner | APPROVED / WB62-P02 |
+| 3 | plan | FULL P02 amendment | UPDATE_EXISTING | T02 and T04 complete specifications plus source impact audit | Pinned delivery/implementation-plan.md | Coordinator | Two reviewers then owner | APPROVED / WB62-P02 |
 | 4 | source | Existing authority and consumer source changes | UPDATE_EXISTING | T01 output implementing C01–C06; not a planning prerequisite | Accepted whiteboard source inventory | Implementer | Two reviewers then owner | APPROVED / PR64 |
 | 5 | specialized | Separate specialized-policy file | SKIP | Existing quality/governance owners cover this guidance change | Template governance | Maintainer | Routing reviewers | JUSTIFIED / WB62-P01 |
 | 6 | adr | Separate ADR | SKIP | No new significant architecture or service | Accepted handoff | Maintainer | Routing reviewers | JUSTIFIED / WB62-P01 |
@@ -161,7 +161,7 @@ matrix and complete remove/reset/keep inventory define their bounded scope.
 | Artifact ID | State | Current version | Verified version | Change impact | Freshness | Review state | Review evidence | Blocked by |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | source | COMPLETE | 9e8f79af50ed3bad2d512301e03943506f7421f0 | 9e8f79af50ed3bad2d512301e03943506f7421f0 | CONTROL_ONLY | CURRENT | APPROVED | [PR64 reviews](../../reviews/WB62-P01.md#r08-acceptance-and-merge-reconciliation) | None |
-| pr65-v5 | NOT_STARTED | None | None | MATERIAL | CURRENT | NOT_STARTED | [T02 specification](implementation-plan.md#t02--pr-owned-evidence-reset-contract-and-v5-enforcement) | None |
+| pr65-v5 | IN_PROGRESS | None | None | MATERIAL | CURRENT | NOT_STARTED | [T02 specification](implementation-plan.md#t02--pr-owned-evidence-reset-contract-and-v5-enforcement) | None |
 | reset-v5 | NOT_STARTED | None | None | MATERIAL | CURRENT | NOT_STARTED | [T04 specification](implementation-plan.md#t04--exact-sha-wb62-reset-and-runtime-cutover) | None |
 | validation | NOT_STARTED | None | None | MATERIAL | CURRENT | NOT_STARTED | Versioned PR target receipts | None |
 
@@ -183,8 +183,9 @@ matrix and complete remove/reset/keep inventory define their bounded scope.
 T01 and `upgrade-input` retain historical identities. T02 and T04 register the
 current task specifications for readiness/review scope; their execution order
 and output bindings remain in the plan. The new whiteboard/workflow/plan chain
-is current but awaits P02 approval. Output obligations stay `NOT_STARTED`; no
-future PR, merge, target receipt or reset value is used as a prerequisite.
+is approved and current. T02 is in progress; T04 remains gated on the reviewed
+and target-verified PR #65 output. No future PR, merge, target receipt or reset
+value is used as a prerequisite.
 
 ### Blockers
 
@@ -212,9 +213,9 @@ owns the correction and unblock evidence; the live blocker register is empty.
 | T04 | Exact-SHA WB62 reset/upgrade PR | EXPLICIT_REVIEW | PR #65 target receipt and accepted P02 | Complete inventory/ownership, migration/runtime checks, two reviewers and fresh owner cutover acceptance | Not applicable | YES | NOT_STARTED |
 | V02 | Final target/reset validation | EXPLICIT_REVIEW | T02 and T04 complete | PR target receipts, `EMPTY`, runtime `CURRENT`, preserved adoption/reusable output | Not applicable | YES | NOT_STARTED |
 
-W01, P01 and T01 remain complete history. D02 is accepted. P02 is the current
-review boundary. No T02/T04 work starts until P02 is accepted and the owner
-selects a live implementation mode covering those exact task IDs.
+W01, P01 and T01 remain complete history. D02 and P02 are accepted. T02 has
+reached its implementation review boundary; T04 remains gated on PR #65 merge
+and target evidence.
 
 ### Artifact reviews and automatic work
 
@@ -254,16 +255,16 @@ unknown destructive identity or unresolved delivery-owned item prevents closure.
 | Field | Current value |
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
-| Current artifact/task | T02 implementation in progress |
-| Current artifact review | NOT_STARTED; completed PR #65 candidate not yet published |
+| Current artifact/task | T02 complete locally; exact-head review pending |
+| Current artifact review | NOT_STARTED; complete PR #65 candidate not yet published |
 | Last approved artifact | P02 plan `d8d7fd707e1ca31f2d413c86479f51fe7864c6d8` |
-| Next ready action | Implement T02, run focused/full gates and review complete PR #65 |
+| Next ready action | Publish the exact T02 head, run self-review and start the two implementation reviewers |
 | Active blockers | None |
 | Stale artifacts | None |
 | Validation complete | T01/PR64 integration and current v4 runtime verified; D02 design accepted |
 | Validation remaining | T02 PR #65 implementation/review/merge/target receipt; T04 exact-SHA reset/upgrade; final reset/runtime proof |
 | Branch/PR | `codex/upgrade-37653ee`; T02 [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) open; T04 PR not created |
-| Last updated | 2026-09-06 Asia/Shanghai |
+| Last updated | 2026-09-07 Asia/Shanghai |
 
 T01 remains verified. The rejected archive closure is withdrawn. Completion now
 requires reviewed T02/T04, PR-owned evidence, complete exact cleanup inventory,
@@ -281,3 +282,4 @@ amendment; no artifact selection or execution approval inferred.
 | --- | --- | --- | --- | --- |
 | 2026-09-06 | First manual routing | Accepted H01 candidate | ROUTING to MANIFEST_IN_REVIEW; FULL plan proposed | Owner handoff acceptance; routing approval pending |
 | 2026-09-06 | Validation returned to delivery | Accepted reset design `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30` | VALIDATING to DELIVERY_ACTIVE; P02 amendment prepared; no task started | Owner design acceptance; plan and implementation authority pending |
+| 2026-09-07 | T02 local implementation complete | Accepted P02 and `HUMAN_REVIEW_BEFORE_MERGE` scope | v5 contract, verifier, schema dispatch, mapped consumers and tests ready for exact-head review; 113 tests and all local blocking gates pass | Existing T02 implementation authority; no merge authority inferred |

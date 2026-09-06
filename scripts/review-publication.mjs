@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
 
 const hash = value => createHash("sha256").update(JSON.stringify(value)).digest("hex");
+const bodyDigest = value => `sha256:${createHash("sha256").update(value).digest("hex")}`;
 const object = value => value !== null && typeof value === "object" && !Array.isArray(value);
 const text = value => typeof value === "string" && value.trim().length > 0;
 const id = value => typeof value === "string" && /^[A-Za-z0-9][A-Za-z0-9_-]*$/.test(value);
@@ -46,7 +47,7 @@ function validate(input) {
     for (const r of Array.isArray(l.reviews) ? l.reviews : []) require(object(r) && positive(r.id) && text(r.publisher) && sha(r.head) && typeof r.body === "string" && text(r.event), "OBSERVED_REVIEW");
     for (const c of Array.isArray(l.comments) ? l.comments : []) require(object(c) && positive(c.id) && positive(c.reviewId) && text(c.publisher) && sha(c.head) && typeof c.body === "string" && anchor(c), "OBSERVED_COMMENT");
   }
-  require(input.checkpoint === null || (object(input.checkpoint) && input.checkpoint.schemaVersion === 1 && typeof input.checkpoint.candidate === "string" && Array.isArray(input.checkpoint.publications) && input.checkpoint.publications.every(p => object(p) && text(p.actionId) && text(p.digest) && ["PLANNED", "VERIFIED"].includes(p.state))), "CHECKPOINT_SCHEMA");
+  require(input.checkpoint === null || (object(input.checkpoint) && input.checkpoint.schemaVersion === 1 && typeof input.checkpoint.candidate === "string" && Array.isArray(input.checkpoint.publications) && input.checkpoint.publications.every(p => object(p) && text(p.actionId) && text(p.digest) && (p.bodyDigest === undefined || /^sha256:[a-f0-9]{64}$/.test(p.bodyDigest)) && ["PLANNED", "VERIFIED"].includes(p.state))), "CHECKPOINT_SCHEMA");
   return errors;
 }
 
@@ -93,8 +94,9 @@ export function evaluatePublication(input) {
     const body = `${marker}\nAgent-generated review; not a formal GitHub approval.\nSession: ${input.session}; round: ${input.round}; seat: ${seat.seat}; agent: ${seat.agent}\nHead: ${input.expectedHead}\nDisposition: ${receipt.disposition}\n${receipt.summary}${summaries.length ? `\n\n${summaries.join("\n\n")}` : ""}`;
     const payload = { commit_id: input.expectedHead, event: "COMMENT", body, comments };
     const digest = hash(payload);
+    const publishedBodyDigest = bodyDigest(body);
     const prior = input.checkpoint?.publications.filter(p => p.actionId === actionId) || [];
-    if (prior.length > 1 || prior.some(p => p.digest !== digest)) fail("CHECKPOINT_CONFLICT", seat.seat);
+    if (prior.length > 1 || prior.some(p => p.digest !== digest || (p.bodyDigest && p.bodyDigest !== publishedBodyDigest))) fail("CHECKPOINT_CONFLICT", seat.seat);
     const observed = l.reviews.filter(r => r.body.includes(marker));
     if (l.comments.some(c => c.body.includes(marker) && !observed.some(r => r.id === c.reviewId))) fail("ORPHAN_PUBLICATION", seat.seat);
     if (observed.length > 1) fail("DUPLICATE_PUBLICATION", seat.seat);
@@ -114,9 +116,9 @@ export function evaluatePublication(input) {
       }
     } else if (!observed.length) {
       if (input.operation === "RECONCILE" || prior.length) fail("PUBLICATION_MISSING_OR_UNCERTAIN", seat.seat);
-      else requests.push({ actionId, payload });
+      else requests.push({ actionId, bodyDigest: publishedBodyDigest, payload });
     }
-    publications.push({ actionId, digest, state: verified ? "VERIFIED" : "PLANNED", ...(verified ? { reviewId, commentIds } : {}) });
+    publications.push({ actionId, digest, bodyDigest: publishedBodyDigest, state: verified ? "VERIFIED" : "PLANNED", ...(verified ? { reviewId, commentIds } : {}) });
   }
   if (input.checkpoint?.publications.some(p => !publications.some(x => x.actionId === p.actionId))) fail("CHECKPOINT_UNKNOWN_ACTION");
   if (requests.length && publications.some(p => p.state === "VERIFIED")) fail("PARTIAL_BATCH");

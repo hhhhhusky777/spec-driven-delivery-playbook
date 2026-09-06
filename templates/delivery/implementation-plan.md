@@ -17,7 +17,7 @@ task specification; do not infer a task's execution state from input freshness.
 See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
 requirements. This route takes effect only through reviewed project adoption.
 
-<!-- sdd-schema: implementation-plan@4; mode: SELECT -->
+<!-- sdd-schema: implementation-plan@5; mode: SELECT -->
 
 Use this template for a non-trivial feature, refactor, migration, or reliability
 change. The completed document is the plan of record: it defines intended
@@ -88,20 +88,20 @@ section.
 | Development policy | `<canonical path/URL>` |
 | Test strategy | `<canonical path/URL>` |
 | PR/branch policy | `<canonical path/URL>` |
-| Delivery implementation task count | `<integer; exclude discovery, planning, validation-only, and archive-only rows>` |
+| Delivery implementation task count | `<integer; exclude discovery, planning, validation-only, and reset/archive-only rows>` |
 | Integration model | `<single-task direct / multi-task feature integration>` |
 | Feature integration branch | `<branch or Not applicable>` |
 | Task PR target | `<protected branch / feature integration branch>` |
 | Final PR target | `<protected branch>` |
 | Protected-branch synchronization | `<cadence/trigger or Not applicable>` |
 | Branch / PR | `<branch and canonical PR URL, or Not opened>` |
-| Archived record | `Not archived` |
+| Durable evidence | `Feature PR; not yet published` |
 
 One implementation and merge unit uses a task PR to the protected branch. Two
 or more use a delivery-specific feature integration branch: every task starts
 from and returns to that branch, and only the complete, validated feature uses
 a final reviewed PR to the protected branch. Discovery, planning,
-validation-only, and archive-only ledger rows do not count as implementation
+validation-only, and reset/archive-only ledger rows do not count as implementation
 units.
 
 ### 0.1 Plan lifecycle
@@ -149,7 +149,8 @@ or manifest, return to that upstream owner rather than repairing only this plan.
 `GENERATE_COMPACT` for one coherent low-risk production task. It still retains
 document control/review, governing inputs, problem/scope, every applicable
 system contract and risk, the single task's DoR/DOD and execution record, live
-state, evidence, validation, retrospective, and archive handoff. Mark an
+state, evidence, validation, retrospective, and installed-schema closure
+handoff. Mark an
 inapplicable section with a reason rather than hiding the boundary.
 
 `FULL` is required for multi-task, systemic, policy-gap, high-risk, or otherwise
@@ -746,20 +747,24 @@ Route improvements through the development policy: immediate plan correction,
 proposed policy/template change, tooling/test task, durable issue, or no action.
 Do not silently mutate an active policy from this record.
 
-### 11.3 Archive handoff
+### 11.3 PR evidence and reset handoff
 
-Apply the active development policy's archive rules:
+Apply the active development policy's installed-schema closure rules:
 
 1. Reconcile every contract, decision, task, PR, test result, failure,
    exception, retrospective action, and deferred item.
-2. Record actual results without deleting original estimates or accepted
-   history.
-3. Mark the plan `COMPLETE` and change its title from `Implementation Plan` to
-   `Delivery Record`.
-4. Archive at `<policy-defined path>` and link the concluded whiteboard.
-5. Repair inbound references or preserve a redirect when required.
-6. Treat the record as dated evidence; later work starts a new whiteboard and
-   plan that link back rather than resuming this ledger.
+2. Publish the concise actual design/task/outcome map, exact candidate,
+   self-review, two review receipts and digests, checks, limits, requested owner
+   authority, and complete reset inventory in `sdd-pr-review/v1`.
+3. After the owner acts, publish `sdd-pr-acceptance/v1`; after merge, verify the
+   target and publish `sdd-target-receipt/v1`.
+4. Preserve this working plan through target verification. Remove it only in
+   the bounded reset PR when the inventory classifies it as delivery-only and
+   remote evidence remains retrievable with matching digests.
+5. Reset the stable whiteboard and owned machine runtime; preserve adoption and
+   reusable output. Update only the manifest's fixed-size delivery locator.
+6. Existing v2–v4 instances follow their adopted archive handoff until an
+   explicitly reviewed upgrade.
 
 ## 12. External methodology references
 

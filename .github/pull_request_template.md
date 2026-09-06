@@ -31,6 +31,35 @@ For changes to this repository, apply [the project branch and review policy](../
 - Required reviewers or specialties:
 - Recommended reading order and evidence:
 
+## Versioned PR evidence (v5)
+
+Before owner acceptance, publish one PR comment beginning
+`<!-- sdd-pr-review/v1 -->` with this exact two-column field set. Populate
+actual values; do not leave the instructional table in the published comment.
+
+| Field | Value |
+| --- | --- |
+| Repository and target | |
+| Design | |
+| Tasks | |
+| Candidate | |
+| Self-review | |
+| Independent review | |
+| Findings | |
+| Requested owner authority | `PENDING` |
+| Checks | |
+| Limits and follow-ups | |
+| Reset plan | |
+
+After the owner acts, publish `<!-- sdd-pr-acceptance/v1 -->` with `Candidate`,
+`Owner decision`, `Merge/reset scope`, `Owner comment`, `Owner comment body digest`,
+and `Review evidence digest`. After merge, publish
+`<!-- sdd-target-receipt/v1 -->` with `Merge identity`, `Target proof`,
+`Check proof`, `Evidence availability`, `Runtime/project proof`,
+`Reset authorization`, and `Exceptions/follow-ups`. Run the read-only
+GitHub-aware evidence gate with the exact head, base, and target before creating
+the reset PR.
+
 ## Contract-to-change map and author annotations
 
 | Material change / PR annotation | Governing statement | Why / expected effect | Evidence | Risk / non-scope |

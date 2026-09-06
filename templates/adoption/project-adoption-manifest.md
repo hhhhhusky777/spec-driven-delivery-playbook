@@ -1,5 +1,7 @@
 # Project Adoption Manifest — `<project>`
 
+<!-- sdd-schema: project-adoption-manifest@5 -->
+
 Human handoffs must include the
 [phase-specific review brief](../../docs/documentation-quality-policy.md#26-attention-and-reviewability-gate).
 Surface discovered contracts, selected policies, gaps, owners and activation status.
@@ -60,11 +62,18 @@ evidence; it does not replace the project authorities to which it links.
 | Automation exception | `<ID/details or None>` |
 | Current blocker | `None` |
 | Next action | `<one concrete action>` |
+| Last delivery receipt | `None` |
 
 Set `State before block` to the current non-blocked adoption state before
 entering `BLOCKED`; reset it to `None` after returning to a safe active state.
 The installer uses this field only to retain the correct adoption or workflow
 skill while blocked.
+
+`Last delivery receipt` remains one fixed-size locator, not a delivery archive.
+After a verified v5 reset, replace `None` or the previous value with
+`feature_pr=<URL>; feature_merge=<SHA>; reset_pr=<URL>; reset_head=<SHA>; bundle=sha256:<digest>`.
+Git history preserves prior values. Never update it before the referenced
+feature evidence and reviewed reset head exist.
 
 Review defaults to `EXPLICIT_REVIEW`. `AUTO_CONTINUE` and
 `REVIEW_ON_EXCEPTION` are valid only when a reviewed project authority
@@ -135,7 +144,7 @@ evidence is unavailable.
 | CI/release/operations | `<links or None>` | `<value>` | `<role>` | `<level>` |
 | Security/privacy/compliance | `<links or None>` | `<value>` | `<role>` | `<level>` |
 | Data/concurrency/performance | `<links or None>` | `<value>` | `<role>` | `<level>` |
-| Decision/history/archive | `<links or None>` | `<value>` | `<role>` | `<level>` |
+| Decision/history/PR evidence | `<links or None>` | `<value>` | `<role>` | `<level>` |
 
 Unknowns and verification owners:
 
@@ -156,7 +165,7 @@ Use only `REUSE`, `UPDATE_EXISTING`, `GENERATE`, `SKIP`, `DEFER`, or `BLOCKED`.
 | `4` | Specialized-policy registry | `<decision>` | `<link/path>` | `<reason>` | `<IDs>` | `<review>` |
 | `5` | Per-need delivery artifacts | `<decision>` | `<link/path>` | `<reason>` | `<IDs>` | `<review>` |
 | `6` | Documentation/test/PR enforcement | `<decision>` | `<link/path>` | `<reason>` | `<IDs>` | `<review>` |
-| `7` | Adoption archive and updates | `<decision>` | `<link/path>` | `<reason>` | `<IDs>` | `<review>` |
+| `7` | Adoption retention, delivery reset and updates | `<decision>` | `<link/path>` | `<reason>` | `<IDs>` | `<review>` |
 | `8` | Human/agent entry-point adapters | `<decision>` | `<link/path>` | `<reason>` | `<IDs>` | `<review>` |
 
 ### Policy conformance audit
@@ -180,7 +189,7 @@ documents.
 | --- | --- | --- | --- | --- | --- | --- |
 | Development and delivery / `<ID>` | `<boundaries, tasks, lifecycle, readiness, defects, policy gaps>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
 | Testing and quality / `<ID>` | `<levels, coverage, environments, triage, evidence, exceptions>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
-| PR and branch / `<ID>` | `<models, targets, naming, reviews/checks, merge, closure, archive>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
+| PR and branch / `<ID>` | `<models, targets, naming, reviews/checks, merge, evidence, closure/reset>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
 | Documentation and API contracts / `<ID>` | `<authority, precedence, consumers, compatibility, freshness, validation>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
 | Security, data, concurrency, and performance / `<ID>` | `<invariants, risks, migrations, races, capacity, observability, enforcement>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
 | Release, operations, and incident response / `<ID>` | `<environments, rollout, rollback, recovery, escalation, reconciliation>` | `<YES / NO + reason>` | `<section/link or None>` | `<gap / control / exception ID>` | `<REUSE / UPDATE_EXISTING / SKIP / BLOCKED>` | `<review>` |
@@ -189,7 +198,7 @@ documents.
 For PR and branch policy, include protected target, single-task and multi-task
 branch models, the implementation-unit counting rule, naming, allowed source/target
 relationships, task and final PR targets, synchronization and closure,
-required validation/review, and merge-before-reconciliation-before-archive
+required validation/review, and merge-before-target-verification-before-reset
 ordering. A `REUSE` disposition is invalid until every applicable row has
 evidence or a reviewed exception.
 

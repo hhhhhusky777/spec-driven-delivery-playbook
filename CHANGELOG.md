@@ -9,6 +9,16 @@ adopted.
 
 ## Unreleased — updated 2026-09-06
 
+- Add opt-in lifecycle v5 with GitHub PR-owned delivery evidence and exact
+  post-target reset. Versioned review, owner-acceptance and target receipts bind
+  exact revisions, URLs and body digests; a read-only GitHub verifier checks
+  pagination, reviews, comments, required checks, merge identity and evidence
+  availability. The local lifecycle checker validates fixed-size manifest
+  locators and exact `REMOVE`/`RESET`/`KEEP` inventories while preserving frozen
+  v2–v4 schemas. Reset removes delivery-only state, restores `EMPTY`, regenerates
+  owned runtime and keeps adoption plus reusable output. Existing pins and
+  historical archives do not migrate automatically.
+
 - Define five goals in the quality policy and integrate recoverability,
   isolation and project/playbook gap triage into existing error handling.
   Skills link to canonical guidance; authorized internal steps and draft PR

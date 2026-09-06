@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | Implement T02 under owner-selected `HUMAN_REVIEW_BEFORE_MERGE`, then review the complete PR #65 candidate |
+| Next action | Publish the complete T02 candidate to PR #65, then run exact-head self-review and two implementation reviews before owner merge review |
 
 Adoption type: `real project`
 

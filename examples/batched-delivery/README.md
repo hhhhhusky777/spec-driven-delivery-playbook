@@ -16,8 +16,8 @@ must come from the actual repository, identities and revisions.
 | Implementation | Complete related changes, tests and self-review; review actual PR once | Two isolated retained seats, exact-head comments, owner merge approval; no self-approval |
 | Corrections | Combine findings, fix affected scope and return revised head to both seats | Old findings preserved; delta review may be focused but exact-head evidence refreshed |
 | Validation | Verify completed tasks and integration with actual checks | No future task repairs an intentionally failing merge; all human follow-ups resolved |
-| Closure | Review validation, record, retrospective and archive plan together | Owner accepts actual evidence and exact archive targets |
-| Archive/cleanup | Copy immutable conclusion, verify bidirectional links, reset EMPTY, then authorized cleanup | Stop dependent operations on failure; never erase unowned or unmerged work |
+| Closure | Publish versioned PR evidence and the exact reset inventory | Owner accepts actual outcome, candidate, evidence and bounded reset scope |
+| Reset/cleanup | After merge, verify target and evidence digests; merge bounded reset, restore EMPTY and regenerate runtime | Stop dependent operations on failure; preserve adoption, reusable output and unowned work |
 | Upgrade | Between tasks, prepare assessed migration while retaining old pin | Two-agent review, owner acceptance, migration tests and explicit cutover; verified rollback available |
 | Urgent fix | Escalate immediately under emergency policy | Minimum checks, owner authority, rollback and dated follow-up retained |
 
@@ -52,13 +52,14 @@ not additional rules. The agent selects a safe response within the
 
 ## Essential evidence example
 
-A simulated review uses retained base/candidate commits and a concise record of
-the findings, resolutions and acceptance; it does not add another copy of every
-changed file for each round. Before acceptance, retrieving the exact candidate
-must succeed. A missing Git object blocks using its hash as evidence. Unique
-failure logs remain under the applicable retention policy; a checker-consumed
-local snapshot remains because that interface still needs its bytes. None of
-these examples authorizes deletion of existing records.
+A simulated v5 review publishes `sdd-pr-review/v1`, owner-bound
+`sdd-pr-acceptance/v1`, and post-merge `sdd-target-receipt/v1` on the feature
+PR. Their exact revisions, URLs and fetched-body digests replace duplicate
+per-feature repository records. Before reset, the read-only GitHub-aware gate
+must retrieve and validate them. The reset inventory names every file, full
+branch ref, worktree/runtime path, ownership proof and disposition. A missing
+Git object or remote evidence body preserves working state; none of these
+examples authorizes deletion of unenumerated targets.
 
 ## Human brief example
 
@@ -129,14 +130,15 @@ when instantiating real documents.
 | Result changes | Current bytes no longer match verified identity | Block affected consumption and revalidate; retain historical receipts |
 | Enter VALIDATING | Implementation outputs complete/current/approved | Validation report may still be NOT_STARTED |
 | Enter COMPLETE | Validation outputs complete/current/approved plus ordinary acceptance | Closure record may still be NOT_STARTED |
-| Enter ARCHIVED | Closure outputs complete/current/approved plus existing archive controls | Archive only after actual acceptance |
+| Enter ARCHIVED | Closure outputs complete/current/approved plus existing archive controls | Legacy v4 only: archive after actual acceptance |
 | Invalid dependency | Validation report depends on later closure record, even without a cycle | Reject during preparation |
 | Real input stale | Design changes materially before T1 | Existing prerequisite gate still blocks T1 |
 
 The same pattern applies to a service's implementation result and a
 documentation project's published-reference result. Different artifact names
-do not change timing or authority. No runtime migration, issue closure, merge
-or deletion follows from this simulated example.
+do not change timing or authority. This table demonstrates v4 compatibility;
+v5 closes through verified PR evidence and `RESET`, not `ARCHIVED`. No runtime
+migration, issue closure, merge, or deletion follows from this example.
 
 ## Simulated exception triage
 

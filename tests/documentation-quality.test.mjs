@@ -17,7 +17,7 @@ test("human gate brief remains mandatory and linked from phase consumers", async
   }
 });
 
-test("one closure review owns a fail-closed post-merge control receipt", async () => {
+test("v5 reset and v4 control receipts stay fail-closed", async () => {
   const files = [
     "docs/batch-review-and-recovery.md",
     "CONTRIBUTING.md",
@@ -29,7 +29,11 @@ test("one closure review owns a fail-closed post-merge control receipt", async (
   const bundle = new Map(await Promise.all(files.map(async (file) => [file, await readFile(path.join(REPOSITORY_ROOT, file), "utf8")])));
   const canonical = bundle.get("docs/batch-review-and-recovery.md");
   for (const value of [
-    "One closure review and a bounded post-merge receipt",
+    "Version 5 PR evidence and delivery reset",
+    "sdd-pr-review/v1",
+    "sdd-pr-acceptance/v1",
+    "sdd-target-receipt/v1",
+    "Version 4 closure review and bounded post-merge receipt",
     "PREAUTHORIZED_CONTROL_RECEIPT",
     "without another two-agent or human review",
     "cleanup without authority",
@@ -37,24 +41,23 @@ test("one closure review owns a fail-closed post-merge control receipt", async (
     "EXPLICIT_REVIEW",
   ]) assert.ok(canonical.includes(value), value);
   for (const file of files.slice(1)) {
-    assert.match(bundle.get(file), /post-merge|control receipt/i, file);
+    assert.match(bundle.get(file), /post-merge|control receipt|PR evidence|reset/i, file);
   }
   const workflowFields = parseMarkdownTables(bundle.get("templates/workflows/sdd-delivery-workflow.md"))
     .find((table) => table.headers.includes("Field"));
   for (const field of [
-    "Post-merge control mode",
-    "Post-merge control authority",
-    "Post-merge control source revision",
-    "Post-merge control PR",
-    "Post-merge control allowed paths",
-    "Post-merge control changed paths",
-    "Post-merge control allowed fields",
-    "Post-merge control changed fields",
-    "Post-merge control required gates",
-    "Post-merge control evidence owner",
-    "Post-merge cleanup targets",
-    "Post-merge cleanup authority",
+    "PR evidence state",
+    "PR evidence",
+    "Reset inventory",
+    "Reset authority",
+    "Reset state",
   ]) assert.ok(workflowFields?.rows.some((row) => row.Field === field), field);
+  const action = await readFile(path.join(REPOSITORY_ROOT, ".github/workflows/documentation-quality.yml"), "utf8");
+  const packageConfig = await readFile(path.join(REPOSITORY_ROOT, "package.json"), "utf8");
+  for (const value of ["pull-requests: read", "checks: read", "evidence_base:", "evidence_target:", "--base", "--target"]) {
+    assert.ok(action.includes(value), value);
+  }
+  assert.match(packageConfig, /"sdd:evidence":\s*"node scripts\/verify-pr-evidence\.mjs"/);
 });
 
 import {
@@ -646,7 +649,7 @@ test("project adoption proves policy conformance before reuse", async () => {
   assert.match(runbook, /Release, operations, and incident response/);
   assert.match(runbook, /Specialized policies/);
   assert.match(runbook, /task PR targets and final integration PR target/i);
-  assert.match(runbook, /merge.*archive/i);
+  assert.match(runbook, /merge.*(?:archive|reset)/i);
   assert.match(
     runbook,
     /must update that canonical artifact instead of creating a\s+duplicate/i,
@@ -943,12 +946,12 @@ test("installer guide and repository skills preserve the adoption boundary", asy
   assert.match(workflowSkill, /project-owned solution whiteboard/);
   assert.match(workflowSkill, /\*\*`EMPTY`:\*\*/);
   assert.match(workflowSkill, /\*\*`CONCLUDED`:\*\*/);
-  assert.match(workflowSkill, /\*\*`ARCHIVED`:\*\*/);
+  assert.match(workflowSkill, /PR evidence and reset are verified/);
   assert.match(workflowSkill, /Do not\s+overwrite it or admit a second need/);
   assert.match(whiteboard, /`EMPTY`: installation is ready/);
   assert.match(whiteboard, /Only one need may own a stable working-whiteboard path/);
   assert.match(developmentPolicy, /Permit only one need in each stable working-whiteboard path/);
-  assert.match(deliveryWorkflow, /stable project working-whiteboard path is replaced/);
+  assert.match(deliveryWorkflow, /feature PR owns durable delivery evidence; this working record is\s+removed/);
 });
 
 test("upgrade mode preserves the active pin until reviewed validation and cutover", async () => {
@@ -1330,7 +1333,7 @@ test("implementation auto-merge is human-selected, implementation-only, and rech
   assert.match(workflow, /sdd-section: implementation-review-ledger/);
   assert.match(workflow, /exact table headers present even before/);
   assert.match(workflow, /Every merged row requires fresh-context `APPROVED`/);
-  assert.match(workflow, /`COMPLETE` and `ARCHIVED` require at least one/);
+  assert.match(workflow, /`COMPLETE` and `RESET` require at least one/);
   assert.match(workflow, /bare disposition does not pass that gate/);
   assert.match(workflow, /Current review phase/);
   assert.match(workflow, /Current review target ID/);

@@ -1,6 +1,61 @@
 # Batched review and recovery
 
+## Version 5 PR evidence and delivery reset
+
+Version 5 keeps active delivery state only while it is needed to deliver and
+recover safely. The feature PR becomes the durable evidence owner. Existing
+v2–v4 instances retain their archive contracts; no marker, installed pin, or
+historical artifact changes without a reviewed upgrade.
+
+Before feature acceptance, publish one `sdd-pr-review/v1` table on the PR with
+repository/target, accepted design, task briefs and outcomes, exact candidate,
+self-review, two independent review receipts and body digests, findings and
+dispositions, required checks, limits/follow-ups, requested owner authority,
+and the complete reset plan. The self-review and both reviewer receipts name
+the exact head and passing disposition, no finding remains open, and requested
+owner authority is exactly `PENDING`. After the owner acts, publish a separate
+`sdd-pr-acceptance/v1` table binding the owner comment and its body digest to
+the accepted review-table digest and exact candidate. The evidence gate proceeds
+only for an `APPROVED` owner decision; rejected or changed work returns to review.
+Do not put a future decision into either table.
+
+After merge, verify target ancestry/tree and checks, then publish
+`sdd-target-receipt/v1` with the merge identity, target/check proof, evidence
+availability and matching body digests, runtime/project proof, reset authority,
+and exceptions. Run `npm run sdd:evidence -- --mode RESET_READY ...` against
+the GitHub API before creating the reset PR. Local files cannot substitute for
+remote comments, reviews, checks, base/target identity, or merged-tree state.
+
+The reset inventory classifies every delivery-owned item exactly once:
+
+| Disposition | Outcome |
+| --- | --- |
+| `REMOVE` | Delete an item used only to plan, execute, review, or close the completed delivery |
+| `RESET` | Replace a reusable working entry point or owned machine runtime with its reviewed neutral/current state |
+| `KEEP` | Preserve an adoption control or output independently reusable by future work; record the concrete reuse reason |
+
+Every repository file uses one exact repository-relative path; every branch
+uses one full `refs/heads/...` identity; every worktree/runtime item uses one
+exact absolute path and ownership evidence. Globs, classes, unresolved paths,
+unknown effects, or descriptive examples grant no deletion authority. Create
+the reset PR only after the feature target receipt verifies. Its delta is
+limited to the accepted inventory, exact neutral `EMPTY` bytes, the fixed-size
+manifest locator, and any explicitly reviewed pin/runtime cutover. Missing or
+mutated evidence preserves working state and routes through the canonical error
+handling below.
+
+The manifest retains one replaceable `Last delivery receipt` locator:
+
+```text
+feature_pr=<URL>; feature_merge=<SHA>; reset_pr=<URL>; reset_head=<SHA>; bundle=sha256:<digest>
+```
+
+Git history preserves older locator values. The locator is not a copied delivery
+record and cannot replace verification of the referenced PR evidence.
+
 ## Version 4 phase-aware readiness
+
+This section is the compatibility contract for existing v4 instances.
 
 New source plan/workflow/batch templates use v4. Existing v2/v3 instances keep
 their original schema and behavior, including the v3 batch protocol. Do not
@@ -77,7 +132,7 @@ artifacts without the required batch authority.
 | Planning | Conclusion, handoff, routing, contracts/audit and implementation plan | Complete task specifications, explicit acceptance of each input, legal consumption order |
 | Readiness | No additional full review for unchanged accepted context | One consolidated fresh pre-start check; material mismatch returns to the owning review |
 | Implementation | One complete coherent PR, possibly containing related tasks | WIP/dependencies, tests, self-review, two reviewers, required owner merge authority |
-| Closure | Actual validation, record, retrospective and archive/cleanup plan | Terminal tasks, verified integration, resolved human follow-ups; owner closure acceptance |
+| Closure | Actual validation, versioned PR evidence and exact archive/reset inventory for the installed schema | Terminal tasks, verified integration, resolved human follow-ups; owner acceptance |
 | Upgrade | Authorized assessment/migration package | Between-task boundary, old pin until validated owner cutover, rollback and runtime ownership |
 
 Unrelated or unreviewable changes must be split. The first review inventories the
@@ -89,7 +144,7 @@ reconciliation, not another full review of the already accepted archive package.
 It uses the old head only as the immutable source authority; it cannot approve
 new normative content.
 
-## One closure review and a bounded post-merge receipt
+## Version 4 closure review and bounded post-merge receipt
 
 The closure package is the single planned full review unit. Before that review,
 include actual validation, the delivery record and retrospective, the final
@@ -454,12 +509,13 @@ in the owner attention table, with links rather than copied long documents.
 
 ## Closure and measurement
 
-Review actual validation, record, retrospective and exact archive/cleanup plan
-together only after terminal tasks, verified target integration and resolved
-required human follow-ups. After owner acceptance: publish immutable archive;
-verify copy and bidirectional links; create the new EMPTY whiteboard; perform
-only separately authorized owned cleanup; then use the bounded receipt above
-without a second full review. A failure stops dependent steps.
+Review actual validation, the versioned PR evidence and the exact
+version-appropriate archive/reset plan together only after terminal tasks and
+resolved human follow-ups. For v5, merge and target-verify the feature before
+creating the accepted bounded reset PR; verify evidence digests, reset only
+enumerated owned targets, restore `EMPTY`, regenerate runtime, and retain the
+fixed-size manifest locator. For v2–v4, follow the compatibility archive route
+above. A failure preserves affected state and stops dependent steps.
 Upgrade retains the old pin through validation and explicit cutover. Urgent fixes
 retain stricter emergency authority, rollback and follow-up obligations.
 

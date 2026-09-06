@@ -20,6 +20,12 @@ percentage denominator, and write `Not applicable — <reason>` instead of
 silently deleting a required section. Remove this introduction from the
 instantiated strategy.
 
+For v5 delivery reset, test local schema/inventory rules separately from the
+GitHub-aware gate. Mocked API fixtures cover pagination, missing/mutated bodies,
+digests, review identities, check runs, merge identity, and target proof. Only
+the read-only live GitHub check can establish that remote evidence currently
+exists; local fixtures must not make that claim.
+
 ## 1. Document control
 
 | Field | Value |
