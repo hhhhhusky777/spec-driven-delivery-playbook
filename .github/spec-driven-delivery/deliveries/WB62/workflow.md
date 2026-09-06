@@ -21,8 +21,8 @@
 | Review batch | [Planning batch](planning-batch.md) |
 | Implementation plan | [FULL plan](implementation-plan.md) |
 | Delivery | WB62 — agent judgment and essential evidence |
-| State | BLOCKED |
-| Previous state | GATES_READY |
+| State | GATES_READY |
+| Previous state | BLOCKED |
 | Owner | Repository owner |
 | Concluded whiteboard | [Whiteboard](../../solution-whiteboard.md) |
 | Approved workflow handoff | [Handoff](handoff.md) |
@@ -31,11 +31,11 @@
 | Trigger mode | MANUAL_INVOCATION |
 | Trigger identity/run ID | Coordinating agent / WB62-ROUTE-20260906-01 |
 | Selected route | Route 3 — systemic guidance change using existing authorities and FULL plan |
-| Manifest review state | IN_REVIEW |
+| Manifest review state | APPROVED |
 | Current artifact/gate | [Corrected FULL plan](implementation-plan.md) |
 | Current review phase | DESIGN |
 | Current review target ID | plan |
-| Current artifact review state | IN_REVIEW |
+| Current artifact review state | APPROVED |
 | Self-review state | SELF_REVIEW_PASSED |
 | Self-review candidate revision | WB62-P01-R06 |
 | Self-review evidence | [Routing review](../../reviews/WB62-P01.md) |
@@ -46,8 +46,8 @@
 | Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context reviewed revision | WB62-P01-R06 |
 | Fresh-context review evidence | [Routing review](../../reviews/WB62-P01.md) |
-| Human review state | NOT_STARTED |
-| Human reviewed revision | None |
+| Human review state | APPROVED |
+| Human reviewed revision | WB62-P01-R06 |
 | Human review evidence | [Review record](../../reviews/WB62-P01.md#owner-package-acceptance) |
 | Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |
 | Implementation mode authority | [Owner mode record](../../reviews/WB62-P01.md#implementation-mode-authority) |
@@ -116,8 +116,8 @@ policy output to be approved before T01 can produce it.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 0 | whiteboard | Concluded design | REUSE | Accepted C01–C06 and four goals | [Design](../../solution-whiteboard.md) | Owner | Owner | APPROVED / WB62-S01 |
 | 1 | handoff | Normalized input | REUSE | Exact candidate accepted | [Handoff](handoff.md) | Owner | Owner | APPROVED / WB62-H01 |
-| 2 | workflow | Routing | GENERATE | Select applicable artifacts | Pinned workflows/sdd-delivery-workflow.md | Coordinator | Two reviewers then owner | IN_REVIEW / WB62-P01 |
-| 3 | plan | FULL plan including source impact audit | GENERATE_FULL | Systemic scope, one complete T01 specification | Pinned delivery/implementation-plan.md | Coordinator | Two reviewers then owner | IN_REVIEW |
+| 2 | workflow | Routing | GENERATE | Select applicable artifacts | Pinned workflows/sdd-delivery-workflow.md | Coordinator | Two reviewers then owner | APPROVED / WB62-P01 |
+| 3 | plan | FULL plan including source impact audit | GENERATE_FULL | Systemic scope, one complete T01 specification | Pinned delivery/implementation-plan.md | Coordinator | Two reviewers then owner | APPROVED |
 | 4 | source | Existing authority and consumer source changes | UPDATE_EXISTING | T01 output implementing C01–C06; not a planning prerequisite | Accepted whiteboard source inventory | Implementer | Two reviewers then owner | NOT_STARTED |
 | 5 | specialized | Separate specialized-policy file | SKIP | Existing quality/governance owners cover this guidance change | Template governance | Maintainer | Routing reviewers | IN_REVIEW |
 | 6 | adr | Separate ADR | SKIP | No new significant architecture or service | Accepted handoff | Maintainer | Routing reviewers | IN_REVIEW |
@@ -231,9 +231,9 @@ guidance conflict; report a scoped design amendment when necessary.
 
 | Field | Current value |
 | --- | --- |
-| Workflow state | BLOCKED |
+| Workflow state | GATES_READY |
 | Current artifact/task | T01 mapping correction and owner clarifications |
-| Current artifact review | IN_REVIEW / WB62-P01 |
+| Current artifact review | APPROVED / WB62-P01 |
 | Last approved artifact | WB62-P01-R04; afde3edd4582c5118ddf714b489aaf0b268c72fa |
 | Next ready action | Verify corrected planning package; retain recorded human-review-before-merge authority |
 | Active blockers | None |

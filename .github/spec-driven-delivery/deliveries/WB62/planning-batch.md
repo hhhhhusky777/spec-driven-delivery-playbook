@@ -18,8 +18,8 @@
 | Approval owner | Repository owner |
 | Expiry/end condition | Owner package acceptance, scope change or cancellation |
 | Authority status | CURRENT |
-| State | IN_REVIEW |
-| Previous state | PREPARING |
+| State | ACCEPTED |
+| Previous state | IN_REVIEW |
 | Resume state | IN_REVIEW |
 | Base revision | b43873a9aa8f6798c6b7a90d28521a89b4b8e08e |
 | Candidate revision | WB62-P01-R06 |
@@ -34,8 +34,8 @@
 | Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context reviewed revision | WB62-P01-R06 |
 | Fresh-context review evidence | [Review record](../../reviews/WB62-P01.md) |
-| Human review state | NOT_STARTED |
-| Human reviewed revision | None |
+| Human review state | APPROVED |
+| Human reviewed revision | WB62-P01-R06 |
 | Human review evidence | [Owner acceptance](../../reviews/WB62-P01.md#owner-package-acceptance) |
 | Checkpoint | [Checkpoint](../../reviews/WB62-P01.md#checkpoint) |
 | Transient retry limit | 2 |
@@ -60,18 +60,18 @@
 | trigger | .github/spec-driven-delivery/agent-trigger.md | git:d5665ef782a48a78ec8e1db1338f44d0832f2110 | registry | C1, C2, C3, C4, C5, C6 | APPROVED | Exact file bytes | None | None |
 | manifest | .github/spec-driven-delivery/project-adoption-manifest.md | git:cf898b8420a83114d4cf25cdb317dfd0afa456fb | authority | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-manifest.snapshot | [R03 delta](../../reviews/WB62-P01.md#r03-control-delta-evidence) |
 | upgrade | .github/spec-driven-delivery/playbook-upgrade-assessment.md | git:d7f4fdfa2d7b35c70b407af527dd55eb84544bfe | authority | C1, C2, C3, C4, C5, C6 | APPROVED | Exact file bytes | None | None |
-| workflow | .github/spec-driven-delivery/deliveries/WB62/workflow.md | git:e5f0cedaf08b109ba037bf34baa60a1e8ba62695 | authority, registry, trigger, manifest, upgrade | C1, C2, C3, C4, C5, C6, C7 | IN_REVIEW | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-workflow.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
-| plan | .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md | git:e7ada43113d4df62ab334c678beab60bcb789cc9 | workflow | C1, C2, C3, C4, C5, C6, C7 | IN_REVIEW | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-plan.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
+| workflow | .github/spec-driven-delivery/deliveries/WB62/workflow.md | git:e5f0cedaf08b109ba037bf34baa60a1e8ba62695 | authority, registry, trigger, manifest, upgrade | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-workflow.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
+| plan | .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md | git:e7ada43113d4df62ab334c678beab60bcb789cc9 | workflow | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-plan.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
 
 ## Required controls
 
 | Control ID | Owning source | Satisfaction point | Evidence | Disposition |
 | --- | --- | --- | --- | --- |
-| C1 | Accepted design and packaging amendment | Whole planning review | Unchanged design/handoff; explicit scope | IN_REVIEW |
-| C2 | V4 readiness contract | Role/graph review and actual checker | Reciprocal plan/workflow and separate future outputs | IN_REVIEW |
-| C3 | Quality policy | Exact candidate checks and two reviewers | Review record | IN_REVIEW |
-| C4 | Context/readiness contract | Package acceptance then fresh pre-start check | Plan T01 substantive context; future actual verification | IN_REVIEW |
-| C5 | Owner authority | Exact package acceptance | No inferred approval or merge authority | IN_REVIEW |
+| C1 | Accepted design and packaging amendment | Whole planning review | Unchanged design/handoff; explicit scope | SATISFIED |
+| C2 | V4 readiness contract | Role/graph review and actual checker | Reciprocal plan/workflow and separate future outputs | SATISFIED |
+| C3 | Quality policy | Exact candidate checks and two reviewers | Review record | SATISFIED |
+| C4 | Context/readiness contract | Package acceptance then fresh pre-start check | Plan T01 substantive context; future actual verification | SATISFIED |
+| C5 | Owner authority | Exact package acceptance | No inferred approval or merge authority | SATISFIED |
 | C6 | Upgrade policy | Verified local cutover and combined publication | U84 checkpoint; main publication pending | SATISFIED |
 | C7 | Issue 63 owner amendment | Required control progress succeeds; scope/dependencies/review links/prose still fail closed | Focused regression and actual WB62 route simulation | SATISFIED |
 
