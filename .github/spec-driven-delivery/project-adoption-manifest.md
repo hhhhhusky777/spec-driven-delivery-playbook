@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | None |
-| Next action | WB62-P01 R05 corrects task mapping and incorporates owner goal/error-handling clarification; retained review pending; T01 human review before merge remains selected |
+| Next action | WB62-P01 R06 reconciles mapping/clarification review controls; retained review pending; T01 human review before merge remains selected |
 
 Adoption type: `real project`
 

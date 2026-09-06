@@ -35,7 +35,7 @@ measurement or CI pass is claimed yet.
 | Reviewers | Two isolated planning reviewers, then owner |
 | Review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P01-R05 |
+| Self-review candidate revision | WB62-P01-R06 |
 | Self-review evidence | [Package evidence](../../reviews/WB62-P01.md) |
 | Fresh-context review state | IN_REVIEW |
 | Fresh-context review session ID | WB62-P01 |
@@ -266,14 +266,14 @@ not yet produced.
 
 | Field | Current value |
 | --- | --- |
-| Plan state | READY |
+| Plan state | CONTRACT_REVIEW |
 | Current task | None |
-| Next ready task(s) | T01 |
+| Next ready task(s) | None |
 | Active branch / PR | codex/wb62-agent-judgment; no PR |
 | Last completed task | None |
 | Active blocker | None |
-| Last validation | R04 checks passed; real acceptance and READY transitions passed; pre-start mode pending |
-| Next action | Record owner implementation-mode selection for T01, then finish fresh pre-start verification |
+| Last validation | R05: 101 tests and documentation checks passed; R06 control reconciliation under review |
+| Next action | Finish amended-context review and fresh pre-start verification; human review before merge remains selected |
 
 ## 10. Evidence and history
 
