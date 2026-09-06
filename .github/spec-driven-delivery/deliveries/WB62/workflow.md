@@ -37,7 +37,7 @@
 | Current review target ID | record |
 | Current artifact review state | CHANGES_REQUESTED |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-C01-R03 |
+| Self-review candidate revision | WB62-C01-R05 |
 | Self-review evidence | [Closure review](../../reviews/WB62-C01.md) |
 | Fresh-context review state | CHANGES_REQUESTED |
 | Fresh-context review session ID | WB62-C01 |
@@ -54,7 +54,7 @@
 | Implementation mode scope | T01 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-06T09:36:49Z |
-| Next action | Retained-seat R03 review of the exact same-PR closure/finalization package, then owner acceptance |
+| Next action | Retained-seat review of the exact PR #65 closure package, then owner acceptance |
 | Next action target IDs | validation, record |
 | Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/upgrades/U64.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; CONTRIBUTING.md; README.md; CHANGELOG.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/workflows; examples; scripts/sdd-lifecycle.mjs; tests |
 | Next action write targets | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews/WB62-C01.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/upgrades/U64.md |
@@ -165,7 +165,7 @@ runtime work. The complete source inventory stays in the accepted whiteboard.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | source | COMPLETE | 9e8f79af50ed3bad2d512301e03943506f7421f0 | 9e8f79af50ed3bad2d512301e03943506f7421f0 | CONTROL_ONLY | CURRENT | APPROVED | [PR64 reviews](../../reviews/WB62-P01.md#r08-acceptance-and-merge-reconciliation) | None |
 | validation | IN_PROGRESS | dc81fd82eff6ed4f8d83dc13f6dc62cdb768c63f | None | MATERIAL | CURRENT | IN_REVIEW | [WB62-C01](../../reviews/WB62-C01.md) | None |
-| record | IN_PROGRESS | d2080c2e2bd4703d125eb04f4e68fa2504a90a29 | None | MATERIAL | CURRENT | IN_REVIEW | [WB62-C01](../../reviews/WB62-C01.md) | None |
+| record | IN_PROGRESS | e2d775e178c24f4f9870b96f0a3e024988abba00 | None | MATERIAL | CURRENT | IN_REVIEW | [WB62-C01](../../reviews/WB62-C01.md) | None |
 
 ### Dependency and freshness register
 
@@ -249,7 +249,7 @@ guidance conflict; report a scoped design amendment when necessary.
 | --- | --- |
 | Workflow state | VALIDATING |
 | Current artifact/task | WB62 validation/archive package |
-| Current artifact review | CHANGES_REQUESTED / WB62-C01; R03 correction prepared |
+| Current artifact review | CHANGES_REQUESTED / WB62-C01; exact correction prepared |
 | Last approved artifact | WB62-P01-R06; 419d62db53986f11b727b7532c0273e45439ce13 |
 | Next ready action | Exact closure-package review, then owner archive acceptance |
 | Active blockers | None |

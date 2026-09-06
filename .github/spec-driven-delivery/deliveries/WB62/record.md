@@ -71,7 +71,8 @@ control PR is selected.
 In the tables below, `accepted-source SHA` means the exact 40-character PR #65
 head SHA named in the owner's acceptance after both WB62-C01 seats approve it;
 `final-head SHA` means the one descendant commit containing only this control
-delta. `validation blob` and `record blob` mean the Git blob IDs of
+delta and is recorded only in PR #65's external retained-seat and target
+receipts, never inside that commit. `validation blob` and `record blob` mean the Git blob IDs of
 `evidence.md` and `record.md` at the accepted-source SHA. These are deterministic
 substitutions, not permission to vary wording or scope.
 
@@ -115,8 +116,8 @@ Only these workflow fields or cells may change, to these exact values:
 | Output register / record | State `COMPLETE`; Current version and Verified version `record blob`; Review state `APPROVED`; Review evidence [WB62-C01](../../reviews/WB62-C01.md) and [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
 | Delivery state / Workflow state | `ARCHIVED` |
 | Delivery state / Current artifact/task | `None` |
-| Delivery state / Current artifact review | `APPROVED / WB62-C01 at accepted-source SHA; bounded control delta verified at final-head SHA` |
-| Delivery state / Last approved artifact | `WB62 closure package at accepted-source SHA; bounded control delta at final-head SHA` |
+| Delivery state / Current artifact review | `APPROVED / WB62-C01 at accepted-source SHA; bounded control delta verified on PR #65` |
+| Delivery state / Last approved artifact | `WB62 closure package at accepted-source SHA; bounded control delta verified on PR #65` |
 | Delivery state / Next ready action | `None — delivery archived; PR #65 owns target verification` |
 | Delivery state / Validation complete | `T01/PR #64 integration, U64 runtime cutover, closure package, archive/reset, and exact control-delta gates verified` |
 | Delivery state / Validation remaining | `None` |
@@ -126,8 +127,15 @@ Only these workflow fields or cells may change, to these exact values:
 No other path, field, table cell or prose may change. Set task-specific shell
 variables `sdd_accepted_source` and `sdd_final_head` to the two resolved SHAs.
 The delta must make `git diff --name-only
-"$sdd_accepted_source..$sdd_final_head"` return exactly the plan and workflow
-paths above, and must pass `npm run docs:all`, `git diff --check
+"$sdd_accepted_source..$sdd_final_head"` return exactly these two lines, in this
+order:
+
+```text
+.github/spec-driven-delivery/deliveries/WB62/implementation-plan.md
+.github/spec-driven-delivery/deliveries/WB62/workflow.md
+```
+
+It must also pass `npm run docs:all`, `git diff --check
 "$sdd_accepted_source..$sdd_final_head"`,
 `./install-sdd.sh --validate`, and the GitHub check named
 `Blocking documentation checks`. Because local `npm` is not available in this
