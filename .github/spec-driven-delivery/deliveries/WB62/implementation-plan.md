@@ -62,7 +62,7 @@ measurement or CI pass is claimed yet.
 | Task PR target | main |
 | Final PR target | main |
 | Protected-branch synchronization | Before task start and merge; reconcile changed inputs |
-| Branch / PR | codex/wb62-agent-judgment; not opened |
+| Branch / PR | Implementation [PR #64](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/64) merged; closure [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) open from `codex/upgrade-37653ee` |
 | Archived record | Not archived |
 
 ## 1. Governing inputs
@@ -230,7 +230,7 @@ and durable concise evidence. No unrelated diff or lost historical evidence.
 | Compatibility before/after | Machine schemas and installer runtime logic unchanged; existing lifecycle checker admits only newly enumerated valid control progress; installed project upgrades explicit |
 | Contract IDs | FC01, FC02, FC03, FC04, FC05, FC06 |
 | Owner | Coordinating implementer |
-| Branch / PR | codex/wb62-agent-judgment; main target; no PR yet |
+| Branch / PR | [PR #64](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/64), merged as `37653eec1d980e3ea5ed858922ab97894395fab9` |
 | Context receipt | APPROVED |
 | Context source revision | d93d27a33c43c1574aeed27044654c8964cf998b |
 | Context verification | CURRENT |
@@ -238,8 +238,8 @@ and durable concise evidence. No unrelated diff or lost historical evidence.
 | Verification evidence | [T01 readiness evidence](../../reviews/WB62-P01.md#t01-readiness-evidence) |
 | Verified at | 2026-09-06T10:20:34Z |
 | Implementation mode at task start | HUMAN_REVIEW_BEFORE_MERGE; recorded owner scope T01 |
-| Implementation mode at PR/merge | HUMAN_REVIEW_BEFORE_MERGE; reread for PR 64 review; merge not authorized |
-| Post-merge human review | NOT_APPLICABLE; no merge yet |
+| Implementation mode at PR/merge | HUMAN_REVIEW_BEFORE_MERGE; owner authorized exact PR64 head after review |
+| Post-merge human review | NOT_APPLICABLE; the implementation used human review before merge, followed by the recorded post-merge validation receipt |
 | Self-contained boundary | Policies, consumers, tests and upgrade controls delivered together |
 | Actual change summary | Canonical goals/recovery, linked skills and consumers, discretionary PR timing, essential evidence and regressions; PR 64 |
 

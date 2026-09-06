@@ -243,7 +243,7 @@ guidance conflict; report a scoped design amendment when necessary.
 | Stale artifacts | None |
 | Validation complete | T01/PR64 integration and U64 runtime cutover verified; closure evidence prepared |
 | Validation remaining | Exact closure-package review, owner acceptance, merge and post-merge archive receipt |
-| Branch/PR | codex/upgrade-37653ee; closure PR not opened |
+| Branch/PR | `codex/upgrade-37653ee`; closure [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) open |
 | Last updated | 2026-09-06 Asia/Shanghai |
 
 Completion requires actual T01 outcome evidence, consistent sources/consumers,
