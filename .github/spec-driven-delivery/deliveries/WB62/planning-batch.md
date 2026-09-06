@@ -18,9 +18,9 @@
 | Approval owner | Repository owner |
 | Expiry/end condition | Owner package acceptance, scope change or cancellation |
 | Authority status | CURRENT |
-| State | IN_REVIEW |
-| Previous state | PREPARING |
-| Resume state | None |
+| State | BLOCKED |
+| Previous state | IN_REVIEW |
+| Resume state | IN_REVIEW |
 | Base revision | b43873a9aa8f6798c6b7a90d28521a89b4b8e08e |
 | Candidate revision | WB62-P01-R01 |
 | PR | None |
@@ -42,8 +42,8 @@
 | No-progress limit | 2 |
 | Transient retry count | 0 |
 | No-progress count | 0 |
-| Unresolved finding IDs | None |
-| Next action | Complete package validation and exact review inventory |
+| Unresolved finding IDs | WB62-P01-R1-F01, WB62-P01-R1-F02, WB62-P01-R2-F01, WB62-P01-R2-F02 |
+| Next action | Owner scope decision for issue63, then supported control route and retained-reviewer re-review |
 | Action owner | Coordinator |
 | Execution authority | None |
 | Inputs freshness | CURRENT |

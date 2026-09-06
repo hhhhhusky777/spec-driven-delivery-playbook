@@ -13,6 +13,15 @@ its exact d93d27a33c43c1574aeed27044654c8964cf998b pin/runtime transition.
 The original assessment below is retained as reviewed history. This checkpoint
 supersedes its WB33 and waiting-for-cutover status descriptions.
 
+Current planning state: the provisional WB62 v4 workflow and FULL plan now
+exist; registry and trigger include the packaging amendment. Local cutover
+remains verified and joint publication remains pending. Planning review found
+a control-delta limitation tracked in issue63; no implementation has started.
+The observations in the following table and paragraphs describe the earlier
+cutover checkpoint, not the current planning package.
+
+### Historical cutover observations
+
 | Item | Current evidence / boundary |
 | --- | --- |
 | State | VALIDATING; local cutover verified, reviewed publication remains |

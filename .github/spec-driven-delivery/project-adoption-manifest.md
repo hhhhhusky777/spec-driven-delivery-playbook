@@ -64,8 +64,8 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Automatic gate result | `NOT_APPLICABLE` |
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
-| Current blocker | `None` |
-| Next action | Prepare owner-authorized combined WB62 planning package; U84 publication joins this delivery |
+| Current blocker | WB62-P01 issue63 control-delta gap; owner scope amendment required |
+| Next action | Resolve issue63 scope decision; preserve provisional WB62 package and verified U84 runtime |
 
 Adoption type: `real project`
 
