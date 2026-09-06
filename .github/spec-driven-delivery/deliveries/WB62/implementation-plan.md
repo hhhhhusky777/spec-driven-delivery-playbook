@@ -37,12 +37,12 @@ measurement or CI pass is claimed yet.
 | Self-review state | SELF_REVIEW_PASSED |
 | Self-review candidate revision | WB62-P01-R06 |
 | Self-review evidence | [Package evidence](../../reviews/WB62-P01.md) |
-| Fresh-context review state | IN_REVIEW |
+| Fresh-context review state | APPROVED |
 | Fresh-context review session ID | WB62-P01 |
 | Fresh-context assigned reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | None |
-| Fresh-context reviewed revision | None |
+| Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
+| Fresh-context reviewed revision | WB62-P01-R06 |
 | Fresh-context review evidence | [Package evidence](../../reviews/WB62-P01.md) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | None |
@@ -273,7 +273,7 @@ not yet produced.
 | Last completed task | None |
 | Active blocker | None |
 | Last validation | R05: 101 tests and documentation checks passed; R06 control reconciliation under review |
-| Next action | Finish amended-context review and fresh pre-start verification; human review before merge remains selected |
+| Next action | Obtain human acceptance of R06 amended package; retain selected merge mode |
 
 ## 10. Evidence and history
 

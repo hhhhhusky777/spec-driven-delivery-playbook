@@ -27,12 +27,12 @@
 | Self-review state | SELF_REVIEW_PASSED |
 | Self-review candidate revision | WB62-P01-R06 |
 | Self-review evidence | [Review record](../../reviews/WB62-P01.md) |
-| Fresh-context review state | IN_REVIEW |
+| Fresh-context review state | APPROVED |
 | Fresh-context review session ID | WB62-P01 |
 | Fresh-context assigned reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | None |
-| Fresh-context reviewed revision | None |
+| Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
+| Fresh-context reviewed revision | WB62-P01-R06 |
 | Fresh-context review evidence | [Review record](../../reviews/WB62-P01.md) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | None |
@@ -43,7 +43,7 @@
 | Transient retry count | 0 |
 | No-progress count | 0 |
 | Unresolved finding IDs | None |
-| Next action | Review corrected task mapping and owner goal/error-handling clarification |
+| Next action | Obtain human acceptance of R06 amended package; retain selected merge mode |
 | Action owner | Coordinator |
 | Execution authority | None |
 | Inputs freshness | CURRENT |
