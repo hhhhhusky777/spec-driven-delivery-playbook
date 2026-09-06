@@ -68,18 +68,73 @@ applies it on PR #65, and the retained seats verify that exact delta without
 repeating semantic review. The resulting PR head then merges; no post-merge
 control PR is selected.
 
-| Path | Exact mutable fields / columns | Required final value |
-| --- | --- | --- |
-| `deliveries/WB62/implementation-plan.md` | Document control: Status; Previous status; Current phase; Review state; Self-review candidate revision; Fresh-context review state; Fresh-context approved reviewers; Fresh-context reviewed revision; Human review state; Human reviewed revision; Branch / PR; Archived record. Live snapshot: Plan state; Active branch / PR; Last validation; Next action | Status `COMPLETE`; Previous status `VALIDATING`; Current phase `CLOSE`; all closure acceptance fields bind the owner-accepted source; PR #65 remains the publication owner; no task/specification field changes |
-| `deliveries/WB62/workflow.md` | Workflow control: State; Previous state; Current artifact/gate; Current artifact review state; Self-review candidate revision; Fresh-context review state; Fresh-context approved reviewers; Fresh-context reviewed revision; Human review state; Human reviewed revision; Next action; Next action target IDs; Allowed write scope; Next action write targets; Semantic decision introduced; Automation audit record; Last routed. Output register columns for validation and record: State; Current version; Verified version; Review state; Review evidence. Delivery-state values: Workflow state; Current artifact/task; Current artifact review; Last approved artifact; Next ready action; Validation complete; Validation remaining; Branch/PR; Last updated | State `ARCHIVED`; Previous state `COMPLETE`; both outputs `COMPLETE` with matching existing blobs and PR #65 review evidence; all closure acceptance fields bind the owner-accepted source; next action/targets/write scope are `None`; semantic decision `NO`; PR #65 owns the audit and archive evidence |
+In the tables below, `accepted-source SHA` means the exact 40-character PR #65
+head SHA named in the owner's acceptance after both WB62-C01 seats approve it;
+`final-head SHA` means the one descendant commit containing only this control
+delta. `validation blob` and `record blob` mean the Git blob IDs of
+`evidence.md` and `record.md` at the accepted-source SHA. These are deterministic
+substitutions, not permission to vary wording or scope.
 
-No other path, field, table cell or prose may change. The delta runs exactly:
-`npm run docs:all`, `git diff --check`, `./install-sdd.sh --validate`, and the
-GitHub check named `Blocking documentation checks`. Because local `npm` is not
-available in this environment, the coordinator may run the same pinned
-`docs:lint`, `docs:structure`, `docs:sdd`, `docs:mermaid` and `docs:test`
-components directly with Node 24, recording that substitution; hosted CI still
-runs `npm run docs:all` on the exact head.
+The implementation plan keeps its accepted WB62-P01 planning-review identity.
+Only these plan fields may change, to these exact values:
+
+| Section / field | Required final value |
+| --- | --- |
+| Document control / Status | `COMPLETE` |
+| Document control / Previous status | `VALIDATING` |
+| Document control / Current phase | `CLOSE` |
+| Document control / Branch / PR | Implementation [PR #64](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/64) merged; closure publication and target verification owned by [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
+| Document control / Archived record | [Delivery record](record.md) |
+| Live snapshot / Plan state | `COMPLETE` |
+| Live snapshot / Active branch / PR | Implementation [PR #64](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/64) merged; closure [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) owns archive publication and target verification |
+| Live snapshot / Last validation | `T01/PR #64 integration, U64 cutover, closure package, archive/reset, and exact control-delta gates verified; PR #65 owns target evidence` |
+| Live snapshot / Next action | `None — delivery archived; PR #65 owns target verification` |
+
+Only these workflow fields or cells may change, to these exact values:
+
+| Section / field or row | Required final value |
+| --- | --- |
+| Workflow control / State | `ARCHIVED` |
+| Workflow control / Previous state | `COMPLETE` |
+| Workflow control / Current artifact/gate | [WB62 archive record](record.md) |
+| Workflow control / Current artifact review state | `APPROVED` |
+| Workflow control / Self-review candidate revision | `accepted-source SHA` |
+| Workflow control / Fresh-context review state | `APPROVED` |
+| Workflow control / Fresh-context approved reviewers | `wb62_closure_r1, wb62_closure_r2` |
+| Workflow control / Fresh-context reviewed revision | `accepted-source SHA` |
+| Workflow control / Human review state | `APPROVED` |
+| Workflow control / Human reviewed revision | `accepted-source SHA` |
+| Workflow control / Next action | `None — delivery archived; PR #65 owns target verification` |
+| Workflow control / Next action target IDs | `None` |
+| Workflow control / Allowed write scope | `None` |
+| Workflow control / Next action write targets | `None` |
+| Workflow control / Semantic decision introduced | `NO` |
+| Workflow control / Automation audit record | [PR #65 review and target evidence](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
+| Workflow control / Last routed | `2026-09-06 Asia/Shanghai` |
+| Output register / validation | State `COMPLETE`; Current version and Verified version `validation blob`; Review state `APPROVED`; Review evidence [WB62-C01](../../reviews/WB62-C01.md) and [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
+| Output register / record | State `COMPLETE`; Current version and Verified version `record blob`; Review state `APPROVED`; Review evidence [WB62-C01](../../reviews/WB62-C01.md) and [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
+| Delivery state / Workflow state | `ARCHIVED` |
+| Delivery state / Current artifact/task | `None` |
+| Delivery state / Current artifact review | `APPROVED / WB62-C01 at accepted-source SHA; bounded control delta verified at final-head SHA` |
+| Delivery state / Last approved artifact | `WB62 closure package at accepted-source SHA; bounded control delta at final-head SHA` |
+| Delivery state / Next ready action | `None — delivery archived; PR #65 owns target verification` |
+| Delivery state / Validation complete | `T01/PR #64 integration, U64 runtime cutover, closure package, archive/reset, and exact control-delta gates verified` |
+| Delivery state / Validation remaining | `None` |
+| Delivery state / Branch/PR | Branch `codex/upgrade-37653ee`; closure [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) owns publication and target verification |
+| Delivery state / Last updated | `2026-09-06 Asia/Shanghai` |
+
+No other path, field, table cell or prose may change. Set task-specific shell
+variables `sdd_accepted_source` and `sdd_final_head` to the two resolved SHAs.
+The delta must make `git diff --name-only
+"$sdd_accepted_source..$sdd_final_head"` return exactly the plan and workflow
+paths above, and must pass `npm run docs:all`, `git diff --check
+"$sdd_accepted_source..$sdd_final_head"`,
+`./install-sdd.sh --validate`, and the GitHub check named
+`Blocking documentation checks`. Because local `npm` is not available in this
+environment, the coordinator may run the same pinned `docs:lint`,
+`docs:structure`, `docs:sdd`, `docs:mermaid` and `docs:test` components directly
+with Node 24, recording that substitution; hosted CI still runs
+`npm run docs:all` on the exact head.
 
 After merge, PR #65 records these exact probes without another repository
 change: main contains the merge; the accepted source is an ancestor; the merged

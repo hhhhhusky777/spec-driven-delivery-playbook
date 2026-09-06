@@ -724,7 +724,9 @@ recovery authority it was moved aside without marking cleanup successful or
 fabricating ownership. Installer regeneration at the unchanged full pin
 `d213114f99dc2186d6f4e50a85fe962de0e1afa9` succeeded; validation reported CURRENT.
 Adoption remains INSTALLED, not ACTIVE. This restores access, not persistence.
-The U84 upgrade branch remains pending and separate, not silently applied.
+At that recovery checkpoint, the U84 upgrade branch remained pending and
+separate; this historical statement does not override its later PR #64
+publication or the current U64/live controls.
 
 The [archived WB62 conclusion](archive/WB62/solution-whiteboard.md) owns the
 accepted design for issues #62/#54. The stable [working whiteboard](solution-whiteboard.md)

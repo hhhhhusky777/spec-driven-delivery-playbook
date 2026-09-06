@@ -294,4 +294,5 @@ complete/current/reviewed and NEXT became empty. Actual FC evidence and green
 gates are in the closure package; unknown performance measurements remain
 unknown and deferred runtime work retains its issue owner. The archived design
 and bidirectional links are prepared, while authoritative closure still waits
-for review, owner acceptance, merge and the bounded receipt. Cleanup is None.
+for review, owner acceptance, exact same-PR control finalization, PR #65 merge
+and its target probes. Cleanup is None.
