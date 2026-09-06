@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | None |
-| Next action | WB62-P01 R06 approved by both retained reviewers; obtain human acceptance of amended package; T01 human review before merge remains selected |
+| Next action | R06 accepted; readiness verified and draft PR 64 open; start T01 with human review before merge |
 
 Adoption type: `real project`
 

@@ -40,6 +40,38 @@ The authority order is:
 Resolve conflicts at the higher authority. Do not copy this policy into every
 template or generated artifact.
 
+### Five goals and agent judgment
+
+These goals govern how instructions are written and applied throughout delivery.
+Skills and templates route to this section instead of defining competing goals.
+
+| Goal | Expected outcome |
+| --- | --- |
+| Clear boundaries | Identify approved scope, authority, protected invariants and required evidence |
+| Stable outcomes | Demonstrate the agreed result regardless of the chosen execution approach |
+| Key information only | Retain information needed for decisions, verification, recovery and maintenance |
+| Proportional effort | Match preparation, review and records to actual complexity, risk and value |
+| Agent discretion | Leave methods, sequencing and safe recovery to the agent within those boundaries |
+
+Distinguish mandatory outcomes and controls from recommended methods and examples.
+Prescribe a particular method only when deviation threatens a concrete protected
+property; explain that property. Several valid implementation choices are not
+by themselves ambiguity requiring a human decision. Reuse current, applicable
+authorization rather than repeatedly asking for the same decision. This does
+not extend its scope or supply acceptance of unseen results.
+
+Canonical policies, contracts and owner decisions must be mutually consistent
+for the applicable scope and version. Where precedence and approved intent are
+clear, repair a subordinate inconsistency within authority. Do not guess between
+conflicting canonical owners. Skills and generated guides execute these
+authorities; they do not introduce a separate policy layer.
+
+The existing [error-handling framework](batch-review-and-recovery.md#recovery-without-restarting-everything)
+owns diagnosis, recovery, isolation and escalation. Consumers link to it and
+retain only necessary local consequences, not restated error-handling rules.
+
+### Required review evidence
+
 > [!IMPORTANT]
 > Automation can prove structure and known mechanical rules. It cannot approve
 > factual correctness, clarity, completeness, or methodological fitness. Every
@@ -125,6 +157,16 @@ author-reviewer disagreement is a human decision, not an automatic code edit.
   supported Markdown callout. Do not repeat it merely to make it visible.
 - A generated document may repeat the minimum context needed to stand alone,
   but it must not create a competing version of a shared rule.
+
+For reviewed source, prefer retained Git base/candidate revisions plus concise
+findings, resolutions, acceptance and gate results over another full-file copy.
+Verify the exact bytes are retrievable: a digest alone cannot recover content.
+Retain unique non-Git/failure evidence and any local snapshot the active checker
+actually consumes; this guidance does not add a Git resolver to that checker.
+Do not prune historical evidence or weaken applicable retention periods merely
+to reduce size. Record what, why, evidence and unresolved risk, not every tool's
+successful output. PR versus non-PR receipt retention follows the
+[canonical retention contract](batch-review-and-recovery.md#pr-publication-and-retention).
 
 ### 2.5 Instantiated and generated documents
 

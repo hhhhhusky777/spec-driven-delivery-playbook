@@ -3,6 +3,8 @@
 Human handoffs must include the
 [phase-specific review brief](../../docs/documentation-quality-policy.md#26-attention-and-reviewability-gate).
 Present task IDs and brief work beside their design basis, validation and uncovered gaps.
+Use the [canonical goals](../../docs/documentation-quality-policy.md#five-goals-and-agent-judgment)
+to choose task boundaries and evidence, not a second set of local prescriptions.
 
 ## Optional batched route
 

@@ -864,20 +864,19 @@ else
 4. Treat \`Manifest state detected\` as generation-time provenance. A compatible
    state advance within this workflow profile does not authorize a new action;
    the reviewed manifest and workflow remain authoritative.
-5. Perform exactly one dependency-ready action inside its allowed write scope.
-   Verify structured blockers and transitive freshness before editing.
-6. After the action, compute freshness impact, keep the current change as the
-   immediate review target, and do not correct a second stale artifact in the
-   same invocation.
+5. Execute the dependency-ready work unit inside its authorized scope. Follow
+   the skill's canonical goals and error-handling references; choose internal
+   steps without inventing a new gate for each edit or conversation turn.
+6. Preserve structured freshness and the actual acceptance boundary. Combining
+   independently gated artifacts still requires the approved batch route.
 7. Preserve unrelated work and stop whenever approval, authority, or user input
    is required. Never self-approve.
 
 ## Expected completion boundary
 
-- Exactly one manifest/workflow-authorized discovery, artifact, task, validation,
-  or archive action is complete.
+- The authorized work unit has reached its actual completion or review boundary.
 - Required checks and lifecycle invariants are reported separately.
-- Newly stale dependants are recorded but not modified in the same action.
+- Affected dependencies and any remaining recovery work are recorded.
 - The next independent review or dependency-ready action is explicit.
 EOF
 fi

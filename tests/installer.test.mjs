@@ -150,6 +150,34 @@ test("installer resolves latest main, installs adoption skill, and emits one gui
   assert.equal(repeatedCleanup.status, 0, repeatedCleanup.stderr);
 });
 
+test("real workflow skill and generated guide resolve canonical goals and recovery after installation", async (t) => {
+  const source = await createPlaybookFixture(t);
+  for (const name of ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade"]) {
+    await cp(path.join(REPOSITORY_ROOT, "skills", name), path.join(source.repository, "skills", name), { recursive: true });
+  }
+  await mkdir(path.join(source.repository, "docs"), { recursive: true });
+  for (const name of ["documentation-quality-policy.md", "batch-review-and-recovery.md"]) {
+    await cp(path.join(REPOSITORY_ROOT, "docs", name), path.join(source.repository, "docs", name));
+  }
+  run("git", ["add", "."], source.repository);
+  run("git", ["commit", "-m", "actual guidance fixture"], source.repository);
+  source.firstRevision = run("git", ["rev-parse", "HEAD"], source.repository).trim();
+  const project = await createInstalledProject(t, source);
+  const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
+  const skill = await readFile(path.join(project, ".agents", "skills", "sdd-project-workflow", "SKILL.md"), "utf8");
+  assert.equal(skill, await readFile(path.join(REPOSITORY_ROOT, "skills", "sdd-project-workflow", "SKILL.md"), "utf8"));
+  assert.equal(guideValue(guide, "Resolved revision"), source.firstRevision);
+  const checkout = guideValue(guide, "Playbook checkout");
+  for (const target of ["docs/documentation-quality-policy.md", "docs/batch-review-and-recovery.md"]) {
+    await access(path.join(checkout, target));
+    assert.ok(skill.includes(target), target);
+  }
+  assert.doesNotMatch(guide + skill, /exactly one dependency-ready action|Before every project edit/);
+  assert.match(guide, /required skill|sdd-project-workflow/);
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
+  assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
+});
+
 test("completed adoption replaces its runtime before the first need", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createTargetProject(t);

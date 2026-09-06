@@ -43,7 +43,7 @@
 | Transient retry count | 0 |
 | No-progress count | 0 |
 | Unresolved finding IDs | None |
-| Next action | Obtain human acceptance of R06 amended package; retain selected merge mode |
+| Next action | R06 accepted; readiness verified and draft PR 64 open; start T01 with human review before merge |
 | Action owner | Coordinator |
 | Execution authority | None |
 | Inputs freshness | CURRENT |

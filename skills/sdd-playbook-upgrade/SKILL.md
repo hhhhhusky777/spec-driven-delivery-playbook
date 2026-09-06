@@ -5,19 +5,19 @@ description: Assess and apply a prepared Spec-Driven Delivery Playbook revision 
 
 # SDD Playbook Upgrade
 
+## Governing goals
+
+After runtime verification, read and apply
+`docs/documentation-quality-policy.md#five-goals-and-agent-judgment` from the
+verified playbook checkout. Keep operational choices within project authority.
+
 ## Exception routing
 
-When an exception occurs in any phase, read and apply
-`docs/batch-review-and-recovery.md#exception-triage-and-upstream-reporting`
-from the verified playbook checkout, using its
-`templates/reviews/exception-triage.md` fields in the canonical recovery record.
-This duty is not limited to batches. Diagnose before retrying; confirmed source
-gaps require deduplicated, authorized and sanitized upstream reporting, not an
-automatic project-origin issue. Missing access/authority leaves a pending draft;
-reporting never bypasses gates. If runtime verification itself fails, preserve
-the stop and sanitized diagnostic; do not read an unverified checkout or perform
-prohibited project writes. Installed copies use their approved pin, not latest
-source instructions.
+Read and apply `docs/batch-review-and-recovery.md#recovery-without-restarting-everything`
+and `docs/batch-review-and-recovery.md#exception-triage-and-upstream-reporting`
+from the verified checkout. Use `templates/reviews/exception-triage.md` in the
+existing recovery record. Runtime-verification failure still forbids reading
+an unverified checkout or making prohibited project writes.
 
 ## Optional batched route
 
@@ -27,10 +27,8 @@ Group authorized preparation/migration review boundaries; retain current pin,
 between-task checks, actual validation, human cutover and owned cleanup. Never
 use batching to upgrade during active implementation or erase failure evidence.
 
-Read `docs/batch-review-and-recovery.md` from the verified read-only playbook
-checkout for authority, evidence and recovery requirements. Resolve this path
-relative to that checkout, not the installed skill directory. This route takes
-effect only through reviewed project adoption.
+Resolve source paths through that verified checkout, not the installed skill
+directory. Availability is not project adoption or additional authority.
 
 Use this skill only from an installed project's root when
 `.sdd-runtime/playbook-upgrade-guide.md` exists.
@@ -67,17 +65,12 @@ Create or resume the guide's assessment destination from the candidate
   review, merge, gate, or continuation semantics changed. Project authority
   must reconfirm any more permissive mode after migration.
 
-Perform the standard agent self-review against the exact assessment candidate.
-Record `SELF_REVIEW_PASSED` only when every assertion is supported. Then read
-the candidate's canonical fresh-context review protocol, freeze the exact
-assessment packet, open a stable session, and initialize exactly two read-only
-reviewers without inherited author conversation. Preserve requested changes
-and explicit author dispositions as immutable per-round findings. Any
-assessment change requires a new self-review and re-review by the same assigned
-session reviewer(s). After all assigned reviewers record fresh-context
-`APPROVED`, stop for
-mandatory human upgrade review. Never approve the assessment you generated or
-treat agent approval as human upgrade authority.
+For the exact assessment candidate, follow the candidate checkout's
+`templates/reviews/agent-self-review.md` and
+`templates/reviews/fresh-context-agent-review.md`. Those protocols own
+`SELF_REVIEW_PASSED`, isolated retained reviewers, evidence and correction rounds.
+Mandatory human upgrade review still precedes cutover; agent review is not
+human upgrade authority.
 
 ## Apply an approved upgrade
 

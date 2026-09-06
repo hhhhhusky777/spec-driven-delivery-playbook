@@ -13,6 +13,9 @@ requirements. This route takes effect only through reviewed project adoption.
 
 Changes are welcome when they make the workflow clearer, safer, more
 evidence-driven, or less burdensome without weakening necessary controls.
+Apply the quality policy's [five goals](docs/documentation-quality-policy.md#five-goals-and-agent-judgment)
+and its linked error-handling authority; contributor instructions add only
+repository-specific consequences, not a second set of shared rules.
 
 ## Start or resume repository delivery
 
@@ -129,6 +132,8 @@ If a single unit splits, review routing and retarget before merging.
 
 Synchronize before starting each dependent task and before final integration;
 recheck changed upstream contracts and tests. Do not rewrite shared history.
+Choose when to open a draft PR; it is not required before local coding. Before
+implementation review, publish the complete candidate to the correct target.
 Squash merge through a PR with the current documentation checks, two agent
 approvals, and owner approval unless an explicitly scoped implementation mode
 permits otherwise. Require the PR to be current with its target and green.

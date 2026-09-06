@@ -135,9 +135,10 @@ human-review sequence. `AUTO_CONTINUE` and
 `REVIEW_ON_EXCEPTION` may continue through multiple pre-authorized actions in
 one invocation only while every input is approved/current, no semantic decision
 is introduced, all declared gates pass, and each next action remains within the
-recorded automation boundary, WIP policy, and write scope. Stop immediately on
-failure, ambiguity, unknown impact, exception, drift, unrelated change, scope
-expansion, or a mandatory semantic checkpoint. These automatic modes apply
+recorded automation boundary, WIP policy, and write scope. Handle exceptions
+through [canonical recovery](../../docs/batch-review-and-recovery.md#recovery-without-restarting-everything),
+not an extra gate for each internal correction. Stop at a mandatory semantic
+checkpoint or an unresolved authority/safety boundary. These automatic modes apply
 only to deterministic non-review actions and cannot approve normative content.
 
 - Before every review gate, the implementing agent completes the
@@ -470,6 +471,9 @@ Independent ready work may continue within the approved WIP and write scope.
 ### 9.1 Action control ledger
 
 Classify each action before execution. Mode changes require explicit review.
+Apply the [five goals](../../docs/documentation-quality-policy.md#five-goals-and-agent-judgment)
+to the work unit, not each tool call. Draft PR timing is discretionary; the
+implementation-review boundary still requires the correctly scoped PR.
 Normative generated content, interpretation, or a new decision always uses
 `EXPLICIT_REVIEW`, even when its formatting checks pass.
 

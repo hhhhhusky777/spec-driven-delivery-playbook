@@ -7,7 +7,13 @@ This project has not published a formal versioned release. Significant template
 and workflow changes are recorded here until a release/versioning policy is
 adopted.
 
-## Unreleased — updated 2026-09-05
+## Unreleased — updated 2026-09-06
+
+- Define five goals in the quality policy and integrate recoverability,
+  isolation and project/playbook gap triage into existing error handling.
+  Skills link to canonical guidance; authorized internal steps and draft PR
+  timing are agent choices. Preserve review, safety, schema and installed-pin
+  boundaries; prefer retrievable evidence without pruning historical records.
 
 - Keep installed adoption, workflow and upgrade skills portable by resolving
   batch documentation through the verified checkout. Regression coverage copies

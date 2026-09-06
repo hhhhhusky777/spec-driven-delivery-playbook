@@ -97,6 +97,11 @@ Always begin with a solution whiteboard. Keep lightweight discussion notes,
 then conclude once requirements, decisions and open items are reconciled.
 The workflow selects the smallest safe route and reuses active project policies.
 
+The [five core goals](docs/documentation-quality-policy.md#five-goals-and-agent-judgment)
+are clear boundaries, stable outcomes, key information only, proportional effort
+and agent discretion. Policy owns those goals; skills apply them and other
+documents link to them. Execution methods are adaptable, not additional gates.
+
 | Route | Preparation and review boundary |
 | --- | --- |
 | Existing unbatched route | Review artifacts individually under the installed project's current rules |
@@ -115,10 +120,12 @@ exact reviewed/current predecessor results. See the [phase readiness contract](d
 and [simulated walkthrough](examples/batched-delivery/README.md#simulated-phase-aware-readiness). Existing v2/v3
 records retain their original checks until an explicitly reviewed migration.
 
-Exceptions across all phases follow [shared triage and upstream reporting](docs/batch-review-and-recovery.md#exception-triage-and-upstream-reporting):
-diagnose the responsible layer, reuse or open a sanitized issue for a confirmed
-playbook gap, and keep a pending draft when access or disclosure authority is
-missing. Filing an issue never approves a workaround or resumes blocked work.
+Exceptions across all phases use the existing
+[error-handling framework](docs/batch-review-and-recovery.md#recovery-without-restarting-everything)
+and [cause-based triage](docs/batch-review-and-recovery.md#exception-triage-and-upstream-reporting).
+These canonical sections own recovery and reporting; local summaries do not
+introduce new error rules. Draft PR timing is an agent choice; a complete PR
+and its required approvals still precede merge.
 
 ```mermaid
 flowchart TD
@@ -131,7 +138,7 @@ flowchart TD
     R -->|"Findings: consolidate corrections"| P
     R -->|"Both approve"| A["Required owner acceptance"]
     A --> C["One consolidated fresh readiness check"]
-    C -->|"Affected prerequisite fails"| F["Diagnose and reconcile affected work"]
+    C -->|"Affected prerequisite fails"| F["Apply canonical recovery and triage"]
     F --> C
     F -->|"Changed design or authority"| W
     C -->|"Pass"| I["Implement dependency-ready coherent change; test and self-review"]
@@ -452,7 +459,8 @@ adoption manifest. Then follow `.sdd-runtime/agent-guide.md` exactly. Apply the
 recorded `EXPLICIT_REVIEW`, `AUTO_CONTINUE`, or `REVIEW_ON_EXCEPTION` mode to
 each dependency-ready action. Continue automatically only while every declared
 gate passes and the next action remains inside the approved automation
-boundary. Stop at the next explicit checkpoint or exception. Do not approve
+boundary. Stop at the next explicit checkpoint; handle exceptions through the
+canonical recovery contract. Do not approve
 the result of the next action.
 ```
 
@@ -460,8 +468,8 @@ Approval remains scoped to the reviewed artifact and version. After each
 action, compare its changed facts, links, and availability claims with every
 previously approved artifact that depends on them. Record affected artifacts as
 `STALE` in the manifest's freshness register and schedule the earliest
-dependency-ready correction as a later one-artifact action. Do not update a
-second artifact in the current invocation. Stable entry points reference the
+dependency-ready correction under its required authority. Do not consume an
+unapproved result outside an authorized batch. Stable entry points reference the
 manifest for live adoption status instead of copying temporary statements such
 as "not installed yet." Final installation verification is blocked while any
 applicable artifact remains `STALE`.
@@ -484,8 +492,8 @@ The manifest owns adoption state, the delivery workflow owns artifact
 freshness, blockers, and next action, and the plan owns task state. Stable entry
 points link to those authorities instead of copying volatile values. After
 every artifact action, compute structured transitive freshness. An explicit
-action stops for review; an automatic action stops if that audit finds a stale
-dependant, unknown impact, or any other exception.
+action reaches its review boundary; failures in an automatic action use the
+canonical recovery contract before dependent work resumes.
 
 For explicitly adopted batching, combine the conclusion, handoff, routing,
 contracts/audit and plan into the planning review package. After acceptance,
@@ -687,10 +695,10 @@ actions.
 `AUTO_CONTINUE` permits deterministic or mechanically derived work;
 `REVIEW_ON_EXCEPTION` permits a pre-authorized repeatable action. Both require
 approved/current inputs, exact scope, no new semantic decision, all declared
-gates passing on the output revision, and an audit record. They fail closed to
-`EXPLICIT_REVIEW` on failure, ambiguity, unknown impact, drift, a stale or
-blocked dependency, exception, unrelated change, or scope expansion. Automatic
-work continues only until the next mandatory semantic checkpoint.
+gates passing on the output revision, and an audit record. The canonical
+error-handling framework governs exceptions; these modes cannot bypass required
+checks or unresolved authority/safety boundaries. Automatic work continues only
+until the next mandatory semantic checkpoint.
 
 `AUTO_CONTINUED` records execution evidence; it is never an approval. Passing
 automation cannot mark normative content `APPROVED`, and changing a review mode

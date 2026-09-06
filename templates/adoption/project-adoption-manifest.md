@@ -69,7 +69,7 @@ skill while blocked.
 Review defaults to `EXPLICIT_REVIEW`. `AUTO_CONTINUE` and
 `REVIEW_ON_EXCEPTION` are valid only when a reviewed project authority
 preclassifies the action, every declared gate passes, no semantic decision or
-exception exists, and the next action remains within the recorded automation
+unresolved exception exists, and the next action remains within the recorded automation
 boundary and write scope. Otherwise continuation fails closed to
 `EXPLICIT_REVIEW`.
 
@@ -202,8 +202,8 @@ earlier review remains valid historical evidence. Schedule the earliest
 dependency-ready stale correction as a separate action. For `EXPLICIT_REVIEW`,
 the immediate next action remains review of the current change; do not silently
 update the stale artifact during the action that invalidated it. For an
-automatic mode, newly stale or unknown impact is an exception that stops the
-segment and fails closed to explicit review. Stable entry points reference this
+automatic mode, apply [canonical recovery](../../docs/batch-review-and-recovery.md#recovery-without-restarting-everything)
+without consuming stale inputs or bypassing required acceptance. Stable entry points reference this
 manifest for live adoption status instead of copying temporary progress
 statements.
 
@@ -263,7 +263,7 @@ Shared workflow/dependency provenance and immutable revision: `<value or None>`
 
 ### 8.1 Adoption action control
 
-Initial discovery, authority mapping, policy creation/update, exceptions, state
+Initial discovery, authority mapping, policy creation/update, policy exceptions, state
 activation, and adoption approval require `EXPLICIT_REVIEW`. Only deterministic
 mechanics pre-authorized by reviewed project policy may use `AUTO_CONTINUE` or
 `REVIEW_ON_EXCEPTION`.
@@ -285,10 +285,9 @@ review.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `<ID>` | `<versions>` | `<AUTO_CONTINUE/REVIEW_ON_EXCEPTION>` | `<link>` | `<evidence / PASS>` | `<CONTROL_ONLY / None>` | `<state>` | `<action or explicit checkpoint>` |
 
-`AUTO_CONTINUED` is not an approval or review state. Automatic adoption work
-fails closed on a failed/missing gate, ambiguity, unknown/material semantic
-impact, exception, drift, blocker, stale dependency, unrelated change, or scope
-expansion.
+`AUTO_CONTINUED` is not an approval or review state. Apply the
+[canonical error-handling framework](../../docs/batch-review-and-recovery.md#recovery-without-restarting-everything)
+to failures; internal repair does not approve a policy exception or waive a gate.
 
 ## 9. Pilot delivery
 

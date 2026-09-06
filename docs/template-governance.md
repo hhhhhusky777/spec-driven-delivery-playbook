@@ -17,6 +17,11 @@ All repository changes also follow the
 
 ## Principles
 
+Apply the quality policy's [five goals](documentation-quality-policy.md#five-goals-and-agent-judgment).
+Keep a required field when it protects a necessary decision or invariant, not
+merely because a previous example used it. Internal methods remain adaptable;
+do not turn every incident into another universal instruction.
+
 - Each template has one primary purpose.
 - Stable policy belongs in policy templates; uncertain discovery belongs in the
   whiteboard; accepted feature behavior belongs in the implementation plan.
@@ -30,13 +35,9 @@ All repository changes also follow the
 - Examples demonstrate the templates and must not claim evidence that was not
   produced.
 - Concision matters: reference canonical content instead of duplicating it.
-- Every review gate requires exact-candidate self-review and a stable review
-  session whose reviewer(s) are initially created without author context and
-  retained across revision rounds. Design and governance artifacts then require human
-  approval. Only scoped implementation `AGENT_AUTO_MERGE` may proceed after
-  fresh approval without pre-merge human review. Pre-authorized deterministic
-  mechanics may continue automatically with fail-closed gates and an audit
-  record; `AUTO_CONTINUED` never means approval.
+- Review and acceptance follow the quality policy's
+  [required review evidence](documentation-quality-policy.md#required-review-evidence),
+  not a second protocol here.
 
 ## Change categories
 
@@ -61,12 +62,7 @@ All repository changes also follow the
 9. Record migration guidance for existing instantiated documents when needed.
 10. When review states or dependencies change, verify the handoff trigger,
     manifest review, per-artifact review loop, and return paths together.
-11. Before every review gate, complete the agent self-review record against the
-    exact candidate revision; any later change invalidates that evidence.
-12. Open a stable session with exactly two fresh-context reviewers for that exact
-    candidate, preserve findings and author dispositions, and retain those
-    reviewer(s) through revisions. Require human review unless the candidate is
-    inside a live scoped implementation `AGENT_AUTO_MERGE` action.
+11. Apply the canonical review protocol linked above to the resulting candidate.
 
 ## Periodic review
 

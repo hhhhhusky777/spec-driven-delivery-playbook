@@ -24,12 +24,12 @@ measurement or CI pass is claimed yet.
 | Review batch | [Planning batch](planning-batch.md) |
 | Delivery workflow | [Workflow](workflow.md) |
 | Plan | WB62 agent judgment and essential evidence |
-| Status | READY |
-| Previous status | CONTRACT_REVIEW |
+| Status | IMPLEMENTING |
+| Previous status | READY |
 | Plan mode | FULL |
-| Current phase | READY |
-| Current task | None |
-| Next ready task(s) | T01 |
+| Current phase | IMPLEMENTING |
+| Current task | T01 |
+| Next ready task(s) | None |
 | Blockers | None |
 | Owner | Repository owner |
 | Reviewers | Two isolated planning reviewers, then owner |
@@ -209,7 +209,7 @@ and durable concise evidence. No unrelated diff or lost historical evidence.
 
 | ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Independent merge boundary | PR | Required output IDs | Consumed output versions |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| T01 | READY | NEXT | None | None | CURRENT | COMPLETE | NONE | Bounded agent judgment and essential evidence with U84 publication | FC01, FC02, FC03, FC04, FC05, FC06 | One consistent source/policy/consumer PR | None | None | None |
+| T01 | VERIFYING | | None | None | CURRENT | COMPLETE | NONE | Bounded agent judgment and essential evidence with U84 publication | FC01, FC02, FC03, FC04, FC05, FC06 | One consistent source/policy/consumer PR | None | None | None |
 
 ## 8. Task specification and context
 
@@ -220,7 +220,7 @@ and durable concise evidence. No unrelated diff or lost historical evidence.
 
 | Field | Value |
 | --- | --- |
-| State | READY |
+| State | VERIFYING |
 | Depends on | None |
 | Data phase | NONE |
 | Source boundary | Whiteboard source inventory: docs, Contributing, README, CHANGELOG, three source skills, review/affected phase templates, generated guidance in install-sdd.sh, one maintained example and corresponding tests; U84 project controls; issue 63 checker/docs/regression correction |
@@ -234,11 +234,11 @@ and durable concise evidence. No unrelated diff or lost historical evidence.
 | Verified source revision | d93d27a33c43c1574aeed27044654c8964cf998b |
 | Verification evidence | [T01 readiness evidence](../../reviews/WB62-P01.md#t01-readiness-evidence) |
 | Verified at | 2026-09-06T10:20:34Z |
-| Implementation mode at task start | Not selected; read workflow after package acceptance |
-| Implementation mode at PR/merge | Not selected; reread live authority |
+| Implementation mode at task start | HUMAN_REVIEW_BEFORE_MERGE; recorded owner scope T01 |
+| Implementation mode at PR/merge | HUMAN_REVIEW_BEFORE_MERGE; reread for PR 64 review; merge not authorized |
 | Post-merge human review | NOT_APPLICABLE; no merge yet |
 | Self-contained boundary | Policies, consumers, tests and upgrade controls delivered together |
-| Actual change summary | Not recorded |
+| Actual change summary | Canonical goals/recovery, linked skills and consumers, discretionary PR timing, essential evidence and regressions; PR 64 |
 
 Outcome, requirements, scope and prohibited behavior are FC01–FC06 and §§2–5.
 No predecessor outputs are consumed. The source set is accepted design/handoff,
@@ -266,14 +266,14 @@ not yet produced.
 
 | Field | Current value |
 | --- | --- |
-| Plan state | READY |
-| Current task | None |
-| Next ready task(s) | T01 |
-| Active branch / PR | codex/wb62-agent-judgment; no PR |
+| Plan state | IMPLEMENTING |
+| Current task | T01 |
+| Next ready task(s) | None |
+| Active branch / PR | codex/wb62-agent-judgment; PR 64, main target |
 | Last completed task | None |
 | Active blocker | None |
-| Last validation | R05: 101 tests and documentation checks passed; R06 control reconciliation under review |
-| Next action | Obtain human acceptance of R06 amended package; retain selected merge mode |
+| Last validation | T01 local gates and source validation recorded in WB62-P01; exact-head independent review pending |
+| Next action | Complete exact-head T01 review on PR 64, then owner review before merge |
 
 ## 10. Evidence and history
 

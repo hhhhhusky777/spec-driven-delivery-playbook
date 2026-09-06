@@ -21,8 +21,8 @@
 | Review batch | [Planning batch](planning-batch.md) |
 | Implementation plan | [FULL plan](implementation-plan.md) |
 | Delivery | WB62 — agent judgment and essential evidence |
-| State | GATES_READY |
-| Previous state | BLOCKED |
+| State | DELIVERY_ACTIVE |
+| Previous state | GATES_READY |
 | Owner | Repository owner |
 | Concluded whiteboard | [Whiteboard](../../solution-whiteboard.md) |
 | Approved workflow handoff | [Handoff](handoff.md) |
@@ -32,29 +32,29 @@
 | Trigger identity/run ID | Coordinating agent / WB62-ROUTE-20260906-01 |
 | Selected route | Route 3 — systemic guidance change using existing authorities and FULL plan |
 | Manifest review state | APPROVED |
-| Current artifact/gate | [Corrected FULL plan](implementation-plan.md) |
-| Current review phase | DESIGN |
-| Current review target ID | plan |
-| Current artifact review state | APPROVED |
+| Current artifact/gate | [T01 PR 64](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/64) |
+| Current review phase | IMPLEMENTATION |
+| Current review target ID | T01 |
+| Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P01-R06 |
+| Self-review candidate revision | WB62-T01-R07 |
 | Self-review evidence | [Routing review](../../reviews/WB62-P01.md) |
-| Fresh-context review state | APPROVED |
+| Fresh-context review state | IN_REVIEW |
 | Fresh-context review session ID | WB62-P01 |
 | Fresh-context assigned reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
-| Fresh-context reviewed revision | WB62-P01-R06 |
+| Fresh-context approved reviewers | None |
+| Fresh-context reviewed revision | None |
 | Fresh-context review evidence | [Routing review](../../reviews/WB62-P01.md) |
-| Human review state | APPROVED |
-| Human reviewed revision | WB62-P01-R06 |
+| Human review state | NOT_STARTED |
+| Human reviewed revision | None |
 | Human review evidence | [Review record](../../reviews/WB62-P01.md#owner-package-acceptance) |
 | Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |
 | Implementation mode authority | [Owner mode record](../../reviews/WB62-P01.md#implementation-mode-authority) |
 | Implementation mode scope | T01 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-06T09:36:49Z |
-| Next action | Obtain human acceptance of R06 amended package; retain selected merge mode |
+| Next action | Complete exact-head T01 review on PR 64, then owner review before merge |
 | Next action target IDs | workflow |
 | Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; CONTRIBUTING.md; README.md; CHANGELOG.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/workflows; examples; scripts/sdd-lifecycle.mjs; tests |
 | Next action write targets | .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/planning-batch.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
@@ -232,8 +232,8 @@ guidance conflict; report a scoped design amendment when necessary.
 | Field | Current value |
 | --- | --- |
 | Workflow state | GATES_READY |
-| Current artifact/task | T01 mapping correction and owner clarifications |
-| Current artifact review | APPROVED / WB62-P01 |
+| Current artifact/task | T01 IN_PROGRESS |
+| Current artifact review | NOT_STARTED / WB62-P01 |
 | Last approved artifact | WB62-P01-R04; afde3edd4582c5118ddf714b489aaf0b268c72fa |
 | Next ready action | Verify corrected planning package; retain recorded human-review-before-merge authority |
 | Active blockers | None |
