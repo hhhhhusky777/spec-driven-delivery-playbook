@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | WB62 handoff accepted; route the delivery manifest before formal plan generation under the pinned workflow |
+| Next action | Follow the WB62 workflow for routing review before formal plan generation |
 
 Adoption type: `real project`
 
@@ -735,5 +735,7 @@ WB62 R02 design was accepted by the owner after both independent reviewers
 approved exact commit `456b3fc2459be4f3ddc5ca7f649a533dd4e48996`.
 The [design review record](reviews/WB62-S01.md#owner-acceptance) owns exact
 approval evidence. Working whiteboard control now reads CONCLUDED; its accepted
-body is unchanged. Next dependency-ready artifact is the handoff, followed by
-reviewed routing and the single-unit implementation plan. No task is active.
+body is unchanged. The owner subsequently accepted the exact H01 handoff;
+the [WB62 workflow](deliveries/WB62/workflow.md) now owns routing, dependency
+freshness and next action. No task is active. The handoff ledger retains its
+exact acceptance and the workflow records its single manual consumption.

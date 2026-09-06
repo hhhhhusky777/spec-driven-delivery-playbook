@@ -17,7 +17,7 @@
 | Field | Value |
 | --- | --- |
 | Delivery | WB62 — agent judgment and essential evidence |
-| State | APPROVED |
+| State | CONSUMED |
 | Source whiteboard | [Concluded whiteboard](../../solution-whiteboard.md) |
 | Whiteboard state | CONCLUDED |
 | Whiteboard conclusion version | 77a738d60f245fa1752b4cb25d1c3e788455e1fd; approved content from 456b3fc2459be4f3ddc5ca7f649a533dd4e48996 |
@@ -29,8 +29,8 @@
 | Review state | APPROVED |
 | Approved by / at | Repository owner / 2026-09-06; [acceptance](../../reviews/WB62-H01.md#owner-acceptance) |
 | Trigger mode | MANUAL_INVOCATION |
-| Workflow record | Not generated |
-| Next action | Invoke delivery routing from accepted candidate 4b18100a722aa06baba7643b67e01185108a8635 |
+| Workflow record | [WB62 routing](workflow.md) |
+| Next action | Review generated routing manifest; workflow owns subsequent progress |
 
 The normalized input freezes on approval. After consumption this handoff
 preserves its consumption-time state; the generated workflow owns progress.
@@ -119,4 +119,16 @@ Only after APPROVED may a manual coordinator invocation generate the workflow,
 record its consumed handoff revision and one run identity, and advance this
 handoff to CONSUMED. If source content materially changes, mark affected input
 stale and return to its owner. Current trigger version, time, run identity and
-workflow are Not recorded because no trigger occurred.
+workflow are recorded below following owner acceptance; the earlier review
+instructions above describe the completed handoff gate.
+
+| Trigger field | Value |
+| --- | --- |
+| Approved handoff version | 4b18100a722aa06baba7643b67e01185108a8635 |
+| Trigger identity | Coordinating agent, manual invocation after owner acceptance |
+| Triggered at | 2026-09-06 Asia/Shanghai |
+| Idempotency/run ID | WB62-ROUTE-20260906-01 |
+| Generated workflow | [WB62 routing](workflow.md) |
+
+The normalized conclusion is unchanged. These controls freeze at consumption;
+future invocations resume the workflow instead of triggering another instance.
