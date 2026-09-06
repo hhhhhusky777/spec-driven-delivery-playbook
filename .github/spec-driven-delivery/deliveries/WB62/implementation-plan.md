@@ -24,16 +24,16 @@ measurement or CI pass is claimed yet.
 | Review batch | [Planning batch](planning-batch.md) |
 | Delivery workflow | [Workflow](workflow.md) |
 | Plan | WB62 agent judgment and essential evidence |
-| Status | CONTRACT_REVIEW |
-| Previous status | DRAFT |
+| Status | READY |
+| Previous status | CONTRACT_REVIEW |
 | Plan mode | FULL |
-| Current phase | SPECIFY |
+| Current phase | READY |
 | Current task | None |
-| Next ready task(s) | None |
+| Next ready task(s) | T01 |
 | Blockers | None |
 | Owner | Repository owner |
 | Reviewers | Two isolated planning reviewers, then owner |
-| Review state | IN_REVIEW |
+| Review state | APPROVED |
 | Self-review state | SELF_REVIEW_PASSED |
 | Self-review candidate revision | WB62-P01-R04 |
 | Self-review evidence | [Package evidence](../../reviews/WB62-P01.md) |
@@ -44,8 +44,8 @@ measurement or CI pass is claimed yet.
 | Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context reviewed revision | WB62-P01-R04 |
 | Fresh-context review evidence | [Package evidence](../../reviews/WB62-P01.md) |
-| Human review state | NOT_STARTED |
-| Human reviewed revision | Not recorded |
+| Human review state | APPROVED |
+| Human reviewed revision | WB62-P01-R04 |
 | Human review evidence | [Review record](../../reviews/WB62-P01.md#owner-package-acceptance) |
 | Created | 2026-09-06 Asia/Shanghai |
 | Last updated | 2026-09-06 Asia/Shanghai |
@@ -201,7 +201,7 @@ and durable concise evidence. No unrelated diff or lost historical evidence.
 
 | ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Independent merge boundary | PR | Required output IDs | Consumed output versions |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| T01 | PLANNED | | None | None | CURRENT | COMPLETE | NONE | Bounded agent judgment and essential evidence with U84 publication | FC01, FC02, FC03, FC04, FC05, FC06 | One consistent source/policy/consumer PR | None | None | None |
+| T01 | READY | NEXT | None | None | CURRENT | COMPLETE | NONE | Bounded agent judgment and essential evidence with U84 publication | FC01, FC02, FC03, FC04, FC05, FC06 | One consistent source/policy/consumer PR | None | None | None |
 
 ## 8. Task specification and context
 
@@ -212,7 +212,7 @@ and durable concise evidence. No unrelated diff or lost historical evidence.
 
 | Field | Value |
 | --- | --- |
-| State | PLANNED |
+| State | READY |
 | Depends on | None |
 | Data phase | NONE |
 | Source boundary | Whiteboard source inventory: docs, Contributing, README, CHANGELOG, three source skills, review/affected phase templates, generated guidance in install-sdd.sh, one maintained example and corresponding tests; U84 project controls; issue 63 checker/docs/regression correction |
@@ -220,7 +220,7 @@ and durable concise evidence. No unrelated diff or lost historical evidence.
 | Contract IDs | FC01, FC02, FC03, FC04, FC05, FC06 |
 | Owner | Coordinating implementer |
 | Branch / PR | codex/wb62-agent-judgment; main target; no PR yet |
-| Context receipt | NOT_STARTED |
+| Context receipt | APPROVED |
 | Context source revision | d93d27a33c43c1574aeed27044654c8964cf998b |
 | Context verification | NOT_STARTED |
 | Verified source revision | Not recorded |
@@ -258,14 +258,14 @@ not yet produced.
 
 | Field | Current value |
 | --- | --- |
-| Plan state | CONTRACT_REVIEW |
+| Plan state | READY |
 | Current task | None |
-| Next ready task(s) | None |
+| Next ready task(s) | T01 |
 | Active branch / PR | codex/wb62-agent-judgment; no PR |
 | Last completed task | None |
 | Active blocker | None |
-| Last validation | Package checks pending |
-| Next action | Owner acceptance of exact R04 package |
+| Last validation | R04 checks passed; real acceptance and READY transitions passed; pre-start mode pending |
+| Next action | Record owner implementation-mode selection for T01, then finish fresh pre-start verification |
 
 ## 10. Evidence and history
 

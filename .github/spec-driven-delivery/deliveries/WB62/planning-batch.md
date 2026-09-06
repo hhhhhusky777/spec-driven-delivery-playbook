@@ -18,8 +18,8 @@
 | Approval owner | Repository owner |
 | Expiry/end condition | Owner package acceptance, scope change or cancellation |
 | Authority status | CURRENT |
-| State | IN_REVIEW |
-| Previous state | PREPARING |
+| State | ACCEPTED |
+| Previous state | IN_REVIEW |
 | Resume state | IN_REVIEW |
 | Base revision | b43873a9aa8f6798c6b7a90d28521a89b4b8e08e |
 | Candidate revision | WB62-P01-R04 |
@@ -34,16 +34,16 @@
 | Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context reviewed revision | WB62-P01-R04 |
 | Fresh-context review evidence | [Review record](../../reviews/WB62-P01.md) |
-| Human review state | NOT_STARTED |
-| Human reviewed revision | None |
-| Human review evidence | None |
+| Human review state | APPROVED |
+| Human reviewed revision | WB62-P01-R04 |
+| Human review evidence | [Owner acceptance](../../reviews/WB62-P01.md#owner-package-acceptance) |
 | Checkpoint | [Checkpoint](../../reviews/WB62-P01.md#checkpoint) |
 | Transient retry limit | 2 |
 | No-progress limit | 2 |
 | Transient retry count | 0 |
 | No-progress count | 0 |
 | Unresolved finding IDs | None |
-| Next action | Owner review and acceptance of exact R04 planning and issue63 correction package |
+| Next action | Record accepted planning transitions and verify readiness |
 | Action owner | Coordinator |
 | Execution authority | None |
 | Inputs freshness | CURRENT |
@@ -55,25 +55,25 @@
 
 | Artifact ID | Path | Candidate hash | Depends on | Required control IDs | Disposition | Evidence | Reviewed snapshot | Control delta evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| authority | .github/spec-driven-delivery/deliveries/WB62/preparation-authority.md | git:b023745c0b6473d48130658f0b841c4fcd351622 | None | C1, C2, C3, C4, C5, C6, C7 | PENDING | Exact file bytes | None | None |
-| registry | .github/spec-driven-delivery/project-contracts.md | git:abb2743b657a6abb4459eef005b8940541095cf0 | authority | C1, C2, C3, C4, C5, C6 | PENDING | Exact file bytes | None | None |
-| trigger | .github/spec-driven-delivery/agent-trigger.md | git:d5665ef782a48a78ec8e1db1338f44d0832f2110 | registry | C1, C2, C3, C4, C5, C6 | PENDING | Exact file bytes | None | None |
-| manifest | .github/spec-driven-delivery/project-adoption-manifest.md | git:cf898b8420a83114d4cf25cdb317dfd0afa456fb | authority | C1, C2, C3, C4, C5, C6, C7 | PENDING | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-manifest.snapshot | [R03 delta](../../reviews/WB62-P01.md#r03-control-delta-evidence) |
-| upgrade | .github/spec-driven-delivery/playbook-upgrade-assessment.md | git:d7f4fdfa2d7b35c70b407af527dd55eb84544bfe | authority | C1, C2, C3, C4, C5, C6 | PENDING | Exact file bytes | None | None |
-| workflow | .github/spec-driven-delivery/deliveries/WB62/workflow.md | git:b16c6ecb69c3372c03845cc93ccd28f7237eb980 | authority, registry, trigger, manifest, upgrade | C1, C2, C3, C4, C5, C6, C7 | PENDING | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-workflow.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
-| plan | .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md | git:c5e090f427fed2d21db5c976194aecb63113cdf8 | workflow | C1, C2, C3, C4, C5, C6, C7 | PENDING | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-plan.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
+| authority | .github/spec-driven-delivery/deliveries/WB62/preparation-authority.md | git:b023745c0b6473d48130658f0b841c4fcd351622 | None | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | None | None |
+| registry | .github/spec-driven-delivery/project-contracts.md | git:abb2743b657a6abb4459eef005b8940541095cf0 | authority | C1, C2, C3, C4, C5, C6 | APPROVED | Exact file bytes | None | None |
+| trigger | .github/spec-driven-delivery/agent-trigger.md | git:d5665ef782a48a78ec8e1db1338f44d0832f2110 | registry | C1, C2, C3, C4, C5, C6 | APPROVED | Exact file bytes | None | None |
+| manifest | .github/spec-driven-delivery/project-adoption-manifest.md | git:cf898b8420a83114d4cf25cdb317dfd0afa456fb | authority | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-manifest.snapshot | [R03 delta](../../reviews/WB62-P01.md#r03-control-delta-evidence) |
+| upgrade | .github/spec-driven-delivery/playbook-upgrade-assessment.md | git:d7f4fdfa2d7b35c70b407af527dd55eb84544bfe | authority | C1, C2, C3, C4, C5, C6 | APPROVED | Exact file bytes | None | None |
+| workflow | .github/spec-driven-delivery/deliveries/WB62/workflow.md | git:b16c6ecb69c3372c03845cc93ccd28f7237eb980 | authority, registry, trigger, manifest, upgrade | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-workflow.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
+| plan | .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md | git:c5e090f427fed2d21db5c976194aecb63113cdf8 | workflow | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-plan.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
 
 ## Required controls
 
 | Control ID | Owning source | Satisfaction point | Evidence | Disposition |
 | --- | --- | --- | --- | --- |
-| C1 | Accepted design and packaging amendment | Whole planning review | Unchanged design/handoff; explicit scope | PENDING |
-| C2 | V4 readiness contract | Role/graph review and actual checker | Reciprocal plan/workflow and separate future outputs | PENDING |
-| C3 | Quality policy | Exact candidate checks and two reviewers | Review record | PENDING |
-| C4 | Context/readiness contract | Package acceptance then fresh pre-start check | Plan T01 substantive context; future actual verification | PENDING |
-| C5 | Owner authority | Exact package acceptance | No inferred approval or merge authority | PENDING |
-| C6 | Upgrade policy | Verified local cutover and combined publication | U84 checkpoint; main publication pending | PENDING |
-| C7 | Issue 63 owner amendment | Required control progress succeeds; scope/dependencies/review links/prose still fail closed | Focused regression and actual WB62 route simulation | PENDING |
+| C1 | Accepted design and packaging amendment | Whole planning review | Unchanged design/handoff; explicit scope | SATISFIED |
+| C2 | V4 readiness contract | Role/graph review and actual checker | Reciprocal plan/workflow and separate future outputs | SATISFIED |
+| C3 | Quality policy | Exact candidate checks and two reviewers | Review record | SATISFIED |
+| C4 | Context/readiness contract | Package acceptance then fresh pre-start check | Plan T01 substantive context; future actual verification | SATISFIED |
+| C5 | Owner authority | Exact package acceptance | No inferred approval or merge authority | SATISFIED |
+| C6 | Upgrade policy | Verified local cutover and combined publication | U84 checkpoint; main publication pending | SATISFIED |
+| C7 | Issue 63 owner amendment | Required control progress succeeds; scope/dependencies/review links/prose still fail closed | Focused regression and actual WB62 route simulation | SATISFIED |
 
 ## Supplemental issue 63 correction subject
 
