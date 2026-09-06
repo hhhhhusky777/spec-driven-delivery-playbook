@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | Continue WB62 design for issues 62 and 54; prior WB33 working draft discarded by owner; runtime recovered at unchanged pin |
+| Next action | WB62 design accepted; prepare its faithful handoff, then route the formal implementation plan through the pinned workflow |
 
 Adoption type: `real project`
 
@@ -730,3 +730,10 @@ The [working whiteboard](solution-whiteboard.md) now owns WB62. Current scope is
 owner-requested intake/design for #62/#54 with project checks/reviews retained.
 No implementation or automatic merge authority is inferred. Runtime issues
 33/34/36 remain deferred open work; their former local draft is no longer active.
+
+WB62 R02 design was accepted by the owner after both independent reviewers
+approved exact commit `456b3fc2459be4f3ddc5ca7f649a533dd4e48996`.
+The [design review record](reviews/WB62-S01.md#owner-acceptance) owns exact
+approval evidence. Working whiteboard control now reads CONCLUDED; its accepted
+body is unchanged. Next dependency-ready artifact is the handoff, followed by
+reviewed routing and the single-unit implementation plan. No task is active.
