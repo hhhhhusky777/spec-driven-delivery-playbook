@@ -726,16 +726,17 @@ fabricating ownership. Installer regeneration at the unchanged full pin
 Adoption remains INSTALLED, not ACTIVE. This restores access, not persistence.
 The U84 upgrade branch remains pending and separate, not silently applied.
 
-The [working whiteboard](solution-whiteboard.md) now owns WB62. Current scope is
-owner-requested intake/design for #62/#54 with project checks/reviews retained.
-No implementation or automatic merge authority is inferred. Runtime issues
-33/34/36 remain deferred open work; their former local draft is no longer active.
+The [archived WB62 conclusion](archive/WB62/solution-whiteboard.md) owns the
+accepted design for issues #62/#54. The stable [working whiteboard](solution-whiteboard.md)
+is now neutral EMPTY for the next owner-supplied need. The [WB62 workflow](deliveries/WB62/workflow.md)
+owns remaining closure progress. Runtime issues 33/34/36 remain deferred open
+work; their former local draft is no longer active.
 
 WB62 R02 design was accepted by the owner after both independent reviewers
 approved exact commit `456b3fc2459be4f3ddc5ca7f649a533dd4e48996`.
 The [design review record](reviews/WB62-S01.md#owner-acceptance) owns exact
-approval evidence. Working whiteboard control now reads CONCLUDED; its accepted
-body is unchanged. The owner subsequently accepted the exact H01 handoff;
+approval evidence. The accepted body is preserved in the archive, while the
+working path no longer represents WB62. The owner subsequently accepted the exact H01 handoff;
 the [WB62 workflow](deliveries/WB62/workflow.md) now owns routing, dependency
 freshness and next action. No task is active. The handoff ledger retains its
 exact acceptance and the workflow records its single manual consumption.

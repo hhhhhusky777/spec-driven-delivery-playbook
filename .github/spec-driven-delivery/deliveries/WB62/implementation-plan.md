@@ -9,13 +9,12 @@
 | Five goals; C01–C03 and owner clarification | T01: clear boundaries, stable outcomes, key information, proportional effort and agent discretion; reconcile policy, skills and generated guide | Consistent authority, retained approvals, bounded recovery, scope/safety escalation cases | No weakening of required gates or new machine semantics |
 | Key information; C04–C05 | Issue 63 unblock plus T01: retain justified checker snapshots and Git-first review evidence with concise findings | Snapshot control transitions, immutable boundaries, Git history, unavailable bytes and unique logs | No broad mask, historical deletion or arbitrary volume threshold |
 | Canonical consistency; C06 | T01: update affected README, diagrams, templates and maintained example together | Source-impact audit, semantic review, docs and full regression | Syntax passes are not proof of semantic consistency |
-| Owner packaging amendment | T01 PR includes already verified U84 upgrade controls | New runtime CURRENT, migration inventory and mixed-version tests | No runtime issue fix; final main publication still pending |
+| Owner packaging amendment | T01 PR included U84 source controls; U64 publishes the later project cutover with closure | New runtime CURRENT, migration inventory and mixed-version tests | No runtime issue fix; U64 tracked publication remains in PR #65 |
 
-Accept the exact planning package, including routing migration, this plan and
-substantive context, after independent review. No unresolved design choice is
-identified. This is not implementation-result or merge acceptance. Final
-pre-start observations remain necessary. No implementation scenarios, savings
-measurement or CI pass is claimed yet.
+The planning package was accepted before implementation. T01 is now DONE through
+reviewed and merged PR #64; its actual scenarios, CI and target verification are
+recorded below and in the linked evidence. No measured savings claim is made.
+PR #65 owns the remaining validation/archive review and U64 publication.
 
 ## 0. Document control
 
@@ -50,7 +49,7 @@ measurement or CI pass is claimed yet.
 | Created | 2026-09-06 Asia/Shanghai |
 | Last updated | 2026-09-06 Asia/Shanghai |
 | Primary issue | [Issue 62](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/62) |
-| Concluded whiteboard | [Design](../../solution-whiteboard.md) |
+| Concluded whiteboard | [Archived design](../../archive/WB62/solution-whiteboard.md) |
 | Approved workflow handoff | [Handoff](handoff.md), 4b18100a722aa06baba7643b67e01185108a8635 |
 | Implementation continuation mode | Read live from delivery workflow; do not copy |
 | Development policy | [Contributing](../../../../CONTRIBUTING.md) |
@@ -63,7 +62,7 @@ measurement or CI pass is claimed yet.
 | Final PR target | main |
 | Protected-branch synchronization | Before task start and merge; reconcile changed inputs |
 | Branch / PR | Implementation [PR #64](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/64) merged; closure [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) open from `codex/upgrade-37653ee` |
-| Archived record | Not archived |
+| Archived record | Proposed in [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65); authoritative only after closure acceptance and merge |
 
 ## 1. Governing inputs
 
@@ -263,7 +262,8 @@ existing v2/v3/v4 and snapshot compatibility tests, scenario evidence for all
 FC rows, full 99-test baseline plus additions, Markdown, structure, lifecycle,
 Mermaid and whitespace. External-link advisory if changed claims need it.
 Package-check results belong in the review ledger; implementation results are
-not yet produced.
+now recorded in T01/final evidence and PR #64. The original 99-test baseline
+grew to 103 passing tests; the external-link advisory was not rerun.
 
 ## 9. Live snapshot
 
@@ -281,17 +281,17 @@ not yet produced.
 ## 10. Evidence and history
 
 Traceability: C01/FC01, C02–C03/FC02–FC03, C04/FC04, C05/FC05,
-C06/FC06 all map to T01 and the §4 scenario matrix. Final evidence is pending.
-Record failures and author dispositions in the package checkpoint/review ledger,
-not copied logs. Initial creation on 2026-09-06 implements the accepted design
-and owner packaging amendment; no implementation result or new source policy.
+C06/FC06 all map to T01 and the §4 scenario matrix. [Final evidence](evidence.md)
+and [T01 evidence](T01-evidence.md) record the actual result. Failures and author
+dispositions belong in the package checkpoint/review ledger, not copied logs.
+The initial plan remains the accepted specification; current control rows own
+the completed implementation state.
 
 ## 11. Validation, retrospective and archive
 
-Enter plan VALIDATING only after T01 is DONE, source output is complete/current
-and reviewed, and NEXT is empty. Require actual FC evidence, green gates and
-consistent source/docs before completion. Compare intended versus actual
-outcomes, review effort and gaps; unknown measurements stay unknown. Deferred
-runtime work retains its issue owner. Archive only after reviewed closure and
-verified merge, preserving accepted design and bidirectional links under the
-project archive contract. No archive path is reset or cleaned by this plan.
+The plan entered VALIDATING after T01 became DONE, source output became
+complete/current/reviewed and NEXT became empty. Actual FC evidence and green
+gates are in the closure package; unknown performance measurements remain
+unknown and deferred runtime work retains its issue owner. The archived design
+and bidirectional links are prepared, while authoritative closure still waits
+for review, owner acceptance, merge and the bounded receipt. Cleanup is None.

@@ -1,5 +1,9 @@
 # WB62 — discovery-to-delivery handoff
 
+This is the accepted consumption-time input. Planning and implementation claims
+below remain historical; the [live workflow](workflow.md) owns current progress
+and the archived conclusion owns the durable design.
+
 ## Owner review brief
 
 | Type | Item | Acceptance / consequence |
@@ -18,8 +22,8 @@
 | --- | --- |
 | Delivery | WB62 — agent judgment and essential evidence |
 | State | CONSUMED |
-| Source whiteboard | [Concluded whiteboard](../../solution-whiteboard.md) |
-| Whiteboard state | CONCLUDED |
+| Source whiteboard | [Archived concluded whiteboard](../../archive/WB62/solution-whiteboard.md) |
+| Whiteboard state | CONCLUDED at consumption; now preserved as ARCHIVED |
 | Whiteboard conclusion version | 77a738d60f245fa1752b4cb25d1c3e788455e1fd; approved content from 456b3fc2459be4f3ddc5ca7f649a533dd4e48996 |
 | Target repository | [Playbook](https://github.com/hhhhhusky777/spec-driven-delivery-playbook) |
 | Governing registry | [Project contracts](../../project-contracts.md) |

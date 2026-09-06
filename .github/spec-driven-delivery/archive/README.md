@@ -1,6 +1,13 @@
 # Archive and update contract
 
-Status: PROPOSED in the installation batch. No delivery has been archived.
+Status: ACTIVE through the accepted installation/archive contract. WB38 is
+archived. WB62 is an archive candidate in PR #65 and becomes authoritative only
+after its closure review, owner acceptance and merge.
+
+| Delivery | Archived conclusion | Delivery record | State |
+| --- | --- | --- | --- |
+| WB38 | [Conclusion](WB38/solution-whiteboard.md) | [Record](../deliveries/WB38/record.md) | ARCHIVED |
+| WB62 | [Conclusion candidate](WB62/solution-whiteboard.md) | [Record candidate](../deliveries/WB62/record.md) | IN_REVIEW / PR #65 |
 
 After final merge and verification of the protected target, reconcile task,
 plan, workflow, and review evidence. Finish post-merge human reviews before
