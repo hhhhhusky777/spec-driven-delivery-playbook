@@ -457,6 +457,7 @@ test("immutable reviewed snapshots allow only enumerated control deltas", async 
 | Implementation mode scope | Not selected |
 | Implementation repository | Not selected |
 | Implementation mode selected at | Not selected |
+| Verification evidence | [Readiness](readiness.md) |
 | Next action target IDs | plan |
 | Allowed write scope | docs |
 | Next action write targets | artifact.md |
@@ -512,6 +513,8 @@ test("immutable reviewed snapshots allow only enumerated control deltas", async 
   await writeFile(input.file, controlOnly.replace("| Self-review evidence | `reviews/self-review.md` |", "| Self-review evidence | `reviews/other.md` |"));
   assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
   await writeFile(input.file, controlOnly.replace("| Implementation mode authority | [Owner mode record](owner-mode.md) |", "| Implementation mode authority | [Other](other.md) |"));
+  assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
+  await writeFile(input.file, controlOnly.replace("| Verification evidence | [Readiness](readiness.md) |", "| Verification evidence | [Other](other.md) |"));
   assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
   await writeFile(input.file, controlOnly.replace("| Current artifact review | APPROVED / B01 |", "| Current artifact review | APPROVED / OTHER |"));
   assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));

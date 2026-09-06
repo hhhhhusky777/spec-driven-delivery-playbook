@@ -2014,7 +2014,7 @@ function normativeProjection(text) {
     "Implementation mode at task start", "Implementation mode at PR/merge",
     "Next action", "Next action target IDs", "Next action write targets",
     "Context receipt", "Context verification", "Context source revision", "Verified source revision",
-    "Verification evidence", "Verified at", "Last updated", "Actual change summary",
+    "Verified at", "Last updated", "Actual change summary",
     "Workflow state", "Current artifact/task", "Last approved artifact",
     "Next ready action", "Active blockers", "Stale artifacts", "Validation complete",
     "Validation remaining", "Branch/PR", "Plan state", "Active branch / PR",

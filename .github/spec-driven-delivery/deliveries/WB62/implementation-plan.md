@@ -35,7 +35,7 @@ measurement or CI pass is claimed yet.
 | Reviewers | Two isolated planning reviewers, then owner |
 | Review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P01-R03; exact identity in review record |
+| Self-review candidate revision | WB62-P01-R04; exact identity in review record |
 | Self-review evidence | [Package evidence](../../reviews/WB62-P01.md) |
 | Fresh-context review state | NOT_STARTED |
 | Fresh-context review session ID | WB62-P01 |

@@ -37,7 +37,7 @@
 | Current review target ID | workflow |
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P01-R03; exact identity in review record |
+| Self-review candidate revision | WB62-P01-R04; exact identity in review record |
 | Self-review evidence | [Routing review](../../reviews/WB62-P01.md) |
 | Fresh-context review state | NOT_STARTED |
 | Fresh-context review session ID | WB62-P01 |
