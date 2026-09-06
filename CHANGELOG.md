@@ -9,6 +9,10 @@ adopted.
 
 ## Unreleased — updated 2026-09-05
 
+- Keep installed adoption, workflow and upgrade skills portable by resolving
+  batch documentation through the verified checkout. Regression coverage copies
+  all three real skills into the adopting-project layout and checks local links.
+
 - Make upgrade preflight honor the installed manifest's reviewed local
   `Start contributing` entry point. Retain the legacy adoption-root README
   fallback for older manifests and fail closed on missing, external,

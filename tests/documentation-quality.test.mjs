@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import os from "node:os";
 import path from "node:path";
@@ -70,6 +70,25 @@ import {
 } from "../scripts/documentation-quality.mjs";
 import { validateMermaidBlocks } from "../scripts/check-mermaid.mjs";
 import { parseMarkdownTables } from "../scripts/sdd-lifecycle.mjs";
+
+test("real skills retain valid local links after installation into an adopting project", async (t) => {
+  const project = await mkdtemp(path.join(os.tmpdir(), "sdd-portable-skills-"));
+  t.after(() => rm(project, { recursive: true, force: true }));
+  const files = [];
+  for (const name of ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade"]) {
+    const destination = path.join(project, ".agents", "skills", name);
+    await mkdir(path.dirname(destination), { recursive: true });
+    await cp(path.join(REPOSITORY_ROOT, "skills", name), destination, { recursive: true });
+    files.push(path.join(destination, "SKILL.md"));
+  }
+  assert.deepEqual(await checkLocalLinks(files, project), []);
+
+  // Prove that the installed layout catches the original source-relative link.
+  const original = await readFile(files[0], "utf8");
+  await writeFile(files[0], `${original}\n[Broken](../../docs/batch-review-and-recovery.md)\n`);
+  const diagnostics = await checkLocalLinks(files, project);
+  assert.ok(diagnostics.some((diagnostic) => diagnostic.rule === "LOCAL_LINK"));
+});
 
 test("exception triage consumers resolve one canonical contract and complete record", async () => {
   const canonical = "docs/batch-review-and-recovery.md";
