@@ -34,7 +34,7 @@ the one-time current-project cutover after PR #65 target verification.
 | Reviewers | Two isolated planning reviewers, then owner |
 | Review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P02-R02 |
+| Self-review candidate revision | WB62-P02-R03 |
 | Self-review evidence | [Package evidence](../../reviews/WB62-P01.md) |
 | Fresh-context review state | NOT_STARTED |
 | Fresh-context review session ID | WB62-P02 |

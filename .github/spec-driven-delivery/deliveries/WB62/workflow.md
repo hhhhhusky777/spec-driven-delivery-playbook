@@ -37,7 +37,7 @@
 | Current review target ID | plan |
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P02-R02 |
+| Self-review candidate revision | WB62-P02-R03 |
 | Self-review evidence | [Planning review](../../reviews/WB62-P01.md#p02-pr-evidence-reset-amendment) |
 | Fresh-context review state | NOT_STARTED |
 | Fresh-context review session ID | WB62-P02 |
@@ -173,12 +173,12 @@ matrix and complete remove/reset/keep inventory define their bounded scope.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | whiteboard | [Accepted reset conclusion](../../solution-whiteboard.md) | None | a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30 | a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30 | MATERIAL | CURRENT | None |
 | handoff | [Historical handoff](handoff.md) | None | 4b18100a722aa06baba7643b67e01185108a8635 | 4b18100a722aa06baba7643b67e01185108a8635 | CONTROL_ONLY | CURRENT | None |
-| workflow | This routing candidate | whiteboard, handoff | WB62-P02-R02 | WB62-P02-R02 | MATERIAL | CURRENT | None |
-| plan | [Plan](implementation-plan.md) | workflow | WB62-P02-R02 | WB62-P02-R02 | MATERIAL | CURRENT | None |
+| workflow | This routing candidate | whiteboard, handoff | WB62-P02-R03 | WB62-P02-R03 | MATERIAL | CURRENT | None |
+| plan | [Plan](implementation-plan.md) | workflow | WB62-P02-R03 | WB62-P02-R03 | MATERIAL | CURRENT | None |
 | T01 | [Completed task](implementation-plan.md#t01--bounded-judgment-and-essential-evidence) | None | WB62-P01-R05 | WB62-P01-R05 | CONTROL_ONLY | CURRENT | None |
 | upgrade-input | [U84](../../playbook-upgrade-assessment.md) | None | b43873a | b43873a | CONTROL_ONLY | CURRENT | None |
-| T02 | [T02 task specification](implementation-plan.md#t02--pr-owned-evidence-reset-contract-and-v5-enforcement) | plan | WB62-P02-R02 | WB62-P02-R02 | MATERIAL | CURRENT | None |
-| T04 | [T04 task specification](implementation-plan.md#t04--exact-sha-wb62-reset-and-runtime-cutover) | plan | WB62-P02-R02 | WB62-P02-R02 | MATERIAL | CURRENT | None |
+| T02 | [T02 task specification](implementation-plan.md#t02--pr-owned-evidence-reset-contract-and-v5-enforcement) | plan | WB62-P02-R03 | WB62-P02-R03 | MATERIAL | CURRENT | None |
+| T04 | [T04 task specification](implementation-plan.md#t04--exact-sha-wb62-reset-and-runtime-cutover) | plan | WB62-P02-R03 | WB62-P02-R03 | MATERIAL | CURRENT | None |
 
 T01 and `upgrade-input` retain historical identities. T02 and T04 register the
 current task specifications for readiness/review scope; their execution order
@@ -225,7 +225,7 @@ selects a live implementation mode covering those exact task IDs.
 | Handoff | 4b18100a722aa06baba7643b67e01185108a8635 | [Handoff acceptance](../../reviews/WB62-H01.md#owner-acceptance) | APPROVED |
 | Routing and plan | WB62-P01-R06 | [Accepted package](../../reviews/WB62-P01.md#owner-package-acceptance) | APPROVED |
 | Source / T01 | 3621b19f58b83ea6ff16d01e03f6b61b2dad9b49 | [PR64 reviews and owner acceptance](../../reviews/WB62-P01.md#r08-acceptance-and-merge-reconciliation) | APPROVED |
-| P02 plan amendment | WB62-P02-R02 | [Planning review](../../reviews/WB62-P01.md#p02-pr-evidence-reset-amendment) | IN_REVIEW |
+| P02 plan amendment | WB62-P02-R03 | [Planning review](../../reviews/WB62-P01.md#p02-pr-evidence-reset-amendment) | IN_REVIEW |
 
 Manual trigger WB62-ROUTE-20260906-01 consumed the original handoff once. T01
 completed through reviewed PR #64. The accepted D02 conclusion amends the same
@@ -255,7 +255,7 @@ unknown destructive identity or unresolved delivery-owned item prevents closure.
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
 | Current artifact/task | P02 plan amendment; no implementation task active |
-| Current artifact review | IN_REVIEW / WB62-P02-R02 |
+| Current artifact review | IN_REVIEW / WB62-P02-R03 |
 | Last approved artifact | Reset design `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30` |
 | Next ready action | Retained planning review, then owner plan acceptance and T02/T04 mode selection |
 | Active blockers | None |
