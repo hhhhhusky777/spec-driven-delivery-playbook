@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { access, cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import os from "node:os";
 import path from "node:path";
@@ -398,6 +398,127 @@ test("upgrade prepares a newer immutable candidate without changing the active r
   const cleanedNormalGuide = await readFile(normalGuidePath, "utf8");
   assert.equal(guideValue(cleanedUpgradeGuide, "Cleanup state"), "COMPLETE");
   assert.equal(guideValue(cleanedNormalGuide, "Cleanup state"), "COMPLETE");
+});
+
+test("upgrade accepts the existing project entry point recorded in navigation", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
+  const manifestPath = path.join(adoptionRoot, "project-adoption-manifest.md");
+
+  await rm(path.join(adoptionRoot, "README.md"));
+  await writeFile(path.join(project, "CONTRIBUTING.md"), "# Contributing\n", "utf8");
+  const manifest = await readFile(manifestPath, "utf8");
+  await writeFile(
+    manifestPath,
+    `${manifest}\n## 7. Project-local navigation\n\n| Reader need | Canonical project entry/link | Required reading order |\n| --- | --- | --- |\n| Start contributing | [Contributing](../../CONTRIBUTING.md#contributing) | Contributing -> manifest |\n`,
+    "utf8",
+  );
+
+  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Prepared candidate revision:/);
+});
+
+test("upgrade rejects an unavailable project entry point recorded in navigation", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
+  const manifestPath = path.join(adoptionRoot, "project-adoption-manifest.md");
+
+  await rm(path.join(adoptionRoot, "README.md"));
+  const manifest = await readFile(manifestPath, "utf8");
+  await writeFile(
+    manifestPath,
+    `${manifest}\n## 7. Project-local navigation\n\n| Reader need | Canonical project entry/link | Required reading order |\n| --- | --- | --- |\n| Start contributing | [Missing](../../MISSING.md) | Missing -> manifest |\n`,
+    "utf8",
+  );
+
+  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /recorded project entry point is unavailable/);
+});
+
+test("upgrade rejects a blank recorded entry point instead of using the legacy fallback", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const manifestPath = path.join(
+    project,
+    ".github",
+    "spec-driven-delivery",
+    "project-adoption-manifest.md",
+  );
+  const manifest = await readFile(manifestPath, "utf8");
+  await writeFile(
+    manifestPath,
+    `${manifest}\n| Start contributing |  | Broken |\n`,
+    "utf8",
+  );
+
+  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /record a local project entry point/);
+});
+
+test("upgrade rejects URI-scheme entry points even when a matching file exists", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
+  const manifestPath = path.join(adoptionRoot, "project-adoption-manifest.md");
+  const manifest = await readFile(manifestPath, "utf8");
+
+  await writeFile(path.join(adoptionRoot, "javascript:entry.md"), "# Not a local link\n", "utf8");
+  await writeFile(
+    manifestPath,
+    `${manifest}\n| Start contributing | [Script](javascript:entry.md) | Script |\n`,
+    "utf8",
+  );
+
+  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /record a local project entry point/);
+});
+
+test("upgrade rejects external and out-of-project navigation entry points", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
+  const manifestPath = path.join(adoptionRoot, "project-adoption-manifest.md");
+  const manifest = await readFile(manifestPath, "utf8");
+
+  await rm(path.join(adoptionRoot, "README.md"));
+  await writeFile(
+    manifestPath,
+    `${manifest}\n| Start contributing | [External](https://example.test/start) | External |\n`,
+    "utf8",
+  );
+  const external = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(external.status, 0);
+  assert.match(external.stderr, /record a local project entry point/);
+
+  const outsideName = `${path.basename(project)}-outside-entry.md`;
+  const outsidePath = path.join(project, "..", outsideName);
+  await writeFile(outsidePath, "# Outside\n", "utf8");
+  t.after(async () => rm(outsidePath, { force: true }));
+  await writeFile(
+    manifestPath,
+    `${manifest}\n| Start contributing | [Outside](../../../${outsideName}) | Outside |\n`,
+    "utf8",
+  );
+  const outside = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(outside.status, 0);
+  assert.match(outside.stderr, /must stay inside the project root/);
+
+  const linkedPath = path.join(project, "linked-entry.md");
+  await symlink(outsidePath, linkedPath);
+  await writeFile(
+    manifestPath,
+    `${manifest}\n| Start contributing | [Linked](../../linked-entry.md) | Linked |\n`,
+    "utf8",
+  );
+  const linked = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(linked.status, 0);
+  assert.match(linked.stderr, /must not be a symbolic link/);
 });
 
 test("upgrade preflight fails closed for active work, blocked adoption, and unchanged candidates", async (t) => {

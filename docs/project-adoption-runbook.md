@@ -576,6 +576,16 @@ candidate, a blocked or unstable adoption state, active task work, or another
 pending upgrade checkout. Passing preflight proves readiness to assess; it does
 not prove semantic compatibility.
 
+For an installed manifest, the stable human entry point is the local target in
+the `Start contributing` row of Project-local navigation. Upgrade preflight
+resolves that target relative to the manifest, permits a heading fragment, and
+requires the resulting file to remain inside the project, exist, and not be a
+symbolic link. Manifests
+that predate this navigation row retain compatibility through the legacy
+adoption-root `README.md` entry point. An unavailable, external, or
+out-of-project or symbolic-link recorded target fails closed; preflight does
+not invent or rewrite project navigation.
+
 Give the agent only the printed prompt. The generated upgrade guide installs
 `sdd-playbook-upgrade` and records the current and candidate revisions in an
 isolated read-only checkout. The agent then:

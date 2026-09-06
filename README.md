@@ -421,6 +421,11 @@ Rollback keeps or restores the previous pin. See the
 [project adoption runbook](docs/project-adoption-runbook.md#11-playbook-updates-and-drift)
 and [upgrade assessment template](templates/adoption/playbook-upgrade-assessment.md).
 
+Preflight verifies the local `Start contributing` entry point recorded in the
+installed manifest instead of requiring adoption to create a parallel SDD
+README. Older manifests without that navigation row keep their legacy
+adoption-root README fallback.
+
 #### Review and resume adoption
 
 Each agent invocation stops at the next mandatory review checkpoint. It may

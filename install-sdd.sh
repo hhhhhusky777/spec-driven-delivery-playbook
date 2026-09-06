@@ -156,6 +156,86 @@ markdown_value() {
   ' "$file"
 }
 
+manifest_navigation_entry_point() {
+  awk -F'|' '
+    function trim(value) {
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", value)
+      return value
+    }
+    trim($2) == "Start contributing" {
+      print trim($3)
+      exit
+    }
+  ' "$MANIFEST_PATH"
+}
+
+manifest_has_navigation_entry_point() {
+  awk -F'|' '
+    function trim(value) {
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", value)
+      return value
+    }
+    trim($2) == "Start contributing" {
+      found = 1
+      exit
+    }
+    END {
+      exit !found
+    }
+  ' "$MANIFEST_PATH"
+}
+
+entry_point_target() {
+  awk '
+    match($0, /\]\([^)]*\)/) {
+      print substr($0, RSTART + 2, RLENGTH - 3)
+      exit
+    }
+    match($0, /`[^`]+`/) {
+      print substr($0, RSTART + 1, RLENGTH - 2)
+      exit
+    }
+  '
+}
+
+validate_project_entry_point() {
+  local navigation_entry target manifest_directory candidate_directory candidate
+  if manifest_has_navigation_entry_point; then
+    navigation_entry=$(manifest_navigation_entry_point)
+    target=$(printf '%s\n' "$navigation_entry" | entry_point_target)
+    [[ -n "$target" ]] ||
+      fail "upgrade requires Start contributing to record a local project entry point"
+    target=${target#<}
+    target=${target%>}
+    target=${target%%\#*}
+    target=${target%%\?*}
+    if [[ "$target" =~ ^[[:alpha:]][[:alnum:].+-]*: ]]; then
+      fail "upgrade requires Start contributing to record a local project entry point"
+    fi
+    case "$target" in
+      ""|/*)
+        fail "upgrade requires Start contributing to record a local project entry point"
+        ;;
+    esac
+
+    manifest_directory=$(cd "$(dirname "$MANIFEST_PATH")" && pwd -P)
+    candidate_directory=$(cd "$(dirname "$manifest_directory/$target")" 2>/dev/null && pwd -P) ||
+      fail "recorded project entry point is unavailable: $target"
+    candidate="$candidate_directory/$(basename "$target")"
+    case "$candidate" in
+      "$PROJECT_ROOT"/*) ;;
+      *) fail "recorded project entry point must stay inside the project root: $target" ;;
+    esac
+    [[ ! -L "$manifest_directory/$target" ]] ||
+      fail "recorded project entry point must not be a symbolic link: $target"
+    [[ -f "$candidate" ]] || fail "recorded project entry point is unavailable: $target"
+    return
+  fi
+
+  [[ -f "$PROJECT_ROOT/$ADOPTION_ROOT/README.md" ]] ||
+    fail "upgrade requires a manifest Start contributing entry point or the legacy project SDD entry point: $ADOPTION_ROOT/README.md"
+}
+
 profile_for_state() {
   case "$1" in
     ABSENT|DISCOVERY|MAPPED)
@@ -459,8 +539,7 @@ prepare_upgrade() {
   [[ "$current_blocker" == "None" ]] ||
     fail "upgrade requires Current blocker to be None"
 
-  [[ -f "$PROJECT_ROOT/$ADOPTION_ROOT/README.md" ]] ||
-    fail "upgrade requires the project SDD entry point: $ADOPTION_ROOT/README.md"
+  validate_project_entry_point
   [[ -f "$PROJECT_ROOT/$ADOPTION_ROOT/solution-whiteboard.md" ]] ||
     fail "upgrade requires the project solution whiteboard"
   [[ -f "$GUIDE_PATH" ]] ||
