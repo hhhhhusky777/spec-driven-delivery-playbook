@@ -247,6 +247,8 @@ test("reset plan is bound to retrievable exact-head inventory content", () => {
     data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("| policy.md | Git tracked | KEEP | Reused policy | None | PLANNED |", "| policy.md | Git tracked | KEEP | None | None | PLANNED |"); },
     data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("| delivery.md | Git tracked | REMOVE | None | Delete in reset PR | PLANNED |", "| delivery.md | Git tracked | REMOVE | None | None | PLANNED |"); },
     data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replaceAll("PLANNED", "UNKNOWN"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("reset /srv/project/runtime", "reset /srv/project/runtime/only-child"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("reset /srv/project/runtime", "delete /srv/project/runtime/../../etc"); },
     data => { data.snapshot.changedFiles.push("unclassified.md"); },
   ]) {
     const data = fixture();

@@ -377,17 +377,16 @@ export function checkSensitiveContent(relativeFile, text, config) {
       const cells = line.trim().replace(/^\|/, "").replace(/\|$/, "").split(/(?<!\\)\|/).map(cell => cell.trim().replace(/^`|`$/g, ""));
       const identity = cells[resetInventoryColumns.identity] || "";
       if (["WORKTREE", "RUNTIME"].includes(cells[resetInventoryColumns.kind]) && path.isAbsolute(identity)) {
-        for (const column of [resetInventoryColumns.identity, resetInventoryColumns.ownership, resetInventoryColumns.operation]) {
-          if (cells[column] === identity) {
-            cells[column] = "<EXACT_RESET_IDENTITY>";
-            continue;
-          }
-          const escaped = identity.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-          cells[column] = cells[column].replace(
-            new RegExp(`(^|[\\s'"\x60=:;,])${escaped}(?=$|[\\s/'"\x60;,])`, "g"),
-            (_, prefix) => `${prefix}<EXACT_RESET_IDENTITY>`,
-          );
-        }
+        cells[resetInventoryColumns.identity] = "<EXACT_RESET_IDENTITY>";
+        const escaped = identity.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        cells[resetInventoryColumns.ownership] = cells[resetInventoryColumns.ownership].replace(
+          new RegExp(`(^|[\\s'"\x60=:;,])${escaped}(?:/\\.sdd-owned-checkout)?(?=$|[\\s'"\x60;,])`, "g"),
+          (_, prefix) => `${prefix}<EXACT_RESET_OWNERSHIP>`,
+        );
+        cells[resetInventoryColumns.operation] = cells[resetInventoryColumns.operation].replace(
+          new RegExp(`(^|[\\s'"\x60=:;,])${escaped}(?=$|[\\s'"\x60;,])`, "g"),
+          (_, prefix) => `${prefix}<EXACT_RESET_IDENTITY>`,
+        );
         sensitiveLine = `| ${cells.join(" | ")} |`;
       }
     }

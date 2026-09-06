@@ -94,8 +94,15 @@ const unsafeExternalParents = new Set([
 const recorded = value => Boolean(normalize(value)) && !/^(?:none|not applicable|n\/a|—|-)$/i.test(normalize(value));
 const exactToken = (value, expected) => {
   const escaped = expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`(^|[\\s'"\x60=:;,])${escaped}(?=$|[\\s/'"\x60;,])`).test(String(value ?? ""));
+  return new RegExp(`(^|[\\s'"\x60=:;,])${escaped}(?=$|[\\s'"\x60;,])`).test(String(value ?? ""));
 };
+
+const ownershipToken = (value, expected) => {
+  const escaped = expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[\\s'"\x60=:;,])${escaped}(?:/\\.sdd-owned-checkout)?(?=$|[\\s'"\x60;,])`).test(String(value ?? ""));
+};
+
+const unresolvedOperation = value => /[*?\[\]{}]|\$\{|\$[A-Za-z_]|(?:^|[\\s/])\.\.(?=$|[\\s/])|(?:^|\s)~(?:\/|$)/.test(String(value ?? ""));
 
 function pathAliases(value) {
   const resolved = path.resolve(value);
@@ -146,7 +153,7 @@ function resetInventory(body) {
         (disposition === "KEEP" ? (!recorded(reuseReason) || normalize(operation).toUpperCase() !== "NONE") :
           (normalize(reuseReason).toUpperCase() !== "NONE" || !recorded(operation))) ||
         (["WORKTREE", "RUNTIME"].includes(kind) && disposition !== "KEEP" &&
-          (!exactToken(ownership, identity) || !exactToken(operation, identity)))) return null;
+          (!ownershipToken(ownership, identity) || !exactToken(operation, identity) || unresolvedOperation(operation)))) return null;
     itemIds.add(itemId.toLowerCase());
     identities.add(identity);
     result[disposition].push(identity);
