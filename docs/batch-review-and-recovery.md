@@ -65,6 +65,12 @@ explicitly adopt it; installed pins and historical records never auto-migrate.
 
 ## Choose a coherent unit
 
+Apply the [five goals and agent-judgment boundary](documentation-quality-policy.md#five-goals-and-agent-judgment).
+An authorized action is a work unit, not a keystroke, tool call or conversation
+turn. Choose methods and group related internal steps within its scope; stop
+at its actual acceptance boundary. This does not combine independently gated
+artifacts without the required batch authority.
+
 | Phase | One planned full two-agent review unit | Still required |
 | --- | --- | --- |
 | Adoption | Complete mapped installation package, including neutral whiteboard | Policy decisions, conformance, source/pin and runtime handoff verification; a real pilot before ACTIVE |
@@ -158,8 +164,14 @@ affected acceptance. Current progress fields belong to their live owners.
 For a local artifact with later control-only changes, the inventory may add
 `Reviewed snapshot` (a root-contained immutable copy) and `Control delta evidence`
 columns. The declared hash binds that snapshot. The checker compares the live
-file to it after masking only enumerated status/review/context values and task
-ledger progress columns; other prose, scope and dependency changes fail closed.
+file to it after masking only enumerated status, review, implementation-mode,
+current-action, context and live-summary values, plus review-state cells in the
+delivery manifest and enumerated progress cells in the action and task ledgers. Review links,
+reviewer roster/session/quorum, task-spec completion, allowed write scope, task
+dependencies, contracts, risks and ordinary prose remain bound; changing any
+of them fails closed. Review/evidence controls may change status or descriptive
+text only while retaining every predeclared link target; a new or replaced link
+is normative.
 Predeclare control fields before review rather than adding new unreviewed
 structure afterward. The coordinator retains exact input/output hashes and
 delta evidence. This mechanism does not reuse an old PR-head approval.
@@ -194,6 +206,11 @@ Immediately before implementation, the coordinator performs one combined check:
 | Environment | Actual tools, locked dependencies, test prerequisites and source availability |
 | Permissions | Current action scope, owner decisions and selected merge mode |
 | Evidence | Per-task context, source revision, verification time and results |
+
+PR creation timing is an implementation choice. A draft PR may support early
+collaboration but is not a prerequisite to local coding. Verify an existing PR
+when present; the complete candidate must have a correctly scoped PR before
+its implementation review. Publication still needs the applicable authority.
 
 For a v3 batched task, `Context receipt: APPROVED` records substantive acceptance.
 `Context verification: CURRENT`, `Verified source revision`, `Verification
@@ -309,6 +326,27 @@ failure retention rules remain unchanged.
 
 ## Recovery without restarting everything
 
+Use this framework across all phases, whether batched or ordinary. An exception
+starts diagnosis, not automatically a human gate. Classify its cause through
+[triage](#exception-triage-and-upstream-reporting), then judge whether continuing
+preserves approved intent, authority, safety and evidence integrity.
+
+| Impact and recoverability | Response |
+| --- | --- |
+| Recoverable within existing authority | Correct, verify and continue; an agent mistake alone does not need another owner approval |
+| Failure safely isolated | Pause affected operations while independent authorized work continues |
+| Critical invariant violated or safety uncertain | Fail closed on affected operations and obtain the missing decision or authority; stop the whole workflow if impact cannot be contained |
+
+Cause and severity are independent: an agent mistake can threaten safety, while
+a genuine product or playbook gap may allow unaffected work to proceed. Repair
+restores approved intent; changing that intent is not routine repair. Conflicting
+canonical authority, scope/contract changes and uncertain destructive effects
+require escalation when the agent cannot resolve them safely within authority.
+The following cases illustrate the framework; they are not an exhaustive list
+of errors an agent may encounter. Existing retry bounds and acceptance controls
+remain binding. A correction does not bypass a failed check, reset a budget or
+replace exact-head review at the actual package/PR boundary.
+
 | Failure | Response | Stop / escalation |
 | --- | --- | --- |
 | Transient read failure | Initial attempt plus at most two retries, delays 1 and 2 seconds | Exhaustion checkpoints; no unlimited retries |
@@ -352,20 +390,33 @@ canonical checkpoint/manifest/assessment, not a second progress ledger.
 | PLAYBOOK_GAP | Verified playbook contract/template/skill/checker is missing, contradictory or wrong; source evidence or a minimal reproducer distinguishes it from local misuse | Search canonical upstream and update a matching issue or open a sanitized issue |
 | UNKNOWN | Evidence cannot yet isolate responsibility | Preserve uncertainty and the next bounded diagnostic; do not label a confirmed upstream defect |
 
+These classifications identify the responsible layer, not an automatic stop
+decision. Within PROJECT or ADOPTION, distinguish an agent's incorrect execution
+of a valid instruction from a genuine missing or defective project contract,
+implementation or mapping. Record that cause in the existing cause-evidence
+field; no new schema or parallel error record is needed.
+
+Correct an agent mistake under existing authority without opening an issue
+solely for that mistake. Genuine project gaps require a deduplicated issue in
+the project's tracker; genuine playbook gaps require one in the verified
+playbook upstream. Track evaluation and follow-up even when a safe workaround
+allows progress. UNKNOWN remains uncertain until evidence supports attribution.
+
 Record expected versus observed behavior, exact playbook repository/pin,
 candidate/action/failing gate, affected IDs, diagnostic/reproducer and last safe
 checkpoint. Keep valid evidence and invalidate affected dependencies using the
 existing recovery rules. Multiple contributing causes may be recorded separately;
 an upstream defect and a local misconfiguration need not share one remedy.
 
-For PLAYBOOK_GAP, perform the following reporting action without an extra
+For a genuine project gap or PLAYBOOK_GAP, perform the following reporting action without an extra
 approval prompt when existing authority already covers that disclosure and
 destination. Otherwise keep a sanitized pending draft and request only the
 missing authority in the normal owner decision table.
 
-1. **Verify destination.** Resolve canonical upstream from the installed
-   manifest and verified runtime source; do not assume the project origin is
-   the playbook repository. Missing/mismatched provenance stops publishing.
+1. **Verify destination.** For a project gap, verify the project's issue tracker;
+   for a playbook gap, resolve canonical upstream from the installed manifest
+   and verified runtime source. Do not assume both destinations are the same.
+   Missing/mismatched provenance stops publishing.
    Do not read an unverified checkout or modify a project whose runtime gate
    forbids edits; return a sanitized pending handoff if no record write is allowed.
 2. **Deduplicate.** Search open and closed issues using sanitized cause,
@@ -388,6 +439,11 @@ missing authority in the normal owner decision table.
    inspect external effects before retrying; do not duplicate an issue because
    the response was lost. Reporting failures do not recursively create reports
    or reset retry/no-progress counters. Use remaining recovery budgets.
+
+Reporting states belong to the existing recovery record: NOT_REQUIRED needs a
+cause-based reason, PENDING is not filed, and LINKED requires a verified issue
+identity (including a reused issue). Keep private references in authorized
+private records.
 
 An issue is tracking evidence, not a workaround approval or proof of recovery.
 It never weakens a quality/policy gate, changes scope, approves a migration,
@@ -414,6 +470,11 @@ average. The [worked scenario](../examples/batched-delivery/README.md) is simula
 not measured live proof.
 
 ## Compatibility and migration
+
+The five-goal and error-handling clarification changes source guidance, not
+schema fields, retry limits, review quorum, installed pins or historical evidence.
+Existing projects reconcile affected instructions through their approved update
+route. Runtime verification and publication/merge permissions remain required.
 
 Schema 3 retains v2 plan/workflow fields and adds required `Review batch: None`
 or a local link to `review-batch@3`. None keeps ordinary per-artifact behavior.

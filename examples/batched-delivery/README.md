@@ -12,7 +12,7 @@ must come from the actual repository, identities and revisions.
 | Adoption | Inventory authorities and assemble policies, navigation and neutral whiteboard in one package | Conformance, exact pin, two reviewers and owner acceptance before installation; runtime handoff verified |
 | Discussion | Save meaningful facts, proposals, rejected alternatives and questions | One active need; no conclusion until material questions settle |
 | Planning | Synthesize conclusion, handoff, route, contracts and task plan together | Two-agent exact-package review; owner accepts named inputs, not future outputs |
-| Readiness | Check the graph during planning; perform one fresh check just before coding | Accepted context, dependencies, branch/PR, environment, tests, permissions and merge mode all present |
+| Readiness | Check the graph during planning; perform one fresh check just before coding | Accepted context, dependencies, branch, environment, tests, permissions and merge mode; verify a PR if already opened |
 | Implementation | Complete related changes, tests and self-review; review actual PR once | Two isolated retained seats, exact-head comments, owner merge approval; no self-approval |
 | Corrections | Combine findings, fix affected scope and return revised head to both seats | Old findings preserved; delta review may be focused but exact-head evidence refreshed |
 | Validation | Verify completed tasks and integration with actual checks | No future task repairs an intentionally failing merge; all human follow-ups resolved |
@@ -28,6 +28,10 @@ separate from readiness inputs, preserving their dependency and acceptance gates
 
 ## Recovery walkthrough
 
+These examples apply the [canonical error-handling framework](../../docs/batch-review-and-recovery.md#recovery-without-restarting-everything),
+not additional rules. The agent selects a safe response within the
+[five-goal boundary](../../docs/documentation-quality-policy.md#five-goals-and-agent-judgment).
+
 | Event | Simulated handling | What must not happen |
 | --- | --- | --- |
 | Transient read timeout | Preserve first failure; retries after 1 then 2 seconds | Unlimited retries or retrying authentication failure |
@@ -35,12 +39,26 @@ separate from readiness inputs, preserving their dependency and acceptance gates
 | Unknown comment-write result | Read all remote comments and verify marker/head/body | Blind duplicate publication |
 | Partial publication | Preserve returned IDs; reconcile missing/conflicting effects | Claiming full publication or deleting history |
 | Failed test | Diagnose the responsible layer, fix, rerun required suite | Weakening assertion to get green |
+| Agent omitted an approved task's reference | Repair the record against accepted intent and recheck affected controls | Ask the owner to make the same decision again or invent a future-output prerequisite |
+| Genuine project gap | Reuse or open a project issue; continue safely isolated work | Misattribute the defect to the playbook or treat issue creation as recovery |
+| Genuine playbook gap | Verify upstream and reuse or open the appropriate issue | File in an unrelated project or bypass the failing boundary |
+| Cause uncertain | Preserve uncertainty and perform bounded safe diagnosis | Declare an unproven gap or retry an ambiguous destructive write |
 | Rejected item | Invalidate only dependent evidence, retain independent valid work | Restarting every task or silently dropping the item |
 | Interrupted session | Recover exact action ID, source and counters; inspect actual effects | Assuming earlier writes failed or succeeded |
 | Two no-progress rounds | Return original disputed findings to owner with options | Auto-pass, renumber findings or replace reviewers for approval |
 | Changed context | Stop affected task and return material mismatch to its owning review | Treating an old receipt as current |
 | Missing PR evidence | Restore through the same reviewers or reviewed exception | Treating a digest as replacement content |
 | Unclear cleanup ownership | Stop before deletion and preserve evidence | Broad cleanup or removal of user work |
+
+## Essential evidence example
+
+A simulated review uses retained base/candidate commits and a concise record of
+the findings, resolutions and acceptance; it does not add another copy of every
+changed file for each round. Before acceptance, retrieving the exact candidate
+must succeed. A missing Git object blocks using its hash as evidence. Unique
+failure logs remain under the applicable retention policy; a checker-consumed
+local snapshot remains because that interface still needs its bytes. None of
+these examples authorizes deletion of existing records.
 
 ## Human brief example
 

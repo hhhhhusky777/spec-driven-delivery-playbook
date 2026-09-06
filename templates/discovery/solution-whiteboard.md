@@ -79,17 +79,10 @@ delivery-record links, and only then create a fresh `EMPTY` working copy.
 
 ### 0.1 Conclusion review gate
 
-The whiteboard owner may facilitate discussion but must not alone approve the
-conclusion. First complete the
-[agent self-review](../reviews/agent-self-review.md) against the exact candidate
-revision and record `SELF_REVIEW_PASSED`, then run the canonical
-[fresh-context agent review](../reviews/fresh-context-agent-review.md). After
-fresh-context approval, stop for mandatory human review before setting the
-state to `CONCLUDED`. Any candidate change invalidates both review results;
-resolve `CHANGES_REQUESTED`, record an explicit author disposition, repeat
-self-review with the revised candidate, and return to the same assigned session
-reviewer(s) before human review. Self-review and fresh-context review are
-evidence; neither replaces human design approval.
+The whiteboard owner facilitates discussion but must not alone approve the
+conclusion. Apply [self-review](../reviews/agent-self-review.md) and the
+[canonical review protocol](../reviews/fresh-context-agent-review.md), including
+human design approval before setting CONCLUDED.
 
 | Round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
 | --- | --- | --- | --- | --- | --- | --- |

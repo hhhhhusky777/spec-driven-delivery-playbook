@@ -3,6 +3,8 @@
 Human handoffs must include the
 [phase-specific review brief](../../docs/documentation-quality-policy.md#26-attention-and-reviewability-gate).
 Present task IDs and brief work beside their design basis, validation and uncovered gaps.
+Use the [canonical goals](../../docs/documentation-quality-policy.md#five-goals-and-agent-judgment)
+to choose task boundaries and evidence, not a second set of local prescriptions.
 
 ## Optional batched route
 
@@ -132,17 +134,10 @@ that are not in this state machine.
 
 ### 0.2 Artifact review gate
 
-Before `READY`, first complete the
-[agent self-review](../reviews/agent-self-review.md) against the exact candidate
-revision and record `SELF_REVIEW_PASSED`, then open a stable session with
-[fresh-context agent review](../reviews/fresh-context-agent-review.md), and
-finally obtain human approval of that same revision. Any candidate change
-invalidates both reviews. Resolve `CHANGES_REQUESTED`, update affected
-contracts/tasks, record the author's disposition, repeat self-review, return to
-the same assigned session reviewer(s), and repeat human review. If comments
-invalidate the accepted
-solution or manifest, return to the owning upstream artifact instead of fixing
-the contradiction only in this plan. Self-review is evidence, not approval.
+Before `READY`, apply [self-review](../reviews/agent-self-review.md) and the
+[canonical review protocol](../reviews/fresh-context-agent-review.md), including
+human approval of the exact plan. If findings invalidate the accepted solution
+or manifest, return to that upstream owner rather than repairing only this plan.
 
 | Round | Candidate | Self-review | Fresh-context review | Human review | Durable findings/resolution | Result |
 | --- | --- | --- | --- | --- | --- | --- |

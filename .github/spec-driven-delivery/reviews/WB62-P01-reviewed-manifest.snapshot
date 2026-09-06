@@ -64,8 +64,8 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Automatic gate result | `NOT_APPLICABLE` |
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
-| Current blocker | None |
-| Next action | Follow WB62 workflow: T01 VERIFYING on PR 64; R08 review then human review before merge |
+| Current blocker | WB62-P01 issue63 control-delta gap; bounded correction authorized and in progress |
+| Next action | Verify issue63 correction and actual readiness route; return exact package to the retained planning reviewers |
 
 Adoption type: `real project`
 

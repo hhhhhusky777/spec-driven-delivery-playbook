@@ -69,7 +69,7 @@ skill while blocked.
 Review defaults to `EXPLICIT_REVIEW`. `AUTO_CONTINUE` and
 `REVIEW_ON_EXCEPTION` are valid only when a reviewed project authority
 preclassifies the action, every declared gate passes, no semantic decision or
-exception exists, and the next action remains within the recorded automation
+unresolved exception exists, and the next action remains within the recorded automation
 boundary and write scope. Otherwise continuation fails closed to
 `EXPLICIT_REVIEW`.
 
@@ -202,8 +202,8 @@ earlier review remains valid historical evidence. Schedule the earliest
 dependency-ready stale correction as a separate action. For `EXPLICIT_REVIEW`,
 the immediate next action remains review of the current change; do not silently
 update the stale artifact during the action that invalidated it. For an
-automatic mode, newly stale or unknown impact is an exception that stops the
-segment and fails closed to explicit review. Stable entry points reference this
+automatic mode, apply [canonical recovery](../../docs/batch-review-and-recovery.md#recovery-without-restarting-everything)
+without consuming stale inputs or bypassing required acceptance. Stable entry points reference this
 manifest for live adoption status instead of copying temporary progress
 statements.
 
@@ -263,17 +263,15 @@ Shared workflow/dependency provenance and immutable revision: `<value or None>`
 
 ### 8.1 Adoption action control
 
-Initial discovery, authority mapping, policy creation/update, exceptions, state
+Initial discovery, authority mapping, policy creation/update, policy exceptions, state
 activation, and adoption approval require `EXPLICIT_REVIEW`. Only deterministic
 mechanics pre-authorized by reviewed project policy may use `AUTO_CONTINUE` or
 `REVIEW_ON_EXCEPTION`.
 
-Every adoption review gate requires exact-candidate self-review followed by a
-stable session with reviewer(s) initialized without author context and then
-mandatory human review. Preserve requested changes, author dispositions, and
-resolutions as immutable findings. A candidate change starts a new round with
-the same assigned reviewer(s); automatic action modes do not replace either
-review.
+Adoption review follows [self-review](../reviews/agent-self-review.md) and the
+[canonical review protocol](../reviews/fresh-context-agent-review.md), including
+human acceptance of the installation or activation boundary. Record evidence
+in §10; automatic action modes do not approve adoption.
 
 | Action ID | Target/output | Review mode | Mode authority | Required gates | Automation boundary | Semantic decision? | State |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -285,10 +283,9 @@ review.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `<ID>` | `<versions>` | `<AUTO_CONTINUE/REVIEW_ON_EXCEPTION>` | `<link>` | `<evidence / PASS>` | `<CONTROL_ONLY / None>` | `<state>` | `<action or explicit checkpoint>` |
 
-`AUTO_CONTINUED` is not an approval or review state. Automatic adoption work
-fails closed on a failed/missing gate, ambiguity, unknown/material semantic
-impact, exception, drift, blocker, stale dependency, unrelated change, or scope
-expansion.
+`AUTO_CONTINUED` is not an approval or review state. Apply the
+[canonical error-handling framework](../../docs/batch-review-and-recovery.md#recovery-without-restarting-everything)
+to failures; internal repair does not approve a policy exception or waive a gate.
 
 ## 9. Pilot delivery
 
@@ -321,11 +318,7 @@ which reasoning is reconstructed>`
 
 ### Review rounds
 
-Every adoption review round requires a completed
-[agent self-review](../reviews/agent-self-review.md) against the exact candidate
-revision. A later candidate change invalidates the result and requires another
-self-review. `SELF_REVIEW_PASSED` is evidence only; it cannot approve adoption,
-satisfy reviewer independence, authorize merge, or authorize continuation.
+Use the protocols linked in §8.1; this table records their results.
 
 | Session | Round | Self-review evidence | Assigned reviewer/type | Scope | Disposition | Findings/author responses | Version/date |
 | --- | --- | --- | --- | --- | --- | --- | --- |

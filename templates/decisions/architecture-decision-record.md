@@ -41,17 +41,10 @@ not live delivery status. Follow the linked workflow for current progress.
 
 ### Review gate
 
-Submit the ADR through self-review, fresh-context agent review, and human review
-before `ACCEPTED`. First complete the
-[agent self-review](../reviews/agent-self-review.md) against the exact candidate
-revision and record `SELF_REVIEW_PASSED`, then use the canonical
-[fresh-context review](../reviews/fresh-context-agent-review.md). After fresh
-approval, stop for mandatory human review. Any candidate change invalidates
-both results; resolve `CHANGES_REQUESTED`, record an explicit author
-disposition, repeat self-review, and return to the same assigned session
-reviewer(s). Return to the handoff or whiteboard if comments invalidate the
-accepted requirements or solution. Agent review is evidence, not design
-approval.
+Before ACCEPTED, apply [self-review](../reviews/agent-self-review.md) and the
+[canonical review protocol](../reviews/fresh-context-agent-review.md), including
+human design approval. Return to the handoff/whiteboard owner if findings
+invalidate accepted requirements or the solution.
 
 | Round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
 | --- | --- | --- | --- | --- | --- | --- |

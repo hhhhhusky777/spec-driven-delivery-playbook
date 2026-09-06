@@ -57,17 +57,10 @@ manifest and tracker before affected implementation resumes.
 
 ### 1.1 Artifact review gate
 
-Submit each draft or update through exact-revision self-review, fresh-context
-agent review, and human review. First complete the
-[agent self-review](../reviews/agent-self-review.md) against the exact candidate
-evidence, then use the canonical
-[fresh-context review](../reviews/fresh-context-agent-review.md). After fresh
-approval, stop for mandatory human review before a `PROPOSED` rule governs
-new/changed work and again before changing the policy to `ACTIVE` when the
-activation evidence differs. Any candidate change invalidates both prior
-results and requires a new self-review plus re-review by the same assigned
-session reviewer(s). The author may reject an incorrect finding only with
-recorded evidence. Agent review is evidence, not policy approval.
+Apply [self-review](../reviews/agent-self-review.md) and the
+[canonical review protocol](../reviews/fresh-context-agent-review.md). Human
+acceptance is required before a PROPOSED rule governs new/changed work and again
+before ACTIVE when activation evidence differs.
 
 | Round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
 | --- | --- | --- | --- | --- | --- | --- |

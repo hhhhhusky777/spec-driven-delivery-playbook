@@ -97,6 +97,11 @@ Always begin with a solution whiteboard. Keep lightweight discussion notes,
 then conclude once requirements, decisions and open items are reconciled.
 The workflow selects the smallest safe route and reuses active project policies.
 
+The [five core goals](docs/documentation-quality-policy.md#five-goals-and-agent-judgment)
+are clear boundaries, stable outcomes, key information only, proportional effort
+and agent discretion. Policy owns those goals; skills apply them and other
+documents link to them. Execution methods are adaptable, not additional gates.
+
 | Route | Preparation and review boundary |
 | --- | --- |
 | Existing unbatched route | Review artifacts individually under the installed project's current rules |
@@ -115,10 +120,12 @@ exact reviewed/current predecessor results. See the [phase readiness contract](d
 and [simulated walkthrough](examples/batched-delivery/README.md#simulated-phase-aware-readiness). Existing v2/v3
 records retain their original checks until an explicitly reviewed migration.
 
-Exceptions across all phases follow [shared triage and upstream reporting](docs/batch-review-and-recovery.md#exception-triage-and-upstream-reporting):
-diagnose the responsible layer, reuse or open a sanitized issue for a confirmed
-playbook gap, and keep a pending draft when access or disclosure authority is
-missing. Filing an issue never approves a workaround or resumes blocked work.
+Exceptions across all phases use the existing
+[error-handling framework](docs/batch-review-and-recovery.md#recovery-without-restarting-everything)
+and [cause-based triage](docs/batch-review-and-recovery.md#exception-triage-and-upstream-reporting).
+These canonical sections own recovery and reporting; local summaries do not
+introduce new error rules. Draft PR timing is an agent choice; a complete PR
+and its required approvals still precede merge.
 
 ```mermaid
 flowchart TD
@@ -131,7 +138,7 @@ flowchart TD
     R -->|"Findings: consolidate corrections"| P
     R -->|"Both approve"| A["Required owner acceptance"]
     A --> C["One consolidated fresh readiness check"]
-    C -->|"Affected prerequisite fails"| F["Diagnose and reconcile affected work"]
+    C -->|"Affected prerequisite fails"| F["Apply canonical recovery and triage"]
     F --> C
     F -->|"Changed design or authority"| W
     C -->|"Pass"| I["Implement dependency-ready coherent change; test and self-review"]
@@ -452,7 +459,8 @@ adoption manifest. Then follow `.sdd-runtime/agent-guide.md` exactly. Apply the
 recorded `EXPLICIT_REVIEW`, `AUTO_CONTINUE`, or `REVIEW_ON_EXCEPTION` mode to
 each dependency-ready action. Continue automatically only while every declared
 gate passes and the next action remains inside the approved automation
-boundary. Stop at the next explicit checkpoint or exception. Do not approve
+boundary. Stop at the next explicit checkpoint; handle exceptions through the
+canonical recovery contract. Do not approve
 the result of the next action.
 ```
 
@@ -460,8 +468,8 @@ Approval remains scoped to the reviewed artifact and version. After each
 action, compare its changed facts, links, and availability claims with every
 previously approved artifact that depends on them. Record affected artifacts as
 `STALE` in the manifest's freshness register and schedule the earliest
-dependency-ready correction as a later one-artifact action. Do not update a
-second artifact in the current invocation. Stable entry points reference the
+dependency-ready correction under its required authority. Do not consume an
+unapproved result outside an authorized batch. Stable entry points reference the
 manifest for live adoption status instead of copying temporary statements such
 as "not installed yet." Final installation verification is blocked while any
 applicable artifact remains `STALE`.
@@ -484,8 +492,8 @@ The manifest owns adoption state, the delivery workflow owns artifact
 freshness, blockers, and next action, and the plan owns task state. Stable entry
 points link to those authorities instead of copying volatile values. After
 every artifact action, compute structured transitive freshness. An explicit
-action stops for review; an automatic action stops if that audit finds a stale
-dependant, unknown impact, or any other exception.
+action reaches its review boundary; failures in an automatic action use the
+canonical recovery contract before dependent work resumes.
 
 For explicitly adopted batching, combine the conclusion, handoff, routing,
 contracts/audit and plan into the planning review package. After acceptance,
@@ -675,157 +683,26 @@ unmerged work through a feature integration branch.
 
 ### Risk-based review gates
 
-The unbatched default is `EXPLICIT_REVIEW`. Explicitly adopted batching groups
-the normative items below into coherent review packages; it does not waive their
-acceptance. Every full review gate requires reviews from
-two newly isolated subagents of the exact candidate, followed by human review.
-It remains mandatory for requirements,
-solution conclusions, handoffs, routing, policies, ADRs, contracts, complete
-task specifications, risk/exception decisions, and externally consequential
-actions.
-
-`AUTO_CONTINUE` permits deterministic or mechanically derived work;
-`REVIEW_ON_EXCEPTION` permits a pre-authorized repeatable action. Both require
-approved/current inputs, exact scope, no new semantic decision, all declared
-gates passing on the output revision, and an audit record. They fail closed to
-`EXPLICIT_REVIEW` on failure, ambiguity, unknown impact, drift, a stale or
-blocked dependency, exception, unrelated change, or scope expansion. Automatic
-work continues only until the next mandatory semantic checkpoint.
-
-`AUTO_CONTINUED` records execution evidence; it is never an approval. Passing
-automation cannot mark normative content `APPROVED`, and changing a review mode
-requires explicit review. This reduces mechanical review stops without
-allowing green tests to approve a wrong design.
-
-`AUTO_CONTINUE` and `REVIEW_ON_EXCEPTION` are non-review action modes. They end
-at the next review-gated artifact and cannot approve normative content. The
-implementation-only `AGENT_AUTO_MERGE` choice is different: it may continue
-after fresh-context approval without pre-merge human review, subject to its
-exact scope and every live merge gate.
-
-The live workflow proves that exception with `Current review phase =
-IMPLEMENTATION` and a `Current review target ID` contained in the recorded mode
-scope, plus a PR link in the recorded implementation repository. Scope is a
-comma-separated stable-ID list, never free-text task/PR prose. A selected
-auto-merge mode never waives human review for a design,
-validation, or archive gate encountered during implementation.
-
-Before every review gate, the generating or implementing agent self-reviews the
-exact candidate revision against its approved inputs, scope, acceptance
-criteria, policies, tests, risks, and surrounding context. For a PR, it also
-adds concise author annotations to material or non-obvious hunks and maps them
-to governing statements and evidence. The self-review is repeated after any
-candidate change and records `SELF_REVIEW_PASSED` or `SELF_REVIEW_FAILED`.
-
-`SELF_REVIEW_PASSED` is pre-review evidence, never approval. It does not satisfy
-reviewer independence, change the selected review mode, authorize merge, or
-authorize continuation by itself.
+Use the [development-policy mode contract](templates/policies/development-policy.md#risk-based-review-and-continuation)
+for EXPLICIT_REVIEW, AUTO_CONTINUE and REVIEW_ON_EXCEPTION. Approved batching
+changes review units, not acceptance authority. The
+[workflow](templates/workflows/sdd-delivery-workflow.md#13-implementation-continuation-mode)
+owns the separate implementation merge choice and its live scope.
 
 #### Fresh-context agent review design
 
-Every review gate opens a review session with fresh reviewer context to reduce anchoring
-on the author's conversation and reasoning. The original agent acts as the
-coordinator: it freezes a bounded review packet, assigns exactly two reviewers
-with conversation inheritance disabled, waits for their structured receipts,
-triages every finding, and then resumes the delivery. The assigned reviewers
-verify fixes in later rounds. Replacement is allowed only for recorded
-unavailability, authority, or specialty need. The coordinator records
-`REVIEWER_REPLACED` and gives the newly isolated reviewer the full immutable
-session history, stable seat, and next finding sequence; replacement cannot
-bypass an unresolved finding. Reviewers read the approved documents, complete
-diff, checks, and repository state directly. They perform review only; they do
-not edit, merge, resolve their own comments, or continue implementation.
+Follow [self-review](templates/reviews/agent-self-review.md), then the
+[two-reviewer protocol](templates/reviews/fresh-context-agent-review.md).
+The protocol owns isolation, retained seats, exact-head findings and correction
+rounds. Same-account agent comments do not supply another GitHub actor's approval.
 
 ```mermaid
-sequenceDiagram
-    participant U as Human
-    participant A as Original agent
-    participant R as Two assigned fresh-context reviewers
-    participant P as Project and PR
-
-    U->>A: Start or continue delivery
-    A->>P: Implement, test, annotate, and self-review exact revision
-    A->>A: Freeze review packet without author conversation or proposed result
-    A->>R: Open session and initialize both reviewers with no author context
-    R->>P: Read contracts, base, exact candidate, full diff, and gate evidence
-    R->>R: Derive expectations independently, then reconcile author evidence
-    R-->>A: Return exact structured receipts and actionable findings
-    A->>A: Verify isolation, reviewer identity, exact head, and live authority
-    A->>P: Publish labeled agent comments through authorized access
-    A->>A: Reconcile publication IDs and current head before continuation
-    alt Changes requested
-        A->>A: Accept, partly accept, reject with evidence, or defer with authority
-        A->>P: Apply accepted fixes and self-review the new exact revision
-        A->>R: Resume both session reviewers to verify responses and revision
-    else Approved in design or manual implementation
-        A-->>U: Stop for human review
-        alt Human requests changes
-            U->>A: Return durable findings
-            A->>A: Triage every human finding
-            A->>P: Apply accepted fixes and self-review the new exact revision
-            A->>R: Resume both session reviewers before human re-review
-        else Human approves
-            U->>A: Authorize next workflow action
-        end
-    else Approved in scoped implementation auto mode
-        A->>A: Recheck exact head, mode, scope, checks, comments, and blockers
-        A->>P: Merge and continue when every gate passes
-    else Blocked or inconsistent
-        A-->>U: Stop with the exact blocker
-    end
+flowchart LR
+    A["Complete candidate + self-review"] --> R["Two isolated reviewers"]
+    R -->|"Findings"| C["Consolidated correction"]
+    C -->|"New exact head, same seats"| R
+    R -->|"Both approve"| H["Required human review or scoped implementation merge gate"]
 ```
-
-The durable connector is the
-[fresh-context review packet and receipt](templates/reviews/fresh-context-agent-review.md).
-The packet contains the exact subject and revision, governing inputs, scope,
-evidence, and publication channel. It must not include the authoring chat,
-private reasoning, or a recommended disposition. The reviewer first derives
-expectations from source documents and the complete candidate, then reconciles
-the author's annotations and self-review in a second pass.
-
-The reviewer returns `APPROVED`, `CHANGES_REQUESTED`, or `BLOCKED`. It records
-each requested change with its location, governing statement, expected and
-observed behavior, impact, and required outcome. PR findings remain in inline
-comments; non-PR findings are preserved in an immutable per-round review
-record. The original finding is never overwritten when the author responds.
-
-Any new candidate revision invalidates the receipt. The original agent, not
-the reviewer, waits for the result and performs the next action after
-rechecking the live workflow. Conceptually, a compatible agent runtime
-performs:
-
-```text
-packet = freeze_review_packet(exact_candidate)
-reviewers = create_agents(count = 2, inherit_author_conversation = false, input = packet)
-receipts = wait_for_all(reviewers)
-resume_original_agent(receipts)
-```
-
-Design, governance, adoption, upgrade, validation, and archive artifacts always
-stop for human review after fresh-context approval. Implementation under
-`HUMAN_REVIEW_BEFORE_MERGE` follows the same sequence. Only implementation PRs
-inside a live `AGENT_AUTO_MERGE` scope may merge and continue after both agent
-reviews approve and all repository gates pass; they still enter the post-merge human
-review ledger.
-
-Fresh context is process independence, not account independence. With the same
-GitHub identity, the result can be recorded in the workflow ledger or a PR
-comment but must not be represented as a repository-required approval from a
-different actor. A separately authorized GitHub App and restricted review
-gateway can provide that formal identity later; they are not required for this
-review method to improve the current delivery loop.
-
-After every design artifact and complete task specification is approved, the
-user chooses the implementation continuation mode in the live delivery
-workflow. `HUMAN_REVIEW_BEFORE_MERGE` pauses each task PR for review;
-`AGENT_AUTO_MERGE` lets the agent merge an annotated, exact-revision
-self-reviewed task PR only after all repository protections and declared gates
-pass. The agent rereads this mode before each task, PR, merge, and continuation;
-the user may change it at any time. Missing or invalid mode data, conflicts,
-inconsistencies, failed gates, scope drift, unresolved comments, or repository
-rules requiring review stop automation. Design and planning gates never use
-this implementation-only choice, and all automatically merged PRs require
-post-merge human review before delivery completion/archive.
 
 #### Example: enable auto-continuation during implementation
 

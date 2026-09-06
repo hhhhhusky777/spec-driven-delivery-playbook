@@ -135,35 +135,27 @@ write scope. Apply its pre-approved `EXPLICIT_REVIEW`, `AUTO_CONTINUE`, or
   next action inside the approved automation boundary and write scope;
 - continue through eligible automatic actions only until the next mandatory
   semantic checkpoint;
-- fail closed to `EXPLICIT_REVIEW` on a failed/missing gate, ambiguity, unknown
-  impact, exception, drift, blocker, stale dependency, unrelated change, or
-  scope expansion;
-- do not update a newly stale artifact in this invocation, and keep volatile
+- handle failures through the verified checkout's canonical recovery framework
+  in `docs/batch-review-and-recovery.md#recovery-without-restarting-everything`;
+  do not bypass a required check or unresolved authority/safety boundary;
+- do not consume unapproved output outside an authorized batch, and keep volatile
   adoption progress in the manifest rather than copying it into stable entry
   points;
 - preserve all unrelated and user-owned changes;
 - do not write outside the current Allowed write scope;
 - update manifest evidence and Next action;
 - run only the Required documentation checks applicable to this action;
-- before every review gate, complete the adopted agent self-review record
-  against the exact candidate revision, including the contract-to-change map,
-  material author annotations, scope, evidence, risks, and cross-document
-  consistency; and
-- record `SELF_REVIEW_PASSED` or `SELF_REVIEW_FAILED`; any candidate change
-  invalidates the result, and a pass cannot approve, merge, or continue work;
-- after self-review passes, open a stable session and initialize exactly two reviewers
-  with no inherited authoring conversation, follow the canonical fresh-context
-  review protocol, and preserve requested-change findings plus explicit author
-  dispositions without overwriting them; and
-- after fresh-context approval, stop for mandatory human adoption review. Any
-  candidate change requires a new self-review and re-review by the same assigned
-  session reviewer(s).
+- at the review boundary, follow `templates/reviews/agent-self-review.md` and
+  `templates/reviews/fresh-context-agent-review.md` from the verified checkout;
+  those protocols own the exact-candidate review and correction sequence;
+- obtain required human adoption acceptance before advancing adoption state.
 
 Do not advance Adoption state without recorded explicit reviewer authority.
 Do not approve your own work, use `AUTO_CONTINUED` as approval, cross an
 explicit checkpoint, start a feature whiteboard, modify product code, or
 contact an external project. Stop at `EXPLICIT_REVIEW`, the automation
-boundary, or the first exception, then report:
+boundary, or an unresolved authority/safety boundary after canonical recovery,
+then report:
 - current state;
 - actions completed and their review modes;
 - files changed;

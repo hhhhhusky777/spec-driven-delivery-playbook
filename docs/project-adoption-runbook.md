@@ -213,18 +213,10 @@ instructions, and pinned repository. It updates only repository discovery,
 unknowns, and the proposed routing map. It must not create downstream policies
 or mark its own work approved.
 
-Before each review stop, the agent completes the adopted self-review record
-against the exact candidate revision and records `SELF_REVIEW_PASSED` or
-`SELF_REVIEW_FAILED`. A later change invalidates that result. A pass supplies
-review evidence but cannot approve adoption, satisfy reviewer independence,
-authorize merge, or authorize continuation.
-
-It then opens a stable review session and initializes exactly two fresh-context
-reviewer(s) for the exact candidate using the canonical protocol. Requested
-changes and author dispositions remain durable audit history. After all
-assigned reviewers approve, adoption still stops for mandatory human review; a
-changed candidate requires a new self-review and re-review by the same session
-reviewer(s).
+At each review boundary, apply the
+[self-review](../templates/reviews/agent-self-review.md) and
+[fresh-context protocol](../templates/reviews/fresh-context-agent-review.md).
+They own exact candidates, findings, retained reviewers and correction rounds.
 
 **Review stop A:** after fresh-context approval, an authorized human reviewer
 verifies facts and authority links. Human approval records the review and moves
@@ -247,9 +239,10 @@ commands, and availability claims with previously approved artifacts. Record
 each affected artifact as `STALE` in the manifest's freshness register. Under
 `EXPLICIT_REVIEW`, the immediate next action remains independent review of the
 current change; after approval, the earliest dependency-ready stale correction
-takes priority. Under an automatic mode, any newly stale artifact, unknown
-impact, or exception ends the automation segment and fails closed to explicit
-review. Stable entry points and contract registries link to the manifest for
+takes priority. Under an automatic mode, use
+[canonical recovery](batch-review-and-recovery.md#recovery-without-restarting-everything)
+to restore valid inputs within authority or isolate affected work; do not consume
+stale inputs or bypass the next required review. Stable entry points and contract registries link to the manifest for
 live adoption status instead of duplicating temporary progress statements.
 
 Example: if an approved entry point says a checker is not installed, installing
@@ -531,15 +524,9 @@ is outside its authority.
 ## 10. Failure handling and rollback
 
 Apply [exception triage and upstream reporting](batch-review-and-recovery.md#exception-triage-and-upstream-reporting)
-to adoption and upgrade failures. Reuse a matching upstream issue for a
-confirmed source gap; local adoption errors and old pins need their own
-appropriate correction, not an automatic new playbook issue. Preserve the
-existing runtime-verification and rollback boundaries below.
-
-Before changing a document, test, configuration, or workflow after a failure,
-record what happened, what was expected, the relevant authority, and whether
-the cause is a project defect, adoption-design defect, configuration defect,
-environment limitation, or test/checker defect. Fix the responsible layer.
+and [recovery](batch-review-and-recovery.md#recovery-without-restarting-everything)
+to adoption and upgrade failures. Those sections own classification, repair,
+reporting and escalation. The adoption-specific rollback consequences follow.
 
 If adoption creates ambiguity, blocks normal delivery, or weakens an existing
 gate:

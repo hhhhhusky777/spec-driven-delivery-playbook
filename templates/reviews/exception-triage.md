@@ -22,10 +22,9 @@ diagnostics into a public repository. Follow the
 | Safe workaround / required approval | `<proposal and authority, or None>` |
 | Owner / next action / unblock condition | `<responsible owner, bounded next step and preserved gates>` |
 
-NOT_REQUIRED needs a classification-based reason. PENDING is not filed. LINKED
-requires verified actual issue evidence, including a reused issue where no new
-comment was needed. A private report's reference must stay in an authorized
-private record. An issue link never supplies permission to bypass a failed gate.
+Use the canonical contract above to interpret classification and reporting state;
+record the verified project or upstream destination in the existing destination
+field. Keep decision-useful evidence, not another copy of the recovery policy.
 
 ## Owner attention
 

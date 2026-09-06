@@ -26,6 +26,16 @@ From the repository root:
    human authority, checks, and freshness. Ordinary future gates follow the
    approved project policy; this installation's batch authorization does not
    grant permanent automatic continuation or merge authority.
+7. During an approved upgrade, follow the generated upgrade guide and
+   [assessment](playbook-upgrade-assessment.md), retaining the old pin until
+   validated owner cutover. After cutover and reviewed publication, use the
+   [future-delivery routing](project-contracts.md#u84-future-delivery-routing)
+   with the verified candidate workflow skill. Preserve existing discussion
+   and terminal history; a new runtime does not authorize a new design or merge.
+
+For WB62 only, the later [preparation authority](deliveries/WB62/preparation-authority.md)
+permits joint upgrade/planning preparation before publication; retain required
+package acceptance and do not infer implementation or merge permission.
 
 Resume prompt: “Follow the verified `.sdd-runtime/agent-guide.md`, then the
 project registry and current manifest/workflow next action. Reconcile exact
