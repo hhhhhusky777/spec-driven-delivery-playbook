@@ -70,9 +70,14 @@ The agent classifies the exact inventory case by case using this outcome:
 | Adoption control or output usable independently by future work | `KEEP`; examples include the manifest, contracts, trigger, current pin, delivered source, tests, policies, templates and reusable documentation |
 
 Before destructive work, the reset candidate enumerates every delivery-owned
-item and its disposition. `KEEP` requires a concrete future-use reason. Omitted
-or uncertain ownership blocks only the affected removal; it cannot be treated
-as implicit permission to retain duplicate delivery evidence or delete it.
+item and its disposition. Repository files use exact repository-relative paths;
+branches use exact refs; worktrees use exact filesystem paths plus ownership
+markers; machine runtime uses the exact checkout, guide and ownership-marker
+identities. Each non-repository target records verified ownership and the exact
+authorized cleanup command or operation. `KEEP` requires a concrete future-use
+reason. Omitted or uncertain ownership blocks the affected removal and prevents
+delivery reset/closure from being declared complete; it cannot be treated as
+implicit permission to retain duplicate delivery evidence or delete it.
 
 GitHub repository and PR history are the selected system of record under the
 same administrative trust boundary as repository Git history. The playbook does
@@ -99,7 +104,7 @@ Before owner acceptance, the feature PR must contain one versioned
 | Requested owner authority | Exact candidate and requested feature/reset merge scope; state `PENDING` before the owner acts |
 | Checks | Required check names, conclusions and exact run URLs |
 | Limits and follow-ups | Unrun/unavailable evidence, accepted limits and linked issues or `None` |
-| Reset plan | Complete inventory of delivery-owned repository paths and runtime items; each item is `REMOVE`, `RESET`, or `KEEP` with a reuse reason; exact replacement bytes or blobs for every reset file; reset PR mode and cleanup authority; descriptive classes grant no deletion authority |
+| Reset plan | Complete inventory of exact repository-relative paths, branch refs, worktree paths/ownership markers and machine-runtime checkout/guide/marker identities; each item is `REMOVE`, `RESET`, or `KEEP` with a reuse reason; exact replacement bytes/blobs for reset files and exact cleanup authority/operation for non-repository targets; descriptive classes grant no deletion authority |
 
 After the owner acts and before feature merge, the same PR receives a separate
 `sdd-pr-acceptance/v1` comment containing the exact accepted candidate, owner
@@ -153,9 +158,9 @@ revision. It does not authorize this repository's one-time v4-to-v5 bootstrap.
    checks. Merge it without another semantic review only when the feature-PR
    owner acceptance explicitly authorized that exact reset scope and merge mode.
 7. Verify the reset merge on target and append the final reset identity/result
-   to the feature PR. Then remove delivery-owned branches/worktrees, clean the
-   owned machine runtime and regenerate it for the next need from the current
-   reviewed manifest pin.
+   to the feature PR. Then remove only the enumerated, ownership-verified branch
+   refs and worktree paths, clean only the enumerated owned machine runtime, and
+   regenerate it for the next need from the current reviewed manifest pin.
 
 The reset is not evidence deletion: the PR and immutable Git revisions must
 already own the required evidence. Missing or inconsistent PR evidence blocks
@@ -299,7 +304,7 @@ This is an outcome boundary, leaving agents room to choose safe mechanics.
 | Task | Brief work | Completion signal |
 | --- | --- | --- |
 | T02 — Closure contract | Update canonical docs, diagrams, skills, templates and PR evidence schema to make the feature PR the semantic owner and define classification, repository reset, runtime regeneration and neutral-whiteboard outcomes | All consumers state the same evidence, sequencing, reuse boundary and authority outcome without copied archive rules |
-| T03 — Enforcement and compatibility | Add GitHub-aware evidence verification; update local v5 lifecycle validation and reset-inventory regressions while preserving v2–v4 | Positive/negative API fixtures, schema compatibility, remove/reset/keep classification and failure-boundary scenarios pass |
+| T03 — Enforcement and compatibility | Add GitHub-aware evidence verification; update local v5 lifecycle validation and reset-inventory regressions while preserving v2–v4 | Positive/negative API fixtures, schema compatibility, remove/reset/keep classification, exact file/ref/worktree/runtime identity and incomplete-cleanup scenarios pass |
 | T04 — Current-project migration | Withdraw the unmerged terminal controls, keep the v4 pin, remove only unmerged archive additions in PR #65, and publish the complete WB62 disposition inventory; after PR #65 target verification, prepare one exact-SHA reset/upgrade PR for normal upgrade review | PR #65 merges reusable v5 behavior with WB62 state preserved; the later human-approved reset/upgrade PR pins the exact v5 merge, removes all non-reusable WB62 state, restores EMPTY and regenerates runtime without touching WB38 |
 
 T02–T04 form PR #65 plus one later combined reset/upgrade PR. PR #65 receives
@@ -361,7 +366,7 @@ is today.
 | `templates/reviews/agent-self-review.md` and `scripts/review-publication.mjs` | Publish exact self-review/body digests and retain literal reviewer findings without local ledger duplication | T02/T03 | Deterministic publication/replay and edited-body digest mismatch tests |
 | `.github/workflows/documentation-quality.yml` and `package.json` | Add the canonical reset-evidence check with read-only pull-request/check/content permissions and an explicit script entry point | T03 | Workflow wiring assertion plus mocked GitHub API positive/negative runs |
 | `config/sdd-lifecycle-schema-v2.json`, `config/sdd-lifecycle-schema-v3.json`, current v4 `config/sdd-lifecycle-schema.json`, and `scripts/sdd-lifecycle.mjs` dispatch | Preserve v2/v3; retain the current schema as explicit v4 compatibility input; add a v5/default schema and validate v5 local fields, locator and reset inventory | T03 | Exact v2–v5 dispatch plus positive/negative compatibility tests |
-| Project registry, trigger, manifest, WB62 paths/reviews/U64, machine runtime and archive index | Keep adoption controls; classify every WB62-owned item; remove non-reusable state, restore `EMPTY`, and regenerate runtime only through the reviewed current-project v5 cutover | T04 | Complete remove/reset/keep inventory, PR evidence verifier, regenerated runtime CURRENT and WB38 no-impact check |
+| Project registry, trigger, manifest, WB62 paths/reviews/U64, machine runtime and archive index | Keep adoption controls; classify every WB62-owned item; remove non-reusable state, restore `EMPTY`, and regenerate runtime only through the reviewed current-project v5 cutover | T04 | Complete exact path/ref/worktree/runtime remove/reset/keep inventory, ownership verification, PR evidence verifier, regenerated runtime CURRENT and WB38 no-impact check |
 
 ## Conclusion readiness
 
