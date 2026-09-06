@@ -250,6 +250,9 @@ test("reset plan is bound to retrievable exact-head inventory content", () => {
     data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("reset /srv/project/runtime", "reset /srv/project/runtime/only-child"); },
     data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("reset /srv/project/runtime", "delete /srv/project/runtime/../../etc"); },
     data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("reset /srv/project/runtime", "reset /srv/project/runtime and delete /etc"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("reset /srv/project/runtime", "reset /srv/project/runtime and delete //etc"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("reset /srv/project/runtime", "reset /srv/project/runtime and delete(/etc)"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("reset /srv/project/runtime", `reset /srv/project/runtime and open file:${"/".repeat(3)}etc/passwd`); },
     data => { data.snapshot.changedFiles.push("unclassified.md"); },
   ]) {
     const data = fixture();

@@ -104,13 +104,17 @@ const ownershipToken = (value, expected) => {
 
 const unresolvedOperation = value => /[*?\[\]{}]|\$\{|\$[A-Za-z_]|(?:^|[\\s/])\.\.(?=$|[\\s/])|(?:^|\s)~(?:\/|$)/.test(String(value ?? ""));
 
-function hasAdditionalAbsolutePath(value, expected) {
+function operationTargetsOnlyIdentity(value, expected) {
   const escaped = expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  let matched = 0;
   const withoutExpected = String(value ?? "").replace(
     new RegExp(`(^|[\\s'"\x60=:;,])${escaped}(?=$|[\\s'"\x60;,])`, "g"),
-    (_, prefix) => `${prefix}<EXACT_RESET_IDENTITY>`,
+    (_, prefix) => {
+      matched += 1;
+      return `${prefix}<EXACT_RESET_IDENTITY>`;
+    },
   );
-  return /(^|[\s'"`=:;,])\/(?!\/)[^\s'"`;,]+/.test(withoutExpected);
+  return matched > 0 && !withoutExpected.includes("/");
 }
 
 function pathAliases(value) {
@@ -163,7 +167,7 @@ function resetInventory(body) {
           (normalize(reuseReason).toUpperCase() !== "NONE" || !recorded(operation))) ||
         (["WORKTREE", "RUNTIME"].includes(kind) && disposition !== "KEEP" &&
           (!ownershipToken(ownership, identity) || !exactToken(operation, identity) || unresolvedOperation(operation) ||
-            hasAdditionalAbsolutePath(operation, identity)))) return null;
+            !operationTargetsOnlyIdentity(operation, identity)))) return null;
     itemIds.add(itemId.toLowerCase());
     identities.add(identity);
     result[disposition].push(identity);
