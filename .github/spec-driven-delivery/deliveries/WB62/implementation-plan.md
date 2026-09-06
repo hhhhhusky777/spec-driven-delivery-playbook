@@ -469,9 +469,9 @@ Required tests and evidence: exact tree/path/ref/worktree/runtime inventory;
 GitHub evidence verification; v4-to-v5 migration tests; installer cleanup,
 install and validate; lifecycle, documentation and full regression gates;
 post-merge target receipt on PR #65. Local implementation validation: focused
-schema/evidence/reset/publication tests pass 59/59; Markdown, structure,
-lifecycle, Mermaid and whitespace gates pass; the full Node suite passes
-122/122. The external-link advisory was not rerun because no external factual
+evidence/documentation regressions pass 54/54; Markdown, structure, lifecycle,
+Mermaid and whitespace gates pass; the full Node suite passes 124/124. The
+external-link advisory was not rerun because no external factual
 claim changed. Exact-head PR checks and implementation reviews remain pending.
 
 ## 9. Live snapshot
@@ -483,9 +483,9 @@ claim changed. Exact-head PR checks and implementation reviews remain pending.
 | Next ready task(s) | None |
 | Active branch / PR | `codex/upgrade-37653ee`; [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
 | Last completed task | T01 |
-| Active blocker | None; R02 findings are corrected and await exact-head self-review |
-| Last validation | Consolidated R02 corrections complete locally; focused evidence/lifecycle tests 59/59, full Node suite 122/122, Markdown, structure, lifecycle, Mermaid and whitespace gates pass |
-| Next action | Publish the revised exact PR #65 head, run self-review and return it to retained R1/R2 for R03 |
+| Active blocker | None; R04 findings are corrected and await exact-head self-review |
+| Last validation | Consolidated R04 corrections complete locally; focused evidence/documentation tests pass 54/54; full Node suite 124/124; Markdown, structure, lifecycle, Mermaid, whitespace and runtime validation pass |
+| Next action | Publish the revised exact PR #65 head, run self-review and return it to retained R1/R2 for R05 |
 
 ## 10. Evidence and history
 

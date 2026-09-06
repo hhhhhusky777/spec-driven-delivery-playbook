@@ -38,14 +38,14 @@
 | Current artifact review state | NOT_STARTED |
 | Self-review state | NOT_STARTED |
 | Self-review candidate revision | Not recorded |
-| Self-review evidence | [R03 candidate self-review](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#issuecomment-5561044226); stale after the current correction batch |
+| Self-review evidence | [R04 candidate self-review](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#issuecomment-5561193067); stale after the current correction batch |
 | Fresh-context review state | NOT_STARTED |
 | Fresh-context review session ID | Not recorded |
-| Fresh-context assigned reviewers | wb62_t02_r1; wb62_t02_r2 retained for R04 after exact-head self-review |
+| Fresh-context assigned reviewers | wb62_t02_r1; wb62_t02_r2 retained for R05 after exact-head self-review |
 | Fresh-context required approvals | 2 |
 | Fresh-context approved reviewers | Not recorded |
 | Fresh-context reviewed revision | Not recorded |
-| Fresh-context review evidence | R03 changes requested: [R1](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#pullrequestreview-5126175587); [R2](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#pullrequestreview-5126177976) |
+| Fresh-context review evidence | R04 changes requested: [R1](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#pullrequestreview-5126234308); [R2](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#pullrequestreview-5126234347) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | Not recorded |
 | Human review evidence | Not recorded |
@@ -54,7 +54,7 @@
 | Implementation mode scope | T02, T04 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-06T23:54:35+08:00 |
-| Next action | Address all R03 findings together, publish exact-head self-review, and return the revised candidate to the same reviewers for R04 |
+| Next action | Address all R04 findings together, publish exact-head self-review, and return the revised candidate to the same reviewers for R05 |
 | Next action target IDs | T02 |
 | Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/upgrades/U64.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; .github/pull_request_template.md; .github/workflows/documentation-quality.yml; CONTRIBUTING.md; README.md; CHANGELOG.md; package.json; config; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/README.md; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/handoffs; templates/policies; templates/testing; templates/workflows; examples; scripts/sdd-lifecycle.mjs; scripts/review-publication.mjs; scripts/verify-pr-evidence.mjs; tests |
 | Next action write targets | CONTRIBUTING.md; README.md; CHANGELOG.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/README.md; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/handoffs; templates/policies; templates/testing; templates/workflows; .github/pull_request_template.md; .github/workflows/documentation-quality.yml; package.json; config; examples; scripts/sdd-lifecycle.mjs; scripts/review-publication.mjs; scripts/verify-pr-evidence.mjs; tests; .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
@@ -330,13 +330,13 @@ before its separate exact-head review and owner cutover acceptance.
 | Field | Current value |
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
-| Current artifact/task | T02 PR #65; R03 correction batch in progress |
-| Current artifact review | NOT_STARTED; retained-seat R04 follows the published R03 changes-requested receipts |
+| Current artifact/task | T02 PR #65; R04 correction batch complete locally |
+| Current artifact review | NOT_STARTED; retained-seat R05 follows the published R04 changes-requested receipts |
 | Last approved artifact | P02 plan `d8d7fd707e1ca31f2d413c86479f51fe7864c6d8` |
-| Next ready action | Complete the consolidated R03 correction, publish exact-head self-review, and return it to retained R1/R2 |
-| Active blockers | R03 structured authority, complete-receipt, inventory-completeness and scoped-private-path findings |
+| Next ready action | Publish the consolidated R04 correction, run exact-head self-review, and return it to retained R1/R2 |
+| Active blockers | None; R04 verifier fail-open, destructive-root and cross-document-state findings are corrected locally |
 | Stale artifacts | None |
-| Validation complete | T01/PR64 integration and current v4 runtime verified; D02 design accepted; R01-R03 findings preserved on PR #65 |
+| Validation complete | T01/PR64 integration and current v4 runtime verified; D02 design accepted; R01-R04 findings preserved on PR #65; R04 focused regressions 54/54 and full Node suite 124/124 pass; Markdown, structure, lifecycle, Mermaid, whitespace and runtime validation pass |
 | Validation remaining | T02 PR #65 implementation/review/merge/target receipt; T04 exact-SHA reset/upgrade; final reset/runtime proof |
 | Branch/PR | `codex/upgrade-37653ee`; T02 [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) open; T04 PR not created |
 | Last updated | 2026-09-07 Asia/Shanghai |

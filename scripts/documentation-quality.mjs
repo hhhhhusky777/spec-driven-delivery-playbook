@@ -378,7 +378,15 @@ export function checkSensitiveContent(relativeFile, text, config) {
       const identity = cells[resetInventoryColumns.identity] || "";
       if (["WORKTREE", "RUNTIME"].includes(cells[resetInventoryColumns.kind]) && path.isAbsolute(identity)) {
         for (const column of [resetInventoryColumns.identity, resetInventoryColumns.ownership, resetInventoryColumns.operation]) {
-          cells[column] = cells[column].split(identity).join("<EXACT_RESET_IDENTITY>");
+          if (cells[column] === identity) {
+            cells[column] = "<EXACT_RESET_IDENTITY>";
+            continue;
+          }
+          const escaped = identity.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          cells[column] = cells[column].replace(
+            new RegExp(`(^|[\\s'"\x60=:;,])${escaped}(?=$|[\\s/'"\x60;,])`, "g"),
+            (_, prefix) => `${prefix}<EXACT_RESET_IDENTITY>`,
+          );
         }
         sensitiveLine = `| ${cells.join(" | ")} |`;
       }

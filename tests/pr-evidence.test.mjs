@@ -1,6 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import os from "node:os";
+import path from "node:path";
+import process from "node:process";
 
 import { collectGitHubSnapshot, evaluatePrEvidence } from "../scripts/verify-pr-evidence.mjs";
 
@@ -183,6 +186,10 @@ test("owner evidence requires a trusted identity and unambiguous affirmative dec
     `Approval remains pending; APPROVED may follow. ${head}. Scope: ${acceptedScope}`,
     `If checks pass, I will APPROVE ${head}. Scope: ${acceptedScope}`,
     `Decision=APPROVED; Candidate=${head}; Scope=${acceptedScope}; Reset target=${resetTarget}; Reset mode=${resetMode}\nI withdraw this approval.`,
+    `Use this later:\nDecision=APPROVED; Candidate=${head}; Scope=${acceptedScope}; Reset target=${resetTarget}; Reset mode=${resetMode}`,
+    `Decision=APPROVED; Candidate=${head}; Scope=${acceptedScope}; Reset target=${resetTarget}; Reset mode=${resetMode}\nDo not act on this.`,
+    `Decision=APPROVED; Candidate=${head}; Scope=${acceptedScope}; Reset target=${resetTarget}; Reset mode=${resetMode}\nI revoke this decision.`,
+    `Decision=APPROVED; Candidate=${head}; Scope=${acceptedScope}; Reset target=${resetTarget}; Reset mode=${resetMode}\nI rescind this decision.`,
   ]) {
     const data = fixture();
     data.snapshot.issueComments[0].body = body;
@@ -199,6 +206,7 @@ test("canonical reviewer receipts reject contradictory or duplicate machine fiel
     data => { data.snapshot.reviews[0].body = table("### Section 6 review receipt", [["Review session ID", "S01"], ["Reviewer seat", "R1"], ["Reviewed candidate revision", head], ["Disposition", "APPROVED"]]); },
     data => { data.snapshot.reviews[0].body = data.snapshot.reviews[0].body.replace("| Context isolation | FRESH_CONTEXT |", "| Context isolation | ISOLATION_UNVERIFIED |"); },
     data => { data.snapshot.reviews[0].body = data.snapshot.reviews[0].body.replace("| Durable findings | None |", "| Durable findings | F01 OPEN |"); },
+    data => { data.snapshot.reviews[0].body = data.snapshot.reviews[0].body.replace("| Durable findings | None |", "| Durable findings | F01 needs correction |"); },
     data => { data.snapshot.reviews[1].body = data.snapshot.reviews[1].body.replace("agent-r2", "agent-r1"); },
   ]) {
     const data = fixture();
@@ -244,6 +252,37 @@ test("reset plan is bound to retrievable exact-head inventory content", () => {
     const data = fixture();
     mutate(data);
     assert.equal(evaluatePrEvidence(data).status, "BLOCKED");
+  }
+});
+
+test("reset inventory accepts a runtime checkout with its exact child ownership marker", () => {
+  const runtime = path.join(os.tmpdir(), "sdd-playbook.test", "repository");
+  const data = fixture();
+  data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body
+    .replaceAll("/srv/project/runtime", runtime)
+    .replace(`marker=${runtime}`, `marker ${runtime}/.sdd-owned-checkout and generated guide`);
+  const evidence = data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-review"));
+  evidence.body = evidence.body.replace("RESET=/srv/project/runtime", `RESET=${runtime}`);
+  const acceptance = data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-acceptance"));
+  acceptance.body = acceptance.body.replace(/(\| Review evidence digest \| )sha256:[a-f0-9]{64}/, `$1${sha256(evidence.body)}`);
+  assert.equal(evaluatePrEvidence(data).status, "VERIFIED");
+});
+
+test("reset inventory rejects repository and temporary parent targets", () => {
+  const candidates = [
+    process.cwd(),
+    path.dirname(process.cwd()),
+    path.dirname(os.tmpdir()),
+    path.dirname(path.dirname(os.tmpdir())),
+  ];
+  for (const candidate of candidates) {
+    const data = fixture();
+    data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replaceAll("/srv/project/runtime", candidate);
+    const evidence = data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-review"));
+    evidence.body = evidence.body.replace("RESET=/srv/project/runtime", `RESET=${candidate}`);
+    const acceptance = data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-acceptance"));
+    acceptance.body = acceptance.body.replace(/(\| Review evidence digest \| )sha256:[a-f0-9]{64}/, `$1${sha256(evidence.body)}`);
+    assert.equal(evaluatePrEvidence(data).status, "BLOCKED", candidate);
   }
 });
 

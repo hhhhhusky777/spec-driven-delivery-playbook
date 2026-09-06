@@ -19,6 +19,9 @@ digest. Both reviewer receipts use the canonical Section 6 table, name the exact
 head and passing disposition, and label distinct stable seats `R1` and `R2` in
 one review session. No finding remains open. Record requested authority as
 `State=PENDING; Candidate=FULL_SHA; Scope=EXACT_MERGE_AND_RESET_SCOPE; Reset target=BRANCH; Reset mode=MODE`.
+An approving canonical receipt records `Durable findings` as exactly `None` or
+`All prior findings RESOLVED`; descriptive finding text belongs in the finding
+table and author-response history, not in that machine-consumed approval field.
 After the owner acts, publish a separate
 `sdd-pr-acceptance/v1` table binding the owner comment and its body digest to
 the accepted review-table digest, exact candidate and stated merge/reset scope.

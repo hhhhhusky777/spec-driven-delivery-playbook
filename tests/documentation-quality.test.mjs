@@ -464,6 +464,8 @@ test("local paths are allowed only in exact external reset-inventory rows", () =
   assert.equal(checkSensitiveContent("workflow.md", table.replace("| None | reset", `| ${unrelatedPath} | reset`), CONFIG)[0]?.rule, "LOCAL_PATH");
   assert.equal(checkSensitiveContent("workflow.md", table.replace(`marker ${localPath}`, `marker ${localPath} and ${unrelatedPath}`), CONFIG)[0]?.rule, "LOCAL_PATH");
   assert.equal(checkSensitiveContent("workflow.md", table.replace(`reset ${localPath}`, `reset ${localPath}; inspect ${unrelatedPath}`), CONFIG)[0]?.rule, "LOCAL_PATH");
+  assert.equal(checkSensitiveContent("workflow.md", table.replace(`marker ${localPath}`, `marker ${localPath}-unrelated`), CONFIG)[0]?.rule, "LOCAL_PATH");
+  assert.equal(checkSensitiveContent("workflow.md", table.replace(`reset ${localPath}`, `reset ${localPath}-private-plan`), CONFIG)[0]?.rule, "LOCAL_PATH");
 });
 
 test("blocking Mermaid check accepts valid syntax and rejects invalid syntax", async (t) => {

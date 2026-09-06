@@ -2,6 +2,7 @@
 
 import { createHash } from "node:crypto";
 import { Buffer } from "node:buffer";
+import os from "node:os";
 import path from "node:path";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
@@ -93,8 +94,25 @@ const unsafeExternalParents = new Set([
 const recorded = value => Boolean(normalize(value)) && !/^(?:none|not applicable|n\/a|—|-)$/i.test(normalize(value));
 const exactToken = (value, expected) => {
   const escaped = expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`(^|[\\s'"\x60=:;,])${escaped}(?=$|[\\s'"\x60;,])`).test(String(value ?? ""));
+  return new RegExp(`(^|[\\s'"\x60=:;,])${escaped}(?=$|[\\s/'"\x60;,])`).test(String(value ?? ""));
 };
+
+function pathAliases(value) {
+  const resolved = path.resolve(value);
+  const aliases = new Set([resolved]);
+  if (resolved.startsWith("/private/var/")) aliases.add(resolved.slice("/private".length));
+  if (resolved.startsWith("/var/")) aliases.add(`/private${resolved}`);
+  return [...aliases];
+}
+
+function protectsBoundary(candidate, protectedPath) {
+  return protectedPath === candidate || protectedPath.startsWith(`${candidate}${path.sep}`);
+}
+
+function isProtectedExternalParent(candidate) {
+  const protectedRoots = [process.cwd(), os.tmpdir(), process.env.TMPDIR].filter(Boolean).flatMap(pathAliases);
+  return pathAliases(candidate).some(alias => protectedRoots.some(root => protectsBoundary(alias, root)));
+}
 
 function validInventoryIdentity(kind, identity) {
   if (!identity || /[*?\[\]{}]/.test(identity) || /(^|\/)\.\.($|\/)/.test(identity) || /\$\{|\$[A-Za-z_]|^~(?:\/|$)/.test(identity)) return false;
@@ -102,7 +120,8 @@ function validInventoryIdentity(kind, identity) {
   if (kind === "BRANCH") return /^refs\/heads\/[A-Za-z0-9][A-Za-z0-9._/-]*$/.test(identity) && !identity.includes("..") && !identity.includes("//");
   if (!["WORKTREE", "RUNTIME"].includes(kind) || !path.isAbsolute(identity)) return false;
   const resolved = path.resolve(identity);
-  return identity === resolved && !unsafeExternalParents.has(resolved) && !/^\/(?:Users|home)\/[^/]+$/.test(resolved);
+  return identity === resolved && !unsafeExternalParents.has(resolved) && !/^\/(?:Users|home)\/[^/]+$/.test(resolved) &&
+    !isProtectedExternalParent(resolved);
 }
 
 function resetInventory(body) {
@@ -175,7 +194,7 @@ function reviewerReceipt(body, expectedHead, expectedBase, expectedSubject) {
   return allValuesPresent && ["R1", "R2"].includes(seat) && /^[A-Za-z0-9._-]+$/.test(session) && /^R\d+$/.test(round) &&
     /^[A-Za-z0-9._/-]+$/.test(assignedReviewer) && candidate === expectedHead && includesExact(fields.get("Reviewed base revision"), expectedBase) &&
     normalize(fields.get("Subject")) === expectedSubject && isolation.startsWith("FRESH_CONTEXT") && !isolation.includes("ISOLATION_UNVERIFIED") &&
-    !/\b(?:OPEN|UNRESOLVED|CHANGES_NEEDED|CHANGES_REQUESTED|BLOCKED|HUMAN_DECISION_REQUIRED)\b/i.test(findings) &&
+    /^(?:NONE|ALL PRIOR FINDINGS RESOLVED)[.!]?$/i.test(findings) &&
     disposition === "APPROVED" && ["HUMAN_REVIEW", "MERGE_GATE"].includes(next) ? { seat, session, assignedReviewer } : null;
 }
 
@@ -195,12 +214,10 @@ function requestedAuthority(value, expectedHead) {
 
 function ownerDecision(body) {
   const keys = ["DECISION", "CANDIDATE", "SCOPE", "RESET TARGET", "RESET MODE"];
-  const lines = String(body ?? "").split(/\r?\n/);
-  const parsed = lines.map((line, index) => ({ index, entries: assignments(line, keys) })).filter(item => item.entries);
-  if (parsed.length !== 1) return null;
-  const { index, entries } = parsed[0];
-  const surrounding = lines.filter((_, lineIndex) => lineIndex !== index).join("\n");
-  if (/\b(?:approv\w*|reject\w*|disapprov\w*|withdraw\w*|pending|conditional)\b/i.test(surrounding)) return null;
+  const lines = String(body ?? "").split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+  if (lines.length !== 1) return null;
+  const entries = assignments(lines[0], keys);
+  if (!entries) return null;
   return entries.get("DECISION").toUpperCase() === "APPROVED" && sha(entries.get("CANDIDATE")) && entries.get("SCOPE") && branch(entries.get("RESET TARGET")) &&
     ["HUMAN_REVIEW_BEFORE_MERGE", "AGENT_AUTO_MERGE"].includes(entries.get("RESET MODE").toUpperCase()) ?
     { candidate: entries.get("CANDIDATE"), scope: entries.get("SCOPE"), target: entries.get("RESET TARGET"), mode: entries.get("RESET MODE").toUpperCase() } : null;
