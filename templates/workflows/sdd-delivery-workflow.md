@@ -598,10 +598,16 @@ authorized operation; examples, globs and classes are never authority.
 For a destructive `WORKTREE` or `RUNTIME` row, both the ownership evidence and
 authorized operation name the exact absolute target. Broad repository,
 temporary, user-home, and system parent directories are invalid targets.
+For these destructive external rows, the operation must use exactly
+`Action=ACTION; Target=EXACT_PATH`. `REMOVE` permits `DELETE` or `CLEANUP`;
+`RESET` permits `RESET`, `REGENERATE`, or `CLEANUP_AND_REGENERATE`. This closed
+grammar applies only to external `WORKTREE` and `RUNTIME` rows; extra fields,
+prose, URIs, child paths, traversal, unsupported actions, or a different target
+fail closed.
 
 | Item ID | Kind | Exact identity | Ownership evidence | Disposition | Reuse reason | Authorized operation | State |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `<stable ID>` | `<FILE/BRANCH/WORKTREE/RUNTIME>` | `<exact repository-relative path, full ref, or absolute owned path>` | `<proof>` | `<REMOVE/RESET/KEEP>` | `<future use or None>` | `<exact operation/authority or None>` | `<PLANNED/VERIFIED>` |
+| `<stable ID>` | `<FILE/BRANCH/WORKTREE/RUNTIME>` | `<exact repository-relative path, full ref, or absolute owned path>` | `<proof>` | `<REMOVE/RESET/KEEP>` | `<future use or None>` | `<exact FILE/BRANCH authority; external: Action=ACTION; Target=EXACT_PATH; KEEP: None>` | `<PLANNED/VERIFIED>` |
 
 Publish it as `REMOVE=...; RESET=...; KEEP=...; Inventory=<exact-head GitHub
 blob URL>` in `sdd-pr-review/v1`, using `None` where a disposition is empty and

@@ -9,7 +9,7 @@
 | DECISION | T02 implementation acceptance | After exact-head self-review, two implementation reviews and required checks, approve or request changes on PR #65 |
 | ATTENTION | Delivered behavior | T01 implements the five goals, canonical recovery and Git-first essential evidence; PR #64 is reviewed, merged and target-verified |
 | ATTENTION | Design alignment | Accepted PR-evidence/reset conclusion makes PRs durable evidence, removes all non-reusable delivery state, restores `EMPTY` and regenerates runtime |
-| ATTENTION | Delivered candidate | T02 combines the whiteboard's contract/enforcement packages in PR #65; R01-R08 findings are corrected together and the revised exact head returns to the same reviewers |
+| ATTENTION | Delivered candidate | T02 combines the whiteboard's contract/enforcement packages in PR #65; R01-R09 findings are corrected together and the revised exact head returns to the same reviewers |
 | ATTENTION | Compatibility | v2–v4 remain supported; this project stays on v4 through PR #65 target proof and cannot preapprove the future v5 cutover candidate |
 | ATTENTION | Deferred / limits | Runtime #33/#34/#36 remain deferred; no measured performance claim or external-link advisory rerun |
 | ATTENTION | Evidence | PR #65 and the later reset/upgrade PR will own durable evidence; working WB62 files remain only until the verified reset |
@@ -38,14 +38,14 @@
 | Current artifact review state | NOT_STARTED |
 | Self-review state | NOT_STARTED |
 | Self-review candidate revision | Not recorded |
-| Self-review evidence | [R08 candidate self-review](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#issuecomment-5561477353); stale after the current correction batch |
+| Self-review evidence | [R09 candidate self-review](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#issuecomment-5561543489); stale after the current correction batch |
 | Fresh-context review state | NOT_STARTED |
 | Fresh-context review session ID | Not recorded |
-| Fresh-context assigned reviewers | wb62_t02_r1; wb62_t02_r2 retained for R09 after exact-head self-review |
+| Fresh-context assigned reviewers | wb62_t02_r1; wb62_t02_r2 retained for R10 after exact-head self-review |
 | Fresh-context required approvals | 2 |
 | Fresh-context approved reviewers | Not recorded |
 | Fresh-context reviewed revision | Not recorded |
-| Fresh-context review evidence | R08: [R1 approved](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#pullrequestreview-5126325721); [R2 changes requested](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#pullrequestreview-5126325759) |
+| Fresh-context review evidence | R09 changes requested: [R1](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#pullrequestreview-5126352881); [R2](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#pullrequestreview-5126352862) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | Not recorded |
 | Human review evidence | Not recorded |
@@ -54,7 +54,7 @@
 | Implementation mode scope | T02, T04 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-06T23:54:35+08:00 |
-| Next action | Publish the structured-operation correction for R2-F16, complete exact-head self-review, and return the revised candidate to the same reviewers for R09 |
+| Next action | Correct R1-F16 and R2-F17 together, complete exact-head self-review, and return the revised candidate to the same reviewers for R10 |
 | Next action target IDs | T02 |
 | Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/upgrades/U64.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; .github/pull_request_template.md; .github/workflows/documentation-quality.yml; CONTRIBUTING.md; README.md; CHANGELOG.md; package.json; config; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/README.md; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/handoffs; templates/policies; templates/testing; templates/workflows; examples; scripts/sdd-lifecycle.mjs; scripts/review-publication.mjs; scripts/verify-pr-evidence.mjs; tests |
 | Next action write targets | CONTRIBUTING.md; README.md; CHANGELOG.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/README.md; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/handoffs; templates/policies; templates/testing; templates/workflows; .github/pull_request_template.md; .github/workflows/documentation-quality.yml; package.json; config; examples; scripts/sdd-lifecycle.mjs; scripts/review-publication.mjs; scripts/verify-pr-evidence.mjs; tests; .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
@@ -330,13 +330,13 @@ before its separate exact-head review and owner cutover acceptance.
 | Field | Current value |
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
-| Current artifact/task | T02 PR #65; R07 correction batch complete locally |
-| Current artifact review | NOT_STARTED; retained-seat R09 follows the published R08 receipts |
+| Current artifact/task | T02 PR #65; R09 live-state and producer-template correction batch complete locally |
+| Current artifact review | NOT_STARTED; retained-seat R10 follows the published R09 receipts |
 | Last approved artifact | P02 plan `d8d7fd707e1ca31f2d413c86479f51fe7864c6d8` |
-| Next ready action | Publish the structured-operation correction, run exact-head self-review, and return it to retained R1/R2 for R09 |
-| Active blockers | None; the R07 normalized/punctuated/URI extra-target findings are corrected locally |
+| Next ready action | Validate and publish the R09 correction batch, run exact-head self-review, and return it to retained R1/R2 for R10 |
+| Active blockers | None; R1-F16 and R2-F17 are corrected locally |
 | Stale artifacts | None |
-| Validation complete | T01/PR64 integration and current v4 runtime verified; D02 design accepted; R01-R08 findings preserved on PR #65; R2-F16 is corrected locally; focused regressions pass 54/54; full Node suite passes 124/124; Markdown 98 files/0 issues, structure, lifecycle, Mermaid, whitespace and runtime validation pass |
+| Validation complete | T01/PR64 integration and current v4 runtime verified; D02 design accepted; R01-R09 findings preserved on PR #65; R1-F16 and R2-F17 are corrected locally; focused regressions pass 54/54; full Node suite passes 124/124; Markdown 98 files/0 issues, structure, lifecycle, Mermaid, whitespace and runtime validation pass |
 | Validation remaining | T02 PR #65 implementation/review/merge/target receipt; T04 exact-SHA reset/upgrade; final reset/runtime proof |
 | Branch/PR | `codex/upgrade-37653ee`; T02 [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) open; T04 PR not created |
 | Last updated | 2026-09-07 Asia/Shanghai |

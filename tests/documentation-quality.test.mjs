@@ -46,6 +46,16 @@ test("v5 reset and v4 control receipts stay fail-closed", async () => {
     "returns the affected work to",
     "EXPLICIT_REVIEW",
   ]) assert.ok(canonical.includes(value), value);
+  const workflow = bundle.get("templates/workflows/sdd-delivery-workflow.md");
+  for (const value of [
+    "Action=ACTION; Target=EXACT_PATH",
+    "`REMOVE` permits `DELETE` or `CLEANUP`",
+    "`RESET` permits `RESET`, `REGENERATE`, or `CLEANUP_AND_REGENERATE`",
+  ]) {
+    assert.ok(canonical.replace(/\s+/g, " ").includes(value), `canonical: ${value}`);
+    assert.ok(workflow.replace(/\s+/g, " ").includes(value), `workflow: ${value}`);
+  }
+  assert.match(workflow, /closed\s+grammar applies only to external `WORKTREE` and `RUNTIME` rows/);
   for (const file of files.slice(1)) {
     assert.match(bundle.get(file), /post-merge|control receipt|PR evidence|reset/i, file);
   }

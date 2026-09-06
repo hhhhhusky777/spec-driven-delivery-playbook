@@ -65,7 +65,7 @@ exact absolute path and ownership evidence. A destructive external row binds
 its ownership proof to that exact path or its exact `.sdd-owned-checkout`
 marker. Its authorized operation uses only `Action=ACTION; Target=EXACT_PATH`:
 `REMOVE` permits `DELETE` or `CLEANUP`, while `RESET` permits `RESET`,
-`REGENERATE` or `CLEANUP_AND_REGENERATE`. Extra fields, prose, child targets,
+`REGENERATE`, or `CLEANUP_AND_REGENERATE`. Extra fields, prose, child targets,
 traversal, URIs, or a different target fail closed. Repository, temporary,
 user-home, and system parent
 directories are never valid targets.
