@@ -102,16 +102,20 @@ After feature merge, the same PR receives a versioned
 | Reset authorization | Exact reset scope, reset PR target/mode and prior owner authority |
 | Exceptions/follow-ups | External effects, unresolved work or `None` |
 
-The reset PR records its exact reviewed head and check runs before merge.
-Retained-seat delta verification, the reset merge SHA and target-reset result
-are appended later to the feature PR. The reset PR itself updates the manifest's
-single `Last delivery receipt` row with only values knowable before its merge:
-feature PR URL and merge SHA, reset PR URL and exact reviewed reset head, plus
-the SHA-256 digest of the complete pre-reset evidence bundle. The later reset
-merge/result stays solely on the feature PR; no third control PR or self-reference
-is required. The row is a locator and integrity check, not a copied record.
+For a project already using v5, the reset PR records its exact reviewed head and
+check runs before merge. Retained-seat delta verification, the reset merge SHA
+and target-reset result are appended later to the feature PR. The reset PR
+itself updates the manifest's single `Last delivery receipt` row with only
+values knowable before its merge: feature PR URL and merge SHA, reset PR URL and
+exact reviewed reset head, plus the SHA-256 digest of the complete pre-reset
+evidence bundle. The later reset merge/result stays solely on the feature PR;
+no third control PR or self-reference is required. The row is a locator and
+integrity check, not a copied record.
 
-## Executable closure and reset flow
+## Steady-state v5 closure and reset flow
+
+This flow applies only after the project is already pinned to a reviewed v5
+revision. It does not authorize this repository's one-time v4-to-v5 bootstrap.
 
 1. During discovery and implementation, maintain only the working context needed
    to deliver safely.
@@ -138,11 +142,28 @@ the reset PR, so a failed feature target probe preserves tracked working state.
 A failed reset PR preserves that branch and reports the affected failure. Cleanup
 outside enumerated transient feature state still requires explicit authority.
 
+### Current v4-to-v5 self-adoption bootstrap
+
+This repository cannot pre-authorize an upgrade to PR #65's future merge SHA.
+For this one-time bootstrap:
+
+1. Keep PR #65 and its runtime pin on v4 through merge and target verification.
+2. Resolve the immutable PR #65 merge SHA from the verified target receipt.
+3. Prepare one combined reset/upgrade PR against that exact SHA, containing the
+   enumerated reset and the v5 pin/runtime migration.
+4. Run migration validation and required checks on that exact candidate.
+5. Obtain two independent exact-head reviews and fresh human cutover acceptance.
+6. Only then merge the pin/runtime cutover and enumerated reset, verify target,
+   and append its identity/result to PR #65.
+
+PR #65 acceptance does not preapprove this later candidate. The steady-state
+bounded-reset exception begins only after the reviewed v5 cutover is complete.
+
 ## Current-delivery migration candidate
 
 | Scope | Proposed treatment |
 | --- | --- |
-| PR #65 | Replace the proposed archive with the v5 policy/runtime migration; remove unmerged WB62 archive additions, preserve working state through target verification and own all semantic evidence |
+| PR #65 | Replace the proposed archive with v5 source policy and compatibility behavior while retaining the v4 runtime pin; remove unmerged WB62 archive additions, preserve working state through target verification and own all semantic evidence |
 | Unmerged final-control commit | Withdraw only `5c894694a670d425033f5a0387a737359a3d5262`; retain its parent `cd6d8ba3311bbe3e4a6a692b4cd970477021fb7b` as the reconciled `VALIDATING` checkpoint, then use the allowed return to plan `IMPLEMENTING` / workflow `DELIVERY_ACTIVE` for T02–T04 |
 | WB62 working delivery files already on main | Remove only in the post-verification reset PR after exact PR #64/#65 evidence validation |
 | Working whiteboard | Preserve this amendment through PR #65 target verification; reset to the neutral tracked `EMPTY` entry point in the reset PR |
@@ -166,7 +187,7 @@ outside enumerated transient feature state still requires explicit authority.
 | 1 | Owner rejected permanent feature archives because GitHub PR is the evidence owner and requested reset after delivery | ACCEPTED_DIRECTION |
 | 1 | Preserve adoption/runtime and reusable delivered work; reset only feature-specific working/evidence artifacts | PROPOSED_DETAIL |
 | 1 | Apply the new behavior to current WB62; leave older WB38 history untouched without separate deletion authority | SAFE_MIGRATION_DEFAULT |
-| 2 | Use a separately scoped reset PR after feature target verification; feature-PR acceptance may pre-authorize its exact enumerated mechanical merge path | PROPOSED_DETAIL |
+| 2 | For an already-v5 project, use a separately scoped reset PR after feature target verification; feature-PR acceptance may pre-authorize its exact enumerated mechanical merge path | PROPOSED_DETAIL |
 | 2 | Preserve v2–v4 behavior; introduce opt-in v5 and migrate only at a reviewed safe checkpoint | PROPOSED_DETAIL |
 | 2 | Use pre-acceptance review, post-decision acceptance and post-merge target tables plus body digests and a non-self-referential fixed-size manifest locator | PROPOSED_DETAIL |
 | 3 | Preserve the exact-SHA upgrade gate: current self-adoption needs one post-PR65 exact-SHA reset/upgrade acceptance; later v5 feature resets do not | PROPOSED_DETAIL |
@@ -213,14 +234,16 @@ bounded corrections.
 | --- | --- | --- |
 | Keep permanent repository archives | REJECTED | Duplicates PR/Git history and preserves large per-feature payloads |
 | Delete feature records without replacement evidence | REJECTED | Loses decisions, review identity and verification needed for stable outcomes |
-| PR-owned evidence plus post-verification reset PR | PREFERRED | Keeps exact audit evidence, preserves state on failed target probes and removes completed feature state without another semantic review |
+| PR-owned evidence plus post-verification reset PR | PREFERRED | Keeps exact audit evidence, preserves state on failed target probes and removes completed feature state with review proportional to whether the project is already on v5 |
 
 The feature branch may use working whiteboard, workflow, plan and evidence files
 while the delivery is active. By the final feature-PR review, their material
-decisions and results must be published in the versioned PR evidence. The two
-reviewers and owner review the reusable feature result and exact reset plan once.
-After merge, target probes verify the result while tracked working state still
-exists; only then does the bounded reset PR remove it.
+decisions and results must be published in the versioned PR evidence. For an
+already-v5 delivery, the two reviewers and owner review the reusable feature
+result and exact reset plan once; after merge, target probes verify the result
+while tracked working state still exists, and only then does the bounded reset
+PR remove it. The current v4-to-v5 bootstrap instead uses the separate exact-SHA
+review and human cutover sequence above.
 
 The playbook should prefer ignored runtime working state when practical, but
 must not require one storage mechanism. Branch-local tracked state is also
@@ -240,7 +263,7 @@ This is an outcome boundary, leaving agents room to choose safe mechanics.
 | Local lifecycle checker and tests | Preserve v2–v4; validate v5 local schema, exact reset inventory and fixed-size receipt locator without pretending to query GitHub |
 | GitHub-aware verification command/action | Query PR/review/comment/check/merge APIs, validate exact identities/body digests and gate reset publication |
 | Examples and changelog | Demonstrate the new flow and record the compatibility change |
-| Current self-adoption records | Remove WB62 transient/archive payload from the final tree; keep current runtime pin and reset the stable entry point |
+| Current self-adoption records | Keep the v4 pin through PR #65; then use the separately reviewed exact-SHA reset/upgrade PR to remove WB62 transient/archive payload, activate v5 and reset the stable entry point |
 
 ## Implementation task mapping
 
@@ -250,11 +273,14 @@ This is an outcome boundary, leaving agents room to choose safe mechanics.
 | T03 — Enforcement and compatibility | Add GitHub-aware evidence verification; update local v5 lifecycle validation and regressions while preserving v2–v4 | Positive/negative API fixtures, schema compatibility and reset-boundary scenarios pass |
 | T04 — Current-project migration | Withdraw the unmerged terminal controls, keep the v4 pin, remove only unmerged archive additions in PR #65, and publish the exact reset inventory; after PR #65 target verification, prepare one exact-SHA reset/upgrade PR for normal upgrade review | PR #65 merges reusable v5 behavior with WB62 state preserved; the later human-approved reset/upgrade PR pins the exact v5 merge, removes WB62 state and restores EMPTY without touching WB38 |
 
-T02–T04 form one semantic feature PR plus one separately scoped retained-seat
-control reset PR. There is one final full semantic review gate; the reset PR
-receives only bounded delta verification and required checks. Intermediate task
-checks do not create separate two-agent review gates unless a material design
-mismatch or missing authority is discovered.
+T02–T04 form PR #65 plus one later combined reset/upgrade PR. PR #65 receives
+one final full semantic review. Because this repository starts on v4, the later
+candidate receives migration validation, two independent reviews on its exact
+head and fresh human cutover acceptance before changing the pin or resetting
+WB62. Only future deliveries after that v5 cutover may use bounded delta
+verification for an exactly pre-authorized reset. Intermediate task checks do
+not create separate two-agent review gates unless a material design mismatch or
+missing authority is discovered.
 
 ## Error handling
 
