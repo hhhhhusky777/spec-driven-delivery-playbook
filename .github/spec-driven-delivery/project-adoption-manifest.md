@@ -741,7 +741,12 @@ the [WB62 workflow](deliveries/WB62/workflow.md) now owns routing, dependency
 freshness and next action. No task is active. The handoff ledger retains its
 exact acceptance and the workflow records its single manual consumption.
 
-### U84 upgrade handoff
+### Historical U84 upgrade handoff
+
+This subsection records the earlier d93d27a cutover boundary. It is superseded
+for current runtime state by the manifest controls above and the
+[completed U64 assessment](upgrades/U64.md); it does not direct a resuming agent
+to restore the old pin or reopen U84.
 
 The owner instructed “complete the upgrade” after the unchanged installed pin
 and pending reviewed U84 migration were identified. This accepts the R04
@@ -753,15 +758,13 @@ WB62 design/handoff approvals and versioned routing remain intact; WB33 and
 runtime issues remain deferred. No blanket batch, implementation or merge
 permission is inferred. Adoption remains INSTALLED, not ACTIVE.
 
-Local cutover is verified: manifest, normal guide and installed workflow skill
-now use d93d27a33c43c1574aeed27044654c8964cf998b and runtime reports CURRENT.
-Upgrade state remains VALIDATING until reviewed publication; main is not yet
-updated. The original assessment's old-pin and WB33 progress descriptions are
-historical. WB62 v2 routing stays preserved, not silently migrated or approved.
+At that historical checkpoint, local manifest, guide and installed workflow
+skill used d93d27a33c43c1574aeed27044654c8964cf998b and runtime reported CURRENT.
+Upgrade state was VALIDATING until its later reviewed publication. The original
+assessment's old-pin, WB33 and v2-routing descriptions are historical; current
+WB62 routing and the U64 pin are governed by the live controls.
 
 The owner subsequently directed joint delivery of U84 and #62/#54 and continued
 the proposed planning batch. [Preparation authority](deliveries/WB62/preparation-authority.md)
-records provisional v4 routing/plan/context preparation before combined
-publication. Exact package acceptance and readiness remain required. Earlier
-separate-publication sequencing is superseded only for this scope; U84 remains
-VALIDATING until publication.
+records that historical provisional v4 preparation. U84 was later published in
+PR #64; U64 and PR #65 own the subsequent current pin and closure publication.

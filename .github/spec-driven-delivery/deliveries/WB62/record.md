@@ -5,7 +5,7 @@
 | Type | Important item | Evidence / acceptance boundary |
 | --- | --- | --- |
 | DECISION | Accept the exact closure package | Accept validation, record, U64 controls, archived conclusion, neutral working whiteboard and workflow/plan target controls at the exact reviewed PR head |
-| DECISION | Authorize publication and bounded receipt | Authorize squash merge after both reviewers and CI pass, then one control-only receipt PR for `COMPLETE -> ARCHIVED` with no repeated semantic review |
+| DECISION | Authorize publication and exact control finalization | After both reviewers approve one head, authorize only the enumerated PR #65 control fields below, retained-seat delta verification, squash merge and target verification; no second semantic review |
 | ATTENTION | Delivered behavior | Five goals, canonical recovery, proportional review/evidence and agent discretion are implemented; [T01 evidence](T01-evidence.md) |
 | ATTENTION | Upgrade | Live runtime is CURRENT at `37653eec1d980e3ea5ed858922ab97894395fab9`; historical U84 input and WB62 snapshots remain unchanged; [U64](../../upgrades/U64.md) |
 | ATTENTION | Archive transformation | Accepted conclusion source blob `62e8a643bf71949b217bddab0103c734bdb950ee`; only control fields and relative destinations change in the [archive copy](../../archive/WB62/solution-whiteboard.md) |
@@ -59,43 +59,36 @@ resolve, the source blob to remain retrievable, and reciprocal archive/record
 links. The stable working path becomes the neutral EMPTY instance included in
 this same package only after the archive copy exists and link checks pass.
 
-### Exact control transition after semantic acceptance
+### Exact same-PR control finalization
 
-The closure review covers the semantic package once. After both WB62-C01 seats
-approve one PR #65 revision and the owner accepts that same revision, PR #65 may
-receive one enumerated control-only reconciliation before merge:
+The closure review covers the semantic package once. Both WB62-C01 seats first
+approve one exact PR #65 source revision. The owner then accepts that same
+revision and explicitly authorizes only the control delta below. The coordinator
+applies it on PR #65, and the retained seats verify that exact delta without
+repeating semantic review. The resulting PR head then merges; no post-merge
+control PR is selected.
 
-| Path | Permitted fields | Required result |
+| Path | Exact mutable fields / columns | Required final value |
 | --- | --- | --- |
-| `deliveries/WB62/implementation-plan.md` | Status, Previous status, Current phase, current review/branch/archive summaries | `VALIDATING -> COMPLETE`; no task, scope or normative prose change |
-| `deliveries/WB62/workflow.md` | State/Previous state, closure review fields, validation output row and current delivery-state summary | `VALIDATING -> COMPLETE`; bind the already reviewed validation blob and PR receipts; record output remains in progress until merge |
+| `deliveries/WB62/implementation-plan.md` | Document control: Status; Previous status; Current phase; Review state; Self-review candidate revision; Fresh-context review state; Fresh-context approved reviewers; Fresh-context reviewed revision; Human review state; Human reviewed revision; Branch / PR; Archived record. Live snapshot: Plan state; Active branch / PR; Last validation; Next action | Status `COMPLETE`; Previous status `VALIDATING`; Current phase `CLOSE`; all closure acceptance fields bind the owner-accepted source; PR #65 remains the publication owner; no task/specification field changes |
+| `deliveries/WB62/workflow.md` | Workflow control: State; Previous state; Current artifact/gate; Current artifact review state; Self-review candidate revision; Fresh-context review state; Fresh-context approved reviewers; Fresh-context reviewed revision; Human review state; Human reviewed revision; Next action; Next action target IDs; Allowed write scope; Next action write targets; Semantic decision introduced; Automation audit record; Last routed. Output register columns for validation and record: State; Current version; Verified version; Review state; Review evidence. Delivery-state values: Workflow state; Current artifact/task; Current artifact review; Last approved artifact; Next ready action; Validation complete; Validation remaining; Branch/PR; Last updated | State `ARCHIVED`; Previous state `COMPLETE`; both outputs `COMPLETE` with matching existing blobs and PR #65 review evidence; all closure acceptance fields bind the owner-accepted source; next action/targets/write scope are `None`; semantic decision `NO`; PR #65 owns the audit and archive evidence |
 
-That reconciliation must contain no semantic decision and must pass the same
-blocking documentation, lifecycle, Mermaid, whitespace, 103-test and runtime
-checks. The retained reviewer seats verify only that bounded delta against the
-accepted source; a mismatch returns to full explicit review.
+No other path, field, table cell or prose may change. The delta runs exactly:
+`npm run docs:all`, `git diff --check`, `./install-sdd.sh --validate`, and the
+GitHub check named `Blocking documentation checks`. Because local `npm` is not
+available in this environment, the coordinator may run the same pinned
+`docs:lint`, `docs:structure`, `docs:sdd`, `docs:mermaid` and `docs:test`
+components directly with Node 24, recording that substitution; hosted CI still
+runs `npm run docs:all` on the exact head.
 
-After PR #65 merges, its accepted source revision is the one full 40-character
-head shared by self-review, both reviewer comments and owner acceptance. After
-both reviewers approve that source and before the owner acceptance request, the
-coordinator opens a distinct same-repository receipt PR from it so the review
-packet can name the exact future publication identity.
-The receipt may change only
-`.github/spec-driven-delivery/deliveries/WB62/workflow.md` and only these
-predeclared controls: State/Previous state, current artifact and review fields,
-post-merge control fields, action/write targets, review/automation fields, the
-record output row, delivery-state summary and timestamps. Its exact transition
-is `COMPLETE -> ARCHIVED`; it binds the existing record blob, PR #65 merge/tree/
-ancestry and hosted checks, archive source/bytes/links, the EMPTY working path,
-runtime CURRENT, exact receipt diff/scope, all blocking documentation gates and
-the 103-test regression. Required automatic gates and the receipt's gate list
-must match exactly. Cleanup targets and cleanup authority are both None.
-
-The owner is asked to preauthorize this one receipt and its merge with closure
-acceptance. Any changed semantics or normative prose, unlisted path or field,
-failed/missing gate, source mismatch, new decision, unknown effect, repository
-refusal or cleanup request ends automatic continuation and returns the affected
-work to explicit review. The receipt PR owns the immutable post-merge evidence.
+After merge, PR #65 records these exact probes without another repository
+change: main contains the merge; the accepted source is an ancestor; the merged
+tree equals the reviewed final PR tree; the named hosted check passed; archive
+source/bytes/links and the EMPTY working path validate; runtime reports CURRENT.
+Any extra path/field/prose, changed meaning, failed/missing gate, source mismatch,
+new decision, unknown effect, repository refusal or cleanup request ends the
+bounded continuation and returns affected work to explicit review. Cleanup
+targets and cleanup authority remain exactly `None`.
 
 ## Closure review
 

@@ -6,7 +6,7 @@
 
 | Type | Item | Meaning |
 | --- | --- | --- |
-| DECISION | Closure-package acceptance | After two exact-head approvals, accept PR #65's validation, archive/reset, U64 publication and the bounded control-receipt plan |
+| DECISION | Closure-package acceptance | After two exact-head approvals, accept PR #65's validation, archive/reset, U64 publication and exact same-PR control finalization |
 | ATTENTION | Delivered behavior | T01 implements the five goals, canonical recovery and Git-first essential evidence; PR #64 is reviewed, merged and target-verified |
 | ATTENTION | Design alignment | Accepted C01–C06 plus agent discretion and error-handling clarification remain the boundary; the archived conclusion is canonical |
 | ATTENTION | Compatibility | Machine schemas, quorum, acceptance, retry/retention limits and required snapshots remain; runtime is CURRENT at 37653ee |
@@ -37,7 +37,7 @@
 | Current review target ID | record |
 | Current artifact review state | CHANGES_REQUESTED |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-C01-R02 |
+| Self-review candidate revision | WB62-C01-R03 |
 | Self-review evidence | [Closure review](../../reviews/WB62-C01.md) |
 | Fresh-context review state | CHANGES_REQUESTED |
 | Fresh-context review session ID | WB62-C01 |
@@ -54,26 +54,26 @@
 | Implementation mode scope | T01 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-06T09:36:49Z |
-| Next action | Retained-seat R02 review of the consolidated correction, then owner acceptance |
+| Next action | Retained-seat R03 review of the exact same-PR closure/finalization package, then owner acceptance |
 | Next action target IDs | validation, record |
 | Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/upgrades/U64.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; CONTRIBUTING.md; README.md; CHANGELOG.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/workflows; examples; scripts/sdd-lifecycle.mjs; tests |
 | Next action write targets | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews/WB62-C01.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/upgrades/U64.md |
 | Post-merge control mode | NOT_SELECTED |
-| Post-merge control authority | Proposed owner acceptance of the exact WB62-C01 R02 source and enumerated receipt plan in PR #65 |
-| Post-merge control source revision | Exact PR #65 revision shared by self-review, both WB62-C01 reviewers and owner acceptance |
-| Post-merge control PR | Distinct same-repository receipt PR opened from the accepted source before owner closure acceptance |
-| Post-merge control allowed paths | .github/spec-driven-delivery/deliveries/WB62/workflow.md |
-| Post-merge control changed paths | .github/spec-driven-delivery/deliveries/WB62/workflow.md |
-| Post-merge control allowed fields | State; Previous state; Current artifact/gate; Current artifact review state; Self-review candidate revision; Fresh-context review state; Fresh-context approved reviewers; Fresh-context reviewed revision; Human review state; Human reviewed revision; Next action; Next action target IDs; Allowed write scope; Next action write targets; Post-merge control fields; Review mode; Review mode authority; Automation boundary; Required automatic gates; Automatic gate result; Semantic decision introduced; Automation exception; Automation audit record; Last routed; record output row; delivery-state summary |
-| Post-merge control changed fields | State; Previous state; Current artifact/gate; Current artifact review state; Self-review candidate revision; Fresh-context review state; Fresh-context approved reviewers; Fresh-context reviewed revision; Human review state; Human reviewed revision; Next action; Next action target IDs; Allowed write scope; Next action write targets; Post-merge control fields; Review mode; Review mode authority; Automation boundary; Required automatic gates; Automatic gate result; Semantic decision introduced; Automation exception; Automation audit record; Last routed; record output row; delivery-state summary |
-| Post-merge control required gates | PR65 merged-head/tree/ancestry and hosted checks; archive source/bytes/links and EMPTY working path; documentation, lifecycle, Mermaid, whitespace and 103-test regression; runtime CURRENT; receipt PR exact diff/scope |
-| Post-merge control evidence owner | The distinct same-repository receipt PR, linked from PR #65 before owner closure acceptance |
+| Post-merge control authority | Not selected; PR #65 owns closure and its post-merge evidence |
+| Post-merge control source revision | Not selected |
+| Post-merge control PR | Not selected |
+| Post-merge control allowed paths | Not selected |
+| Post-merge control changed paths | Not selected |
+| Post-merge control allowed fields | Not selected |
+| Post-merge control changed fields | Not selected |
+| Post-merge control required gates | Not selected |
+| Post-merge control evidence owner | Not selected |
 | Post-merge cleanup targets | None |
 | Post-merge cleanup authority | None |
 | Review mode | EXPLICIT_REVIEW |
 | Review mode authority | Contributing review and continuation authority; pinned workflow §1.2 |
-| Automation boundary | Not applicable until the owner accepts the enumerated post-merge receipt |
-| Required automatic gates | Not applicable until receipt selection; then exactly the Post-merge control required gates above |
+| Automation boundary | Not applicable |
+| Required automatic gates | Not applicable |
 | Automatic gate result | NOT_APPLICABLE |
 | Semantic decision introduced | YES |
 | Automation exception | None |
@@ -165,7 +165,7 @@ runtime work. The complete source inventory stays in the accepted whiteboard.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | source | COMPLETE | 9e8f79af50ed3bad2d512301e03943506f7421f0 | 9e8f79af50ed3bad2d512301e03943506f7421f0 | CONTROL_ONLY | CURRENT | APPROVED | [PR64 reviews](../../reviews/WB62-P01.md#r08-acceptance-and-merge-reconciliation) | None |
 | validation | IN_PROGRESS | dc81fd82eff6ed4f8d83dc13f6dc62cdb768c63f | None | MATERIAL | CURRENT | IN_REVIEW | [WB62-C01](../../reviews/WB62-C01.md) | None |
-| record | IN_PROGRESS | 92deac676e77de1cbe9085665b49c01e353cf369 | None | MATERIAL | CURRENT | IN_REVIEW | [WB62-C01](../../reviews/WB62-C01.md) | None |
+| record | IN_PROGRESS | d2080c2e2bd4703d125eb04f4e68fa2504a90a29 | None | MATERIAL | CURRENT | IN_REVIEW | [WB62-C01](../../reviews/WB62-C01.md) | None |
 
 ### Dependency and freshness register
 
@@ -192,11 +192,11 @@ T01 and U84 publication evidence; no future output was used as a pre-start input
 | Blocker ID | Evidence/unblock condition | Blocks | State | Owner |
 | --- | --- | --- | --- | --- |
 
-The BLOCKED control state preserves the GATES_READY checkpoint while the
-corrected mapping and owner clarifications are reconciled. T01 identifies the
-existing task specification with the owner's clarification, not its future source output. No new
-execution dependency or owner mode choice is introduced. The review ledger
-owns the correction evidence and the unblock result.
+Historical readiness recovery: the earlier BLOCKED control state preserved its
+GATES_READY checkpoint while mapping and owner clarifications were reconciled.
+That recovery is closed. T01 used its accepted task specification, not its future
+source output, and introduced no extra execution dependency. The review ledger
+owns the correction and unblock evidence; the live blocker register is empty.
 
 ## 5. Action and review order
 
@@ -249,20 +249,20 @@ guidance conflict; report a scoped design amendment when necessary.
 | --- | --- |
 | Workflow state | VALIDATING |
 | Current artifact/task | WB62 validation/archive package |
-| Current artifact review | CHANGES_REQUESTED / WB62-C01; R02 correction prepared |
+| Current artifact review | CHANGES_REQUESTED / WB62-C01; R03 correction prepared |
 | Last approved artifact | WB62-P01-R06; 419d62db53986f11b727b7532c0273e45439ce13 |
 | Next ready action | Exact closure-package review, then owner archive acceptance |
 | Active blockers | None |
 | Stale artifacts | None |
 | Validation complete | T01/PR64 integration and U64 runtime cutover verified; closure evidence prepared |
-| Validation remaining | Corrected exact closure-package review, owner acceptance, merge and the predeclared post-merge archive receipt |
+| Validation remaining | Corrected exact closure-package review, owner acceptance, exact same-PR control finalization, merge and target verification |
 | Branch/PR | `codex/upgrade-37653ee`; closure [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) open |
 | Last updated | 2026-09-06 Asia/Shanghai |
 
 T01 outcome, source/consumer consistency and target integration are verified.
-Closure still requires exact-package review, owner acceptance, PR #65 merge and
-the predeclared fail-closed receipt. Cleanup targets and authority are None;
-adoption remains INSTALLED, not ACTIVE.
+Closure still requires exact-package review, owner acceptance, the enumerated
+same-PR control finalization, PR #65 merge and target verification. Cleanup
+targets and authority are None; adoption remains INSTALLED, not ACTIVE.
 
 ## 7. History
 
