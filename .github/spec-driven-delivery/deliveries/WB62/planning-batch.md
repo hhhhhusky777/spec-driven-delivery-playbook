@@ -14,18 +14,18 @@
 | Owner | Repository owner |
 | Preparation authority | Owner joint-delivery and continued planning instruction |
 | Authority evidence | [Authority](preparation-authority.md) |
-| Allowed paths | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; .github/spec-driven-delivery/reviews |
+| Allowed paths | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; .github/spec-driven-delivery/reviews; docs/batch-review-and-recovery.md; scripts/sdd-lifecycle.mjs; tests/sdd-lifecycle.test.mjs |
 | Approval owner | Repository owner |
 | Expiry/end condition | Owner package acceptance, scope change or cancellation |
 | Authority status | CURRENT |
-| State | BLOCKED |
-| Previous state | IN_REVIEW |
+| State | IN_REVIEW |
+| Previous state | PREPARING |
 | Resume state | IN_REVIEW |
 | Base revision | b43873a9aa8f6798c6b7a90d28521a89b4b8e08e |
-| Candidate revision | WB62-P01-R01 |
+| Candidate revision | WB62-P01-R02 |
 | PR | None |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P01-R01 |
+| Self-review candidate revision | WB62-P01-R02 |
 | Self-review evidence | [Review record](../../reviews/WB62-P01.md) |
 | Fresh-context review state | IN_REVIEW |
 | Fresh-context review session ID | WB62-P01 |
@@ -43,7 +43,7 @@
 | Transient retry count | 0 |
 | No-progress count | 0 |
 | Unresolved finding IDs | WB62-P01-R1-F01, WB62-P01-R1-F02, WB62-P01-R2-F01, WB62-P01-R2-F02 |
-| Next action | Owner scope decision for issue63, then supported control route and retained-reviewer re-review |
+| Next action | Complete bounded issue63 correction, snapshots and actual-route validation; self-review and retained-reviewer R02 |
 | Action owner | Coordinator |
 | Execution authority | None |
 | Inputs freshness | CURRENT |
@@ -53,15 +53,15 @@
 
 ## Exact artifact inventory
 
-| Artifact ID | Path | Candidate hash | Depends on | Required control IDs | Disposition | Evidence |
-| --- | --- | --- | --- | --- | --- | --- |
-| authority | .github/spec-driven-delivery/deliveries/WB62/preparation-authority.md | git:86176c2fb97ab91bce2c1dd8402d501278d4ab14 | None | C1, C2, C3, C4, C5, C6 | PENDING | Exact file bytes |
-| registry | .github/spec-driven-delivery/project-contracts.md | git:abb2743b657a6abb4459eef005b8940541095cf0 | authority | C1, C2, C3, C4, C5, C6 | PENDING | Exact file bytes |
-| trigger | .github/spec-driven-delivery/agent-trigger.md | git:d5665ef782a48a78ec8e1db1338f44d0832f2110 | registry | C1, C2, C3, C4, C5, C6 | PENDING | Exact file bytes |
-| manifest | .github/spec-driven-delivery/project-adoption-manifest.md | git:292620493a815244144d7d9154cdeb430d584ea0 | authority | C1, C2, C3, C4, C5, C6 | PENDING | Exact file bytes |
-| upgrade | .github/spec-driven-delivery/playbook-upgrade-assessment.md | git:903be6d8e1edbd84186bb5a6192c2d1cb615d58a | authority | C1, C2, C3, C4, C5, C6 | PENDING | Exact file bytes |
-| workflow | .github/spec-driven-delivery/deliveries/WB62/workflow.md | git:89cf8e66203f982ec4ed925314c17d51cf3e0c4b | authority, registry, trigger, manifest, upgrade | C1, C2, C3, C4, C5, C6 | PENDING | Exact file bytes |
-| plan | .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md | git:48d9af07d440b0d839d0a7cfc12ce5ac32b575ba | workflow | C1, C2, C3, C4, C5, C6 | PENDING | Exact file bytes |
+| Artifact ID | Path | Candidate hash | Depends on | Required control IDs | Disposition | Evidence | Reviewed snapshot | Control delta evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| authority | .github/spec-driven-delivery/deliveries/WB62/preparation-authority.md | git:1dcc0b84feca736108bfb389669852bf4a1a37ac | None | C1, C2, C3, C4, C5, C6, C7 | PENDING | Exact file bytes | None | None |
+| registry | .github/spec-driven-delivery/project-contracts.md | git:abb2743b657a6abb4459eef005b8940541095cf0 | authority | C1, C2, C3, C4, C5, C6 | PENDING | Exact file bytes | None | None |
+| trigger | .github/spec-driven-delivery/agent-trigger.md | git:d5665ef782a48a78ec8e1db1338f44d0832f2110 | registry | C1, C2, C3, C4, C5, C6 | PENDING | Exact file bytes | None | None |
+| manifest | .github/spec-driven-delivery/project-adoption-manifest.md | git:cf898b8420a83114d4cf25cdb317dfd0afa456fb | authority | C1, C2, C3, C4, C5, C6, C7 | PENDING | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-R02-manifest.snapshot | [R02 delta](../../reviews/WB62-P01.md#r02-control-delta-evidence) |
+| upgrade | .github/spec-driven-delivery/playbook-upgrade-assessment.md | git:d7f4fdfa2d7b35c70b407af527dd55eb84544bfe | authority | C1, C2, C3, C4, C5, C6 | PENDING | Exact file bytes | None | None |
+| workflow | .github/spec-driven-delivery/deliveries/WB62/workflow.md | git:3ae5883a1168926619963dddb82e10d569d959c2 | authority, registry, trigger, manifest, upgrade | C1, C2, C3, C4, C5, C6, C7 | PENDING | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-R02-workflow.snapshot | [R02 delta](../../reviews/WB62-P01.md#r02-control-delta-evidence) |
+| plan | .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md | git:e47a7390a24a1c5c88b6733f8c7bc09497fd81a0 | workflow | C1, C2, C3, C4, C5, C6, C7 | PENDING | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-R02-plan.snapshot | [R02 delta](../../reviews/WB62-P01.md#r02-control-delta-evidence) |
 
 ## Required controls
 
@@ -73,6 +73,16 @@
 | C4 | Context/readiness contract | Package acceptance then fresh pre-start check | Plan T01 substantive context; future actual verification | PENDING |
 | C5 | Owner authority | Exact package acceptance | No inferred approval or merge authority | PENDING |
 | C6 | Upgrade policy | Verified local cutover and combined publication | U84 checkpoint; main publication pending | PENDING |
+| C7 | Issue 63 owner amendment | Required control progress succeeds; scope/dependencies/review links/prose still fail closed | Focused regression and actual WB62 route simulation | PENDING |
+
+## Supplemental issue 63 correction subject
+
+The R02 review packet also binds the exact candidate commit containing
+`docs/batch-review-and-recovery.md`, `scripts/sdd-lifecycle.mjs`, and
+`tests/sdd-lifecycle.test.mjs`. These are exception-resolution source outputs,
+not live planning artifacts and therefore are not placed behind this planning
+batch's persistent snapshot reference. Their exact Git blob identities and
+check results are recorded in the R02 review ledger.
 
 ## Acceptance and recovery
 
@@ -82,3 +92,7 @@ changes invalidate current review. Record legal transitions after owner package
 acceptance, then one fresh readiness check. No new source behavior is active
 merely because this package exists. Recovery counters and findings remain in
 the linked checkpoint; interrupted work resumes without erasing evidence.
+
+Exception transition history: `BLOCKED -> IN_REVIEW -> PREPARING` after the
+owner's issue 63 amendment. This latest state reflects candidate correction;
+the R01 findings and original blocked checkpoint remain immutable below.

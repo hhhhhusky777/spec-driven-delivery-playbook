@@ -2003,13 +2003,24 @@ function hasBatchValue(value) {
 function normativeProjection(text) {
   const controls = new Set([
     "State", "Previous state", "Status", "Previous status", "Current phase",
-    "Current task", "Next ready task(s)", "Review state", "Current artifact review state",
+    "Current task", "Next ready task(s)", "Blockers", "Review state", "Current artifact review state",
+    "Current artifact/gate", "Current review phase", "Current review target ID",
     "Self-review state", "Self-review candidate revision", "Self-review evidence",
-    "Fresh-context review state",
+    "Fresh-context review state", "Fresh-context review session ID",
+    "Fresh-context assigned reviewers", "Fresh-context required approvals",
     "Fresh-context approved reviewers", "Fresh-context reviewed revision", "Fresh-context review evidence",
     "Human review state", "Human reviewed revision", "Human review evidence",
+    "Implementation continuation mode", "Implementation mode authority", "Implementation mode scope",
+    "Implementation repository", "Implementation mode selected at",
+    "Implementation mode at task start", "Implementation mode at PR/merge",
+    "Next action", "Next action target IDs", "Next action write targets",
     "Context receipt", "Context verification", "Context source revision", "Verified source revision",
     "Verification evidence", "Verified at", "Last updated", "Actual change summary",
+    "Workflow state", "Current artifact/task", "Current artifact review", "Last approved artifact",
+    "Next ready action", "Active blockers", "Stale artifacts", "Validation complete",
+    "Validation remaining", "Branch/PR", "Plan state", "Active branch / PR",
+    "Last completed task", "Active blocker", "Current blocker", "Last validation", "Archived record",
+    "Post-merge human review",
   ]);
   let headers = [];
   return text.split(/\r?\n/).map(line => {
@@ -2018,11 +2029,27 @@ function normativeProjection(text) {
     if (!headers.length) { headers = cells; return line; }
     if (isSeparatorRow(cells)) return line;
     if (headers.length === 2 && headers[0] === "Field" && controls.has(normalizeValue(cells[0]))) return `| ${cells[0]} | CONTROL |`;
+    if (headers.includes("Artifact ID") && headers.includes("Decision") && headers.includes("Review state/link")) {
+      return cells.map((value, index) => {
+        if (headers[index] !== "Review state/link") return value;
+        const separator = value.indexOf("/");
+        return separator < 0 ? "CONTROL" : `CONTROL ${value.slice(separator)}`;
+      }).join("|");
+    }
+    if (headers.includes("Action ID") && headers.includes("Target/output") && headers.includes("State")) {
+      return cells.map((value, index) => headers[index] === "State" ? "CONTROL" : value).join("|");
+    }
     if (headers.includes("ID") && headers.includes("State") && headers.includes("Depends on")) {
-      return cells.map((value, index) => ["State", "Next", "Source freshness", "PR"].includes(headers[index]) ? "CONTROL" : value).join("|");
+      return cells.map((value, index) => [
+        "State", "Next", "Blocked by", "Source freshness", "Spec state", "PR", "Consumed output versions",
+      ].includes(headers[index]) ? "CONTROL" : value).join("|");
     }
     return line;
   }).join("\n");
+}
+
+export function hasOnlyEnumeratedControlDeltas(reviewedText, liveText) {
+  return normativeProjection(reviewedText) === normativeProjection(liveText);
 }
 
 async function checkReviewBatch(file, root, tables, fields, schema, schemas, ancestors) {
@@ -2120,7 +2147,7 @@ async function checkReviewBatch(file, root, tables, fields, schema, schemas, anc
         if (!isNone(snapshot)) {
           const snapshotFile = await containedFile(root, path.join(root, "batch-root"), snapshot);
           const original = await readFile(snapshotFile);
-          if (!hasBatchValue(row["Control delta evidence"]) || normativeProjection(content.toString("utf8")) !== normativeProjection(original.toString("utf8"))) {
+          if (!hasBatchValue(row["Control delta evidence"]) || !hasOnlyEnumeratedControlDeltas(original.toString("utf8"), content.toString("utf8"))) {
             fail("SDD_BATCH_CONTROL_DELTA", `${id} changed normative content or lacks exact control-delta evidence`);
           }
           content = original;

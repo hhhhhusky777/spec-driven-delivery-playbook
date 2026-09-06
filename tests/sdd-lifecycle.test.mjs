@@ -396,7 +396,35 @@ test("each batched active task needs its own current verified context", async (t
 
 test("immutable reviewed snapshots allow only enumerated control deltas", async (t) => {
   const source = plan().replace("implementation-plan@2", "implementation-plan@3")
-    .replace("| Status |", "| Review batch | [B01](batch.md) |\n| Status |");
+    .replace("| Status |", "| Review batch | [B01](batch.md) |\n| Status |") + `
+
+| Field | Value |
+| --- | --- |
+| Current artifact/gate | [plan](artifact.md) |
+| Current review phase | DESIGN |
+| Current review target ID | plan |
+| Implementation continuation mode | NOT_SELECTED |
+| Implementation mode authority | Not selected |
+| Implementation mode scope | Not selected |
+| Implementation repository | Not selected |
+| Implementation mode selected at | Not selected |
+| Next action target IDs | plan |
+| Allowed write scope | docs |
+| Next action write targets | artifact.md |
+| Workflow state | ARTIFACT_IN_REVIEW |
+| Current artifact/task | Plan |
+| Current artifact review | IN_REVIEW / B01 |
+| Current blocker | Issue 63 correction |
+| Next ready action | Accept plan |
+
+| Order | Artifact ID | Artifact | Decision | Reason/trigger | Template or authority | Owner | Review owner | Review state/link |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | plan | Plan | GENERATE | Required | plan.md | owner | owner | IN_REVIEW / B01 |
+
+| Action ID | Target/output | Review mode | Mode authority | Required gates | Automation boundary | Semantic decision? | State |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| P01 | Plan | EXPLICIT_REVIEW | policy.md | checks | None | YES | ACTIVE |
+`;
   const input = await batchedPlanFixture(t, source);
   await writeFile(path.join(input.root, "snapshot.md"), source);
   const batchPath = path.join(input.root, "batch.md");
@@ -405,8 +433,36 @@ test("immutable reviewed snapshots allow only enumerated control deltas", async 
     .replace("| --- | --- | --- | --- | --- | --- | --- |", "| --- | --- | --- | --- | --- | --- | --- | --- | --- |")
     .replace(/(\| A01 \| artifact.md .*? \| APPROVED \| review.md) \|/, "$1 | snapshot.md | delta.md |");
   await writeFile(batchPath, batch);
-  await writeFile(input.file, source.replace("| Previous status | `CONTRACT_REVIEW` |", "| Previous status | `READY` |"));
+  const controlOnly = source
+    .replace("| Previous status | `CONTRACT_REVIEW` |", "| Previous status | `READY` |")
+    .replace("| Current artifact/gate | [plan](artifact.md) |", "| Current artifact/gate | [T01 PR](https://github.com/example/project/pull/1) |")
+    .replace("| Current review phase | DESIGN |", "| Current review phase | IMPLEMENTATION |")
+    .replace("| Current review target ID | plan |", "| Current review target ID | T01 |")
+    .replace("| Implementation continuation mode | NOT_SELECTED |", "| Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |")
+    .replace("| Implementation mode authority | Not selected |", "| Implementation mode authority | owner.md |")
+    .replace("| Implementation mode scope | Not selected |", "| Implementation mode scope | T01 |")
+    .replace("| Implementation repository | Not selected |", "| Implementation repository | https://github.com/example/project |")
+    .replace("| Implementation mode selected at | Not selected |", "| Implementation mode selected at | 2026-01-01T00:00:00Z |")
+    .replace("| Next action target IDs | plan |", "| Next action target IDs | T01 |")
+    .replace("| Next action write targets | artifact.md |", "| Next action write targets | scripts/change.mjs |")
+    .replace("| Workflow state | ARTIFACT_IN_REVIEW |", "| Workflow state | GATES_READY |")
+    .replace("| Current artifact/task | Plan |", "| Current artifact/task | T01 |")
+    .replace("| Current artifact review | IN_REVIEW / B01 |", "| Current artifact review | APPROVED / B01 |")
+    .replace("| Current blocker | Issue 63 correction |", "| Current blocker | None |")
+    .replace("| Next ready action | Accept plan |", "| Next ready action | Start T01 |")
+    .replace("| IN_REVIEW / B01 |", "| APPROVED / B01 |")
+    .replace("| P01 | Plan | EXPLICIT_REVIEW | policy.md | checks | None | YES | ACTIVE |", "| P01 | Plan | EXPLICIT_REVIEW | policy.md | checks | None | YES | COMPLETE |");
+  await writeFile(input.file, controlOnly);
   assert.deepEqual(await checkSddLifecycleDocument(input.file, input.root, SCHEMAS), []);
+  await writeFile(input.file, controlOnly.replace("| Allowed write scope | docs |", "| Allowed write scope | docs, scripts |"));
+  assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
+  await writeFile(input.file, controlOnly.replace("| `T01` | `READY` | `NEXT` | `None` |", "| `T01` | `READY` | `NEXT` | `T00` |"));
+  assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
+  await writeFile(input.file, controlOnly.replace(
+    "| 1 | plan | Plan | GENERATE | Required | plan.md | owner | owner | APPROVED / B01 |",
+    "| 1 | plan | Plan | GENERATE | Required | plan.md | owner | owner | APPROVED / [other](other-review.md) |",
+  ));
+  assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
   await writeFile(input.file, source + "\nNew unapproved requirement\n");
   assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
   await writeFile(input.file, source);
