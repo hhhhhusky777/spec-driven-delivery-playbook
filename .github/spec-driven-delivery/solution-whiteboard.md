@@ -81,7 +81,7 @@ Before owner acceptance, the feature PR must contain one versioned
 | Requested owner authority | Exact candidate and requested feature/reset merge scope; state `PENDING` before the owner acts |
 | Checks | Required check names, conclusions and exact run URLs |
 | Limits and follow-ups | Unrun/unavailable evidence, accepted limits and linked issues or `None` |
-| Reset plan | Exact transient paths/classes, retained stable controls, reset PR mode and cleanup authority |
+| Reset plan | Enumerated repository-relative transient paths, exact replacement bytes or blobs for every retained file, reset PR mode and cleanup authority; descriptive classes grant no deletion authority |
 
 After the owner acts and before feature merge, the same PR receives a separate
 `sdd-pr-acceptance/v1` comment containing the exact accepted candidate, owner
@@ -124,9 +124,8 @@ is required. The row is a locator and integrity check, not a copied record.
 4. Merge the feature PR while preserving its tracked working state; verify
    target ancestry/tree/checks and publish `sdd-target-receipt/v1` on that PR.
 5. If every evidence item remains available and matches its digest, create the
-   pre-authorized reset PR containing only the exact transient-state deletion,
-   stable `EMPTY` whiteboard, fixed-size manifest locator update and any
-   explicitly reviewed current-project v5 runtime cutover.
+   pre-authorized reset PR containing only the accepted path-by-path deletion,
+   exact `EMPTY` whiteboard bytes and fixed-size manifest locator update.
 6. The retained reviewers verify only that bounded reset delta and required
    checks. Merge it without another semantic review only when the feature-PR
    owner acceptance explicitly authorized that exact reset scope and merge mode.
@@ -147,7 +146,7 @@ outside enumerated transient feature state still requires explicit authority.
 | Unmerged final-control commit | Withdraw only `5c894694a670d425033f5a0387a737359a3d5262`; retain its parent `cd6d8ba3311bbe3e4a6a692b4cd970477021fb7b` as the reconciled `VALIDATING` checkpoint, then use the allowed return to plan `IMPLEMENTING` / workflow `DELIVERY_ACTIVE` for T02–T04 |
 | WB62 working delivery files already on main | Remove only in the post-verification reset PR after exact PR #64/#65 evidence validation |
 | Working whiteboard | Preserve this amendment through PR #65 target verification; reset to the neutral tracked `EMPTY` entry point in the reset PR |
-| U64 runtime result | Keep the current runtime pin and stable manifest routing; move delivery-only narrative to PR evidence |
+| U64 runtime result | PR #65 preserves the current v4 pin; after its exact merge SHA exists, a separately reviewed reset/upgrade PR performs the one-time v5 cutover and moves delivery-only narrative to PR evidence |
 | Existing WB38 history | No change in this migration |
 
 ## Risks and validation
@@ -167,9 +166,10 @@ outside enumerated transient feature state still requires explicit authority.
 | 1 | Owner rejected permanent feature archives because GitHub PR is the evidence owner and requested reset after delivery | ACCEPTED_DIRECTION |
 | 1 | Preserve adoption/runtime and reusable delivered work; reset only feature-specific working/evidence artifacts | PROPOSED_DETAIL |
 | 1 | Apply the new behavior to current WB62; leave older WB38 history untouched without separate deletion authority | SAFE_MIGRATION_DEFAULT |
-| 2 | Use a separately scoped reset PR after feature target verification; feature-PR acceptance may pre-authorize its exact mechanical merge path | PROPOSED_DETAIL |
+| 2 | Use a separately scoped reset PR after feature target verification; feature-PR acceptance may pre-authorize its exact enumerated mechanical merge path | PROPOSED_DETAIL |
 | 2 | Preserve v2–v4 behavior; introduce opt-in v5 and migrate only at a reviewed safe checkpoint | PROPOSED_DETAIL |
 | 2 | Use pre-acceptance review, post-decision acceptance and post-merge target tables plus body digests and a non-self-referential fixed-size manifest locator | PROPOSED_DETAIL |
+| 3 | Preserve the exact-SHA upgrade gate: current self-adoption needs one post-PR65 exact-SHA reset/upgrade acceptance; later v5 feature resets do not | PROPOSED_DETAIL |
 
 ### Design review reconciliation
 
@@ -196,6 +196,16 @@ R02 retained reviewers requested bounded corrections on exact candidate
 | R02-R1-F08 / R2-F09 | Map self-review, publication, workflow, package and CI consumers; assign the GitHub-aware command/action and read-only permissions | PENDING_R03_REVIEW |
 | R2-F06 | Split pre-owner `sdd-pr-review/v1` from post-decision `sdd-pr-acceptance/v1` to remove circular evidence | PENDING_R03_REVIEW |
 | R2-F08 | Define current self-adoption: explicit v4 amendment and exact v5 cutover inside the post-verification reset PR | PENDING_R03_REVIEW |
+
+R03 R1 approved exact candidate
+`ceabcd90c746bf5aef4c779fcbec162be1c54a9e`; retained R2 requested three
+bounded corrections.
+
+| Finding | Consolidated correction | State |
+| --- | --- | --- |
+| R2-F10 | Keep PR #65 on the current v4 pin; after merge, review the exact new SHA and combine its explicit human-approved upgrade with the current reset PR | PENDING_R04_REVIEW |
+| R2-F11 | Map v2, v3 and current v4 schema files; introduce explicit v4/v5 dispatch and regression coverage rather than claiming no config exists | PENDING_R04_REVIEW |
+| R2-F12 | Require an enumerated repository-relative reset inventory and exact retained replacement bytes/blobs; classes describe intent only | PENDING_R04_REVIEW |
 
 ## Option and lifecycle conclusion
 
@@ -238,7 +248,7 @@ This is an outcome boundary, leaving agents room to choose safe mechanics.
 | --- | --- | --- |
 | T02 — Closure contract | Update canonical docs, diagrams, skills, templates and PR evidence schema to make the feature PR the semantic owner and define the post-verification reset PR | All consumers state the same evidence, sequencing and authority outcome without copied archive rules |
 | T03 — Enforcement and compatibility | Add GitHub-aware evidence verification; update local v5 lifecycle validation and regressions while preserving v2–v4 | Positive/negative API fixtures, schema compatibility and reset-boundary scenarios pass |
-| T04 — Current-project migration | Withdraw the unmerged terminal controls, update stable routing/runtime records, remove only unmerged archive additions in PR #65, then publish the exact reset inventory for a post-verification PR | PR #65 merges reusable v5 behavior with WB62 state preserved; later reset PR removes WB62 state and restores EMPTY without touching adoption/runtime or WB38 |
+| T04 — Current-project migration | Withdraw the unmerged terminal controls, keep the v4 pin, remove only unmerged archive additions in PR #65, and publish the exact reset inventory; after PR #65 target verification, prepare one exact-SHA reset/upgrade PR for normal upgrade review | PR #65 merges reusable v5 behavior with WB62 state preserved; the later human-approved reset/upgrade PR pins the exact v5 merge, removes WB62 state and restores EMPTY without touching WB38 |
 
 T02–T04 form one semantic feature PR plus one separately scoped retained-seat
 control reset PR. There is one final full semantic review gate; the reset PR
@@ -276,7 +286,7 @@ is today.
 | New behavior | Introduce v5 workflow/evidence semantics; select only through an explicit reviewed playbook upgrade |
 | Active old-model delivery | Finish under its pinned model by default; migrate only at a reviewed checkpoint with no running task or unresolved external effect |
 | Current WB62 | Main is workflow `DELIVERY_ACTIVE` / plan `IMPLEMENTING`; PR #65 already reconciled T01 at `cd6d8ba` to `VALIDATING`. The owner amendment withdraws only unmerged terminal child `5c89469`, then uses the allowed `VALIDATING -> DELIVERY_ACTIVE` / `VALIDATING -> IMPLEMENTING` return for T02–T04 |
-| Current self-adoption cutover | PR #65 owner acceptance must explicitly approve this one v4 closure amendment and the exact v5 reset migration. After feature target verification, the reset PR uses the merged v5 installer/checker, updates the manifest pin to the exact PR #65 merge SHA, regenerates/validates runtime, and applies only the reviewed reset inventory and stable locator |
+| Current self-adoption cutover | PR #65 owner acceptance approves only the v4 closure amendment and exact reset inventory. After feature target verification reveals the immutable merge SHA, prepare the combined reset/upgrade PR, run migration validation, obtain two exact-head reviews and human cutover acceptance, then update the manifest pin, regenerate/validate runtime and apply the enumerated reset. This one-time bootstrap cannot reuse relational preapproval |
 | Downstream installation | No silent migration; upgrade keeps the old pin until compatibility checks and owner cutover acceptance pass |
 | Historical archive cleanup | Never inferred; retain when required PR evidence is unavailable; any deletion needs separate exact scope and authority |
 
@@ -295,7 +305,7 @@ is today.
 | Maintained batched/adoption examples | Update one v5 example; label older examples historical/no-impact where retained | T02 | Example links and documented expected output |
 | `templates/reviews/agent-self-review.md` and `scripts/review-publication.mjs` | Publish exact self-review/body digests and retain literal reviewer findings without local ledger duplication | T02/T03 | Deterministic publication/replay and edited-body digest mismatch tests |
 | `.github/workflows/documentation-quality.yml` and `package.json` | Add the canonical reset-evidence check with read-only pull-request/check/content permissions and an explicit script entry point | T03 | Workflow wiring assertion plus mocked GitHub API positive/negative runs |
-| `scripts/sdd-lifecycle.mjs` schema dispatch; no separate schema configuration file exists | Preserve old schemas; validate v5 local fields and locator/reset inventory only | T03 | v2–v5 positive/negative unit tests |
+| `config/sdd-lifecycle-schema-v2.json`, `config/sdd-lifecycle-schema-v3.json`, current v4 `config/sdd-lifecycle-schema.json`, and `scripts/sdd-lifecycle.mjs` dispatch | Preserve v2/v3; retain the current schema as explicit v4 compatibility input; add a v5/default schema and validate v5 local fields, locator and reset inventory | T03 | Exact v2–v5 dispatch plus positive/negative compatibility tests |
 | Project registry, trigger, manifest, WB62 paths/reviews/U64 and archive index | Keep stable pin/routes; remove unmerged archive additions; declare later reset inventory and reviewed current-project v5 cutover | T04 | Exact path inventory, PR evidence verifier, runtime CURRENT and WB38 no-impact check |
 
 ## Conclusion readiness
@@ -304,6 +314,6 @@ is today.
 | --- | --- |
 | Owner direction | GitHub PR owns delivery evidence; permanent feature archive rejected |
 | Required boundaries | Adoption/runtime/reusable work preserved; review, quality and authority controls unchanged |
-| Current migration | PR #65 preserves WB62 through target verification; separately scoped reset PR removes it; historical WB38 untouched |
+| Current migration | PR #65 preserves v4/WB62 through target verification; one exact-SHA reviewed reset/upgrade PR activates v5 and removes WB62; historical WB38 remains untouched |
 | Open product/design decisions | None |
 | Remaining work | Independent conclusion review, owner acceptance, plan update and implementation |
