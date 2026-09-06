@@ -21,8 +21,8 @@
 | Review batch | None |
 | Implementation plan | [FULL plan](implementation-plan.md) |
 | Delivery | WB62 — agent judgment and essential evidence |
-| State | VALIDATING |
-| Previous state | DELIVERY_ACTIVE |
+| State | ARCHIVED |
+| Previous state | COMPLETE |
 | Owner | Repository owner |
 | Concluded whiteboard | [Archived WB62 conclusion](../../archive/WB62/solution-whiteboard.md) |
 | Approved workflow handoff | [Handoff](handoff.md) |
@@ -32,32 +32,32 @@
 | Trigger identity/run ID | Coordinating agent / WB62-ROUTE-20260906-01 |
 | Selected route | Route 3 — systemic guidance change using existing authorities and FULL plan |
 | Manifest review state | APPROVED |
-| Current artifact/gate | [WB62 closure package](record.md) |
+| Current artifact/gate | [WB62 archive record](record.md) |
 | Current review phase | ARCHIVE |
 | Current review target ID | record |
-| Current artifact review state | CHANGES_REQUESTED |
+| Current artifact review state | APPROVED |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-C01-R05 |
+| Self-review candidate revision | cd6d8ba3311bbe3e4a6a692b4cd970477021fb7b |
 | Self-review evidence | [Closure review](../../reviews/WB62-C01.md) |
-| Fresh-context review state | CHANGES_REQUESTED |
+| Fresh-context review state | APPROVED |
 | Fresh-context review session ID | WB62-C01 |
 | Fresh-context assigned reviewers | wb62_closure_r1, wb62_closure_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | None |
-| Fresh-context reviewed revision | None |
+| Fresh-context approved reviewers | wb62_closure_r1, wb62_closure_r2 |
+| Fresh-context reviewed revision | cd6d8ba3311bbe3e4a6a692b4cd970477021fb7b |
 | Fresh-context review evidence | [Closure review](../../reviews/WB62-C01.md) |
-| Human review state | NOT_STARTED |
-| Human reviewed revision | None |
+| Human review state | APPROVED |
+| Human reviewed revision | cd6d8ba3311bbe3e4a6a692b4cd970477021fb7b |
 | Human review evidence | [Closure review](../../reviews/WB62-C01.md) |
 | Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |
 | Implementation mode authority | [Owner mode record](../../reviews/WB62-P01.md#implementation-mode-authority) |
 | Implementation mode scope | T01 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-06T09:36:49Z |
-| Next action | Retained-seat review of the exact PR #65 closure package, then owner acceptance |
-| Next action target IDs | validation, record |
-| Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/upgrades/U64.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; CONTRIBUTING.md; README.md; CHANGELOG.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/workflows; examples; scripts/sdd-lifecycle.mjs; tests |
-| Next action write targets | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews/WB62-C01.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/upgrades/U64.md |
+| Next action | None — delivery archived; PR #65 owns target verification |
+| Next action target IDs | None |
+| Allowed write scope | None |
+| Next action write targets | None |
 | Post-merge control mode | NOT_SELECTED |
 | Post-merge control authority | Not selected; PR #65 owns closure and its post-merge evidence |
 | Post-merge control source revision | Not selected |
@@ -75,9 +75,9 @@
 | Automation boundary | Not applicable |
 | Required automatic gates | Not applicable |
 | Automatic gate result | NOT_APPLICABLE |
-| Semantic decision introduced | YES |
+| Semantic decision introduced | NO |
 | Automation exception | None |
-| Automation audit record | Not applicable |
+| Automation audit record | [PR #65 review and target evidence](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
 | Last routed | 2026-09-06 Asia/Shanghai |
 
 The review ledger records exact candidate self-review and subsequent receipts
@@ -164,8 +164,8 @@ runtime work. The complete source inventory stays in the accepted whiteboard.
 | Artifact ID | State | Current version | Verified version | Change impact | Freshness | Review state | Review evidence | Blocked by |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | source | COMPLETE | 9e8f79af50ed3bad2d512301e03943506f7421f0 | 9e8f79af50ed3bad2d512301e03943506f7421f0 | CONTROL_ONLY | CURRENT | APPROVED | [PR64 reviews](../../reviews/WB62-P01.md#r08-acceptance-and-merge-reconciliation) | None |
-| validation | IN_PROGRESS | dc81fd82eff6ed4f8d83dc13f6dc62cdb768c63f | None | MATERIAL | CURRENT | IN_REVIEW | [WB62-C01](../../reviews/WB62-C01.md) | None |
-| record | IN_PROGRESS | e2d775e178c24f4f9870b96f0a3e024988abba00 | None | MATERIAL | CURRENT | IN_REVIEW | [WB62-C01](../../reviews/WB62-C01.md) | None |
+| validation | COMPLETE | dc81fd82eff6ed4f8d83dc13f6dc62cdb768c63f | dc81fd82eff6ed4f8d83dc13f6dc62cdb768c63f | MATERIAL | CURRENT | APPROVED | [WB62-C01](../../reviews/WB62-C01.md) and [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) | None |
+| record | COMPLETE | e2d775e178c24f4f9870b96f0a3e024988abba00 | e2d775e178c24f4f9870b96f0a3e024988abba00 | MATERIAL | CURRENT | APPROVED | [WB62-C01](../../reviews/WB62-C01.md) and [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) | None |
 
 ### Dependency and freshness register
 
@@ -247,16 +247,16 @@ guidance conflict; report a scoped design amendment when necessary.
 
 | Field | Current value |
 | --- | --- |
-| Workflow state | VALIDATING |
-| Current artifact/task | WB62 validation/archive package |
-| Current artifact review | CHANGES_REQUESTED / WB62-C01; exact correction prepared |
-| Last approved artifact | WB62-P01-R06; 419d62db53986f11b727b7532c0273e45439ce13 |
-| Next ready action | Exact closure-package review, then owner archive acceptance |
+| Workflow state | ARCHIVED |
+| Current artifact/task | None |
+| Current artifact review | APPROVED / WB62-C01 at cd6d8ba3311bbe3e4a6a692b4cd970477021fb7b; bounded control delta verified on PR #65 |
+| Last approved artifact | WB62 closure package at cd6d8ba3311bbe3e4a6a692b4cd970477021fb7b; bounded control delta verified on PR #65 |
+| Next ready action | None — delivery archived; PR #65 owns target verification |
 | Active blockers | None |
 | Stale artifacts | None |
-| Validation complete | T01/PR64 integration and U64 runtime cutover verified; closure evidence prepared |
-| Validation remaining | Corrected exact closure-package review, owner acceptance, exact same-PR control finalization, merge and target verification |
-| Branch/PR | `codex/upgrade-37653ee`; closure [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) open |
+| Validation complete | T01/PR #64 integration, U64 runtime cutover, closure package, archive/reset, and exact control-delta gates verified |
+| Validation remaining | None |
+| Branch/PR | Branch `codex/upgrade-37653ee`; closure [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) owns publication and target verification |
 | Last updated | 2026-09-06 Asia/Shanghai |
 
 T01 outcome, source/consumer consistency and target integration are verified.
