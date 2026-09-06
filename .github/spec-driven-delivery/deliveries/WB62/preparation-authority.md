@@ -40,7 +40,7 @@ round.
 | Purpose | Let reviewed snapshots admit required, valid lifecycle-control progress while retaining the accepted normative design |
 | Added files | `scripts/sdd-lifecycle.mjs`; `tests/sdd-lifecycle.test.mjs`; `docs/batch-review-and-recovery.md`; issue 63 evidence in the existing WB62 review records |
 | Mutable controls | Enumerated status, review, implementation-mode, current-action, context and live-summary values; delivery-manifest review state with its existing evidence link; action/task ledger progress |
-| Still immutable | Allowed write scope, review links, task dependencies, contracts, risk, acceptance criteria and ordinary prose |
+| Still immutable | Predeclared allowed write scope; reviewer roster/session/quorum; review-link targets; task-spec completion and dependencies; contracts, risk, acceptance criteria and ordinary prose |
 | Compatibility | No schema/state/quorum change; existing snapshots and v2/v3/v4 routes remain supported |
 | Review | Same two WB62 planning reviewers inspect the corrected exact package; owner acceptance remains required |
 | Excluded | Broad projection bypass, unreviewed scope expansion, approval fabrication, implementation of the remaining T01 policy changes |

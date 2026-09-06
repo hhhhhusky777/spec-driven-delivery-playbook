@@ -2003,32 +2003,49 @@ function hasBatchValue(value) {
 function normativeProjection(text) {
   const controls = new Set([
     "State", "Previous state", "Status", "Previous status", "Current phase",
-    "Current task", "Next ready task(s)", "Blockers", "Review state", "Current artifact review state",
+    "Current task", "Next ready task(s)", "Blockers", "Review state", "Manifest review state",
+    "Current artifact review state",
     "Current artifact/gate", "Current review phase", "Current review target ID",
-    "Self-review state", "Self-review candidate revision", "Self-review evidence",
-    "Fresh-context review state", "Fresh-context review session ID",
-    "Fresh-context assigned reviewers", "Fresh-context required approvals",
-    "Fresh-context approved reviewers", "Fresh-context reviewed revision", "Fresh-context review evidence",
-    "Human review state", "Human reviewed revision", "Human review evidence",
-    "Implementation continuation mode", "Implementation mode authority", "Implementation mode scope",
+    "Self-review state", "Self-review candidate revision",
+    "Fresh-context review state", "Fresh-context approved reviewers", "Fresh-context reviewed revision",
+    "Human review state", "Human reviewed revision",
+    "Implementation continuation mode", "Implementation mode scope",
     "Implementation repository", "Implementation mode selected at",
     "Implementation mode at task start", "Implementation mode at PR/merge",
     "Next action", "Next action target IDs", "Next action write targets",
     "Context receipt", "Context verification", "Context source revision", "Verified source revision",
     "Verification evidence", "Verified at", "Last updated", "Actual change summary",
-    "Workflow state", "Current artifact/task", "Current artifact review", "Last approved artifact",
+    "Workflow state", "Current artifact/task", "Last approved artifact",
     "Next ready action", "Active blockers", "Stale artifacts", "Validation complete",
     "Validation remaining", "Branch/PR", "Plan state", "Active branch / PR",
     "Last completed task", "Active blocker", "Current blocker", "Last validation", "Archived record",
     "Post-merge human review",
   ]);
+  const evidenceControls = new Set([
+    "Self-review evidence", "Fresh-context review evidence", "Human review evidence",
+    "Verification evidence", "Implementation mode authority",
+  ]);
+  const referencedStatusControls = new Set(["Current artifact review"]);
+  const preserveLinks = value => {
+    const links = [...value.matchAll(/\]\(([^)]+)\)/g)].map(match => match[1]);
+    return links.length ? `CONTROL LINKS ${links.join(",")}` : value;
+  };
+  const preserveReference = value => {
+    const separator = value.indexOf("/");
+    return separator < 0 ? "CONTROL" : `CONTROL ${value.slice(separator)}`;
+  };
   let headers = [];
   return text.split(/\r?\n/).map(line => {
     if (!/^\s*\|/.test(line)) { headers = []; return line; }
     const cells = splitMarkdownRow(line);
     if (!headers.length) { headers = cells; return line; }
     if (isSeparatorRow(cells)) return line;
-    if (headers.length === 2 && headers[0] === "Field" && controls.has(normalizeValue(cells[0]))) return `| ${cells[0]} | CONTROL |`;
+    if (headers.length === 2 && headers[0] === "Field") {
+      const field = normalizeValue(cells[0]);
+      if (controls.has(field)) return `| ${cells[0]} | CONTROL |`;
+      if (evidenceControls.has(field)) return `| ${cells[0]} | ${preserveLinks(cells[1])} |`;
+      if (referencedStatusControls.has(field)) return `| ${cells[0]} | ${preserveReference(cells[1])} |`;
+    }
     if (headers.includes("Artifact ID") && headers.includes("Decision") && headers.includes("Review state/link")) {
       return cells.map((value, index) => {
         if (headers[index] !== "Review state/link") return value;
@@ -2041,7 +2058,7 @@ function normativeProjection(text) {
     }
     if (headers.includes("ID") && headers.includes("State") && headers.includes("Depends on")) {
       return cells.map((value, index) => [
-        "State", "Next", "Blocked by", "Source freshness", "Spec state", "PR", "Consumed output versions",
+        "State", "Next", "Blocked by", "Source freshness", "PR", "Consumed output versions",
       ].includes(headers[index]) ? "CONTROL" : value).join("|");
     }
     return line;

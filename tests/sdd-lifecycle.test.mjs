@@ -201,6 +201,54 @@ test("v4 traverses counterpart batch authority from either entry point", async t
   }
 });
 
+test("v4 reviewed snapshots preserve an accepted planning package through readiness", async t => {
+  const f = await v4Fixture(t);
+  const planFile = path.join(f.root, "implementation-plan.md");
+  const liveWorkflow = f.w.replace("| Review batch | None |", "| Review batch | [Batch](batch.md) |");
+  const livePlan = f.p.replace("| Review batch | None |", "| Review batch | [Batch](batch.md) |");
+  const reviewedWorkflow = liveWorkflow
+    .replace("| State | `GATES_READY` |", "| State | `MANIFEST_IN_REVIEW` |")
+    .replace("| Previous state | `ARTIFACT_IN_REVIEW` |", "| Previous state | `ROUTING` |")
+    .replace("| Implementation continuation mode | `HUMAN_REVIEW_BEFORE_MERGE` |", "| Implementation continuation mode | `NOT_SELECTED` |")
+    .replace("| Implementation mode scope | `task-1` |", "| Implementation mode scope | `Not selected` |")
+    .replace("| Implementation repository | `https://github.com/example/project` |", "| Implementation repository | `Not selected` |")
+    .replace("| Implementation mode selected at | `2026-09-03 10:00 UTC` |", "| Implementation mode selected at | `Not selected` |")
+    .replace("| 1 | plan | Plan | GENERATE_FULL | Required | artifact.md | Author | Reviewer | APPROVED |", "| 1 | plan | Plan | GENERATE_FULL | Required | artifact.md | Author | Reviewer | IN_REVIEW |");
+  const reviewedPlan = livePlan
+    .replace("| Status | `READY` |", "| Status | `CONTRACT_REVIEW` |")
+    .replace("| Previous status | `CONTRACT_REVIEW` |", "| Previous status | `DRAFT` |")
+    .replace("| `T01` | `READY` | `NEXT` |", "| `T01` | `PLANNED` | `` |");
+  const workflowHash = createHash("sha256").update(reviewedWorkflow).digest("hex");
+  const planHash = createHash("sha256").update(reviewedPlan).digest("hex");
+  const approved = {
+    State: "ACCEPTED", "Previous state": "IN_REVIEW", "Allowed paths": "artifact.md; implementation-plan.md",
+    "Candidate revision": "B01-R01", "Self-review state": "SELF_REVIEW_PASSED",
+    "Self-review candidate revision": "B01-R01", "Self-review evidence": "self.md",
+    "Fresh-context review state": "APPROVED", "Fresh-context review session ID": "S01",
+    "Fresh-context assigned reviewers": "r1, r2", "Fresh-context required approvals": "2",
+    "Fresh-context approved reviewers": "r1, r2", "Fresh-context reviewed revision": "B01-R01",
+    "Fresh-context review evidence": "review.md", "Human review state": "APPROVED",
+    "Human reviewed revision": "B01-R01", "Human review evidence": "owner.md",
+    "Unresolved finding IDs": "None",
+  };
+  let batch = reviewBatch(approved,
+    `| W01 | artifact.md | sha256:${workflowHash} | None | C01 | APPROVED | review.md | workflow.snapshot | delta.md |\n` +
+    `| P01 | implementation-plan.md | sha256:${planHash} | W01 | C01 | APPROVED | review.md | plan.snapshot | delta.md |`,
+    "| C01 | policy.md | Planning acceptance | review.md | SATISFIED |");
+  batch = batch.replace("review-batch@3", "review-batch@4")
+    .replace("| Disposition | Evidence |", "| Disposition | Evidence | Reviewed snapshot | Control delta evidence |")
+    .replace("| --- | --- | --- | --- | --- | --- | --- |", "| --- | --- | --- | --- | --- | --- | --- | --- | --- |");
+  await writeFile(f.file, liveWorkflow);
+  await writeFile(planFile, livePlan);
+  await writeFile(path.join(f.root, "workflow.snapshot"), reviewedWorkflow);
+  await writeFile(path.join(f.root, "plan.snapshot"), reviewedPlan);
+  await writeFile(path.join(f.root, "batch.md"), batch);
+  assert.deepEqual(await checkSddLifecycleDocument(f.file, f.root, SCHEMAS), []);
+  assert.deepEqual(await checkSddLifecycleDocument(planFile, f.root, SCHEMAS), []);
+  await writeFile(f.file, liveWorkflow.replace("| Allowed write scope | `docs` |", "| Allowed write scope | `docs, scripts` |"));
+  assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
+});
+
 test("v4 document entries reject a complete output with a pending ancestor", async t => {
   const f = await v4Fixture(t);
   const bytes = "synthetic result\n";
@@ -403,8 +451,9 @@ test("immutable reviewed snapshots allow only enumerated control deltas", async 
 | Current artifact/gate | [plan](artifact.md) |
 | Current review phase | DESIGN |
 | Current review target ID | plan |
+| Manifest review state | IN_REVIEW |
 | Implementation continuation mode | NOT_SELECTED |
-| Implementation mode authority | Not selected |
+| Implementation mode authority | [Owner mode record](owner-mode.md) |
 | Implementation mode scope | Not selected |
 | Implementation repository | Not selected |
 | Implementation mode selected at | Not selected |
@@ -438,8 +487,8 @@ test("immutable reviewed snapshots allow only enumerated control deltas", async 
     .replace("| Current artifact/gate | [plan](artifact.md) |", "| Current artifact/gate | [T01 PR](https://github.com/example/project/pull/1) |")
     .replace("| Current review phase | DESIGN |", "| Current review phase | IMPLEMENTATION |")
     .replace("| Current review target ID | plan |", "| Current review target ID | T01 |")
+    .replace("| Manifest review state | IN_REVIEW |", "| Manifest review state | APPROVED |")
     .replace("| Implementation continuation mode | NOT_SELECTED |", "| Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |")
-    .replace("| Implementation mode authority | Not selected |", "| Implementation mode authority | owner.md |")
     .replace("| Implementation mode scope | Not selected |", "| Implementation mode scope | T01 |")
     .replace("| Implementation repository | Not selected |", "| Implementation repository | https://github.com/example/project |")
     .replace("| Implementation mode selected at | Not selected |", "| Implementation mode selected at | 2026-01-01T00:00:00Z |")
@@ -457,6 +506,16 @@ test("immutable reviewed snapshots allow only enumerated control deltas", async 
   await writeFile(input.file, controlOnly.replace("| Allowed write scope | docs |", "| Allowed write scope | docs, scripts |"));
   assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
   await writeFile(input.file, controlOnly.replace("| `T01` | `READY` | `NEXT` | `None` |", "| `T01` | `READY` | `NEXT` | `T00` |"));
+  assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
+  await writeFile(input.file, controlOnly.replace("| Fresh-context assigned reviewers | `reviewer-1, reviewer-2` |", "| Fresh-context assigned reviewers | `replacement-1, replacement-2` |"));
+  assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
+  await writeFile(input.file, controlOnly.replace("| Self-review evidence | `reviews/self-review.md` |", "| Self-review evidence | `reviews/other.md` |"));
+  assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
+  await writeFile(input.file, controlOnly.replace("| Implementation mode authority | [Owner mode record](owner-mode.md) |", "| Implementation mode authority | [Other](other.md) |"));
+  assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
+  await writeFile(input.file, controlOnly.replace("| Current artifact review | APPROVED / B01 |", "| Current artifact review | APPROVED / OTHER |"));
+  assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
+  await writeFile(input.file, controlOnly.replace("| `CURRENT` | `COMPLETE` |", "| `CURRENT` | `DRAFT` |"));
   assert.ok((await checkSddLifecycleDocument(input.file, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
   await writeFile(input.file, controlOnly.replace(
     "| 1 | plan | Plan | GENERATE | Required | plan.md | owner | owner | APPROVED / B01 |",

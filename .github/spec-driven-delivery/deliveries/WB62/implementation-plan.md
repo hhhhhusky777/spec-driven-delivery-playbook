@@ -35,7 +35,7 @@ measurement or CI pass is claimed yet.
 | Reviewers | Two isolated planning reviewers, then owner |
 | Review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P01-R02; exact identity in review record |
+| Self-review candidate revision | WB62-P01-R03; exact identity in review record |
 | Self-review evidence | [Package evidence](../../reviews/WB62-P01.md) |
 | Fresh-context review state | NOT_STARTED |
 | Fresh-context review session ID | WB62-P01 |
@@ -46,7 +46,7 @@ measurement or CI pass is claimed yet.
 | Fresh-context review evidence | [Package evidence](../../reviews/WB62-P01.md) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | Not recorded |
-| Human review evidence | Not recorded |
+| Human review evidence | [Review record](../../reviews/WB62-P01.md#owner-package-acceptance) |
 | Created | 2026-09-06 Asia/Shanghai |
 | Last updated | 2026-09-06 Asia/Shanghai |
 | Primary issue | [Issue 62](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/62) |
@@ -224,7 +224,7 @@ and durable concise evidence. No unrelated diff or lost historical evidence.
 | Context source revision | d93d27a33c43c1574aeed27044654c8964cf998b |
 | Context verification | NOT_STARTED |
 | Verified source revision | Not recorded |
-| Verification evidence | Not recorded |
+| Verification evidence | [T01 readiness evidence](../../reviews/WB62-P01.md#t01-readiness-evidence) |
 | Verified at | Not recorded |
 | Implementation mode at task start | Not selected; read workflow after package acceptance |
 | Implementation mode at PR/merge | Not selected; reread live authority |

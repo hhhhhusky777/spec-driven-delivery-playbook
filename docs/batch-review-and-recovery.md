@@ -161,8 +161,11 @@ columns. The declared hash binds that snapshot. The checker compares the live
 file to it after masking only enumerated status, review, implementation-mode,
 current-action, context and live-summary values, plus review-state cells in the
 delivery manifest and enumerated progress cells in the action and task ledgers. Review links,
-allowed write scope, task dependencies, contracts, risks and ordinary prose
-remain bound; changing any of them fails closed.
+reviewer roster/session/quorum, task-spec completion, allowed write scope, task
+dependencies, contracts, risks and ordinary prose remain bound; changing any
+of them fails closed. Review/evidence controls may change status or descriptive
+text only while retaining every predeclared link target; a new or replaced link
+is normative.
 Predeclare control fields before review rather than adding new unreviewed
 structure afterward. The coordinator retains exact input/output hashes and
 delta evidence. This mechanism does not reuse an old PR-head approval.
