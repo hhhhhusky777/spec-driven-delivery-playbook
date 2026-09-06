@@ -64,7 +64,7 @@ uses one full `refs/heads/...` identity; every worktree/runtime item uses one
 exact absolute path and ownership evidence. A destructive external row binds
 its ownership proof to that exact path or its exact `.sdd-owned-checkout`
 marker, and binds its authorized operation to the exact path without a child or
-traversal suffix; repository, temporary, user-home, and system parent
+traversal suffix or another absolute target; repository, temporary, user-home, and system parent
 directories are never valid targets.
 Globs, classes, unresolved paths, unknown effects, or descriptive examples grant no deletion authority. Create
 the reset PR only after the feature target receipt verifies. Its delta is

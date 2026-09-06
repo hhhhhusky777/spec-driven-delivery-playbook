@@ -104,6 +104,15 @@ const ownershipToken = (value, expected) => {
 
 const unresolvedOperation = value => /[*?\[\]{}]|\$\{|\$[A-Za-z_]|(?:^|[\\s/])\.\.(?=$|[\\s/])|(?:^|\s)~(?:\/|$)/.test(String(value ?? ""));
 
+function hasAdditionalAbsolutePath(value, expected) {
+  const escaped = expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const withoutExpected = String(value ?? "").replace(
+    new RegExp(`(^|[\\s'"\x60=:;,])${escaped}(?=$|[\\s'"\x60;,])`, "g"),
+    (_, prefix) => `${prefix}<EXACT_RESET_IDENTITY>`,
+  );
+  return /(^|[\s'"`=:;,])\/(?!\/)[^\s'"`;,]+/.test(withoutExpected);
+}
+
 function pathAliases(value) {
   const resolved = path.resolve(value);
   const aliases = new Set([resolved]);
@@ -153,7 +162,8 @@ function resetInventory(body) {
         (disposition === "KEEP" ? (!recorded(reuseReason) || normalize(operation).toUpperCase() !== "NONE") :
           (normalize(reuseReason).toUpperCase() !== "NONE" || !recorded(operation))) ||
         (["WORKTREE", "RUNTIME"].includes(kind) && disposition !== "KEEP" &&
-          (!ownershipToken(ownership, identity) || !exactToken(operation, identity) || unresolvedOperation(operation)))) return null;
+          (!ownershipToken(ownership, identity) || !exactToken(operation, identity) || unresolvedOperation(operation) ||
+            hasAdditionalAbsolutePath(operation, identity)))) return null;
     itemIds.add(itemId.toLowerCase());
     identities.add(identity);
     result[disposition].push(identity);
