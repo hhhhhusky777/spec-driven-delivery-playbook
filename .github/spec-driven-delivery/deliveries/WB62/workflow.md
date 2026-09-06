@@ -37,7 +37,7 @@
 | Current review target ID | plan |
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P02-R01 |
+| Self-review candidate revision | WB62-P02-R02 |
 | Self-review evidence | [Planning review](../../reviews/WB62-P01.md#p02-pr-evidence-reset-amendment) |
 | Fresh-context review state | NOT_STARTED |
 | Fresh-context review session ID | WB62-P02 |
@@ -56,8 +56,8 @@
 | Implementation mode selected at | 2026-09-06T09:36:49Z |
 | Next action | Retained planning seats review P02; then owner accepts the package and selects mode for T02/T04 |
 | Next action target IDs | plan |
-| Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/upgrades/U64.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; .github/pull_request_template.md; .github/workflows/documentation-quality.yml; CONTRIBUTING.md; README.md; CHANGELOG.md; package.json; config; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/workflows; examples; scripts/sdd-lifecycle.mjs; scripts/review-publication.mjs; scripts/verify-pr-evidence.mjs; tests |
-| Next action write targets | .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
+| Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/upgrades/U64.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; .github/pull_request_template.md; .github/workflows/documentation-quality.yml; CONTRIBUTING.md; README.md; CHANGELOG.md; package.json; config; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/README.md; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/handoffs; templates/policies; templates/testing; templates/workflows; examples; scripts/sdd-lifecycle.mjs; scripts/review-publication.mjs; scripts/verify-pr-evidence.mjs; tests |
+| Next action write targets | .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
 | Post-merge control mode | NOT_SELECTED |
 | Post-merge control authority | Not selected; PR #65 cannot preauthorize T04's future exact-SHA reset/upgrade candidate |
 | Post-merge control source revision | Not selected |
@@ -108,8 +108,8 @@ accepted semantic design; their future outputs are not pre-start prerequisites.
 | Change / scope | Systemic closure/evidence contract, checker and current-project migration; FULL planning |
 | Reversibility | Reviewed coherent source revert; preserve historical evidence |
 | Interface / compatibility | Agent instructions, generated guidance and v5 schema change; v2–v4 and current pin remain until reviewed cutover |
-| Data, security, concurrency | No runtime/data/concurrency logic change; existing safety and permission boundaries retained |
-| Operations / performance | Runtime cleanup/regeneration behavior changes; no runtime defect fix or performance measurement |
+| Data, security, concurrency | No product application runtime/data/concurrency logic change or new credential model; existing safety and permission boundaries retained |
+| Operations / performance | Installer/runtime cleanup and regeneration behavior changes as approved; no runtime defect fix or performance measurement |
 | Uncertainty | Accepted reset outcome settled; implementation must verify consumer completeness and destructive inventory |
 
 Route 3 remains selected because the amendment changes systemic policy,
@@ -134,8 +134,7 @@ reset/upgrade and does not require either future output before its producer.
 | 7 | runtime-defects | Runtime defect group | DEFER | Issues 33/34/36 remain outside scope | Accepted whiteboard | Owner | Owner | Deferred by design acceptance |
 | 8 | validation | Final validation and target receipts | GENERATE | Produced after T02/T04 | Project quality policy and PR evidence contract | Coordinator | Two reviewers then owner | NOT_STARTED |
 | 9 | record | Permanent delivery record/archive | SKIP | GitHub PR evidence is authoritative; non-reusable WB62 records are reset | Accepted reset design | Coordinator | P02 reviewers then owner | PROPOSED / WB62-P02 |
-| 10 | upgrade | Exact-SHA v5 cutover | UPDATE_EXISTING | T04 after PR #65 merge/target proof; current U64 v4 pin remains until then | [U64](../../upgrades/U64.md) | Owner | Two reviewers then owner | PLANNED / T04 |
-| 11 | reset-v5 | WB62 repository/local reset | GENERATE | Remove every non-reusable delivery item, restore `EMPTY`, regenerate runtime | Accepted reset design | Coordinator | Two reviewers then owner | PLANNED / T04 |
+| 10 | reset-v5 | Exact-SHA v5 cutover and WB62 reset | GENERATE | T04 after PR #65 target proof removes non-reusable state, restores `EMPTY`, updates the pin and regenerates runtime | Accepted reset design plus current [U64](../../upgrades/U64.md) input | Coordinator | Two reviewers then owner | PLANNED / T04 |
 
 Public application API, product data migration and separate performance/security
 plans are not applicable. T02 owns reusable policy/checker/schema work; T04 owns
@@ -150,9 +149,11 @@ matrix and complete remove/reset/keep inventory define their bounded scope.
 | handoff | PREREQUISITE | EXISTING | GATES_READY | NONE | None | [Historical handoff](handoff.md) |
 | workflow | PREREQUISITE | EXISTING | GATES_READY | NONE | whiteboard, handoff | This workflow |
 | plan | PREREQUISITE | EXISTING | GATES_READY | NONE | workflow | [Plan](implementation-plan.md) |
+| T02 | PREREQUISITE | EXISTING | GATES_READY | NONE | plan | [T02 task specification](implementation-plan.md#t02--pr-owned-evidence-reset-contract-and-v5-enforcement) |
+| T04 | PREREQUISITE | EXISTING | GATES_READY | NONE | plan | [T04 task specification](implementation-plan.md#t04--exact-sha-wb62-reset-and-runtime-cutover) |
 | T01 | PREREQUISITE | EXISTING | GATES_READY | NONE | None | [Completed task](implementation-plan.md#t01--bounded-judgment-and-essential-evidence) |
-| upgrade | PREREQUISITE | EXISTING | GATES_READY | NONE | None | [U84](../../playbook-upgrade-assessment.md) |
-| source | FUTURE_OUTPUT | IMPLEMENTATION | VALIDATING | T01 | plan, upgrade | [T01 evidence](T01-evidence.md) |
+| upgrade-input | PREREQUISITE | EXISTING | GATES_READY | NONE | None | [U84](../../playbook-upgrade-assessment.md) |
+| source | FUTURE_OUTPUT | IMPLEMENTATION | VALIDATING | T01 | plan, upgrade-input | [T01 evidence](T01-evidence.md) |
 | pr65-v5 | FUTURE_OUTPUT | IMPLEMENTATION | VALIDATING | T02 | plan, source | [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
 | reset-v5 | FUTURE_OUTPUT | IMPLEMENTATION | VALIDATING | T04 | pr65-v5 | Future exact-SHA reset/upgrade PR |
 | validation | FUTURE_OUTPUT | VALIDATION | COMPLETE | PHASE | reset-v5 | Versioned PR target receipts |
@@ -172,14 +173,18 @@ matrix and complete remove/reset/keep inventory define their bounded scope.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | whiteboard | [Accepted reset conclusion](../../solution-whiteboard.md) | None | a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30 | a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30 | MATERIAL | CURRENT | None |
 | handoff | [Historical handoff](handoff.md) | None | 4b18100a722aa06baba7643b67e01185108a8635 | 4b18100a722aa06baba7643b67e01185108a8635 | CONTROL_ONLY | CURRENT | None |
-| workflow | This routing candidate | whiteboard, handoff | WB62-P02-R01 | WB62-P02-R01 | MATERIAL | CURRENT | None |
-| plan | [Plan](implementation-plan.md) | workflow | WB62-P02-R01 | WB62-P02-R01 | MATERIAL | CURRENT | None |
+| workflow | This routing candidate | whiteboard, handoff | WB62-P02-R02 | WB62-P02-R02 | MATERIAL | CURRENT | None |
+| plan | [Plan](implementation-plan.md) | workflow | WB62-P02-R02 | WB62-P02-R02 | MATERIAL | CURRENT | None |
 | T01 | [Completed task](implementation-plan.md#t01--bounded-judgment-and-essential-evidence) | None | WB62-P01-R05 | WB62-P01-R05 | CONTROL_ONLY | CURRENT | None |
-| upgrade | [U84](../../playbook-upgrade-assessment.md) | None | b43873a | b43873a | CONTROL_ONLY | CURRENT | None |
+| upgrade-input | [U84](../../playbook-upgrade-assessment.md) | None | b43873a | b43873a | CONTROL_ONLY | CURRENT | None |
+| T02 | [T02 task specification](implementation-plan.md#t02--pr-owned-evidence-reset-contract-and-v5-enforcement) | plan | WB62-P02-R02 | WB62-P02-R02 | MATERIAL | CURRENT | None |
+| T04 | [T04 task specification](implementation-plan.md#t04--exact-sha-wb62-reset-and-runtime-cutover) | plan | WB62-P02-R02 | WB62-P02-R02 | MATERIAL | CURRENT | None |
 
-T01 and U84 rows retain historical identities. The new whiteboard/workflow/plan
-chain is current but awaits P02 approval. Output obligations stay `NOT_STARTED`;
-no future PR, merge, target receipt or reset value is used as a prerequisite.
+T01 and `upgrade-input` retain historical identities. T02 and T04 register the
+current task specifications for readiness/review scope; their execution order
+and output bindings remain in the plan. The new whiteboard/workflow/plan chain
+is current but awaits P02 approval. Output obligations stay `NOT_STARTED`; no
+future PR, merge, target receipt or reset value is used as a prerequisite.
 
 ### Blockers
 
@@ -220,7 +225,7 @@ selects a live implementation mode covering those exact task IDs.
 | Handoff | 4b18100a722aa06baba7643b67e01185108a8635 | [Handoff acceptance](../../reviews/WB62-H01.md#owner-acceptance) | APPROVED |
 | Routing and plan | WB62-P01-R06 | [Accepted package](../../reviews/WB62-P01.md#owner-package-acceptance) | APPROVED |
 | Source / T01 | 3621b19f58b83ea6ff16d01e03f6b61b2dad9b49 | [PR64 reviews and owner acceptance](../../reviews/WB62-P01.md#r08-acceptance-and-merge-reconciliation) | APPROVED |
-| P02 plan amendment | WB62-P02-R01 | [Planning review](../../reviews/WB62-P01.md#p02-pr-evidence-reset-amendment) | IN_REVIEW |
+| P02 plan amendment | WB62-P02-R02 | [Planning review](../../reviews/WB62-P01.md#p02-pr-evidence-reset-amendment) | IN_REVIEW |
 
 Manual trigger WB62-ROUTE-20260906-01 consumed the original handoff once. T01
 completed through reviewed PR #64. The accepted D02 conclusion amends the same
@@ -250,7 +255,7 @@ unknown destructive identity or unresolved delivery-owned item prevents closure.
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
 | Current artifact/task | P02 plan amendment; no implementation task active |
-| Current artifact review | IN_REVIEW / WB62-P02-R01 |
+| Current artifact review | IN_REVIEW / WB62-P02-R02 |
 | Last approved artifact | Reset design `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30` |
 | Next ready action | Retained planning review, then owner plan acceptance and T02/T04 mode selection |
 | Active blockers | None |

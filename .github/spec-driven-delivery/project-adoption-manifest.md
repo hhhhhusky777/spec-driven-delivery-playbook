@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | Review and publish the combined WB62 validation/archive package and U64 control record |
+| Next action | Complete WB62 P02 planning review and owner acceptance; then start T02 under the selected implementation mode |
 
 Adoption type: `real project`
 
@@ -728,20 +728,26 @@ At that recovery checkpoint, the U84 upgrade branch remained pending and
 separate; this historical statement does not override its later PR #64
 publication or the current U64/live controls.
 
-The [archived WB62 conclusion](archive/WB62/solution-whiteboard.md) owns the
-accepted design for issues #62/#54. The stable [working whiteboard](solution-whiteboard.md)
-is now neutral EMPTY for the next owner-supplied need. The [WB62 workflow](deliveries/WB62/workflow.md)
-owns remaining closure progress. Runtime issues 33/34/36 remain deferred open
-work; their former local draft is no longer active.
+At that recovery checkpoint, the
+[archived WB62 conclusion](archive/WB62/solution-whiteboard.md) owned the
+accepted design for issues #62/#54 and the stable
+[working whiteboard](solution-whiteboard.md) was neutral `EMPTY`. That snapshot
+is historical; it does not route the current amendment. Runtime issues
+33/34/36 remain deferred open work and their former local draft is not active.
 
 WB62 R02 design was accepted by the owner after both independent reviewers
 approved exact commit `456b3fc2459be4f3ddc5ca7f649a533dd4e48996`.
 The [design review record](reviews/WB62-S01.md#owner-acceptance) owns exact
-approval evidence. The accepted body is preserved in the archive, while the
-working path no longer represents WB62. The owner subsequently accepted the exact H01 handoff;
-the [WB62 workflow](deliveries/WB62/workflow.md) now owns routing, dependency
-freshness and next action. No task is active. The handoff ledger retains its
-exact acceptance and the workflow records its single manual consumption.
+approval evidence. The owner subsequently accepted the exact H01 handoff and
+the workflow recorded its single manual consumption.
+
+The owner later accepted the PR-evidence/reset amendment at exact semantic
+candidate `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30`. The current
+[working whiteboard](solution-whiteboard.md) is therefore `CONCLUDED`, belongs
+to active WB62 and blocks intake of a new need through PR #65 target
+verification and the separately reviewed T04 reset. The
+[WB62 workflow](deliveries/WB62/workflow.md) owns current routing, dependency
+freshness and the P02 planning review; no implementation task is active yet.
 
 ### Historical U84 upgrade handoff
 
@@ -769,4 +775,5 @@ WB62 routing and the U64 pin are governed by the live controls.
 The owner subsequently directed joint delivery of U84 and #62/#54 and continued
 the proposed planning batch. [Preparation authority](deliveries/WB62/preparation-authority.md)
 records that historical provisional v4 preparation. U84 was later published in
-PR #64; U64 and PR #65 own the subsequent current pin and closure publication.
+PR #64; U64 owns the current v4 pin while the WB62 P02 plan routes PR #65 and a
+later exact-SHA v5 reset/upgrade candidate.

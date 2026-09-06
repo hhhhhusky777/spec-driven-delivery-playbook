@@ -34,7 +34,7 @@ the one-time current-project cutover after PR #65 target verification.
 | Reviewers | Two isolated planning reviewers, then owner |
 | Review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P02-R01 |
+| Self-review candidate revision | WB62-P02-R02 |
 | Self-review evidence | [Package evidence](../../reviews/WB62-P01.md) |
 | Fresh-context review state | NOT_STARTED |
 | Fresh-context review session ID | WB62-P02 |
@@ -117,7 +117,7 @@ before starting. Rollback is a reviewed coherent revert, preserving evidence.
 | ID | Question | Resolution | State | Owner |
 | --- | --- | --- | --- | --- |
 | Q01 | Publish upgrade separately? | Owner requests joint delivery; local cutover verified | RESOLVED | Owner |
-| Q02 | Change schemas or mandatory approvals? | No; issue 63 may correct existing control projection without changing either | RESOLVED | Owner |
+| Q02 | What schema and approval changes are in scope? | Add explicit v5/default lifecycle and PR-evidence validation while preserving v2–v4 behavior; review quorum and required human authority do not change | RESOLVED | Owner |
 | Q03 | Runtime issues? | Deferred to issues 33/34/36; independent of source guidance | DEFERRED | Owner |
 | Q04 | What does post-delivery reset include? | Every current-delivery item without reuse value is removed; machine runtime is regenerated; working whiteboard becomes `EMPTY`; adoption and reusable outputs remain | RESOLVED | Owner |
 
@@ -140,12 +140,14 @@ before starting. Rollback is a reviewed coherent revert, preserving evidence.
 
 ### Other system boundaries
 
-State transitions, task graph rules, quorum, exact-head invalidation, retries
-and retention deadlines stay as specified by the installed canonical contracts.
-No new state machine, public API, data transaction, concurrent service, auth
-mechanism or performance budget is introduced. Existing command/token/privacy
-and worktree-ownership protections remain. Generated instructions are the only
-installer interface change; execution logic is out of scope.
+Existing v2–v4 state transitions, task graphs, quorum, exact-head invalidation,
+retries and retention deadlines remain compatible. T02 adds the approved v5
+lifecycle/evidence contract, schema dispatch and GitHub-aware verification;
+T04 performs the bounded installer runtime reset/regeneration and exact-pin
+cutover. No product application state machine, public API, data transaction,
+concurrent service, new authentication mechanism or performance budget is
+introduced. Existing command, token, privacy and worktree-ownership protections
+remain.
 
 Failures follow the existing triage contract: diagnose failed checks before
 fixing; preserve ambiguous external effects; escalate genuine authority gaps;
@@ -222,11 +224,11 @@ Never prefill approval or a future verification timestamp.
 
 <!-- sdd-section: definition-of-done -->
 
-DoD: the task's FC07–FC12 outcomes are implemented; actual focused/full checks,
-impact reconciliation, exact PR review, required owner merge acceptance and
-target verification are complete. T04 additionally requires complete cleanup,
-neutral `EMPTY` and regenerated runtime `CURRENT`. No unrelated diff or lost
-reusable output.
+DoD: each task's assigned FC outcomes are implemented; actual focused/full
+checks, impact reconciliation, exact PR review, required owner merge acceptance
+and target verification are complete. T04 additionally requires complete
+cleanup, neutral `EMPTY` and regenerated runtime `CURRENT`. No unrelated diff
+or lost reusable output.
 
 ## 7. Task ledger
 
