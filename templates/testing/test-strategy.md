@@ -43,16 +43,10 @@ Only `ACTIVE` versions define required quality gates.
 
 ### 1.1 Artifact review gate
 
-Submit each draft or update through exact-revision self-review, fresh-context
-agent review, and human review. First complete the
-[agent self-review](../reviews/agent-self-review.md) against the exact candidate
-revision, then use the canonical
-[fresh-context review](../reviews/fresh-context-agent-review.md). After fresh
-approval, stop for mandatory human review before activating the strategy. Any
-candidate change invalidates both prior results; resolve `CHANGES_REQUESTED`,
-record an explicit author disposition, repeat self-review, and return to the
-same assigned session reviewer(s). Agent review is evidence, not policy
-approval.
+Apply [self-review](../reviews/agent-self-review.md) and the
+[canonical review protocol](../reviews/fresh-context-agent-review.md) before
+human acceptance of this document. Activation requires the designated owner;
+record that decision below rather than treating agent review as approval.
 
 | Round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -171,8 +165,9 @@ receipt must agree with this strategy's task-specific gates.
 The active development policy defines `EXPLICIT_REVIEW`, `AUTO_CONTINUE`, and
 `REVIEW_ON_EXCEPTION`. This strategy must map each automatic action class to
 deterministic gates that run against the exact output revision. Automatic
-continuation fails closed to `EXPLICIT_REVIEW` when a required gate is missing,
-skipped, flaky without an approved treatment, or not passing.
+cannot pass a required gate that is missing, skipped, flaky without an approved
+treatment, or failing. Use [canonical recovery](../../docs/batch-review-and-recovery.md#recovery-without-restarting-everything)
+for diagnosis, repair and escalation rather than inventing another review stop.
 
 For every gate that can authorize continuation, require:
 
@@ -181,12 +176,12 @@ For every gate that can authorize continuation, require:
 - immutable or attributable gate provenance and an auditable result;
 - explicit detection of stale inputs, scope drift, unrelated changes,
   ambiguity, and exceptions where applicable; and
-- a documented failure route that preserves evidence and stops before the next
-  action.
+- a failure route that preserves evidence and blocks affected dependent work
+  until its required conditions are restored.
 
 Passing tests do not prove semantic correctness and cannot turn
 `AUTO_CONTINUED` into `APPROVED`. Any new or changed requirement, design,
-policy, contract, behavior, risk, or exception requires the explicit review
+policy, contract, behavior, risk, or policy exception requires the explicit review
 defined by the development policy.
 
 For implementation `AGENT_AUTO_MERGE`, also test the control plane that checks

@@ -268,12 +268,10 @@ activation, and adoption approval require `EXPLICIT_REVIEW`. Only deterministic
 mechanics pre-authorized by reviewed project policy may use `AUTO_CONTINUE` or
 `REVIEW_ON_EXCEPTION`.
 
-Every adoption review gate requires exact-candidate self-review followed by a
-stable session with reviewer(s) initialized without author context and then
-mandatory human review. Preserve requested changes, author dispositions, and
-resolutions as immutable findings. A candidate change starts a new round with
-the same assigned reviewer(s); automatic action modes do not replace either
-review.
+Adoption review follows [self-review](../reviews/agent-self-review.md) and the
+[canonical review protocol](../reviews/fresh-context-agent-review.md), including
+human acceptance of the installation or activation boundary. Record evidence
+in §10; automatic action modes do not approve adoption.
 
 | Action ID | Target/output | Review mode | Mode authority | Required gates | Automation boundary | Semantic decision? | State |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -320,11 +318,7 @@ which reasoning is reconstructed>`
 
 ### Review rounds
 
-Every adoption review round requires a completed
-[agent self-review](../reviews/agent-self-review.md) against the exact candidate
-revision. A later candidate change invalidates the result and requires another
-self-review. `SELF_REVIEW_PASSED` is evidence only; it cannot approve adoption,
-satisfy reviewer independence, authorize merge, or authorize continuation.
+Use the protocols linked in §8.1; this table records their results.
 
 | Session | Round | Self-review evidence | Assigned reviewer/type | Scope | Disposition | Findings/author responses | Version/date |
 | --- | --- | --- | --- | --- | --- | --- | --- |

@@ -141,35 +141,15 @@ not an extra gate for each internal correction. Stop at a mandatory semantic
 checkpoint or an unresolved authority/safety boundary. These automatic modes apply
 only to deterministic non-review actions and cannot approve normative content.
 
-- Before every review gate, the implementing agent completes the
-  [agent self-review](../reviews/agent-self-review.md) against the exact
-  candidate revision. Review may begin only with `SELF_REVIEW_PASSED` and linked
-  evidence. Any candidate change invalidates that result and requires another
-  self-review.
-- Then open or resume the gate's stable review session through the
-  [fresh-context review protocol](../reviews/fresh-context-agent-review.md).
-  Initially create its assigned read-only reviewer(s) without author context.
-  Record packets/receipts, exact revisions, immutable findings, and author
-  dispositions. Any candidate change requires a new self-review and re-review
-  by the same assigned session reviewer(s).
-- After fresh-context `APPROVED`, design, governance, adoption, upgrade,
-  validation, archive, and manual implementation stop for human review. Only a
-  scoped implementation `AGENT_AUTO_MERGE` action may proceed without
-  pre-merge human review after all live gates are rechecked.
-- `CHANGES_REQUESTED` returns to the same artifact for refinement and another
-  review round.
-- A local documentation problem returns to the current artifact; an incorrect
-  manifest decision returns to routing; a requirement or solution problem
-  returns to the handoff/whiteboard owner.
-- Record each finding's location, governing statement, expected/observed
-  result, impact, requested outcome, author response, resolution revision, and
-  reviewer disposition. Preserve original findings. Silence or elapsed time is
-  never approval.
-- Record every automatic action separately. `AUTO_CONTINUED` is not an approval
-  or review state and cannot mark a normative artifact `APPROVED`.
-- `SELF_REVIEW_PASSED` is pre-review evidence only. It cannot approve an
-  artifact, satisfy reviewer independence, authorize merge, or authorize
-  continuation.
+At review, follow [self-review](../reviews/agent-self-review.md) and the
+[fresh-context protocol](../reviews/fresh-context-agent-review.md); record their
+exact-revision results in the fields above. Those protocols own findings,
+retained reviewers, correction rounds and human acceptance.
+
+A local documentation problem returns to its artifact; an incorrect manifest
+decision returns to routing; a requirement or solution problem returns to the
+handoff/whiteboard owner. Record automatic actions in §9.3; AUTO_CONTINUED is
+execution evidence, not artifact approval.
 
 Standard review states are `NOT_STARTED`, `IN_REVIEW`, `CHANGES_REQUESTED`,
 `APPROVED`, and `STALE`.
@@ -197,8 +177,8 @@ At each review gate, record its phase and stable target ID. Auto-merge can omit
 pre-merge human review only when `Current review phase` is `IMPLEMENTATION`, the
 target ID is in that scope, and `Current artifact/gate` links that same target's
 PR. A design, validation, or archive gate always requires human review.
-The user may change the mode at any time. Before each task edit, self-review
-gate, PR opening, merge attempt, and continuation, reread these live fields;
+The user may change the mode at any time. At task start/resumption, PR
+publication, review and merge boundaries, reread these live fields;
 never rely on an earlier prompt or cached value. A missing, invalid, stale, or
 out-of-scope value stops for user direction. A later change takes effect before
 the next irreversible action and cannot undo a completed merge.

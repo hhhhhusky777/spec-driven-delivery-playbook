@@ -88,33 +88,12 @@ each artifact is or is not required.
 
 ## Review rule
 
-Generate or update one selected artifact, then move it through
-`IN_REVIEW -> CHANGES_REQUESTED -> IN_REVIEW` until it is `APPROVED`. Do not
-generate a dependent artifact from an unapproved draft. The author or
-generating runner must not self-approve. Every review gate requires a stable
-session with exactly two newly isolated reviewers, retained across its revision rounds.
-Design, governance, adoption, upgrade, validation,
-archive, and implementation under `HUMAN_REVIEW_BEFORE_MERGE` then stop for
-mandatory human review. Only a user-authorized, scoped implementation
-`AGENT_AUTO_MERGE` action may proceed after fresh approval without pre-merge
-human review, subject to every live gate and repository protection.
-
-For a fresh-context independent review, the original agent freezes the review
-packet and creates exactly two read-only reviewers with author-conversation
-inheritance disabled. Both return structured receipts; they never edit, merge,
-or continues delivery. A candidate change invalidates the prior revision
-disposition and returns to the same session reviewer(s) after author
-self-review. Shared GitHub credentials do not constitute a distinct formal
-approval identity.
-
-`AUTO_CONTINUE` and `REVIEW_ON_EXCEPTION` classify deterministic non-review
-actions. They do not approve artifacts or replace fresh-context or human
-review.
-
-Before submission, the generating or implementing agent must record
-`SELF_REVIEW_PASSED` against the exact candidate revision. Any later change
-invalidates that result. Self-review prepares the review package; it never
-becomes `APPROVED` or authorizes merge or continuation.
+Use [self-review](reviews/agent-self-review.md) and the
+[fresh-context protocol](reviews/fresh-context-agent-review.md) for the selected
+artifact or explicitly authorized batch. The protocol owns isolation, findings,
+revision rounds and phase acceptance; the approved workflow owns execution and
+merge authority. Follow the [batch contract](../docs/batch-review-and-recovery.md)
+only within adopted scope. Do not consume an unapproved draft as authority.
 
 ## Instantiation rules
 

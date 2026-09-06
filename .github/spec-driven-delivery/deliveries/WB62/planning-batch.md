@@ -43,7 +43,7 @@
 | Transient retry count | 0 |
 | No-progress count | 0 |
 | Unresolved finding IDs | None |
-| Next action | R06 accepted; readiness verified and draft PR 64 open; start T01 with human review before merge |
+| Next action | R06 remains accepted; T01 VERIFYING on PR 64; R08 re-review after owner-directed dry run/consolidation, then owner review before merge |
 | Action owner | Coordinator |
 | Execution authority | None |
 | Inputs freshness | CURRENT |

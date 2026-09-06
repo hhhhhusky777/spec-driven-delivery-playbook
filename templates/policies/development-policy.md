@@ -47,17 +47,10 @@ rewrite obligations during active delivery.
 
 ### 1.1 Artifact review gate
 
-Submit each draft or update through exact-revision self-review, fresh-context
-agent review, and human review. First complete the
-[agent self-review](../reviews/agent-self-review.md) against the exact candidate
-evidence, then use the canonical
-[fresh-context review](../reviews/fresh-context-agent-review.md). After fresh
-approval, stop for mandatory human review before changing the policy to
-`ACTIVE`. Any candidate change invalidates both prior results; resolve
-`CHANGES_REQUESTED`, record `ACCEPT`, `PARTIALLY_ACCEPT`,
-`REJECT_WITH_JUSTIFICATION`, or `DEFER_WITH_AUTHORITY`, repeat self-review, and
-return to the same session reviewer(s). Agent review is evidence, not policy
-approval.
+Apply [self-review](../reviews/agent-self-review.md) and the
+[canonical review protocol](../reviews/fresh-context-agent-review.md) before
+human acceptance of this document. Activation requires the designated owner;
+record that decision below rather than treating agent review as approval.
 
 | Round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -97,21 +90,9 @@ as generally `ACTIVE` outside that boundary.
 
 ## 3. Core development principles
 
-Customize these principles without weakening applicable safety or quality
-requirements:
-
-- Deliver the smallest self-contained change that creates demonstrable value
-  and leaves its integration target working.
-- Define observable behavior before implementation.
-- Use tests as evidence against contracts and risks, not as proof that defects
-  are impossible.
-- Prefer simple current requirements over speculative flexibility.
-- Preserve unrelated and user-owned work.
-- Diagnose failures before changing product code, configuration, or tests.
-- Keep one canonical source for each policy or contract and link instead of
-  copying it.
-- Record decisions, exceptions, and residual risk so another contributor can
-  continue without reconstructing private conversation.
+Apply the [five canonical goals](../../docs/documentation-quality-policy.md#five-goals-and-agent-judgment)
+and their linked recovery framework. Add only project-specific principles here:
+`<protected project outcome, reason and owning contract; or None>`.
 
 ## 4. Change classification and required workflow
 
@@ -141,9 +122,9 @@ or its authority is absent, the default review mode is `EXPLICIT_REVIEW`.
 
 | Mode | Behavior | Permitted use |
 | --- | --- | --- |
-| `EXPLICIT_REVIEW` | Exact-revision self-review, stable fresh-context review session, then mandatory human review | Any semantic decision, approval, exception, or risk boundary |
+| `EXPLICIT_REVIEW` | Apply the shared review protocol, including human acceptance | Semantic decisions, policy exceptions and required acceptance boundaries |
 | `AUTO_CONTINUE` | Run deterministic work and continue while every condition passes | Mechanical generation, state/evidence synchronization, and deterministic validation |
-| `REVIEW_ON_EXCEPTION` | Continue through a pre-authorized repeatable action; stop on any exception | Known low-risk operations with objective success/failure gates |
+| `REVIEW_ON_EXCEPTION` | Continue pre-authorized repeatable work; route failures through canonical recovery | Known low-risk operations with objective success/failure gates |
 
 An automatic action must satisfy all of these conditions:
 
@@ -151,22 +132,21 @@ An automatic action must satisfy all of these conditions:
   automation boundary, and audit destination;
 - its inputs are approved and `CURRENT`;
 - it must not introduce a new semantic decision about requirements, design,
-  policy, architecture, contracts, behavior, risk, or exceptions;
+  policy, architecture, contracts, behavior, risk, or policy exceptions;
 - its output is deterministic or mechanically derived from approved inputs;
 - every required automated gate passes against the exact resulting revision;
-- no blocker, stale dependency, ambiguity, unknown, exception, test failure,
-  unrelated diff, or scope expansion exists; and
+- no unresolved blocker affects the action; and
 - the next action remains inside the approved automation boundary, WIP policy,
   and exact write scope.
 
-Automatic continuation fails closed to `EXPLICIT_REVIEW` when any condition is
-false or cannot be proven. It continues only until the next mandatory semantic
-checkpoint. `AUTO_CONTINUED` is an audit outcome, not an approval, review state,
-or permission to mark a normative artifact `APPROVED`.
+Apply [canonical recovery](../../docs/batch-review-and-recovery.md#recovery-without-restarting-everything)
+when a condition fails; restore valid conditions within authority before
+dependent work continues. An unresolved authority/safety boundary fails closed
+to `EXPLICIT_REVIEW`. `AUTO_CONTINUED` is an audit outcome, not approval.
 
 Always require `EXPLICIT_REVIEW` for a whiteboard conclusion, handoff meaning,
 routing choice, policy, ADR, public/system contract, complete task
-specification, acceptance or risk decision, exception, destructive or
+specification, acceptance or risk decision, policy exception, destructive or
 externally consequential action, and any approval required by project PR,
 security, release, or compliance policy. A project may make this list stricter.
 Changing an action from `EXPLICIT_REVIEW` to another mode is itself a semantic
@@ -183,113 +163,27 @@ artifact is approved. They never replace fresh-context or human review.
 
 ### Mandatory agent self-review
 
-Before every review gate, the generating or implementing agent reviews the
-exact candidate revision against approved inputs, requirements, contracts,
-scope and non-scope, acceptance criteria, applicable policies, required tests,
-risks, surrounding behavior, and cross-document consistency. Use the canonical
-agent self-review template: `<link>`.
-
-For code changes, open a draft PR when project policy permits and add concise
-author annotations to material or non-obvious hunks. Each annotation maps the
-change to its governing statement, reason, expected effect, evidence, and
-risk. Do not comment on routine mechanics or add source-code comments that only
-repeat the PR explanation.
-
-The agent then audits the complete diff and annotations against the final PR
-head. Record the exact commit or immutable artifact version, findings,
-resolutions, gates, and `SELF_REVIEW_PASSED` or `SELF_REVIEW_FAILED`. Any
-candidate change invalidates the prior result. An open blocking finding or
-missing/failed gate requires `SELF_REVIEW_FAILED` and stops submission to the
-owning review gate until resolved.
-
-Self-review is mandatory pre-review evidence regardless of the selected review
-mode. It is not independent approval: `SELF_REVIEW_PASSED` cannot set
-`APPROVED`, satisfy a required reviewer, authorize merge, or authorize
-continuation by itself.
+Apply the [canonical self-review](../reviews/agent-self-review.md) to the exact
+candidate before requesting review; it owns the checks, annotation guidance
+and SELF_REVIEW_PASSED / SELF_REVIEW_FAILED evidence.
 
 ### Mandatory fresh-context and human review
 
-After self-review passes, every review gate opens a stable review session and
-initializes exactly two fresh-context subagents using the canonical protocol:
-`<link>`. Each reviewer receives a frozen exact-revision packet without the
-author's conversation or proposed result, derives expectations from approved
-sources, remains read-only, and returns `APPROVED`, `CHANGES_REQUESTED`, or
-`BLOCKED` with durable findings.
-
-Every finding records its location, governing statement, expected and observed
-result, impact, requested outcome, author disposition, resolution revision, and
-reviewer disposition. Preserve the original finding. A changed candidate
-invalidates its prior disposition and requires a new self-review plus re-review
-by the same assigned session reviewer(s). Incorrect comments are rejected with
-contract evidence; unresolved disagreement stops for human decision.
-
-For design, governance, adoption, upgrade, validation, and archive gates,
-fresh-context approval is followed by mandatory human review. Human-requested
-changes repeat the author -> self-review -> same-session fresh-review cycle before human
-re-review, using the same session reviewer(s). An agent approval cannot replace
-human design authority.
-
-Implementation uses the same sequence in `HUMAN_REVIEW_BEFORE_MERGE`. Only a
-user-authorized, scoped `AGENT_AUTO_MERGE` implementation PR may continue after
-fresh-context approval without pre-merge human review, and only when every live
-mode, scope, repository, test, comment, blocker, and merge gate passes.
+Apply the [canonical review protocol](../reviews/fresh-context-agent-review.md).
+It owns reviewer isolation, retained seats, findings, correction rounds and
+phase-specific human acceptance. Instantiation must resolve these references
+to the approved project review route; policy activation still needs its owner.
 
 ### Human-selected implementation continuation
 
-This choice applies only after the whiteboard, handoff, routing, policies,
-contracts, complete task specification, and implementation plan have received
-their required design-phase approvals. Design and planning gates always stop
-for their required reviewer and cannot use this implementation mode.
+Project choice: `<HUMAN_REVIEW_BEFORE_MERGE only / both modes>`; default and
+selecting owner: `<mode / authority>`. Never infer AGENT_AUTO_MERGE.
 
-The delivery workflow is the canonical live owner of one mode:
-
-| Mode | Task-PR behavior |
-| --- | --- |
-| `NOT_SELECTED` | Implementation cannot start; ask the user to choose a mode |
-| `HUMAN_REVIEW_BEFORE_MERGE` | After exact-revision self-review and fresh-context approval, stop until human review and merge authority are recorded |
-| `AGENT_AUTO_MERGE` | After exact-revision self-review and fresh-context approval, recheck all live gates, merge the scoped implementation PR, and continue to the next dependency-ready task |
-
-Ask the user to choose after design approval and before the first task enters
-`IN_PROGRESS`. Record the user's identity/instruction, selected time, exact
-implementation repository URL, and a comma-separated list of unique stable
-implementation target IDs in the workflow. Do not encode prose such as `task`
-or `PR` in that list. The agent must never infer or select `AGENT_AUTO_MERGE`.
-
-Recording an explicit user selection or change is a control-only workflow
-synchronization and needs no second semantic approval unless project policy
-requires one. It must reproduce the instructed mode and scope exactly and pass
-the workflow's lifecycle checks; it cannot broaden the authorization.
-
-The user may change the mode at any time. The new value applies before the next
-irreversible action; it cannot undo a completed merge. Before each task edit,
-self-review gate, PR opening, merge attempt, and next-task continuation, the
-agent rereads the canonical workflow and verifies the current mode, authority,
-scope, revision, `Current review phase`, and `Current review target ID`. Only an
-`IMPLEMENTATION` target inside that scope can omit pre-merge human review;
-design, validation, and archive gates cannot. Missing, invalid, stale, or
-out-of-scope mode data stops for user direction.
-
-`AGENT_AUTO_MERGE` does not relax the approved task, tests, self-review,
-fresh-context review, PR
-annotations, branch routing, branch protection, CODEOWNERS, security,
-compliance, deployment, or repository merge rules. The agent must stop on a
-failed or missing gate, conflict, unresolved comment, change request, stale
-input, unexpected diff, ambiguity, inconsistency, new semantic decision,
-scope expansion, mode change, or a repository rule requiring review. It must
-not use administrator bypass or weaken a required check.
-
-The recorded scope may include task PRs and, after final validation receives
-its required approval, the final feature-integration PR. The mode may authorize
-that PR's merge but cannot approve final validation or any other design,
-contract, risk, exception, or closure decision.
-
-Every automatically merged PR enters a post-merge human-review ledger with its
-registered target/PR identity, head and merge commit, mode authority,
-revision-bound self-review, fresh-review and check receipts, merge evidence,
-and disposition.
-Implementation may continue while those reviews are pending only when no
-finding affects the next task. Delivery cannot become `COMPLETE` or archive
-until every pending review is accepted or its required follow-up is resolved.
+The [delivery workflow mode contract](../workflows/sdd-delivery-workflow.md#13-implementation-continuation-mode)
+owns selection timing, exact scope, rereads and the
+[post-merge ledger](../workflows/sdd-delivery-workflow.md#94-implementation-pr-and-post-merge-review-ledger).
+Record live choices there, not a parallel copy here. Project PR/security rules
+may require stricter approval; document those choices in their owning policy.
 
 ## 5. Spec-driven development workflow
 

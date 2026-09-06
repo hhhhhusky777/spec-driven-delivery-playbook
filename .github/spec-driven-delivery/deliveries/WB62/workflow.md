@@ -37,7 +37,7 @@
 | Current review target ID | T01 |
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-T01-R07 |
+| Self-review candidate revision | WB62-T01-R08 |
 | Self-review evidence | [Routing review](../../reviews/WB62-P01.md) |
 | Fresh-context review state | IN_REVIEW |
 | Fresh-context review session ID | WB62-P01 |
@@ -231,16 +231,16 @@ guidance conflict; report a scoped design amendment when necessary.
 
 | Field | Current value |
 | --- | --- |
-| Workflow state | GATES_READY |
-| Current artifact/task | T01 IN_PROGRESS |
-| Current artifact review | NOT_STARTED / WB62-P01 |
-| Last approved artifact | WB62-P01-R04; afde3edd4582c5118ddf714b489aaf0b268c72fa |
-| Next ready action | Verify corrected planning package; retain recorded human-review-before-merge authority |
-| Active blockers | None |
+| Workflow state | DELIVERY_ACTIVE |
+| Current artifact/task | T01 VERIFYING |
+| Current artifact review | IN_REVIEW / WB62-P01 |
+| Last approved artifact | WB62-P01-R06; 419d62db53986f11b727b7532c0273e45439ce13 |
+| Next ready action | Same reviewers inspect R08 consolidated source and dry-run evidence on PR 64 before owner merge review |
+| Active blockers | None; required exact-head review pending |
 | Stale artifacts | None |
-| Validation complete | See exact routing review record; no implementation validation |
-| Validation remaining | Corrected mapping/clarification review and final pre-start verification; T01 implementation and later delivery gates |
-| Branch/PR | codex/wb62-agent-judgment; local only, no PR |
+| Validation complete | R08: 103 tests, documentation/skill checks and five-scenario installed-candidate dry run; R07 findings corrected |
+| Validation remaining | Corrected exact-head checks/re-review, owner review, merge and later delivery gates |
+| Branch/PR | codex/wb62-agent-judgment; PR 64 |
 | Last updated | 2026-09-06 Asia/Shanghai |
 
 Completion requires actual T01 outcome evidence, consistent sources/consumers,

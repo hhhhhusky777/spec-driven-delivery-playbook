@@ -105,13 +105,8 @@ Choose internal steps and corrections within that unit; a tool call or user
 status question is not a new approval boundary. Recheck affected inputs when
 they change. After the unit and its applicable checks:
 
-1. Before every review gate, complete the repository's adopted agent self-review
-   record against the exact candidate revision. Map material or non-obvious
-   changes to their governing statements, verify scope, evidence, risks, and
-   cross-document consistency, and record `SELF_REVIEW_PASSED` or
-   `SELF_REVIEW_FAILED`. Any candidate change invalidates the result. A passing
-   self-review is evidence only and cannot by itself approve, merge, or continue
-   the work.
+1. At the review boundary, apply the canonical self-review and independent
+   review protocols linked below to the exact candidate.
 2. Compare changed facts, links, commands, versions, availability claims, and
    contracts with the workflow dependency register.
 3. Classify the change `CONTROL_ONLY`, `MATERIAL`, or `UNKNOWN` and compute
@@ -136,26 +131,11 @@ they change. After the unit and its applicable checks:
 
 ### Post-merge closure receipt
 
-Treat the actual validation, record, retrospective, archive/reset bytes,
-cleanup plan, expected live-state fields and failure boundaries as one closure
-review package. After both reviewers and the owner accept that exact package,
-do not create another full review gate merely to record deterministic merge and
-verification evidence.
-
-A workflow may select `PREAUTHORIZED_CONTROL_RECEIPT` only when closure
-acceptance explicitly authorizes the receipt scope and its merge. Reread the
-source revision, receipt PR, allowed and changed paths, allowed fields, gates,
-evidence owner and cleanup authority before acting. Use `AUTO_CONTINUE` only for
-the exact `COMPLETE -> ARCHIVED` control transition, preserve the accepted
-archive and neutral working-path bytes, run every declared gate, and publish the
-receipt on its owning PR. This receipt is not an archive approval and does not
-need another two-reviewer or owner stop.
-
-Fail closed to `EXPLICIT_REVIEW` on a missing or mismatched source, unlisted
-path/field, normative change, new decision, unresolved finding, failed/missing
-gate, unknown effect, scope drift, cleanup without explicit ownership/deletion
-authority, or repository refusal. The receipt cannot activate adoption, change
-a runtime pin, expand cleanup, or carry authority into the next need.
+Before archive/reset or cleanup, read
+`docs/batch-review-and-recovery.md#one-closure-review-and-a-bounded-post-merge-receipt`
+from the verified checkout. It owns the closure package, receipt scope and
+failure boundaries. Read actual authorization from the live workflow; do not
+infer PREAUTHORIZED_CONTROL_RECEIPT from a completed implementation review.
 
 ## Fresh-context independent review
 

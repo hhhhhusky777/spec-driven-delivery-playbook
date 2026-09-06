@@ -736,7 +736,7 @@ test("risk-based review gates permit bounded audited auto-continuation", async (
     assert.match(document, /EXPLICIT_REVIEW/);
     assert.match(document, /AUTO_CONTINUE/);
     assert.match(document, /REVIEW_ON_EXCEPTION/);
-    if ([readme, workflow, workflowSkill, adoptionSkill].includes(document)) {
+    if ([readme, workflow, testStrategy, adoptionTrigger, workflowSkill, adoptionSkill].includes(document)) {
       assert.match(document, /batch-review-and-recovery\.md/);
     } else {
       assert.match(document, /fail(?:s)? closed/i);
@@ -751,7 +751,7 @@ test("risk-based review gates permit bounded audited auto-continuation", async (
   assert.match(workflow, /^### 1\.2 Review and automation protocol$/m);
   assert.match(workflow, /^### 9\.1 Action control ledger$/m);
   assert.match(workflow, /^### 9\.3 Automation audit ledger$/m);
-  assert.match(workflow, /`AUTO_CONTINUED` is not an approval/i);
+  assert.match(workflow, /AUTO_CONTINUED is\s+execution evidence, not artifact approval/i);
   assert.match(testStrategy, /^### Automated-continuation gate validation$/m);
   assert.match(
     workflowSkill,
@@ -896,7 +896,7 @@ test("project adoption architecture remains connected to runbook and manifest", 
   assert.match(agentTrigger, /Do not advance Adoption state/);
   assert.match(agentTrigger, /record every affected artifact as STALE/);
   assert.match(agentTrigger, /for `EXPLICIT_REVIEW`, keep independent review/);
-  assert.match(agentTrigger, /do not update a newly stale artifact in this invocation/);
+  assert.match(agentTrigger, /do not consume unapproved output outside an authorized batch/);
   assert.match(agentTrigger, /^## Adoption-to-workflow runtime handoff$/m);
   assert.match(agentTrigger, /\.\/install-sdd\.sh --cleanup/);
   assert.match(agentTrigger, /If a verified current guide already\s+selects `sdd-project-workflow`, reuse it/);
@@ -974,7 +974,8 @@ test("upgrade mode preserves the active pin until reviewed validation and cutove
     "utf8",
   );
 
-  for (const content of [readme, runbook, skill, assessment, example]) {
+  assert.match(readme, /templates\/adoption\/playbook-upgrade-assessment\.md/);
+  for (const content of [runbook, skill, assessment, example]) {
     assert.match(content, /current (?:revision|pin)|previous pin/i);
     assert.match(content, /candidate revision|immutable candidate/i);
     assert.match(content, /fresh-context (?:approval|review)/i);
@@ -1191,8 +1192,8 @@ test("fresh-context review isolates author context and returns an exact-revision
     ]);
 
   assert.match(readme, /^#### Fresh-context agent review design$/m);
-  assert.match(readme, /create_agents\(count = 2, inherit_author_conversation = false/);
-  assert.match(readme, /process independence, not account independence/i);
+  assert.match(readme, /templates\/reviews\/fresh-context-agent-review\.md/);
+  assert.match(readme, /Same-account agent comments do not supply another GitHub actor's approval/i);
   assert.match(protocol, /^## 1\. Phase and continuation policy$/m);
   assert.match(protocol, /^## 2\. Review packet$/m);
   assert.match(protocol, /^## 3\. Fresh-context creation contract$/m);
@@ -1213,23 +1214,23 @@ test("fresh-context review isolates author context and returns an exact-revision
   );
   assert.match(protocol, /design and manual implementation stop for human review/i);
   assert.match(protocol, /Never overwrite a request for changes/i);
-  assert.match(workflow, /Record packets\/receipts, exact revisions/);
+  assert.match(workflow, /reviews\/fresh-context-agent-review\.md/);
   // The skill routes to the owner instead of duplicating its protocol.
   assert.match(workflowSkill, /templates\/reviews\/fresh-context-agent-review\.md/);
   assert.match(protocol, /conversation inheritance disabled/);
   assert.match(protocol, /responsible for waiting for the receipt/);
-  assert.match(prPolicy, /Fresh context does not create a second GitHub identity/);
+  assert.match(prPolicy, /Same-account comments cannot satisfy\s+branch protection requiring a different actor/);
   assert.match(prTemplate, /^## Fresh-context and human review$/m);
   assert.match(prTemplate, /Fresh-context session.*assigned reviewer/i);
   assert.match(prTemplate, /same-actor comment is not represented as a formal approval/i);
   assert.match(catalog, /fresh-context agent review/);
   assert.match(example, /This\s+example does not invent a reviewer/);
   assert.match(readme, /assigned reviewers retain\s+their context through every revision round/i);
-  assert.match(readme, /REVIEWER_REPLACED/);
-  assert.match(readme, /Replacement is allowed only for recorded\s+unavailability, authority, or specialty need/i);
+  assert.match(protocol, /REVIEWER_REPLACED/);
+  assert.match(protocol, /Replacement is allowed only for recorded unavailability,\s+authority, or specialty need/i);
   assert.match(protocol, /same two assigned reviewers/);
   assert.match(protocol, /assigns exactly two\s+reviewers/i);
-  assert.match(prPolicy, /REJECT_WITH_JUSTIFICATION/);
+  assert.match(protocol, /REJECT_WITH_JUSTIFICATION/);
   assert.match(prTemplate, /same assigned reviewer/i);
 });
 
@@ -1305,22 +1306,27 @@ test("implementation auto-merge is human-selected, implementation-only, and rech
     "utf8",
   );
 
-  for (const content of [developmentPolicy, prPolicy, workflow, workflowSkill]) {
+  for (const content of [developmentPolicy, prPolicy]) {
+    assert.match(content, /workflows\/sdd-delivery-workflow\.md#13-implementation-continuation-mode/);
+    assert.match(content, /HUMAN_REVIEW_BEFORE_MERGE/);
+    assert.match(content, /AGENT_AUTO_MERGE/);
+  }
+  for (const content of [workflow, workflowSkill]) {
     assert.match(content, /HUMAN_REVIEW_BEFORE_MERGE/);
     assert.match(content, /AGENT_AUTO_MERGE/);
     assert.match(content, /user.*choos|user-selected/is);
     if (content === workflowSkill) {
       assert.match(content, /task start or\s+resumption, PR publication, review and merge boundaries/);
     } else {
-      assert.match(content, /before (?:each|the) task.*PR.*merge.*continu/is);
+      assert.match(content, /At task start\/resumption, PR\s+publication, review and merge boundaries/);
     }
     assert.match(content, /design/i);
     assert.match(content, /post-merge (?:human[- ]?)?review/i);
   }
-  assert.match(developmentPolicy, /The agent must never infer or select\s+`AGENT_AUTO_MERGE`/);
-  assert.match(prPolicy, /must not\s+bypass a repository-required approval/);
-  assert.match(prPolicy, /exact-head self-review and the assigned session reviewer/);
-  assert.match(prPolicy, /final feature PR[\s\S]*final validation has its required approval/);
+  assert.match(developmentPolicy, /Never infer AGENT_AUTO_MERGE/);
+  assert.match(prPolicy, /Hosted approvals remain binding/);
+  assert.match(prPolicy, /reviews\/fresh-context-agent-review\.md/);
+  assert.match(workflow, /final feature PR[\s\S]*final validation receives its required approval/);
   assert.match(workflow, /sdd-section: implementation-review-ledger/);
   assert.match(workflow, /exact table headers present even before/);
   assert.match(workflow, /Every merged row requires fresh-context `APPROVED`/);
@@ -1337,7 +1343,7 @@ test("implementation auto-merge is human-selected, implementation-only, and rech
   assert.match(workflow, /single GitHub PR link must identify the same PR/);
   assert.match(workflow, /merge-evidence commit must equal the recorded full merge SHA/);
   assert.match(workflow, /`STOPPED` row cannot satisfy delivery closure/);
-  assert.match(developmentPolicy, /Only an\s+`IMPLEMENTATION` target inside that scope/);
+  assert.match(workflow, /only when `Current review phase` is `IMPLEMENTATION`/);
   assert.match(workflowSkill, /Current review\s+target ID.*recorded mode scope/s);
   assert.match(workflowSkill, /Never weaken checks, use\s+administrator bypass/);
   assert.match(workflowSkill, /final feature PR only[\s\S]*final validation is already approved/);

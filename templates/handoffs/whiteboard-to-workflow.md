@@ -112,11 +112,10 @@ design gate.
 
 Review the handoff as one small artifact before routing. Confirm that it is a
 faithful, complete, and unambiguous projection of the concluded whiteboard.
-Before requesting review, complete the
-[agent self-review](../reviews/agent-self-review.md) against the exact handoff
-candidate and record `SELF_REVIEW_PASSED`. Any candidate change invalidates the
-evidence and requires another self-review. Self-review is evidence, not
-approval.
+Apply [self-review](../reviews/agent-self-review.md) and the
+[canonical review protocol](../reviews/fresh-context-agent-review.md) before
+this handoff can authorize routing. The following checks concern its faithful
+projection, not another copy of the review procedure.
 
 - [ ] The referenced whiteboard is `CONCLUDED` at the recorded version.
 - [ ] Accepted requirements and solution match the frozen conclusion.

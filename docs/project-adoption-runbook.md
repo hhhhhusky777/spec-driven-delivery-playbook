@@ -213,18 +213,10 @@ instructions, and pinned repository. It updates only repository discovery,
 unknowns, and the proposed routing map. It must not create downstream policies
 or mark its own work approved.
 
-Before each review stop, the agent completes the adopted self-review record
-against the exact candidate revision and records `SELF_REVIEW_PASSED` or
-`SELF_REVIEW_FAILED`. A later change invalidates that result. A pass supplies
-review evidence but cannot approve adoption, satisfy reviewer independence,
-authorize merge, or authorize continuation.
-
-It then opens a stable review session and initializes exactly two fresh-context
-reviewer(s) for the exact candidate using the canonical protocol. Requested
-changes and author dispositions remain durable audit history. After all
-assigned reviewers approve, adoption still stops for mandatory human review; a
-changed candidate requires a new self-review and re-review by the same session
-reviewer(s).
+At each review boundary, apply the
+[self-review](../templates/reviews/agent-self-review.md) and
+[fresh-context protocol](../templates/reviews/fresh-context-agent-review.md).
+They own exact candidates, findings, retained reviewers and correction rounds.
 
 **Review stop A:** after fresh-context approval, an authorized human reviewer
 verifies facts and authority links. Human approval records the review and moves

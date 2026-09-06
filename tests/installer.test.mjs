@@ -155,9 +155,8 @@ test("real workflow skill and generated guide resolve canonical goals and recove
   for (const name of ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade"]) {
     await cp(path.join(REPOSITORY_ROOT, "skills", name), path.join(source.repository, "skills", name), { recursive: true });
   }
-  await mkdir(path.join(source.repository, "docs"), { recursive: true });
-  for (const name of ["documentation-quality-policy.md", "batch-review-and-recovery.md"]) {
-    await cp(path.join(REPOSITORY_ROOT, "docs", name), path.join(source.repository, "docs", name));
+  for (const directory of ["docs", "templates"]) {
+    await cp(path.join(REPOSITORY_ROOT, directory), path.join(source.repository, directory), { recursive: true });
   }
   run("git", ["add", "."], source.repository);
   run("git", ["commit", "-m", "actual guidance fixture"], source.repository);
@@ -168,7 +167,7 @@ test("real workflow skill and generated guide resolve canonical goals and recove
   assert.equal(skill, await readFile(path.join(REPOSITORY_ROOT, "skills", "sdd-project-workflow", "SKILL.md"), "utf8"));
   assert.equal(guideValue(guide, "Resolved revision"), source.firstRevision);
   const checkout = guideValue(guide, "Playbook checkout");
-  for (const target of ["docs/documentation-quality-policy.md", "docs/batch-review-and-recovery.md"]) {
+  for (const target of ["docs/documentation-quality-policy.md", "docs/batch-review-and-recovery.md", "templates/reviews/agent-self-review.md", "templates/reviews/fresh-context-agent-review.md"]) {
     await access(path.join(checkout, target));
     assert.ok(skill.includes(target), target);
   }

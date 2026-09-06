@@ -78,26 +78,17 @@ retain only necessary local consequences, not restated error-handling rules.
 > material documentation change therefore requires automated evidence,
 > fresh-context agent review, and human semantic review.
 
-Before every review gate, the producing agent must complete the
-[agent self-review record](../templates/reviews/agent-self-review.md) against the
-exact candidate revision. It checks correctness, clarity, canonical ownership,
-cross-document consistency, freshness, duplication, attention mapping, scope,
-and applicable automated evidence. Any candidate change invalidates the result.
-`SELF_REVIEW_PASSED` is review input only; it cannot approve the artifact,
-satisfy reviewer independence, authorize merge, or authorize continuation.
-Next open a review session and initialize exactly two fresh-context reviewers for the exact candidate under the
-[canonical protocol](../templates/reviews/fresh-context-agent-review.md).
-Preserve requested changes, author dispositions, and resolutions as immutable
-findings. After all assigned reviewers approve the same exact candidate,
-mandatory human review decides the documentation gate. Any candidate change
-requires a new self-review and re-review by the same session reviewer(s).
+Every review gate requires exact-candidate
+[self-review](../templates/reviews/agent-self-review.md), followed by the
+[two-reviewer protocol](../templates/reviews/fresh-context-agent-review.md).
+Those owners define checks, isolation, findings and revised-candidate handling.
+Material documentation requires human semantic acceptance; this policy does
+not delegate that authority to agents or automated checks.
 
 ## 2. Required semantic review
 
-The author records `ACCEPT`, `PARTIALLY_ACCEPT`,
-`REJECT_WITH_JUSTIFICATION`, or `DEFER_WITH_AUTHORITY` for every material
-finding. The same assigned reviewer then verifies the response; unresolved
-author-reviewer disagreement is a human decision, not an automatic code edit.
+Apply the canonical review protocol's finding dispositions and disagreement
+route alongside the documentation-specific checks below.
 
 ### 2.1 Correctness and evidence
 

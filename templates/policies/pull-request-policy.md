@@ -37,16 +37,10 @@ Only `ACTIVE` versions govern pull requests.
 
 ### 1.1 Artifact review gate
 
-Submit each draft or update through exact-revision self-review, fresh-context
-agent review, and human review. First complete the
-[agent self-review](../reviews/agent-self-review.md) against the exact candidate
-evidence, then use the canonical
-[fresh-context review](../reviews/fresh-context-agent-review.md). After fresh
-approval, stop for mandatory human review before activating the policy. Any
-candidate change invalidates both prior results; resolve `CHANGES_REQUESTED`,
-record an explicit author disposition for every finding, repeat self-review,
-and return to the same assigned session reviewer(s). Agent review is evidence,
-not policy approval.
+Apply [self-review](../reviews/agent-self-review.md) and the
+[canonical review protocol](../reviews/fresh-context-agent-review.md) before
+human acceptance of this document. Activation requires the designated owner;
+record that decision below rather than treating agent review as approval.
 
 | Round | Candidate | Self-review | Fresh-context review | Durable findings/resolution | Human review | Result |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -312,36 +306,11 @@ approval and does not authorize merge or continuation.
 
 ## 9. Review policy
 
-The live delivery workflow records the user-selected implementation mode; this
-policy defines what each value permits. The user chooses after design approval
-and before implementation begins, and may change it at any time. The agent
-rereads the live mode before each task edit, self-review gate, PR opening, merge
-attempt, and continuation.
-
-- `HUMAN_REVIEW_BEFORE_MERGE`: after exact-head self-review and fresh-context
-  approval, the agent opens the ready PR and stops until human review and merge
-  authority are recorded.
-- `AGENT_AUTO_MERGE`: the user's recorded mode selection supplies merge
-  authorization for only the listed stable implementation target IDs in the
-  recorded repository. The agent may merge only
-  after its exact-head self-review and the assigned session reviewer(s)' pass,
-  annotations are current, all checks and repository protections pass, and no
-  stop condition exists. It must not bypass a repository-required approval.
-
-This implementation-only choice cannot approve requirements, design, policy,
-contracts, task specifications, exceptions, or final delivery. Missing,
-invalid, stale, or out-of-scope mode data stops for user direction.
-
-For multi-task delivery, the recorded scope may include the final feature PR
-only after final validation has its required approval. Auto-merge authority for
-that PR is merge authority, not validation or delivery approval.
-
-The live scope is a comma-separated list of unique stable target IDs, not
-free-text task/PR prose. The workflow records the exact implementation
-repository URL. Each ledger target must exist in the dependency register; its
-PR, merge evidence, and full merge SHA must agree. Self-review, fresh-review,
-required-check, and human-review evidence repeats the head or merge SHA defined
-by the workflow ledger contract.
+Use the [workflow mode contract](../workflows/sdd-delivery-workflow.md#13-implementation-continuation-mode)
+and its [implementation ledger](../workflows/sdd-delivery-workflow.md#94-implementation-pr-and-post-merge-review-ledger)
+for HUMAN_REVIEW_BEFORE_MERGE and AGENT_AUTO_MERGE. This policy's project profile
+owns permitted modes and stricter repository approvals. The complete PR exists
+before implementation review; draft timing follows §7.
 
 Reviewers evaluate:
 
@@ -361,39 +330,13 @@ Define approval rules by risk:
 | --- | --- | --- |
 | `<domain>` | `<role>` | `<gate>` |
 
-Authors classify every comment as `ACCEPT`, `PARTIALLY_ACCEPT`,
-`REJECT_WITH_JUSTIFICATION`, or `DEFER_WITH_AUTHORITY`, with a change,
-evidence-backed explanation, or authorized follow-up as applicable. Do not
-resolve substantive comments without reviewer reconciliation; unresolved
-disagreement requires human decision.
+Apply the [canonical review protocol](../reviews/fresh-context-agent-review.md)
+to the exact PR candidate. It owns isolation, both retained seats, author
+responses, immutable findings and re-review; do not duplicate its record here.
 
-At every PR review gate, use the canonical
-[review packet and receipt](../reviews/fresh-context-agent-review.md). The
-original agent creates exactly two reviewers without author-conversation
-inheritance, waits for both receipts, and remains responsible for addressing
-findings or running the merge gate. Both reviewers are read-only and review the
-complete exact candidate. Both remain assigned throughout the review session;
-any new commit invalidates their prior revision dispositions and requires the
-same two reviewers to review the new exact head after author self-review.
-
-Persist every requested-change finding without overwriting it. A PR finding
-links its inline or summary comment and records the governing statement,
-expected and observed behavior, impact, requested correction, author response,
-resolved revision, and reviewer disposition. A revised head starts a new review
-round with the same assigned reviewer(s); the prior finding remains immutable
-audit history. The author marks every comment `ACCEPT`, `PARTIALLY_ACCEPT`,
-`REJECT_WITH_JUSTIFICATION`, or `DEFER_WITH_AUTHORITY`. An unresolved conflict
-is escalated to human review rather than forcing a change or silently resolving
-the comment.
-
-Assign stable reviewer seats `R1` and `R2`. Finding IDs include the session,
-reviewer seat, and reviewer-local sequence (for example, `S1-R2-F03`) so two
-concurrent reviewers cannot publish the same durable identifier.
-
-Fresh context does not create a second GitHub identity. Record whether the
-result is workflow evidence, a PR comment, or a formal review made through
-separately authorized credentials. Never count a same-actor advisory result as
-a branch-protection approval from another actor.
+Authorized review publication: `<workflow evidence / same-account PR comments /
+separately authorized review identity>`. Same-account comments cannot satisfy
+branch protection requiring a different actor. Hosted approvals remain binding.
 
 ## 10. Merge policy
 
