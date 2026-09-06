@@ -6,7 +6,7 @@
 
 | Design basis | Task / work | Validation | Limit / decision |
 | --- | --- | --- | --- |
-| Four goals; C01–C03 | T01: clarify mandatory outcomes and adaptable methods; reconcile policy, skills and generated guide | Consistent authority, retained approvals, bounded recovery, scope/safety escalation cases | No weakening of required gates or new machine semantics |
+| Five goals; C01–C03 and owner clarification | T01: clear boundaries, stable outcomes, key information, proportional effort and agent discretion; reconcile policy, skills and generated guide | Consistent authority, retained approvals, bounded recovery, scope/safety escalation cases | No weakening of required gates or new machine semantics |
 | Key information; C04–C05 | Issue 63 unblock plus T01: retain justified checker snapshots and Git-first review evidence with concise findings | Snapshot control transitions, immutable boundaries, Git history, unavailable bytes and unique logs | No broad mask, historical deletion or arbitrary volume threshold |
 | Canonical consistency; C06 | T01: update affected README, diagrams, templates and maintained example together | Source-impact audit, semantic review, docs and full regression | Syntax passes are not proof of semantic consistency |
 | Owner packaging amendment | T01 PR includes already verified U84 upgrade controls | New runtime CURRENT, migration inventory and mixed-version tests | No runtime issue fix; final main publication still pending |
@@ -24,28 +24,28 @@ measurement or CI pass is claimed yet.
 | Review batch | [Planning batch](planning-batch.md) |
 | Delivery workflow | [Workflow](workflow.md) |
 | Plan | WB62 agent judgment and essential evidence |
-| Status | READY |
-| Previous status | CONTRACT_REVIEW |
+| Status | CONTRACT_REVIEW |
+| Previous status | READY |
 | Plan mode | FULL |
-| Current phase | READY |
+| Current phase | CONTRACT_REVIEW |
 | Current task | None |
-| Next ready task(s) | T01 |
+| Next ready task(s) | None |
 | Blockers | None |
 | Owner | Repository owner |
 | Reviewers | Two isolated planning reviewers, then owner |
-| Review state | APPROVED |
+| Review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P01-R04 |
+| Self-review candidate revision | WB62-P01-R05 |
 | Self-review evidence | [Package evidence](../../reviews/WB62-P01.md) |
-| Fresh-context review state | APPROVED |
+| Fresh-context review state | IN_REVIEW |
 | Fresh-context review session ID | WB62-P01 |
 | Fresh-context assigned reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
-| Fresh-context reviewed revision | WB62-P01-R04 |
+| Fresh-context approved reviewers | None |
+| Fresh-context reviewed revision | None |
 | Fresh-context review evidence | [Package evidence](../../reviews/WB62-P01.md) |
-| Human review state | APPROVED |
-| Human reviewed revision | WB62-P01-R04 |
+| Human review state | NOT_STARTED |
+| Human reviewed revision | None |
 | Human review evidence | [Review record](../../reviews/WB62-P01.md#owner-package-acceptance) |
 | Created | 2026-09-06 Asia/Shanghai |
 | Last updated | 2026-09-06 Asia/Shanghai |
@@ -72,6 +72,14 @@ design C01–C06 and handoff define source behavior; [preparation authority](pre
 adds U84 publication and provisional batching. Issue prose alone is not a
 contract. Runtime d93d27a33c43c1574aeed27044654c8964cf998b supplies v4 templates.
 Old receipts and schema versions remain immutable history.
+
+The later [owner goal and error-handling clarification](../../reviews/WB62-P01.md#owner-goal-clarification-for-t01)
+adds agent discretion as an explicit fifth goal. Integrate recovery and triage
+into existing error handling, not a new framework: correct agent mistakes within
+authority; track genuine project/playbook gaps in their respective issue
+trackers; diagnose uncertain causes; isolate affected work and involve humans
+for critical mismatches or missing decisions. The accepted baseline remains
+retrievable; this clarification does not approve future implementation results.
 
 Applicable: documentation ownership, test/PR policy, evidence retention,
 installer-generated instructions and safety. No application API, database,
@@ -114,7 +122,7 @@ before starting. Rollback is a reviewed coherent revert, preserving evidence.
 | --- | --- | --- | --- |
 | FC01 | Canonical sources agree within applicable scope/version; clear precedence allows subordinate correction | Genuine conflicting authority stops affected consumption | Same-authority conflict and stale-summary scenarios |
 | FC02 | Agents reuse valid authorization and choose sequencing/diagnostics within authorized unit | New scope, authority or acceptance boundary is not inferred | Unchanged approval, related correction and scope-expansion cases |
-| FC03 | Recovery preserves valid work and uses existing bounded policy | Uncertain destructive effects or exhausted bounds stop | Reversible recovery and unknown-write/safety cases |
+| FC03 | Existing error handling supports autonomous repair of agent mistakes, safe isolation and issue tracking for genuine project/playbook gaps | Critical mismatch, missing authority, uncertain destructive effects or exhausted bounds stop affected work | Agent-mistake recovery, isolated failure, project/upstream gap triage, uncertain cause and safety escalation cases |
 | FC04 | Exact reviewed bytes remain retrievable with concise findings/resolutions | A digest without available content cannot support acceptance | Git multi-round evidence and unavailable-object case |
 | FC05 | Necessary unique raw/non-Git and checker-consumed snapshots remain | No blanket deletion or unsupported Git resolver | Unique log and current snapshot-comparison cases |
 | FC06 | Policies, source skills, generator, phase templates, README and example agree | A link alone cannot fix contradictory instructions | Full affected-source audit plus docs and semantic review |
@@ -201,7 +209,7 @@ and durable concise evidence. No unrelated diff or lost historical evidence.
 
 | ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Independent merge boundary | PR | Required output IDs | Consumed output versions |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| T01 | READY | NEXT | None | None | CURRENT | COMPLETE | NONE | Bounded agent judgment and essential evidence with U84 publication | FC01, FC02, FC03, FC04, FC05, FC06 | One consistent source/policy/consumer PR | None | None | None |
+| T01 | PLANNED | | None | None | CURRENT | COMPLETE | NONE | Bounded agent judgment and essential evidence with U84 publication | FC01, FC02, FC03, FC04, FC05, FC06 | One consistent source/policy/consumer PR | None | None | None |
 
 ## 8. Task specification and context
 
@@ -212,7 +220,7 @@ and durable concise evidence. No unrelated diff or lost historical evidence.
 
 | Field | Value |
 | --- | --- |
-| State | READY |
+| State | PLANNED |
 | Depends on | None |
 | Data phase | NONE |
 | Source boundary | Whiteboard source inventory: docs, Contributing, README, CHANGELOG, three source skills, review/affected phase templates, generated guidance in install-sdd.sh, one maintained example and corresponding tests; U84 project controls; issue 63 checker/docs/regression correction |
@@ -220,7 +228,7 @@ and durable concise evidence. No unrelated diff or lost historical evidence.
 | Contract IDs | FC01, FC02, FC03, FC04, FC05, FC06 |
 | Owner | Coordinating implementer |
 | Branch / PR | codex/wb62-agent-judgment; main target; no PR yet |
-| Context receipt | APPROVED |
+| Context receipt | NOT_STARTED |
 | Context source revision | d93d27a33c43c1574aeed27044654c8964cf998b |
 | Context verification | NOT_STARTED |
 | Verified source revision | Not recorded |

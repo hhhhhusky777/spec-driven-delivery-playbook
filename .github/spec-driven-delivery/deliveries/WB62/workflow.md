@@ -7,7 +7,7 @@
 | Type | Item | Meaning |
 | --- | --- | --- |
 | DECISION | Planning package acceptance | Accept v4 mapping, FULL plan/audit and substantive T01 context together; final fresh readiness and owner merge authority remain |
-| ATTENTION | Design alignment | Four goals and C01–C06 from the accepted whiteboard remain unchanged; canonical consistency is a boundary |
+| ATTENTION | Design alignment | Accepted C01–C06 plus the owner's fifth goal, agent discretion, and existing error-handling clarification; canonical consistency remains a boundary |
 | ATTENTION | Task proposal | T01 aligns existing policy, skills/generated guidance, evidence retention and affected consumers/tests |
 | ATTENTION | Minimal artifacts | Reuse existing authorities; put the existing-source impact audit and task specification in the FULL plan, not new parallel policy/ADR files |
 | ATTENTION | Compatibility | Preserve machine schemas, quorum, acceptance boundaries, retry/retention limits and installed pin; required local snapshots remain |
@@ -21,8 +21,8 @@
 | Review batch | [Planning batch](planning-batch.md) |
 | Implementation plan | [FULL plan](implementation-plan.md) |
 | Delivery | WB62 — agent judgment and essential evidence |
-| State | GATES_READY |
-| Previous state | ARTIFACT_IN_REVIEW |
+| State | BLOCKED |
+| Previous state | GATES_READY |
 | Owner | Repository owner |
 | Concluded whiteboard | [Whiteboard](../../solution-whiteboard.md) |
 | Approved workflow handoff | [Handoff](handoff.md) |
@@ -32,29 +32,29 @@
 | Trigger identity/run ID | Coordinating agent / WB62-ROUTE-20260906-01 |
 | Selected route | Route 3 — systemic guidance change using existing authorities and FULL plan |
 | Manifest review state | APPROVED |
-| Current artifact/gate | [Accepted FULL plan](implementation-plan.md) |
+| Current artifact/gate | [Corrected FULL plan](implementation-plan.md) |
 | Current review phase | DESIGN |
 | Current review target ID | plan |
-| Current artifact review state | APPROVED |
+| Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P01-R04 |
+| Self-review candidate revision | WB62-P01-R05 |
 | Self-review evidence | [Routing review](../../reviews/WB62-P01.md) |
-| Fresh-context review state | APPROVED |
+| Fresh-context review state | IN_REVIEW |
 | Fresh-context review session ID | WB62-P01 |
 | Fresh-context assigned reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
-| Fresh-context reviewed revision | WB62-P01-R04 |
+| Fresh-context approved reviewers | None |
+| Fresh-context reviewed revision | None |
 | Fresh-context review evidence | [Routing review](../../reviews/WB62-P01.md) |
-| Human review state | APPROVED |
-| Human reviewed revision | WB62-P01-R04 |
+| Human review state | NOT_STARTED |
+| Human reviewed revision | None |
 | Human review evidence | [Review record](../../reviews/WB62-P01.md#owner-package-acceptance) |
-| Implementation continuation mode | NOT_SELECTED |
+| Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |
 | Implementation mode authority | [Owner mode record](../../reviews/WB62-P01.md#implementation-mode-authority) |
-| Implementation mode scope | Not selected |
-| Implementation repository | Not selected |
-| Implementation mode selected at | Not selected |
-| Next action | Record owner implementation-mode selection for T01, then finish fresh pre-start verification |
+| Implementation mode scope | T01 |
+| Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
+| Implementation mode selected at | 2026-09-06T09:36:49Z |
+| Next action | Verify corrected T01 input mapping and owner clarifications with retained reviewers |
 | Next action target IDs | workflow |
 | Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; CONTRIBUTING.md; README.md; CHANGELOG.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/workflows; examples; scripts/sdd-lifecycle.mjs; tests |
 | Next action write targets | .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/planning-batch.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
@@ -140,6 +140,7 @@ runtime work. The complete source inventory stays in the accepted whiteboard.
 | handoff | PREREQUISITE | EXISTING | GATES_READY | NONE | whiteboard | [Handoff](handoff.md) |
 | workflow | PREREQUISITE | EXISTING | GATES_READY | NONE | handoff | This workflow |
 | plan | PREREQUISITE | EXISTING | GATES_READY | NONE | workflow | [Plan](implementation-plan.md) |
+| T01 | PREREQUISITE | EXISTING | GATES_READY | NONE | plan | [Task specification](implementation-plan.md#t01--bounded-judgment-and-essential-evidence) |
 | upgrade | PREREQUISITE | EXISTING | GATES_READY | NONE | None | [U84](../../playbook-upgrade-assessment.md) |
 | source | FUTURE_OUTPUT | IMPLEMENTATION | VALIDATING | T01 | plan, upgrade | Pending source-delivery evidence file |
 | validation | FUTURE_OUTPUT | VALIDATION | COMPLETE | PHASE | source | Pending validation evidence file |
@@ -161,6 +162,7 @@ runtime work. The complete source inventory stays in the accepted whiteboard.
 | handoff | [Handoff](handoff.md) | whiteboard | 4b18100a722aa06baba7643b67e01185108a8635 | 4b18100a722aa06baba7643b67e01185108a8635 | CONTROL_ONLY | CURRENT | None |
 | workflow | This routing candidate | handoff | WB62-P01-R01 | WB62-P01-R01 | CONTROL_ONLY | CURRENT | None |
 | plan | [Plan](implementation-plan.md) | workflow | WB62-P01-R01 | WB62-P01-R01 | CONTROL_ONLY | CURRENT | None |
+| T01 | [Task specification](implementation-plan.md#t01--bounded-judgment-and-essential-evidence) | plan | WB62-P01-R05 | WB62-P01-R05 | MATERIAL | CURRENT | None |
 | upgrade | [U84](../../playbook-upgrade-assessment.md) | None | b43873a | b43873a | CONTROL_ONLY | CURRENT | None |
 
 Plan and workflow are provisional prerequisites, not approved merely because
@@ -175,7 +177,11 @@ actual delivered files and U84 publication; no future output is a pre-start inpu
 | Blocker ID | Evidence/unblock condition | Blocks | State | Owner |
 | --- | --- | --- | --- | --- |
 
-No active blocker. Required review/acceptance remains pending, not waived.
+The BLOCKED control state preserves the GATES_READY checkpoint while the
+corrected mapping and owner clarifications are reconciled. T01 identifies the
+existing task specification with the owner's clarification, not its future source output. No new
+execution dependency or owner mode choice is introduced. The review ledger
+owns the correction evidence and the unblock result.
 
 ## 5. Action and review order
 
@@ -225,15 +231,15 @@ guidance conflict; report a scoped design amendment when necessary.
 
 | Field | Current value |
 | --- | --- |
-| Workflow state | GATES_READY |
-| Current artifact/task | T01 READY; implementation mode pending |
-| Current artifact review | APPROVED / WB62-P01 |
+| Workflow state | BLOCKED |
+| Current artifact/task | T01 mapping correction and owner clarifications |
+| Current artifact review | IN_REVIEW / WB62-P01 |
 | Last approved artifact | WB62-P01-R04; afde3edd4582c5118ddf714b489aaf0b268c72fa |
-| Next ready action | Record owner implementation-mode selection and finish T01 pre-start verification |
+| Next ready action | Verify corrected planning package; retain recorded human-review-before-merge authority |
 | Active blockers | None |
 | Stale artifacts | None |
 | Validation complete | See exact routing review record; no implementation validation |
-| Validation remaining | Implementation mode and final pre-start verification; T01 implementation and later delivery gates |
+| Validation remaining | Corrected mapping/clarification review and final pre-start verification; T01 implementation and later delivery gates |
 | Branch/PR | codex/wb62-agent-judgment; local only, no PR |
 | Last updated | 2026-09-06 Asia/Shanghai |
 

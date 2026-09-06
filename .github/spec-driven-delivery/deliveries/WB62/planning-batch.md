@@ -18,24 +18,24 @@
 | Approval owner | Repository owner |
 | Expiry/end condition | Owner package acceptance, scope change or cancellation |
 | Authority status | CURRENT |
-| State | ACCEPTED |
-| Previous state | IN_REVIEW |
+| State | IN_REVIEW |
+| Previous state | PREPARING |
 | Resume state | IN_REVIEW |
 | Base revision | b43873a9aa8f6798c6b7a90d28521a89b4b8e08e |
-| Candidate revision | WB62-P01-R04 |
+| Candidate revision | WB62-P01-R05 |
 | PR | None |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-P01-R04 |
+| Self-review candidate revision | WB62-P01-R05 |
 | Self-review evidence | [Review record](../../reviews/WB62-P01.md) |
-| Fresh-context review state | APPROVED |
+| Fresh-context review state | IN_REVIEW |
 | Fresh-context review session ID | WB62-P01 |
 | Fresh-context assigned reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
-| Fresh-context reviewed revision | WB62-P01-R04 |
+| Fresh-context approved reviewers | None |
+| Fresh-context reviewed revision | None |
 | Fresh-context review evidence | [Review record](../../reviews/WB62-P01.md) |
-| Human review state | APPROVED |
-| Human reviewed revision | WB62-P01-R04 |
+| Human review state | NOT_STARTED |
+| Human reviewed revision | None |
 | Human review evidence | [Owner acceptance](../../reviews/WB62-P01.md#owner-package-acceptance) |
 | Checkpoint | [Checkpoint](../../reviews/WB62-P01.md#checkpoint) |
 | Transient retry limit | 2 |
@@ -43,7 +43,7 @@
 | Transient retry count | 0 |
 | No-progress count | 0 |
 | Unresolved finding IDs | None |
-| Next action | Record accepted planning transitions and verify readiness |
+| Next action | Review corrected task mapping and owner goal/error-handling clarification |
 | Action owner | Coordinator |
 | Execution authority | None |
 | Inputs freshness | CURRENT |
@@ -60,8 +60,8 @@
 | trigger | .github/spec-driven-delivery/agent-trigger.md | git:d5665ef782a48a78ec8e1db1338f44d0832f2110 | registry | C1, C2, C3, C4, C5, C6 | APPROVED | Exact file bytes | None | None |
 | manifest | .github/spec-driven-delivery/project-adoption-manifest.md | git:cf898b8420a83114d4cf25cdb317dfd0afa456fb | authority | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-manifest.snapshot | [R03 delta](../../reviews/WB62-P01.md#r03-control-delta-evidence) |
 | upgrade | .github/spec-driven-delivery/playbook-upgrade-assessment.md | git:d7f4fdfa2d7b35c70b407af527dd55eb84544bfe | authority | C1, C2, C3, C4, C5, C6 | APPROVED | Exact file bytes | None | None |
-| workflow | .github/spec-driven-delivery/deliveries/WB62/workflow.md | git:b16c6ecb69c3372c03845cc93ccd28f7237eb980 | authority, registry, trigger, manifest, upgrade | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-workflow.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
-| plan | .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md | git:c5e090f427fed2d21db5c976194aecb63113cdf8 | workflow | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-plan.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
+| workflow | .github/spec-driven-delivery/deliveries/WB62/workflow.md | git:e5f0cedaf08b109ba037bf34baa60a1e8ba62695 | authority, registry, trigger, manifest, upgrade | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-workflow.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
+| plan | .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md | git:e7ada43113d4df62ab334c678beab60bcb789cc9 | workflow | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-plan.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
 
 ## Required controls
 

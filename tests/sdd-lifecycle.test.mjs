@@ -249,6 +249,24 @@ test("v4 reviewed snapshots preserve an accepted planning package through readin
   assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_CONTROL_DELTA"));
 });
 
+test("v4 implementation review registers the accepted task input without requiring its future result", async t => {
+  const f = await v4Fixture(t);
+  // Synthetic documents only: these review values do not represent live approval.
+  const candidate = f.w.replaceAll("task-1", "T01")
+    .replace("| State | `GATES_READY` |", "| State | `DELIVERY_ACTIVE` |")
+    .replace("| Previous state | `ARTIFACT_IN_REVIEW` |", "| Previous state | `GATES_READY` |")
+    .replace("| Current review phase | `DESIGN` |", "| Current review phase | `IMPLEMENTATION` |")
+    .replace("| Current artifact/gate | [plan](implementation-plan.md) |", "| Current artifact/gate | [T01 PR #1](https://github.com/example/project/pull/1) |");
+  await writeFile(f.file, candidate);
+  assert.deepEqual(await checkSddLifecycleDocument(f.file, f.root, SCHEMAS), []);
+  assert.match(candidate, /\| result \| NOT_STARTED \|/);
+  // Reproduce the WB62 omission while leaving phase-role membership coherent.
+  const missingTask = candidate.split("\n").filter(line => !line.startsWith("| T01 |")).join("\n");
+  await writeFile(f.file, missingTask);
+  assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS))
+    .some(item => item.rule === "SDD_IMPLEMENTATION_REVIEW_SCOPE"));
+});
+
 test("v4 document entries reject a complete output with a pending ancestor", async t => {
   const f = await v4Fixture(t);
   const bytes = "synthetic result\n";
