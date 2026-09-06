@@ -10,14 +10,14 @@ supersedes its WB33 and waiting-for-cutover status descriptions.
 
 | Item | Current evidence / boundary |
 | --- | --- |
-| State | APPLYING; old pin retained until current validation passes |
+| State | VALIDATING; local cutover verified, reviewed publication remains |
 | Source | Latest remote main still equals reviewed candidate d93d27a33c43c1574aeed27044654c8964cf998b |
 | Safe boundary | WB62 is routing review only; no implementation plan, active task or task PR. WB33 draft was owner-discarded; do not resume it |
 | Existing approvals | WB62 design and handoff remain accepted; W01 has two agent approvals but no human routing acceptance |
 | Migration | R04 registry/trigger bytes reused unchanged; manifest navigation preserves WB62; no source or historical delivery bytes replaced |
 | Compatibility | Existing WB62 v2 routing remains a versioned record, not silently converted to v4. New linked plan/workflow or batch preparation must reconcile its schema/authority explicitly before readiness |
 | Batching | New runtime makes the scoped batch route available, not automatically selected. The upgrade does not approve WB62 routing or unseen batch contents |
-| Remaining | Current gates, exact pin cutover, owned cleanup, regenerated normal-runtime verification and reviewed publication |
+| Remaining | Reviewed publication of durable upgrade controls; explicit WB62 batch adoption is separate |
 | Rollback | Retain pre-cutover Git commit and old pin d213114f99dc2186d6f4e50a85fe962de0e1afa9; restore only upgrade changes and regenerate verified old runtime if cutover fails |
 
 No accepted WB62 normative input changes. Versioned legacy records remain
@@ -25,6 +25,19 @@ valid under the candidate's frozen compatibility schema; planning has not
 started, so there is no active task context to invalidate. The new runtime
 does not grant merge authority. Local cutover and reviewed main publication
 are distinct results; source publication remains required.
+
+Local cutover succeeded on 2026-09-06. Pre-cutover checkpoint:
+9f25106f35860759fac8633e6717237658b5bf3f. The manifest, regenerated guide,
+managed workflow-skill marker and verified checkout agree on candidate
+d93d27a33c43c1574aeed27044654c8964cf998b; normal validation returned CURRENT.
+Installer cleanup removed only this root's verified candidate and old normal
+checkouts. Other worktrees and their runtimes remain untouched. Both source
+revisions remain available in Git; no accepted project history was deleted.
+
+The installed workflow now includes the optional batched route. Registry and
+trigger retain their reviewed publication boundary. No claim of main cutover,
+WB62 batch acceptance or completed project-wide upgrade is made before that
+remaining boundary is satisfied.
 
 ## Historical owner review brief
 

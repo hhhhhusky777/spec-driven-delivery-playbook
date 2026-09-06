@@ -35,8 +35,8 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Adoption state | `INSTALLED` |
 | State before block | `None` |
 | Playbook source repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook.git` |
-| Playbook revision | `d213114f99dc2186d6f4e50a85fe962de0e1afa9` |
-| Upgrade state | `APPLYING` |
+| Playbook revision | `d93d27a33c43c1574aeed27044654c8964cf998b` |
+| Upgrade state | `VALIDATING` |
 | Upgrade assessment / candidate | [U84 assessment](playbook-upgrade-assessment.md); `d93d27a33c43c1574aeed27044654c8964cf998b` |
 | Playbook materialization mode | `pinned local checkout` |
 | Runtime playbook locator contract | Installer-generated `.sdd-runtime/agent-guide.md` supplies and verifies the read-only checkout for each invocation |
@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | Complete owner-authorized U84 cutover and runtime verification, preserving WB62 accepted inputs and routing review |
+| Next action | U84 local cutover verified; publish reviewed upgrade controls before selecting WB62 batching; preserve accepted inputs |
 
 Adoption type: `real project`
 
@@ -751,3 +751,9 @@ preserve both approvals. Registry and trigger reuse reviewed migration bytes.
 WB62 design/handoff approvals and versioned routing remain intact; WB33 and
 runtime issues remain deferred. No blanket batch, implementation or merge
 permission is inferred. Adoption remains INSTALLED, not ACTIVE.
+
+Local cutover is verified: manifest, normal guide and installed workflow skill
+now use d93d27a33c43c1574aeed27044654c8964cf998b and runtime reports CURRENT.
+Upgrade state remains VALIDATING until reviewed publication; main is not yet
+updated. The original assessment's old-pin and WB33 progress descriptions are
+historical. WB62 v2 routing stays preserved, not silently migrated or approved.
