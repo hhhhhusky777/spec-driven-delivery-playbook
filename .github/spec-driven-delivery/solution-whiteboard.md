@@ -5,19 +5,21 @@
 | Field | Value |
 | --- | --- |
 | Topic | PR-owned delivery evidence and post-delivery reset |
-| State | CONVERGING |
+| State | CONCLUDED |
 | Owner | Repository owner |
-| Conclusion review | NOT_STARTED |
+| Conclusion review | APPROVED — `wb66_design_r1` and `wb66_design_r2` approved exact candidate `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30` |
+| Owner acceptance | APPROVED — exact candidate `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30` at 2026-09-06T23:13:53+08:00 |
 | Created | 2026-09-06 Asia/Shanghai |
 | Origin | Owner amendment during PR #65 closure; [issue #66](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/66), building on #54 and #62 |
 | Development policy | [Contributing](../../CONTRIBUTING.md) |
 | Project contracts | [Registry](project-contracts.md) |
-| Generated workflow handoff | Not generated |
-| Resulting delivery workflow | Not generated |
-| Resulting implementation plan | Not generated |
+| Generated workflow handoff | Not required; this is an accepted amendment to the active WB62 delivery |
+| Resulting delivery workflow | [Existing WB62 workflow](deliveries/WB62/workflow.md) |
+| Resulting implementation plan | [Existing WB62 plan](deliveries/WB62/implementation-plan.md); amendment pending |
 
-This is a lightweight discussion draft. It is not an accepted policy or merge
-authority. PR #65 remains unmerged while the closure model is reconsidered.
+This is the formally concluded design. It is an accepted input to WB62 planning,
+not acceptance of future implementation or merge authority. PR #65 remains
+unmerged while the approved design is implemented and reviewed.
 
 ## Current snapshot
 
@@ -28,8 +30,8 @@ authority. PR #65 remains unmerged while the closure model is reconsidered.
 | Preferred direction | Keep only adoption controls and reusable/current outputs in the merged tree; use concise PR evidence plus exact Git revisions; remove non-reusable delivery state and regenerate runtime for the next need |
 | Confidence | High; direction is explicit and the affected canonical consumers are mapped |
 | Material open questions | None for the direction; historical archives are outside the current migration unless separately authorized |
-| Active blocker | Current archive-based closure package cannot merge under the amended requirement |
-| Next action | Review the formal conclusion, then update the existing WB62 plan with the implementation tasks |
+| Active blocker | None at the design boundary; the amended implementation plan still requires review and owner acceptance |
+| Next action | Update the existing WB62 workflow and plan with T02–T04 and review the coherent planning package |
 
 ## Confirmed goals and boundaries
 
@@ -262,6 +264,14 @@ expanded the reset boundary to every non-reusable current-delivery item and
 explicit machine-runtime regeneration, so those approvals remain historical
 evidence and do not approve the revised candidate. R06 review is required.
 
+On R06 candidate `ed221d3fa47ab77cc16201de6e363e8a063d19a2`, retained R2
+approved and retained R1 requested exact destructive-target identities. R07
+candidate `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30` resolved that finding by
+enumerating repository paths, branch refs, worktree paths/markers and runtime
+checkout/guide/marker identities, with ownership and cleanup authority. Both
+retained reviewers approved R07 with no open finding. The owner then accepted
+that exact candidate as the concluded design.
+
 ## Option and lifecycle conclusion
 
 | Option | Result | Reason |
@@ -376,4 +386,4 @@ is today.
 | Required boundaries | Adoption and reusable work remain; all non-reusable current-delivery state is removed, runtime and whiteboard are reset, and review/quality/authority controls remain unchanged |
 | Current migration | PR #65 preserves v4/WB62 through target verification; one exact-SHA reviewed reset/upgrade PR activates v5, applies the complete WB62 disposition inventory, restores `EMPTY`, and regenerates runtime; historical WB38 remains untouched |
 | Open product/design decisions | None |
-| Remaining work | Independent conclusion review, owner acceptance, plan update and implementation |
+| Remaining work | Update and review the WB62 planning package, obtain owner plan acceptance, then implement |
