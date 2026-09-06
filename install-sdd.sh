@@ -169,6 +169,22 @@ manifest_navigation_entry_point() {
   ' "$MANIFEST_PATH"
 }
 
+manifest_has_navigation_entry_point() {
+  awk -F'|' '
+    function trim(value) {
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", value)
+      return value
+    }
+    trim($2) == "Start contributing" {
+      found = 1
+      exit
+    }
+    END {
+      exit !found
+    }
+  ' "$MANIFEST_PATH"
+}
+
 entry_point_target() {
   awk '
     match($0, /\]\([^)]*\)/) {
@@ -184,8 +200,8 @@ entry_point_target() {
 
 validate_project_entry_point() {
   local navigation_entry target manifest_directory candidate_directory candidate
-  navigation_entry=$(manifest_navigation_entry_point)
-  if [[ -n "$navigation_entry" ]]; then
+  if manifest_has_navigation_entry_point; then
+    navigation_entry=$(manifest_navigation_entry_point)
     target=$(printf '%s\n' "$navigation_entry" | entry_point_target)
     [[ -n "$target" ]] ||
       fail "upgrade requires Start contributing to record a local project entry point"
@@ -193,8 +209,11 @@ validate_project_entry_point() {
     target=${target%>}
     target=${target%%\#*}
     target=${target%%\?*}
+    if [[ "$target" =~ ^[[:alpha:]][[:alnum:].+-]*: ]]; then
+      fail "upgrade requires Start contributing to record a local project entry point"
+    fi
     case "$target" in
-      ""|/*|*://*|mailto:*)
+      ""|/*)
         fail "upgrade requires Start contributing to record a local project entry point"
         ;;
     esac

@@ -439,6 +439,46 @@ test("upgrade rejects an unavailable project entry point recorded in navigation"
   assert.match(result.stderr, /recorded project entry point is unavailable/);
 });
 
+test("upgrade rejects a blank recorded entry point instead of using the legacy fallback", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const manifestPath = path.join(
+    project,
+    ".github",
+    "spec-driven-delivery",
+    "project-adoption-manifest.md",
+  );
+  const manifest = await readFile(manifestPath, "utf8");
+  await writeFile(
+    manifestPath,
+    `${manifest}\n| Start contributing |  | Broken |\n`,
+    "utf8",
+  );
+
+  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /record a local project entry point/);
+});
+
+test("upgrade rejects URI-scheme entry points even when a matching file exists", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
+  const manifestPath = path.join(adoptionRoot, "project-adoption-manifest.md");
+  const manifest = await readFile(manifestPath, "utf8");
+
+  await writeFile(path.join(adoptionRoot, "javascript:entry.md"), "# Not a local link\n", "utf8");
+  await writeFile(
+    manifestPath,
+    `${manifest}\n| Start contributing | [Script](javascript:entry.md) | Script |\n`,
+    "utf8",
+  );
+
+  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /record a local project entry point/);
+});
+
 test("upgrade rejects external and out-of-project navigation entry points", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createInstalledProject(t, source);
