@@ -52,6 +52,10 @@ quality, and template rules remain at their existing canonical sources.
 
 ## U84 future-delivery routing
 
+WB62 has a later [preparation amendment](deliveries/WB62/preparation-authority.md)
+for joint upgrade/issue publication. It permits provisional package preparation
+with the verified new runtime, not automatic acceptance or future-project use.
+
 This migration is pending the [manifest's upgrade cutover](project-adoption-manifest.md#u84-upgrade-handoff)
 and reviewed publication. Until then use the unchanged installed pin. After
 cutover, resolve all source paths below through the verified pinned checkout.

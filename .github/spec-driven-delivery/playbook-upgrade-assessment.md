@@ -2,6 +2,11 @@
 
 ## Current cutover checkpoint
 
+Later owner direction joins upgrade publication with WB62 #62/#54. The
+[preparation amendment](deliveries/WB62/preparation-authority.md) supersedes
+separate-publication sequencing for that provisional planning scope only.
+No local cutover is repeated; final combined publication remains required.
+
 The owner instructed “complete the upgrade” on 2026-09-06 after the pending U84
 cutover was identified. This accepts the reviewed R04 migration and authorizes
 its exact d93d27a33c43c1574aeed27044654c8964cf998b pin/runtime transition.

@@ -1,23 +1,25 @@
 # WB62 — delivery routing
 
-<!-- sdd-schema: delivery-workflow@2 -->
+<!-- sdd-schema: delivery-workflow@4 -->
 
 ## Owner review brief
 
 | Type | Item | Meaning |
 | --- | --- | --- |
-| DECISION | Routing acceptance | Select FULL planning for one coherent T01; no implementation or merge permission |
+| DECISION | Planning package acceptance | Accept v4 mapping, FULL plan/audit and substantive T01 context together; final fresh readiness and owner merge authority remain |
 | ATTENTION | Design alignment | Four goals and C01–C06 from the accepted whiteboard remain unchanged; canonical consistency is a boundary |
 | ATTENTION | Task proposal | T01 aligns existing policy, skills/generated guidance, evidence retention and affected consumers/tests |
 | ATTENTION | Minimal artifacts | Reuse existing authorities; put the existing-source impact audit and task specification in the FULL plan, not new parallel policy/ADR files |
 | ATTENTION | Compatibility | Preserve machine schemas, quorum, acceptance boundaries, retry/retention limits and installed pin; required local snapshots remain |
-| ATTENTION | Deferred | Runtime #33/#34/#36 and U84; no historical deletion or measured savings |
+| ATTENTION | Deferred | Runtime #33/#34/#36 deferred; U84 publication included by owner amendment |
 | ATTENTION | Evidence | Exact candidate and actual local check results belong to the linked review record; no implementation, CI or scenario-execution claim |
 
 ## 1. Workflow control
 
 | Field | Value |
 | --- | --- |
+| Review batch | [Planning batch](planning-batch.md) |
+| Implementation plan | [FULL plan](implementation-plan.md) |
 | Delivery | WB62 — agent judgment and essential evidence |
 | State | MANIFEST_IN_REVIEW |
 | Previous state | ROUTING |
@@ -35,15 +37,15 @@
 | Current review target ID | workflow |
 | Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-W01-R01; exact Git identity in linked review record |
-| Self-review evidence | [Routing review](../../reviews/WB62-W01.md) |
+| Self-review candidate revision | WB62-P01-R01; exact identity in review record |
+| Self-review evidence | [Routing review](../../reviews/WB62-P01.md) |
 | Fresh-context review state | NOT_STARTED |
-| Fresh-context review session ID | WB62-W01 |
-| Fresh-context assigned reviewers | wb62_routing_r1, wb62_routing_r2 |
+| Fresh-context review session ID | WB62-P01 |
+| Fresh-context assigned reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context required approvals | 2 |
 | Fresh-context approved reviewers | Not recorded |
 | Fresh-context reviewed revision | Not recorded |
-| Fresh-context review evidence | [Routing review](../../reviews/WB62-W01.md) |
+| Fresh-context review evidence | [Routing review](../../reviews/WB62-P01.md) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | Not recorded |
 | Human review evidence | Not recorded |
@@ -52,10 +54,10 @@
 | Implementation mode scope | Not selected |
 | Implementation repository | Not selected |
 | Implementation mode selected at | Not selected |
-| Next action | Complete exact routing review, then owner acceptance before plan generation |
+| Next action | Complete coherent planning package review, then owner acceptance |
 | Next action target IDs | workflow |
-| Allowed write scope | .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/reviews/WB62-W01.md |
-| Next action write targets | .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/reviews/WB62-W01.md |
+| Allowed write scope | .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/planning-batch.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
+| Next action write targets | .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/planning-batch.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
 | Review mode | EXPLICIT_REVIEW |
 | Review mode authority | Contributing review and continuation authority; pinned workflow §1.2 |
 | Automation boundary | Not applicable |
@@ -68,8 +70,10 @@
 
 The review ledger records exact candidate self-review and subsequent receipts
 outside the frozen candidate bytes. CURRENT means reconciled, not approved.
-The installed d213114f99dc2186d6f4e50a85fe962de0e1afa9 workflow governs this
-delivery; this routing does not adopt prospective source changes. Only control
+The verified d93d27a33c43c1574aeed27044654c8964cf998b runtime and
+[preparation authority](preparation-authority.md) permit this provisional v4
+planning package. The prior v2 review remains immutable Git history, not
+approval of this migration. Only control
 fields were changed in the handoff after its exact candidate acceptance.
 
 ## 2. Governing registry and input
@@ -112,19 +116,40 @@ policy output to be approved before T01 can produce it.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 0 | whiteboard | Concluded design | REUSE | Accepted C01–C06 and four goals | [Design](../../solution-whiteboard.md) | Owner | Owner | APPROVED / WB62-S01 |
 | 1 | handoff | Normalized input | REUSE | Exact candidate accepted | [Handoff](handoff.md) | Owner | Owner | APPROVED / WB62-H01 |
-| 2 | workflow | Routing | GENERATE | Select applicable artifacts | Pinned workflows/sdd-delivery-workflow.md | Coordinator | Two reviewers then owner | IN_REVIEW / WB62-W01 |
+| 2 | workflow | Routing | GENERATE | Select applicable artifacts | Pinned workflows/sdd-delivery-workflow.md | Coordinator | Two reviewers then owner | IN_REVIEW / WB62-P01 |
 | 3 | plan | FULL plan including source impact audit | GENERATE_FULL | Systemic scope, one complete T01 specification | Pinned delivery/implementation-plan.md | Coordinator | Two reviewers then owner | NOT_STARTED |
 | 4 | source | Existing authority and consumer source changes | UPDATE_EXISTING | T01 output implementing C01–C06; not a planning prerequisite | Accepted whiteboard source inventory | Implementer | Two reviewers then owner | NOT_STARTED |
 | 5 | specialized | Separate specialized-policy file | SKIP | Existing quality/governance owners cover this guidance change | Template governance | Maintainer | Routing reviewers | IN_REVIEW |
 | 6 | adr | Separate ADR | SKIP | No new significant architecture or service | Accepted handoff | Maintainer | Routing reviewers | IN_REVIEW |
-| 7 | runtime | Runtime group and upgrade | DEFER | Outside accepted priority scope; owner retains issues 33/34/36 and U84 | Accepted whiteboard | Owner | Owner | Deferred by design acceptance |
-| 8 | record | Validation and delivery record | GENERATE | After T01 completion; preserve actual evidence and archive links | Project archive contract and pinned plan | Coordinator | Two reviewers then owner | NOT_STARTED |
+| 7 | runtime | Runtime group | DEFER | Issues 33/34/36 remain outside scope | Accepted whiteboard | Owner | Owner | Deferred by design acceptance |
+| 8 | validation | Final validation evidence | GENERATE | Produced after implementation | Project quality policy | Coordinator | Two reviewers then owner | NOT_STARTED |
+| 9 | record | Delivery record/archive | GENERATE | After validation | Project archive contract | Coordinator | Two reviewers then owner | NOT_STARTED |
+| 10 | upgrade | U84 controls | REUSE | Verified local cutover; owner requests combined publication | [U84](../../playbook-upgrade-assessment.md) | Owner | Owner | Cutover approved; publication pending |
 
 Public application API, data migration and separate performance/security plans
 are not applicable: no such executable boundary changes. Tests and source
 compatibility belong to the FULL plan. Affected adoption/runbook, README,
 diagrams and template guidance are part of source/T01, not separately invented
 runtime work. The complete source inventory stays in the accepted whiteboard.
+
+### Phase roles and future outputs
+
+| Artifact ID | Role | Production phase | Required gate | Producer task | Depends on | Evidence |
+| --- | --- | --- | --- | --- | --- | --- |
+| whiteboard | PREREQUISITE | EXISTING | GATES_READY | NONE | None | [Design](../../solution-whiteboard.md) |
+| handoff | PREREQUISITE | EXISTING | GATES_READY | NONE | whiteboard | [Handoff](handoff.md) |
+| workflow | PREREQUISITE | EXISTING | GATES_READY | NONE | handoff | This workflow |
+| plan | PREREQUISITE | EXISTING | GATES_READY | NONE | workflow | [Plan](implementation-plan.md) |
+| upgrade | PREREQUISITE | EXISTING | GATES_READY | NONE | None | [U84](../../playbook-upgrade-assessment.md) |
+| source | FUTURE_OUTPUT | IMPLEMENTATION | VALIDATING | T01 | plan, upgrade | Pending source-delivery evidence file |
+| validation | FUTURE_OUTPUT | VALIDATION | COMPLETE | PHASE | source | Pending validation evidence file |
+| record | FUTURE_OUTPUT | CLOSURE | ARCHIVED | PHASE | validation | Pending closure record |
+
+| Artifact ID | State | Current version | Verified version | Change impact | Freshness | Review state | Review evidence | Blocked by |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| source | NOT_STARTED | None | None | MATERIAL | CURRENT | NOT_STARTED | None | None |
+| validation | NOT_STARTED | None | None | MATERIAL | CURRENT | NOT_STARTED | None | None |
+| record | NOT_STARTED | None | None | MATERIAL | CURRENT | NOT_STARTED | None | None |
 
 ### Dependency and freshness register
 
@@ -134,12 +159,14 @@ runtime work. The complete source inventory stays in the accepted whiteboard.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | whiteboard | [Design](../../solution-whiteboard.md) | None | 77a738d60f245fa1752b4cb25d1c3e788455e1fd | 77a738d60f245fa1752b4cb25d1c3e788455e1fd | CONTROL_ONLY | CURRENT | None |
 | handoff | [Handoff](handoff.md) | whiteboard | 4b18100a722aa06baba7643b67e01185108a8635 | 4b18100a722aa06baba7643b67e01185108a8635 | CONTROL_ONLY | CURRENT | None |
-| workflow | This routing candidate | handoff | WB62-W01-R01 | WB62-W01-R01 | CONTROL_ONLY | CURRENT | None |
+| workflow | This routing candidate | handoff | WB62-P01-R01 | WB62-P01-R01 | CONTROL_ONLY | CURRENT | None |
+| plan | [Plan](implementation-plan.md) | workflow | WB62-P01-R01 | WB62-P01-R01 | CONTROL_ONLY | CURRENT | None |
+| upgrade | [U84](../../playbook-upgrade-assessment.md) | None | b43873a | b43873a | CONTROL_ONLY | CURRENT | None |
 
-Unproduced plan/source/record outputs are not consumed dependencies and have
-no fabricated CURRENT or approval state. Register their actual revisions when
-created; complete required coverage before GATES_READY. Deferred and skipped
-rows cannot become implicit implementation prerequisites.
+Plan and workflow are provisional prerequisites, not approved merely because
+CURRENT. Source, validation and closure evidence remain separate future outputs.
+Skipped/deferred items have no required role. Source includes T01 evidence of
+actual delivered files and U84 publication; no future output is a pre-start input.
 
 ### Blockers
 
@@ -155,7 +182,7 @@ No active blocker. Required review/acceptance remains pending, not waived.
 | Action ID | Target/output | Review mode | Mode authority | Required gates | Automation boundary | Semantic decision? | State |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | W01 | Routing | EXPLICIT_REVIEW | Approved handoff; pinned workflow | Local docs/lifecycle/regression and exact independent review | Not applicable | YES | ACTIVE |
-| P01 | FULL plan and embedded source audit | EXPLICIT_REVIEW | Requires accepted W01 | Task completeness, docs/checks and two reviewers then owner | Not applicable | YES | PLANNED |
+| P01 | FULL plan and embedded source audit | EXPLICIT_REVIEW | Provisional preparation authority; joint acceptance required | Task completeness, docs/checks and two reviewers then owner | Not applicable | YES | PLANNED |
 | T01 | Coherent source implementation PR | EXPLICIT_REVIEW | Requires approved plan/context and recorded mode | Focused scenarios, full checks, two reviewers and owner merge authority | Not applicable | YES | PLANNED |
 | V01 | Final validation/closure | EXPLICIT_REVIEW | Requires complete implementation evidence | Actual validation, archive and authorized cleanup evidence | Not applicable | YES | PLANNED |
 
@@ -172,7 +199,7 @@ control continuation under existing Contributing, not implied auto-merge.
 | --- | --- | --- | --- |
 | Whiteboard | 456b3fc2459be4f3ddc5ca7f649a533dd4e48996 | [Design acceptance](../../reviews/WB62-S01.md#owner-acceptance) | APPROVED |
 | Handoff | 4b18100a722aa06baba7643b67e01185108a8635 | [Handoff acceptance](../../reviews/WB62-H01.md#owner-acceptance) | APPROVED |
-| Routing | Exact candidate in [review record](../../reviews/WB62-W01.md) | Pending exact checks and review | IN_REVIEW |
+| Routing | Exact candidate in [review record](../../reviews/WB62-P01.md) | Pending exact checks and review | IN_REVIEW |
 
 No automatic semantic action or implementation has occurred. Manual trigger
 WB62-ROUTE-20260906-01 consumes the accepted handoff once; repeat invocation
@@ -200,9 +227,9 @@ guidance conflict; report a scoped design amendment when necessary.
 | --- | --- |
 | Workflow state | MANIFEST_IN_REVIEW |
 | Current artifact/task | Routing; no active task |
-| Current artifact review | IN_REVIEW / WB62-W01 |
+| Current artifact review | IN_REVIEW / WB62-P01 |
 | Last approved artifact | Handoff 4b18100a722aa06baba7643b67e01185108a8635 |
-| Next ready action | Review this routing; generate plan only after acceptance |
+| Next ready action | Review the provisional routing, plan and substantive context together |
 | Active blockers | None |
 | Stale artifacts | None |
 | Validation complete | See exact routing review record; no implementation validation |
@@ -216,6 +243,11 @@ record and verified immutable archive before working-whiteboard reset. Cleanup
 requires ownership and authorization. No closure or ACTIVE adoption claim now.
 
 ## 7. History
+
+Owner packaging amendment permits provisional v4 migration and plan preparation
+together. Prior W01 approval applies only to its v2 candidate. Legal transition
+history: MANIFEST_IN_REVIEW -> CHANGES_REQUESTED -> ROUTING for this owner
+amendment; no artifact selection or execution approval inferred.
 
 | Date | Event | Input | Effect | Authority |
 | --- | --- | --- | --- | --- |

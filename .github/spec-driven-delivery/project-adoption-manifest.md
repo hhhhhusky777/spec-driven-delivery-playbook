@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | U84 local cutover verified; publish reviewed upgrade controls before selecting WB62 batching; preserve accepted inputs |
+| Next action | Prepare owner-authorized combined WB62 planning package; U84 publication joins this delivery |
 
 Adoption type: `real project`
 
@@ -757,3 +757,10 @@ now use d93d27a33c43c1574aeed27044654c8964cf998b and runtime reports CURRENT.
 Upgrade state remains VALIDATING until reviewed publication; main is not yet
 updated. The original assessment's old-pin and WB33 progress descriptions are
 historical. WB62 v2 routing stays preserved, not silently migrated or approved.
+
+The owner subsequently directed joint delivery of U84 and #62/#54 and continued
+the proposed planning batch. [Preparation authority](deliveries/WB62/preparation-authority.md)
+records provisional v4 routing/plan/context preparation before combined
+publication. Exact package acceptance and readiness remain required. Earlier
+separate-publication sequencing is superseded only for this scope; U84 remains
+VALIDATING until publication.

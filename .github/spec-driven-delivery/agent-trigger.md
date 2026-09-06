@@ -33,6 +33,10 @@ From the repository root:
    with the verified candidate workflow skill. Preserve existing discussion
    and terminal history; a new runtime does not authorize a new design or merge.
 
+For WB62 only, the later [preparation authority](deliveries/WB62/preparation-authority.md)
+permits joint upgrade/planning preparation before publication; retain required
+package acceptance and do not infer implementation or merge permission.
+
 Resume prompt: “Follow the verified `.sdd-runtime/agent-guide.md`, then the
 project registry and current manifest/workflow next action. Reconcile exact
 inputs and allowed writes before acting; record evidence and remaining gates.”
