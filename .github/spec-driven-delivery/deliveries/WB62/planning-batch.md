@@ -43,7 +43,7 @@
 | Transient retry count | 0 |
 | No-progress count | 0 |
 | Unresolved finding IDs | None |
-| Next action | R06 remains accepted; T01 VERIFYING on PR 64; R08 re-review after owner-directed dry run/consolidation, then owner review before merge |
+| Next action | R06 remains accepted as planning history; T01 DONE; U64 upgrade approved for cutover; WB62 validation and archive remain |
 | Action owner | Coordinator |
 | Execution authority | None |
 | Inputs freshness | CURRENT |
@@ -58,10 +58,10 @@
 | authority | .github/spec-driven-delivery/deliveries/WB62/preparation-authority.md | git:b023745c0b6473d48130658f0b841c4fcd351622 | None | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | None | None |
 | registry | .github/spec-driven-delivery/project-contracts.md | git:abb2743b657a6abb4459eef005b8940541095cf0 | authority | C1, C2, C3, C4, C5, C6 | APPROVED | Exact file bytes | None | None |
 | trigger | .github/spec-driven-delivery/agent-trigger.md | git:d5665ef782a48a78ec8e1db1338f44d0832f2110 | registry | C1, C2, C3, C4, C5, C6 | APPROVED | Exact file bytes | None | None |
-| manifest | .github/spec-driven-delivery/project-adoption-manifest.md | git:cf898b8420a83114d4cf25cdb317dfd0afa456fb | authority | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-manifest.snapshot | [R03 delta](../../reviews/WB62-P01.md#r03-control-delta-evidence) |
+| manifest | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-manifest.snapshot | git:cf898b8420a83114d4cf25cdb317dfd0afa456fb | authority | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact accepted planning input; U64 owns later live-manifest pin changes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-manifest.snapshot | [R03 delta](../../reviews/WB62-P01.md#r03-control-delta-evidence) |
 | upgrade | .github/spec-driven-delivery/playbook-upgrade-assessment.md | git:d7f4fdfa2d7b35c70b407af527dd55eb84544bfe | authority | C1, C2, C3, C4, C5, C6 | APPROVED | Exact file bytes | None | None |
-| workflow | .github/spec-driven-delivery/deliveries/WB62/workflow.md | git:e5f0cedaf08b109ba037bf34baa60a1e8ba62695 | authority, registry, trigger, manifest, upgrade | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-workflow.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
-| plan | .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md | git:e7ada43113d4df62ab334c678beab60bcb789cc9 | workflow | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact file bytes | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-plan.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
+| workflow | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-workflow.snapshot | git:e5f0cedaf08b109ba037bf34baa60a1e8ba62695 | authority, registry, trigger, manifest, upgrade | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact accepted planning input; WB62-C01 owns later output/closure records | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-workflow.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
+| plan | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-plan.snapshot | git:e7ada43113d4df62ab334c678beab60bcb789cc9 | workflow | C1, C2, C3, C4, C5, C6, C7 | APPROVED | Exact accepted planning input; WB62-C01 owns later output/closure records | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-plan.snapshot | [R04 delta](../../reviews/WB62-P01.md#r04-control-delta-evidence) |
 
 ## Required controls
 

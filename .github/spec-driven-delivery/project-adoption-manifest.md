@@ -35,9 +35,9 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Adoption state | `INSTALLED` |
 | State before block | `None` |
 | Playbook source repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook.git` |
-| Playbook revision | `d93d27a33c43c1574aeed27044654c8964cf998b` |
-| Upgrade state | `VALIDATING` |
-| Upgrade assessment / candidate | [U84 assessment](playbook-upgrade-assessment.md); `d93d27a33c43c1574aeed27044654c8964cf998b` |
+| Playbook revision | `37653eec1d980e3ea5ed858922ab97894395fab9` |
+| Upgrade state | `COMPLETE` |
+| Upgrade assessment / candidate | [U64 assessment](upgrades/U64.md); `37653eec1d980e3ea5ed858922ab97894395fab9` |
 | Playbook materialization mode | `pinned local checkout` |
 | Runtime playbook locator contract | Installer-generated `.sdd-runtime/agent-guide.md` supplies and verifies the read-only checkout for each invocation |
 | Target base revision | `d213114f99dc2186d6f4e50a85fe962de0e1afa9` |
@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | Assess owner-requested latest-main runtime upgrade after merged T01; WB62 validation and closure remain |
+| Next action | Review and publish the combined WB62 validation/archive package and U64 control record |
 
 Adoption type: `real project`
 

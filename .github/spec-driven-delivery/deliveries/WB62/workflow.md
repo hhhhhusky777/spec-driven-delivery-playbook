@@ -18,11 +18,11 @@
 
 | Field | Value |
 | --- | --- |
-| Review batch | [Planning batch](planning-batch.md) |
+| Review batch | None |
 | Implementation plan | [FULL plan](implementation-plan.md) |
 | Delivery | WB62 — agent judgment and essential evidence |
-| State | DELIVERY_ACTIVE |
-| Previous state | GATES_READY |
+| State | VALIDATING |
+| Previous state | DELIVERY_ACTIVE |
 | Owner | Repository owner |
 | Concluded whiteboard | [Whiteboard](../../solution-whiteboard.md) |
 | Approved workflow handoff | [Handoff](handoff.md) |
@@ -32,32 +32,32 @@
 | Trigger identity/run ID | Coordinating agent / WB62-ROUTE-20260906-01 |
 | Selected route | Route 3 — systemic guidance change using existing authorities and FULL plan |
 | Manifest review state | APPROVED |
-| Current artifact/gate | [T01 PR 64](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/64) |
-| Current review phase | IMPLEMENTATION |
-| Current review target ID | T01 |
-| Current artifact review state | APPROVED |
+| Current artifact/gate | [WB62 closure package](record.md) |
+| Current review phase | ARCHIVE |
+| Current review target ID | record |
+| Current artifact review state | IN_REVIEW |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | 3621b19f58b83ea6ff16d01e03f6b61b2dad9b49 |
-| Self-review evidence | [Routing review](../../reviews/WB62-P01.md) |
-| Fresh-context review state | APPROVED |
-| Fresh-context review session ID | WB62-P01 |
-| Fresh-context assigned reviewers | wb62_planning_r1, wb62_planning_r2 |
+| Self-review candidate revision | WB62-C01-R01 |
+| Self-review evidence | [Closure review](../../reviews/WB62-C01.md) |
+| Fresh-context review state | NOT_STARTED |
+| Fresh-context review session ID | WB62-C01 |
+| Fresh-context assigned reviewers | wb62_closure_r1, wb62_closure_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
-| Fresh-context reviewed revision | 3621b19f58b83ea6ff16d01e03f6b61b2dad9b49 |
-| Fresh-context review evidence | [Routing review](../../reviews/WB62-P01.md) |
-| Human review state | APPROVED |
-| Human reviewed revision | 3621b19f58b83ea6ff16d01e03f6b61b2dad9b49 |
-| Human review evidence | [Review record](../../reviews/WB62-P01.md#owner-package-acceptance) |
+| Fresh-context approved reviewers | None |
+| Fresh-context reviewed revision | None |
+| Fresh-context review evidence | [Closure review](../../reviews/WB62-C01.md) |
+| Human review state | NOT_STARTED |
+| Human reviewed revision | None |
+| Human review evidence | [Closure review](../../reviews/WB62-C01.md) |
 | Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |
 | Implementation mode authority | [Owner mode record](../../reviews/WB62-P01.md#implementation-mode-authority) |
 | Implementation mode scope | T01 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-06T09:36:49Z |
-| Next action | Owner-requested runtime upgrade between tasks; preserve pending delivery validation and closure |
-| Next action target IDs | workflow |
-| Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; CONTRIBUTING.md; README.md; CHANGELOG.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/workflows; examples; scripts/sdd-lifecycle.mjs; tests |
-| Next action write targets | .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/planning-batch.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
+| Next action | Exact-package self-review and two-agent closure review, then owner acceptance |
+| Next action target IDs | validation, record |
+| Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive/WB62; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/upgrades/U64.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; CONTRIBUTING.md; README.md; CHANGELOG.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/workflows; examples; scripts/sdd-lifecycle.mjs; tests |
+| Next action write targets | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive/WB62; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews/WB62-C01.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/upgrades/U64.md |
 | Review mode | EXPLICIT_REVIEW |
 | Review mode authority | Contributing review and continuation authority; pinned workflow §1.2 |
 | Automation boundary | Not applicable |
@@ -70,6 +70,8 @@
 
 The review ledger records exact candidate self-review and subsequent receipts
 outside the frozen candidate bytes. CURRENT means reconciled, not approved.
+The accepted R06 [planning history](planning-batch.md) now binds its immutable
+snapshots; this live closure record no longer consumes that completed batch.
 The verified d93d27a33c43c1574aeed27044654c8964cf998b runtime and
 [preparation authority](preparation-authority.md) permit this provisional v4
 planning package. The prior v2 review remains immutable Git history, not
@@ -118,12 +120,12 @@ policy output to be approved before T01 can produce it.
 | 1 | handoff | Normalized input | REUSE | Exact candidate accepted | [Handoff](handoff.md) | Owner | Owner | APPROVED / WB62-H01 |
 | 2 | workflow | Routing | GENERATE | Select applicable artifacts | Pinned workflows/sdd-delivery-workflow.md | Coordinator | Two reviewers then owner | APPROVED / WB62-P01 |
 | 3 | plan | FULL plan including source impact audit | GENERATE_FULL | Systemic scope, one complete T01 specification | Pinned delivery/implementation-plan.md | Coordinator | Two reviewers then owner | APPROVED |
-| 4 | source | Existing authority and consumer source changes | UPDATE_EXISTING | T01 output implementing C01–C06; not a planning prerequisite | Accepted whiteboard source inventory | Implementer | Two reviewers then owner | NOT_STARTED |
+| 4 | source | Existing authority and consumer source changes | UPDATE_EXISTING | T01 output implementing C01–C06; not a planning prerequisite | Accepted whiteboard source inventory | Implementer | Two reviewers then owner | APPROVED / PR64 |
 | 5 | specialized | Separate specialized-policy file | SKIP | Existing quality/governance owners cover this guidance change | Template governance | Maintainer | Routing reviewers | IN_REVIEW |
 | 6 | adr | Separate ADR | SKIP | No new significant architecture or service | Accepted handoff | Maintainer | Routing reviewers | IN_REVIEW |
 | 7 | runtime | Runtime group | DEFER | Issues 33/34/36 remain outside scope | Accepted whiteboard | Owner | Owner | Deferred by design acceptance |
-| 8 | validation | Final validation evidence | GENERATE | Produced after implementation | Project quality policy | Coordinator | Two reviewers then owner | NOT_STARTED |
-| 9 | record | Delivery record/archive | GENERATE | After validation | Project archive contract | Coordinator | Two reviewers then owner | NOT_STARTED |
+| 8 | validation | Final validation evidence | GENERATE | Produced after implementation | Project quality policy | Coordinator | Two reviewers then owner | IN_REVIEW / WB62-C01 |
+| 9 | record | Delivery record/archive | GENERATE | After validation | Project archive contract | Coordinator | Two reviewers then owner | IN_REVIEW / WB62-C01 |
 | 10 | upgrade | U84 controls | REUSE | Verified local cutover; owner requests combined publication | [U84](../../playbook-upgrade-assessment.md) | Owner | Owner | APPROVED |
 
 Public application API, data migration and separate performance/security plans
@@ -142,13 +144,13 @@ runtime work. The complete source inventory stays in the accepted whiteboard.
 | plan | PREREQUISITE | EXISTING | GATES_READY | NONE | workflow | [Plan](implementation-plan.md) |
 | T01 | PREREQUISITE | EXISTING | GATES_READY | NONE | plan | [Task specification](implementation-plan.md#t01--bounded-judgment-and-essential-evidence) |
 | upgrade | PREREQUISITE | EXISTING | GATES_READY | NONE | None | [U84](../../playbook-upgrade-assessment.md) |
-| source | FUTURE_OUTPUT | IMPLEMENTATION | VALIDATING | T01 | plan, upgrade | Pending source-delivery evidence file |
+| source | FUTURE_OUTPUT | IMPLEMENTATION | VALIDATING | T01 | plan, upgrade | [T01 evidence](T01-evidence.md) |
 | validation | FUTURE_OUTPUT | VALIDATION | COMPLETE | PHASE | source | Pending validation evidence file |
 | record | FUTURE_OUTPUT | CLOSURE | ARCHIVED | PHASE | validation | Pending closure record |
 
 | Artifact ID | State | Current version | Verified version | Change impact | Freshness | Review state | Review evidence | Blocked by |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| source | NOT_STARTED | None | None | MATERIAL | CURRENT | NOT_STARTED | None | None |
+| source | COMPLETE | 9e8f79af50ed3bad2d512301e03943506f7421f0 | 9e8f79af50ed3bad2d512301e03943506f7421f0 | CONTROL_ONLY | CURRENT | APPROVED | [PR64 reviews](../../reviews/WB62-P01.md#r08-acceptance-and-merge-reconciliation) | None |
 | validation | NOT_STARTED | None | None | MATERIAL | CURRENT | NOT_STARTED | None | None |
 | record | NOT_STARTED | None | None | MATERIAL | CURRENT | NOT_STARTED | None | None |
 
@@ -217,6 +219,7 @@ resumes this workflow instead of generating another. No handoff content changed.
 
 | Task/PR | Head and merge commit | Implementation mode/authority | Self-review | Fresh-context review | Required checks | Merge result | Human review | Findings/follow-up |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| T01 / [PR #64](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/64) | HEAD 3621b19f58b83ea6ff16d01e03f6b61b2dad9b49 / MERGE 37653eec1d980e3ea5ed858922ab97894395fab9 | HUMAN_REVIEW_BEFORE_MERGE / [authority](../../reviews/WB62-P01.md#implementation-mode-authority) | SELF_REVIEW_PASSED HEAD 3621b19f58b83ea6ff16d01e03f6b61b2dad9b49 / [R08](../../reviews/WB62-P01.md#r08-candidate-dry-run-and-consolidation) | APPROVED HEAD 3621b19f58b83ea6ff16d01e03f6b61b2dad9b49 / [R1 and R2](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/64#pullrequestreview-5125175628) | PASS HEAD 3621b19f58b83ea6ff16d01e03f6b61b2dad9b49 / [checks](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/actions/runs/34030312733/job/101478493683) | MERGED / [commit](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/commit/37653eec1d980e3ea5ed858922ab97894395fab9) | APPROVED HEAD 3621b19f58b83ea6ff16d01e03f6b61b2dad9b49 / [owner](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/64#issuecomment-5558974141) | R07 findings resolved in R08; [post-merge](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/64#issuecomment-5558979067) |
 
 ## 6. Recovery and completion
 
@@ -231,16 +234,16 @@ guidance conflict; report a scoped design amendment when necessary.
 
 | Field | Current value |
 | --- | --- |
-| Workflow state | DELIVERY_ACTIVE |
-| Current artifact/task | T01 DONE; PR 64 merged |
-| Current artifact review | APPROVED / WB62-P01 |
+| Workflow state | VALIDATING |
+| Current artifact/task | WB62 validation/archive package |
+| Current artifact review | IN_REVIEW / WB62-C01 |
 | Last approved artifact | WB62-P01-R06; 419d62db53986f11b727b7532c0273e45439ce13 |
-| Next ready action | Assess owner-requested runtime upgrade; delivery validation and closure remain |
+| Next ready action | Exact closure-package review, then owner archive acceptance |
 | Active blockers | None |
 | Stale artifacts | None |
-| Validation complete | R08: 103 tests, documentation/skill checks and five-scenario installed-candidate dry run; R07 findings corrected |
-| Validation remaining | Delivery validation and closure; implementation review, owner acceptance and merged-tree checks passed on PR 64 |
-| Branch/PR | codex/wb62-agent-judgment; PR 64 |
+| Validation complete | T01/PR64 integration and U64 runtime cutover verified; closure evidence prepared |
+| Validation remaining | Exact closure-package review, owner acceptance, merge and post-merge archive receipt |
+| Branch/PR | codex/upgrade-37653ee; closure PR not opened |
 | Last updated | 2026-09-06 Asia/Shanghai |
 
 Completion requires actual T01 outcome evidence, consistent sources/consumers,

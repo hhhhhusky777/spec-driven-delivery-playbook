@@ -21,13 +21,13 @@ measurement or CI pass is claimed yet.
 
 | Field | Value |
 | --- | --- |
-| Review batch | [Planning batch](planning-batch.md) |
+| Review batch | None |
 | Delivery workflow | [Workflow](workflow.md) |
 | Plan | WB62 agent judgment and essential evidence |
-| Status | IMPLEMENTING |
-| Previous status | READY |
+| Status | VALIDATING |
+| Previous status | IMPLEMENTING |
 | Plan mode | FULL |
-| Current phase | IMPLEMENTING |
+| Current phase | VALIDATING |
 | Current task | None |
 | Next ready task(s) | None |
 | Blockers | None |
@@ -66,6 +66,9 @@ measurement or CI pass is claimed yet.
 | Archived record | Not archived |
 
 ## 1. Governing inputs
+
+The accepted R06 planning input remains in [planning history](planning-batch.md);
+this live plan no longer consumes that completed preparation batch.
 
 Use quality-policy precedence, Template Governance and Contributing. Accepted
 design C01–C06 and handoff define source behavior; [preparation authority](preparation-authority.md)
@@ -266,14 +269,14 @@ not yet produced.
 
 | Field | Current value |
 | --- | --- |
-| Plan state | IMPLEMENTING |
+| Plan state | VALIDATING |
 | Current task | None |
 | Next ready task(s) | None |
 | Active branch / PR | PR 64 merged at 37653eec1d980e3ea5ed858922ab97894395fab9 |
 | Last completed task | T01 |
 | Active blocker | None |
 | Last validation | Both R08 reviewers and owner accepted PR 64; merged tree matches reviewed head; 103 tests and documentation checks passed; PR owns receipts |
-| Next action | Owner-requested runtime upgrade between tasks; delivery validation and closure remain |
+| Next action | Review the combined validation/archive package; no implementation task remains |
 
 ## 10. Evidence and history
 
