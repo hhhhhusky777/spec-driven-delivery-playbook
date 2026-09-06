@@ -2,6 +2,7 @@
 
 import { createHash } from "node:crypto";
 import { Buffer } from "node:buffer";
+import path from "node:path";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
 
@@ -78,22 +79,64 @@ function commaList(value) {
   return values.length && new Set(values).size === values.length ? values.sort() : null;
 }
 
+const inventoryHeaders = [
+  "Item ID", "Kind", "Exact identity", "Ownership evidence", "Disposition",
+  "Reuse reason", "Authorized operation", "State",
+];
+const inventoryKinds = new Set(["FILE", "BRANCH", "WORKTREE", "RUNTIME"]);
+const inventoryStates = new Set(["PLANNED", "VERIFIED"]);
+const unsafeExternalParents = new Set([
+  "/", "/tmp", "/private", "/private/tmp", "/var", "/var/tmp", "/private/var",
+  "/private/var/tmp", "/private/var/folders", "/Users", "/home", "/root", "/usr",
+  "/opt", "/etc", "/Applications", "/Library", "/System", "/Volumes",
+]);
+const recorded = value => Boolean(normalize(value)) && !/^(?:none|not applicable|n\/a|—|-)$/i.test(normalize(value));
+const exactToken = (value, expected) => {
+  const escaped = expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[\\s'"\x60=:;,])${escaped}(?=$|[\\s'"\x60;,])`).test(String(value ?? ""));
+};
+
+function validInventoryIdentity(kind, identity) {
+  if (!identity || /[*?\[\]{}]/.test(identity) || /(^|\/)\.\.($|\/)/.test(identity) || /\$\{|\$[A-Za-z_]|^~(?:\/|$)/.test(identity)) return false;
+  if (kind === "FILE") return !path.isAbsolute(identity) && !identity.includes("\\") && !identity.split("/").some(part => ["", ".", ".."].includes(part)) && identity !== ".git" && !identity.startsWith(".git/");
+  if (kind === "BRANCH") return /^refs\/heads\/[A-Za-z0-9][A-Za-z0-9._/-]*$/.test(identity) && !identity.includes("..") && !identity.includes("//");
+  if (!["WORKTREE", "RUNTIME"].includes(kind) || !path.isAbsolute(identity)) return false;
+  const resolved = path.resolve(identity);
+  return identity === resolved && !unsafeExternalParents.has(resolved) && !/^\/(?:Users|home)\/[^/]+$/.test(resolved);
+}
+
 function resetInventory(body) {
   const candidates = markdownTables(body).filter(table =>
-    ["Item ID", "Kind", "Exact identity", "Disposition"].every(header => table.headers.includes(header)));
+    table.headers.length === inventoryHeaders.length && inventoryHeaders.every((header, index) => table.headers[index] === header));
   if (candidates.length !== 1) return null;
   const result = { REMOVE: [], RESET: [], KEEP: [] };
+  const itemIds = new Set();
+  const identities = new Set();
   for (const row of candidates[0].rows) {
+    const itemId = normalize(row.get("Item ID"));
+    const kind = normalize(row.get("Kind")).toUpperCase();
     const identity = normalize(row.get("Exact identity"));
+    const ownership = normalize(row.get("Ownership evidence"));
     const disposition = normalize(row.get("Disposition")).toUpperCase();
-    if (!identity || !Object.hasOwn(result, disposition) || Object.values(result).flat().includes(identity)) return null;
+    const reuseReason = normalize(row.get("Reuse reason"));
+    const operation = normalize(row.get("Authorized operation"));
+    const state = normalize(row.get("State")).toUpperCase();
+    if (!/^[A-Za-z][A-Za-z0-9_-]*$/.test(itemId) || itemIds.has(itemId.toLowerCase()) ||
+        !inventoryKinds.has(kind) || !validInventoryIdentity(kind, identity) || identities.has(identity) ||
+        !recorded(ownership) || !Object.hasOwn(result, disposition) || !inventoryStates.has(state) ||
+        (disposition === "KEEP" ? (!recorded(reuseReason) || normalize(operation).toUpperCase() !== "NONE") :
+          (normalize(reuseReason).toUpperCase() !== "NONE" || !recorded(operation))) ||
+        (["WORKTREE", "RUNTIME"].includes(kind) && disposition !== "KEEP" &&
+          (!exactToken(ownership, identity) || !exactToken(operation, identity)))) return null;
+    itemIds.add(itemId.toLowerCase());
+    identities.add(identity);
     result[disposition].push(identity);
   }
   for (const values of Object.values(result)) values.sort();
   return result;
 }
 
-function resetPlan(value, repository, expectedHead, inventoryFiles) {
+function resetPlan(value, repository, expectedHead, inventoryFiles, changedFiles) {
   const entries = assignments(value, ["REMOVE", "RESET", "KEEP", "INVENTORY"]);
   if (!entries) return false;
   const inventory = entries.get("INVENTORY") || "";
@@ -101,21 +144,39 @@ function resetPlan(value, repository, expectedHead, inventoryFiles) {
   const inventoryFile = inventoryFiles.find(item => item.url === inventory);
   const parsed = inventoryFile ? resetInventory(inventoryFile.body) : null;
   if (!parsed) return false;
+  const classifiedRepositoryFiles = new Set(Object.values(parsed).flat().filter(identity => !path.isAbsolute(identity) && !identity.startsWith("refs/heads/")));
+  if (!Array.isArray(changedFiles) || changedFiles.some(file => !classifiedRepositoryFiles.has(normalize(file)))) return false;
   return ["REMOVE", "RESET", "KEEP"].every(key => {
     const listed = commaList(entries.get(key));
     return listed && listed.length === parsed[key].length && listed.every((item, index) => item === parsed[key][index]);
   }) ? { entries, inventoryFile } : false;
 }
 
-function reviewerReceipt(body, expectedHead) {
-  const requiredFields = ["Review session ID", "Reviewer seat", "Reviewed candidate revision", "Disposition"];
+function reviewerReceipt(body, expectedHead, expectedBase, expectedSubject) {
+  const requiredFields = [
+    "Review session ID", "Review round", "Reviewer seat", "Assigned reviewer ID",
+    "Reviewer agent/runtime", "Context isolation", "Subject", "Reviewed candidate revision",
+    "Reviewed base revision", "Governing inputs inspected", "Gates/evidence inspected",
+    "Summary comment", "Inline comments", "Durable findings", "Disposition",
+    "Recommended next action", "Reviewed at",
+  ];
   const fields = fieldTable(body, requiredFields);
-  if (!fields || /(?:^|\n)(?:Review session(?: ID)?|Reviewer seat|Reviewed candidate revision|Disposition):/i.test(String(body ?? ""))) return null;
+  if (!fields || /(?:^|\n)(?:Review session(?: ID)?|Review round|Reviewer seat|Assigned reviewer ID|Context isolation|Reviewed candidate revision|Reviewed base revision|Durable findings|Disposition):/i.test(String(body ?? ""))) return null;
   const seat = normalize(fields.get("Reviewer seat")).toUpperCase();
   const session = normalize(fields.get("Review session ID"));
+  const round = normalize(fields.get("Review round")).toUpperCase();
+  const assignedReviewer = normalize(fields.get("Assigned reviewer ID"));
   const candidate = normalize(fields.get("Reviewed candidate revision"));
+  const isolation = normalize(fields.get("Context isolation")).toUpperCase();
+  const findings = normalize(fields.get("Durable findings"));
   const disposition = normalize(fields.get("Disposition")).toUpperCase();
-  return ["R1", "R2"].includes(seat) && /^[A-Za-z0-9._-]+$/.test(session) && candidate === expectedHead && disposition === "APPROVED" ? { seat, session } : null;
+  const next = normalize(fields.get("Recommended next action")).toUpperCase();
+  const allValuesPresent = requiredFields.every(field => normalize(fields.get(field)));
+  return allValuesPresent && ["R1", "R2"].includes(seat) && /^[A-Za-z0-9._-]+$/.test(session) && /^R\d+$/.test(round) &&
+    /^[A-Za-z0-9._/-]+$/.test(assignedReviewer) && candidate === expectedHead && includesExact(fields.get("Reviewed base revision"), expectedBase) &&
+    normalize(fields.get("Subject")) === expectedSubject && isolation.startsWith("FRESH_CONTEXT") && !isolation.includes("ISOLATION_UNVERIFIED") &&
+    !/\b(?:OPEN|UNRESOLVED|CHANGES_NEEDED|CHANGES_REQUESTED|BLOCKED|HUMAN_DECISION_REQUIRED)\b/i.test(findings) &&
+    disposition === "APPROVED" && ["HUMAN_REVIEW", "MERGE_GATE"].includes(next) ? { seat, session, assignedReviewer } : null;
 }
 
 function selfReviewReceipt(body, expectedHead) {
@@ -125,22 +186,30 @@ function selfReviewReceipt(body, expectedHead) {
 }
 
 function requestedAuthority(value, expectedHead) {
-  const entries = assignments(value, ["STATE", "CANDIDATE", "SCOPE"]);
-  return entries && entries.get("STATE").toUpperCase() === "PENDING" && entries.get("CANDIDATE") === expectedHead && entries.get("SCOPE")
-    ? { scope: entries.get("SCOPE") }
+  const entries = assignments(value, ["STATE", "CANDIDATE", "SCOPE", "RESET TARGET", "RESET MODE"]);
+  return entries && entries.get("STATE").toUpperCase() === "PENDING" && entries.get("CANDIDATE") === expectedHead && entries.get("SCOPE") &&
+    branch(entries.get("RESET TARGET")) && ["HUMAN_REVIEW_BEFORE_MERGE", "AGENT_AUTO_MERGE"].includes(entries.get("RESET MODE").toUpperCase())
+    ? { scope: entries.get("SCOPE"), target: entries.get("RESET TARGET"), mode: entries.get("RESET MODE").toUpperCase() }
     : null;
 }
 
-function affirmativeOwnerDecision(body) {
-  const text = String(body ?? "");
-  if (/\b(?:do\s+not|don['’]t|not)\s+approv(?:e|ed)\b|\b(?:reject(?:ed)?|disapprov(?:e|ed))\b/i.test(text)) return false;
-  return [...text.matchAll(/\b(?:I\s+APPROVE|APPROVED)\b/gi)].length === 1;
+function ownerDecision(body) {
+  const keys = ["DECISION", "CANDIDATE", "SCOPE", "RESET TARGET", "RESET MODE"];
+  const lines = String(body ?? "").split(/\r?\n/);
+  const parsed = lines.map((line, index) => ({ index, entries: assignments(line, keys) })).filter(item => item.entries);
+  if (parsed.length !== 1) return null;
+  const { index, entries } = parsed[0];
+  const surrounding = lines.filter((_, lineIndex) => lineIndex !== index).join("\n");
+  if (/\b(?:approv\w*|reject\w*|disapprov\w*|withdraw\w*|pending|conditional)\b/i.test(surrounding)) return null;
+  return entries.get("DECISION").toUpperCase() === "APPROVED" && sha(entries.get("CANDIDATE")) && entries.get("SCOPE") && branch(entries.get("RESET TARGET")) &&
+    ["HUMAN_REVIEW_BEFORE_MERGE", "AGENT_AUTO_MERGE"].includes(entries.get("RESET MODE").toUpperCase()) ?
+    { candidate: entries.get("CANDIDATE"), scope: entries.get("SCOPE"), target: entries.get("RESET TARGET"), mode: entries.get("RESET MODE").toUpperCase() } : null;
 }
 
-function resetAuthorization(value, expectedScope, expectedTarget, expectedAuthority) {
+function resetAuthorization(value, expectedScope, expectedTarget, expectedMode, expectedAuthority) {
   const entries = assignments(value, ["SCOPE", "RESET TARGET", "RESET MODE", "AUTHORITY"]);
   return entries && entries.get("SCOPE") === expectedScope && entries.get("RESET TARGET") === expectedTarget &&
-    ["HUMAN_REVIEW_BEFORE_MERGE", "AGENT_AUTO_MERGE"].includes(entries.get("RESET MODE")) && entries.get("AUTHORITY") === expectedAuthority;
+    entries.get("RESET MODE").toUpperCase() === expectedMode && entries.get("AUTHORITY") === expectedAuthority;
 }
 
 function splitRow(line) {
@@ -204,7 +273,7 @@ export function evaluatePrEvidence(input) {
     return { status: "INVALID", exitCode: 2, discrepancies: [{ rule: "INPUT_SCHEMA" }] };
   }
   const snapshot = input.snapshot;
-  for (const key of ["issueComments", "reviews", "reviewComments", "checkRuns", "inventoryFiles"]) {
+  for (const key of ["issueComments", "reviews", "reviewComments", "checkRuns", "inventoryFiles", "changedFiles"]) {
     if (!Array.isArray(snapshot[key])) fail("SNAPSHOT_SCHEMA", key);
   }
   if (discrepancies.length) return { status: "INVALID", exitCode: 2, discrepancies };
@@ -235,8 +304,8 @@ export function evaluatePrEvidence(input) {
         !String(review.fields.get("Self-review")).includes(digest(selfReviewEvidence[0]?.body ?? "")) ||
         !selfReviewReceipt(selfReviewEvidence[0]?.body, input.expectedHead)) fail("SELF_REVIEW_EVIDENCE");
     authorityRequest = requestedAuthority(review.fields.get("Requested owner authority"), input.expectedHead);
-    if (!authorityRequest) fail("OWNER_AUTHORITY_PENDING");
-    reviewedResetPlan = resetPlan(review.fields.get("Reset plan"), input.repository, input.expectedHead, snapshot.inventoryFiles);
+    if (!authorityRequest || authorityRequest.target !== input.target) fail("OWNER_AUTHORITY_PENDING");
+    reviewedResetPlan = resetPlan(review.fields.get("Reset plan"), input.repository, input.expectedHead, snapshot.inventoryFiles, snapshot.changedFiles);
     if (!reviewedResetPlan) fail("RESET_PLAN");
   }
   if (acceptance && review && acceptance.fields.get("Review evidence digest") !== digest(review.body)) fail("REVIEW_DIGEST");
@@ -248,15 +317,18 @@ export function evaluatePrEvidence(input) {
     if (ownerUrls.length !== 1 || ownerEvidence.length !== 1 || [review?.id, acceptance.id, target?.id].includes(ownerEvidence[0]?.id) || acceptance.fields.get("Owner comment body digest") !== digest(ownerEvidence[0]?.body ?? "")) fail("OWNER_EVIDENCE");
     if (ownerEvidence[0]?.author !== input.owner) fail("OWNER_IDENTITY");
     const ownerBody = String(ownerEvidence[0]?.body ?? "");
+    const decision = ownerDecision(ownerBody);
     const acceptedScope = normalize(acceptance.fields.get("Merge/reset scope"));
-    if (!includesExact(ownerBody, input.expectedHead) || !affirmativeOwnerDecision(ownerBody) || !acceptedScope || !includesExact(ownerBody, acceptedScope) || acceptedScope !== authorityRequest?.scope) fail("OWNER_SCOPE_BINDING");
+    if (!decision || decision.candidate !== input.expectedHead || !acceptedScope || decision.scope !== acceptedScope ||
+        acceptedScope !== authorityRequest?.scope || decision.target !== authorityRequest?.target || decision.mode !== authorityRequest?.mode) fail("OWNER_SCOPE_BINDING");
   }
   let reviewReceipts = [];
   if (review) {
     const receiptUrls = urls(review.fields.get("Independent review"));
     reviewReceipts = bodyObjects(snapshot).filter(item => receiptUrls.includes(item.url));
-    const parsedReceipts = reviewReceipts.map(item => reviewerReceipt(item.body, input.expectedHead));
-    if (new Set(receiptUrls).size !== 2 || reviewReceipts.length !== 2 || reviewReceipts.some(item => [review.id, acceptance?.id, target?.id, ownerEvidence[0]?.id, selfReviewEvidence[0]?.id].includes(item.id)) || parsedReceipts.some(item => !item) || new Set(parsedReceipts.map(item => item?.seat)).size !== 2 || !parsedReceipts.some(item => item?.seat === "R1") || !parsedReceipts.some(item => item?.seat === "R2") || new Set(parsedReceipts.map(item => item?.session)).size !== 1 || reviewReceipts.some(item => !String(review.fields.get("Independent review")).includes(digest(item.body)))) {
+    const expectedSubject = `https://github.com/${input.repository}/pull/${input.pr}`;
+    const parsedReceipts = reviewReceipts.map(item => reviewerReceipt(item.body, input.expectedHead, input.expectedBase, expectedSubject));
+    if (new Set(receiptUrls).size !== 2 || reviewReceipts.length !== 2 || reviewReceipts.some(item => [review.id, acceptance?.id, target?.id, ownerEvidence[0]?.id, selfReviewEvidence[0]?.id].includes(item.id)) || parsedReceipts.some(item => !item) || new Set(parsedReceipts.map(item => item?.seat)).size !== 2 || !parsedReceipts.some(item => item?.seat === "R1") || !parsedReceipts.some(item => item?.seat === "R2") || new Set(parsedReceipts.map(item => item?.session)).size !== 1 || new Set(parsedReceipts.map(item => item?.assignedReviewer)).size !== 2 || reviewReceipts.some(item => !String(review.fields.get("Independent review")).includes(digest(item.body)))) {
       fail("INDEPENDENT_REVIEW_EVIDENCE");
     }
   }
@@ -275,7 +347,7 @@ export function evaluatePrEvidence(input) {
         !sha(pull.headTree) || !sha(pull.mergeTree) || pull.headTree !== pull.mergeTree || !sha(pull.targetSha) ||
         pull.targetMergeBase !== pull.mergeSha || !["ahead", "identical"].includes(pull.targetCompareStatus)) fail("TARGET_PROOF");
     const acceptedScope = normalize(acceptance?.fields.get("Merge/reset scope"));
-    if (!resetAuthorization(target.fields.get("Reset authorization"), acceptedScope, input.target, ownerEvidence[0]?.url)) fail("TARGET_RESET_AUTHORIZATION");
+    if (!resetAuthorization(target.fields.get("Reset authorization"), acceptedScope, authorityRequest?.target, authorityRequest?.mode, ownerEvidence[0]?.url)) fail("TARGET_RESET_AUTHORIZATION");
     for (const item of [review, acceptance, ...selfReviewEvidence, ...reviewReceipts, ...ownerEvidence, reviewedResetPlan?.inventoryFile]) {
       if (!item || !String(target.fields.get("Evidence availability")).includes(item.url) || !String(target.fields.get("Evidence availability")).includes(digest(item.body))) fail("TARGET_EVIDENCE_AVAILABILITY", item?.id ? String(item.id) : "missing");
     }
@@ -320,10 +392,11 @@ function inventoryLocation(url, repository) {
 export async function collectGitHubSnapshot({ repository, pr, credential, fetchImpl = fetch }) {
   const base = `https://api.github.com/repos/${repository}`;
   const pull = await githubJson(fetchImpl, `${base}/pulls/${pr}`, credential);
-  const [issueComments, reviews, reviewComments, checkRuns, headCommit, mergeCommit] = await Promise.all([
+  const [issueComments, reviews, reviewComments, changedFiles, checkRuns, headCommit, mergeCommit] = await Promise.all([
     paged(fetchImpl, `${base}/issues/${pr}/comments`, credential),
     paged(fetchImpl, `${base}/pulls/${pr}/reviews`, credential),
     paged(fetchImpl, `${base}/pulls/${pr}/comments`, credential),
+    paged(fetchImpl, `${base}/pulls/${pr}/files`, credential),
     paged(fetchImpl, `${base}/commits/${pull.head.sha}/check-runs`, credential, "check_runs"),
     githubJson(fetchImpl, `${base}/git/commits/${pull.head.sha}`, credential),
     pull.merged_at && pull.merge_commit_sha ? githubJson(fetchImpl, `${base}/git/commits/${pull.merge_commit_sha}`, credential) : Promise.resolve(null),
@@ -355,6 +428,7 @@ export async function collectGitHubSnapshot({ repository, pr, credential, fetchI
     issueComments: normalizedIssueComments,
     reviews: reviews.map(comment),
     reviewComments: reviewComments.map(comment),
+    changedFiles: changedFiles.map(item => item.filename),
     checkRuns: checkRuns.map(item => ({ name: item.name, head: item.head_sha, status: item.status, conclusion: item.conclusion, url: item.html_url })),
     inventoryFiles,
     paginationComplete: true,

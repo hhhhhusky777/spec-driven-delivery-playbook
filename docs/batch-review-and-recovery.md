@@ -18,13 +18,17 @@ The self-review field links the canonical self-review body and its SHA-256
 digest. Both reviewer receipts use the canonical Section 6 table, name the exact
 head and passing disposition, and label distinct stable seats `R1` and `R2` in
 one review session. No finding remains open. Record requested authority as
-`State=PENDING; Candidate=FULL_SHA; Scope=EXACT_MERGE_AND_RESET_SCOPE`. After the
-owner acts, publish a separate
+`State=PENDING; Candidate=FULL_SHA; Scope=EXACT_MERGE_AND_RESET_SCOPE; Reset target=BRANCH; Reset mode=MODE`.
+After the owner acts, publish a separate
 `sdd-pr-acceptance/v1` table binding the owner comment and its body digest to
 the accepted review-table digest, exact candidate and stated merge/reset scope.
-The owner comment must come from the expected owner identity, name that
-candidate and scope, and state an unambiguous affirmative decision. The evidence
-gate proceeds only for `APPROVED`; rejected, negated or changed work returns to review.
+The owner comment must come from the expected owner identity and contain exactly
+one structured decision line:
+`Decision=APPROVED; Candidate=FULL_SHA; Scope=EXACT_MERGE_AND_RESET_SCOPE; Reset target=BRANCH; Reset mode=MODE`.
+The candidate, scope, target, and mode must equal the pending request. Free-form,
+conditional, attributed, withdrawn, future, or negated approval text grants no
+authority. The evidence gate proceeds only for the exact structured `APPROVED`
+decision; rejected or changed work returns to review.
 Do not put a future decision into either table.
 
 After merge, fetch the live target tip and verify that the observed merge commit
@@ -38,8 +42,9 @@ remote comments, reviews, checks, base/target identity, or merged-tree state.
 Pass the expected owner login explicitly. Record reset authorization as
 `Scope=EXACT_ACCEPTED_SCOPE; Reset target=BRANCH; Reset mode=MODE;
 Authority=OWNER_COMMENT_URL`; the verifier binds all four values to the accepted
-evidence. It also retrieves the immutable inventory blob and verifies that its
-content matches the three disposition summaries.
+evidence. It also retrieves the immutable inventory blob, validates every
+canonical row, verifies that every PR-changed repository file appears in the
+inventory, and checks that its content matches the three disposition summaries.
 
 The reset inventory classifies every delivery-owned item exactly once:
 
@@ -49,7 +54,9 @@ The reset inventory classifies every delivery-owned item exactly once:
 | `RESET` | Replace a reusable working entry point or owned machine runtime with its reviewed neutral/current state |
 | `KEEP` | Preserve an adoption control or output independently reusable by future work; record the concrete reuse reason |
 
-Every repository file uses one exact repository-relative path; every branch
+Every row has a unique stable item ID, supported kind, ownership evidence,
+disposition, disposition-appropriate reuse reason and operation, and valid
+state. Every repository file uses one exact repository-relative path; every branch
 uses one full `refs/heads/...` identity; every worktree/runtime item uses one
 exact absolute path and ownership evidence. A destructive external row binds
 both its ownership proof and authorized operation to that exact path; repository,

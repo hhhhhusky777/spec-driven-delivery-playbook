@@ -362,15 +362,27 @@ export function checkSensitiveContent(relativeFile, text, config) {
     if (/^\s*\|/.test(line)) {
       const cells = line.trim().replace(/^\|/, "").replace(/\|$/, "").split(/(?<!\\)\|/).map(cell => cell.trim());
       if (["Item ID", "Kind", "Exact identity", "Ownership evidence", "Disposition", "Reuse reason", "Authorized operation", "State"].every(header => cells.includes(header))) {
-        resetInventoryColumns = { kind: cells.indexOf("Kind"), identity: cells.indexOf("Exact identity") };
+        resetInventoryColumns = {
+          kind: cells.indexOf("Kind"),
+          identity: cells.indexOf("Exact identity"),
+          ownership: cells.indexOf("Ownership evidence"),
+          operation: cells.indexOf("Authorized operation"),
+        };
       }
     } else {
       resetInventoryColumns = null;
     }
-    const resetExternalRow = resetInventoryColumns && !/^\s*\|(?:\s*:?-{3,}:?\s*\|)+\s*$/.test(line) && (() => {
+    let sensitiveLine = line;
+    if (resetInventoryColumns && !/^\s*\|(?:\s*:?-{3,}:?\s*\|)+\s*$/.test(line)) {
       const cells = line.trim().replace(/^\|/, "").replace(/\|$/, "").split(/(?<!\\)\|/).map(cell => cell.trim().replace(/^`|`$/g, ""));
-      return ["WORKTREE", "RUNTIME"].includes(cells[resetInventoryColumns.kind]) && path.isAbsolute(cells[resetInventoryColumns.identity] || "");
-    })();
+      const identity = cells[resetInventoryColumns.identity] || "";
+      if (["WORKTREE", "RUNTIME"].includes(cells[resetInventoryColumns.kind]) && path.isAbsolute(identity)) {
+        for (const column of [resetInventoryColumns.identity, resetInventoryColumns.ownership, resetInventoryColumns.operation]) {
+          cells[column] = cells[column].split(identity).join("<EXACT_RESET_IDENTITY>");
+        }
+        sensitiveLine = `| ${cells.join(" | ")} |`;
+      }
+    }
     for (const { name, pattern } of SECRET_PATTERNS) {
       if (pattern.test(line)) {
         diagnostics.push(
@@ -378,9 +390,9 @@ export function checkSensitiveContent(relativeFile, text, config) {
         );
       }
     }
-    if (!resetExternalRow && !lineMatchesAllowlist(line, config.localPathAllowlist)) {
+    if (!lineMatchesAllowlist(sensitiveLine, config.localPathAllowlist)) {
       for (const { name, pattern } of LOCAL_PATH_PATTERNS) {
-        if (pattern.test(line)) {
+        if (pattern.test(sensitiveLine)) {
           diagnostics.push(
             diagnostic(relativeFile, index + 1, "LOCAL_PATH", `${name} pattern detected`),
           );

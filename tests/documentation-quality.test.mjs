@@ -34,7 +34,8 @@ test("v5 reset and v4 control receipts stay fail-closed", async () => {
     "sdd-pr-review/v1",
     "sdd-pr-acceptance/v1",
     "sdd-target-receipt/v1",
-    "State=PENDING; Candidate=FULL_SHA; Scope=EXACT_MERGE_AND_RESET_SCOPE",
+    "State=PENDING; Candidate=FULL_SHA; Scope=EXACT_MERGE_AND_RESET_SCOPE; Reset target=BRANCH; Reset mode=MODE",
+    "Decision=APPROVED; Candidate=FULL_SHA; Scope=EXACT_MERGE_AND_RESET_SCOPE; Reset target=BRANCH; Reset mode=MODE",
     "canonical Section 6 table",
     "expected owner identity",
     "retrieves the immutable inventory blob",
@@ -453,12 +454,16 @@ test("blocking local-path check rejects private workstation paths", () => {
 
 test("local paths are allowed only in exact external reset-inventory rows", () => {
   const localPath = "/" + "Users/example/private/runtime";
+  const unrelatedPath = "/" + "Users/example/private/plan.md";
   const table = `| Item ID | Kind | Exact identity | Ownership evidence | Disposition | Reuse reason | Authorized operation | State |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | runtime | RUNTIME | ${localPath} | marker ${localPath} | RESET | None | reset ${localPath} | PLANNED |`;
   assert.deepEqual(checkSensitiveContent("workflow.md", table, CONFIG), []);
   assert.equal(checkSensitiveContent("workflow.md", `${table}\n\nSee ${localPath}\n`, CONFIG).at(-1)?.rule, "LOCAL_PATH");
   assert.equal(checkSensitiveContent("workflow.md", table.replace("RUNTIME", "FILE"), CONFIG)[0]?.rule, "LOCAL_PATH");
+  assert.equal(checkSensitiveContent("workflow.md", table.replace("| None | reset", `| ${unrelatedPath} | reset`), CONFIG)[0]?.rule, "LOCAL_PATH");
+  assert.equal(checkSensitiveContent("workflow.md", table.replace(`marker ${localPath}`, `marker ${localPath} and ${unrelatedPath}`), CONFIG)[0]?.rule, "LOCAL_PATH");
+  assert.equal(checkSensitiveContent("workflow.md", table.replace(`reset ${localPath}`, `reset ${localPath}; inspect ${unrelatedPath}`), CONFIG)[0]?.rule, "LOCAL_PATH");
 });
 
 test("blocking Mermaid check accepts valid syntax and rejects invalid syntax", async (t) => {

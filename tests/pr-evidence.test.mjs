@@ -15,6 +15,8 @@ const checkUrl = "https://github.com/example/project/actions/runs/1";
 const baseUrl = "https://github.com/example/project/pull/7";
 const acceptedScope = "Merge PR 7 and reset only its accepted inventory";
 const inventoryUrl = `https://github.com/example/project/blob/${head}/reset.md`;
+const resetTarget = "main";
+const resetMode = "HUMAN_REVIEW_BEFORE_MERGE";
 const inventoryBody = `# Reset inventory
 
 | Item ID | Kind | Exact identity | Ownership evidence | Disposition | Reuse reason | Authorized operation | State |
@@ -57,7 +59,7 @@ function fixture(mode = "PRE_MERGE") {
     ["Reviewing agent", "author"],
     ["Reviewed at", "2026-01-01 UTC"],
   ])}\n\nResult: SELF_REVIEW_PASSED`, "publisher");
-  const owner = comment(20, `I APPROVE ${head}. Scope: ${acceptedScope}`);
+  const owner = comment(20, `Decision=APPROVED; Candidate=${head}; Scope=${acceptedScope}; Reset target=${resetTarget}; Reset mode=${resetMode}`);
   const reviewBody = table("<!-- sdd-pr-review/v1 -->", [
     ["Repository and target", `example/project / main / ${base}`],
     ["Design", "Accepted design and risks"],
@@ -66,7 +68,7 @@ function fixture(mode = "PRE_MERGE") {
     ["Self-review", `${selfReview.url} ${sha256(selfReview.body)}`],
     ["Independent review", `${r1.url} ${sha256(r1.body)}; ${r2.url} ${sha256(r2.body)}`],
     ["Findings", "None"],
-    ["Requested owner authority", `State=PENDING; Candidate=${head}; Scope=${acceptedScope}`],
+    ["Requested owner authority", `State=PENDING; Candidate=${head}; Scope=${acceptedScope}; Reset target=${resetTarget}; Reset mode=${resetMode}`],
     ["Checks", `docs / success / ${checkUrl}`],
     ["Limits and follow-ups", "None"],
     ["Reset plan", `REMOVE=delivery.md; RESET=/srv/project/runtime; KEEP=policy.md; Inventory=${inventoryUrl}`],
@@ -87,7 +89,7 @@ function fixture(mode = "PRE_MERGE") {
     ["Check proof", `docs / success / ${checkUrl}`],
     ["Evidence availability", [...[reviewComment, acceptance, selfReview, r1, r2, owner].map(item => `${item.url} ${sha256(item.body)}`), `${inventoryUrl} ${sha256(inventoryBody)}`].join("; ")],
     ["Runtime/project proof", "CURRENT"],
-    ["Reset authorization", `Scope=${acceptedScope}; Reset target=main; Reset mode=HUMAN_REVIEW_BEFORE_MERGE; Authority=${owner.url}`],
+    ["Reset authorization", `Scope=${acceptedScope}; Reset target=${resetTarget}; Reset mode=${resetMode}; Authority=${owner.url}`],
     ["Exceptions/follow-ups", "None"],
   ]);
   return {
@@ -105,6 +107,7 @@ function fixture(mode = "PRE_MERGE") {
       issueComments: [owner, selfReview, reviewComment, acceptance, ...(mode === "RESET_READY" ? [comment(23, targetBody, "publisher")] : [])],
       reviews: [r1, r2],
       reviewComments: [],
+      changedFiles: ["delivery.md", "policy.md"],
       checkRuns: [{ name: "docs", head, status: "completed", conclusion: "success", url: checkUrl }],
       inventoryFiles: [{ url: inventoryUrl, body: inventoryBody }],
       paginationComplete: true,
@@ -174,6 +177,12 @@ test("owner evidence requires a trusted identity and unambiguous affirmative dec
     `I do not APPROVE ${head}. Scope: ${acceptedScope}`,
     `NOT APPROVED ${head}. Scope: ${acceptedScope}`,
     `I REJECT ${head}. Scope: ${acceptedScope}`,
+    `APPROVED? No. ${head}. Scope: ${acceptedScope}`,
+    `I previously APPROVED ${head}, but withdraw that decision. Scope: ${acceptedScope}`,
+    `This candidate is not yet APPROVED. ${head}. Scope: ${acceptedScope}`,
+    `Approval remains pending; APPROVED may follow. ${head}. Scope: ${acceptedScope}`,
+    `If checks pass, I will APPROVE ${head}. Scope: ${acceptedScope}`,
+    `Decision=APPROVED; Candidate=${head}; Scope=${acceptedScope}; Reset target=${resetTarget}; Reset mode=${resetMode}\nI withdraw this approval.`,
   ]) {
     const data = fixture();
     data.snapshot.issueComments[0].body = body;
@@ -187,6 +196,10 @@ test("canonical reviewer receipts reject contradictory or duplicate machine fiel
     data => { data.snapshot.reviews[0].body += `\n\n${receipt("R1")}`; },
     data => { data.snapshot.reviews[0].body = data.snapshot.reviews[0].body.replace(head, "f".repeat(40)); },
     data => { data.snapshot.reviews[1].body = data.snapshot.reviews[1].body.replace("| Review session ID | S01 |", "| Review session ID | S02 |"); },
+    data => { data.snapshot.reviews[0].body = table("### Section 6 review receipt", [["Review session ID", "S01"], ["Reviewer seat", "R1"], ["Reviewed candidate revision", head], ["Disposition", "APPROVED"]]); },
+    data => { data.snapshot.reviews[0].body = data.snapshot.reviews[0].body.replace("| Context isolation | FRESH_CONTEXT |", "| Context isolation | ISOLATION_UNVERIFIED |"); },
+    data => { data.snapshot.reviews[0].body = data.snapshot.reviews[0].body.replace("| Durable findings | None |", "| Durable findings | F01 OPEN |"); },
+    data => { data.snapshot.reviews[1].body = data.snapshot.reviews[1].body.replace("agent-r2", "agent-r1"); },
   ]) {
     const data = fixture();
     mutate(data);
@@ -202,6 +215,10 @@ test("self-review and pending authority are exact-content bindings", () => {
     data => { data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-review")).body = data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-review")).body.replace("State=PENDING", "State=APPROVED"); },
     data => { data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-review")).body = data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-review")).body.replace(`Candidate=${head}`, `Candidate=${"f".repeat(40)}`); },
     data => { data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-review")).body = data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-review")).body.replace(`Scope=${acceptedScope}`, "Scope=Different scope"); },
+    data => { data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-review")).body = data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-review")).body.replace("Reset target=main", "Reset target=release"); },
+    data => { data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-review")).body = data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-review")).body.replace("Reset mode=HUMAN_REVIEW_BEFORE_MERGE", "Reset mode=UNKNOWN"); },
+    data => { data.snapshot.issueComments[0].body = data.snapshot.issueComments[0].body.replace("Reset target=main", "Reset target=release"); },
+    data => { data.snapshot.issueComments[0].body = data.snapshot.issueComments[0].body.replace("Reset mode=HUMAN_REVIEW_BEFORE_MERGE", "Reset mode=AGENT_AUTO_MERGE"); },
   ]) {
     const data = fixture();
     mutate(data);
@@ -215,6 +232,14 @@ test("reset plan is bound to retrievable exact-head inventory content", () => {
     data => { data.snapshot.inventoryFiles[0].body = "# Unrelated file"; },
     data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("| delivery | FILE | delivery.md", "| delivery | FILE | other.md"); },
     data => { data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-review")).body = data.snapshot.issueComments.find(item => item.body.includes("sdd-pr-review")).body.replace("REMOVE=delivery.md", "REMOVE=other.md"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace(" | Ownership evidence", ""); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("| delivery | FILE", "| delivery | UNKNOWN"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("| runtime | RUNTIME", "| delivery | RUNTIME"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("| Git tracked | REMOVE", "| None | REMOVE"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("| policy.md | Git tracked | KEEP | Reused policy | None | PLANNED |", "| policy.md | Git tracked | KEEP | None | None | PLANNED |"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replace("| delivery.md | Git tracked | REMOVE | None | Delete in reset PR | PLANNED |", "| delivery.md | Git tracked | REMOVE | None | None | PLANNED |"); },
+    data => { data.snapshot.inventoryFiles[0].body = data.snapshot.inventoryFiles[0].body.replaceAll("PLANNED", "UNKNOWN"); },
+    data => { data.snapshot.changedFiles.push("unclassified.md"); },
   ]) {
     const data = fixture();
     mutate(data);
@@ -228,6 +253,7 @@ test("target receipt reset authorization binds scope, target, mode and owner aut
     `Scope=Different; Reset target=main; Reset mode=HUMAN_REVIEW_BEFORE_MERGE; Authority=${baseUrl}#issuecomment-20`,
     `Scope=${acceptedScope}; Reset target=release; Reset mode=HUMAN_REVIEW_BEFORE_MERGE; Authority=${baseUrl}#issuecomment-20`,
     `Scope=${acceptedScope}; Reset target=main; Reset mode=UNKNOWN; Authority=${baseUrl}#issuecomment-20`,
+    `Scope=${acceptedScope}; Reset target=main; Reset mode=AGENT_AUTO_MERGE; Authority=${baseUrl}#issuecomment-20`,
     `Scope=${acceptedScope}; Reset target=main; Reset mode=HUMAN_REVIEW_BEFORE_MERGE; Authority=${baseUrl}#issuecomment-99`,
   ]) {
     const data = fixture("RESET_READY");
@@ -259,7 +285,8 @@ test("GitHub collector uses read-only paginated endpoints and normalizes evidenc
   assert.equal(snapshot.pull.target, "main");
   assert.equal(snapshot.pull.headTree, tree);
   assert.equal(snapshot.paginationComplete, true);
-  assert.equal(calls.length, 6);
+  assert.deepEqual(snapshot.changedFiles, []);
+  assert.equal(calls.length, 7);
   assert.ok(calls.every(url => url.startsWith("https://api.github.com/repos/example/project/")));
 });
 
@@ -283,7 +310,7 @@ test("GitHub collector retrieves the merged and reviewed tree identities", async
   assert.equal(snapshot.pull.targetSha, target);
   assert.equal(snapshot.pull.targetMergeBase, merge);
   assert.equal(snapshot.pull.targetCompareStatus, "ahead");
-  assert.equal(calls.length, 9);
+  assert.equal(calls.length, 10);
 });
 
 test("GitHub collector retrieves the immutable reset inventory body", async () => {
@@ -303,5 +330,6 @@ test("GitHub collector retrieves the immutable reset inventory body", async () =
   };
   const snapshot = await collectGitHubSnapshot({ repository: "example/project", pr: 7, fetchImpl });
   assert.deepEqual(snapshot.inventoryFiles, [{ url: inventoryUrl, body: inventoryBody }]);
+  assert.deepEqual(snapshot.changedFiles, []);
   assert.ok(calls.some(url => url.includes(`/contents/reset.md?ref=${head}`)));
 });
