@@ -26,13 +26,13 @@ the one-time current-project cutover after PR #65 target verification.
 | Status | IMPLEMENTING |
 | Previous status | VALIDATING |
 | Plan mode | FULL |
-| Current phase | PLANNING_AMENDMENT |
+| Current phase | READINESS |
 | Current task | None |
-| Next ready task(s) | None |
+| Next ready task(s) | T02 |
 | Blockers | None |
 | Owner | Repository owner |
 | Reviewers | Two isolated planning reviewers, then owner |
-| Review state | IN_REVIEW |
+| Review state | APPROVED |
 | Self-review state | SELF_REVIEW_PASSED |
 | Self-review candidate revision | d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 |
 | Self-review evidence | [Package evidence](../../reviews/WB62-P01.md) |
@@ -43,9 +43,9 @@ the one-time current-project cutover after PR #65 target verification.
 | Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context reviewed revision | d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 |
 | Fresh-context review evidence | [Package evidence](../../reviews/WB62-P01.md) |
-| Human review state | NOT_STARTED |
-| Human reviewed revision | None |
-| Human review evidence | Not recorded |
+| Human review state | APPROVED |
+| Human reviewed revision | d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 |
+| Human review evidence | [P02 owner acceptance](../../reviews/WB62-P01.md#p02-owner-acceptance) |
 | Created | 2026-09-06 Asia/Shanghai |
 | Last updated | 2026-09-06 Asia/Shanghai |
 | Primary issue | [Issue 62](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/62) |
@@ -237,7 +237,7 @@ or lost reusable output.
 | ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Independent merge boundary | PR | Required output IDs | Consumed output versions |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | T01 | DONE | | None | None | CURRENT | COMPLETE | NONE | Bounded agent judgment and essential evidence with U84 publication | FC01, FC02, FC03, FC04, FC05, FC06 | One consistent source/policy/consumer PR | None | None | None |
-| T02 | PLANNED | | T01 | None | CURRENT | COMPLETE | NONE | PR-owned evidence, reset contract, v5 enforcement and compatibility in PR #65 | FC07, FC08, FC09, FC10, FC11, FC12 | One coherent policy/consumer/checker PR; design packages T02/T03 cannot merge separately | [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) | source | source=9e8f79af50ed3bad2d512301e03943506f7421f0 |
+| T02 | READY | NEXT | T01 | None | CURRENT | COMPLETE | NONE | PR-owned evidence, reset contract, v5 enforcement and compatibility in PR #65 | FC07, FC08, FC09, FC10, FC11, FC12 | One coherent policy/consumer/checker PR; design packages T02/T03 cannot merge separately | [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) | source | source=9e8f79af50ed3bad2d512301e03943506f7421f0 |
 | T04 | PLANNED | | T02 | None | CURRENT | COMPLETE | CLEANUP | Exact-SHA current-project v5 cutover, complete WB62 reset and runtime regeneration | FC08, FC09, FC10, FC11 | One separately reviewed reset/upgrade PR after PR #65 target proof | Not created | pr65-v5 | None |
 
 ## 8. Task specification and context
@@ -298,7 +298,7 @@ grew to 103 passing tests; the external-link advisory was not rerun.
 
 | Field | Value |
 | --- | --- |
-| State | PLANNED |
+| State | READY |
 | Depends on | T01 |
 | Data phase | NONE |
 | Source boundary | Canonical documentation, diagrams, skills, installer-generated guidance, whiteboard/handoff/plan/workflow/review/adoption templates, PR template, lifecycle schemas/dispatcher, GitHub-aware evidence verifier/action, package scripts, examples, changelog and corresponding tests identified by the accepted design consumer matrix |
@@ -477,12 +477,12 @@ started.
 | --- | --- |
 | Plan state | IMPLEMENTING |
 | Current task | None |
-| Next ready task(s) | None |
+| Next ready task(s) | T02 |
 | Active branch / PR | `codex/upgrade-37653ee`; [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
 | Last completed task | T01 |
 | Active blocker | None |
 | Last validation | Accepted reset design `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30`; two design reviewers approved; 103 tests and documentation gates passed |
-| Next action | Owner accepts exact P02 candidate and selects mode for T02/T04; then make T02 READY |
+| Next action | Perform one consolidated T02 readiness/context check, then start implementation |
 
 ## 10. Evidence and history
 

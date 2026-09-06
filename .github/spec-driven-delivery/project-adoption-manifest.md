@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | Owner accepts exact WB62 P02 candidate `d8d7fd707e1ca31f2d413c86479f51fe7864c6d8` and selects the T02/T04 implementation mode; then perform T02 readiness |
+| Next action | Perform the consolidated T02 readiness/context check under owner-selected `HUMAN_REVIEW_BEFORE_MERGE`, then start T02 |
 
 Adoption type: `real project`
 

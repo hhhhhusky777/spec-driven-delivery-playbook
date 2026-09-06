@@ -35,7 +35,7 @@
 | Current artifact/gate | [WB62 P02 planning amendment](implementation-plan.md) |
 | Current review phase | DESIGN |
 | Current review target ID | plan |
-| Current artifact review state | IN_REVIEW |
+| Current artifact review state | APPROVED |
 | Self-review state | SELF_REVIEW_PASSED |
 | Self-review candidate revision | d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 |
 | Self-review evidence | [Planning review](../../reviews/WB62-P01.md#p02-pr-evidence-reset-amendment) |
@@ -46,16 +46,16 @@
 | Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context reviewed revision | d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 |
 | Fresh-context review evidence | [Planning review](../../reviews/WB62-P01.md#p02-pr-evidence-reset-amendment) |
-| Human review state | NOT_STARTED |
-| Human reviewed revision | None |
-| Human review evidence | Not recorded |
+| Human review state | APPROVED |
+| Human reviewed revision | d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 |
+| Human review evidence | [P02 owner acceptance](../../reviews/WB62-P01.md#p02-owner-acceptance) |
 | Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |
-| Implementation mode authority | [Owner mode record](../../reviews/WB62-P01.md#implementation-mode-authority) |
-| Implementation mode scope | T01 |
+| Implementation mode authority | [P02 owner acceptance](../../reviews/WB62-P01.md#p02-owner-acceptance) |
+| Implementation mode scope | T02, T04 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
-| Implementation mode selected at | 2026-09-06T09:36:49Z |
-| Next action | Owner accepts exact P02 candidate and selects implementation mode for T02/T04 |
-| Next action target IDs | plan |
+| Implementation mode selected at | 2026-09-06T23:54:35+08:00 |
+| Next action | Perform one consolidated T02 readiness/context check, then start implementation |
+| Next action target IDs | T02 |
 | Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/upgrades/U64.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; .github/pull_request_template.md; .github/workflows/documentation-quality.yml; CONTRIBUTING.md; README.md; CHANGELOG.md; package.json; config; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/README.md; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/handoffs; templates/policies; templates/testing; templates/workflows; examples; scripts/sdd-lifecycle.mjs; scripts/review-publication.mjs; scripts/verify-pr-evidence.mjs; tests |
 | Next action write targets | .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
 | Post-merge control mode | NOT_SELECTED |
@@ -207,7 +207,7 @@ owns the correction and unblock evidence; the live blocker register is empty.
 | P01 | FULL plan and embedded source audit | EXPLICIT_REVIEW | Provisional preparation authority; joint acceptance required | Task completeness, docs/checks and two reviewers then owner | Not applicable | YES | DONE |
 | T01 | Coherent source implementation PR | EXPLICIT_REVIEW | Approved plan/context and recorded mode | Focused scenarios, full checks, two reviewers and owner merge authority | Not applicable | YES | DONE |
 | D02 | PR-evidence/reset design amendment | EXPLICIT_REVIEW | Owner-supplied closure correction | Exact conclusion, two reviewers and owner acceptance | Not applicable | YES | DONE |
-| P02 | T02/T04 FULL plan amendment | EXPLICIT_REVIEW | Accepted D02 conclusion | Completeness, phase-aware prerequisites, exact reviewers then owner | Not applicable | YES | IN_REVIEW |
+| P02 | T02/T04 FULL plan amendment | EXPLICIT_REVIEW | Accepted D02 conclusion | Completeness, phase-aware prerequisites, exact reviewers then owner | Not applicable | YES | DONE |
 | T02 | PR-owned evidence/reset contract and enforcement in PR #65 | EXPLICIT_REVIEW | Accepted P02 and selected live implementation mode | Focused/API/schema/docs/full checks, two reviewers and owner merge authority | Not applicable | YES | NOT_STARTED |
 | T04 | Exact-SHA WB62 reset/upgrade PR | EXPLICIT_REVIEW | PR #65 target receipt and accepted P02 | Complete inventory/ownership, migration/runtime checks, two reviewers and fresh owner cutover acceptance | Not applicable | YES | NOT_STARTED |
 | V02 | Final target/reset validation | EXPLICIT_REVIEW | T02 and T04 complete | PR target receipts, `EMPTY`, runtime `CURRENT`, preserved adoption/reusable output | Not applicable | YES | NOT_STARTED |
@@ -225,7 +225,7 @@ selects a live implementation mode covering those exact task IDs.
 | Handoff | 4b18100a722aa06baba7643b67e01185108a8635 | [Handoff acceptance](../../reviews/WB62-H01.md#owner-acceptance) | APPROVED |
 | Routing and plan | WB62-P01-R06 | [Accepted package](../../reviews/WB62-P01.md#owner-package-acceptance) | APPROVED |
 | Source / T01 | 3621b19f58b83ea6ff16d01e03f6b61b2dad9b49 | [PR64 reviews and owner acceptance](../../reviews/WB62-P01.md#r08-acceptance-and-merge-reconciliation) | APPROVED |
-| P02 plan amendment | d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 | [Planning review](../../reviews/WB62-P01.md#p02-pr-evidence-reset-amendment) | AGENT_APPROVED / OWNER_PENDING |
+| P02 plan amendment | d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 | [Planning review and owner acceptance](../../reviews/WB62-P01.md#p02-owner-acceptance) | APPROVED |
 
 Manual trigger WB62-ROUTE-20260906-01 consumed the original handoff once. T01
 completed through reviewed PR #64. The accepted D02 conclusion amends the same
@@ -254,10 +254,10 @@ unknown destructive identity or unresolved delivery-owned item prevents closure.
 | Field | Current value |
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
-| Current artifact/task | P02 plan amendment; no implementation task active |
-| Current artifact review | IN_REVIEW / exact candidate d8d7fd707e1ca31f2d413c86479f51fe7864c6d8; both agents APPROVED; owner pending |
-| Last approved artifact | Reset design `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30` |
-| Next ready action | Owner plan acceptance and T02/T04 implementation-mode selection |
+| Current artifact/task | T02 readiness; no implementation task active |
+| Current artifact review | P02 APPROVED / exact candidate d8d7fd707e1ca31f2d413c86479f51fe7864c6d8 |
+| Last approved artifact | P02 plan `d8d7fd707e1ca31f2d413c86479f51fe7864c6d8` |
+| Next ready action | Consolidated T02 readiness/context verification, then implementation |
 | Active blockers | None |
 | Stale artifacts | None |
 | Validation complete | T01/PR64 integration and current v4 runtime verified; D02 design accepted |
