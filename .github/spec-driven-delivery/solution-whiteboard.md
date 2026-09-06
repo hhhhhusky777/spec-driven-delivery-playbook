@@ -24,8 +24,8 @@ authority. PR #65 remains unmerged while the closure model is reconsidered.
 | Field | Current conclusion |
 | --- | --- |
 | Problem | Permanent per-feature whiteboards, plans, ledgers, snapshots, evidence files and archives duplicate GitHub PR history and make the repository harder to review and maintain |
-| Required outcome | GitHub PRs own durable delivery evidence; after target verification, feature-specific working state is reset without reinstalling adoption or deleting reusable project/playbook state |
-| Preferred direction | Keep only reusable/current contracts in the merged tree; use concise PR evidence plus exact Git revisions; reset transient delivery state |
+| Required outcome | GitHub PRs own durable delivery evidence; after target verification, remove everything specific to the completed delivery that cannot be reused, reset the runtime and working whiteboard, and preserve adoption plus reusable project/playbook outputs |
+| Preferred direction | Keep only adoption controls and reusable/current outputs in the merged tree; use concise PR evidence plus exact Git revisions; remove non-reusable delivery state and regenerate runtime for the next need |
 | Confidence | High; direction is explicit and the affected canonical consumers are mapped |
 | Material open questions | None for the direction; historical archives are outside the current migration unless separately authorized |
 | Active blocker | Current archive-based closure package cannot merge under the amended requirement |
@@ -36,7 +36,7 @@ authority. PR #65 remains unmerged while the closure model is reconsidered.
 | ID | Goal / boundary | Acceptance signal |
 | --- | --- | --- |
 | C01 | GitHub PR is the durable feature-delivery evidence owner | PR retains design/task brief, exact revisions, reviewer findings and dispositions, owner decision, checks, merge identity and target verification |
-| C02 | Reset feature-specific state after delivery | No completed feature whiteboard, handoff, workflow, plan, local review ledger, snapshot family, evidence file or archive copy is required in the merged tree |
+| C02 | Reset all non-reusable current-delivery state after delivery | Every path, runtime item and branch/worktree owned only by the completed delivery is removed or reset after target verification; the working whiteboard returns to neutral `EMPTY` |
 | C03 | Preserve one-time adoption | Adoption manifest, current immutable runtime pin, entry point, project contracts and installed trigger remain tracked and reusable for later features |
 | C04 | Preserve reusable playbook/product work | Source, tests, policies, templates, docs and project code delivered by the feature remain tracked normally |
 | C05 | Keep stable outcomes and authority boundaries | Required checks, two-agent review, human decisions, merge authority, target verification and safety controls remain; only duplicate repository evidence is removed |
@@ -53,8 +53,26 @@ authority. PR #65 remains unmerged while the closure model is reconsidered.
 | Reviewer findings and author dispositions | Labeled PR reviews/comments plus digests in the evidence comment | Do not copy them into a repository ledger |
 | Checks and post-merge verification | GitHub checks plus versioned target-verification comment | Link exact check/run and merge identities |
 | Last delivery locator | One fixed-size manifest row with feature PR, reset PR and evidence digest | Overwrite for the next delivery; Git history preserves prior values |
-| Active whiteboard/workflow/plan | Tracked or ignored working state while needed | Preserve through feature target verification; remove through the bounded reset PR |
+| Active whiteboard/workflow/plan and other delivery-only state | Tracked or ignored working state while needed | Preserve through feature target verification; remove or reset through the bounded reset operation |
 | Historical WB38 material | Existing merged history | Leave unchanged in this delivery; any retrospective deletion needs separate explicit scope |
+
+### Reset classification boundary
+
+The reset applies to the completed delivery, not to adoption or reusable output.
+Historical interest alone is not reuse because the PR owns delivery history.
+The agent classifies the exact inventory case by case using this outcome:
+
+| Classification | Required disposition after verified delivery |
+| --- | --- |
+| Exists only to plan, execute, review or close the completed delivery | `REMOVE`; examples include its handoff, workflow, plan, local review/evidence records, snapshots, temporary branches and worktrees |
+| Stable working entry point with reusable identity but delivery-specific content | `RESET`; replace the working whiteboard with the reviewed neutral `EMPTY` bytes |
+| Machine-local delivery runtime | `RESET`; clean the owned checkout/guide and regenerate it from the preserved or explicitly upgraded manifest pin |
+| Adoption control or output usable independently by future work | `KEEP`; examples include the manifest, contracts, trigger, current pin, delivered source, tests, policies, templates and reusable documentation |
+
+Before destructive work, the reset candidate enumerates every delivery-owned
+item and its disposition. `KEEP` requires a concrete future-use reason. Omitted
+or uncertain ownership blocks only the affected removal; it cannot be treated
+as implicit permission to retain duplicate delivery evidence or delete it.
 
 GitHub repository and PR history are the selected system of record under the
 same administrative trust boundary as repository Git history. The playbook does
@@ -81,7 +99,7 @@ Before owner acceptance, the feature PR must contain one versioned
 | Requested owner authority | Exact candidate and requested feature/reset merge scope; state `PENDING` before the owner acts |
 | Checks | Required check names, conclusions and exact run URLs |
 | Limits and follow-ups | Unrun/unavailable evidence, accepted limits and linked issues or `None` |
-| Reset plan | Enumerated repository-relative transient paths, exact replacement bytes or blobs for every retained file, reset PR mode and cleanup authority; descriptive classes grant no deletion authority |
+| Reset plan | Complete inventory of delivery-owned repository paths and runtime items; each item is `REMOVE`, `RESET`, or `KEEP` with a reuse reason; exact replacement bytes or blobs for every reset file; reset PR mode and cleanup authority; descriptive classes grant no deletion authority |
 
 After the owner acts and before feature merge, the same PR receives a separate
 `sdd-pr-acceptance/v1` comment containing the exact accepted candidate, owner
@@ -128,13 +146,16 @@ revision. It does not authorize this repository's one-time v4-to-v5 bootstrap.
 4. Merge the feature PR while preserving its tracked working state; verify
    target ancestry/tree/checks and publish `sdd-target-receipt/v1` on that PR.
 5. If every evidence item remains available and matches its digest, create the
-   pre-authorized reset PR containing only the accepted path-by-path deletion,
-   exact `EMPTY` whiteboard bytes and fixed-size manifest locator update.
+   pre-authorized reset PR containing the complete accepted path inventory,
+   removal of all non-reusable delivery paths, exact `EMPTY` whiteboard bytes
+   and fixed-size manifest locator update.
 6. The retained reviewers verify only that bounded reset delta and required
    checks. Merge it without another semantic review only when the feature-PR
    owner acceptance explicitly authorized that exact reset scope and merge mode.
 7. Verify the reset merge on target and append the final reset identity/result
-   to the feature PR. Only then may ignored local working state be cleaned.
+   to the feature PR. Then remove delivery-owned branches/worktrees, clean the
+   owned machine runtime and regenerate it for the next need from the current
+   reviewed manifest pin.
 
 The reset is not evidence deletion: the PR and immutable Git revisions must
 already own the required evidence. Missing or inconsistent PR evidence blocks
@@ -153,8 +174,9 @@ For this one-time bootstrap:
    enumerated reset and the v5 pin/runtime migration.
 4. Run migration validation and required checks on that exact candidate.
 5. Obtain two independent exact-head reviews and fresh human cutover acceptance.
-6. Only then merge the pin/runtime cutover and enumerated reset, verify target,
-   and append its identity/result to PR #65.
+6. Only then merge the pin cutover and enumerated repository reset, verify
+   target, append its identity/result to PR #65, clean the old owned runtime and
+   regenerate it at the new exact pin.
 
 PR #65 acceptance does not preapprove this later candidate. The steady-state
 bounded-reset exception begins only after the reviewed v5 cutover is complete.
@@ -165,9 +187,9 @@ bounded-reset exception begins only after the reviewed v5 cutover is complete.
 | --- | --- |
 | PR #65 | Replace the proposed archive with v5 source policy and compatibility behavior while retaining the v4 runtime pin; remove unmerged WB62 archive additions, preserve working state through target verification and own all semantic evidence |
 | Unmerged final-control commit | Withdraw only `5c894694a670d425033f5a0387a737359a3d5262`; retain its parent `cd6d8ba3311bbe3e4a6a692b4cd970477021fb7b` as the reconciled `VALIDATING` checkpoint, then use the allowed return to plan `IMPLEMENTING` / workflow `DELIVERY_ACTIVE` for T02–T04 |
-| WB62 working delivery files already on main | Remove only in the post-verification reset PR after exact PR #64/#65 evidence validation |
+| WB62 delivery-only files already on main | Inventory all WB62-owned paths and remove every non-reusable item only in the post-verification reset/upgrade PR after exact PR #64/#65 evidence validation |
 | Working whiteboard | Preserve this amendment through PR #65 target verification; reset to the neutral tracked `EMPTY` entry point in the reset PR |
-| U64 runtime result | PR #65 preserves the current v4 pin; after its exact merge SHA exists, a separately reviewed reset/upgrade PR performs the one-time v5 cutover and moves delivery-only narrative to PR evidence |
+| U64 runtime result | PR #65 preserves the current v4 pin; after its exact merge SHA exists, a separately reviewed reset/upgrade PR performs the one-time v5 cutover, then the owned machine runtime is cleaned and regenerated at that pin |
 | Existing WB38 history | No change in this migration |
 
 ## Risks and validation
@@ -176,7 +198,7 @@ bounded-reset exception begins only after the reviewed v5 cutover is complete.
 | --- | --- |
 | PR summary omits a material decision | Mandatory table-first evidence contract and human gate completeness check |
 | Mutable/deleted PR evidence loses exact identity | Validate URLs and body digests before reset; retain one fixed-size locator/digest in manifest history; stop and open a gap if evidence is unavailable |
-| Reset removes one-time adoption | Checker distinguishes stable adoption/runtime controls from feature-transient state |
+| Reset removes one-time adoption or reusable output | Complete classification inventory distinguishes adoption/reusable outputs from delivery-only state; uncertain ownership fails closed for the affected item |
 | Agent resets before merge is proven | Create reset PR only after exact target verification; failed probes preserve tracked state and block reset |
 | Existing archive consumers break | Audit README, policies, skills, templates, lifecycle checker and tests as one coherent change |
 
@@ -185,12 +207,13 @@ bounded-reset exception begins only after the reviewed v5 cutover is complete.
 | Round | Decision / new information | State |
 | --- | --- | --- |
 | 1 | Owner rejected permanent feature archives because GitHub PR is the evidence owner and requested reset after delivery | ACCEPTED_DIRECTION |
-| 1 | Preserve adoption/runtime and reusable delivered work; reset only feature-specific working/evidence artifacts | PROPOSED_DETAIL |
+| 1 | Preserve adoption/runtime routing and reusable delivered work; reset delivery-specific working/evidence artifacts | PROPOSED_DETAIL |
 | 1 | Apply the new behavior to current WB62; leave older WB38 history untouched without separate deletion authority | SAFE_MIGRATION_DEFAULT |
 | 2 | For an already-v5 project, use a separately scoped reset PR after feature target verification; feature-PR acceptance may pre-authorize its exact enumerated mechanical merge path | PROPOSED_DETAIL |
 | 2 | Preserve v2–v4 behavior; introduce opt-in v5 and migrate only at a reviewed safe checkpoint | PROPOSED_DETAIL |
 | 2 | Use pre-acceptance review, post-decision acceptance and post-merge target tables plus body digests and a non-self-referential fixed-size manifest locator | PROPOSED_DETAIL |
 | 3 | Preserve the exact-SHA upgrade gate: current self-adoption needs one post-PR65 exact-SHA reset/upgrade acceptance; later v5 feature resets do not | PROPOSED_DETAIL |
+| 4 | Owner clarified that reset covers the machine runtime, neutral working whiteboard and every current-delivery item that cannot be reused; reusable adoption controls and delivered outputs remain | ACCEPTED_DIRECTION |
 
 ### Design review reconciliation
 
@@ -228,6 +251,12 @@ bounded corrections.
 | R2-F11 | Map v2, v3 and current v4 schema files; introduce explicit v4/v5 dispatch and regression coverage rather than claiming no config exists | PENDING_R04_REVIEW |
 | R2-F12 | Require an enumerated repository-relative reset inventory and exact retained replacement bytes/blobs; classes describe intent only | PENDING_R04_REVIEW |
 
+Both retained reviewers approved exact R05 candidate
+`49273873fa3c85019be38425cbde2e74ce1081d3`. The owner's later clarification
+expanded the reset boundary to every non-reusable current-delivery item and
+explicit machine-runtime regeneration, so those approvals remain historical
+evidence and do not approve the revised candidate. R06 review is required.
+
 ## Option and lifecycle conclusion
 
 | Option | Result | Reason |
@@ -263,15 +292,15 @@ This is an outcome boundary, leaving agents room to choose safe mechanics.
 | Local lifecycle checker and tests | Preserve v2–v4; validate v5 local schema, exact reset inventory and fixed-size receipt locator without pretending to query GitHub |
 | GitHub-aware verification command/action | Query PR/review/comment/check/merge APIs, validate exact identities/body digests and gate reset publication |
 | Examples and changelog | Demonstrate the new flow and record the compatibility change |
-| Current self-adoption records | Keep the v4 pin through PR #65; then use the separately reviewed exact-SHA reset/upgrade PR to remove WB62 transient/archive payload, activate v5 and reset the stable entry point |
+| Current self-adoption records | Keep the v4 pin through PR #65; then use the separately reviewed exact-SHA reset/upgrade PR to apply the complete WB62 disposition inventory, activate v5, restore the stable whiteboard to `EMPTY`, and regenerate the machine runtime |
 
 ## Implementation task mapping
 
 | Task | Brief work | Completion signal |
 | --- | --- | --- |
-| T02 — Closure contract | Update canonical docs, diagrams, skills, templates and PR evidence schema to make the feature PR the semantic owner and define the post-verification reset PR | All consumers state the same evidence, sequencing and authority outcome without copied archive rules |
-| T03 — Enforcement and compatibility | Add GitHub-aware evidence verification; update local v5 lifecycle validation and regressions while preserving v2–v4 | Positive/negative API fixtures, schema compatibility and reset-boundary scenarios pass |
-| T04 — Current-project migration | Withdraw the unmerged terminal controls, keep the v4 pin, remove only unmerged archive additions in PR #65, and publish the exact reset inventory; after PR #65 target verification, prepare one exact-SHA reset/upgrade PR for normal upgrade review | PR #65 merges reusable v5 behavior with WB62 state preserved; the later human-approved reset/upgrade PR pins the exact v5 merge, removes WB62 state and restores EMPTY without touching WB38 |
+| T02 — Closure contract | Update canonical docs, diagrams, skills, templates and PR evidence schema to make the feature PR the semantic owner and define classification, repository reset, runtime regeneration and neutral-whiteboard outcomes | All consumers state the same evidence, sequencing, reuse boundary and authority outcome without copied archive rules |
+| T03 — Enforcement and compatibility | Add GitHub-aware evidence verification; update local v5 lifecycle validation and reset-inventory regressions while preserving v2–v4 | Positive/negative API fixtures, schema compatibility, remove/reset/keep classification and failure-boundary scenarios pass |
+| T04 — Current-project migration | Withdraw the unmerged terminal controls, keep the v4 pin, remove only unmerged archive additions in PR #65, and publish the complete WB62 disposition inventory; after PR #65 target verification, prepare one exact-SHA reset/upgrade PR for normal upgrade review | PR #65 merges reusable v5 behavior with WB62 state preserved; the later human-approved reset/upgrade PR pins the exact v5 merge, removes all non-reusable WB62 state, restores EMPTY and regenerates runtime without touching WB38 |
 
 T02–T04 form PR #65 plus one later combined reset/upgrade PR. PR #65 receives
 one final full semantic review. Because this repository starts on v4, the later
@@ -332,14 +361,14 @@ is today.
 | `templates/reviews/agent-self-review.md` and `scripts/review-publication.mjs` | Publish exact self-review/body digests and retain literal reviewer findings without local ledger duplication | T02/T03 | Deterministic publication/replay and edited-body digest mismatch tests |
 | `.github/workflows/documentation-quality.yml` and `package.json` | Add the canonical reset-evidence check with read-only pull-request/check/content permissions and an explicit script entry point | T03 | Workflow wiring assertion plus mocked GitHub API positive/negative runs |
 | `config/sdd-lifecycle-schema-v2.json`, `config/sdd-lifecycle-schema-v3.json`, current v4 `config/sdd-lifecycle-schema.json`, and `scripts/sdd-lifecycle.mjs` dispatch | Preserve v2/v3; retain the current schema as explicit v4 compatibility input; add a v5/default schema and validate v5 local fields, locator and reset inventory | T03 | Exact v2–v5 dispatch plus positive/negative compatibility tests |
-| Project registry, trigger, manifest, WB62 paths/reviews/U64 and archive index | Keep stable pin/routes; remove unmerged archive additions; declare later reset inventory and reviewed current-project v5 cutover | T04 | Exact path inventory, PR evidence verifier, runtime CURRENT and WB38 no-impact check |
+| Project registry, trigger, manifest, WB62 paths/reviews/U64, machine runtime and archive index | Keep adoption controls; classify every WB62-owned item; remove non-reusable state, restore `EMPTY`, and regenerate runtime only through the reviewed current-project v5 cutover | T04 | Complete remove/reset/keep inventory, PR evidence verifier, regenerated runtime CURRENT and WB38 no-impact check |
 
 ## Conclusion readiness
 
 | Check | Result |
 | --- | --- |
 | Owner direction | GitHub PR owns delivery evidence; permanent feature archive rejected |
-| Required boundaries | Adoption/runtime/reusable work preserved; review, quality and authority controls unchanged |
-| Current migration | PR #65 preserves v4/WB62 through target verification; one exact-SHA reviewed reset/upgrade PR activates v5 and removes WB62; historical WB38 remains untouched |
+| Required boundaries | Adoption and reusable work remain; all non-reusable current-delivery state is removed, runtime and whiteboard are reset, and review/quality/authority controls remain unchanged |
+| Current migration | PR #65 preserves v4/WB62 through target verification; one exact-SHA reviewed reset/upgrade PR activates v5, applies the complete WB62 disposition inventory, restores `EMPTY`, and regenerates runtime; historical WB38 remains untouched |
 | Open product/design decisions | None |
 | Remaining work | Independent conclusion review, owner acceptance, plan update and implementation |
