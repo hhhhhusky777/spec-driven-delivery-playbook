@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | WB62 design accepted; prepare its faithful handoff, then route the formal implementation plan through the pinned workflow |
+| Next action | WB62 handoff accepted; route the delivery manifest before formal plan generation under the pinned workflow |
 
 Adoption type: `real project`
 
