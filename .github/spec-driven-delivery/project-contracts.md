@@ -12,7 +12,7 @@ and reviewed merge are recorded in the manifest. The
 | Reusable template ownership | [Template Governance](../../docs/template-governance.md) | Template maintainer |
 | Review packet and self-review | Pinned `templates/reviews/` through verified runtime | Two isolated reviewers then owner |
 | Start or resume agent work | [Project trigger](agent-trigger.md) | Maintainer |
-| Current need | [Empty working whiteboard](solution-whiteboard.md) | Owner; no need admitted before acceptance |
+| Current need | [Working whiteboard](solution-whiteboard.md) | Repository owner; live state governs intake |
 | Archive / updates | [Archive contract](archive/README.md) | Maintainer |
 
 ## Artifact locations
@@ -49,3 +49,22 @@ mismatched runtime stops agent execution before project writes.
 No specialized-policy file is installed without an observed systemic trigger.
 The manifest gap register records that deferred route and owner. Security,
 quality, and template rules remain at their existing canonical sources.
+
+## U84 future-delivery routing
+
+This migration is pending the [manifest's upgrade cutover](project-adoption-manifest.md#u84-upgrade-handoff)
+and reviewed publication. Until then use the unchanged installed pin. After
+cutover, resolve all source paths below through the verified pinned checkout.
+
+| Need | Canonical source / project consequence |
+| --- | --- |
+| New workflow/plan | Matching v4 source templates; reciprocal links must resolve by GATES_READY. A compact plan is required even for editorial delivery; Contributing's compact discovery route is not a no-plan exemption under v4 |
+| Phase readiness | `docs/batch-review-and-recovery.md#version-4-phase-aware-readiness`; map prerequisites separately from future implementation, validation and closure outputs; never require a task's own future result before it starts |
+| Batched preparation/review | `docs/batch-review-and-recovery.md`; use `templates/reviews/review-batch.md` only with explicit per-package scope/authority. Availability is not standing batch or auto-merge authorization |
+| Discussion and human review | Draft-first whiteboard notes; formal conclusion when settled; phase-specific table briefs from the quality policy. Planning brief compares design points with tasks and validation |
+| Evidence and exceptions | Shared PR-primary retention and exception-triage contract; preserve prior exact local receipts and distinguish upstream gaps from project errors |
+| Closure | Shared one-closure-package contract; preserve actual validation and owner acceptance, exact cleanup ownership and separately authorized bounded control receipts |
+
+Historical v2/v3 records and completed WB38 artifacts keep their accepted bytes
+and versions. The registry routes new work; it does not retroactively migrate
+history or override Contributing's review, branch, or owner-acceptance policy.

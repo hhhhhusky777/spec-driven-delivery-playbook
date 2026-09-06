@@ -36,8 +36,8 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | State before block | `None` |
 | Playbook source repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook.git` |
 | Playbook revision | `d213114f99dc2186d6f4e50a85fe962de0e1afa9` |
-| Upgrade state | `NONE` |
-| Upgrade assessment / candidate | `None` |
+| Upgrade state | `APPLYING` |
+| Upgrade assessment / candidate | [U84 assessment](playbook-upgrade-assessment.md); `d93d27a33c43c1574aeed27044654c8964cf998b` |
 | Playbook materialization mode | `pinned local checkout` |
 | Runtime playbook locator contract | Installer-generated `.sdd-runtime/agent-guide.md` supplies and verifies the read-only checkout for each invocation |
 | Target base revision | `d213114f99dc2186d6f4e50a85fe962de0e1afa9` |
@@ -65,7 +65,7 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
 | Current blocker | `None` |
-| Next action | Follow the WB62 workflow for routing review before formal plan generation |
+| Next action | Complete owner-authorized U84 cutover and runtime verification, preserving WB62 accepted inputs and routing review |
 
 Adoption type: `real project`
 
@@ -739,3 +739,15 @@ body is unchanged. The owner subsequently accepted the exact H01 handoff;
 the [WB62 workflow](deliveries/WB62/workflow.md) now owns routing, dependency
 freshness and next action. No task is active. The handoff ledger retains its
 exact acceptance and the workflow records its single manual consumption.
+
+### U84 upgrade handoff
+
+The owner instructed “complete the upgrade” after the unchanged installed pin
+and pending reviewed U84 migration were identified. This accepts the R04
+migration and authorizes cutover to d93d27a33c43c1574aeed27044654c8964cf998b.
+The [assessment checkpoint](playbook-upgrade-assessment.md#current-cutover-checkpoint)
+owns current compatibility and validation; [U84 receipts](reviews/U84-S01.md)
+preserve both approvals. Registry and trigger reuse reviewed migration bytes.
+WB62 design/handoff approvals and versioned routing remain intact; WB33 and
+runtime issues remain deferred. No blanket batch, implementation or merge
+permission is inferred. Adoption remains INSTALLED, not ACTIVE.
