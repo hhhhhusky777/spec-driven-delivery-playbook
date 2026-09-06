@@ -12,15 +12,19 @@ repository/target, accepted design, task briefs and outcomes, exact candidate,
 self-review, two independent review receipts and body digests, findings and
 dispositions, required checks, limits/follow-ups, requested owner authority,
 and the complete reset plan. Record it as `REMOVE=...; RESET=...; KEEP=...;
-Inventory=EXACT_HEAD_GITHUB_BLOB_URL`; use `None` for an empty disposition.
-The self-review and both reviewer receipts name the exact head and passing
-disposition. The receipts label distinct stable seats `R1` and `R2` in one
-review session, no finding remains open, and requested owner authority is
-exactly `PENDING`. After the owner acts, publish a separate
+Inventory=EXACT_HEAD_GITHUB_BLOB_URL`; each disposition is `None` or a
+comma-separated list of exact identities matching the retrieved inventory.
+The self-review field links the canonical self-review body and its SHA-256
+digest. Both reviewer receipts use the canonical Section 6 table, name the exact
+head and passing disposition, and label distinct stable seats `R1` and `R2` in
+one review session. No finding remains open. Record requested authority as
+`State=PENDING; Candidate=FULL_SHA; Scope=EXACT_MERGE_AND_RESET_SCOPE`. After the
+owner acts, publish a separate
 `sdd-pr-acceptance/v1` table binding the owner comment and its body digest to
 the accepted review-table digest, exact candidate and stated merge/reset scope.
-The owner comment itself must name that candidate and scope. The evidence gate proceeds
-only for an `APPROVED` owner decision; rejected or changed work returns to review.
+The owner comment must come from the expected owner identity, name that
+candidate and scope, and state an unambiguous affirmative decision. The evidence
+gate proceeds only for `APPROVED`; rejected, negated or changed work returns to review.
 Do not put a future decision into either table.
 
 After merge, fetch the live target tip and verify that the observed merge commit
@@ -31,6 +35,11 @@ availability and matching body digests, runtime/project proof, reset authority,
 and exceptions. Run `npm run sdd:evidence -- --mode RESET_READY ...` against
 the GitHub API before creating the reset PR. Local files cannot substitute for
 remote comments, reviews, checks, base/target identity, or merged-tree state.
+Pass the expected owner login explicitly. Record reset authorization as
+`Scope=EXACT_ACCEPTED_SCOPE; Reset target=BRANCH; Reset mode=MODE;
+Authority=OWNER_COMMENT_URL`; the verifier binds all four values to the accepted
+evidence. It also retrieves the immutable inventory blob and verifies that its
+content matches the three disposition summaries.
 
 The reset inventory classifies every delivery-owned item exactly once:
 

@@ -34,6 +34,10 @@ test("v5 reset and v4 control receipts stay fail-closed", async () => {
     "sdd-pr-review/v1",
     "sdd-pr-acceptance/v1",
     "sdd-target-receipt/v1",
+    "State=PENDING; Candidate=FULL_SHA; Scope=EXACT_MERGE_AND_RESET_SCOPE",
+    "canonical Section 6 table",
+    "expected owner identity",
+    "retrieves the immutable inventory blob",
     "Version 4 closure review and bounded post-merge receipt",
     "PREAUTHORIZED_CONTROL_RECEIPT",
     "without another two-agent or human review",
@@ -58,6 +62,7 @@ test("v5 reset and v4 control receipts stay fail-closed", async () => {
   for (const value of ["pull-requests: read", "checks: read", "evidence_base:", "evidence_target:", "--base", "--target"]) {
     assert.ok(action.includes(value), value);
   }
+  assert.match(action, /evidence_owner:\n\s+description: "Expected owner login"\n\s+required: true/);
   const evidenceStep = action.split("- name: Verify versioned PR evidence")[1]?.split("\n  [a-z-]+:")[0] || "";
   assert.ok(evidenceStep.includes("EVIDENCE_MODE: ${{ inputs.evidence_mode }}"));
   assert.ok(!evidenceStep.split("run: >-")[1]?.includes("${{ inputs."), "workflow inputs must not be interpolated into shell source");
@@ -444,6 +449,16 @@ test("blocking local-path check rejects private workstation paths", () => {
   const localPath = "/" + "Users/example/private/design.md";
   const diagnostics = checkSensitiveContent("docs/example.md", `See ${localPath}\n`, CONFIG);
   assert.equal(diagnostics[0]?.rule, "LOCAL_PATH");
+});
+
+test("local paths are allowed only in exact external reset-inventory rows", () => {
+  const localPath = "/" + "Users/example/private/runtime";
+  const table = `| Item ID | Kind | Exact identity | Ownership evidence | Disposition | Reuse reason | Authorized operation | State |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| runtime | RUNTIME | ${localPath} | marker ${localPath} | RESET | None | reset ${localPath} | PLANNED |`;
+  assert.deepEqual(checkSensitiveContent("workflow.md", table, CONFIG), []);
+  assert.equal(checkSensitiveContent("workflow.md", `${table}\n\nSee ${localPath}\n`, CONFIG).at(-1)?.rule, "LOCAL_PATH");
+  assert.equal(checkSensitiveContent("workflow.md", table.replace("RUNTIME", "FILE"), CONFIG)[0]?.rule, "LOCAL_PATH");
 });
 
 test("blocking Mermaid check accepts valid syntax and rejects invalid syntax", async (t) => {

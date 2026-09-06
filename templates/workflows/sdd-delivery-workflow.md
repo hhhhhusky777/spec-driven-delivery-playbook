@@ -604,7 +604,9 @@ temporary, user-home, and system parent directories are invalid targets.
 | `<stable ID>` | `<FILE/BRANCH/WORKTREE/RUNTIME>` | `<exact repository-relative path, full ref, or absolute owned path>` | `<proof>` | `<REMOVE/RESET/KEEP>` | `<future use or None>` | `<exact operation/authority or None>` | `<PLANNED/VERIFIED>` |
 
 Publish it as `REMOVE=...; RESET=...; KEEP=...; Inventory=<exact-head GitHub
-blob URL>` in `sdd-pr-review/v1`, using `None` where a disposition is empty.
+blob URL>` in `sdd-pr-review/v1`, using `None` where a disposition is empty and
+otherwise listing comma-separated exact identities. The evidence gate retrieves
+the blob and requires all three summaries to match its table.
 After feature target proof and
 `sdd-target-receipt/v1`, the reset PR may change only these identities and exact
 replacement bytes. Update `PR evidence state` and `Reset state` from observed

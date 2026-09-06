@@ -35,17 +35,17 @@
 | Current artifact/gate | [T02 PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
 | Current review phase | IMPLEMENTATION |
 | Current review target ID | T02 |
-| Current artifact review state | CHANGES_REQUESTED |
-| Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | aaf3831cb2fb008f90b057163275db42feb0016d |
-| Self-review evidence | [PR #65 candidate and checks](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
-| Fresh-context review state | CHANGES_REQUESTED |
-| Fresh-context review session ID | WB62-T02-S01 |
-| Fresh-context assigned reviewers | wb62_t02_r1, wb62_t02_r2 |
+| Current artifact review state | NOT_STARTED |
+| Self-review state | NOT_STARTED |
+| Self-review candidate revision | Not recorded |
+| Self-review evidence | Not recorded; exact-head evidence will be published on PR #65 before R03 |
+| Fresh-context review state | NOT_STARTED |
+| Fresh-context review session ID | Not recorded |
+| Fresh-context assigned reviewers | Not recorded; R03 will retain wb62_t02_r1 and wb62_t02_r2 after exact-head self-review |
 | Fresh-context required approvals | 2 |
 | Fresh-context approved reviewers | Not recorded |
-| Fresh-context reviewed revision | aaf3831cb2fb008f90b057163275db42feb0016d |
-| Fresh-context review evidence | [R1 findings](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#issuecomment-5560786445); [R2 findings](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#issuecomment-5560789647) |
+| Fresh-context reviewed revision | Not recorded |
+| Fresh-context review evidence | Historical R02 findings: [R1](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#pullrequestreview-5126076314); [R2](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#pullrequestreview-5126077783) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | Not recorded |
 | Human review evidence | Not recorded |
@@ -54,7 +54,7 @@
 | Implementation mode scope | T02, T04 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-06T23:54:35+08:00 |
-| Next action | Publish the consolidated R01 corrections, rerun exact-head self-review and return the revised candidate to the same reviewers for R02 |
+| Next action | Address all R02 findings together, publish exact-head self-review, and return the revised candidate to the same reviewers for R03 |
 | Next action target IDs | T02 |
 | Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/upgrades/U64.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; .github/pull_request_template.md; .github/workflows/documentation-quality.yml; CONTRIBUTING.md; README.md; CHANGELOG.md; package.json; config; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/README.md; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/handoffs; templates/policies; templates/testing; templates/workflows; examples; scripts/sdd-lifecycle.mjs; scripts/review-publication.mjs; scripts/verify-pr-evidence.mjs; tests |
 | Next action write targets | CONTRIBUTING.md; README.md; CHANGELOG.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/README.md; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/handoffs; templates/policies; templates/testing; templates/workflows; .github/pull_request_template.md; .github/workflows/documentation-quality.yml; package.json; config; examples; scripts/sdd-lifecycle.mjs; scripts/review-publication.mjs; scripts/verify-pr-evidence.mjs; tests; .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
@@ -250,18 +250,91 @@ changes invalidate affected dependencies. Missing retrievable PR evidence is not
 approval and blocks reset. Agent errors may be corrected within authority; an
 unknown destructive identity or unresolved delivery-owned item prevents closure.
 
+### Exact WB62 reset inventory
+
+<!-- sdd-section: reset-inventory -->
+
+This is the complete feature-PR inventory for the later reviewed T04
+reset/upgrade candidate. Repository rows use exact paths; external rows bind the
+current installed-runtime identities. T04 must refresh any identity that changes
+before its separate exact-head review and owner cutover acceptance.
+
+| Item ID | Kind | Exact identity | Ownership evidence | Disposition | Reuse reason | Authorized operation | State |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| wb62-t01-evidence | FILE | .github/spec-driven-delivery/deliveries/WB62/T01-evidence.md | Git-tracked WB62 delivery state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-handoff | FILE | .github/spec-driven-delivery/deliveries/WB62/handoff.md | Git-tracked WB62 delivery state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-plan | FILE | .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md | Git-tracked WB62 delivery state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-batch | FILE | .github/spec-driven-delivery/deliveries/WB62/planning-batch.md | Git-tracked WB62 delivery state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-preparation | FILE | .github/spec-driven-delivery/deliveries/WB62/preparation-authority.md | Git-tracked WB62 delivery state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-workflow | FILE | .github/spec-driven-delivery/deliveries/WB62/workflow.md | Git-tracked WB62 delivery state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-review-h01 | FILE | .github/spec-driven-delivery/reviews/WB62-H01.md | Git-tracked WB62 review state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-review-p01-manifest | FILE | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-manifest.snapshot | Git-tracked WB62 review state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-review-p01-plan | FILE | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-plan.snapshot | Git-tracked WB62 review state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-review-p01-registry | FILE | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-registry.snapshot | Git-tracked WB62 review state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-review-p01-trigger | FILE | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-trigger.snapshot | Git-tracked WB62 review state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-review-p01-workflow | FILE | .github/spec-driven-delivery/reviews/WB62-P01-reviewed-workflow.snapshot | Git-tracked WB62 review state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-review-p01 | FILE | .github/spec-driven-delivery/reviews/WB62-P01.md | Git-tracked WB62 review state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-review-s01 | FILE | .github/spec-driven-delivery/reviews/WB62-S01.md | Git-tracked WB62 review state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-review-w01 | FILE | .github/spec-driven-delivery/reviews/WB62-W01.md | Git-tracked WB62 review state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-upgrade-review | FILE | .github/spec-driven-delivery/reviews/U64-S01.md | Git-tracked WB62 upgrade state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-upgrade | FILE | .github/spec-driven-delivery/upgrades/U64.md | Git-tracked WB62 upgrade state | REMOVE | None | Delete in reviewed T04 reset PR | PLANNED |
+| wb62-branch | BRANCH | refs/heads/codex/upgrade-37653ee | PR #65 head branch | REMOVE | None | Delete refs/heads/codex/upgrade-37653ee after reset target proof | PLANNED |
+| whiteboard | FILE | .github/spec-driven-delivery/solution-whiteboard.md | Stable tracked working entry point | RESET | None | Replace with reviewed neutral EMPTY bytes in T04 | PLANNED |
+| adoption-manifest | FILE | .github/spec-driven-delivery/project-adoption-manifest.md | Installed adoption control | RESET | None | Replace with reviewed v5 steady-state bytes and exact pin in T04 | PLANNED |
+| runtime-guide | RUNTIME | /Users/hhhhhusky/Documents/spec-driven-delivery-playbook/.sdd-runtime/agent-guide.md | Installer-generated guide at /Users/hhhhhusky/Documents/spec-driven-delivery-playbook/.sdd-runtime/agent-guide.md | RESET | None | Regenerate /Users/hhhhhusky/Documents/spec-driven-delivery-playbook/.sdd-runtime/agent-guide.md after T04 cutover | PLANNED |
+| runtime-checkout | RUNTIME | /private/var/folders/v4/86fpp9p101g6zqnqzgycrkz40000gn/T/sdd-playbook.UUJzcO/repository | Marker /private/var/folders/v4/86fpp9p101g6zqnqzgycrkz40000gn/T/sdd-playbook.UUJzcO/repository/.sdd-owned-checkout and generated guide | RESET | None | Run installer cleanup for /private/var/folders/v4/86fpp9p101g6zqnqzgycrkz40000gn/T/sdd-playbook.UUJzcO/repository then regenerate | PLANNED |
+| pr-template | FILE | .github/pull_request_template.md | Reusable v5 product output | KEEP | Future PR review entry point | None | PLANNED |
+| agent-trigger | FILE | .github/spec-driven-delivery/agent-trigger.md | Installed adoption control | KEEP | Future feature routing | None | PLANNED |
+| archive-index | FILE | .github/spec-driven-delivery/archive/README.md | Reusable compatibility index | KEEP | Existing v2-v4 archives | None | PLANNED |
+| project-contracts | FILE | .github/spec-driven-delivery/project-contracts.md | Installed adoption control | KEEP | Future contract routing | None | PLANNED |
+| docs-workflow | FILE | .github/workflows/documentation-quality.yml | Reusable v5 product output | KEEP | Future validation | None | PLANNED |
+| changelog | FILE | CHANGELOG.md | Reusable project history | KEEP | Future releases | None | PLANNED |
+| contributing | FILE | CONTRIBUTING.md | Reusable project policy | KEEP | Future contributors | None | PLANNED |
+| readme | FILE | README.md | Reusable project entry point | KEEP | Future users | None | PLANNED |
+| schema-v4 | FILE | config/sdd-lifecycle-schema-v4.json | Frozen compatibility output | KEEP | Existing v4 projects | None | PLANNED |
+| schema-v5 | FILE | config/sdd-lifecycle-schema.json | Reusable v5 product output | KEEP | Future v5 projects | None | PLANNED |
+| batch-contract | FILE | docs/batch-review-and-recovery.md | Reusable canonical contract | KEEP | Future deliveries | None | PLANNED |
+| quality-policy | FILE | docs/documentation-quality-policy.md | Reusable canonical policy | KEEP | Future documentation | None | PLANNED |
+| adoption-runbook | FILE | docs/project-adoption-runbook.md | Reusable adoption guidance | KEEP | Future installations | None | PLANNED |
+| batch-example | FILE | examples/batched-delivery/README.md | Reusable example | KEEP | Future adopters | None | PLANNED |
+| adoption-example | FILE | examples/project-adoption/sglang/README.md | Reusable example | KEEP | Future adopters | None | PLANNED |
+| installer | FILE | install-sdd.sh | Reusable installer | KEEP | Future installs/upgrades | None | PLANNED |
+| package | FILE | package.json | Reusable command map | KEEP | Future validation | None | PLANNED |
+| review-publisher | FILE | scripts/review-publication.mjs | Reusable v5 enforcement | KEEP | Future review publication | None | PLANNED |
+| lifecycle-checker | FILE | scripts/sdd-lifecycle.mjs | Reusable v5 enforcement | KEEP | Future lifecycle checks | None | PLANNED |
+| evidence-checker | FILE | scripts/verify-pr-evidence.mjs | Reusable v5 enforcement | KEEP | Future PR evidence checks | None | PLANNED |
+| upgrade-skill | FILE | skills/sdd-playbook-upgrade/SKILL.md | Reusable agent guidance | KEEP | Future upgrades | None | PLANNED |
+| adoption-skill | FILE | skills/sdd-project-adoption/SKILL.md | Reusable agent guidance | KEEP | Future adoptions | None | PLANNED |
+| workflow-skill | FILE | skills/sdd-project-workflow/SKILL.md | Reusable agent guidance | KEEP | Future deliveries | None | PLANNED |
+| template-index | FILE | templates/README.md | Reusable template map | KEEP | Future generation | None | PLANNED |
+| manifest-template | FILE | templates/adoption/project-adoption-manifest.md | Reusable v5 template | KEEP | Future projects | None | PLANNED |
+| plan-template | FILE | templates/delivery/implementation-plan.md | Reusable v5 template | KEEP | Future planning | None | PLANNED |
+| whiteboard-template | FILE | templates/discovery/solution-whiteboard.md | Reusable v5 template | KEEP | Future design | None | PLANNED |
+| handoff-template | FILE | templates/handoffs/whiteboard-to-workflow.md | Reusable v5 template | KEEP | Future routing | None | PLANNED |
+| development-template | FILE | templates/policies/development-policy.md | Reusable policy template | KEEP | Future projects | None | PLANNED |
+| pr-policy-template | FILE | templates/policies/pull-request-policy.md | Reusable policy template | KEEP | Future projects | None | PLANNED |
+| self-review-template | FILE | templates/reviews/agent-self-review.md | Reusable review template | KEEP | Future reviews | None | PLANNED |
+| fresh-review-template | FILE | templates/reviews/fresh-context-agent-review.md | Reusable review template | KEEP | Future reviews | None | PLANNED |
+| batch-template | FILE | templates/reviews/review-batch.md | Reusable review template | KEEP | Future batches | None | PLANNED |
+| test-strategy-template | FILE | templates/testing/test-strategy.md | Reusable test template | KEEP | Future projects | None | PLANNED |
+| workflow-template | FILE | templates/workflows/sdd-delivery-workflow.md | Reusable v5 template | KEEP | Future deliveries | None | PLANNED |
+| documentation-tests | FILE | tests/documentation-quality.test.mjs | Reusable regression coverage | KEEP | Future changes | None | PLANNED |
+| evidence-tests | FILE | tests/pr-evidence.test.mjs | Reusable regression coverage | KEEP | Future changes | None | PLANNED |
+| publication-tests | FILE | tests/review-publication.test.mjs | Reusable regression coverage | KEEP | Future changes | None | PLANNED |
+| lifecycle-tests | FILE | tests/sdd-lifecycle.test.mjs | Reusable regression coverage | KEEP | Future changes | None | PLANNED |
+
 <!-- sdd-section: delivery-state -->
 
 | Field | Current value |
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
-| Current artifact/task | T02 complete locally; exact-head review pending |
-| Current artifact review | NOT_STARTED; complete PR #65 candidate not yet published |
+| Current artifact/task | T02 PR #65; R02 correction batch in progress |
+| Current artifact review | NOT_STARTED; R03 follows the R02 changes requested on e77636c0f307c739318189fde856cac8ce34f4ae |
 | Last approved artifact | P02 plan `d8d7fd707e1ca31f2d413c86479f51fe7864c6d8` |
-| Next ready action | Publish the exact T02 head, run self-review and start the two implementation reviewers |
-| Active blockers | None |
+| Next ready action | Complete the consolidated R02 correction, publish exact-head self-review, and return it to retained R1/R2 |
+| Active blockers | R02 verifier, inventory, path-safety, workflow-consistency and self-review findings |
 | Stale artifacts | None |
-| Validation complete | T01/PR64 integration and current v4 runtime verified; D02 design accepted |
+| Validation complete | T01/PR64 integration and current v4 runtime verified; D02 design accepted; R02 findings preserved on PR #65 |
 | Validation remaining | T02 PR #65 implementation/review/merge/target receipt; T04 exact-SHA reset/upgrade; final reset/runtime proof |
 | Branch/PR | `codex/upgrade-37653ee`; T02 [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) open; T04 PR not created |
 | Last updated | 2026-09-07 Asia/Shanghai |

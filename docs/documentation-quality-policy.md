@@ -267,6 +267,11 @@ Every relevant pull request and push to `main` runs the following gates:
 | Likely secrets | Repository Node.js checker | Representative credential pattern fails |
 | Private/local paths | Repository Node.js checker | Representative workstation path fails |
 
+Exact absolute paths are permitted only in a structured reset-inventory
+`WORKTREE` or `RUNTIME` row, where the destructive-safety contract requires the
+identity, ownership evidence and authorized operation. The same value in prose,
+a `FILE` row or any unrelated table remains a blocking local-path finding.
+
 The regression suite creates intentional failures at runtime; it does not commit
 real credentials, private paths, or permanently invalid fixtures. A new blocking
 rule is incomplete until it has a negative regression test and one repository

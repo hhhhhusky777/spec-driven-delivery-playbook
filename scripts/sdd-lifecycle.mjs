@@ -37,6 +37,11 @@ function normalizeValue(value) {
     .trim();
 }
 
+function exactPathReference(value, identity) {
+  const escaped = identity.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[\\s'\"\x60=:;,])${escaped}(?=$|[\\s'\"\x60;,])`).test(String(value ?? ""));
+}
+
 function splitMarkdownRow(line) {
   return line
     .trim()
@@ -1809,6 +1814,14 @@ function checkV5Workflow(file, tables, fields) {
   const resetStates = new Set(["NOT_STARTED", "PLANNED", "READY", "IN_PROGRESS", "VERIFIED"]);
   const evidenceState = fields.get("PR evidence state");
   const resetState = fields.get("Reset state");
+  const deliveryState = findTable(tables, ["Field", "Current value"]);
+  const deliveryReview = deliveryState?.rows.find(row => normalizeValue(row.Field) === "Current artifact review");
+  if (deliveryReview) {
+    const snapshotState = normalizeValue(deliveryReview["Current value"]).match(/^[A-Z_]+/)?.[0];
+    if (snapshotState !== fields.get("Current artifact review state")) {
+      fail("SDD_LIVE_STATE_CONSISTENCY", "delivery-state Current artifact review must match the primary review state");
+    }
+  }
   if (!evidenceStates.has(evidenceState)) fail("SDD_PR_EVIDENCE_STATE", `unsupported PR evidence state: ${evidenceState || "missing"}`);
   if (!resetStates.has(resetState)) fail("SDD_RESET_STATE", `unsupported Reset state: ${resetState || "missing"}`);
   const inventory = findTable(tables, [
@@ -1841,16 +1854,16 @@ function checkV5Workflow(file, tables, fields) {
     if (["WORKTREE", "RUNTIME"].includes(kind)) {
       if (!path.isAbsolute(identity)) fail("SDD_RESET_EXTERNAL_IDENTITY", `${itemId} requires an exact absolute path`);
       const normalizedIdentity = path.resolve(identity);
-      const unsafeParents = new Set(["/", "/tmp", "/private", "/private/tmp", "/var", "/private/var", "/Users", "/home", "/usr", "/opt", "/etc", "/Applications", "/Library", "/System", "/Volumes"]);
-      if (unsafeParents.has(normalizedIdentity)) fail("SDD_RESET_EXTERNAL_IDENTITY", `${itemId} cannot target a broad or system parent path`);
-      if (externalIdentities.has(identity)) fail("SDD_RESET_IDENTITY", `${itemId} duplicates an external identity`);
-      externalIdentities.add(identity);
+      const unsafeParents = new Set(["/", "/tmp", "/private", "/private/tmp", "/var", "/var/tmp", "/private/var", "/private/var/tmp", "/private/var/folders", "/Users", "/home", "/root", "/usr", "/opt", "/etc", "/Applications", "/Library", "/System", "/Volumes"]);
+      if (identity !== normalizedIdentity || unsafeParents.has(normalizedIdentity) || /^\/(?:Users|home)\/[^/]+$/.test(normalizedIdentity)) fail("SDD_RESET_EXTERNAL_IDENTITY", `${itemId} cannot target an aliased, user-home, broad or system parent path`);
+      if (externalIdentities.has(normalizedIdentity)) fail("SDD_RESET_IDENTITY", `${itemId} duplicates an external identity`);
+      externalIdentities.add(normalizedIdentity);
     }
     if (!["REMOVE", "RESET", "KEEP"].includes(disposition)) fail("SDD_RESET_DISPOSITION", `${itemId} requires REMOVE, RESET or KEEP`);
     if (disposition === "KEEP" && !hasRecordedValue(row["Reuse reason"])) fail("SDD_RESET_KEEP_REASON", `${itemId} KEEP requires a future-use reason`);
     if (["REMOVE", "RESET"].includes(disposition) && (!hasRecordedValue(row["Ownership evidence"]) || !hasRecordedValue(row["Authorized operation"]))) fail("SDD_RESET_AUTHORITY", `${itemId} ${disposition} requires ownership evidence and an authorized operation`);
     if (["WORKTREE", "RUNTIME"].includes(kind) && ["REMOVE", "RESET"].includes(disposition) &&
-        (!String(row["Ownership evidence"] || "").includes(identity) || !String(row["Authorized operation"] || "").includes(identity))) {
+        (!exactPathReference(row["Ownership evidence"], identity) || !exactPathReference(row["Authorized operation"], identity))) {
       fail("SDD_RESET_AUTHORITY", `${itemId} destructive external evidence and operation must name the exact target`);
     }
     if (kind === "FILE" && ["REMOVE", "RESET"].includes(disposition) && (globalScope || !allowedScopes.some(scope => pathWithinScope(identity, scope)))) fail("SDD_RESET_SCOPE", `${itemId} destructive file target must be inside a non-global Allowed write scope`);

@@ -197,12 +197,26 @@ test("v5 dispatch preserves v4 links and validates exact reset inventory", async
   const external = `| volatile-worktree | WORKTREE | /srv/project-worktree | owned marker /srv/project-worktree | REMOVE | None | remove /srv/project-worktree | PLANNED |`;
   for (const [row, rule] of [
     [external.replaceAll("/srv/project-worktree", "/"), "SDD_RESET_EXTERNAL_IDENTITY"],
+    [external.replaceAll("/srv/project-worktree", "/Users/alice"), "SDD_RESET_EXTERNAL_IDENTITY"],
+    [external.replaceAll("/srv/project-worktree", "/home/alice"), "SDD_RESET_EXTERNAL_IDENTITY"],
+    [external.replaceAll("/srv/project-worktree", "/srv/team/../project-worktree"), "SDD_RESET_EXTERNAL_IDENTITY"],
     [external.replace("owned marker /srv/project-worktree", "owned marker for another path"), "SDD_RESET_AUTHORITY"],
     [external.replace("remove /srv/project-worktree", "remove another path"), "SDD_RESET_AUTHORITY"],
+    [external.replace("owned marker /srv/project-worktree", "owned marker /srv/project-worktree-old"), "SDD_RESET_AUTHORITY"],
+    [external.replace("remove /srv/project-worktree", "remove /srv/project-worktree-old"), "SDD_RESET_AUTHORITY"],
   ]) {
     await writeFile(f.file, f.w.replace("| stable-doc | FILE | docs/stable.md | Git tracked | KEEP | Reusable project documentation | None | PLANNED |", row));
     assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(item => item.rule === rule), rule);
   }
+});
+
+test("v5 duplicated live review state must remain consistent", async t => {
+  const f = await v5Fixture(t);
+  const withSnapshot = f.w.replace("| Stale artifacts | `None` |", "| Current artifact review | APPROVED; R01 |\n| Stale artifacts | `None` |");
+  await writeFile(f.file, withSnapshot);
+  assert.deepEqual(await checkSddLifecycleDocument(f.file, f.root, SCHEMAS), []);
+  await writeFile(f.file, withSnapshot.replace("| Current artifact review | APPROVED; R01 |", "| Current artifact review | CHANGES_REQUESTED; R01 |"));
+  assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(item => item.rule === "SDD_LIVE_STATE_CONSISTENCY"));
 });
 
 test("v5 adoption receipt locator is fixed-size and exact", async t => {

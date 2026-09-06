@@ -46,15 +46,17 @@ actual values; do not leave the instructional table in the published comment.
 | Self-review | |
 | Independent review | |
 | Findings | |
-| Requested owner authority | `PENDING` |
+| Requested owner authority | `State=PENDING; Candidate=FULL_SHA; Scope=EXACT_MERGE_AND_RESET_SCOPE` |
 | Checks | |
 | Limits and follow-ups | |
 | Reset plan | |
 
 Format `Reset plan` as `REMOVE=...; RESET=...; KEEP=...;
-Inventory=EXACT_HEAD_GITHUB_BLOB_URL` (`None` is valid for an empty group).
-Each review receipt identifies one stable `R1` or `R2` seat, a shared session,
-the exact candidate, and its disposition.
+Inventory=EXACT_HEAD_GITHUB_BLOB_URL`. Each disposition is `None` or a
+comma-separated list of exact identities matching the retrieved inventory.
+The self-review field contains its PR URL and SHA-256 body digest. Each reviewer
+publication uses the canonical Section 6 receipt table and identifies one stable
+`R1` or `R2` seat, a shared session, the exact candidate, and its disposition.
 
 After the owner acts, publish `<!-- sdd-pr-acceptance/v1 -->` with `Candidate`,
 `Owner decision`, `Merge/reset scope`, `Owner comment`, `Owner comment body digest`,
@@ -62,9 +64,11 @@ and `Review evidence digest`; the owner comment names the exact candidate and
 same merge/reset scope. After merge, publish
 `<!-- sdd-target-receipt/v1 -->` with `Merge identity`, `Target proof`,
 `Check proof`, `Evidence availability`, `Runtime/project proof`,
-`Reset authorization`, and `Exceptions/follow-ups`. Run the read-only
+`Reset authorization`, and `Exceptions/follow-ups`. Format reset authorization
+as `Scope=EXACT_ACCEPTED_SCOPE; Reset target=BRANCH; Reset mode=MODE;
+Authority=OWNER_COMMENT_URL`. Run the read-only
 GitHub-aware evidence gate with the exact head, base, and target before creating
-the reset PR.
+the reset PR, always supplying the expected owner login.
 
 ## Contract-to-change map and author annotations
 

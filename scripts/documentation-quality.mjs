@@ -356,8 +356,21 @@ export function checkMarkdownContent(relativeFile, text, config) {
 export function checkSensitiveContent(relativeFile, text, config) {
   const diagnostics = [];
   const lines = text.split(/\r?\n/);
+  let resetInventoryColumns = null;
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
+    if (/^\s*\|/.test(line)) {
+      const cells = line.trim().replace(/^\|/, "").replace(/\|$/, "").split(/(?<!\\)\|/).map(cell => cell.trim());
+      if (["Item ID", "Kind", "Exact identity", "Ownership evidence", "Disposition", "Reuse reason", "Authorized operation", "State"].every(header => cells.includes(header))) {
+        resetInventoryColumns = { kind: cells.indexOf("Kind"), identity: cells.indexOf("Exact identity") };
+      }
+    } else {
+      resetInventoryColumns = null;
+    }
+    const resetExternalRow = resetInventoryColumns && !/^\s*\|(?:\s*:?-{3,}:?\s*\|)+\s*$/.test(line) && (() => {
+      const cells = line.trim().replace(/^\|/, "").replace(/\|$/, "").split(/(?<!\\)\|/).map(cell => cell.trim().replace(/^`|`$/g, ""));
+      return ["WORKTREE", "RUNTIME"].includes(cells[resetInventoryColumns.kind]) && path.isAbsolute(cells[resetInventoryColumns.identity] || "");
+    })();
     for (const { name, pattern } of SECRET_PATTERNS) {
       if (pattern.test(line)) {
         diagnostics.push(
@@ -365,7 +378,7 @@ export function checkSensitiveContent(relativeFile, text, config) {
         );
       }
     }
-    if (!lineMatchesAllowlist(line, config.localPathAllowlist)) {
+    if (!resetExternalRow && !lineMatchesAllowlist(line, config.localPathAllowlist)) {
       for (const { name, pattern } of LOCAL_PATH_PATTERNS) {
         if (pattern.test(line)) {
           diagnostics.push(

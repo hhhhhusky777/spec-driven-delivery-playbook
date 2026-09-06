@@ -18,6 +18,10 @@ adopted.
   v2–v4 schemas. Reset removes delivery-only state, restores `EMPTY`, regenerates
   owned runtime and keeps adoption plus reusable output. Existing pins and
   historical archives do not migrate automatically.
+  Evidence verification requires an expected owner, unambiguous owner approval,
+  canonical Section 6 reviewer receipts, digest-bound self-review, retrieved
+  inventory contents, exact target/reset authority, and normalized destructive
+  paths that reject user-home or prefix-alias targets.
 
 - Define five goals in the quality policy and integrate recoverability,
   isolation and project/playbook gap triage into existing error handling.

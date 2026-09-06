@@ -59,7 +59,7 @@ on:
         type: string
       evidence_owner:
         description: "Expected owner login"
-        required: false
+        required: true
         type: string
 
 permissions:

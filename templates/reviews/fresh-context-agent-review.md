@@ -229,6 +229,11 @@ finding.
 | Recommended next action | `<HUMAN_REVIEW / MERGE_GATE / AUTHOR_ADDRESS_FINDINGS / RESTORE_REVIEWABILITY>` |
 | Reviewed at | `<timestamp/timezone>` |
 
+For a v5 PR publication, preserve this two-column Section 6 table as the single
+machine-readable receipt. Do not append duplicate standalone seat, session,
+candidate, or disposition fields; contradictory or duplicate fields fail the
+evidence gate.
+
 ## 7. Coordinator resume gate
 
 Before using the receipt, the original agent verifies:
