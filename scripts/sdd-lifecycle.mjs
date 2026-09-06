@@ -1840,12 +1840,19 @@ function checkV5Workflow(file, tables, fields) {
     if (kind === "BRANCH" && !/^refs\/heads\/[A-Za-z0-9._/-]+$/.test(identity)) fail("SDD_RESET_BRANCH_IDENTITY", `${itemId} requires an exact refs/heads branch ref`);
     if (["WORKTREE", "RUNTIME"].includes(kind)) {
       if (!path.isAbsolute(identity)) fail("SDD_RESET_EXTERNAL_IDENTITY", `${itemId} requires an exact absolute path`);
+      const normalizedIdentity = path.resolve(identity);
+      const unsafeParents = new Set(["/", "/tmp", "/private", "/private/tmp", "/var", "/private/var", "/Users", "/home", "/usr", "/opt", "/etc", "/Applications", "/Library", "/System", "/Volumes"]);
+      if (unsafeParents.has(normalizedIdentity)) fail("SDD_RESET_EXTERNAL_IDENTITY", `${itemId} cannot target a broad or system parent path`);
       if (externalIdentities.has(identity)) fail("SDD_RESET_IDENTITY", `${itemId} duplicates an external identity`);
       externalIdentities.add(identity);
     }
     if (!["REMOVE", "RESET", "KEEP"].includes(disposition)) fail("SDD_RESET_DISPOSITION", `${itemId} requires REMOVE, RESET or KEEP`);
     if (disposition === "KEEP" && !hasRecordedValue(row["Reuse reason"])) fail("SDD_RESET_KEEP_REASON", `${itemId} KEEP requires a future-use reason`);
     if (["REMOVE", "RESET"].includes(disposition) && (!hasRecordedValue(row["Ownership evidence"]) || !hasRecordedValue(row["Authorized operation"]))) fail("SDD_RESET_AUTHORITY", `${itemId} ${disposition} requires ownership evidence and an authorized operation`);
+    if (["WORKTREE", "RUNTIME"].includes(kind) && ["REMOVE", "RESET"].includes(disposition) &&
+        (!String(row["Ownership evidence"] || "").includes(identity) || !String(row["Authorized operation"] || "").includes(identity))) {
+      fail("SDD_RESET_AUTHORITY", `${itemId} destructive external evidence and operation must name the exact target`);
+    }
     if (kind === "FILE" && ["REMOVE", "RESET"].includes(disposition) && (globalScope || !allowedScopes.some(scope => pathWithinScope(identity, scope)))) fail("SDD_RESET_SCOPE", `${itemId} destructive file target must be inside a non-global Allowed write scope`);
     if (!new Set(["PLANNED", "VERIFIED"]).has(state)) fail("SDD_RESET_ITEM_STATE", `${itemId} has unsupported state ${state}`);
   }
@@ -2180,7 +2187,8 @@ async function checkReviewBatch(file, root, tables, fields, schema, schemas, anc
       const workflowTables = parseMarkdownTables(workflowText);
       const workflowFields = extractControlFields(workflowTables);
       const batchVersion = extractMarker(await readFile(file, "utf8"))?.version;
-      const result = marker?.artifact === "delivery-workflow" && (batchVersion === 4 ? marker.version === 4 : [2, 3].includes(marker.version))
+      const compatibleWorkflow = [4, 5].includes(batchVersion) ? marker?.version === batchVersion : [2, 3].includes(marker?.version);
+      const result = marker?.artifact === "delivery-workflow" && compatibleWorkflow
         ? await checkSddLifecycleDocument(linked, root, schemas, ancestors) : ["invalid workflow"];
       const pr = markdownLinkTarget(rawControlField(tables, "PR"));
       const targetLink = markdownLinkTarget(rawControlField(workflowTables, "Current artifact/gate"));

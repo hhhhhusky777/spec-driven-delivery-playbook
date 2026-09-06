@@ -117,13 +117,21 @@ jobs:
       - name: Verify versioned PR evidence
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          EVIDENCE_MODE: ${{ inputs.evidence_mode }}
+          EVIDENCE_REPOSITORY: ${{ github.repository }}
+          EVIDENCE_PR: ${{ inputs.evidence_pr }}
+          EVIDENCE_HEAD: ${{ inputs.evidence_head }}
+          EVIDENCE_BASE: ${{ inputs.evidence_base }}
+          EVIDENCE_TARGET: ${{ inputs.evidence_target }}
+          EVIDENCE_CHECKS: ${{ inputs.evidence_checks }}
+          EVIDENCE_OWNER: ${{ inputs.evidence_owner }}
         run: >-
           npm run sdd:evidence --
-          --mode "${{ inputs.evidence_mode }}"
-          --repository "${{ github.repository }}"
-          --pr "${{ inputs.evidence_pr }}"
-          --head "${{ inputs.evidence_head }}"
-          --base "${{ inputs.evidence_base }}"
-          --target "${{ inputs.evidence_target }}"
-          --checks "${{ inputs.evidence_checks }}"
-          --owner "${{ inputs.evidence_owner }}"
+          --mode "$EVIDENCE_MODE"
+          --repository "$EVIDENCE_REPOSITORY"
+          --pr "$EVIDENCE_PR"
+          --head "$EVIDENCE_HEAD"
+          --base "$EVIDENCE_BASE"
+          --target "$EVIDENCE_TARGET"
+          --checks "$EVIDENCE_CHECKS"
+          --owner "$EVIDENCE_OWNER"

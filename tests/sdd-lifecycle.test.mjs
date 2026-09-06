@@ -193,6 +193,16 @@ test("v5 dispatch preserves v4 links and validates exact reset inventory", async
   }
   await writeFile(f.file, f.w.replace("KEEP | Reusable project documentation | None", "REMOVE | None | Delete reviewed delivery file").replace("docs/stable.md", "scripts/transient.mjs"));
   assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(item => item.rule === "SDD_RESET_SCOPE"));
+
+  const external = `| volatile-worktree | WORKTREE | /srv/project-worktree | owned marker /srv/project-worktree | REMOVE | None | remove /srv/project-worktree | PLANNED |`;
+  for (const [row, rule] of [
+    [external.replaceAll("/srv/project-worktree", "/"), "SDD_RESET_EXTERNAL_IDENTITY"],
+    [external.replace("owned marker /srv/project-worktree", "owned marker for another path"), "SDD_RESET_AUTHORITY"],
+    [external.replace("remove /srv/project-worktree", "remove another path"), "SDD_RESET_AUTHORITY"],
+  ]) {
+    await writeFile(f.file, f.w.replace("| stable-doc | FILE | docs/stable.md | Git tracked | KEEP | Reusable project documentation | None | PLANNED |", row));
+    assert.ok((await checkSddLifecycleDocument(f.file, f.root, SCHEMAS)).some(item => item.rule === rule), rule);
+  }
 });
 
 test("v5 adoption receipt locator is fixed-size and exact", async t => {
@@ -656,6 +666,39 @@ test("batch auto-merge exception is bound to an actual matching workflow", async
   assert.ok((await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_EXECUTION"));
   await writeFile(workflowPath, state.replace("AGENT_AUTO_MERGE", "HUMAN_REVIEW_BEFORE_MERGE"));
   assert.ok((await checkSddLifecycleDocument(batchPath, input.root, SCHEMAS)).some(item => item.rule === "SDD_HUMAN_REVIEW_STATE"));
+});
+
+test("v5 automatic implementation batch accepts only a matching v5 workflow", async (t) => {
+  const f = await v5Fixture(t);
+  const head = "b".repeat(40);
+  const workflowPath = f.file;
+  const batchPath = path.join(f.root, "batch.md");
+  const active = f.w
+    .replace("| Review batch | None |", "| Review batch | [Batch](batch.md) |")
+    .replace("| State | `GATES_READY` |", "| State | `DELIVERY_ACTIVE` |")
+    .replace("| Previous state | `ARTIFACT_IN_REVIEW` |", "| Previous state | `GATES_READY` |")
+    .replace("| Current artifact/gate | [plan](implementation-plan.md) |", "| Current artifact/gate | [task-1 PR #1](https://github.com/example/project/pull/1) |")
+    .replace("| Current review phase | `DESIGN` |", "| Current review phase | `IMPLEMENTATION` |")
+    .replace("| Current artifact review state | `APPROVED` |", "| Current artifact review state | `IN_REVIEW` |")
+    .replace("| Implementation continuation mode | `HUMAN_REVIEW_BEFORE_MERGE` |", "| Implementation continuation mode | `AGENT_AUTO_MERGE` |")
+    .replace("| Self-review candidate revision | `candidate-v1` |", `| Self-review candidate revision | \`${head}\` |`)
+    .replace("| Fresh-context reviewed revision | `candidate-v1` |", `| Fresh-context reviewed revision | \`${head}\` |`);
+  await writeFile(workflowPath, active);
+  const workflowHash = createHash("sha256").update(active).digest("hex");
+  const batch = reviewBatch({
+    Phase: "IMPLEMENTATION", "Allowed paths": "artifact.md", State: "ACCEPTED", "Previous state": "IN_REVIEW",
+    "Candidate revision": head, "Base revision": "a".repeat(40), PR: "[PR1](https://github.com/example/project/pull/1)",
+    "Self-review state": "SELF_REVIEW_PASSED", "Self-review candidate revision": head, "Self-review evidence": "self.md",
+    "Fresh-context review state": "APPROVED", "Fresh-context review session ID": "S01", "Fresh-context assigned reviewers": "r1, r2",
+    "Fresh-context required approvals": "2", "Fresh-context approved reviewers": "r1, r2", "Fresh-context reviewed revision": head,
+    "Fresh-context review evidence": "review.md", "Human review state": "NOT_APPLICABLE", "Human reviewed revision": "None",
+    "Human review evidence": "None", "Implementation workflow": "[Workflow](artifact.md)",
+  }, `| A01 | artifact.md | sha256:${workflowHash} | None | C01 | APPROVED | review.md |`,
+  "| C01 | policy.md | Acceptance | review.md | SATISFIED |").replace("review-batch@3", "review-batch@5");
+  await writeFile(batchPath, batch);
+  assert.deepEqual(await checkSddLifecycleDocument(batchPath, f.root, SCHEMAS), []);
+  await writeFile(batchPath, batch.replace("review-batch@5", "review-batch@4"));
+  assert.ok((await checkSddLifecycleDocument(batchPath, f.root, SCHEMAS)).some(item => item.rule === "SDD_BATCH_EXECUTION"));
 });
 
 test("review inventory rejects an in-root symlink outside its allowed scope", async (t) => {

@@ -9,6 +9,28 @@ const repo = value => typeof value === "string" && /^[A-Za-z0-9_.-]+\/[A-Za-z0-9
 const branch = value => typeof value === "string" && /^[A-Za-z0-9][A-Za-z0-9._/-]*$/.test(value) && !value.includes("..") && !value.includes("//") && !value.includes("@{");
 const digest = body => `sha256:${createHash("sha256").update(body).digest("hex")}`;
 const normalize = value => String(value ?? "").trim().replace(/^`|`$/g, "");
+const includesExact = (value, expected) => String(value ?? "").includes(expected);
+
+function resetPlan(value, repository, expectedHead) {
+  const entries = new Map();
+  for (const part of String(value ?? "").split(";")) {
+    const match = part.trim().match(/^(REMOVE|RESET|KEEP|Inventory)\s*=\s*(.+)$/i);
+    if (!match) return false;
+    const key = match[1].toUpperCase();
+    if (entries.has(key) || !normalize(match[2])) return false;
+    entries.set(key, normalize(match[2]));
+  }
+  const inventory = entries.get("INVENTORY") || "";
+  return ["REMOVE", "RESET", "KEEP", "INVENTORY"].every(key => entries.has(key)) &&
+    inventory.startsWith(`https://github.com/${repository}/blob/${expectedHead}/`);
+}
+
+function reviewerReceipt(body, expectedHead) {
+  const seat = String(body ?? "").match(/(?:^|\n)Reviewer seat:\s*(R1|R2)\b/i)?.[1]?.toUpperCase();
+  const session = String(body ?? "").match(/(?:^|\n)Review session:\s*([A-Za-z0-9._-]+)\b/i)?.[1];
+  const disposition = /(?:^|\n)Disposition:\s*(?:PASS|APPROVED)\b/i.test(String(body ?? ""));
+  return seat && session && disposition && includesExact(body, expectedHead) ? { seat, session } : null;
+}
 
 function splitRow(line) {
   return line.trim().replace(/^\|/, "").replace(/\|$/, "")
@@ -106,6 +128,7 @@ export function evaluatePrEvidence(input) {
     if (!String(review.fields.get("Self-review")).includes(input.expectedHead) || !/\b(?:PASS|PASSED)\b/i.test(review.fields.get("Self-review"))) fail("SELF_REVIEW_EVIDENCE");
     if (normalize(review.fields.get("Requested owner authority")).toUpperCase() !== "PENDING") fail("OWNER_AUTHORITY_PENDING");
     if (/\b(?:OPEN|UNRESOLVED|CHANGES_NEEDED|BLOCKED)\b/i.test(review.fields.get("Findings"))) fail("UNRESOLVED_FINDINGS");
+    if (!resetPlan(review.fields.get("Reset plan"), input.repository, input.expectedHead)) fail("RESET_PLAN");
   }
   if (acceptance && review && acceptance.fields.get("Review evidence digest") !== digest(review.body)) fail("REVIEW_DIGEST");
   if (acceptance && normalize(acceptance.fields.get("Owner decision")).toUpperCase() !== "APPROVED") fail("OWNER_DECISION");
@@ -115,12 +138,16 @@ export function evaluatePrEvidence(input) {
     ownerEvidence = bodyObjects(snapshot).filter(item => ownerUrls.includes(item.url));
     if (ownerUrls.length !== 1 || ownerEvidence.length !== 1 || [review?.id, acceptance.id, target?.id].includes(ownerEvidence[0]?.id) || acceptance.fields.get("Owner comment body digest") !== digest(ownerEvidence[0]?.body ?? "")) fail("OWNER_EVIDENCE");
     if (input.owner && ownerEvidence[0]?.author !== input.owner) fail("OWNER_IDENTITY");
+    const ownerBody = String(ownerEvidence[0]?.body ?? "");
+    const acceptedScope = normalize(acceptance.fields.get("Merge/reset scope"));
+    if (!includesExact(ownerBody, input.expectedHead) || !/\bAPPROV(?:E|ED)\b/i.test(ownerBody) || !acceptedScope || !includesExact(ownerBody, acceptedScope)) fail("OWNER_SCOPE_BINDING");
   }
   let reviewReceipts = [];
   if (review) {
     const receiptUrls = urls(review.fields.get("Independent review"));
     reviewReceipts = bodyObjects(snapshot).filter(item => receiptUrls.includes(item.url));
-    if (new Set(receiptUrls).size !== 2 || reviewReceipts.length !== 2 || reviewReceipts.some(item => [review.id, acceptance?.id, target?.id, ownerEvidence[0]?.id].includes(item.id)) || reviewReceipts.some(item => !String(item.body).includes(input.expectedHead) || !/Disposition:\s*(?:PASS|APPROVED)\b/i.test(item.body)) || reviewReceipts.some(item => !String(review.fields.get("Independent review")).includes(digest(item.body)))) {
+    const parsedReceipts = reviewReceipts.map(item => reviewerReceipt(item.body, input.expectedHead));
+    if (new Set(receiptUrls).size !== 2 || reviewReceipts.length !== 2 || reviewReceipts.some(item => [review.id, acceptance?.id, target?.id, ownerEvidence[0]?.id].includes(item.id)) || parsedReceipts.some(item => !item) || new Set(parsedReceipts.map(item => item?.seat)).size !== 2 || !parsedReceipts.some(item => item?.seat === "R1") || !parsedReceipts.some(item => item?.seat === "R2") || new Set(parsedReceipts.map(item => item?.session)).size !== 1 || reviewReceipts.some(item => !String(review.fields.get("Independent review")).includes(digest(item.body)))) {
       fail("INDEPENDENT_REVIEW_EVIDENCE");
     }
   }
@@ -132,7 +159,12 @@ export function evaluatePrEvidence(input) {
     if (target && (!String(target.fields.get("Check proof")).includes(name) || !String(target.fields.get("Check proof")).includes(check?.url))) fail("TARGET_CHECK_BINDING", name);
   }
   if (target) {
-    if (!String(target.fields.get("Merge identity")).includes(pull.mergeSha) || !String(target.fields.get("Merge identity")).includes(input.target) || !String(target.fields.get("Target proof")).includes(input.expectedHead) || !sha(pull.headTree) || !sha(pull.mergeTree) || pull.headTree !== pull.mergeTree) fail("TARGET_PROOF");
+    const mergeIdentity = String(target.fields.get("Merge identity"));
+    const targetProof = String(target.fields.get("Target proof"));
+    if (!sha(pull.mergeSha) || typeof pull.mergedAt !== "string" || !pull.mergedAt || !includesExact(mergeIdentity, pull.mergeSha) || !includesExact(mergeIdentity, input.target) || !includesExact(mergeIdentity, pull.mergedAt) ||
+        !includesExact(targetProof, input.expectedHead) || !includesExact(targetProof, pull.mergeSha) || !includesExact(targetProof, pull.targetSha) ||
+        !sha(pull.headTree) || !sha(pull.mergeTree) || pull.headTree !== pull.mergeTree || !sha(pull.targetSha) ||
+        pull.targetMergeBase !== pull.mergeSha || !["ahead", "identical"].includes(pull.targetCompareStatus)) fail("TARGET_PROOF");
     for (const item of [review, acceptance, ...reviewReceipts, ...ownerEvidence]) {
       if (!item || !String(target.fields.get("Evidence availability")).includes(item.url) || !String(target.fields.get("Evidence availability")).includes(digest(item.body))) fail("TARGET_EVIDENCE_AVAILABILITY", item?.id ? String(item.id) : "missing");
     }
@@ -175,8 +207,17 @@ export async function collectGitHubSnapshot({ repository, pr, credential, fetchI
     pull.merged_at && pull.merge_commit_sha ? githubJson(fetchImpl, `${base}/git/commits/${pull.merge_commit_sha}`, credential) : Promise.resolve(null),
   ]);
   const comment = item => ({ id: item.id, url: item.html_url, author: item.user?.login, body: item.body ?? "" });
+  let targetRef = null;
+  let targetComparison = null;
+  if (pull.merged_at && pull.merge_commit_sha) {
+    const targetPath = pull.base.ref.split("/").map(encodeURIComponent).join("/");
+    targetRef = await githubJson(fetchImpl, `${base}/git/ref/heads/${targetPath}`, credential);
+    if (sha(targetRef?.object?.sha)) {
+      targetComparison = await githubJson(fetchImpl, `${base}/compare/${pull.merge_commit_sha}...${targetRef.object.sha}`, credential);
+    }
+  }
   return {
-    pull: { repository: repository.toLowerCase(), number: pull.number, head: pull.head.sha, base: pull.base.sha, target: pull.base.ref, headTree: headCommit.tree?.sha, mergeTree: mergeCommit?.tree?.sha ?? null, state: pull.merged_at ? "MERGED" : String(pull.state).toUpperCase(), mergeSha: pull.merge_commit_sha },
+    pull: { repository: repository.toLowerCase(), number: pull.number, head: pull.head.sha, base: pull.base.sha, target: pull.base.ref, headTree: headCommit.tree?.sha, mergeTree: mergeCommit?.tree?.sha ?? null, state: pull.merged_at ? "MERGED" : String(pull.state).toUpperCase(), mergeSha: pull.merge_commit_sha, mergedAt: pull.merged_at, targetSha: targetRef?.object?.sha ?? null, targetMergeBase: targetComparison?.merge_base_commit?.sha ?? null, targetCompareStatus: targetComparison?.status ?? null },
     issueComments: issueComments.map(comment),
     reviews: reviews.map(comment),
     reviewComments: reviewComments.map(comment),

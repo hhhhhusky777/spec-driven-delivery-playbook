@@ -53,7 +53,7 @@ section.
 | Field | Value |
 | --- | --- |
 | Review batch | `None` |
-| Delivery workflow | `<local Markdown link to matching v4 workflow>` |
+| Delivery workflow | `<local Markdown link to matching v5 workflow>` |
 | Plan | `<short descriptive name>` |
 | Status | `DRAFT` |
 | Previous status | `DRAFT` |
@@ -547,7 +547,7 @@ model. `Data phase` is `NONE`, `FOUNDATION`, `CONSUMER`, `MIGRATION`, or
 | `T00` | `PLANNED` | | `None` | `None` | `CURRENT` | `SPEC_PENDING` | `NONE` | `<task outcome>` | `<IDs>` | `<why it is independently safe>` | `—` | `None` | `None` |
 | `T01` | `PLANNED` | | `T00` | `None` | `CURRENT` | `SPEC_PENDING` | `<phase>` | `<task outcome>` | `<IDs>` | `<why it is independently safe>` | `—` | `<output IDs/None>` | `None` |
 
-For v4, declare required predecessor output IDs even while PLANNED. Before
+For v4/v5, declare required predecessor output IDs even while PLANNED. Before
 READY/NEXT, bind each consumed identity as `output-id=full-hash` in Consumed
 output versions (comma-separated). The matching workflow owns output state,
 review and file evidence. See the [phase readiness contract](../../docs/batch-review-and-recovery.md#version-4-phase-aware-readiness).

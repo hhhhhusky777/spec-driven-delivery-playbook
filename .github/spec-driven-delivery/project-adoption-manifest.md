@@ -729,10 +729,11 @@ separate; this historical statement does not override its later PR #64
 publication or the current U64/live controls.
 
 At that recovery checkpoint, the
-[archived WB62 conclusion](archive/WB62/solution-whiteboard.md) owned the
-accepted design for issues #62/#54 and the stable
-[working whiteboard](solution-whiteboard.md) was neutral `EMPTY`. That snapshot
-is historical; it does not route the current amendment. Runtime issues
+[accepted WB62 conclusion](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/blob/456b3fc2459be4f3ddc5ca7f649a533dd4e48996/.github/spec-driven-delivery/solution-whiteboard.md)
+owned the design for issues #62/#54 and the stable
+[working whiteboard](solution-whiteboard.md) was neutral `EMPTY`. The immutable
+Git revision preserves that historical snapshot; it does not route the current
+amendment. Runtime issues
 33/34/36 remain deferred open work and their former local draft is not active.
 
 WB62 R02 design was accepted by the owner after both independent reviewers
@@ -747,7 +748,7 @@ candidate `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30`. The current
 to active WB62 and blocks intake of a new need through PR #65 target
 verification and the separately reviewed T04 reset. The
 [WB62 workflow](deliveries/WB62/workflow.md) owns current routing, dependency
-freshness and the P02 planning review; no implementation task is active yet.
+freshness and implementation review; T02 is at its exact-PR-head review boundary.
 
 ### Historical U84 upgrade handoff
 

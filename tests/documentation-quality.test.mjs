@@ -30,6 +30,7 @@ test("v5 reset and v4 control receipts stay fail-closed", async () => {
   const canonical = bundle.get("docs/batch-review-and-recovery.md");
   for (const value of [
     "Version 5 PR evidence and delivery reset",
+    "Current source plan/workflow/batch templates use v5",
     "sdd-pr-review/v1",
     "sdd-pr-acceptance/v1",
     "sdd-target-receipt/v1",
@@ -57,6 +58,12 @@ test("v5 reset and v4 control receipts stay fail-closed", async () => {
   for (const value of ["pull-requests: read", "checks: read", "evidence_base:", "evidence_target:", "--base", "--target"]) {
     assert.ok(action.includes(value), value);
   }
+  const evidenceStep = action.split("- name: Verify versioned PR evidence")[1]?.split("\n  [a-z-]+:")[0] || "";
+  assert.ok(evidenceStep.includes("EVIDENCE_MODE: ${{ inputs.evidence_mode }}"));
+  assert.ok(!evidenceStep.split("run: >-")[1]?.includes("${{ inputs."), "workflow inputs must not be interpolated into shell source");
+  const planTemplate = await readFile(path.join(REPOSITORY_ROOT, "templates/delivery/implementation-plan.md"), "utf8");
+  assert.match(planTemplate, /local Markdown link to matching v5 workflow/);
+  assert.doesNotMatch(planTemplate, /local Markdown link to matching v4 workflow/);
   assert.match(packageConfig, /"sdd:evidence":\s*"node scripts\/verify-pr-evidence\.mjs"/);
 });
 

@@ -484,8 +484,8 @@ claim changed. Exact-head PR checks and implementation reviews remain pending.
 | Active branch / PR | `codex/upgrade-37653ee`; [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
 | Last completed task | T01 |
 | Active blocker | None |
-| Last validation | T02 implementation complete locally; focused tests 59/59, full Node suite 113/113, Markdown, structure, lifecycle, Mermaid and whitespace gates pass |
-| Next action | Freeze and publish the exact PR #65 head, then run self-review and two implementation reviews |
+| Last validation | Consolidated R01 corrections complete locally; focused tests 91/91, full Node suite 114/114, Markdown, structure, lifecycle, Mermaid and whitespace gates pass |
+| Next action | Publish the revised exact PR #65 head, rerun self-review and return it to the retained R1/R2 reviewers |
 
 ## 10. Evidence and history
 

@@ -2,7 +2,7 @@
 
 This is the accepted consumption-time input. Planning and implementation claims
 below remain historical; the [live workflow](workflow.md) owns current progress
-and the archived conclusion owns the durable design.
+and the accepted Git revision owns the durable design.
 
 ## Owner review brief
 
@@ -22,8 +22,8 @@ and the archived conclusion owns the durable design.
 | --- | --- |
 | Delivery | WB62 — agent judgment and essential evidence |
 | State | CONSUMED |
-| Source whiteboard | [Archived concluded whiteboard](../../archive/WB62/solution-whiteboard.md) |
-| Whiteboard state | CONCLUDED at consumption; now preserved as ARCHIVED |
+| Source whiteboard | [Concluded whiteboard at accepted revision](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/blob/456b3fc2459be4f3ddc5ca7f649a533dd4e48996/.github/spec-driven-delivery/solution-whiteboard.md) |
+| Whiteboard state | CONCLUDED at consumption; preserved by the immutable accepted revision |
 | Whiteboard conclusion version | 77a738d60f245fa1752b4cb25d1c3e788455e1fd; approved content from 456b3fc2459be4f3ddc5ca7f649a533dd4e48996 |
 | Target repository | [Playbook](https://github.com/hhhhhusky777/spec-driven-delivery-playbook) |
 | Governing registry | [Project contracts](../../project-contracts.md) |

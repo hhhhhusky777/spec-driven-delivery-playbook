@@ -11,15 +11,21 @@ Before feature acceptance, publish one `sdd-pr-review/v1` table on the PR with
 repository/target, accepted design, task briefs and outcomes, exact candidate,
 self-review, two independent review receipts and body digests, findings and
 dispositions, required checks, limits/follow-ups, requested owner authority,
-and the complete reset plan. The self-review and both reviewer receipts name
-the exact head and passing disposition, no finding remains open, and requested
-owner authority is exactly `PENDING`. After the owner acts, publish a separate
+and the complete reset plan. Record it as `REMOVE=...; RESET=...; KEEP=...;
+Inventory=EXACT_HEAD_GITHUB_BLOB_URL`; use `None` for an empty disposition.
+The self-review and both reviewer receipts name the exact head and passing
+disposition. The receipts label distinct stable seats `R1` and `R2` in one
+review session, no finding remains open, and requested owner authority is
+exactly `PENDING`. After the owner acts, publish a separate
 `sdd-pr-acceptance/v1` table binding the owner comment and its body digest to
-the accepted review-table digest and exact candidate. The evidence gate proceeds
+the accepted review-table digest, exact candidate and stated merge/reset scope.
+The owner comment itself must name that candidate and scope. The evidence gate proceeds
 only for an `APPROVED` owner decision; rejected or changed work returns to review.
 Do not put a future decision into either table.
 
-After merge, verify target ancestry/tree and checks, then publish
+After merge, fetch the live target tip and verify that the observed merge commit
+is its ancestor, in addition to verifying tree identity and checks; a saved
+branch label is not target proof. Then publish
 `sdd-target-receipt/v1` with the merge identity, target/check proof, evidence
 availability and matching body digests, runtime/project proof, reset authority,
 and exceptions. Run `npm run sdd:evidence -- --mode RESET_READY ...` against
@@ -36,8 +42,10 @@ The reset inventory classifies every delivery-owned item exactly once:
 
 Every repository file uses one exact repository-relative path; every branch
 uses one full `refs/heads/...` identity; every worktree/runtime item uses one
-exact absolute path and ownership evidence. Globs, classes, unresolved paths,
-unknown effects, or descriptive examples grant no deletion authority. Create
+exact absolute path and ownership evidence. A destructive external row binds
+both its ownership proof and authorized operation to that exact path; repository,
+temporary, user-home, and system parent directories are never valid targets.
+Globs, classes, unresolved paths, unknown effects, or descriptive examples grant no deletion authority. Create
 the reset PR only after the feature target receipt verifies. Its delta is
 limited to the accepted inventory, exact neutral `EMPTY` bytes, the fixed-size
 manifest locator, and any explicitly reviewed pin/runtime cutover. Missing or
@@ -57,10 +65,11 @@ record and cannot replace verification of the referenced PR evidence.
 
 This section is the compatibility contract for existing v4 instances.
 
-New source plan/workflow/batch templates use v4. Existing v2/v3 instances keep
-their original schema and behavior, including the v3 batch protocol. Do not
-change installed pins or historical markers implicitly. Review a migration's
-role mapping, task graph and output evidence before selecting v4 in a project.
+Current source plan/workflow/batch templates use v5. Existing v2/v3 instances
+keep their original schema and behavior, including the v3 batch protocol, and
+existing v4 instances retain the compatibility contract below. Do not change
+installed pins or historical markers implicitly. Review a migration's role
+mapping, task graph and output evidence before selecting v4 in a project.
 Linked v4 plans, workflows and batches must use matching schema versions.
 
 | Artifact role / phase | Producer | Mandatory boundary |

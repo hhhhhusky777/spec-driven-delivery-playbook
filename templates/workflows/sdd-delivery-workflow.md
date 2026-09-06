@@ -595,12 +595,17 @@ Enumerate every delivery-owned repository file, branch, worktree and machine
 runtime item before feature acceptance. `KEEP` needs a concrete independent
 reuse reason. `REMOVE` and `RESET` need ownership evidence and the exact
 authorized operation; examples, globs and classes are never authority.
+For a destructive `WORKTREE` or `RUNTIME` row, both the ownership evidence and
+authorized operation name the exact absolute target. Broad repository,
+temporary, user-home, and system parent directories are invalid targets.
 
 | Item ID | Kind | Exact identity | Ownership evidence | Disposition | Reuse reason | Authorized operation | State |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `<stable ID>` | `<FILE/BRANCH/WORKTREE/RUNTIME>` | `<exact repository-relative path, full ref, or absolute owned path>` | `<proof>` | `<REMOVE/RESET/KEEP>` | `<future use or None>` | `<exact operation/authority or None>` | `<PLANNED/VERIFIED>` |
 
-Publish this inventory in `sdd-pr-review/v1`. After feature target proof and
+Publish it as `REMOVE=...; RESET=...; KEEP=...; Inventory=<exact-head GitHub
+blob URL>` in `sdd-pr-review/v1`, using `None` where a disposition is empty.
+After feature target proof and
 `sdd-target-receipt/v1`, the reset PR may change only these identities and exact
 replacement bytes. Update `PR evidence state` and `Reset state` from observed
 results; missing or inconsistent evidence preserves working state.

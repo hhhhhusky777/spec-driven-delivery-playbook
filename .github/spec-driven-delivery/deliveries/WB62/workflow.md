@@ -9,7 +9,7 @@
 | DECISION | T02 implementation acceptance | After exact-head self-review, two implementation reviews and required checks, approve or request changes on PR #65 |
 | ATTENTION | Delivered behavior | T01 implements the five goals, canonical recovery and Git-first essential evidence; PR #64 is reviewed, merged and target-verified |
 | ATTENTION | Design alignment | Accepted PR-evidence/reset conclusion makes PRs durable evidence, removes all non-reusable delivery state, restores `EMPTY` and regenerates runtime |
-| ATTENTION | Delivered candidate | T02 combines the whiteboard's contract/enforcement packages in PR #65; local focused/full gates pass and exact-head review is next |
+| ATTENTION | Delivered candidate | T02 combines the whiteboard's contract/enforcement packages in PR #65; R01 findings are corrected together and the revised exact head returns to the same reviewers |
 | ATTENTION | Compatibility | v2–v4 remain supported; this project stays on v4 through PR #65 target proof and cannot preapprove the future v5 cutover candidate |
 | ATTENTION | Deferred / limits | Runtime #33/#34/#36 remain deferred; no measured performance claim or external-link advisory rerun |
 | ATTENTION | Evidence | PR #65 and the later reset/upgrade PR will own durable evidence; working WB62 files remain only until the verified reset |
@@ -35,17 +35,17 @@
 | Current artifact/gate | [T02 PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
 | Current review phase | IMPLEMENTATION |
 | Current review target ID | T02 |
-| Current artifact review state | NOT_STARTED |
-| Self-review state | NOT_STARTED |
-| Self-review candidate revision | Not recorded |
-| Self-review evidence | Not recorded; publish on PR #65 after the exact head is frozen |
-| Fresh-context review state | NOT_STARTED |
-| Fresh-context review session ID | Not recorded |
-| Fresh-context assigned reviewers | Not recorded |
+| Current artifact review state | CHANGES_REQUESTED |
+| Self-review state | SELF_REVIEW_PASSED |
+| Self-review candidate revision | aaf3831cb2fb008f90b057163275db42feb0016d |
+| Self-review evidence | [PR #65 candidate and checks](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
+| Fresh-context review state | CHANGES_REQUESTED |
+| Fresh-context review session ID | WB62-T02-S01 |
+| Fresh-context assigned reviewers | wb62_t02_r1, wb62_t02_r2 |
 | Fresh-context required approvals | 2 |
 | Fresh-context approved reviewers | Not recorded |
-| Fresh-context reviewed revision | Not recorded |
-| Fresh-context review evidence | Not recorded |
+| Fresh-context reviewed revision | aaf3831cb2fb008f90b057163275db42feb0016d |
+| Fresh-context review evidence | [R1 findings](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#issuecomment-5560786445); [R2 findings](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65#issuecomment-5560789647) |
 | Human review state | NOT_STARTED |
 | Human reviewed revision | Not recorded |
 | Human review evidence | Not recorded |
@@ -54,7 +54,7 @@
 | Implementation mode scope | T02, T04 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-06T23:54:35+08:00 |
-| Next action | Freeze and publish the complete T02 candidate to PR #65, then run exact-head self-review and two implementation reviews |
+| Next action | Publish the consolidated R01 corrections, rerun exact-head self-review and return the revised candidate to the same reviewers for R02 |
 | Next action target IDs | T02 |
 | Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/archive; .github/spec-driven-delivery/solution-whiteboard.md; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/upgrades/U64.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; .github/pull_request_template.md; .github/workflows/documentation-quality.yml; CONTRIBUTING.md; README.md; CHANGELOG.md; package.json; config; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/README.md; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/handoffs; templates/policies; templates/testing; templates/workflows; examples; scripts/sdd-lifecycle.mjs; scripts/review-publication.mjs; scripts/verify-pr-evidence.mjs; tests |
 | Next action write targets | CONTRIBUTING.md; README.md; CHANGELOG.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/README.md; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/handoffs; templates/policies; templates/testing; templates/workflows; .github/pull_request_template.md; .github/workflows/documentation-quality.yml; package.json; config; examples; scripts/sdd-lifecycle.mjs; scripts/review-publication.mjs; scripts/verify-pr-evidence.mjs; tests; .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
