@@ -66,8 +66,8 @@ blocks reset until reconciled; a URL or SHA alone is not proof of content.
 
 ## Minimum PR evidence contract
 
-The feature PR must contain one versioned `sdd-pr-evidence/v1` table before
-owner acceptance:
+Before owner acceptance, the feature PR must contain one versioned
+`sdd-pr-review/v1` table:
 
 | Required field | Content |
 | --- | --- |
@@ -78,13 +78,19 @@ owner acceptance:
 | Self-review | Exact candidate, state, evidence URL and SHA-256 digest of the evidence body |
 | Independent review | Two labeled reviewer identities, exact candidate, disposition, receipt URL and SHA-256 digest for each body |
 | Findings | Stable IDs, author dispositions, resolution revision and remaining state |
-| Owner authority | Decision/merge scope, exact accepted candidate, comment URL and SHA-256 digest |
+| Requested owner authority | Exact candidate and requested feature/reset merge scope; state `PENDING` before the owner acts |
 | Checks | Required check names, conclusions and exact run URLs |
 | Limits and follow-ups | Unrun/unavailable evidence, accepted limits and linked issues or `None` |
 | Reset plan | Exact transient paths/classes, retained stable controls, reset PR mode and cleanup authority |
 
-After feature merge, the same PR receives a versioned `sdd-target-receipt/v1`
-table:
+After the owner acts and before feature merge, the same PR receives a separate
+`sdd-pr-acceptance/v1` comment containing the exact accepted candidate, owner
+decision and merge/reset scope, owner comment URL, SHA-256 digest of that fetched
+comment body, and the digest of the accepted `sdd-pr-review/v1` table. Rejecting
+or changing the candidate returns to review; no table requires a future decision.
+
+After feature merge, the same PR receives a versioned
+`sdd-target-receipt/v1` table:
 
 | Required field | Content |
 | --- | --- |
@@ -96,11 +102,14 @@ table:
 | Reset authorization | Exact reset scope, reset PR target/mode and prior owner authority |
 | Exceptions/follow-ups | External effects, unresolved work or `None` |
 
-The later reset PR records its own exact head, check runs, retained-seat delta
-verification, merge SHA and target-reset result on the feature PR. The manifest's
-single `Last delivery receipt` row stores the feature PR URL, feature merge SHA,
-reset PR URL/merge SHA and final evidence digest. This is a locator and integrity
-check, not a copied delivery record.
+The reset PR records its exact reviewed head and check runs before merge.
+Retained-seat delta verification, the reset merge SHA and target-reset result
+are appended later to the feature PR. The reset PR itself updates the manifest's
+single `Last delivery receipt` row with only values knowable before its merge:
+feature PR URL and merge SHA, reset PR URL and exact reviewed reset head, plus
+the SHA-256 digest of the complete pre-reset evidence bundle. The later reset
+merge/result stays solely on the feature PR; no third control PR or self-reference
+is required. The row is a locator and integrity check, not a copied record.
 
 ## Executable closure and reset flow
 
@@ -116,7 +125,8 @@ check, not a copied delivery record.
    target ancestry/tree/checks and publish `sdd-target-receipt/v1` on that PR.
 5. If every evidence item remains available and matches its digest, create the
    pre-authorized reset PR containing only the exact transient-state deletion,
-   stable `EMPTY` whiteboard and fixed-size manifest locator update.
+   stable `EMPTY` whiteboard, fixed-size manifest locator update and any
+   explicitly reviewed current-project v5 runtime cutover.
 6. The retained reviewers verify only that bounded reset delta and required
    checks. Merge it without another semantic review only when the feature-PR
    owner acceptance explicitly authorized that exact reset scope and merge mode.
@@ -134,7 +144,7 @@ outside enumerated transient feature state still requires explicit authority.
 | Scope | Proposed treatment |
 | --- | --- |
 | PR #65 | Replace the proposed archive with the v5 policy/runtime migration; remove unmerged WB62 archive additions, preserve working state through target verification and own all semantic evidence |
-| Unmerged final-control commit | Withdraw the unmerged `ARCHIVED` transition; resume from main's legal WB62 `VALIDATING` state under this owner amendment |
+| Unmerged final-control commit | Withdraw only `5c894694a670d425033f5a0387a737359a3d5262`; retain its parent `cd6d8ba3311bbe3e4a6a692b4cd970477021fb7b` as the reconciled `VALIDATING` checkpoint, then use the allowed return to plan `IMPLEMENTING` / workflow `DELIVERY_ACTIVE` for T02–T04 |
 | WB62 working delivery files already on main | Remove only in the post-verification reset PR after exact PR #64/#65 evidence validation |
 | Working whiteboard | Preserve this amendment through PR #65 target verification; reset to the neutral tracked `EMPTY` entry point in the reset PR |
 | U64 runtime result | Keep the current runtime pin and stable manifest routing; move delivery-only narrative to PR evidence |
@@ -159,7 +169,7 @@ outside enumerated transient feature state still requires explicit authority.
 | 1 | Apply the new behavior to current WB62; leave older WB38 history untouched without separate deletion authority | SAFE_MIGRATION_DEFAULT |
 | 2 | Use a separately scoped reset PR after feature target verification; feature-PR acceptance may pre-authorize its exact mechanical merge path | PROPOSED_DETAIL |
 | 2 | Preserve v2–v4 behavior; introduce opt-in v5 and migrate only at a reviewed safe checkpoint | PROPOSED_DETAIL |
-| 2 | Use versioned PR evidence/target tables plus body digests and a fixed-size manifest locator | PROPOSED_DETAIL |
+| 2 | Use pre-acceptance review, post-decision acceptance and post-merge target tables plus body digests and a non-self-referential fixed-size manifest locator | PROPOSED_DETAIL |
 
 ### Design review reconciliation
 
@@ -173,7 +183,19 @@ Both fresh-context reviewers requested changes on exact R01 candidate
 | R1-F02 / R2-F03 / R2-F04 | Define complete versioned evidence/target tables, body digests, availability checks, fixed-size locator and recovery | PENDING_R02_REVIEW |
 | R1-F03 / R2-F05 | Preserve v2–v4, introduce opt-in v5, define safe active-delivery migration and unavailable-evidence behavior | PENDING_R02_REVIEW |
 | R1-F04 / R2-F05 | Add exact design-to-task consumer mapping and split local versus GitHub-aware enforcement | PENDING_R02_REVIEW |
-| R2-F01 | Withdraw only the unmerged terminal delta and resume WB62 from main's legal VALIDATING state; do not reopen a merged terminal plan | PENDING_R02_REVIEW |
+| R2-F01 | Main is DELIVERY_ACTIVE/IMPLEMENTING; retain the branch's reconciled `cd6d8ba` VALIDATING checkpoint, withdraw only its unmerged terminal child and use the allowed return transition | PENDING_R02_REVIEW |
+
+R02 retained reviewers requested bounded corrections on exact candidate
+`90457879f57d4a9cc8a71715a08fb3684565eccb`.
+
+| Finding | Consolidated correction | State |
+| --- | --- | --- |
+| R02-R1-F05 / R2-F07 | Make the manifest locator non-self-referential: feature PR/merge, reset PR/reviewed head and pre-reset bundle digest only; final reset merge/result stays on feature PR | PENDING_R03_REVIEW |
+| R02-R1-F06 / R2-F01 | Correct main to DELIVERY_ACTIVE/IMPLEMENTING and name `cd6d8ba` as the branch's reconciled VALIDATING checkpoint; withdraw only unmerged `5c89469` | PENDING_R03_REVIEW |
+| R02-R1-F07 | Replace stale one-PR/final-candidate wording with one semantic feature PR plus one bounded reset PR | PENDING_R03_REVIEW |
+| R02-R1-F08 / R2-F09 | Map self-review, publication, workflow, package and CI consumers; assign the GitHub-aware command/action and read-only permissions | PENDING_R03_REVIEW |
+| R2-F06 | Split pre-owner `sdd-pr-review/v1` from post-decision `sdd-pr-acceptance/v1` to remove circular evidence | PENDING_R03_REVIEW |
+| R2-F08 | Define current self-adoption: explicit v4 amendment and exact v5 cutover inside the post-verification reset PR | PENDING_R03_REVIEW |
 
 ## Option and lifecycle conclusion
 
@@ -192,7 +214,8 @@ exists; only then does the bounded reset PR remove it.
 
 The playbook should prefer ignored runtime working state when practical, but
 must not require one storage mechanism. Branch-local tracked state is also
-acceptable when the final candidate resets it and PR evidence remains complete.
+acceptable when the later reset-PR candidate removes it and PR evidence remains
+complete.
 This is an outcome boundary, leaving agents room to choose safe mechanics.
 
 ## Canonical source impact
@@ -217,9 +240,11 @@ This is an outcome boundary, leaving agents room to choose safe mechanics.
 | T03 — Enforcement and compatibility | Add GitHub-aware evidence verification; update local v5 lifecycle validation and regressions while preserving v2–v4 | Positive/negative API fixtures, schema compatibility and reset-boundary scenarios pass |
 | T04 — Current-project migration | Withdraw the unmerged terminal controls, update stable routing/runtime records, remove only unmerged archive additions in PR #65, then publish the exact reset inventory for a post-verification PR | PR #65 merges reusable v5 behavior with WB62 state preserved; later reset PR removes WB62 state and restores EMPTY without touching adoption/runtime or WB38 |
 
-These tasks form one coherent PR and one final full review gate. Intermediate
-task checks do not create separate two-agent review gates unless a material
-design mismatch or missing authority is discovered.
+T02–T04 form one semantic feature PR plus one separately scoped retained-seat
+control reset PR. There is one final full semantic review gate; the reset PR
+receives only bounded delta verification and required checks. Intermediate task
+checks do not create separate two-agent review gates unless a material design
+mismatch or missing authority is discovered.
 
 ## Error handling
 
@@ -250,7 +275,8 @@ is today.
 | Existing schemas | v2–v4 parsing, archive semantics and historical records remain valid and unchanged |
 | New behavior | Introduce v5 workflow/evidence semantics; select only through an explicit reviewed playbook upgrade |
 | Active old-model delivery | Finish under its pinned model by default; migrate only at a reviewed checkpoint with no running task or unresolved external effect |
-| Current WB62 | Eligible because PR #65 is unmerged and the owner explicitly amended closure; withdraw the unmerged terminal delta and resume from main's VALIDATING state |
+| Current WB62 | Main is workflow `DELIVERY_ACTIVE` / plan `IMPLEMENTING`; PR #65 already reconciled T01 at `cd6d8ba` to `VALIDATING`. The owner amendment withdraws only unmerged terminal child `5c89469`, then uses the allowed `VALIDATING -> DELIVERY_ACTIVE` / `VALIDATING -> IMPLEMENTING` return for T02–T04 |
+| Current self-adoption cutover | PR #65 owner acceptance must explicitly approve this one v4 closure amendment and the exact v5 reset migration. After feature target verification, the reset PR uses the merged v5 installer/checker, updates the manifest pin to the exact PR #65 merge SHA, regenerates/validates runtime, and applies only the reviewed reset inventory and stable locator |
 | Downstream installation | No silent migration; upgrade keeps the old pin until compatibility checks and owner cutover acceptance pass |
 | Historical archive cleanup | Never inferred; retain when required PR evidence is unavailable; any deletion needs separate exact scope and authority |
 
@@ -264,10 +290,13 @@ is today.
 | `.github/pull_request_template.md`, `templates/README.md`, PR/development policies | Collect versioned PR evidence and authority | T02 | Complete/missing-field fixtures |
 | Whiteboard, handoff, implementation-plan, workflow, review-batch and fresh-review templates | Make working state transient and publish key gate tables to PR | T02 | Template link/placeholder and gate assertions |
 | Adoption-manifest and test-strategy templates | Preserve stable adoption; verify reset and evidence failure cases | T02/T03 | Stable-control deletion rejection and scenario coverage |
-| `scripts/sdd-lifecycle.mjs` plus a GitHub-aware verifier | Preserve old schemas; validate v5 local/API boundaries at their correct enforcement points | T03 | v2–v5 positive/negative unit and fixture tests |
+| New `scripts/verify-pr-evidence.mjs` | Query GitHub at the reset gate and verify versioned evidence objects, body digests, revisions, checks and authority | T03 | Mocked API positive/negative, pagination, mutation and unavailable-evidence tests |
 | Documentation, lifecycle, installer and publication tests | Replace archive-only assertions; retain old-schema compatibility | T03 | Full suite plus API replay/idempotency tests |
 | Maintained batched/adoption examples | Update one v5 example; label older examples historical/no-impact where retained | T02 | Example links and documented expected output |
-| Project registry, trigger, manifest, WB62 paths/reviews/U64 and archive index | Keep stable pin/routes; remove unmerged archive additions; declare later reset inventory | T04 | Exact path inventory, PR evidence verifier, runtime CURRENT and WB38 no-impact check |
+| `templates/reviews/agent-self-review.md` and `scripts/review-publication.mjs` | Publish exact self-review/body digests and retain literal reviewer findings without local ledger duplication | T02/T03 | Deterministic publication/replay and edited-body digest mismatch tests |
+| `.github/workflows/documentation-quality.yml` and `package.json` | Add the canonical reset-evidence check with read-only pull-request/check/content permissions and an explicit script entry point | T03 | Workflow wiring assertion plus mocked GitHub API positive/negative runs |
+| `scripts/sdd-lifecycle.mjs` schema dispatch; no separate schema configuration file exists | Preserve old schemas; validate v5 local fields and locator/reset inventory only | T03 | v2–v5 positive/negative unit tests |
+| Project registry, trigger, manifest, WB62 paths/reviews/U64 and archive index | Keep stable pin/routes; remove unmerged archive additions; declare later reset inventory and reviewed current-project v5 cutover | T04 | Exact path inventory, PR evidence verifier, runtime CURRENT and WB38 no-impact check |
 
 ## Conclusion readiness
 
