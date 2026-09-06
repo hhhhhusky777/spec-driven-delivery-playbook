@@ -23,10 +23,10 @@ PR #65 owns the remaining validation/archive review and U64 publication.
 | Review batch | None |
 | Delivery workflow | [Workflow](workflow.md) |
 | Plan | WB62 agent judgment and essential evidence |
-| Status | COMPLETE |
-| Previous status | VALIDATING |
+| Status | VALIDATING |
+| Previous status | IMPLEMENTING |
 | Plan mode | FULL |
-| Current phase | CLOSE |
+| Current phase | VALIDATING |
 | Current task | None |
 | Next ready task(s) | None |
 | Blockers | None |
@@ -61,8 +61,8 @@ PR #65 owns the remaining validation/archive review and U64 publication.
 | Task PR target | main |
 | Final PR target | main |
 | Protected-branch synchronization | Before task start and merge; reconcile changed inputs |
-| Branch / PR | Implementation [PR #64](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/64) merged; closure publication and target verification owned by [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) |
-| Archived record | [Delivery record](record.md) |
+| Branch / PR | Implementation [PR #64](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/64) merged; closure [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) open from `codex/upgrade-37653ee` |
+| Archived record | Proposed in [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65); authoritative only after closure acceptance and merge |
 
 ## 1. Governing inputs
 
@@ -269,14 +269,14 @@ grew to 103 passing tests; the external-link advisory was not rerun.
 
 | Field | Current value |
 | --- | --- |
-| Plan state | COMPLETE |
+| Plan state | VALIDATING |
 | Current task | None |
 | Next ready task(s) | None |
-| Active branch / PR | Implementation [PR #64](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/64) merged; closure [PR #65](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65) owns archive publication and target verification |
+| Active branch / PR | PR 64 merged at 37653eec1d980e3ea5ed858922ab97894395fab9 |
 | Last completed task | T01 |
 | Active blocker | None |
-| Last validation | T01/PR #64 integration, U64 cutover, closure package, archive/reset, and exact control-delta gates verified; PR #65 owns target evidence |
-| Next action | None — delivery archived; PR #65 owns target verification |
+| Last validation | Both R08 reviewers and owner accepted PR 64; merged tree matches reviewed head; 103 tests and documentation checks passed; PR owns receipts |
+| Next action | Review the combined validation/archive package; no implementation task remains |
 
 ## 10. Evidence and history
 
