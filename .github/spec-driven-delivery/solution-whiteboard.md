@@ -168,11 +168,12 @@ checker is needed. Performance savings remain unmeasured.
 | Type | Item | Result / requested acceptance |
 | --- | --- | --- |
 | DECISION | Formal design candidate | Accept the four-goal design, canonical-consistency boundary, C01–C06 corrections and proposed single-unit T01 scope after independent review; permits subsequent routing/planning, not implementation or merge |
-| ATTENTION | Source boundary | Source main d93d27a; installed pin d213114 unchanged. Proposed changes are not active installed policy |
+| ATTENTION | Source boundary | Source base d93d27a33c43c1574aeed27044654c8964cf998b; installed pin d213114f99dc2186d6f4e50a85fe962de0e1afa9 unchanged. Proposed changes are not active installed policy |
+| ATTENTION | Exact acceptance identity | The complete whiteboard and manifest are the subject; the [acceptance identity record](reviews/WB62-S01.md#acceptance-identity) owns their full immutable candidate commit and hashes outside the reviewed bytes |
 | ATTENTION | Controls retained | Safety, scoped authority, actual tests/review/merge gates, schemas, retry/retention contracts remain; execution steps are adaptable within them |
 | ATTENTION | Evidence qualification | Git-first does not mean deleting unique logs or checker-required local snapshots; exact reviewed bytes remain recoverable |
 | ATTENTION | Risks / deferred work | Semantic consistency needs review; actual scenario validation remains implementation work. No measured savings. Runtime group and U84 remain deferred |
-| ATTENTION | Current checks | Exact documentation/runtime/test evidence and limitations are recorded in the review record; no implementation result claimed |
+| ATTENTION | Current checks | Local Markdown, structure, lifecycle, Mermaid, whitespace and 99 tests passed; runtime CURRENT. Package components ran directly under Node 24 because npm was unavailable. Brief-only corrections receive targeted checks; no CI, external-link advisory rerun or design-scenario execution claimed. Detailed commands/results in the review record |
 
 No unresolved owner preference is identified. Independent review may reveal a
 material design gap; the agent must not fill such a gap with invented authority.
