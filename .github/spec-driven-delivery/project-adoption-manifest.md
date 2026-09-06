@@ -64,8 +64,8 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Automatic gate result | `NOT_APPLICABLE` |
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
-| Current blocker | None |
-| Next action | Follow WB62 workflow: T01 VERIFYING on PR 64; R08 review then human review before merge |
+| Current blocker | `None` |
+| Next action | Assess owner-requested latest-main runtime upgrade after merged T01; WB62 validation and closure remain |
 
 Adoption type: `real project`
 

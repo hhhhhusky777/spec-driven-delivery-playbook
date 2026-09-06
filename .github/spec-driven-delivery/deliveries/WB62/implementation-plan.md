@@ -28,7 +28,7 @@ measurement or CI pass is claimed yet.
 | Previous status | READY |
 | Plan mode | FULL |
 | Current phase | IMPLEMENTING |
-| Current task | T01 |
+| Current task | None |
 | Next ready task(s) | None |
 | Blockers | None |
 | Owner | Repository owner |
@@ -209,7 +209,7 @@ and durable concise evidence. No unrelated diff or lost historical evidence.
 
 | ID | State | Next | Depends on | Blocked by | Source freshness | Spec state | Data phase | Outcome / vertical slice | Contract IDs | Independent merge boundary | PR | Required output IDs | Consumed output versions |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| T01 | VERIFYING | | None | None | CURRENT | COMPLETE | NONE | Bounded agent judgment and essential evidence with U84 publication | FC01, FC02, FC03, FC04, FC05, FC06 | One consistent source/policy/consumer PR | None | None | None |
+| T01 | DONE | | None | None | CURRENT | COMPLETE | NONE | Bounded agent judgment and essential evidence with U84 publication | FC01, FC02, FC03, FC04, FC05, FC06 | One consistent source/policy/consumer PR | None | None | None |
 
 ## 8. Task specification and context
 
@@ -220,7 +220,7 @@ and durable concise evidence. No unrelated diff or lost historical evidence.
 
 | Field | Value |
 | --- | --- |
-| State | VERIFYING |
+| State | DONE |
 | Depends on | None |
 | Data phase | NONE |
 | Source boundary | Whiteboard source inventory: docs, Contributing, README, CHANGELOG, three source skills, review/affected phase templates, generated guidance in install-sdd.sh, one maintained example and corresponding tests; U84 project controls; issue 63 checker/docs/regression correction |
@@ -267,13 +267,13 @@ not yet produced.
 | Field | Current value |
 | --- | --- |
 | Plan state | IMPLEMENTING |
-| Current task | T01 |
+| Current task | None |
 | Next ready task(s) | None |
-| Active branch / PR | codex/wb62-agent-judgment; PR 64, main target |
-| Last completed task | None |
+| Active branch / PR | PR 64 merged at 37653eec1d980e3ea5ed858922ab97894395fab9 |
+| Last completed task | T01 |
 | Active blocker | None |
-| Last validation | T01 local gates and source validation recorded in WB62-P01; exact-head independent review pending |
-| Next action | Complete exact-head T01 review on PR 64, then owner review before merge |
+| Last validation | Both R08 reviewers and owner accepted PR 64; merged tree matches reviewed head; 103 tests and documentation checks passed; PR owns receipts |
+| Next action | Owner-requested runtime upgrade between tasks; delivery validation and closure remain |
 
 ## 10. Evidence and history
 

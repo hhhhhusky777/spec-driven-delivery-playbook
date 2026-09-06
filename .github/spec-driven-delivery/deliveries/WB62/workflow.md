@@ -35,26 +35,26 @@
 | Current artifact/gate | [T01 PR 64](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/64) |
 | Current review phase | IMPLEMENTATION |
 | Current review target ID | T01 |
-| Current artifact review state | IN_REVIEW |
+| Current artifact review state | APPROVED |
 | Self-review state | SELF_REVIEW_PASSED |
-| Self-review candidate revision | WB62-T01-R08 |
+| Self-review candidate revision | 3621b19f58b83ea6ff16d01e03f6b61b2dad9b49 |
 | Self-review evidence | [Routing review](../../reviews/WB62-P01.md) |
-| Fresh-context review state | IN_REVIEW |
+| Fresh-context review state | APPROVED |
 | Fresh-context review session ID | WB62-P01 |
 | Fresh-context assigned reviewers | wb62_planning_r1, wb62_planning_r2 |
 | Fresh-context required approvals | 2 |
-| Fresh-context approved reviewers | None |
-| Fresh-context reviewed revision | None |
+| Fresh-context approved reviewers | wb62_planning_r1, wb62_planning_r2 |
+| Fresh-context reviewed revision | 3621b19f58b83ea6ff16d01e03f6b61b2dad9b49 |
 | Fresh-context review evidence | [Routing review](../../reviews/WB62-P01.md) |
-| Human review state | NOT_STARTED |
-| Human reviewed revision | None |
+| Human review state | APPROVED |
+| Human reviewed revision | 3621b19f58b83ea6ff16d01e03f6b61b2dad9b49 |
 | Human review evidence | [Review record](../../reviews/WB62-P01.md#owner-package-acceptance) |
 | Implementation continuation mode | HUMAN_REVIEW_BEFORE_MERGE |
 | Implementation mode authority | [Owner mode record](../../reviews/WB62-P01.md#implementation-mode-authority) |
 | Implementation mode scope | T01 |
 | Implementation repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook` |
 | Implementation mode selected at | 2026-09-06T09:36:49Z |
-| Next action | Complete exact-head T01 review on PR 64, then owner review before merge |
+| Next action | Owner-requested runtime upgrade between tasks; preserve pending delivery validation and closure |
 | Next action target IDs | workflow |
 | Allowed write scope | .github/spec-driven-delivery/deliveries/WB62; .github/spec-driven-delivery/reviews; .github/spec-driven-delivery/project-adoption-manifest.md; .github/spec-driven-delivery/project-contracts.md; .github/spec-driven-delivery/agent-trigger.md; .github/spec-driven-delivery/playbook-upgrade-assessment.md; CONTRIBUTING.md; README.md; CHANGELOG.md; docs/documentation-quality-policy.md; docs/template-governance.md; docs/batch-review-and-recovery.md; docs/project-adoption-runbook.md; skills/sdd-project-workflow/SKILL.md; skills/sdd-project-adoption/SKILL.md; skills/sdd-playbook-upgrade/SKILL.md; install-sdd.sh; templates/reviews; templates/adoption; templates/discovery; templates/delivery; templates/workflows; examples; scripts/sdd-lifecycle.mjs; tests |
 | Next action write targets | .github/spec-driven-delivery/deliveries/WB62/workflow.md; .github/spec-driven-delivery/deliveries/WB62/implementation-plan.md; .github/spec-driven-delivery/deliveries/WB62/planning-batch.md; .github/spec-driven-delivery/reviews/WB62-P01.md |
@@ -232,14 +232,14 @@ guidance conflict; report a scoped design amendment when necessary.
 | Field | Current value |
 | --- | --- |
 | Workflow state | DELIVERY_ACTIVE |
-| Current artifact/task | T01 VERIFYING |
-| Current artifact review | IN_REVIEW / WB62-P01 |
+| Current artifact/task | T01 DONE; PR 64 merged |
+| Current artifact review | APPROVED / WB62-P01 |
 | Last approved artifact | WB62-P01-R06; 419d62db53986f11b727b7532c0273e45439ce13 |
-| Next ready action | Same reviewers inspect R08 consolidated source and dry-run evidence on PR 64 before owner merge review |
-| Active blockers | None; required exact-head review pending |
+| Next ready action | Assess owner-requested runtime upgrade; delivery validation and closure remain |
+| Active blockers | None |
 | Stale artifacts | None |
 | Validation complete | R08: 103 tests, documentation/skill checks and five-scenario installed-candidate dry run; R07 findings corrected |
-| Validation remaining | Corrected exact-head checks/re-review, owner review, merge and later delivery gates |
+| Validation remaining | Delivery validation and closure; implementation review, owner acceptance and merged-tree checks passed on PR 64 |
 | Branch/PR | codex/wb62-agent-judgment; PR 64 |
 | Last updated | 2026-09-06 Asia/Shanghai |
 
