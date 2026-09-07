@@ -7,6 +7,12 @@ recover safely. The feature PR becomes the durable evidence owner. Existing
 v2–v4 instances retain their archive contracts; no marker, installed pin, or
 historical artifact changes without a reviewed upgrade.
 
+The `sdd:evidence` verifier and review-publication helper described here are
+playbook-repository maintenance tools. They are not copied into adopting
+projects and are not commands that a project agent must run during latest-only
+document synchronization. Adopting projects retain equivalent evidence through
+their own repository checks, PR system, and installed runtime validation.
+
 Before feature acceptance, publish one `sdd-pr-review/v1` table on the PR with
 repository/target, accepted design, task briefs and outcomes, exact candidate,
 self-review, two independent review receipts and body digests, findings and
@@ -337,9 +343,10 @@ whiteboard gate or substitute a test-status table for design and risk summaries.
 
 ## PR publication and retention
 
-### Optional publication planner
+### Optional playbook-repository publication planner
 
-Run `node scripts/review-publication.mjs` with JSON on stdin and no arguments.
+When maintaining this playbook repository, run
+`node scripts/review-publication.mjs` with JSON on stdin and no arguments.
 It emits one JSON result on stdout: exit 0 for PLANNED/VERIFIED, 1 for BLOCKED,
 2 for malformed input. Exported `evaluatePublication` and `runCli` are pure;
 the CLI only reads stdin and writes stdout. No network, credentials, file writes,
@@ -357,7 +364,8 @@ shell execution, merge or external dependencies are used.
 | Observed comment | Positive id/reviewId, publisher, full head, exact body and path/line/side |
 | Checkpoint | null initially; otherwise the previous result's checkpoint, persisted before any write |
 
-The coordinator normalizes authenticated, fully paginated API snapshots into
+This helper is not an adopting-project dependency or upgrade requirement. The
+playbook-repository coordinator normalizes authenticated, fully paginated API snapshots into
 this schema, including original commit/location data for review comments.
 The helper trusts the supplied diff anchors and collection metadata: it cannot
 prove authentication, freshness, pagination or the completeness of a fetched

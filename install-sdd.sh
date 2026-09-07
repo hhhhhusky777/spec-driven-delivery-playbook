@@ -90,6 +90,9 @@ MODE_COUNT=0
 if ((MODE_COUNT > 1)); then
   fail "--cleanup, --validate, and --upgrade are mutually exclusive"
 fi
+if [[ "$UPGRADE_MODE" == true && "$REVISION_EXPLICIT" == true ]]; then
+  fail "--revision cannot be used with --upgrade; upgrade always resolves latest main"
+fi
 
 command -v git >/dev/null 2>&1 || fail "git is required"
 
@@ -662,27 +665,25 @@ active project pin, approve compatibility, or authorize work in an active task.
 | Cleanup command | \`./install-sdd.sh --cleanup\` |
 | Cleanup state | \`PENDING\` |
 
-## Execution contract
+## Outcome and boundaries
 
-1. Run \`./install-sdd.sh --validate\`, confirm every recorded path and
-   revision, then read the installed required skill completely.
-2. Keep the current revision authoritative while assessing the candidate.
-3. Use the candidate's upgrade-assessment template and migration evidence.
-4. Stop for independent review before changing the manifest pin or applying a
-   migration. Self-review is evidence, never approval.
-5. After supplied approval, migrate one reviewed boundary at a time. Recompute
-   freshness and stop on conflicts, ambiguity, failed gates, or active work.
-6. Cut over the manifest pin only after candidate validation passes. If it
-   fails, preserve or restore the current revision and record rollback evidence.
-7. If continuation or merge rules changed, reset them to explicit review until
-   project authority reconfirms the mode.
-8. At successful cutover or rollback, run \`./install-sdd.sh --cleanup\`, then
-   run \`./install-sdd.sh\` to regenerate the normal runtime from the reviewed
-   manifest pin and validate it.
+| Concern | Required result |
+| --- | --- |
+| Authority | The current pin remains authoritative until the exact synchronized candidate receives independent and human acceptance. |
+| Scope | Reusable SDD documents match the resolved immutable revision; unrelated project content and active work remain unchanged. |
+| Project responsibility | No playbook lifecycle validators, evidence helpers, publication tooling, CI workflows, or playbook tests are added to the project. |
+| Pre-work runtime | Before candidate content is consumed or project files change, this runtime validates as \`UPGRADE_CURRENT\`; provenance, hash, marker, pin, or installed-skill mismatch blocks work. |
+| Consistency | Canonical terminology, links, states, authority, and continuation rules agree; unresolved canonical conflict or failed applicable validation blocks acceptance. |
+| Recovery | A failed candidate leaves or restores the last accepted pin and runtime without discarding valid project work or failure evidence. |
+| Completion | The accepted pin is recorded, normal runtime is regenerated and validates, and installer-owned temporary content is cleaned up. |
+
+The agent chooses comparison, synchronization, batching, validation, and safe
+recovery methods within these boundaries and the installed skill.
 
 ## Prompt
 
-Follow \`.sdd-runtime/playbook-upgrade-guide.md\` exactly.
+Use \`.sdd-runtime/playbook-upgrade-guide.md\` to synchronize the project with
+the latest playbook revision.
 EOF
   refresh_guide_hash "$UPGRADE_GUIDE_PATH"
   trap - EXIT
@@ -691,7 +692,7 @@ EOF
   printf 'Installed skill: sdd-playbook-upgrade\n'
   printf 'Generated guide: %s\n\n' "$UPGRADE_GUIDE_PATH"
   printf 'Prompt the agent with:\n\n'
-  printf 'Follow %s exactly.\n' "$RUNTIME_ROOT/playbook-upgrade-guide.md"
+  printf 'Use %s to synchronize the project with the latest playbook revision.\n' "$RUNTIME_ROOT/playbook-upgrade-guide.md"
 }
 
 if [[ "$CLEANUP_ONLY" == true ]]; then

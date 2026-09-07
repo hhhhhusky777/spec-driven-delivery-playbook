@@ -24,7 +24,7 @@ governance without forcing every project to generate every document.
 | Two-agent review sessions | Review each authorized artifact or coherent batch with two initially isolated reviewers; retain their seats across correction rounds |
 | Controlled automation | Continue deterministic steps automatically and optionally merge scoped implementation PRs after every gate passes |
 | Evolving governance | Add or strengthen specialized policies when real delivery evidence exposes a systemic gap |
-| Versioned upgrades | Assess and migrate a project's pinned playbook revision without silently changing active contracts |
+| Latest-revision synchronization | Align reusable project SDD documents with the latest immutable playbook revision without silently changing project authority |
 | Documentation quality gates | Check Markdown, links, anchors, diagrams, placeholders, secrets, paths, and lifecycle invariants |
 
 The playbook remains adaptable: project-owned contracts are authoritative,
@@ -412,24 +412,29 @@ self-review, or validation in flight:
 ./install-sdd.sh --upgrade
 ```
 
-Add `--revision REVISION` to assess a specific branch, tag, or commit; otherwise
-the candidate is the latest `main`, resolved to an immutable commit. The
+Upgrade mode always resolves the source repository's latest `main` to an
+immutable commit; it does not accept a historic or alternate revision. The
 installer verifies the current project/runtime boundary and candidate ancestry,
 installs the candidate's `sdd-playbook-upgrade` skill, and prints:
 
 ```text
-Follow .sdd-runtime/playbook-upgrade-guide.md exactly.
+Use .sdd-runtime/playbook-upgrade-guide.md to synchronize the project with the
+latest playbook revision.
 ```
 
-The preflight does not change the manifest pin and does not declare semantic
-compatibility. The agent creates a project-owned upgrade assessment, compares
-the exact revisions and affected project authorities, self-reviews it, creates
-exactly two fresh-context reviewers, and then stops for human approval. After
-both reviewers approve, it migrates one reviewed boundary at a time, validates before final
-cutover, then updates the manifest pin once. Finally run
-`./install-sdd.sh --cleanup`, regenerate the normal guide
-with `./install-sdd.sh`, and require `./install-sdd.sh --validate` to pass.
-Rollback keeps or restores the previous pin. See the
+The preflight supplies immutable provenance and does not change the manifest
+pin. The upgrade is a bounded synchronization of reusable SDD documents with
+the latest revision, not a project implementation project. Project policies
+remain authoritative, and project agents do not add or run playbook lifecycle
+validators, evidence helpers, publication tools, CI workflows, or playbook test
+suites. The agent chooses the most proportional comparison, edit, validation,
+and recovery method within the outcome and safety boundaries.
+
+Acceptance requires mutually consistent reusable documents, applicable
+document and runtime checks, independent review, human acceptance, a single
+updated immutable pin, regenerated valid runtime, and cleanup of installer-owned
+temporary content. A rejected candidate leaves or restores the previous pin.
+See the
 [project adoption runbook](docs/project-adoption-runbook.md#11-playbook-updates-and-drift)
 and [upgrade assessment template](templates/adoption/playbook-upgrade-assessment.md).
 

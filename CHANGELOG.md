@@ -1,13 +1,16 @@
 # Changelog
 
-- Require exactly two initially isolated subagents per review gate, retain both
-  across every revision round, and require both to approve the same candidate.
+- Make source skills outcome-based: the five goals, required result, authority
+  and safety boundaries, essential evidence, and error handling govern delivery
+  while agents choose the proportional method. Playbook upgrade now means
+  synchronizing reusable project documents with the immutable latest revision;
+  it does not export playbook tooling or tests into adopting projects.
 
 This project has not published a formal versioned release. Significant template
 and workflow changes are recorded here until a release/versioning policy is
 adopted.
 
-## Unreleased — updated 2026-09-06
+## Unreleased — updated 2026-09-07
 
 - Add opt-in lifecycle v5 with GitHub PR-owned delivery evidence and exact
   post-target reset. Versioned review, owner-acceptance and target receipts bind

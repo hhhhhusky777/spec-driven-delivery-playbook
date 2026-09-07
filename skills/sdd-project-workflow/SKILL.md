@@ -1,224 +1,99 @@
 ---
 name: sdd-project-workflow
-description: Deliver current and future needs in an installed Spec-Driven Delivery Playbook project through its generated guide and stateful working whiteboard, without bypassing evidence, reset, manifest, or review gates.
+description: Deliver project needs through the installed Spec-Driven Delivery Playbook while preserving authority, evidence, quality, and agent discretion.
 ---
 
 # SDD Project Workflow
 
-## Governing goals
+## Required outcome
 
-After runtime verification, read and apply
-`docs/documentation-quality-policy.md#five-goals-and-agent-judgment` from the
-verified playbook checkout. Keep operational choices within project authority.
+Deliver the owner's approved need with current, mutually consistent project
+contracts; verified implementation; concise decision evidence; and a clean
+reusable state for the next need.
+
+Apply the five goals in the verified playbook checkout's
+`docs/documentation-quality-policy.md#five-goals-and-agent-judgment`:
+clear boundaries, stable outcomes, key information only, proportional effort,
+and agent discretion.
+
+## Authority and safety boundaries
+
+- The manifest identifies the installed playbook revision and active delivery.
+- Canonical project contracts and owner decisions define intended behavior.
+- The working whiteboard holds the current need until it is concluded; the PR
+  holds durable delivery and review evidence.
+- Preserve unrelated work, secrets, repository protections, required project
+  quality controls, and explicit authority for destructive or external actions.
+- Stop for the owner when a decision changes intended behavior, policy,
+  authority, safety, irreversible data handling, or delivery acceptance.
+- Do not treat passing automation, agent review, or file presence as human
+  approval.
+
+Only one need owns the project-owned solution whiteboard.
+
+- **`EMPTY`:** a new need may be admitted.
+- **`CONCLUDED`:** the approved design governs delivery.
+
+Do not overwrite it or admit a second need until PR evidence and reset are verified.
+
+For a multi-task delivery, verify the task branch starts from and the task PR
+targets the feature integration branch. Only the validated feature PR targets
+the protected branch.
+
+## Agent discretion
+
+Within those boundaries, the agent chooses methods, sequencing, tools,
+artifacts, tests, recovery, and review depth according to actual risk and
+complexity. Routine corrections and agent mistakes do not require a human stop.
+When the owner or project has authorized batched review, use one coherent
+review package instead of repeated artifact-level reviews; otherwise preserve
+the project's existing review boundaries. Ordinary internal engineering
+choices remain with the agent.
+
+`EXPLICIT_REVIEW`, `AUTO_CONTINUE`, and `REVIEW_ON_EXCEPTION` express owner
+authority and review risk. Implementation merge mode is user-selected as
+`HUMAN_REVIEW_BEFORE_MERGE` or `AGENT_AUTO_MERGE`.
+It is checked at task start or resumption, PR publication, review and merge boundaries. It does not apply
+to design acceptance, and automatic merges remain subject to post-merge human review.
+
+At implementation review, the Current review target ID must be inside the
+recorded mode scope. Never weaken checks, use administrator bypass, or treat
+agent evidence as owner acceptance.
+Automatic authority reaches the final feature PR only when its recorded scope includes that PR and final validation is already approved.
+
+The agent may prepare, implement, validate, and synchronize dependent work
+without artificial pauses when existing authority covers the work and required
+quality outcomes remain satisfied. A status question or tool boundary is not an
+approval boundary.
+
+## Required evidence
+
+Retain only information needed for decisions, verification, recovery, and
+maintenance. Human review briefs use a concise table covering scope, key design
+or task outcomes, risks, checks, reviewer findings, unresolved decisions, and
+the exact response requested. Link to canonical detail rather than repeating
+rules or review commentary.
+
+When independent review is applicable, use
+`templates/reviews/agent-self-review.md` and
+`templates/reviews/fresh-context-agent-review.md` as the evidence source rather
+than copying their protocol into this skill.
 
 ## Exception routing
 
-Read and apply `docs/batch-review-and-recovery.md#recovery-without-restarting-everything`
+Use `docs/batch-review-and-recovery.md#recovery-without-restarting-everything`
 and `docs/batch-review-and-recovery.md#exception-triage-and-upstream-reporting`
-from the verified checkout. Use `templates/reviews/exception-triage.md` in the
-existing recovery record. Runtime-verification failure still forbids reading
-an unverified checkout or making prohibited project writes.
+as the single error-handling authority. Preserve valid work, repeat only what a
+failure affects, correct agent mistakes within scope, and open an owning issue
+for a genuine project or playbook gap. Human involvement is required only when
+the unresolved consequence crosses an authority or safety boundary.
+Use `templates/reviews/exception-triage.md` when a durable exception record is
+needed.
 
-## Optional batched route
+## Completion outcome
 
-Before using an explicitly approved batch route, read
-`docs/batch-review-and-recovery.md` from the verified read-only playbook checkout.
-Within that scope, batch dependent preparation and corrections, then use one
-full review per coherent package/PR instead of per-artifact stops below.
-Perform one fresh readiness check before implementation; material mismatch
-returns to the owning review. Preserve current mode, scope, two retained seats,
-all quality controls and human gates. Outside valid authority, use the ordinary
-sequence below.
-
-Resolve source paths through that verified checkout, not the installed skill
-directory. Availability is not project adoption or additional authority.
-
-Use this skill only through the machine-local `.sdd-runtime/agent-guide.md`
-generated by `install-sdd.sh` after it detects an installed adoption manifest.
-
-## Runtime verification
-
-1. Read the complete guide and verify its project root, playbook checkout Git
-   origin, and resolved revision against the manifest. Treat the checkout as
-   read-only. On any mismatch, make no project edit and report `BLOCKED`.
-2. Read the project entry point, manifest, active project contracts, and the
-   project-owned solution whiteboard.
-3. Treat the guide's detected manifest state as generation-time provenance.
-   Re-read the manifest for live state. If the live state maps to a different
-   guide profile or skill, make no edit and report `STALE_RUNTIME`; a compatible
-   state advance within the workflow profile does not require regeneration.
-
-## Whiteboard state routing
-
-- **Missing:** create one neutral `EMPTY` working whiteboard at the guide's
-  recorded adoption root only when no active or incompletely reset delivery owns that path. Run
-  applicable checks and stop. Do not infer a need to fill the template.
-- **`EMPTY`:** place a user-supplied need in the whiteboard intake and move it
-  to `OPEN`. Keep discussion, facts, requirements, proposals, and corrections
-  in that whiteboard.
-- **`OPEN`, `EXPLORING`, or `CONVERGING`:** continue only that need. Do not
-  overwrite it or admit a second need into the same working path.
-- **`CONCLUDED`:** continue through the reviewed handoff and SDD delivery
-  workflow. A second need is blocked until the current delivery closes and its
-  PR evidence and reset are verified.
-- **`BLOCKED`:** preserve the current need and follow its recorded unblock
-  condition. Before blocking the adoption manifest, preserve its current
-  non-blocked state in `State before block`; reset that field only after a
-  reviewed safe-state return. Do not create another whiteboard to bypass the
-  blocker.
-
-## Live-state ownership
-
-- The adoption manifest owns adoption state and the active-delivery route.
-- The delivery workflow owns artifact dependencies, freshness, blockers, and
-  the current delivery action.
-- The implementation plan owns task state and context receipts.
-- Stable entry points link to those live authorities; never copy volatile
-  lifecycle state, blockers, task IDs, freshness, or next actions into them.
-- A concluded whiteboard, consumed handoff, accepted ADR, or approved audit
-  preserves state at approval. Do not rewrite frozen evidence to simulate live
-  navigation.
-
-## Action and freshness gate
-
-Before starting or resuming an authorized work unit:
-
-1. Identify the current dependency-ready action and its target IDs/files.
-2. Verify its targets are inside the recorded allowed write scope.
-3. Verify no open blocker directly or transitively affects those target IDs.
-4. Require every consumed dependency to be `CURRENT`. `UNKNOWN` impact fails
-   closed like `MATERIAL`; `CONTROL_ONLY` does not invalidate frozen content.
-5. Read its pre-approved review mode. Missing or invalid mode information fails
-   closed to `EXPLICIT_REVIEW`.
-6. For a multi-task delivery, verify the task branch starts from and the task
-   PR targets the feature integration branch. Only the final validated feature
-   PR may target the protected branch.
-7. If the action is implementation, reread the workflow's live implementation
-   continuation mode, authority, scope, and selection time. Do not use a cached
-   value or infer the user's choice.
-
-Choose internal steps and corrections within that unit; a tool call or user
-status question is not a new approval boundary. Recheck affected inputs when
-they change. After the unit and its applicable checks:
-
-1. At the review boundary, apply the canonical self-review and independent
-   review protocols linked below to the exact candidate.
-2. Compare changed facts, links, commands, versions, availability claims, and
-   contracts with the workflow dependency register.
-3. Classify the change `CONTROL_ONLY`, `MATERIAL`, or `UNKNOWN` and compute
-   transitive `CURRENT`, `STALE`, or `BLOCKED` state from structured dependency
-   IDs. Do not infer the graph from prose.
-4. For `EXPLICIT_REVIEW`, complete fresh-context review of the current exact
-   candidate, then keep human review as the immediate next action. Do not
-   consume an unapproved output outside the authorized batch route.
-5. For `AUTO_CONTINUE` or `REVIEW_ON_EXCEPTION`, verify approved/current inputs,
-   no semantic decision, every declared gate passing on the output revision, no
-   unresolved exception, and an audit entry. Continue only until the next mandatory
-   semantic checkpoint and only inside the approved automation boundary, WIP
-   policy, and write scope. `AUTO_CONTINUED` is not approval.
-6. Route failures through the canonical error-handling framework above. Restore
-   valid inputs and checks within authority; unresolved scope, authority or
-   safety mismatches end automatic continuation. Review modes do not waive
-   their declared gates.
-7. After approval, route the earliest dependency-ready stale correction before
-   dependent generation or implementation.
-8. Report the invariant results separately from Markdown/test results. Passing
-   automation is not semantic approval.
-
-### Post-merge evidence and reset
-
-Before reset or cleanup, read
-`docs/batch-review-and-recovery.md#version-5-pr-evidence-and-delivery-reset`
-from the verified checkout. Verify `sdd-pr-review/v1`, owner-bound
-`sdd-pr-acceptance/v1`, and post-merge `sdd-target-receipt/v1` through the
-GitHub-aware command. Read reset authority and the exact inventory from the live
-workflow; an implementation approval does not authorize unseen reset bytes.
-Existing v2–v4 instances follow their installed compatibility closure contract.
-
-## Fresh-context independent review
-
-At the actual review boundary, read and follow
-`templates/reviews/agent-self-review.md` and
-`templates/reviews/fresh-context-agent-review.md` from the verified checkout.
-The protocol owns exact-candidate evidence, isolated read-only reviewer creation,
-retained seats, findings, re-review and phase-specific human acceptance. Use its
-packet and receipt in the existing ledger or PR; do not create a second protocol.
-Same-account agent comments are not separate GitHub approval identities.
-
-## Implementation task continuation
-
-Keep `NOT_SELECTED` throughout design. At `GATES_READY`, ask the user to choose
-`HUMAN_REVIEW_BEFORE_MERGE` or `AGENT_AUTO_MERGE` before the first task enters
-`IN_PROGRESS`; record the instruction, exact implementation repository, and
-comma-separated stable target-ID scope in the workflow. Reject prose tokens,
-duplicate IDs, or a PR outside that repository. The user may change the mode at
-any time.
-
-Treat exact recording of the user's instruction as a control-only workflow
-update unless project policy requires another review. Do not reinterpret or
-broaden its scope, and run lifecycle validation after recording it.
-
-For every implementation task, reread the canonical mode at task start or
-resumption, PR publication, review and merge boundaries:
-
-- At implementation review, require `Current review phase` to be `IMPLEMENTATION`
-  and `Current review target ID` inside the recorded mode scope, with its PR in
-  the recorded implementation repository. A draft PR before coding is optional;
-  follow the canonical readiness contract, not an extra pre-coding PR gate.
-  Any design, validation, or
-  archive/reset phase still requires human review even while auto-merge is selected.
-
-- `HUMAN_REVIEW_BEFORE_MERGE`: after exact-head self-review and fresh-context
-  approval, stop for required human review and merge authority.
-- `AGENT_AUTO_MERGE`: after exact-head self-review and fresh-context approval,
-  wait for all required checks and repository protections, reread the mode,
-  then merge without bypass and record the merge and post-merge review row
-  before continuing to the next dependency-ready task.
-
-Self-review does not authorize the merge; the user's current scoped mode choice
-does. Stop on missing/invalid/stale/out-of-scope mode data, a failed/missing
-gate, conflict, unresolved comment or change request, stale dependency,
-unexpected diff, ambiguity, inconsistency, new semantic decision, scope
-expansion, mode change, or repository refusal. Never weaken checks, use
-administrator bypass, or apply this mode to design, policy, contract, task-spec,
-exception, final-validation, or archive approval.
-
-Every automatically merged PR starts as `PENDING` in the post-merge human-review
-ledger. A finding blocks affected work and routes its correction through the
-workflow. Do not mark the delivery `COMPLETE` or reset/archive until all rows are
-`ACCEPTED` or their required follow-up is complete.
-
-For a multi-task delivery, apply `AGENT_AUTO_MERGE` to the final feature PR only
-when the current user scope names it and final validation is already approved.
-Merging that PR does not approve validation or delivery closure.
-
-`GATES_READY` requires all selected prerequisites approved/current, no blocker
-affecting the first task, and an approved plan with at least one task satisfying
-Definition of Ready and marked `NEXT`. A task may enter `IN_PROGRESS` only with
-an approved, current context receipt. Independent tasks may remain ready while
-an unrelated blocker is open.
-
-Treat a task specification as complete when implementation can proceed without
-inventing product or system behavior, not when every helper or algorithm is
-preselected. Approved contracts may be referenced without copying them.
-Ordinary internal engineering choices remain with the implementer unless they
-change observable behavior, architecture/data reversibility, transaction or
-lock ownership, integrity, security, compatibility, operations, or an approved
-performance boundary. `UNKNOWN` artifact freshness does not apply merely
-because several contract-equivalent implementation choices remain. Before
-`READY`, verify the canonical source boundary and availability; freeze the exact
-current revision in the approved receipt before `IN_PROGRESS`.
-
-Do not promote a plan or workflow to `VALIDATING` because one task enters
-`VERIFYING` or `DONE`. Plan-level validation begins only after every active
-ledger task is `DONE` or reviewed `CANCELLED`, no next task remains, and the
-workflow's linked plan is `CURRENT` and already `VALIDATING`. If plan-level
-validation finds more implementation work, return the plan to `IMPLEMENTING`
-and the workflow to `DELIVERY_ACTIVE` before resuming tasks.
-
-Preserve every design-phase independent review gate and exact allowed write
-scope. Generate no downstream artifact before its owning gate authorizes it.
-Preserve unrelated and user-owned work, and report exact checks and evidence.
-
-The installation guide is runtime orchestration data, not project authority.
-The reviewed manifest and linked project contracts remain authoritative.
+The delivered result satisfies the approved design and project checks, review
+findings are resolved, required human acceptance is recorded, merged-target
+behavior is verified, the concluded whiteboard links the delivery PR, and
+feature-only working material is removed or reset. Adoption and reusable
+project contracts remain available for the next feature.
