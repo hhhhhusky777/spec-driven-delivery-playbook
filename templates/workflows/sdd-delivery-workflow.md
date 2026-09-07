@@ -11,18 +11,14 @@ Record actual acceptance and consumption in legal order before execution.
 See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
 requirements. This route takes effect only through reviewed project adoption.
 
-<!-- sdd-schema: delivery-workflow@4 -->
+<!-- sdd-schema: delivery-workflow@5 -->
 
 Use this template after a generated whiteboard handoff is reviewed and reaches
 `APPROVED`. It consumes that exact handoff version, selects the smallest safe
 delivery route, determines which existing policies to reuse and which artifacts
-to generate, and records each review gate through implementation and archive.
-
-The `PREAUTHORIZED_CONTROL_RECEIPT` mode is closure-only. Select it only in the
-same owner acceptance that approves the complete archive/reset/cleanup package.
-It permits one enumerated post-merge control PR to verify and record that exact
-accepted action without repeating semantic review. Any mismatch returns to
-`EXPLICIT_REVIEW`; `NOT_SELECTED` grants no receipt or merge authority.
+to generate, and records each review gate through implementation and verified
+reset. The feature PR owns durable delivery evidence; this working record is
+removed after its evidence and exact reset inventory are verified.
 
 The workflow is an artifact router. It does not recreate every policy for every
 feature. Replace all `<placeholders>` and remove instructional text from an
@@ -30,7 +26,7 @@ instantiated workflow record.
 
 For ordinary unbatched preparation, keep Implementation plan explicitly `None`
 until its owning action creates it, then record a local Markdown link to the
-matching v4 plan. A supplied link is validated immediately. `GATES_READY` and
+matching v5 plan. A supplied link is validated immediately. `GATES_READY` and
 later require the reciprocal plan and full readiness checks; completed or
 in-progress outputs cannot use the no-plan preparation state. This exception
 does not apply to blocked recovery or an authorized batch.
@@ -54,7 +50,7 @@ does not apply to blocked recovery or an authorized batch.
 | Selected route | `Not selected` |
 | Manifest review state | `NOT_STARTED` |
 | Current artifact/gate | `<value>` |
-| Current review phase | `<DESIGN/IMPLEMENTATION/VALIDATION/ARCHIVE>` |
+| Current review phase | `<DESIGN/IMPLEMENTATION/VALIDATION/RESET>` |
 | Current review target ID | `<stable artifact/task/PR ID>` |
 | Current artifact review state | `<value>` |
 | Self-review state | `<NOT_STARTED / SELF_REVIEW_PASSED / SELF_REVIEW_FAILED>` |
@@ -79,18 +75,11 @@ does not apply to blocked recovery or an authorized batch.
 | Next action target IDs | `<artifact/task IDs>` |
 | Allowed write scope | `<semicolon-separated repository-relative paths>` |
 | Next action write targets | `<semicolon-separated repository-relative paths>` |
-| Post-merge control mode | `NOT_SELECTED` |
-| Post-merge control authority | `Not selected` |
-| Post-merge control source revision | `Not selected` |
-| Post-merge control PR | `Not selected` |
-| Post-merge control allowed paths | `Not selected` |
-| Post-merge control changed paths | `Not selected` |
-| Post-merge control allowed fields | `Not selected` |
-| Post-merge control changed fields | `Not selected` |
-| Post-merge control required gates | `Not selected` |
-| Post-merge control evidence owner | `Not selected` |
-| Post-merge cleanup targets | `None` |
-| Post-merge cleanup authority | `None` |
+| PR evidence state | `NOT_STARTED` |
+| PR evidence | `None` |
+| Reset inventory | `This workflow` |
+| Reset authority | `None` |
+| Reset state | `NOT_STARTED` |
 | Review mode | `<EXPLICIT_REVIEW / AUTO_CONTINUE / REVIEW_ON_EXCEPTION>` |
 | Review mode authority | `<development-policy section and approved action-control row>` |
 | Automation boundary | `<last permitted action ID or Not applicable>` |
@@ -104,7 +93,7 @@ does not apply to blocked recovery or an authorized batch.
 ```text
 AWAITING_HANDOFF -> ROUTING -> MANIFEST_IN_REVIEW -> ARTIFACTS_SELECTED
     -> ARTIFACT_GENERATING -> ARTIFACT_IN_REVIEW -> GATES_READY
-    -> DELIVERY_ACTIVE -> VALIDATING -> COMPLETE -> ARCHIVED
+    -> DELIVERY_ACTIVE -> VALIDATING -> COMPLETE -> RESETTING -> RESET
 
 MANIFEST_IN_REVIEW -> CHANGES_REQUESTED -> ROUTING
 ARTIFACT_IN_REVIEW -> CHANGES_REQUESTED -> ARTIFACT_GENERATING
@@ -176,7 +165,7 @@ or the final feature PR in the scope field.
 At each review gate, record its phase and stable target ID. Auto-merge can omit
 pre-merge human review only when `Current review phase` is `IMPLEMENTATION`, the
 target ID is in that scope, and `Current artifact/gate` links that same target's
-PR. A design, validation, or archive gate always requires human review.
+PR. A design, validation, or semantic reset gate always requires human review.
 The user may change the mode at any time. At task start/resumption, PR
 publication, review and merge boundaries, reread these live fields;
 never rely on an earlier prompt or cached value. A missing, invalid, stale, or
@@ -358,7 +347,7 @@ Justification: `<why this is the smallest safe route>`.
 | API/system contract update | External/shared observable contract changes | Skip with evidence of no contract impact |
 | Runbook/operations update | Deployment, recovery, monitoring, or operator action changes | Skip when operations are unchanged |
 | Dedicated performance/security plan | Risk cannot be adequately specified in the implementation plan | Use plan test matrix for bounded cases |
-| Delivery record | Always for Routes 1–4; Route 0 follows project archive policy | Never claim completion without evidence |
+| Versioned PR evidence | Always for Routes 1–4; Route 0 records its justified evidence boundary | Never claim completion without verified evidence |
 
 ## 8. Delivery manifest
 
@@ -377,7 +366,7 @@ generating the first selected artifact.
 
 ### 8.1 Artifact dependency and freshness register
 
-Version 4 separates prerequisites from output obligations. Populate the role
+Version 5 retains v4 phase-aware prerequisites and output obligations. Populate the role
 inventory and output register below as well as the current-input register.
 Follow the [phase readiness contract](../../docs/batch-review-and-recovery.md#version-4-phase-aware-readiness).
 Do not move completed outputs into this input register. Legacy v2/v3 documents
@@ -385,7 +374,7 @@ retain their original behavior; migration requires reviewed adoption/upgrade.
 
 | Artifact ID | Role | Production phase | Required gate | Producer task | Depends on | Evidence |
 | --- | --- | --- | --- | --- | --- | --- |
-| `<stable ID>` | `<PREREQUISITE/FUTURE_OUTPUT>` | `<EXISTING/IMPLEMENTATION/VALIDATION/CLOSURE>` | `<GATES_READY/VALIDATING/COMPLETE/ARCHIVED>` | `<NONE/task ID/PHASE>` | `<IDs/None>` | `<local evidence link>` |
+| `<stable ID>` | `<PREREQUISITE/FUTURE_OUTPUT>` | `<EXISTING/IMPLEMENTATION/VALIDATION/CLOSURE>` | `<GATES_READY/VALIDATING/COMPLETE/RESET>` | `<NONE/task ID/PHASE>` | `<IDs/None>` | `<local evidence link>` |
 
 | Artifact ID | State | Current version | Verified version | Change impact | Freshness | Review state | Review evidence | Blocked by |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -423,7 +412,7 @@ cannot prove freshness.
 When this workflow enters `VALIDATING`, the `plan` row's Markdown link is the
 machine-readable parent/child state reference. It must resolve inside the
 project to a `CURRENT` SDD implementation plan in `VALIDATING`. Route 0 may omit
-the row in legacy versions when no implementation plan was selected. Version 4
+the row in legacy versions when no implementation plan was selected. Version 5
 requires the reciprocal Implementation plan / Delivery workflow links; use a
 compact plan for a bounded editorial delivery.
 
@@ -445,8 +434,8 @@ Independent ready work may continue within the approved WIP and write scope.
 | `0` | Approved handoff | Delivery manifest | `EXPLICIT_REVIEW` | Select first dependency-ready artifact | Routing or handoff |
 | `1..N` | Approved dependencies | `<policy/ADR/audit/contract/plan/runbook>` | `<normally EXPLICIT_REVIEW>` | Select next dependency-ready artifact | Current artifact, manifest, handoff, or whiteboard |
 | `N+1` | Approved plan and authorities | `<task: code/tests/docs/PR>` | `<project PR/task policy>` | Select next ready task | Failure triage/responsible artifact |
-| `N+2` | All approved task evidence | Validation/retrospective | `<REVIEW_ON_EXCEPTION then plan DOD EXPLICIT_REVIEW>` | Generate delivery record | Responsible artifact |
-| `N+3` | Reconciled approved packet | Delivery record/archive mechanics | `<EXPLICIT_REVIEW then bounded AUTO_CONTINUE>` | Archive and cleanup | Closure correction |
+| `N+2` | All approved task evidence | Validation and versioned PR evidence | `<REVIEW_ON_EXCEPTION then plan DOD EXPLICIT_REVIEW>` | Merge after required acceptance | Responsible artifact |
+| `N+3` | Verified feature target and complete inventory | Exact reset PR | `<recorded feature-PR authority or EXPLICIT_REVIEW>` | Reset delivery state and runtime | Preserve state; closure correction |
 
 ### 9.1 Action control ledger
 
@@ -495,7 +484,7 @@ Every row's mode must lead with exactly `HUMAN_REVIEW_BEFORE_MERGE` or
 `AGENT_AUTO_MERGE`, create the row immediately after merge with human review
 `PENDING`; later record `ACCEPTED` or `FOLLOW_UP_REQUIRED` without rewriting the
 merge evidence. A finding that affects active or future work marks those
-dependencies stale or blocked. `COMPLETE` and `ARCHIVED` require at least one
+dependencies stale or blocked. `COMPLETE` and `RESET` require at least one
 auditable `MERGED` row; a `STOPPED` row cannot satisfy delivery closure. Every
 row must be accepted or have completed follow-up recorded as
 `FOLLOW_UP_COMPLETE`. A `STOPPED` row is for an already-opened scoped PR that
@@ -517,7 +506,7 @@ merge SHA. Contradictory revisions fail closed.
 
 Use the exact leading dispositions shown above. Where the ledger requires
 evidence, record it after ` / `; a bare disposition does not pass that gate.
-Unknown values fail closed. At `COMPLETE` or `ARCHIVED`, human review must record
+Unknown values fail closed. At `COMPLETE` or `RESET`, human review must record
 `APPROVED`, `ACCEPTED`, or `FOLLOW_UP_COMPLETE` with evidence.
 
 ## 10. Feedback and rerouting rules
@@ -598,6 +587,37 @@ Record the reroute in the workflow change history and current-state table:
 
 ## 11. Delivery state and handoff
 
+### 11.1 Exact reset inventory
+
+<!-- sdd-section: reset-inventory -->
+
+Enumerate every delivery-owned repository file, branch, worktree and machine
+runtime item before feature acceptance. `KEEP` needs a concrete independent
+reuse reason. `REMOVE` and `RESET` need ownership evidence and the exact
+authorized operation; examples, globs and classes are never authority.
+For a destructive `WORKTREE` or `RUNTIME` row, both the ownership evidence and
+authorized operation name the exact absolute target. Broad repository,
+temporary, user-home, and system parent directories are invalid targets.
+For these destructive external rows, the operation must use exactly
+`Action=ACTION; Target=EXACT_PATH`. `REMOVE` permits `DELETE` or `CLEANUP`;
+`RESET` permits `RESET`, `REGENERATE`, or `CLEANUP_AND_REGENERATE`. This closed
+grammar applies only to external `WORKTREE` and `RUNTIME` rows; extra fields,
+prose, URIs, child paths, traversal, unsupported actions, or a different target
+fail closed.
+
+| Item ID | Kind | Exact identity | Ownership evidence | Disposition | Reuse reason | Authorized operation | State |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `<stable ID>` | `<FILE/BRANCH/WORKTREE/RUNTIME>` | `<exact repository-relative path, full ref, or absolute owned path>` | `<proof>` | `<REMOVE/RESET/KEEP>` | `<future use or None>` | `<exact FILE/BRANCH authority; external: Action=ACTION; Target=EXACT_PATH; KEEP: None>` | `<PLANNED/VERIFIED>` |
+
+Publish it as `REMOVE=...; RESET=...; KEEP=...; Inventory=<exact-head GitHub
+blob URL>` in `sdd-pr-review/v1`, using `None` where a disposition is empty and
+otherwise listing comma-separated exact identities. The evidence gate retrieves
+the blob and requires all three summaries to match its table.
+After feature target proof and
+`sdd-target-receipt/v1`, the reset PR may change only these identities and exact
+replacement bytes. Update `PR evidence state` and `Reset state` from observed
+results; missing or inconsistent evidence preserves working state.
+
 <!-- sdd-section: delivery-state -->
 
 | Field | Current value |
@@ -619,7 +639,7 @@ dependency-register entry required by the first task is `CURRENT`, no open
 blocker affects that task, the approved plan has one task that satisfies its
 Definition of Ready and is marked `NEXT`, and the next action's write targets
 are inside the allowed write scope. Its `Current artifact review state` must be
-`APPROVED`; invalid review-state values fail closed. `COMPLETE` and `ARCHIVED`
+`APPROVED`; invalid review-state values fail closed. `COMPLETE` and `RESET`
 also require the current validation or closure gate to be `APPROVED`.
 
 At `GATES_READY`, `NOT_SELECTED` is a valid waiting state whose next action is
@@ -629,7 +649,7 @@ are recorded.
 
 ## 12. Completion packet
 
-At completion, the linked packet contains as applicable:
+Before reset, publish this information on the feature PR as applicable:
 
 ```text
 originating need/requirement/issue
@@ -643,7 +663,7 @@ originating need/requirement/issue
 ├── test/performance/security evidence
 ├── failure justifications and defect links
 ├── retrospective and improvement actions
-└── archived delivery record
+└── exact reset inventory and requested authority
 ```
 
 Closure checklist:
@@ -659,13 +679,18 @@ Closure checklist:
       `ACCEPTED`, or its required follow-up is complete and linked.
 - [ ] Contracts, implementation, tests, and operational documentation agree.
 - [ ] Deferred work/residual risk has an owner and durable location.
-- [ ] The concluded whiteboard is preserved at its immutable archive path and
-      linked bidirectionally with the delivery record.
-- [ ] The stable project working-whiteboard path is replaced with a fresh
-      `EMPTY` instance only after archive verification; no active or blocked
-      need was overwritten.
+- [ ] `sdd-pr-review/v1`, `sdd-pr-acceptance/v1`, and
+      `sdd-target-receipt/v1` bind the exact candidate, reviews, owner decision,
+      checks, merge, target proof, URLs and body digests.
+- [ ] Every delivery-owned item appears once in the exact reset inventory;
+      adoption controls and reusable output are `KEEP` with a concrete reason.
+- [ ] The stable working whiteboard becomes exact neutral `EMPTY` only after
+      target/evidence verification; no active or blocked need is overwritten.
+- [ ] The owned runtime is cleaned and regenerated from the preserved or
+      explicitly upgraded reviewed pin.
 - [ ] Retrospective improvements are routed separately.
-- [ ] Archive links resolve and contain no secrets/sensitive evidence.
+- [ ] The manifest has one fixed-size last-delivery locator and no duplicate
+      delivery record; PR evidence contains no secrets or sensitive content.
 
 ## 13. Workflow change history
 

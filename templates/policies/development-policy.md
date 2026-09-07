@@ -200,19 +200,20 @@ Requirement / issue / defect
     -> dependency-ordered tasks
     -> implementation and test evidence
     -> validation and retrospective
-    -> archived delivery record
+    -> versioned PR evidence
+    -> verified delivery reset
 ```
 
 Define required templates and canonical locations:
 
-| Artifact | Template | Active location | Archive location | Owner |
+| Artifact | Template | Active location | Durable/reset owner | Owner |
 | --- | --- | --- | --- | --- |
-| Solution whiteboard | `<link>` | `<path>` | `<path>` | `<role>` |
-| Whiteboard handoff | `<link>` | `<path>` | `<path>` | `<role>` |
-| Delivery workflow/manifest | `<link>` | `<path>` | `<path>` | `<role>` |
-| Implementation plan | `<link>` | `<path>` | `<path>` | `<role>` |
-| Test strategy | `<link>` | `<path>` | `<path>` | `<role>` |
-| PR/branch policy | `<link>` | `<path>` | `<path>` | `<role>` |
+| Solution whiteboard | `<link>` | `<path>` | `<feature PR then EMPTY reset>` | `<role>` |
+| Whiteboard handoff | `<link>` | `<path>` | `<feature PR then REMOVE>` | `<role>` |
+| Delivery workflow/manifest | `<link>` | `<path>` | `<feature PR then REMOVE>` | `<role>` |
+| Implementation plan | `<link>` | `<path>` | `<feature PR then REMOVE>` | `<role>` |
+| Test strategy | `<link>` | `<path>` | `<KEEP when reusable>` | `<role>` |
+| PR/branch policy | `<link>` | `<path>` | `<KEEP when reusable>` | `<role>` |
 | Specialized policy | `<link>` | `<path>` | `<path>` | `<role>` |
 
 The whiteboard contains discovery and rejected alternatives. The approved plan
@@ -583,22 +584,23 @@ Classify each improvement as an immediate plan correction, proposed policy
 change, tooling/test task, durable issue, or no action. Do not silently change
 an active policy from a retrospective.
 
-## 15. Archive and development-history policy
+## 15. Delivery evidence and reset policy
 
 - Reconcile contracts, decisions, tasks, evidence, failures, exceptions, and
-  deferred items before closure.
-- Convert the completed plan into a dated delivery record without erasing its
-  decision and task history.
-- Archive the concluded whiteboard with or link it bidirectionally to the
-  delivery record.
-- Preserve accepted/superseded architecture decisions.
-- Do not reset or resume archived feature artifacts; start a new whiteboard and
-  plan that reference the prior record.
-- Permit only one need in each stable working-whiteboard path. After closure,
-  verify the immutable archived copy and delivery-record links before replacing
-  that working path with a fresh `EMPTY` whiteboard.
-- Define archive paths, naming, retention, sensitive-data restrictions, and
-  broken-link prevention: `<rules>`.
+  deferred items before feature acceptance.
+- Publish the versioned PR review/acceptance/target evidence required by the
+  installed schema; do not keep a duplicate per-feature repository record.
+- Preserve accepted/superseded reusable architecture decisions and delivered
+  project output.
+- Classify every delivery-owned item `REMOVE`, `RESET`, or `KEEP`; `KEEP` needs
+  a concrete future-use reason, while destructive actions need exact identity,
+  ownership evidence, and authority.
+- Permit only one need in each stable working-whiteboard path. Reset it to exact
+  neutral `EMPTY` bytes only after feature target and PR-evidence verification.
+- Clean and regenerate only the enumerated installer-owned runtime from the
+  reviewed manifest pin; adoption is preserved, not repeated.
+- Define PR evidence, reset paths, retention, sensitive-data restrictions, and
+  unavailable-evidence recovery: `<rules>`.
 
 ## 16. Branch, PR, and integration policy
 

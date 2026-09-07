@@ -869,14 +869,17 @@ else
    steps without inventing a new gate for each edit or conversation turn.
 6. Preserve structured freshness and the actual acceptance boundary. Combining
    independently gated artifacts still requires the approved batch route.
-7. Preserve unrelated work and stop whenever approval, authority, or user input
+7. For v5, preserve active working state through feature target verification;
+   verify versioned PR evidence and exact reset authority before removing or
+   resetting any delivery-owned item. Adoption and reusable output remain.
+8. Preserve unrelated work and stop whenever approval, authority, or user input
    is required. Never self-approve.
 
 ## Expected completion boundary
 
 - The authorized work unit has reached its actual completion or review boundary.
 - Required checks and lifecycle invariants are reported separately.
-- Affected dependencies and any remaining recovery work are recorded.
+- Affected dependencies and any remaining recovery/reset work are recorded.
 - The next independent review or dependency-ready action is explicit.
 EOF
 fi

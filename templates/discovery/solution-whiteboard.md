@@ -9,8 +9,8 @@ Supply key design points for the combined design/task comparison; do not add a s
 With explicit batch authority, persist meaningful lightweight discussion notes
 while exploring, then synthesize the complete formal conclusion for the joint
 planning review. Do not treat notes as an accepted conclusion. Preserve one
-active need and immutable accepted history; new requirements use a linked
-amendment.
+active need until verified delivery reset; new requirements use a linked
+amendment while it remains active.
 
 See [Batched review and recovery](../../docs/batch-review-and-recovery.md) for authority, evidence and recovery
 requirements. This route takes effect only through reviewed project adoption.
@@ -22,8 +22,9 @@ chat transcript.
 
 An adoption may instantiate one empty project working copy before a need is
 known. Enter the need inside that whiteboard and move it from `EMPTY` to `OPEN`.
-Before reusing the stable working path, archive the concluded whiteboard and
-replace it with a fresh empty instance; never erase or reset concluded history.
+Before reusing the stable working path, publish the accepted design and delivery
+evidence on the feature PR, verify the merged target and evidence digests, then
+replace it with reviewed neutral `EMPTY` bytes through the exact reset inventory.
 Replace every `<placeholder>` with a neutral or verified value and remove this
 introduction from the instantiated whiteboard.
 
@@ -43,19 +44,18 @@ introduction from the instantiated whiteboard.
 | Generated workflow handoff | `Not generated` |
 | Resulting delivery workflow | `Not generated` |
 | Resulting implementation plan | `Not generated` |
-| Archive/record | `Not archived` |
+| Durable delivery evidence | `Not published` |
 
 The accepted discovery content and workflow-handoff source become
-`IMMUTABLE_AFTER_APPROVAL` at `CONCLUDED`. The generated-artifact and archive
-links above are `MUTABLE_CONTROL`: update them through review as downstream
-artifacts appear, without changing the frozen conclusion. Discussion and
-decision history is `APPEND_ONLY_HISTORY`. The delivery workflow, not this
-whiteboard, owns the live delivery state and next action.
+`IMMUTABLE_AFTER_APPROVAL` at `CONCLUDED` while the delivery is active. Control
+links may update as downstream artifacts appear without changing the frozen
+conclusion. Before reset, the PR evidence must preserve the accepted design,
+alternatives and owner decision. The delivery workflow owns live state.
 
 Lifecycle:
 
 ```text
-EMPTY -> OPEN -> EXPLORING -> CONVERGING -> CONCLUDED -> ARCHIVED
+EMPTY -> OPEN -> EXPLORING -> CONVERGING -> CONCLUDED
            |              |
            +-> BLOCKED <---+
 ```
@@ -69,13 +69,12 @@ EMPTY -> OPEN -> EXPLORING -> CONVERGING -> CONCLUDED -> ARCHIVED
 - `CONCLUDED`: the convergence gate passed and the source content for the
   workflow handoff is frozen.
 - `BLOCKED`: a named missing decision/evidence source prevents safe progress.
-- `ARCHIVED`: the whiteboard is immutable dated context for a plan or record.
 
 Only one need may own a stable working-whiteboard path at a time. A new need is
 blocked while that path is `OPEN`, `EXPLORING`, `CONVERGING`, `CONCLUDED`, or
-`BLOCKED`. At delivery closure, move or copy the concluded whiteboard to its
-immutable archive location, mark that archived copy `ARCHIVED`, verify its
-delivery-record links, and only then create a fresh `EMPTY` working copy.
+`BLOCKED`. At v5 closure, verify the feature PR evidence and merged target, then
+reset this stable path to exact reviewed `EMPTY` bytes. Existing v2–v4 instances
+retain their adopted archive procedure.
 
 ### 0.1 Conclusion review gate
 
@@ -376,15 +375,15 @@ input. If handoff generation or review exposes a material unresolved design
 question, return this whiteboard to `EXPLORING` or `CONVERGING` rather than
 inventing the answer downstream.
 
-## 15. Archive instruction
+## 15. Delivery reset instruction
 
-At delivery closure:
+At v5 delivery closure:
 
-- move or copy this concluded whiteboard to the project's immutable delivery
-  archive and mark that archived copy `ARCHIVED`;
-- link the final implementation/delivery record;
-- preserve facts, rejected options, accepted decisions, and PoC evidence;
-- remove or redact transient sensitive material according to policy; and
-- never reset the archived copy for another topic; and
-- create a fresh neutral `EMPTY` whiteboard at the stable working path only
-  after the archive copy and bidirectional links have been verified.
+- publish key facts, rejected options, accepted decisions, risks and PoC results
+  in the versioned feature-PR evidence;
+- keep this concluded working copy through feature target verification;
+- verify remote evidence URLs and body digests;
+- enumerate this exact path as `RESET`, with reviewed neutral replacement bytes;
+- preserve adoption controls and reusable delivered output; and
+- reset only through the authorized reset PR, never while the need is active,
+  blocked, unverified, or incompletely evidenced.

@@ -5,8 +5,9 @@ This is a non-authoritative integration example for the public
 exactly where the first adoption document goes, how the installer-generated
 guide drives the agent, what is reused versus updated, where review stops
 occur, and how an installed integration produces its empty solution
-whiteboard. The nested delivery example then applies the current workflow to a
-public SGLang issue.
+whiteboard. The nested delivery example is retained as a historical v4 archive
+walkthrough for a public SGLang issue; it is not a v5 reset example and is not
+silently migrated.
 
 The example is not affiliated with or endorsed by SGLang. It changes no SGLang
 repository, opens no upstream issue or pull request, and claims no SGLang test

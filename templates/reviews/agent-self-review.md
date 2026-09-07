@@ -14,6 +14,10 @@ authoring agent's pre-review audit, not approval and not a substitute for the
 reviewer required by project policy. Embed the same fields in the owning
 artifact when a separate file would add unnecessary overhead.
 
+For a v5 feature PR, publish this exact-head result as one PR comment and put its
+URL plus fetched SHA-256 body digest in `sdd-pr-review/v1`. Do not keep a
+duplicate repository self-review file after the verified reset.
+
 ## 1. Subject and provenance
 
 | Field | Value |

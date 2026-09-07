@@ -30,6 +30,8 @@ test("deterministic COMMENT plans reconcile and replay without duplicate writes"
   assert.equal(plan.status, "PLANNED");
   assert.equal(plan.actions.length, 2);
   assert.ok(plan.actions.every(a => a.payload.event === "COMMENT" && a.payload.commit_id === data.expectedHead));
+  assert.ok(plan.actions.every(a => /^sha256:[a-f0-9]{64}$/.test(a.bodyDigest)));
+  assert.deepEqual(plan.actions.map(a => a.bodyDigest), plan.checkpoint.publications.map(p => p.bodyDigest));
   publish(data, plan);
   data.checkpoint = plan.checkpoint;
   data.operation = "RECONCILE";
@@ -111,6 +113,7 @@ test("durable checkpoint candidate, digest, duplicate and unknown action conflic
   for (const [rule, mutate] of [
     ["CHECKPOINT_CANDIDATE", c => { c.candidate = "wrong-candidate"; }],
     ["CHECKPOINT_CONFLICT", c => { c.publications[0].digest = "wrong-digest"; }],
+    ["CHECKPOINT_CONFLICT", c => { c.publications[0].bodyDigest = `sha256:${"0".repeat(64)}`; }],
     ["CHECKPOINT_CONFLICT", c => { c.publications.push(structuredClone(c.publications[0])); }],
     ["CHECKPOINT_UNKNOWN_ACTION", c => { c.publications.push({ actionId: "unknown", digest: "unknown", state: "PLANNED" }); }],
   ]) {

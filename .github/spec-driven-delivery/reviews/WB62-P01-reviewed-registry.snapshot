@@ -50,16 +50,15 @@ No specialized-policy file is installed without an observed systemic trigger.
 The manifest gap register records that deferred route and owner. Security,
 quality, and template rules remain at their existing canonical sources.
 
-## Current future-delivery routing
+## U84 future-delivery routing
 
 WB62 has a later [preparation amendment](deliveries/WB62/preparation-authority.md)
 for joint upgrade/issue publication. It permits provisional package preparation
 with the verified new runtime, not automatic acceptance or future-project use.
 
-U84 was accepted and published through PR #64. The later
-[U64 assessment](upgrades/U64.md) records the reviewed cutover to the manifest's
-current pin. Resolve all source paths below through that verified pinned
-checkout; historical U84 and WB62 planning bytes remain immutable evidence.
+This migration is pending the [manifest's upgrade cutover](project-adoption-manifest.md#u84-upgrade-handoff)
+and reviewed publication. Until then use the unchanged installed pin. After
+cutover, resolve all source paths below through the verified pinned checkout.
 
 | Need | Canonical source / project consequence |
 | --- | --- |

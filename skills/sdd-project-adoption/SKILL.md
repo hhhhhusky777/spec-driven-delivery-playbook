@@ -112,6 +112,10 @@ playbook checkout, immutable revision, manifest path, and cleanup record.
    `./install-sdd.sh --cleanup`, then `./install-sdd.sh`, and verify that the new
    guide selects `sdd-project-workflow` at the manifest's pinned revision. Do
    not clean up while adoption work or empty-whiteboard review remains open.
+18. For v5, retain the installed manifest, registry, trigger and immutable pin
+   across feature resets. A reset removes delivery-only working state and
+   regenerates runtime; it never repeats adoption. Existing v2–v4 projects keep
+   their reviewed archive behavior until an explicit upgrade.
 
 ## Completion report
 

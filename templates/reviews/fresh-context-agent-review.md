@@ -22,8 +22,9 @@ the reviewer. The reviewer receives only the bounded packet below and reads
 the durable project evidence directly.
 
 Fresh context reduces anchoring; it does not create a different human or
-GitHub identity. Until a project installs separate review credentials, record
-the result in the delivery ledger and, when useful, as a PR comment. Do not
+GitHub identity. Until a project installs separate review credentials, publish
+labeled reviewer receipts as PR comments for v5, or use the installed schema's
+delivery ledger for older/non-PR gates. Do not
 claim that it satisfies a repository rule requiring a formal approval from a
 different GitHub actor.
 
@@ -39,7 +40,7 @@ What follows depends on phase and the live implementation mode:
 
 | Phase/mode | After fresh-context `APPROVED` |
 | --- | --- |
-| Design, governance, adoption, upgrade, validation, or archive | Stop for human review; only human approval continues |
+| Design, governance, adoption, upgrade, validation, archive, or semantic reset | Stop for human review; only human approval continues |
 | Implementation with `HUMAN_REVIEW_BEFORE_MERGE` | Stop for human review and merge authority |
 | Implementation with scoped `AGENT_AUTO_MERGE` | Recheck the exact candidate, live mode, scope, checks, repository protections, comments, and blockers; merge and continue only when all pass |
 
@@ -58,8 +59,9 @@ re-review. Do not replace reviewers merely to obtain a new opinion.
 
 ### 1.1 Session control record
 
-Create one durable session record when the gate first enters review. For a PR,
-the PR body or a linked review record owns it; for a non-PR artifact, use a
+Create one session record when the gate first enters review. For a v5 PR, the
+PR body/comments own it and the versioned review table retains URLs and body
+digests; for a non-PR artifact, use a
 project-defined path such as `reviews/<artifact-id>/<session-id>.md`. Append
 rounds and findings to that record instead of replacing it.
 
@@ -111,7 +113,7 @@ round, freeze it before initializing the assigned reviewer(s):
 | Required gates and evidence | `<commands/check runs/artifacts>` |
 | Author annotations | `<PR links or artifact map>` |
 | Author self-review | `<record/link and exact revision>` |
-| Review publication channel | `<delivery ledger / PR comment / formal PR review if separately authorized>` |
+| Review publication channel | `<versioned PR evidence/comment / local record for non-PR gate / formal PR review if separately authorized>` |
 
 The packet identifies evidence without arguing for approval. Do not include the
 authoring conversation, private chain of thought, a recommended result, or a
@@ -226,6 +228,11 @@ finding.
 | Disposition | `<APPROVED / CHANGES_REQUESTED / BLOCKED>` |
 | Recommended next action | `<HUMAN_REVIEW / MERGE_GATE / AUTHOR_ADDRESS_FINDINGS / RESTORE_REVIEWABILITY>` |
 | Reviewed at | `<timestamp/timezone>` |
+
+For a v5 PR publication, preserve this two-column Section 6 table as the single
+machine-readable receipt. Do not append duplicate standalone seat, session,
+candidate, or disposition fields; contradictory or duplicate fields fail the
+evidence gate.
 
 ## 7. Coordinator resume gate
 

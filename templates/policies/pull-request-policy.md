@@ -88,6 +88,22 @@ intentional alternative as a reviewed exception with its equivalent control.
 
 ## 4. Branch models
 
+### Version 5 evidence and reset boundary
+
+The feature PR owns `sdd-pr-review/v1`, the later owner-bound
+`sdd-pr-acceptance/v1`, and post-merge `sdd-target-receipt/v1`. Each object names
+the exact candidate or merge identity and links fetched evidence with SHA-256
+body digests. The owner acceptance identifies the exact merge and reset scope;
+it does not approve unseen bytes.
+
+After target verification, create a reset PR containing only the accepted exact
+`REMOVE`/`RESET`/`KEEP` inventory, neutral whiteboard bytes, fixed-size manifest
+locator, and any separately reviewed pin change. The live GitHub-aware evidence
+check is required before reset publication. Missing evidence, changed bodies,
+unknown ownership, an unlisted target, or an unexpected delta preserves working
+state and requires correction or explicit review. Existing v2–v4 projects keep
+their adopted archive contract until a reviewed upgrade.
+
 ### Single-task delivery
 
 ```text
@@ -97,7 +113,7 @@ protected integration branch -> task branch -> reviewed task PR -> protected bra
 Rules:
 
 - Use this route only when the approved delivery contains one implementation
-  and merge unit. Discovery, planning, final-validation, and archive-only ledger
+  and merge unit. Discovery, planning, final-validation, and reset/archive-only ledger
   rows do not increase that count.
 - The task must be self-contained and must not depend on unmerged follow-up work.
 - Start from a sufficiently current protected branch.
@@ -131,8 +147,8 @@ delivery's integration target. Require:
   validation; and
 - an explicit final feature-to-protected-branch review.
 
-After the final merge, reconcile the protected-branch state before archiving
-the delivery and close branches according to the retention policy. Do not use
+After the final merge, reconcile the protected-branch state before the installed
+schema's archive/reset and close branches according to the retention policy. Do not use
 the feature branch to hide broken intermediate work or postpone integration
 conflicts.
 
@@ -379,7 +395,7 @@ required up-to-date-branch rules: `<rules>`.
 - Advance only the next dependency-ready task.
 - Complete post-merge human review for every automatically merged PR. Record
   `ACCEPTED` or `FOLLOW_UP_REQUIRED`; block affected work on a finding, and do
-  not complete/archive the delivery until review or follow-up closes.
+  not complete or reset/archive the delivery until review or follow-up closes.
 
 ## 12. Emergency changes
 

@@ -21,6 +21,9 @@ const LEGACY_SCHEMAS = JSON.parse(await readFile(
 const V3_SCHEMAS = JSON.parse(await readFile(
   path.join(REPOSITORY_ROOT, "config", "sdd-lifecycle-schema-v3.json"), "utf8",
 ));
+const V4_SCHEMAS = JSON.parse(await readFile(
+  path.join(REPOSITORY_ROOT, "config", "sdd-lifecycle-schema-v4.json"), "utf8",
+));
 
 function diagnostic(file, line, rule, message) {
   return { file: file.split(path.sep).join("/"), line, rule, message };
@@ -32,6 +35,11 @@ function normalizeValue(value) {
     .replace(/^`|`$/g, "")
     .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
     .trim();
+}
+
+function exactPathReference(value, identity) {
+  const escaped = identity.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[\\s'\"\x60=:;,])${escaped}(?=$|[\\s'\"\x60;,])`).test(String(value ?? ""));
 }
 
 function splitMarkdownRow(line) {
@@ -1414,7 +1422,7 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
       ),
     );
   }
-  const reviewApprovedRequired = ["GATES_READY", "COMPLETE", "ARCHIVED"].includes(
+  const reviewApprovedRequired = ["GATES_READY", "COMPLETE", "ARCHIVED", "RESET"].includes(
     fields.get("State"),
   );
   if (reviewApprovedRequired && artifactReviewState !== "APPROVED") {
@@ -1443,6 +1451,7 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
     "IMPLEMENTATION",
     "VALIDATION",
     "ARCHIVE",
+    "RESET",
   ]);
   if (!allowedReviewPhases.has(reviewPhase)) {
     diagnostics.push(
@@ -1748,7 +1757,7 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
         ),
       );
     }
-    const outputIds = new Set(version === 4 ? (findTable(tables, ["Artifact ID", "Role", "Production phase"])?.rows || [])
+    const outputIds = new Set(version >= 4 ? (findTable(tables, ["Artifact ID", "Role", "Production phase"])?.rows || [])
       .filter(row => normalizeValue(row.Role) === "FUTURE_OUTPUT").map(row => normalizeValue(row["Artifact ID"]).toLowerCase()) : []);
     const selectedManifestRows = (deliveryManifest?.rows || []).filter((row) =>
       !["SKIP", "DEFER", "BLOCKED"].includes(normalizeValue(row.Decision)) && !outputIds.has(normalizeValue(row["Artifact ID"]).toLowerCase()),
@@ -1798,10 +1807,90 @@ async function checkDeliveryWorkflow(file, absoluteFile, root, text, tables, fie
   return diagnostics;
 }
 
-// Version 4 keeps output obligations separate from existing inputs. Pure graph
-// validation is shared by workflow and plan entry points; disk bindings are
-// checked separately so neither entry point can bypass the consumption gate.
-export function evaluatePhaseReadiness(roles, inputs, outputs, tasks, state, selected = []) {
+function checkV5Workflow(file, tables, fields) {
+  const diagnostics = [];
+  const fail = (rule, message) => diagnostics.push(diagnostic(file, 1, rule, message));
+  const evidenceStates = new Set(["NOT_STARTED", "REVIEWED", "ACCEPTED", "TARGET_VERIFIED"]);
+  const resetStates = new Set(["NOT_STARTED", "PLANNED", "READY", "IN_PROGRESS", "VERIFIED"]);
+  const evidenceState = fields.get("PR evidence state");
+  const resetState = fields.get("Reset state");
+  const deliveryState = findTable(tables, ["Field", "Current value"]);
+  const deliveryReview = deliveryState?.rows.find(row => normalizeValue(row.Field) === "Current artifact review");
+  if (deliveryReview) {
+    const snapshotState = normalizeValue(deliveryReview["Current value"]).match(/^[A-Z_]+/)?.[0];
+    if (snapshotState !== fields.get("Current artifact review state")) {
+      fail("SDD_LIVE_STATE_CONSISTENCY", "delivery-state Current artifact review must match the primary review state");
+    }
+  }
+  if (!evidenceStates.has(evidenceState)) fail("SDD_PR_EVIDENCE_STATE", `unsupported PR evidence state: ${evidenceState || "missing"}`);
+  if (!resetStates.has(resetState)) fail("SDD_RESET_STATE", `unsupported Reset state: ${resetState || "missing"}`);
+  const inventory = findTable(tables, [
+    "Item ID", "Kind", "Exact identity", "Ownership evidence", "Disposition",
+    "Reuse reason", "Authorized operation", "State",
+  ]);
+  if (!inventory) {
+    fail("SDD_RESET_INVENTORY", "v5 workflow requires the canonical reset inventory table");
+    return diagnostics;
+  }
+  const ids = new Set();
+  const exactIdentities = new Set();
+  const externalIdentities = new Set();
+  const allowedScopes = splitPaths(fields.get("Allowed write scope") || "");
+  const globalScope = allowedScopes.some(scope => normalizeValue(scope) === "*");
+  for (const row of inventory.rows) {
+    const itemId = normalizeValue(row["Item ID"]);
+    const kind = normalizeValue(row.Kind);
+    const identity = normalizeValue(row["Exact identity"]);
+    const disposition = normalizeValue(row.Disposition);
+    const state = normalizeValue(row.State);
+    if (!isStableIdentifier(itemId) || ids.has(itemId.toLowerCase())) fail("SDD_RESET_ITEM_ID", `invalid or duplicate reset item ID: ${itemId || "missing"}`);
+    ids.add(itemId.toLowerCase());
+    if (!new Set(["FILE", "BRANCH", "WORKTREE", "RUNTIME"]).has(kind)) fail("SDD_RESET_KIND", `${itemId} has unsupported kind ${kind}`);
+    if (!identity || /[*?\[\]{}]/.test(identity) || /(^|\/)\.\.($|\/)/.test(identity) || /\$\{|\$[A-Za-z_]|^~(?:\/|$)/.test(identity)) fail("SDD_RESET_IDENTITY", `${itemId} requires one exact non-pattern identity`);
+    if (exactIdentities.has(`${kind}:${identity}`)) fail("SDD_RESET_IDENTITY", `${itemId} duplicates an exact identity`);
+    exactIdentities.add(`${kind}:${identity}`);
+    if (kind === "FILE" && (path.isAbsolute(identity) || identity.includes("\\") || identity.split("/").some(part => ["", ".", ".."].includes(part)) || identity === ".git" || identity.startsWith(".git/"))) fail("SDD_RESET_FILE_IDENTITY", `${itemId} requires one repository-relative non-VCS file path`);
+    if (kind === "BRANCH" && !/^refs\/heads\/[A-Za-z0-9._/-]+$/.test(identity)) fail("SDD_RESET_BRANCH_IDENTITY", `${itemId} requires an exact refs/heads branch ref`);
+    if (["WORKTREE", "RUNTIME"].includes(kind)) {
+      if (!path.isAbsolute(identity)) fail("SDD_RESET_EXTERNAL_IDENTITY", `${itemId} requires an exact absolute path`);
+      const normalizedIdentity = path.resolve(identity);
+      const unsafeParents = new Set(["/", "/tmp", "/private", "/private/tmp", "/var", "/var/tmp", "/private/var", "/private/var/tmp", "/private/var/folders", "/Users", "/home", "/root", "/usr", "/opt", "/etc", "/Applications", "/Library", "/System", "/Volumes"]);
+      if (identity !== normalizedIdentity || unsafeParents.has(normalizedIdentity) || /^\/(?:Users|home)\/[^/]+$/.test(normalizedIdentity)) fail("SDD_RESET_EXTERNAL_IDENTITY", `${itemId} cannot target an aliased, user-home, broad or system parent path`);
+      if (externalIdentities.has(normalizedIdentity)) fail("SDD_RESET_IDENTITY", `${itemId} duplicates an external identity`);
+      externalIdentities.add(normalizedIdentity);
+    }
+    if (!["REMOVE", "RESET", "KEEP"].includes(disposition)) fail("SDD_RESET_DISPOSITION", `${itemId} requires REMOVE, RESET or KEEP`);
+    if (disposition === "KEEP" && !hasRecordedValue(row["Reuse reason"])) fail("SDD_RESET_KEEP_REASON", `${itemId} KEEP requires a future-use reason`);
+    if (["REMOVE", "RESET"].includes(disposition) && (!hasRecordedValue(row["Ownership evidence"]) || !hasRecordedValue(row["Authorized operation"]))) fail("SDD_RESET_AUTHORITY", `${itemId} ${disposition} requires ownership evidence and an authorized operation`);
+    if (["WORKTREE", "RUNTIME"].includes(kind) && ["REMOVE", "RESET"].includes(disposition) &&
+        (!exactPathReference(row["Ownership evidence"], identity) || !exactPathReference(row["Authorized operation"], identity))) {
+      fail("SDD_RESET_AUTHORITY", `${itemId} destructive external evidence and operation must name the exact target`);
+    }
+    if (kind === "FILE" && ["REMOVE", "RESET"].includes(disposition) && (globalScope || !allowedScopes.some(scope => pathWithinScope(identity, scope)))) fail("SDD_RESET_SCOPE", `${itemId} destructive file target must be inside a non-global Allowed write scope`);
+    if (!new Set(["PLANNED", "VERIFIED"]).has(state)) fail("SDD_RESET_ITEM_STATE", `${itemId} has unsupported state ${state}`);
+  }
+  const workflowState = fields.get("State");
+  if (["RESETTING", "RESET"].includes(workflowState)) {
+    if (evidenceState !== "TARGET_VERIFIED") fail("SDD_RESET_PR_EVIDENCE", `${workflowState} requires TARGET_VERIFIED PR evidence`);
+    if (!hasRecordedValue(fields.get("PR evidence")) || !hasRecordedValue(fields.get("Reset inventory")) || !hasRecordedValue(fields.get("Reset authority"))) fail("SDD_RESET_AUTHORITY", `${workflowState} requires linked PR evidence, reset inventory and authority`);
+  }
+  if (workflowState === "RESET" && (resetState !== "VERIFIED" || inventory.rows.length === 0 || inventory.rows.some(row => normalizeValue(row.State) !== "VERIFIED"))) {
+    fail("SDD_RESET_COMPLETION", "RESET requires a non-empty fully verified inventory and Reset state VERIFIED");
+  }
+  return diagnostics;
+}
+
+function checkV5AdoptionManifest(file, fields) {
+  const value = normalizeValue(fields.get("Last delivery receipt") || "");
+  if (isNone(value)) return [];
+  const pattern = /^feature_pr=https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/pull\/[1-9]\d*; feature_merge=[a-f0-9]{40}; reset_pr=https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/pull\/[1-9]\d*; reset_head=[a-f0-9]{40}; bundle=sha256:[a-f0-9]{64}$/;
+  return pattern.test(value) ? [] : [diagnostic(file, 1, "SDD_LAST_DELIVERY_RECEIPT", "Last delivery receipt must be None or the fixed-size v5 feature/reset locator")];
+}
+
+// Versions 4 and 5 keep output obligations separate from existing inputs. Pure
+// graph validation is shared by workflow and plan entry points; disk bindings
+// are checked separately so neither entry point can bypass the consumption gate.
+export function evaluatePhaseReadiness(roles, inputs, outputs, tasks, state, selected = [], schemaVersion = 4) {
   const errors = [];
   const fail = message => errors.push(message);
   const value = (row, key) => normalizeValue(row?.[key] || "");
@@ -1841,7 +1930,7 @@ export function evaluatePhaseReadiness(roles, inputs, outputs, tasks, state, sel
   for (const id of selected.map(id => id.toLowerCase())) if (!roleMap.has(id)) fail(`Selected artifact ${id} lacks a role`);
   for (const id of [...inputMap.keys(), ...outputMap.keys()]) if (!roleMap.has(id)) fail(`Register artifact ${id} lacks a role`);
   const phases = { EXISTING: 0, IMPLEMENTATION: 1, VALIDATION: 2, CLOSURE: 3 };
-  const gates = { IMPLEMENTATION: "VALIDATING", VALIDATION: "COMPLETE", CLOSURE: "ARCHIVED" };
+  const gates = { IMPLEMENTATION: "VALIDATING", VALIDATION: "COMPLETE", CLOSURE: schemaVersion >= 5 ? "RESET" : "ARCHIVED" };
   for (const [id, row] of roleMap) {
     const phase = value(row, "Production phase");
     const producer = value(row, "Producer task").toLowerCase();
@@ -1880,7 +1969,7 @@ export function evaluatePhaseReadiness(roles, inputs, outputs, tasks, state, sel
       value(row, "Review state") === "APPROVED" && hasRecordedValue(row["Review evidence"]) &&
       outputParents.every(dep => ready(dep, new Set([...stack, id])));
   };
-  const boundary = { VALIDATING: 1, COMPLETE: 2, ARCHIVED: 3 }[state] || 0;
+  const boundary = { VALIDATING: 1, COMPLETE: 2, ARCHIVED: 3, RESET: 3 }[state] || 0;
   for (const [id, row] of outputMap) {
     if (!["NOT_STARTED", "IN_PROGRESS", "COMPLETE"].includes(value(row, "State"))) fail(`${id}: invalid output state`);
     if (value(row, "State") === "COMPLETE" && !ready(id)) fail(`${id}: COMPLETE output lacks exact approved/current evidence`);
@@ -1925,7 +2014,7 @@ export function evaluatePhaseReadiness(roles, inputs, outputs, tasks, state, sel
   return errors;
 }
 
-async function checkV4Workflow(file, root, tables, fields, schemas, ancestors) {
+async function checkPhaseWorkflow(file, root, tables, fields, schemas, ancestors, expectedVersion) {
   const relative = path.relative(root, file);
   const errors = [];
   const fail = message => errors.push(diagnostic(relative, 1, "SDD_PHASE_READINESS", message));
@@ -1947,7 +2036,7 @@ async function checkV4Workflow(file, root, tables, fields, schemas, ancestors) {
     const planLink = (rawControlField(tables, "Implementation plan") || "").match(/\]\(([^)]+)\)/)?.[1];
     const planFile = await containedFile(root, file, planLink);
     const planText = await readFile(planFile, "utf8");
-    if (extractMarker(planText)?.artifact !== "implementation-plan" || extractMarker(planText)?.version !== 4) throw new Error("requires v4 implementation plan");
+    if (extractMarker(planText)?.artifact !== "implementation-plan" || extractMarker(planText)?.version !== expectedVersion) throw new Error(`requires v${expectedVersion} implementation plan`);
     const planTables = parseMarkdownTables(planText);
     errors.push(...await checkSddLifecycleDocument(planFile, root, schemas, ancestors));
     const backLink = (rawControlField(planTables, "Delivery workflow") || "").match(/\]\(([^)]+)\)/)?.[1];
@@ -1958,7 +2047,7 @@ async function checkV4Workflow(file, root, tables, fields, schemas, ancestors) {
     if (!roles || !outputs || !inputs) throw new Error("required role/input/output register missing");
     const manifest = findTable(tables, ["Artifact ID", "Decision", "Review state/link"]);
     const selected = (manifest?.rows || []).filter(row => !["SKIP", "DEFER", "BLOCKED"].includes(normalizeValue(row.Decision))).map(row => normalizeValue(row["Artifact ID"]));
-    for (const message of evaluatePhaseReadiness(roles.rows, inputs.rows, outputs.rows, taskRows(planTables), fields.get("State"), selected)) fail(message);
+    for (const message of evaluatePhaseReadiness(roles.rows, inputs.rows, outputs.rows, taskRows(planTables), fields.get("State"), selected, expectedVersion)) fail(message);
     for (const row of outputs.rows) {
       if (normalizeValue(row.State) !== "COMPLETE") continue;
       const role = roles.rows.find(item => normalizeValue(item["Artifact ID"]).toLowerCase() === normalizeValue(row["Artifact ID"]).toLowerCase());
@@ -1972,12 +2061,12 @@ async function checkV4Workflow(file, root, tables, fields, schemas, ancestors) {
   return errors;
 }
 
-async function checkV4PlanLink(file, root, tables, fields, schemas, ancestors) {
+async function checkPhasePlanLink(file, root, tables, fields, schemas, ancestors, expectedVersion) {
   try {
     const target = (rawControlField(tables, "Delivery workflow") || "").match(/\]\(([^)]+)\)/)?.[1];
     const workflowFile = await containedFile(root, file, target);
     const text = await readFile(workflowFile, "utf8");
-    if (extractMarker(text)?.artifact !== "delivery-workflow" || extractMarker(text)?.version !== 4) throw new Error("requires v4 workflow");
+    if (extractMarker(text)?.artifact !== "delivery-workflow" || extractMarker(text)?.version !== expectedVersion) throw new Error(`requires v${expectedVersion} workflow`);
     const workflowTables = parseMarkdownTables(text);
     const planLink = markdownLinkTarget(rawControlField(workflowTables, "Implementation plan"));
     if (await containedFile(root, workflowFile, planLink) !== await realpath(file)) throw new Error("plan/workflow links disagree");
@@ -2111,7 +2200,8 @@ async function checkReviewBatch(file, root, tables, fields, schema, schemas, anc
       const workflowTables = parseMarkdownTables(workflowText);
       const workflowFields = extractControlFields(workflowTables);
       const batchVersion = extractMarker(await readFile(file, "utf8"))?.version;
-      const result = marker?.artifact === "delivery-workflow" && (batchVersion === 4 ? marker.version === 4 : [2, 3].includes(marker.version))
+      const compatibleWorkflow = [4, 5].includes(batchVersion) ? marker?.version === batchVersion : [2, 3].includes(marker?.version);
+      const result = marker?.artifact === "delivery-workflow" && compatibleWorkflow
         ? await checkSddLifecycleDocument(linked, root, schemas, ancestors) : ["invalid workflow"];
       const pr = markdownLinkTarget(rawControlField(tables, "PR"));
       const targetLink = markdownLinkTarget(rawControlField(workflowTables, "Current artifact/gate"));
@@ -2270,7 +2360,12 @@ export async function checkSddLifecycleDocument(file, root, schemas, ancestors =
     return [];
   }
   const selectedSchemas = marker.version === 2 && schemas.schemaVersion >= 3
-    ? LEGACY_SCHEMAS : marker.version === 3 && schemas.schemaVersion >= 4 ? V3_SCHEMAS : schemas;
+    ? LEGACY_SCHEMAS
+    : marker.version === 3 && schemas.schemaVersion >= 4
+      ? V3_SCHEMAS
+      : marker.version === 4 && schemas.schemaVersion >= 5
+        ? V4_SCHEMAS
+        : schemas;
   if (marker.version !== selectedSchemas.schemaVersion) {
     return [
       diagnostic(relative, 1, "SDD_SCHEMA_VERSION", `artifact schema ${marker.version} does not match supported schema ${schemas.schemaVersion}`),
@@ -2282,16 +2377,20 @@ export async function checkSddLifecycleDocument(file, root, schemas, ancestors =
   }
   const tables = parseMarkdownTables(text);
   const fields = extractControlFields(tables);
+  if (marker.artifact === "project-adoption-manifest") {
+    return [...checkRequiredFields(relative, fields, schema.requiredFields || []), ...(marker.version === 5 ? checkV5AdoptionManifest(relative, fields) : [])];
+  }
   if (marker.artifact === "review-batch") return checkReviewBatch(file, root, tables, fields, schema, schemas, ancestors);
   const batchDiagnostics = marker.version >= 3 && marker.artifact !== "review-batch"
     ? await checkBatchReference(file, root, text, tables, schemas, ancestors) : [];
   if (marker.artifact === "implementation-plan") {
     return [...batchDiagnostics, ...checkImplementationPlan(relative, marker, text, tables, fields, schema),
-      ...(marker.version === 4 ? await checkV4PlanLink(file, root, tables, fields, schemas, ancestors) : [])];
+      ...(marker.version >= 4 ? await checkPhasePlanLink(file, root, tables, fields, schemas, ancestors, marker.version) : [])];
   }
   if (marker.artifact === "delivery-workflow") {
     return [...batchDiagnostics, ...await checkDeliveryWorkflow(relative, file, root, text, tables, fields, schema, marker.version),
-      ...(marker.version === 4 ? await checkV4Workflow(file, root, tables, fields, schemas, ancestors) : [])];
+      ...(marker.version >= 4 ? await checkPhaseWorkflow(file, root, tables, fields, schemas, ancestors, marker.version) : []),
+      ...(marker.version === 5 ? checkV5Workflow(relative, tables, fields) : [])];
   }
   return [];
 }

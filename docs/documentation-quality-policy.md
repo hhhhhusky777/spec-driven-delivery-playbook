@@ -199,7 +199,7 @@ Include the following phase-specific content in that same brief:
 | Adoption acceptance | Discovered system contracts and sources; policies reused, changed or added and why; gaps/conflicts, exceptions and deferred items; owners; test/review/merge rules; pin/runtime and activation status |
 | Planning acceptance | Whiteboard design key points together with task IDs, brief work/outcome per task, dependency/order, validation and PR boundaries; show design-to-task alignment and gaps |
 | Implementation PR acceptance | Delivered behavior, deviations from accepted design/plan, compatibility and operational effects, evidence and exact merge target |
-| Validation and closure | Planned versus actual outcomes, unresolved follow-ups, evidence limits, archive/cleanup targets and required permissions |
+| Validation and closure | Planned versus actual outcomes, unresolved follow-ups and evidence limits; versioned PR evidence plus exact archive/reset targets, authority and target proof for the installed schema |
 | Upgrade acceptance | Old/new source pins, contract/policy impact, migration, rollback, validation and explicit cutover authority |
 
 At combined planning review, present a comparison table with columns
@@ -266,6 +266,11 @@ Every relevant pull request and push to `main` runs the following gates:
 | Template placeholders | Repository Node.js checker | Placeholder outside `templates/` fails |
 | Likely secrets | Repository Node.js checker | Representative credential pattern fails |
 | Private/local paths | Repository Node.js checker | Representative workstation path fails |
+
+Exact absolute paths are permitted only in a structured reset-inventory
+`WORKTREE` or `RUNTIME` row, where the destructive-safety contract requires the
+identity, ownership evidence and authorized operation. The same value in prose,
+a `FILE` row or any unrelated table remains a blocking local-path finding.
 
 The regression suite creates intentional failures at runtime; it does not commit
 real credentials, private paths, or permanently invalid fixtures. A new blocking
@@ -528,9 +533,12 @@ remove obsolete tests only through review, never to hide a defect.
 
 Record command, exact source/candidate hash, dirty-state classification,
 environment, start/end or duration, pass/fail/skip counts, changed-path coverage,
-failure classification, and limitations in the delivery evidence record.
-Keep concise evidence permanently in Git. Preserve historical full reviewer
-receipts; new reviews under the adopted batch route use
+failure classification, and limitations in the active evidence owner. For v5,
+publish concise durable evidence on the feature PR and retain only the fixed-size
+manifest locator after the verified reset; do not copy feature history into a
+permanent repository record. Existing v2–v4 deliveries keep their adopted Git
+record/archive behavior. Preserve historical full reviewer receipts; new
+reviews under the adopted batch route use
 [PR-primary retention](batch-review-and-recovery.md#pr-publication-and-retention)
 with permanent identities, digests and disposition pointers. Non-PR reviews
 retain exact local receipts. Retain bulky

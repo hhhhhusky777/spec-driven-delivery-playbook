@@ -15,7 +15,7 @@ requirements. This route takes effect only through reviewed project adoption.
 Use this runbook to integrate the playbook into an existing or new project.
 It owns the reusable adoption procedure. The
 [Project Adoption Manifest Template](../templates/adoption/project-adoption-manifest.md)
-records one project's facts, decisions, state, and evidence.
+records one project's facts, decisions, state, and current evidence locator.
 
 Adoption supplements an existing project. It does not silently replace project
 contracts, contributor rules, review authority, tests, or CI. A project reaches
@@ -264,7 +264,7 @@ performs one final installation verification under Prompt B's boundary:
 
 - a human entry point links the project contract registry and start procedure;
 - each supported agent entry point links the same canonical procedure;
-- whiteboard, handoff, workflow, plan, evidence, and archive locations exist;
+- whiteboard, handoff, workflow, plan, PR evidence, and reset locations exist;
 - documentation, test, and PR gates are project-owned and executable; and
 - the installed empty solution whiteboard can resolve every source without
   hidden chat context; and
@@ -327,19 +327,19 @@ than copying volatile state.
 
 ### Step 7 — Re-enter for future deliveries
 
-At delivery closure, the project's normal SDD delivery workflow preserves the
-concluded whiteboard in its immutable archive, verifies its bidirectional link
-to the delivery record, and replaces the stable working path with a fresh
-`EMPTY` whiteboard. It must not overwrite an active, concluded-but-unarchived,
-or blocked need.
+For v5, the feature PR owns durable design, task, review, acceptance, check,
+merge, and target evidence. After target verification and PR-evidence digest
+validation, a bounded reset PR removes only enumerated delivery-specific state,
+replaces the stable working whiteboard with reviewed neutral `EMPTY` bytes, and
+updates the manifest's fixed-size last-delivery locator. It preserves this
+one-time adoption and every reusable delivered output. An active, blocked,
+unverified, or incompletely evidenced delivery cannot be reset.
 
-After the archive and fresh-whiteboard checks pass, the archive step may run
-`./install-sdd.sh --cleanup` as its final runtime action to remove the
-installer-owned temporary checkout. For a later need, run `./install-sdd.sh`
-again. An `INSTALLED` or `ACTIVE` manifest selects `sdd-project-workflow`, and
-the manifest's immutable playbook revision is reused unless a separate reviewed
-playbook update explicitly changes it. Give the agent the same generated-guide
-prompt; record the later need only inside the fresh whiteboard.
+After the reset merge verifies, clean only its enumerated installer-owned
+runtime and rerun `./install-sdd.sh`. An `INSTALLED` or `ACTIVE` manifest selects
+`sdd-project-workflow`, reusing the immutable pin unless a separately reviewed
+upgrade changed it. Existing v2–v4 projects follow their adopted archive route
+until an explicit upgrade. Record the next need only inside the fresh whiteboard.
 
 ## 6. Discovery and authority mapping
 
@@ -404,8 +404,8 @@ decision areas, not mandatory headings or separate files:
 | --- | --- |
 | Development and delivery | change boundaries, task sizing, dependencies, lifecycle states, readiness/completion, defects, and mid-delivery policy gaps |
 | Testing and quality | test levels and scope, coverage expectations, environments, failure triage, evidence, exceptions, and documentation-only handling |
-| PR and branch | protected targets, branch models, naming, source/target relationships, review/check gates, synchronization, merge, closure, and archive order |
-| Documentation and API contracts | canonical sources, precedence, update triggers, compatibility, consumers, review, validation, freshness, and archive rules |
+| PR and branch | protected targets, branch models, naming, source/target relationships, review/check gates, synchronization, merge, evidence, closure, and reset order |
+| Documentation and API contracts | canonical sources, precedence, update triggers, compatibility, consumers, review, validation, freshness, and retention/reset rules |
 | Security, data, concurrency, and performance | applicable invariants, ownership, threat/risk boundaries, migrations, locking/races, capacity, observability, and enforcement |
 | Release, operations, and incident response | environments, approvals, rollout/rollback, recovery, evidence, escalation, incident routing, and post-release reconciliation |
 | Specialized policies | observed systemic trigger, scope, proposed/active state, existing-system audit, exceptions, enforcement, remediation, and retirement |
@@ -428,11 +428,11 @@ For a PR and branch policy, assess at least:
 - task PR targets and final integration PR target;
 - synchronization, merge method, deletion, and abandoned-branch handling;
 - required reviews, checks, and final integration validation; and
-- merge, post-merge reconciliation, and archive ordering.
+- merge, post-merge target/evidence verification, and reset ordering.
 
 For the multi-task model, the delivery must reach and validate the feature branch,
 merge its final reviewed PR into the protected branch, reconcile the merged
-state, and only then archive the implementation plan. Every task PR targets the
+state, and only then apply the installed schema's archive/reset. Every task PR targets the
 feature integration branch, not the protected branch. An existing policy that
 omits any applicable choice routes to `UPDATE_EXISTING`; adoption must not pick
 the choice on the project's behalf.
@@ -459,8 +459,9 @@ until the next mandatory semantic checkpoint.
 2. Link the adoption manifest and the project's canonical contract registry.
 3. Reuse existing development, test, and PR authorities. Instantiate a
    playbook template only for an approved gap.
-4. Define the project working-whiteboard path and where concluded whiteboards,
-   handoffs, workflow manifests, plans, decisions, evidence, and archives live.
+4. Define the project working-whiteboard path, versioned PR evidence owner, and
+   exact reset treatment for concluded whiteboards, handoffs, workflows, plans,
+   decisions and evidence.
 5. Connect documentation checks to the project's test strategy and PR gates.
 6. Record commands, environments, permissions, owners, failure handling, and
    evidence locations. Never claim that the playbook repository's checks ran
@@ -486,7 +487,7 @@ to deliver. Prefer a change that exercises normal review and test routing
 without requiring the project's most expensive or dangerous environment for
 the first adoption proof.
 
-Run the approved workflow from whiteboard through delivery record:
+Run the approved workflow from whiteboard through verified closure:
 
 1. conclude and review the whiteboard;
 2. generate, review, and approve the handoff;
@@ -495,7 +496,8 @@ Run the approved workflow from whiteboard through delivery record:
 5. complete the task context receipt before implementation;
 6. run the project's required tests and failure triage;
 7. satisfy the project's PR and reviewer requirements; and
-8. reconcile evidence, retrospective actions, and archive links.
+8. publish and verify the version-appropriate PR evidence, then archive or reset
+   only after its exact target, authority, and ownership gates pass.
 
 The pilot for a real adoption must use actual project evidence. A historical
 replay is permitted only for a non-authoritative teaching case. It labels

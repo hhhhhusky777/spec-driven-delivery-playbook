@@ -1,16 +1,20 @@
-# Archive and update contract
+# Historical archive index
 
-Status: PROPOSED in the installation batch. No delivery has been archived.
+Status: compatibility history for deliveries completed under the v2-v4 archive
+contract. New v5 deliveries use PR-owned evidence and verified reset instead of
+creating another permanent per-delivery archive.
 
-After final merge and verification of the protected target, reconcile task,
-plan, workflow, and review evidence. Finish post-merge human reviews before
-closure. Preserve the concluded whiteboard in `archive/DELIVERY-ID/`, mark its
-archived copy ARCHIVED, and link its delivery record bidirectionally. Verify
-the copy and links before creating a new EMPTY working whiteboard. Never
-overwrite accepted conclusions, decisions, or earlier evidence.
+| Delivery | Archived conclusion | Delivery record | State |
+| --- | --- | --- | --- |
+| WB38 | [Conclusion](WB38/solution-whiteboard.md) | [Record](../deliveries/WB38/record.md) | ARCHIVED |
+
+Existing archive entries remain readable compatibility evidence. Follow the
+[current PR evidence and reset contract](../../../docs/batch-review-and-recovery.md#pr-publication-and-retention)
+for new delivery closure; do not copy a concluded whiteboard or delivery record
+into this index merely to retain review history.
 
 Historical reviewer receipts stay in Git; prospective review retention follows
-[the adopted PR evidence contract](../../../docs/batch-review-and-recovery.md#pr-publication-and-retention).
+the current PR evidence contract above.
 Bulky logs follow the
 [quality policy](../../../docs/documentation-quality-policy.md#11-project-tooling-test-strategy)
 retention rules. No raw credentials, machine-local paths, or private data are

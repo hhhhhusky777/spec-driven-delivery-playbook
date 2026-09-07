@@ -113,7 +113,14 @@ authority, exact-head evidence and recovery. The diagram below shows that route;
 the later step-by-step adoption and delivery instructions describe the unbatched
 route unless explicitly labeled otherwise.
 
-New v4 templates also separate current prerequisites from future outputs.
+New v5 templates keep v4's phase-aware inputs/outputs and make GitHub PRs the
+durable delivery evidence owner. After the feature is verified on target, an
+exact, authorized reset removes delivery-only state, restores the working
+whiteboard to `EMPTY`, and regenerates the machine runtime. Adoption controls
+and reusable delivered output remain tracked. Existing v2–v4 records retain
+their original archive behavior until an explicitly reviewed upgrade.
+
+The v4 compatibility templates separate current prerequisites from future outputs.
 Implementation outputs are due before validation, validation outputs before
 completion, and closure outputs before archive; dependent tasks still need
 exact reviewed/current predecessor results. See the [phase readiness contract](docs/batch-review-and-recovery.md#version-4-phase-aware-readiness)
@@ -148,11 +155,10 @@ flowchart TD
     M --> V["Merge and verify"]
     V --> T{"More implementation units?"}
     T -->|"Yes"| C
-    T -->|"No"| CL["Prepare actual validation, record, retrospective and archive plan"]
-    CL --> CR["One full closure-package review and owner acceptance"]
-    CR -->|"Findings"| CL
-    CR -->|"Accepted; follow-ups closed"| AR["Merge archive, then authorized cleanup and verification"]
-    AR --> RC["Publish bounded post-merge receipt; no second full review"]
+    T -->|"No"| RR["Publish target receipt; verify evidence digests"]
+    RR --> RP["Create bounded reset PR"]
+    RP -->|"Unexpected delta"| F
+    RP -->|"Authorized delta verified"| Z["Merge reset; restore EMPTY and regenerate runtime"]
 ```
 
 Each coherent PR gets its own review, even when one task needs several PRs.
@@ -160,10 +166,10 @@ Required decisions, checks, policy controls and merge authority remain intact.
 Implementation auto-merge needs explicit current scope and post-merge human
 review; batching alone never grants it. Recovery preserves valid evidence and
 rechecks affected work, with bounded retries and escalation—not automatic approval.
-For closure, the accepted package may separately pre-authorize one strictly
-control-only receipt and its merge. That receipt repeats automated verification,
-not the two-agent/human semantic archive review; any unlisted or uncertain change
-returns to explicit review.
+For v5 closure, the accepted feature package may pre-authorize only the exact
+reset inventory and merge mode. Target verification happens first; any missing
+evidence, unlisted target, uncertain ownership, or changed semantics preserves
+working state and returns the affected work to explicit review.
 
 ### Mid-delivery policy-gap rerouting
 
@@ -256,20 +262,19 @@ Do not generate slightly different policy copies for every feature.
 - Compact or full implementation plan
 - Optional ADRs and specialized-policy adoption work
 - Task/PR/test evidence
-- Retrospective and delivery record
+- Retrospective and versioned PR evidence
 
-#### 3. Historical records — preserve why and what happened
+#### 3. Durable history — preserve only reusable sources and PR evidence
 
-- Concluded whiteboard with rejected alternatives
 - Accepted and superseded ADRs
-- Completed task/evidence history
-- Failure justifications
-- Delivery retrospective
-- Final delivery record
+- Reusable contracts, policies, code, tests and operational documentation
+- Feature PR review, acceptance, check, merge and target receipts
+- Fixed-size last-delivery locator in the adoption manifest
 - Superseded adoption manifests and update assessments
 
-Historical artifacts are not reset for reuse. Start from a fresh template and
-link prior records when later work depends on them.
+After verified v5 reset, delivery-only whiteboards, handoffs, workflows, plans,
+local ledgers and snapshots do not remain as duplicate history. Existing v2–v4
+archives remain valid compatibility records and are not silently deleted.
 
 ## Adopt and use the playbook
 
@@ -519,21 +524,22 @@ controls and legal state transitions. The following is the unbatched sequence:
 8. Review the manifest, then instantiate and independently review one selected
    artifact at a time in dependency order.
 9. Implement dependency-ready tasks under the project test and PR policies.
-10. Reconcile evidence, run the retrospective, and archive the delivery packet.
+10. Publish the versioned PR evidence, merge and verify the feature, then apply
+    the exact authorized reset so only adoption and reusable outputs remain.
 
 #### Deliver future needs
 
-Only one need may occupy the stable working-whiteboard path. The normal SDD
-delivery workflow archives the concluded whiteboard with its delivery record,
-verifies both links, and then creates a fresh `EMPTY` working whiteboard. It
-never overwrites an active, blocked, or concluded-but-unarchived need.
+Only one need may occupy the stable working-whiteboard path. In v5, the feature
+PR preserves the design, task, review, acceptance, check, merge, and target
+evidence. After target verification, the bounded reset removes delivery-only
+working artifacts and restores the stable whiteboard to reviewed neutral
+`EMPTY` bytes. It never resets an active, blocked, unverified, or incompletely
+evidenced need. Existing v2–v4 projects continue their adopted archive flow.
 
-If the archive removed the temporary playbook checkout, run `install-sdd.sh`
-again before the next delivery and give the agent the generated-guide prompt.
-The installer detects the existing manifest, reuses its pinned playbook
-revision, and installs `sdd-project-workflow`. The next need then enters the
-fresh whiteboard and follows the same whiteboard -> handoff -> workflow ->
-delivery record cycle.
+The v5 reset cleans only its enumerated owned runtime and then runs
+`install-sdd.sh` from the preserved manifest pin. The installer detects the
+existing adoption instead of reinstalling it. The next need enters the fresh
+whiteboard and follows the same PR-evidence/reset cycle.
 
 #### Use this playbook for this repository
 
@@ -587,7 +593,7 @@ This prevents document inflation while making omissions reviewable.
 | --- | --- |
 | [Project adoption manifest](templates/adoption/project-adoption-manifest.md) | Pinned playbook-to-project authority mapping, routing, state, enforcement, pilot evidence, activation, and drift history |
 | [Agent adoption trigger](templates/adoption/agent-adoption-trigger.md) | Bounded bootstrap, one-action continuation, and empty-whiteboard initialization driven by the reviewed adoption manifest |
-| [Development policy](templates/policies/development-policy.md) | Project-wide delivery, dependency/data sequencing, YAGNI, state, pre-start context receipt, policy discovery, handoff, retrospective, and archive rules |
+| [Development policy](templates/policies/development-policy.md) | Project-wide delivery, dependency/data sequencing, YAGNI, state, pre-start context receipt, policy discovery, handoff, retrospective, PR evidence, and reset rules |
 | [Specialized policy](templates/policies/specialized-policy.md) | Standardized creation, audit, adoption, enforcement, and review of a mid-project systemic policy |
 | [PR and branch policy](templates/policies/pull-request-policy.md) | Branch models, review readiness, PR evidence, merge, emergency, and post-merge rules |
 | [Test strategy](templates/testing/test-strategy.md) | TDD, risk/contract traceability, environments, bug-finding methods, performance, and failure triage |
@@ -658,7 +664,7 @@ universal hard line count: [Small CLs](https://google.github.io/eng-practices/re
 
 Select the integration route from the number of implementation and merge
 units in the approved plan. Discovery, planning, final-validation, and
-archive-only rows do not count.
+reset-only rows do not count. Legacy v2–v4 archive-only rows also do not count.
 
 One implementation unit uses the direct route:
 
@@ -678,7 +684,7 @@ Each parallel delivery owns a separate feature integration branch. Task PRs
 must target that branch, which remains green and is synchronized from the
 protected branch. After all tasks complete, run full feature-level validation,
 review the final PR to the protected branch, reconcile the merged state, and
-only then archive. If a one-task delivery splits before merge, reroute its
+only then run the version-appropriate archive or reset. If a one-task delivery splits before merge, reroute its
 unmerged work through a feature integration branch.
 
 ### Risk-based review gates

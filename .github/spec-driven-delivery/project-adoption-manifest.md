@@ -35,9 +35,9 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Adoption state | `INSTALLED` |
 | State before block | `None` |
 | Playbook source repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook.git` |
-| Playbook revision | `d93d27a33c43c1574aeed27044654c8964cf998b` |
-| Upgrade state | `VALIDATING` |
-| Upgrade assessment / candidate | [U84 assessment](playbook-upgrade-assessment.md); `d93d27a33c43c1574aeed27044654c8964cf998b` |
+| Playbook revision | `37653eec1d980e3ea5ed858922ab97894395fab9` |
+| Upgrade state | `COMPLETE` |
+| Upgrade assessment / candidate | [U64 assessment](upgrades/U64.md); `37653eec1d980e3ea5ed858922ab97894395fab9` |
 | Playbook materialization mode | `pinned local checkout` |
 | Runtime playbook locator contract | Installer-generated `.sdd-runtime/agent-guide.md` supplies and verifies the read-only checkout for each invocation |
 | Target base revision | `d213114f99dc2186d6f4e50a85fe962de0e1afa9` |
@@ -64,8 +64,8 @@ not activate policies before final acceptance. There are no inferred needs, exce
 | Automatic gate result | `NOT_APPLICABLE` |
 | Semantic decision introduced | YES — remaining installation policy drafts and integration |
 | Automation exception | `None` |
-| Current blocker | None |
-| Next action | Follow WB62 workflow: T01 VERIFYING on PR 64; R08 review then human review before merge |
+| Current blocker | `None` |
+| Next action | Publish the complete T02 candidate to PR #65, then run exact-head self-review and two implementation reviews before owner merge review |
 
 Adoption type: `real project`
 
@@ -724,23 +724,38 @@ recovery authority it was moved aside without marking cleanup successful or
 fabricating ownership. Installer regeneration at the unchanged full pin
 `d213114f99dc2186d6f4e50a85fe962de0e1afa9` succeeded; validation reported CURRENT.
 Adoption remains INSTALLED, not ACTIVE. This restores access, not persistence.
-The U84 upgrade branch remains pending and separate, not silently applied.
+At that recovery checkpoint, the U84 upgrade branch remained pending and
+separate; this historical statement does not override its later PR #64
+publication or the current U64/live controls.
 
-The [working whiteboard](solution-whiteboard.md) now owns WB62. Current scope is
-owner-requested intake/design for #62/#54 with project checks/reviews retained.
-No implementation or automatic merge authority is inferred. Runtime issues
-33/34/36 remain deferred open work; their former local draft is no longer active.
+At that recovery checkpoint, the
+[accepted WB62 conclusion](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/blob/456b3fc2459be4f3ddc5ca7f649a533dd4e48996/.github/spec-driven-delivery/solution-whiteboard.md)
+owned the design for issues #62/#54 and the stable
+[working whiteboard](solution-whiteboard.md) was neutral `EMPTY`. The immutable
+Git revision preserves that historical snapshot; it does not route the current
+amendment. Runtime issues
+33/34/36 remain deferred open work and their former local draft is not active.
 
 WB62 R02 design was accepted by the owner after both independent reviewers
 approved exact commit `456b3fc2459be4f3ddc5ca7f649a533dd4e48996`.
 The [design review record](reviews/WB62-S01.md#owner-acceptance) owns exact
-approval evidence. Working whiteboard control now reads CONCLUDED; its accepted
-body is unchanged. The owner subsequently accepted the exact H01 handoff;
-the [WB62 workflow](deliveries/WB62/workflow.md) now owns routing, dependency
-freshness and next action. No task is active. The handoff ledger retains its
-exact acceptance and the workflow records its single manual consumption.
+approval evidence. The owner subsequently accepted the exact H01 handoff and
+the workflow recorded its single manual consumption.
 
-### U84 upgrade handoff
+The owner later accepted the PR-evidence/reset amendment at exact semantic
+candidate `a0d7f66559d7f179f333c00ceb1cd2f0ff6c2f30`. The current
+[working whiteboard](solution-whiteboard.md) is therefore `CONCLUDED`, belongs
+to active WB62 and blocks intake of a new need through PR #65 target
+verification and the separately reviewed T04 reset. The
+[WB62 workflow](deliveries/WB62/workflow.md) owns current routing, dependency
+freshness and implementation review; T02 is at its exact-PR-head review boundary.
+
+### Historical U84 upgrade handoff
+
+This subsection records the earlier d93d27a cutover boundary. It is superseded
+for current runtime state by the manifest controls above and the
+[completed U64 assessment](upgrades/U64.md); it does not direct a resuming agent
+to restore the old pin or reopen U84.
 
 The owner instructed “complete the upgrade” after the unchanged installed pin
 and pending reviewed U84 migration were identified. This accepts the R04
@@ -752,15 +767,14 @@ WB62 design/handoff approvals and versioned routing remain intact; WB33 and
 runtime issues remain deferred. No blanket batch, implementation or merge
 permission is inferred. Adoption remains INSTALLED, not ACTIVE.
 
-Local cutover is verified: manifest, normal guide and installed workflow skill
-now use d93d27a33c43c1574aeed27044654c8964cf998b and runtime reports CURRENT.
-Upgrade state remains VALIDATING until reviewed publication; main is not yet
-updated. The original assessment's old-pin and WB33 progress descriptions are
-historical. WB62 v2 routing stays preserved, not silently migrated or approved.
+At that historical checkpoint, local manifest, guide and installed workflow
+skill used d93d27a33c43c1574aeed27044654c8964cf998b and runtime reported CURRENT.
+Upgrade state was VALIDATING until its later reviewed publication. The original
+assessment's old-pin, WB33 and v2-routing descriptions are historical; current
+WB62 routing and the U64 pin are governed by the live controls.
 
 The owner subsequently directed joint delivery of U84 and #62/#54 and continued
 the proposed planning batch. [Preparation authority](deliveries/WB62/preparation-authority.md)
-records provisional v4 routing/plan/context preparation before combined
-publication. Exact package acceptance and readiness remain required. Earlier
-separate-publication sequencing is superseded only for this scope; U84 remains
-VALIDATING until publication.
+records that historical provisional v4 preparation. U84 was later published in
+PR #64; U64 owns the current v4 pin while the WB62 P02 plan routes PR #65 and a
+later exact-SHA v5 reset/upgrade candidate.

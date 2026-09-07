@@ -54,6 +54,9 @@ Create or resume the guide's assessment destination from the candidate
 
 - Compare the exact current and candidate revisions, including changelog,
   migration guidance, schemas, templates, skills, installer behavior, and gates.
+- When moving to v5, verify the PR-evidence/reset contract, fixed-size manifest
+  locator, exact inventory semantics and GitHub-aware read-only gate. Do not
+  reinterpret an old archive as a completed v5 reset.
 - Inventory every adopted project artifact and active delivery dependency that
   the candidate changes can affect.
 - Classify each material change `ACCEPT`, `ADAPT`, `REJECT`, or
@@ -94,6 +97,10 @@ permitted transition.
 6. Run the guide's cleanup command. Regenerate the normal runtime with
    `./install-sdd.sh`, run `./install-sdd.sh --validate`, and verify the normal
    workflow skill marker matches the new manifest pin.
+
+A project with active old-schema work finishes under that pin by default. A v5
+cutover requires a task-safe checkpoint and exact reviewed migration candidate;
+only later deliveries may use the v5 reset route.
 
 If validation or cutover fails, restore the last approved pin and affected
 project artifacts, record the failure and evidence, clean the candidate runtime,

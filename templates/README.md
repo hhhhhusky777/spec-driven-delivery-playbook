@@ -3,8 +3,9 @@
 ## Optional batched route
 
 The optional review-batch record groups exact artifacts and controls without
-changing their owners. Version-3 plan/workflow templates require an explicit
-Review batch selection; None retains ordinary per-artifact behavior.
+changing their owners. Version-5 templates keep the explicit Review batch
+selection and use PR-owned evidence plus exact delivery reset; existing v2–v4
+instances retain their adopted behavior until a reviewed upgrade.
 
 See [Batched review and recovery](../docs/batch-review-and-recovery.md) for authority, evidence and recovery
 requirements. This route takes effect only through reviewed project adoption.
@@ -66,8 +67,8 @@ embed its fields in the owning artifact. Then use the
 [fresh-context agent review](reviews/fresh-context-agent-review.md) packet and
 receipt to connect the original agent, a stable review session whose assigned
 reviewer(s) were initialized without author context, and the exact candidate.
-Preserve requested-change findings and author dispositions as immutable audit
-records.
+Publish requested-change findings and author dispositions on the feature PR for
+v5; non-PR gates and older schemas retain their installed record location.
 
 1. Always begin inside the installed project's empty
    [solution whiteboard](discovery/solution-whiteboard.md).
@@ -104,9 +105,11 @@ only within adopted scope. Do not consume an unapproved draft as authority.
 - Keep rejected discovery in the whiteboard, accepted contracts in the plan,
   and durable architectural rationale in ADRs.
 - Reuse project policies rather than embedding copies in feature documents.
-- Record review owner, state, rounds, comments, and approval in each
-  instantiated artifact.
-- Preserve completed artifacts as records; start later work from fresh copies.
+- Record review owner, state, rounds, comments, and approval in the active
+  artifact and versioned PR evidence.
+- Keep working artifacts through target verification, then remove or reset
+  delivery-only state through the exact inventory; preserve adoption and
+  independently reusable output.
 
 Instantiated delivery workflows and implementation plans retain their
 `sdd-schema`, `sdd-section`, and applicable `sdd-task-spec` comments. These

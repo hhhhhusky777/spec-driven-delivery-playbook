@@ -111,14 +111,13 @@ Routine deterministic state/evidence synchronization may continue within an
 approved action's exact scope, with input/output hashes and gate evidence;
 new semantic decisions end that automatic segment.
 
-For closure, prefer one full review of actual validation, archive/reset bytes,
-cleanup plan and expected control transitions. After owner acceptance and merge,
-publish verification on that PR. A separately needed repository control receipt
-may auto-continue and merge only under explicit pre-recorded owner authority and
-the fail-closed `PREAUTHORIZED_CONTROL_RECEIPT` contract in
-[Batched review and recovery](docs/batch-review-and-recovery.md#one-closure-review-and-a-bounded-post-merge-receipt).
-It is not a second archive approval and cannot change normative content, expand
-cleanup, activate adoption or change a runtime pin.
+For v5 closure, the feature PR owns the versioned review, acceptance and target
+receipts. Review its actual outcome and complete exact reset inventory before
+merge; after target verification, a bounded reset PR may continue only within
+the recorded owner authority and verified identities. Missing PR evidence,
+unknown ownership or an unexpected delta preserves working state. Existing
+v2–v4 projects retain the compatible archive/receipt contract in
+[Batched review and recovery](docs/batch-review-and-recovery.md#version-4-closure-review-and-bounded-post-merge-receipt).
 
 ### Branches and pull requests
 
@@ -127,7 +126,7 @@ integration target is main. Use `codex/task-ID-short-name` for one implementatio
 unit. For two or more implementation/merge units, use an owned
 `codex/feature-ID-short-name` integration branch and task branches from it.
 Task PRs target that feature branch; only the final validated feature PR targets
-main. Discovery/validation/archive rows do not count as implementation units.
+main. Discovery/validation/reset/archive rows do not count as implementation units.
 If a single unit splits, review routing and retarget before merging.
 
 Synchronize before starting each dependent task and before final integration;
@@ -147,7 +146,8 @@ trivial work. Imperative commit summaries are required; no additional signing
 or conventional-commit convention is imposed. CODEOWNERS is deferred while
 the repository owner supplies human approval; revisit when ownership expands.
 
-After merge, verify target ancestry/checks, reconcile the workflow, then archive.
+After merge, verify target ancestry/checks and the versioned PR evidence, then
+run the installed schema's archive or exact reset route.
 Delete only merged task/feature branches after evidence and owner approval;
 retain unmerged abandoned branches until scope and preservation are decided.
 Do not delete unrelated branches as cleanup.
