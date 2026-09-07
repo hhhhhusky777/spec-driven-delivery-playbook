@@ -25,9 +25,8 @@ archive, or request to install playbook tooling in the project.
 The manifest's current revision remains authoritative until the immutable candidate
 revision, resolved from latest, receives fresh-context review, human review,
 validation, and cutover.
-A rejected result restores the previous pin. Historical compatibility choices
-such as `ACCEPT`, `ADAPT`, `REJECT`, or `NOT_APPLICABLE` are not a migration
-plan; record only the final material inconsistency outcome above.
+A rejected result restores the previous pin. Record only the final material
+inconsistency outcome above, not a historic migration decision ledger.
 
 ## Human review brief
 

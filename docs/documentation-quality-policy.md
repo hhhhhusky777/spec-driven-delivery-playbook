@@ -289,19 +289,11 @@ specification marker. Automation checks those structured facts; it does not
 infer prose quality or require one internal design when multiple implementations
 satisfy the same approved contracts.
 
-Use explicit roots and narrow exclusions when applying the structural checker
-to an adopting project:
-
-```bash
-node scripts/documentation-quality.mjs check \
-  --root /path/to/project \
-  --exclude .sdd-runtime \
-  --exclude generated
-node scripts/sdd-lifecycle.mjs check --root /path/to/project
-```
-
-Exclusions are root-relative and reviewed. They must not hide the active SDD
-manifest, workflow, plan, or another governed artifact.
+The scripts and regression suite in this repository verify the playbook itself.
+They are not installed into adopting projects and are not project-agent upgrade
+requirements. An adopting project uses its own documentation and repository
+checks to validate synchronized reusable files; the regenerated SDD runtime is
+validated by the installer.
 
 The likely-secret check is defense in depth for documentation changes, not a
 replacement for repository or organization secret scanning. If a credential is

@@ -24,7 +24,7 @@ governance without forcing every project to generate every document.
 | Two-agent review sessions | Review each authorized artifact or coherent batch with two initially isolated reviewers; retain their seats across correction rounds |
 | Controlled automation | Continue deterministic steps automatically and optionally merge scoped implementation PRs after every gate passes |
 | Evolving governance | Add or strengthen specialized policies when real delivery evidence exposes a systemic gap |
-| Versioned upgrades | Assess and migrate a project's pinned playbook revision without silently changing active contracts |
+| Latest-revision synchronization | Align reusable project SDD documents with the latest immutable playbook revision without silently changing project authority |
 | Documentation quality gates | Check Markdown, links, anchors, diagrams, placeholders, secrets, paths, and lifecycle invariants |
 
 The playbook remains adaptable: project-owned contracts are authoritative,
@@ -412,8 +412,8 @@ self-review, or validation in flight:
 ./install-sdd.sh --upgrade
 ```
 
-Add `--revision REVISION` to assess a specific branch, tag, or commit; otherwise
-the candidate is the latest `main`, resolved to an immutable commit. The
+Upgrade mode always resolves the source repository's latest `main` to an
+immutable commit; it does not accept a historic or alternate revision. The
 installer verifies the current project/runtime boundary and candidate ancestry,
 installs the candidate's `sdd-playbook-upgrade` skill, and prints:
 

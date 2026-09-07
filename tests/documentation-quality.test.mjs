@@ -187,6 +187,32 @@ test("source skills define outcomes and boundaries without procedural lists", as
   const upgrade = await readFile(path.join(REPOSITORY_ROOT, "skills/sdd-playbook-upgrade/SKILL.md"), "utf8");
   assert.match(upgrade, /Do not add project-local lifecycle/);
   assert.match(upgrade, /Project application tests are required only when the\s+project's application code changed/);
+  assert.match(upgrade, /Before reading candidate guidance or changing project files/);
+  assert.match(upgrade, /UPGRADE_CURRENT/);
+  assert.match(upgrade, /ownership marker, manifest pin, or managed\s+skill mismatch blocks synchronization/);
+
+  const workflow = await readFile(path.join(REPOSITORY_ROOT, "skills/sdd-project-workflow/SKILL.md"), "utf8");
+  assert.match(workflow, /manifest identifies the installed playbook revision/);
+  assert.match(workflow, /Canonical project contracts and owner decisions define intended behavior/);
+  assert.match(workflow, /Only the validated feature PR targets\s+the protected branch/);
+  assert.match(workflow, /owner or project has authorized batched review/);
+});
+
+test("latest-only synchronization keeps playbook tooling out of adopting projects", async () => {
+  const [readme, runbook, policy, recovery, example] = await Promise.all([
+    readFile(path.join(REPOSITORY_ROOT, "README.md"), "utf8"),
+    readFile(path.join(REPOSITORY_ROOT, "docs/project-adoption-runbook.md"), "utf8"),
+    readFile(path.join(REPOSITORY_ROOT, "docs/documentation-quality-policy.md"), "utf8"),
+    readFile(path.join(REPOSITORY_ROOT, "docs/batch-review-and-recovery.md"), "utf8"),
+    readFile(path.join(REPOSITORY_ROOT, "examples/project-adoption/sglang/07-playbook-upgrade-assessment.md"), "utf8"),
+  ]);
+  assert.doesNotMatch(readme, /Add `--revision REVISION` to assess/);
+  assert.match(readme, /latest `main`/);
+  assert.match(runbook, /Project agents do not implement or test playbook lifecycle engines/);
+  assert.match(policy, /not installed into adopting projects/);
+  assert.match(recovery, /not copied into adopting\s+projects/);
+  assert.match(example, /resolved-latest-main-commit/);
+  assert.doesNotMatch(example, /Follow .* exactly/);
 });
 
 const CONFIG = {
@@ -365,7 +391,7 @@ test("README leads with value and groups details into reader-oriented chapters",
     "Spec-driven routing",
     "Two-agent review sessions",
     "Controlled automation",
-    "Versioned upgrades",
+    "Latest-revision synchronization",
   ]) {
     assert.match(readme, new RegExp(`\\| ${capability} \\|`));
   }
@@ -646,7 +672,7 @@ test("complete task specifications preserve engineering discretion", async () =>
   assert.match(developmentPolicy, /contract-equivalent internal\s+engineering choices/);
   assert.match(implementationPlan, /canonical source boundary/);
   assert.match(implementationPlan, /exact current\s+revision/);
-  assert.match(workflowSkill, /ordinary internal engineering choices/i);
+  assert.match(workflowSkill, /ordinary internal engineering\s+choices/i);
   assert.match(calibrationGuide, /^## 1\. Framework-only task/m);
   assert.match(calibrationGuide, /^## 2\. Complete bounded task/m);
   assert.match(calibrationGuide, /^## 3\. High-risk migration task/m);
@@ -808,8 +834,10 @@ test("risk-based review gates permit bounded audited auto-continuation", async (
   assert.match(workflow, /^### 9\.3 Automation audit ledger$/m);
   assert.match(workflow, /AUTO_CONTINUED is\s+execution evidence, not artifact approval/i);
   assert.match(testStrategy, /^### Automated-continuation gate validation$/m);
-  assert.match(workflowSkill, /agent chooses methods, sequencing, batching/i);
-  assert.match(adoptionSkill, /agent chooses discovery depth, document mapping, batching/i);
+  assert.match(workflowSkill, /owner or project has authorized batched review/i);
+  assert.match(workflowSkill, /otherwise preserve\s+the project's existing review boundaries/i);
+  assert.match(adoptionSkill, /owner or project has authorized batched\s+review/i);
+  assert.match(adoptionSkill, /otherwise the project's existing review boundaries remain/i);
   assert.match(workedExample, /^### Risk-based action control$/m);
   assert.match(workedExample, /^### Automation audit ledger$/m);
 });
@@ -849,7 +877,8 @@ test("multi-task deliveries isolate work on feature integration branches", async
   assert.match(implementationPlan, /Task PR target/);
   assert.match(implementationPlan, /Final PR target/);
   assert.match(adoptionRunbook, /single-task and multi-task branch\s+models/i);
-  assert.match(workflowSkill, /agent chooses methods, sequencing, batching/i);
+  assert.match(workflowSkill, /agent chooses methods, sequencing, tools/i);
+  assert.match(workflowSkill, /Only the validated feature PR targets\s+the protected branch/i);
   assert.match(workedExample, /Multi-task feature integration/);
   assert.match(workedExample, /task PRs\s+target the feature integration branch/i);
 });
@@ -1026,24 +1055,27 @@ test("upgrade mode preserves the active pin until reviewed validation and cutove
   assert.match(readme, /templates\/adoption\/playbook-upgrade-assessment\.md/);
   for (const content of [runbook, skill, assessment, example]) {
     assert.match(content, /current (?:revision|pin)|previous pin/i);
-    assert.match(content, /candidate revision|immutable candidate/i);
-    assert.match(content, /fresh-context (?:approval|review)/i);
-    assert.match(content, /human (?:approval|review)/i);
+    assert.match(content, /latest revision|immutable candidate/i);
+    assert.match(content, /fresh-context (?:independent )?review/i);
+    assert.match(content, /human (?:acceptance|review)/i);
     assert.match(content, /cutover/i);
-    assert.match(content, /rollback|restore/i);
+    assert.match(content, /rejected|failed|restore/i);
   }
   assert.match(installer, /--upgrade/);
   assert.match(installer, /merge-base --is-ancestor/);
   assert.match(installer, /sdd-playbook-upgrade/);
   assert.match(installer, /playbook-upgrade-guide\.md/);
   assert.match(installer, /upgrade is allowed only between tasks/);
+  assert.match(installer, /upgrade always resolves latest main/);
+  assert.match(installer, /UPGRADE_CURRENT/);
   assert.match(skill, /templates\/reviews\/agent-self-review\.md/);
   assert.match(skill, /templates\/reviews\/fresh-context-agent-review\.md/);
   const selfReview = await readFile(path.join(REPOSITORY_ROOT, "templates/reviews/agent-self-review.md"), "utf8");
   assert.match(selfReview, /`SELF_REVIEW_PASSED` requires no open blocking finding and every required gate/);
   assert.match(skill, /agent review is not\s+human upgrade authority/);
   assert.match(skill, /task is `IN_PROGRESS` or `VERIFYING`/);
-  assert.match(assessment, /ACCEPT.*ADAPT.*REJECT.*NOT_APPLICABLE/s);
+  assert.doesNotMatch(example, /ACCEPT.*ADAPT.*REJECT.*NOT_APPLICABLE/s);
+  assert.match(example, /without adding\s+playbook validators, evidence helpers, publication tooling, CI, or test suites/i);
   assert.match(assessment, /The manifest's\s+current revision remains authoritative/);
 });
 
@@ -1117,9 +1149,9 @@ test("SGLang example demonstrates automated adoption through an empty whiteboard
   assert.match(deliveryPlan, /All task context receipts remain `NOT_STARTED`/);
   assert.match(deliveryPlan, /This teaching packet claims none of those gates/);
   assert.match(walkthrough, /grants no authority to install or discuss a real SGLang need/);
-  assert.match(walkthrough, /Upgrade assessment representation/);
+  assert.match(walkthrough, /Latest-revision synchronization representation/);
   assert.match(upgradeExample, /\.\/install-sdd\.sh --upgrade/);
-  assert.match(upgradeExample, /Follow \.sdd-runtime\/playbook-upgrade-guide\.md exactly/);
+  assert.match(upgradeExample, /Use \.sdd-runtime\/playbook-upgrade-guide\.md to synchronize/);
 });
 
 test("canonical URL and examples preserve approved history and bounded batching scenario", async () => {

@@ -392,6 +392,8 @@ test("upgrade prepares a newer immutable candidate without changing the active r
   assert.equal(guideValue(upgradeGuide, "Required skill"), "sdd-playbook-upgrade");
   assert.equal(guideValue(upgradeGuide, "Cleanup state"), "PENDING");
   assert.match(guideValue(upgradeGuide, "Content hash"), /^[0-9a-f]{40}$/);
+  assert.match(upgradeGuide, /Before candidate content is consumed or project files change/);
+  assert.match(upgradeGuide, /UPGRADE_CURRENT/);
   assert.equal(await readFile(normalGuidePath, "utf8"), normalGuideBefore);
   await access(path.join(project, ".agents", "skills", "sdd-playbook-upgrade", "SKILL.md"));
   assert.equal(run("git", ["status", "--short"], project), "");
@@ -425,6 +427,22 @@ test("upgrade prepares a newer immutable candidate without changing the active r
   const cleanedNormalGuide = await readFile(normalGuidePath, "utf8");
   assert.equal(guideValue(cleanedUpgradeGuide, "Cleanup state"), "COMPLETE");
   assert.equal(guideValue(cleanedNormalGuide, "Cleanup state"), "COMPLETE");
+});
+
+test("upgrade rejects an explicit non-latest revision", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+
+  const result = runInstaller(project, [
+    "--repository",
+    source.repository,
+    "--upgrade",
+    "--revision",
+    source.firstRevision,
+  ]);
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /upgrade always resolves latest main/);
 });
 
 test("upgrade accepts the existing project entry point recorded in navigation", async (t) => {
@@ -584,12 +602,11 @@ test("upgrade preflight fails closed for active work, blocked adoption, and unch
   assert.notEqual(blocked.status, 0);
   assert.match(blocked.stderr, /stable installed state/);
 
-  const currentProject = await createInstalledProject(t, source);
+  const currentSource = { ...source, firstRevision: source.latestRevision };
+  const currentProject = await createInstalledProject(t, currentSource);
   const unchanged = runInstaller(currentProject, [
     "--repository",
     source.repository,
-    "--revision",
-    source.firstRevision,
     "--upgrade",
   ]);
   assert.notEqual(unchanged.status, 0);
@@ -606,21 +623,21 @@ test("upgrade preflight rejects missing project contracts and divergent candidat
   assert.notEqual(missing.status, 0);
   assert.match(missing.stderr, /requires the project solution whiteboard/);
 
+  const divergentProject = await createInstalledProject(t, source);
   const divergentRevision = run("git", ["rev-parse", source.firstRevision], source.repository).trim();
+  run("git", ["branch", "legacy", source.latestRevision], source.repository);
   run("git", ["checkout", "--orphan", "divergent"], source.repository);
   await writeFile(path.join(source.repository, "divergent.md"), "# Divergent\n", "utf8");
   run("git", ["add", "divergent.md"], source.repository);
   run("git", ["commit", "-m", "divergent candidate"], source.repository);
   const candidate = run("git", ["rev-parse", "HEAD"], source.repository).trim();
+  run("git", ["branch", "-f", "main", candidate], source.repository);
   run("git", ["checkout", "main"], source.repository);
   assert.notEqual(candidate, divergentRevision);
 
-  const divergentProject = await createInstalledProject(t, source);
   const divergent = runInstaller(divergentProject, [
     "--repository",
     source.repository,
-    "--revision",
-    candidate,
     "--upgrade",
   ]);
   assert.notEqual(divergent.status, 0);

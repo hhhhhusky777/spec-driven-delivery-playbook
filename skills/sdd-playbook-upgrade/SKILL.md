@@ -27,6 +27,10 @@ and agent discretion.
   validators, evidence helpers, publication tools, CI workflows, or playbook
   test suites.
 - Do not alter active feature work or unrelated project content.
+- Before reading candidate guidance or changing project files, require
+  `./install-sdd.sh --validate` to report `UPGRADE_CURRENT`. Any checkout,
+  repository, revision, guide hash, ownership marker, manifest pin, or managed
+  skill mismatch blocks synchronization.
 - Do not claim compatibility when canonical sources conflict, required project
   authority is missing, or applicable validation fails.
 - Require human review for a policy change, unresolved canonical conflict,

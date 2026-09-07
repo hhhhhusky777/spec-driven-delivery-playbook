@@ -41,10 +41,12 @@ The outcome must require every applicable freshness entry to be `CURRENT` before
 
 ## Agent discretion
 
-The agent chooses discovery depth, document mapping, batching, checks, and
-corrections according to project risk. Related decisions and review material
-belong in one concise package. Routine inconsistencies and agent mistakes are
-corrected without separate human stops.
+The agent chooses discovery depth, document mapping, checks, and corrections
+according to project risk. When the owner or project has authorized batched
+review, the agent may group related decisions and review material into one
+concise package; otherwise the project's existing review boundaries remain.
+Routine inconsistencies and agent mistakes are corrected without separate
+human stops.
 
 `EXPLICIT_REVIEW`, `AUTO_CONTINUE`, and `REVIEW_ON_EXCEPTION` describe the
 owner's review outcome, not a prescribed execution path. Automation remains

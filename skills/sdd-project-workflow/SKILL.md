@@ -42,11 +42,13 @@ the protected branch.
 
 ## Agent discretion
 
-Within those boundaries, the agent chooses methods, sequencing, batching,
-tools, artifacts, tests, recovery, and review depth according to actual risk and
+Within those boundaries, the agent chooses methods, sequencing, tools,
+artifacts, tests, recovery, and review depth according to actual risk and
 complexity. Routine corrections and agent mistakes do not require a human stop.
-Use one coherent review package instead of repeated artifact-level reviews.
-Ordinary internal engineering choices remain with the agent.
+When the owner or project has authorized batched review, use one coherent
+review package instead of repeated artifact-level reviews; otherwise preserve
+the project's existing review boundaries. Ordinary internal engineering
+choices remain with the agent.
 
 `EXPLICIT_REVIEW`, `AUTO_CONTINUE`, and `REVIEW_ON_EXCEPTION` express owner
 authority and review risk. Implementation merge mode is user-selected as

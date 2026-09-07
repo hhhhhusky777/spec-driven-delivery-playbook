@@ -90,6 +90,9 @@ MODE_COUNT=0
 if ((MODE_COUNT > 1)); then
   fail "--cleanup, --validate, and --upgrade are mutually exclusive"
 fi
+if [[ "$UPGRADE_MODE" == true && "$REVISION_EXPLICIT" == true ]]; then
+  fail "--revision cannot be used with --upgrade; upgrade always resolves latest main"
+fi
 
 command -v git >/dev/null 2>&1 || fail "git is required"
 
@@ -669,6 +672,7 @@ active project pin, approve compatibility, or authorize work in an active task.
 | Authority | The current pin remains authoritative until the exact synchronized candidate receives independent and human acceptance. |
 | Scope | Reusable SDD documents match the resolved immutable revision; unrelated project content and active work remain unchanged. |
 | Project responsibility | No playbook lifecycle validators, evidence helpers, publication tooling, CI workflows, or playbook tests are added to the project. |
+| Pre-work runtime | Before candidate content is consumed or project files change, this runtime validates as \`UPGRADE_CURRENT\`; provenance, hash, marker, pin, or installed-skill mismatch blocks work. |
 | Consistency | Canonical terminology, links, states, authority, and continuation rules agree; unresolved canonical conflict or failed applicable validation blocks acceptance. |
 | Recovery | A failed candidate leaves or restores the last accepted pin and runtime without discarding valid project work or failure evidence. |
 | Completion | The accepted pin is recorded, normal runtime is regenerated and validates, and installer-owned temporary content is cleaned up. |
