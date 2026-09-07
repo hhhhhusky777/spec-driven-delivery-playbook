@@ -47,29 +47,26 @@ may use the pinned source at GitHub with that full manifest SHA. Missing or
 mismatched runtime stops agent execution before project writes.
 
 No specialized-policy file is installed without an observed systemic trigger.
-The manifest gap register records that deferred route and owner. Security,
-quality, and template rules remain at their existing canonical sources.
+Genuine project or playbook gaps are deduplicated in the applicable issue
+tracker under the canonical recovery contract. Security, quality, and template
+rules remain at their existing canonical sources.
 
 ## Current future-delivery routing
 
-WB62 has a later [preparation amendment](deliveries/WB62/preparation-authority.md)
-for joint upgrade/issue publication. It permits provisional package preparation
-with the verified new runtime, not automatic acceptance or future-project use.
-
-U84 was accepted and published through PR #64. The later
-[U64 assessment](upgrades/U64.md) records the reviewed cutover to the manifest's
-current pin. Resolve all source paths below through that verified pinned
-checkout; historical U84 and WB62 planning bytes remain immutable evidence.
+The [manifest](project-adoption-manifest.md) owns the installed immutable pin;
+the neutral [whiteboard](solution-whiteboard.md) owns intake state. Resolve
+playbook source paths through the verified runtime checkout and create live
+workflow/plan state only after an owner-supplied need is admitted.
 
 | Need | Canonical source / project consequence |
 | --- | --- |
-| New workflow/plan | Matching v4 source templates; reciprocal links must resolve by GATES_READY. A compact plan is required even for editorial delivery; Contributing's compact discovery route is not a no-plan exemption under v4 |
-| Phase readiness | `docs/batch-review-and-recovery.md#version-4-phase-aware-readiness`; map prerequisites separately from future implementation, validation and closure outputs; never require a task's own future result before it starts |
+| New workflow/plan | Matching templates at the manifest's verified pin; reciprocal links and actual prerequisites must resolve by GATES_READY. A compact plan is required even for editorial delivery |
+| Phase readiness | [Batched review and recovery](../../docs/batch-review-and-recovery.md); map prerequisites separately from future implementation, validation and closure outputs; never require a task's own future result before it starts |
 | Batched preparation/review | `docs/batch-review-and-recovery.md`; use `templates/reviews/review-batch.md` only with explicit per-package scope/authority. Availability is not standing batch or auto-merge authorization |
 | Discussion and human review | Draft-first whiteboard notes; formal conclusion when settled; phase-specific table briefs from the quality policy. Planning brief compares design points with tasks and validation |
 | Evidence and exceptions | Shared PR-primary retention and exception-triage contract; preserve prior exact local receipts and distinguish upstream gaps from project errors |
-| Closure | Shared one-closure-package contract; preserve actual validation and owner acceptance, exact cleanup ownership and separately authorized bounded control receipts |
+| Closure | v5 PR-owned evidence and reset contract; preserve actual validation and owner acceptance, verify target and evidence digests, then reset only the reviewed exact inventory |
 
-Historical v2/v3 records and completed WB38 artifacts keep their accepted bytes
+Historical v2-v4 records and completed WB38 artifacts keep their accepted bytes
 and versions. The registry routes new work; it does not retroactively migrate
 history or override Contributing's review, branch, or owner-acceptance policy.
