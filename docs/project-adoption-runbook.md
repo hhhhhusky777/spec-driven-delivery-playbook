@@ -556,8 +556,8 @@ From the target project root, run:
 ./install-sdd.sh --upgrade
 ```
 
-Without `--revision`, this resolves the source repository's latest `main` to an
-immutable candidate. The preflight fails closed unless the manifest, stable
+Upgrade mode always resolves the source repository's latest `main` to an
+immutable candidate and rejects `--revision`. The preflight fails closed unless the manifest, stable
 entry point, whiteboard, current generated guide, managed workflow skill,
 repository identity, current pin, candidate ancestry, candidate upgrade skill,
 and upgrade template are mechanically valid. It also rejects an unchanged

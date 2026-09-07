@@ -208,6 +208,8 @@ test("latest-only synchronization keeps playbook tooling out of adopting project
   ]);
   assert.doesNotMatch(readme, /Add `--revision REVISION` to assess/);
   assert.match(readme, /latest `main`/);
+  assert.match(runbook, /always resolves the source repository's latest `main`/);
+  assert.match(runbook, /rejects `--revision`/);
   assert.match(runbook, /Project agents do not implement or test playbook lifecycle engines/);
   assert.match(policy, /not installed into adopting projects/);
   assert.match(recovery, /not copied into adopting\s+projects/);
