@@ -418,18 +418,23 @@ installer verifies the current project/runtime boundary and candidate ancestry,
 installs the candidate's `sdd-playbook-upgrade` skill, and prints:
 
 ```text
-Follow .sdd-runtime/playbook-upgrade-guide.md exactly.
+Use .sdd-runtime/playbook-upgrade-guide.md to synchronize the project with the
+latest playbook revision.
 ```
 
-The preflight does not change the manifest pin and does not declare semantic
-compatibility. The agent creates a project-owned upgrade assessment, compares
-the exact revisions and affected project authorities, self-reviews it, creates
-exactly two fresh-context reviewers, and then stops for human approval. After
-both reviewers approve, it migrates one reviewed boundary at a time, validates before final
-cutover, then updates the manifest pin once. Finally run
-`./install-sdd.sh --cleanup`, regenerate the normal guide
-with `./install-sdd.sh`, and require `./install-sdd.sh --validate` to pass.
-Rollback keeps or restores the previous pin. See the
+The preflight supplies immutable provenance and does not change the manifest
+pin. The upgrade is a bounded synchronization of reusable SDD documents with
+the latest revision, not a project implementation project. Project policies
+remain authoritative, and project agents do not add or run playbook lifecycle
+validators, evidence helpers, publication tools, CI workflows, or playbook test
+suites. The agent chooses the most proportional comparison, edit, validation,
+and recovery method within the outcome and safety boundaries.
+
+Acceptance requires mutually consistent reusable documents, applicable
+document and runtime checks, independent review, human acceptance, a single
+updated immutable pin, regenerated valid runtime, and cleanup of installer-owned
+temporary content. A rejected candidate leaves or restores the previous pin.
+See the
 [project adoption runbook](docs/project-adoption-runbook.md#11-playbook-updates-and-drift)
 and [upgrade assessment template](templates/adoption/playbook-upgrade-assessment.md).
 

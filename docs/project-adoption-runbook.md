@@ -575,31 +575,26 @@ adoption-root `README.md` entry point. An unavailable, external, or
 out-of-project or symbolic-link recorded target fails closed; preflight does
 not invent or rewrite project navigation.
 
-Give the agent only the printed prompt. The generated upgrade guide installs
-`sdd-playbook-upgrade` and records the current and candidate revisions in an
-isolated read-only checkout. The agent then:
+The generated guide records immutable current and latest revisions in an
+isolated read-only checkout. The required outcome is a small synchronization of
+reusable project SDD documents: canonical terminology, links, states, authority,
+and continuation rules agree with the latest playbook while approved project
+policy and unrelated work remain unchanged.
 
-1. creates the project-owned
-   [upgrade assessment](../templates/adoption/playbook-upgrade-assessment.md);
-2. compares changelog, migration guidance, schemas, templates, skills,
-   installer behavior, gates, project authorities, and active delivery inputs;
-3. classifies every material change `ACCEPT`, `ADAPT`, `REJECT`, or
-   `NOT_APPLICABLE` and computes transitive staleness;
-4. self-reviews the exact assessment candidate, then stops for independent
-   review without changing the manifest pin;
-5. after supplied approval, applies one dependency-ready migration boundary at
-   a time through normal owners, scopes, checks, and review modes, recording
-   `UPDATING` only when project authority uses the adoption-state transition;
-6. validates the complete candidate migration, then changes the manifest pin
-   once at final cutover; and
-7. cleans both installer-owned checkouts, regenerates the normal runtime from
-   the reviewed pin, and requires `./install-sdd.sh --validate` to pass.
+Project agents do not implement or test playbook lifecycle engines, evidence
+collectors, publication helpers, CI workflows, or historical schema
+compatibility. Those belong to this playbook repository. The agent chooses a
+proportional method and records only the revisions, reusable files changed,
+preserved owner decisions, material inconsistencies, applicable validation, and
+review result in the
+[synchronization assessment](../templates/adoption/playbook-upgrade-assessment.md).
 
-If review, gate, merge, or continuation semantics changed, the migration resets
-implementation continuation to explicit review until project authority
-reconfirms a more permissive mode. On any failed migration or cutover, restore
-the last approved pin and affected artifacts, record rollback evidence, clean
-the candidate runtime, and regenerate the normal runtime from the restored pin.
+The old pin remains authoritative until the exact result passes applicable
+document and runtime validation, independent review, and human acceptance. A
+completed synchronization has one accepted latest pin, valid regenerated
+runtime, mutually consistent reusable documents, and no installer-owned
+temporary content. A rejected result leaves or restores the previous pin and
+preserves failure evidence.
 
 Repository templates are appropriate for an initial copy, not synchronization:
 GitHub states that repositories created from a template have unrelated

@@ -382,7 +382,7 @@ test("upgrade prepares a newer immutable candidate without changing the active r
 
   const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /Follow \.sdd-runtime\/playbook-upgrade-guide\.md exactly\./);
+  assert.match(result.stdout, /Use \.sdd-runtime\/playbook-upgrade-guide\.md to synchronize the project with the latest playbook revision\./);
 
   const upgradeGuidePath = path.join(project, ".sdd-runtime", "playbook-upgrade-guide.md");
   const upgradeGuide = await readFile(upgradeGuidePath, "utf8");

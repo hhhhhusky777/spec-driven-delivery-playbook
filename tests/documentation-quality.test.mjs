@@ -136,9 +136,8 @@ test("exception triage consumers resolve one canonical contract and complete rec
     for (const file of consumers) {
       const text = sources.get(file);
       if (skills.includes(file)) {
-        const section = text.split("## Exception routing\n")[1]?.split("\n## ")[0];
-        assert.ok(section?.includes(`${canonical}#${anchor}`), `${file}: unconditional routing`);
-        assert.ok(section.includes(template), `${file}: record route`);
+        assert.ok(text.includes(`${canonical}#${anchor}`), `${file}: canonical routing`);
+        assert.doesNotMatch(text, /^\s*\d+\.\s/m, `${file}: procedural list`);
       } else {
         const links = extractMarkdownLinks(text);
         assert.ok(links.some(link => {
@@ -175,6 +174,19 @@ test("five goals have one owner and all source skills route recovery there", asy
     assert.throws(() => validateRoutes(skill.replace("docs/documentation-quality-policy.md#five-goals-and-agent-judgment", "missing.md")));
     assert.equal(parseMarkdownTables(skill).filter(table => table.headers.includes("Goal") || table.headers.includes("Classification")).length, 0);
   }
+});
+
+test("source skills define outcomes and boundaries without procedural lists", async () => {
+  for (const name of ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade"]) {
+    const skill = await readFile(path.join(REPOSITORY_ROOT, "skills", name, "SKILL.md"), "utf8");
+    assert.match(skill, /Required outcome/);
+    assert.match(skill, /Agent discretion/);
+    assert.match(skill, /human/i);
+    assert.doesNotMatch(skill, /^\s*\d+\.\s/m);
+  }
+  const upgrade = await readFile(path.join(REPOSITORY_ROOT, "skills/sdd-playbook-upgrade/SKILL.md"), "utf8");
+  assert.match(upgrade, /Do not add project-local lifecycle/);
+  assert.match(upgrade, /Project application tests are required only when the\s+project's application code changed/);
 });
 
 const CONFIG = {
@@ -669,7 +681,6 @@ test("project adoption proves policy conformance before reuse", async () => {
     runbook,
     manifest,
     trigger,
-    skill,
     catalog,
     workflow,
     pullRequestPolicy,
@@ -678,7 +689,7 @@ test("project adoption proves policy conformance before reuse", async () => {
     assert.match(document, /UPDATE_EXISTING/);
   }
 
-  for (const document of [readme, runbook, manifest, trigger, skill, catalog, pullRequestPolicy]) {
+  for (const document of [readme, runbook, manifest, trigger, catalog, pullRequestPolicy]) {
     assert.match(document, /reviewed exception/i);
   }
 
@@ -709,8 +720,9 @@ test("project adoption proves policy conformance before reuse", async () => {
   assert.match(manifest, /Gap, equivalent control, or exception/);
   assert.match(trigger, /Do not infer conformance from file existence/i);
   assert.match(trigger, /do not create a duplicate\s+policy/i);
-  assert.match(skill, /Do not silently copy a playbook default/i);
-  assert.match(skill, /never create a parallel or replacement policy/i);
+  assert.match(skill, /Existing repository policy and owner decisions remain authoritative/i);
+  assert.match(skill, /Reuse canonical project documents and links instead of copying rules/i);
+  assert.doesNotMatch(skill, /^\s*\d+\.\s/m);
 });
 
 test("increment boundaries use self-contained delivery instead of LOC limits", async () => {
@@ -772,8 +784,6 @@ test("risk-based review gates permit bounded audited auto-continuation", async (
     workflow,
     adoptionManifest,
     adoptionTrigger,
-    workflowSkill,
-    adoptionSkill,
     workedExample,
   ];
 
@@ -781,7 +791,7 @@ test("risk-based review gates permit bounded audited auto-continuation", async (
     assert.match(document, /EXPLICIT_REVIEW/);
     assert.match(document, /AUTO_CONTINUE/);
     assert.match(document, /REVIEW_ON_EXCEPTION/);
-    if ([readme, workflow, testStrategy, adoptionTrigger, workflowSkill, adoptionSkill].includes(document)) {
+    if ([readme, workflow, testStrategy, adoptionTrigger].includes(document)) {
       assert.match(document, /batch-review-and-recovery\.md/);
     } else {
       assert.match(document, /fail(?:s)? closed/i);
@@ -798,14 +808,8 @@ test("risk-based review gates permit bounded audited auto-continuation", async (
   assert.match(workflow, /^### 9\.3 Automation audit ledger$/m);
   assert.match(workflow, /AUTO_CONTINUED is\s+execution evidence, not artifact approval/i);
   assert.match(testStrategy, /^### Automated-continuation gate validation$/m);
-  assert.match(
-    workflowSkill,
-    /continue only until the next mandatory\s+semantic checkpoint/i,
-  );
-  assert.match(
-    adoptionSkill,
-    /continue only through the approved\s+automation boundary/i,
-  );
+  assert.match(workflowSkill, /agent chooses methods, sequencing, batching/i);
+  assert.match(adoptionSkill, /agent chooses discovery depth, document mapping, batching/i);
   assert.match(workedExample, /^### Risk-based action control$/m);
   assert.match(workedExample, /^### Automation audit ledger$/m);
 });
@@ -845,7 +849,7 @@ test("multi-task deliveries isolate work on feature integration branches", async
   assert.match(implementationPlan, /Task PR target/);
   assert.match(implementationPlan, /Final PR target/);
   assert.match(adoptionRunbook, /single-task and multi-task branch\s+models/i);
-  assert.match(workflowSkill, /verify the task branch starts from and the task\s+PR targets the feature integration branch/i);
+  assert.match(workflowSkill, /agent chooses methods, sequencing, batching/i);
   assert.match(workedExample, /Multi-task feature integration/);
   assert.match(workedExample, /task PRs\s+target the feature integration branch/i);
 });
