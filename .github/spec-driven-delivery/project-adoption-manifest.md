@@ -46,7 +46,7 @@ manifest keeps only the state needed to start the next delivery safely.
 | Automation exception | `None` |
 | Current blocker | `None` |
 | Next action | Await the owner's next need through the verified workflow runtime and neutral whiteboard |
-| Last delivery receipt | `feature_pr=https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65; feature_merge=69668f7f2a91788129da0c0b59253cf6288f61ba; reset_pr=https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/68; reset_head=2aec42847bf71c11a8a6ca4c22f884d17bdd9ad8; bundle=sha256:1da0ba55ffa6b4d594d072ffc462d012fca4ac913921eaeb8f72315427ae2484` |
+| Last delivery receipt | `feature_pr=https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/65; feature_merge=69668f7f2a91788129da0c0b59253cf6288f61ba; reset_pr=https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/68; reset_head=2aec428e731316433c67d5aa0f74b460f5f4ca53; bundle=sha256:1da0ba55ffa6b4d594d072ffc462d012fca4ac913921eaeb8f72315427ae2484` |
 
 `Last delivery receipt` is replaced only after a verified v5 feature/reset
 cycle. Its fixed-size format and evidence requirements are owned by
