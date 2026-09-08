@@ -49,7 +49,7 @@ This is the only active-delivery state authority.
 | Attention | Summary |
 | --- | --- |
 | Tasks and outcomes | T01 restores the complete README project-guide experience in one coherent documentation PR |
-| Design consistency | D01-D06 are covered; no unexplained task or known gap |
+| Design consistency | D01-D08 are covered; no unexplained task or known gap |
 | Important changes | Reader-facing structure and diagrams plus the owner-selected Apache-2.0 license; no installer, template, or runtime behavior change |
 | Validation | Markdown, internal links, structure, lifecycle, Mermaid, whitespace, and all 28 tests passed locally |
 | Risks or open decisions | None; the owner selected Apache-2.0 and the stale repository-map entries were corrected |
