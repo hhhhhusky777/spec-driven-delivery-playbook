@@ -1,28 +1,43 @@
-# Solution whiteboard
+# Solution whiteboard — README project guide
 
 <!-- sdd: whiteboard -->
-
-This working document holds one feature design at a time. Git and linked pull
-requests preserve accepted history after reset.
 
 ## Control
 
 | Field | Value |
 | --- | --- |
-| Topic | None |
-| State | `EMPTY` |
+| Topic | Restore the README as a complete, attractive project guide |
+| State | `CONCLUDED` |
 | Owner | Repository owner |
 | Open owner decisions | None |
-| Last reset | `2026-09-07 Asia/Shanghai` |
+| Concluded design revision | Owner request on 2026-09-08 Asia/Shanghai |
 
 ## Working notes
 
-None.
+The simplified README preserved the new three-document model but removed too
+much reader-facing context: the project introduction, feature catalog, nested
+navigation, feature diagrams, and explanation of how the model improves both
+efficiency and reliability. The owner wants those layers restored without
+restoring obsolete version history, duplicated policy, or a rigid agent script.
 
 ## Concluded design
 
-Not applicable while `EMPTY`.
+| Design point | Accepted outcome | Boundary or rationale | Validation signal |
+| --- | --- | --- | --- |
+| D01 | Open with a concise, persuasive explanation of the problem, audience, core promise, and major capabilities | Readers should understand why the project matters before implementation detail | First screen contains value proposition, feature summary, and quick start |
+| D02 | Restore a nested table of contents with titles and subtitles | A long-form guide must remain scannable | Every listed anchor resolves and major sections are reachable |
+| D03 | Explain the five goals and three-document model without duplicating their canonical policies | README teaches the model; policy files remain normative | Claims link to canonical sources and use current terminology |
+| D04 | Give every major feature area a focused explanation and diagram | Visual readers should understand adoption, design, planning, implementation, review, recovery, cleanup, and parallel delivery | Mermaid and semantic consistency checks pass |
+| D05 | Explain how the design reduces effort while preserving reliability | Efficiency must not be mistaken for removing quality or authority gates | Explicit comparison table connects reduced overhead to retained controls |
+| D06 | Preserve the simplified latest-only model | Do not restore obsolete version history, redundant ledgers, or prescriptive internal steps | README agrees with current manifest, templates, skills, and policies |
+| D07 | Make the guide compelling and confidence-building, not merely complete | A new reader should want to try it and should understand the details without unresolved questions or hesitation | Both independent reviewers explicitly assess interest, willingness to try, clarity, and hesitation points |
 
 ## Human review brief
 
-Not applicable while `EMPTY`.
+| Attention | Summary |
+| --- | --- |
+| Decisions made | Restore the original README information architecture and visual depth, adapted to the current simplified playbook |
+| Important boundaries | Canonical rules remain in policy documents; README explains and links rather than creating competing authority |
+| Alternatives rejected | Keeping the 163-line overview; restoring the obsolete 900-line README verbatim |
+| Remaining gaps or risks | Semantic drift or a technically correct but unconvincing introduction must be caught in review |
+| Decision requested | None; the owner's request accepts this design for implementation |

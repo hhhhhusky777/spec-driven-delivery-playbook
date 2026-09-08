@@ -1,58 +1,37 @@
 # Spec-Driven Delivery Playbook
 
-Turn an uncertain request into a reviewable product change while preserving the
-decisions, evidence, and authority needed to ship safely.
+**Turn an uncertain request into a reviewable product change—without losing the
+decisions, evidence, or authority needed to ship safely.**
 
-The playbook defines outcomes and boundaries. Agents choose the most
-proportional route within project policy instead of following a prescribed
-sequence of process documents.
+The Spec-Driven Delivery Playbook helps humans and coding agents discover the
+right solution, define what success means, deliver it in coherent increments,
+and leave the project ready for its next feature. It combines lightweight
+design discussion, explicit delivery boundaries, proportional validation, and
+auditable pull-request review without prescribing one rigid path for every
+project.
 
-## Core goals
+## What the playbook gives you
 
-The canonical [five goals](docs/documentation-quality-policy.md#five-goals-and-agent-judgment)
-are:
-
-| Goal | Meaning |
+| Feature | What it helps you achieve |
 | --- | --- |
-| Clear boundaries | Scope, authority, invariants, and evidence are explicit |
-| Stable outcomes | Different valid methods still produce the agreed result |
-| Key information only | Keep what decisions, verification, recovery, and maintenance need |
-| Proportional effort | Match process cost to complexity, risk, and value |
-| Agent discretion | Let the agent choose methods and safe recovery inside the boundaries |
+| One-time project adoption | Connect the playbook to existing project authority without replacing it |
+| Solution whiteboarding | Turn an uncertain need into an accepted design before dependent implementation |
+| Outcome-based planning | Map design points to tasks, dependencies, validation, and Definition of Done |
+| Efficient implementation | Batch coherent work and avoid unnecessary stops while preserving real gates |
+| Reliable review | Give two isolated reviewers and the owner one exact, reviewable candidate |
+| Cause-based recovery | Correct agent mistakes automatically and escalate genuine project or playbook gaps |
+| Parallel delivery | Isolate worktrees and ownership while keeping integration boundaries explicit |
+| Clean completion | Keep reusable output and PR evidence, then remove feature-only working material |
+| Safe upgrades | Synchronize reusable playbook guidance without rewriting active feature content |
 
-The [error-handling framework](docs/error-handling.md) distinguishes an agent
-mistake from a project gap, playbook gap, or critical mismatch. Correct agent
-mistakes within authority, track genuine gaps, and stop only affected work when
-human judgment or a protected boundary is required.
+The central promise is simple: **stable outcomes with less process overhead**.
+The playbook defines goals, responsibilities, and protected boundaries; the
+agent chooses a proportional way to satisfy them.
 
-## Three durable documents
+### Try it in a project
 
-| Document | Sole responsibility |
-| --- | --- |
-| [Project adoption manifest](templates/adoption/project-adoption-manifest.md) | One-time installed revision, canonical project authorities, and stable boundaries |
-| [Solution whiteboard](templates/discovery/solution-whiteboard.md) | One active feature's discussion and concluded design |
-| [Implementation plan](templates/delivery/implementation-plan.md) | Tasks, Definition of Done, validation, and all active-delivery state |
-
-GitHub pull requests own review comments, checks, acceptance, merge evidence,
-and detailed history. Project policies remain in their existing canonical files.
-The workflow skill guides delivery but owns no feature state.
-
-```mermaid
-flowchart LR
-    S["Workflow skill: goals and boundaries"] -. guides .-> M["Manifest: installation and authority"]
-    S -. guides .-> W["Whiteboard: design"]
-    S -. guides .-> P["Plan: tasks and delivery state"]
-    M --> W
-    W -->|"CONCLUDED"| P
-    P --> R["Pull request: review and evidence"]
-    R -->|"merged and verified"| C["Archive linked whiteboard; remove feature material; reset"]
-    C --> W
-```
-
-## Adopt the playbook
-
-Adoption happens once per project. Copy the installer into the target repository
-and run it from that repository's root:
+Clone this repository, copy the installer into the target project root, and run
+it there:
 
 ```bash
 git clone https://github.com/hhhhhusky777/spec-driven-delivery-playbook.git
@@ -61,101 +40,429 @@ cd /path/to/project
 ./install-sdd.sh
 ```
 
-The installer resolves an immutable playbook revision and generates a
-machine-local guide. The adoption agent reconciles the playbook with existing
-project authority and prepares one coherent package:
+The installer prints the prompt for the adoption agent and generates a verified,
+machine-local runtime guide. Adoption happens once; later features reuse the
+accepted installation.
 
-| Adoption outcome | Required result |
+## Contents
+
+- [What the playbook gives you](#what-the-playbook-gives-you)
+  - [Try it in a project](#try-it-in-a-project)
+- [Understand the model](#understand-the-model)
+  - [Five core goals](#five-core-goals)
+  - [Three durable documents](#three-durable-documents)
+  - [Where evidence lives](#where-evidence-lives)
+- [Explore the features](#explore-the-features)
+  - [Adopt once and upgrade safely](#adopt-once-and-upgrade-safely)
+  - [Discuss and conclude a design](#discuss-and-conclude-a-design)
+  - [Plan and track delivery](#plan-and-track-delivery)
+  - [Implement efficiently](#implement-efficiently)
+  - [Review for humans and agents](#review-for-humans-and-agents)
+  - [Recover without restarting everything](#recover-without-restarting-everything)
+  - [Finish, archive, and reset](#finish-archive-and-reset)
+- [How efficiency and reliability reinforce each other](#how-efficiency-and-reliability-reinforce-each-other)
+  - [Use proportional effort](#use-proportional-effort)
+  - [Keep canonical sources consistent](#keep-canonical-sources-consistent)
+  - [Support parallel work safely](#support-parallel-work-safely)
+- [Use the playbook](#use-the-playbook)
+  - [Adopt it in a project](#adopt-it-in-a-project)
+  - [Deliver a feature](#deliver-a-feature)
+  - [Upgrade an installed project](#upgrade-an-installed-project)
+- [Develop this repository](#develop-this-repository)
+  - [Repository map](#repository-map)
+  - [Validation](#validation)
+- [References](#references)
+- [License](#license)
+
+## Understand the model
+
+### Five core goals
+
+The canonical [documentation quality policy](docs/documentation-quality-policy.md#five-goals-and-agent-judgment)
+defines five goals that apply across adoption, design, implementation, review,
+recovery, and cleanup:
+
+| Goal | Required outcome |
 | --- | --- |
-| Verified source | Canonical repository and immutable revision are known |
-| Reusable installation | Manifest records the pin, authorities, and stable boundaries |
-| Ready intake | Working whiteboard is neutral and `EMPTY` |
-| Review | Two isolated agents review the exact package and the owner accepts it |
-| Runtime | Managed skills and generated guide match the accepted pin |
+| Clear boundaries | Scope, authority, invariants, and evidence are explicit |
+| Stable outcomes | Different valid methods still produce the agreed result |
+| Key information only | Retain what decisions, verification, recovery, and maintenance require |
+| Proportional effort | Match preparation, review, and records to complexity, risk, and value |
+| Agent discretion | Let the agent choose methods and safe recovery inside the boundaries |
 
-The generated guide and temporary checkout are machine-local runtime, not
-project authority. Future features reuse the accepted manifest and do not repeat
-adoption.
+These goals are constraints on the result, not a script. Project policies and
+owner decisions remain authoritative, but routine engineering choices stay
+with the agent.
 
 ```mermaid
 flowchart LR
-    P["Immutable playbook revision"] --> I["Installer and generated runtime"]
-    I --> M["Manifest: pin and authorities"]
-    I --> W["Whiteboard: EMPTY"]
-    M --> A["One coherent adoption review"]
-    W --> A
-    A --> D["Recurring delivery ready"]
+    B["Clear boundaries"] --> O["Stable outcome"]
+    K["Key information"] --> O
+    P["Proportional effort"] --> O
+    A["Agent discretion"] --> O
+    O --> D["Efficient and reliable delivery"]
 ```
 
-## Deliver a feature
+### Three durable documents
 
-Discussion begins as lightweight notes in the whiteboard. Once decisions,
-requirements, risks, and open items are reconciled, conclude the design and
-create one implementation plan. The plan maps design points to task outcomes,
-dependencies, validation, and merge boundaries while remaining the only live
-delivery state.
+The playbook deliberately keeps project state small. Each durable document has
+one responsibility:
 
-Related preparation and corrections may be batched. Required decisions, quality
-checks, independent review, human acceptance, safety controls, and merge
-authority remain at their actual boundaries. The agent chooses the internal
-method and does not invent another stop for every edit, tool call, or status
-change.
+| Document | Sole responsibility | Lifetime |
+| --- | --- | --- |
+| [Project adoption manifest](templates/adoption/project-adoption-manifest.md) | Installed immutable revision, canonical project authorities, and stable boundaries | Reused across features |
+| [Solution whiteboard](templates/discovery/solution-whiteboard.md) | One active feature's discussion and concluded design | Archived and reset after delivery |
+| [Implementation plan](templates/delivery/implementation-plan.md) | Tasks, dependencies, Definition of Done, validation, and all active-delivery state | Removed after verified delivery |
 
-At every human gate, provide the quality policy's concise
-[review table](docs/documentation-quality-policy.md#review-and-human-brief).
-For planning, show concluded design points beside task outcomes and validation
-so the human can see omissions or inconsistency without rereading every file.
+Project policies stay in their existing canonical files. The workflow skill
+guides the agent but owns no feature state.
 
-Implementation uses coherent, self-contained merge units. A unit may depend on
-already merged work but cannot rely on a future change to make its required
-outcome safe or green. Parallel agents use isolated worktrees and non-overlapping
-ownership. Multiple dependent units may integrate through a feature branch;
-only the final reviewed feature PR targets the protected branch.
+```mermaid
+flowchart LR
+    M["Manifest<br/>installation + authority"] --> W["Whiteboard<br/>design"]
+    W -->|"concluded"| P["Implementation plan<br/>tasks + live state"]
+    P --> PR["Pull request<br/>review + evidence"]
+    PR -->|"merged and verified"| C["Archive conclusion<br/>and reset"]
+    C --> W
+```
 
-After verified merge, archive the concluded whiteboard with links to its PRs,
-remove the feature plan and other non-reusable feature material, and reset the
-working whiteboard. The manifest and reusable project authority remain.
+### Where evidence lives
 
-## Upgrade an installed project
+GitHub pull requests own detailed review comments, checks, owner acceptance,
+merge evidence, and delivery history. The maintained repository does not copy
+that history into extra ledgers or status documents.
 
-Before a new feature begins, check whether the playbook source has a newer
-`main` revision. At a safe boundary, run:
+| Information | Canonical location |
+| --- | --- |
+| Project authority and accepted playbook pin | Adoption manifest |
+| Feature intent and design decisions | Whiteboard |
+| Current task and delivery state | Implementation plan |
+| Review findings, checks, acceptance, and merge | Pull request |
+| Reusable policy | The owning project policy document |
+
+## Explore the features
+
+### Adopt once and upgrade safely
+
+Adoption reconciles the playbook with the repository that already exists. It
+discovers contribution rules, test expectations, security boundaries, and
+owner authority; records the accepted immutable playbook revision; prepares an
+empty whiteboard; and obtains review of one coherent installation package.
+
+Future features do not repeat adoption. Before a new feature starts, the agent
+checks for a newer playbook revision. An upgrade changes reusable playbook
+material only and never rewrites the active feature's whiteboard or plan.
+
+```mermaid
+flowchart TD
+    S["Verified immutable playbook revision"] --> R["Reconcile project authority"]
+    R --> M["Manifest: pin + canonical sources"]
+    R --> W["Whiteboard: EMPTY"]
+    M --> V["Project validation + two-agent review"]
+    W --> V
+    V --> H["Owner acceptance"]
+    H --> U["Reusable installation"]
+    U --> N["Next feature checks for an upgrade"]
+    N -->|"current"| W
+    N -->|"newer revision"| C["Review and cut over reusable material"]
+    C --> W
+```
+
+See the [adoption skill](skills/sdd-project-adoption/SKILL.md) and
+[upgrade skill](skills/sdd-playbook-upgrade/SKILL.md) for their canonical
+outcomes and boundaries.
+
+### Discuss and conclude a design
+
+The whiteboard starts as lightweight working notes. Humans and agents can
+explore requirements, constraints, alternatives, risks, and unknowns without
+prematurely forcing the conversation into a formal specification. When the
+open decisions are settled, the same document becomes a concise concluded
+design.
+
+```mermaid
+flowchart LR
+    N["Need or problem"] --> D["Draft-first discussion"]
+    D --> Q{"Owner decision needed?"}
+    Q -->|"yes"| T["Concise decision table"]
+    T --> D
+    Q -->|"no"| C["Concluded design points"]
+    C --> B["Human brief: boundaries, risks, gaps"]
+    B --> P["Implementation planning"]
+```
+
+The concluded whiteboard states observable outcomes and important boundaries,
+not implementation trivia. If later work changes an observable outcome, the
+design receives an explicit amendment; ordinary task progress does not reopen
+it.
+
+### Plan and track delivery
+
+The implementation plan turns accepted design points into coherent tasks. It
+is both the execution contract and the single state machine for the active
+delivery, so the agent does not maintain the same status in several files.
+
+```mermaid
+flowchart TD
+    D["Concluded design points"] --> M["Design-to-task mapping"]
+    M --> T["Tasks + dependencies + boundaries"]
+    T --> V["Validation + Definition of Done"]
+    V --> S["One live delivery state"]
+    S --> R{"Next dependency-ready unit"}
+    R --> I["Implement"]
+    I --> S
+```
+
+The planning human brief shows design points beside task outcomes and
+validation. This makes omissions, unsupported tasks, and inconsistencies
+visible without requiring the owner to reread every document word by word.
+
+### Implement efficiently
+
+Implementation is organized around coherent, self-contained merge units—not
+around a stop after every internal action. The agent may batch related
+preparation, coding, corrections, and affected checks inside accepted scope.
+Required decisions, safety controls, tests, independent review, and merge
+authority remain at their real boundaries.
+
+```mermaid
+flowchart LR
+    R["Dependency-ready task"] --> I["Implement coherent unit"]
+    I --> T["Targeted + required checks"]
+    T --> PR["Complete PR candidate"]
+    PR --> A["Two-agent review"]
+    A -->|"findings"| F["Consolidated correction"]
+    F --> T
+    A -->|"approved"| H["Required owner / merge authority"]
+    H --> M["Merge + target verification"]
+```
+
+A task may depend on already delivered work, but it cannot depend on a future
+change to make its own required result safe or green. Draft-PR timing, internal
+working order, tools, and contract-equivalent implementation choices remain
+agent decisions unless project policy says otherwise.
+
+### Review for humans and agents
+
+Every material candidate receives self-review, two isolated agent reviews, and
+the required human semantic decision. The two agents review the same exact
+candidate independently; correction rounds return to the retained reviewer
+seats. Their findings and dispositions belong in the PR.
+
+Humans receive a concise table with the information needed for judgment:
+
+| Human need | What the brief exposes |
+| --- | --- |
+| Acceptance scope | Outcome, scope/non-scope, exact candidate, and authorized action |
+| Decisions | Important choices, consequences, alternatives, and recommendation |
+| Attention | Risks, assumptions, compatibility effects, exceptions, and owners |
+| Evidence | Passed, failed, and unrun checks plus residual limits |
+| Response | The exact decision requested, or confirmation that none remains |
+
+```mermaid
+flowchart TD
+    C["Exact candidate"] --> S["Self-review"]
+    S --> R1["Isolated reviewer 1"]
+    S --> R2["Isolated reviewer 2"]
+    R1 --> J{"Findings resolved?"}
+    R2 --> J
+    J -->|"no"| X["Correct once; return to same seats"]
+    X --> C
+    J -->|"yes"| B["Concise human brief"]
+    B --> H["Human decision at the actual gate"]
+```
+
+See [Review and human brief](docs/documentation-quality-policy.md#review-and-human-brief)
+for the canonical review outcome.
+
+### Recover without restarting everything
+
+Unexpected behavior is classified by cause and impact. Agent mistakes are
+corrected within existing authority. Recoverable failures preserve valid work
+and repeat only affected checks. Genuine project or playbook gaps are tracked
+in the owning repository. Critical mismatches stop only the affected work and
+request human judgment where it is actually needed.
+
+```mermaid
+flowchart TD
+    E["Unexpected behavior"] --> T{"Triage cause and impact"}
+    T -->|"agent mistake"| A["Correct within authority"]
+    T -->|"recoverable failure"| R["Recover proportionally"]
+    T -->|"project gap"| P["Track in project"]
+    T -->|"playbook gap"| G["Track in playbook"]
+    T -->|"critical mismatch"| H["Stop affected work for human judgment"]
+    A --> V["Repeat affected checks"]
+    R --> V
+    P --> C["Continue unaffected authorized work"]
+    G --> C
+```
+
+The [error-handling framework](docs/error-handling.md) is the sole shared
+authority for recovery and escalation. Other guides link to it instead of
+restating increasingly specific error rules.
+
+### Finish, archive, and reset
+
+Delivery finishes only after the accepted outcome is merged and verified on
+its target. The accepted whiteboard is archived with links to the delivery PRs.
+Reusable source output and the adoption manifest remain; the implementation
+plan and other feature-only working material are removed; the live whiteboard
+returns to `EMPTY` for the next need.
+
+```mermaid
+flowchart LR
+    M["Merged feature"] --> V["Verify target outcome"]
+    V --> A["Archive concluded whiteboard + PR links"]
+    A --> K["Keep reusable output + manifest"]
+    A --> X["Remove feature-only material"]
+    K --> R["Reset live whiteboard to EMPTY"]
+    X --> R
+    R --> N["Ready for next feature"]
+```
+
+Git history and pull requests preserve the detailed evidence, so cleanup does
+not need to manufacture a second archive of implementation records.
+
+## How efficiency and reliability reinforce each other
+
+### Use proportional effort
+
+The playbook removes duplicated status, artifact-by-artifact review stops, and
+unnecessary full reruns. It does not remove the controls that protect the
+outcome.
+
+| Expensive pattern | Proportional alternative | Reliability preserved by |
+| --- | --- | --- |
+| Review every small document separately | Review one coherent candidate | Exact candidate and retained reviewer seats |
+| Ask the owner for one approval word at a time | Batch real decisions in a concise table | Explicit consequences and authority |
+| Repeat every check after a local correction | Repeat affected checks plus required final gates | Honest check scope and final validation |
+| Record status in several files | Keep delivery state only in the plan | Canonical ownership and consistency checks |
+| Restart after any failure | Preserve valid work and recover by impact | Cause-based triage and protected stop conditions |
+
+### Keep canonical sources consistent
+
+Each fact has one owner. README prose and diagrams explain the system, but
+normative policy remains in the canonical policy document. When an authority,
+contract, feature, or lifecycle changes, the agent reconciles its affected
+consumers—including README text, diagrams, templates, skills, examples, and
+tests—in the same change.
+
+Automated checks catch structural problems such as broken links, malformed
+Markdown, invalid Mermaid, placeholders, and three-document violations.
+Semantic review catches contradictions that syntax alone cannot understand.
+
+### Support parallel work safely
+
+Parallel tasks use isolated worktrees and non-overlapping write scopes. A
+worktree receives only the required machine-local untracked inputs, such as an
+environment file when the task actually depends on it. Those inputs remain
+ignored and untracked, with secrets kept out of Git.
+
+```mermaid
+flowchart TD
+    F["Accepted feature plan"] --> B["Feature integration target"]
+    B --> T1["Task worktree A"]
+    B --> T2["Task worktree B"]
+    T1 --> P1["Self-contained task PR"]
+    T2 --> P2["Self-contained task PR"]
+    P1 --> B
+    P2 --> B
+    B --> FP["Final feature PR"]
+    FP --> M["Protected target"]
+```
+
+If concurrent deliveries use different playbook revisions, the target branch's
+accepted immutable pin is the integration authority. Reconcile only affected
+reusable guidance and preserve applicable project decisions; never infer
+precedence from a branch name, timestamp, or hash ordering.
+
+## Use the playbook
+
+### Adopt it in a project
+
+1. Copy `install-sdd.sh` into the target repository and run it from the project
+   root.
+2. Give the generated prompt to the adoption agent.
+3. Review the agent's concise adoption brief: discovered authorities, stable
+   boundaries, proposed immutable pin, validation, and remaining gaps.
+4. After two-agent review and owner acceptance, reuse the installed manifest
+   and empty whiteboard for future features.
+
+The numbered list describes the user-facing entry points, not a mandatory
+internal execution script. The adoption agent chooses the proportional method
+that produces the required result.
+
+### Deliver a feature
+
+Tell the agent what you need. The agent uses the working whiteboard for the
+discussion, concludes the accepted design, creates one implementation plan,
+and delivers dependency-ready tasks through reviewable PRs. You should be asked
+to stop only for a real decision, required semantic review, merge authority,
+destructive scope, or a critical mismatch.
+
+At planning review, compare the design-to-task table. At implementation review,
+focus on delivered behavior, deviations, compatibility, validation, and the
+merge target. At completion, verify planned versus actual outcomes and the
+exact cleanup boundary.
+
+### Upgrade an installed project
+
+Before admitting a new feature, the agent checks whether the configured
+playbook source has a newer revision. At a safe boundary, run:
 
 ```bash
 ./install-sdd.sh --upgrade
 ```
 
-Upgrade synchronizes reusable playbook material only. It may read the active
-implementation plan to determine whether the boundary is safe, but it never
-modifies feature design, tasks, status, or evidence. The old immutable pin stays
-authoritative until the candidate passes project checks, two-agent review,
-human acceptance, and cutover validation.
+The old immutable pin remains authoritative until the candidate's reusable
+changes pass project validation, two-agent review, owner acceptance, and
+cutover validation. Upgrade may read an active plan to judge boundary safety,
+but it never rewrites feature design, tasks, status, or evidence. The source
+repository's own test suite is not installed into adopting projects.
 
-When parallel deliveries use different revisions, reconcile reusable files
-against the newest accepted revision and preserve any still-applicable project
-authority. “Newer wins” applies to superseded playbook content, not to unrelated
-project decisions or silently weakened controls.
+## Develop this repository
 
-The source repository's tests validate installer and playbook behavior. They are
-not installed into adopting projects and are not an upgrade responsibility for
-project agents.
+This repository self-adopts the same model. Start with [Contributing](CONTRIBUTING.md),
+the live [adoption manifest](.github/spec-driven-delivery/project-adoption-manifest.md),
+the [working whiteboard](.github/spec-driven-delivery/solution-whiteboard.md),
+and the installer-generated `.sdd-runtime/agent-guide.md`. When present,
+`.github/spec-driven-delivery/implementation-plan.md` owns all active-delivery
+state.
 
-## Repository development
+### Repository map
 
-This repository self-adopts the same model. Read [Contributing](CONTRIBUTING.md),
-the live manifest, and the generated `.sdd-runtime/agent-guide.md`. When a plan
-exists, it owns current task and delivery state.
+| Path | Purpose |
+| --- | --- |
+| `install-sdd.sh` | Resolve immutable revisions and generate isolated runtime guidance |
+| `skills/` | Outcome and boundary guidance used by adoption, workflow, and upgrade agents |
+| `templates/` | Reusable manifest, whiteboard, plan, and review structures |
+| `docs/` | Canonical quality, governance, adoption, and error-handling policies |
+| `scripts/` | Source repository documentation and lifecycle checks |
+| `tests/` | Installer and documentation behavior regression coverage |
+| `examples/` | Sanitized examples that demonstrate selected playbook capabilities |
 
-Source validation:
+### Validation
+
+Install the exact locked dependencies and run the complete source gate:
 
 ```bash
 npm ci --ignore-scripts
 npm run docs:all
 ```
 
-See [Template Governance](docs/template-governance.md) for maintained-template
-ownership and [Documentation Quality](docs/documentation-quality-policy.md) for
-review, evidence, and repository checks.
+The suite checks Markdown, links and headings, Mermaid syntax, fences,
+placeholders, likely secrets, private paths, the three-document model, and
+focused installer/lifecycle behavior. Automated checks are necessary evidence,
+not a replacement for semantic review.
+
+## References
+
+- [Documentation Quality and Testing Policy](docs/documentation-quality-policy.md)
+- [Template Governance](docs/template-governance.md)
+- [Error handling](docs/error-handling.md)
+- [Project adoption skill](skills/sdd-project-adoption/SKILL.md)
+- [Google engineering review guidance](https://google.github.io/eng-practices/review/reviewer/)
+- [GitHub documentation on pull-request reviews](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests)
 
 ## License
 
