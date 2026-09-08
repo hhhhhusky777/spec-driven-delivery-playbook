@@ -11,9 +11,9 @@ RUNTIME_ROOT=".sdd-runtime"
 CLEANUP_ONLY=false
 VALIDATE_ONLY=false
 UPGRADE_MODE=false
-GUIDE_SCHEMA_VERSION="2"
-UPGRADE_GUIDE_SCHEMA_VERSION="1"
-GENERATOR_VERSION="2.1.0"
+GUIDE_SCHEMA_VERSION="3"
+UPGRADE_GUIDE_SCHEMA_VERSION="2"
+GENERATOR_VERSION="2.2.0"
 
 usage() {
   cat <<'EOF'
@@ -26,7 +26,7 @@ Options:
   --revision REF         Branch, tag, or commit to resolve (default: main).
   --adoption-root PATH   Project adoption root.
   --manifest PATH        Existing or future adoption manifest path.
-  --cleanup              Remove only the installer-owned temporary checkout.
+  --cleanup              Remove only the verified project-local checkout.
   --validate             Validate the generated runtime without changing it.
   --upgrade              Prepare a reviewed upgrade to a newer playbook revision.
   --help                 Show this help.
@@ -102,6 +102,10 @@ PROJECT_ROOT=$(cd "$PROJECT_ROOT" && pwd -P)
 CURRENT_ROOT=$(pwd -P)
 [[ "$CURRENT_ROOT" == "$PROJECT_ROOT" ]] ||
   fail "run this installer from the project root: $PROJECT_ROOT"
+GIT_COMMON_DIRECTORY=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null) ||
+  fail "cannot resolve the repository identity"
+GIT_DIRECTORY=$(git rev-parse --absolute-git-dir 2>/dev/null) ||
+  fail "cannot resolve the worktree identity"
 
 [[ -n "$MANIFEST_RELATIVE_PATH" ]] ||
   MANIFEST_RELATIVE_PATH="$ADOPTION_ROOT/project-adoption-manifest.md"
@@ -301,6 +305,7 @@ validate_runtime() {
   local recorded_project recorded_generator recorded_schema recorded_profile recorded_state recorded_prior_state
   local recorded_skill recorded_requested recorded_revision recorded_hash actual_hash expected_profile
   local expected_skill checkout marker cleanup_state checkout_revision checkout_origin installed_marker
+  local recorded_common_directory recorded_git_directory
   recorded_project=$(markdown_value "Project root" "$GUIDE_PATH")
   recorded_generator=$(markdown_value "Generator version" "$GUIDE_PATH")
   recorded_schema=$(markdown_value "Generator schema version" "$GUIDE_PATH")
@@ -314,9 +319,14 @@ validate_runtime() {
   checkout=$(markdown_value "Playbook checkout" "$GUIDE_PATH")
   marker=$(markdown_value "Ownership marker" "$GUIDE_PATH")
   cleanup_state=$(markdown_value "Cleanup state" "$GUIDE_PATH")
+  recorded_common_directory=$(markdown_value "Git common directory" "$GUIDE_PATH")
+  recorded_git_directory=$(markdown_value "Git worktree directory" "$GUIDE_PATH")
 
   [[ "$recorded_project" == "$PROJECT_ROOT" ]] ||
     fail "INVALID_RUNTIME: guide belongs to a different project"
+  [[ "$recorded_common_directory" == "$GIT_COMMON_DIRECTORY" &&
+    "$recorded_git_directory" == "$GIT_DIRECTORY" ]] ||
+    fail "INVALID_RUNTIME: guide belongs to a different repository worktree"
   [[ "$recorded_generator" == "$GENERATOR_VERSION" ]] ||
     fail "STALE_RUNTIME: unsupported generator version $recorded_generator"
   [[ "$recorded_schema" == "$GUIDE_SCHEMA_VERSION" ]] ||
@@ -334,21 +344,33 @@ validate_runtime() {
     [[ "$recorded_prior_state" == "$MANIFEST_STATE_BEFORE_BLOCK" ]] ||
       fail "STALE_RUNTIME: State before block changed while the manifest remained BLOCKED"
   fi
-  [[ "$recorded_requested" == "$REQUESTED_REVISION" ]] ||
-    fail "STALE_RUNTIME: guide revision differs from the manifest-pinned revision"
+  if [[ -n "$PINNED_REVISION" ]]; then
+    [[ "$recorded_revision" == "$PINNED_REVISION" ]] ||
+      fail "STALE_RUNTIME: resolved guide revision differs from the manifest pin"
+  else
+    [[ "$recorded_requested" == "$REQUESTED_REVISION" ]] ||
+      fail "STALE_RUNTIME: requested guide revision differs from the installer request"
+  fi
   installed_marker="$PROJECT_ROOT/.agents/skills/$recorded_skill/.sdd-playbook-managed"
   [[ -f "$installed_marker" && "$(head -n 1 "$installed_marker")" == "$recorded_revision" ]] ||
     fail "INVALID_RUNTIME: installed skill differs from the guide revision"
+  [[ "$recorded_revision" =~ ^[0-9a-fA-F]{40}$ &&
+    "$checkout" == "$RUNTIME_DIRECTORY/checkouts/$recorded_revision/repository" ]] ||
+    fail "INVALID_RUNTIME: checkout is outside the exact project-local runtime path"
   case "$cleanup_state" in
     PENDING)
       [[ -d "$checkout/.git" && -f "$marker" ]] ||
         fail "INVALID_RUNTIME: checkout or ownership marker is missing"
       [[ "$marker" == "$checkout/.sdd-owned-checkout" ]] ||
         fail "INVALID_RUNTIME: ownership marker path does not match checkout"
-      grep -Fqx "sdd-owned-checkout-v1" "$marker" ||
+      grep -Fqx "sdd-owned-checkout-v2" "$marker" ||
         fail "INVALID_RUNTIME: ownership marker signature is invalid"
       grep -Fqx "project-root=$PROJECT_ROOT" "$marker" ||
         fail "INVALID_RUNTIME: ownership marker belongs to a different project"
+      grep -Fqx "git-common-directory=$GIT_COMMON_DIRECTORY" "$marker" ||
+        fail "INVALID_RUNTIME: ownership marker belongs to a different repository"
+      grep -Fqx "git-directory=$GIT_DIRECTORY" "$marker" ||
+        fail "INVALID_RUNTIME: ownership marker belongs to a different worktree"
       checkout_revision=$(git -C "$checkout" rev-parse HEAD 2>/dev/null) ||
         fail "INVALID_RUNTIME: cannot read checkout revision"
       checkout_origin=$(git -C "$checkout" remote get-url origin 2>/dev/null) ||
@@ -380,6 +402,7 @@ validate_upgrade_runtime() {
   local recorded_project recorded_generator recorded_schema recorded_current
   local recorded_revision recorded_repository recorded_hash actual_hash checkout
   local marker cleanup_state checkout_revision checkout_origin installed_marker
+  local recorded_common_directory recorded_git_directory
   recorded_project=$(markdown_value "Project root" "$UPGRADE_GUIDE_PATH")
   recorded_generator=$(markdown_value "Generator version" "$UPGRADE_GUIDE_PATH")
   recorded_schema=$(markdown_value "Generator schema version" "$UPGRADE_GUIDE_PATH")
@@ -390,9 +413,14 @@ validate_upgrade_runtime() {
   checkout=$(markdown_value "Playbook checkout" "$UPGRADE_GUIDE_PATH")
   marker=$(markdown_value "Ownership marker" "$UPGRADE_GUIDE_PATH")
   cleanup_state=$(markdown_value "Cleanup state" "$UPGRADE_GUIDE_PATH")
+  recorded_common_directory=$(markdown_value "Git common directory" "$UPGRADE_GUIDE_PATH")
+  recorded_git_directory=$(markdown_value "Git worktree directory" "$UPGRADE_GUIDE_PATH")
 
   [[ "$recorded_project" == "$PROJECT_ROOT" ]] ||
     fail "INVALID_UPGRADE_RUNTIME: guide belongs to a different project"
+  [[ "$recorded_common_directory" == "$GIT_COMMON_DIRECTORY" &&
+    "$recorded_git_directory" == "$GIT_DIRECTORY" ]] ||
+    fail "INVALID_UPGRADE_RUNTIME: guide belongs to a different repository worktree"
   [[ "$recorded_generator" == "$GENERATOR_VERSION" && \
     "$recorded_schema" == "$UPGRADE_GUIDE_SCHEMA_VERSION" ]] ||
     fail "STALE_UPGRADE_RUNTIME: unsupported generator or guide schema"
@@ -406,14 +434,21 @@ validate_upgrade_runtime() {
     fail "INVALID_UPGRADE_RUNTIME: candidate repository differs from the manifest"
   [[ "$cleanup_state" == "PENDING" ]] ||
     fail "STALE_UPGRADE_RUNTIME: candidate checkout is not available"
+  [[ "$recorded_revision" =~ ^[0-9a-fA-F]{40}$ &&
+    "$checkout" == "$RUNTIME_DIRECTORY/checkouts/$recorded_revision/repository" ]] ||
+    fail "INVALID_UPGRADE_RUNTIME: checkout is outside the exact project-local runtime path"
   [[ -d "$checkout/.git" && -f "$marker" ]] ||
     fail "INVALID_UPGRADE_RUNTIME: checkout or ownership marker is missing"
   [[ "$marker" == "$checkout/.sdd-owned-checkout" ]] ||
     fail "INVALID_UPGRADE_RUNTIME: ownership marker path does not match checkout"
-  grep -Fqx "sdd-owned-checkout-v1" "$marker" ||
+  grep -Fqx "sdd-owned-checkout-v2" "$marker" ||
     fail "INVALID_UPGRADE_RUNTIME: ownership marker signature is invalid"
   grep -Fqx "project-root=$PROJECT_ROOT" "$marker" ||
     fail "INVALID_UPGRADE_RUNTIME: ownership marker belongs to a different project"
+  grep -Fqx "git-common-directory=$GIT_COMMON_DIRECTORY" "$marker" ||
+    fail "INVALID_UPGRADE_RUNTIME: ownership marker belongs to a different repository"
+  grep -Fqx "git-directory=$GIT_DIRECTORY" "$marker" ||
+    fail "INVALID_UPGRADE_RUNTIME: ownership marker belongs to a different worktree"
   checkout_revision=$(git -C "$checkout" rev-parse HEAD 2>/dev/null) ||
     fail "INVALID_UPGRADE_RUNTIME: cannot read candidate checkout revision"
   checkout_origin=$(git -C "$checkout" remote get-url origin 2>/dev/null) ||
@@ -446,7 +481,8 @@ cleanup_checkout() {
 cleanup_guide_checkout() {
   local guide=$1
 
-  local checkout marker recorded_project cleanup_state temp_root updated_guide
+  local checkout marker recorded_project recorded_revision recorded_common_directory
+  local recorded_git_directory cleanup_state updated_guide
   cleanup_state=$(markdown_value "Cleanup state" "$guide")
   if [[ "$cleanup_state" == "COMPLETE" ]]; then
     printf 'Installer-owned checkout is already cleaned up for %s.\n' "$guide"
@@ -458,25 +494,32 @@ cleanup_guide_checkout() {
   checkout=$(markdown_value "Playbook checkout" "$guide")
   marker=$(markdown_value "Ownership marker" "$guide")
   recorded_project=$(markdown_value "Project root" "$guide")
-  [[ -n "$checkout" && -n "$marker" && -n "$recorded_project" ]] ||
+  recorded_revision=$(markdown_value "Resolved revision" "$guide")
+  recorded_common_directory=$(markdown_value "Git common directory" "$guide")
+  recorded_git_directory=$(markdown_value "Git worktree directory" "$guide")
+  [[ -n "$checkout" && -n "$marker" && -n "$recorded_project" &&
+    "$recorded_revision" =~ ^[0-9a-fA-F]{40}$ ]] ||
     fail "installation guide is missing cleanup metadata"
   [[ "$recorded_project" == "$PROJECT_ROOT" ]] ||
     fail "installation guide belongs to a different project"
-
-  temp_root=$(cd "${TMPDIR:-/tmp}" && pwd -P)
-  case "$checkout" in
-    "$temp_root"/sdd-playbook.*/repository) ;;
-    *) fail "refusing cleanup outside an installer-owned temporary path" ;;
-  esac
+  [[ "$recorded_common_directory" == "$GIT_COMMON_DIRECTORY" &&
+    "$recorded_git_directory" == "$GIT_DIRECTORY" ]] ||
+    fail "installation guide belongs to a different repository worktree"
+  [[ "$checkout" == "$RUNTIME_DIRECTORY/checkouts/$recorded_revision/repository" ]] ||
+    fail "refusing cleanup outside the exact project-local runtime checkout"
   [[ "$marker" == "$checkout/.sdd-owned-checkout" ]] ||
     fail "ownership marker path does not match the checkout"
   [[ -f "$marker" ]] || fail "ownership marker is missing"
-  grep -Fqx "sdd-owned-checkout-v1" "$marker" ||
+  grep -Fqx "sdd-owned-checkout-v2" "$marker" ||
     fail "ownership marker signature is invalid"
   grep -Fqx "project-root=$PROJECT_ROOT" "$marker" ||
     fail "ownership marker belongs to a different project"
+  grep -Fqx "git-common-directory=$GIT_COMMON_DIRECTORY" "$marker" ||
+    fail "ownership marker belongs to a different repository"
+  grep -Fqx "git-directory=$GIT_DIRECTORY" "$marker" ||
+    fail "ownership marker belongs to a different worktree"
 
-  rm -rf "${checkout%/repository}"
+  rm -rf "$RUNTIME_DIRECTORY/checkouts/$recorded_revision"
   updated_guide="$guide.tmp"
   awk '
     /^\| Cleanup state \| `PENDING` \|$/ {
@@ -609,12 +652,12 @@ prepare_upgrade() {
 
   ensure_runtime_excludes
 
-  local temp_root temp_directory checkout marker resolved_revision resolved_repository
+  local staging_directory checkout final_directory marker resolved_revision resolved_repository
   local skill_source skill_destination
-  temp_root=$(cd "${TMPDIR:-/tmp}" && pwd -P)
-  temp_directory=$(mktemp -d "$temp_root/sdd-playbook.XXXXXX")
-  checkout="$temp_directory/repository"
-  FAILED_UPGRADE_TEMP_DIRECTORY=$temp_directory
+  mkdir -p "$RUNTIME_DIRECTORY/checkouts"
+  staging_directory=$(mktemp -d "$RUNTIME_DIRECTORY/checkouts/.staging.XXXXXX")
+  checkout="$staging_directory/repository"
+  FAILED_UPGRADE_TEMP_DIRECTORY=$staging_directory
   FAILED_UPGRADE_SKILL_DESTINATION=""
   FAILED_UPGRADE_REVISION=""
   trap cleanup_failed_upgrade EXIT
@@ -630,6 +673,12 @@ prepare_upgrade() {
     fail "manifest-pinned revision is not available from the candidate repository"
   git -C "$checkout" merge-base --is-ancestor "$PINNED_REVISION" "$resolved_revision" ||
     fail "candidate revision does not descend from the manifest-pinned revision"
+  final_directory="$RUNTIME_DIRECTORY/checkouts/$resolved_revision"
+  [[ ! -e "$final_directory" ]] ||
+    fail "project-local candidate checkout already exists: $final_directory"
+  mv "$staging_directory" "$final_directory"
+  checkout="$final_directory/repository"
+  FAILED_UPGRADE_TEMP_DIRECTORY=$final_directory
 
   skill_source="$checkout/skills/sdd-playbook-upgrade"
   [[ -f "$skill_source/SKILL.md" ]] ||
@@ -648,7 +697,8 @@ prepare_upgrade() {
   printf '%s\n' "$resolved_revision" >"$skill_destination/.sdd-playbook-managed"
 
   marker="$checkout/.sdd-owned-checkout"
-  printf '%s\nproject-root=%s\n' "sdd-owned-checkout-v1" "$PROJECT_ROOT" >"$marker"
+  printf '%s\nproject-root=%s\ngit-common-directory=%s\ngit-directory=%s\n' \
+    "sdd-owned-checkout-v2" "$PROJECT_ROOT" "$GIT_COMMON_DIRECTORY" "$GIT_DIRECTORY" >"$marker"
   cat >"$UPGRADE_GUIDE_PATH" <<EOF
 # SDD Playbook Upgrade Guide
 
@@ -660,6 +710,8 @@ active project pin, approve compatibility, or authorize work in an active task.
 | Field | Value |
 | --- | --- |
 | Project root | \`$PROJECT_ROOT\` |
+| Git common directory | \`$GIT_COMMON_DIRECTORY\` |
+| Git worktree directory | \`$GIT_DIRECTORY\` |
 | Adoption manifest | \`$MANIFEST_RELATIVE_PATH\` |
 | Manifest state detected | \`$MANIFEST_STATE\` |
 | Generator version | \`$GENERATOR_VERSION\` |
@@ -699,7 +751,7 @@ active project pin, approve compatibility, or authorize work in an active task.
 | Pre-work runtime | Before candidate content is consumed or project files change, this runtime validates as \`UPGRADE_CURRENT\`; provenance, hash, marker, pin, or installed-skill mismatch blocks work. |
 | Consistency | Canonical terminology, links, states, authority, and continuation rules agree; unresolved canonical conflict or failed applicable validation blocks acceptance. |
 | Recovery | A failed candidate leaves or restores the last accepted pin and runtime without discarding valid project work or failure evidence. |
-| Completion | The accepted pin is recorded, normal runtime is regenerated and validates, and installer-owned temporary content is cleaned up. |
+| Completion | The accepted pin is recorded, normal runtime is regenerated and validates, and any superseded installer-owned checkout is cleaned up. |
 
 The agent chooses comparison, synchronization, batching, validation, and safe
 recovery methods within these boundaries and the installed skill.
@@ -754,8 +806,8 @@ fi
 
 ensure_runtime_excludes
 
-TEMP_ROOT=$(cd "${TMPDIR:-/tmp}" && pwd -P)
-TEMP_DIRECTORY=$(mktemp -d "$TEMP_ROOT/sdd-playbook.XXXXXX")
+mkdir -p "$RUNTIME_DIRECTORY/checkouts"
+TEMP_DIRECTORY=$(mktemp -d "$RUNTIME_DIRECTORY/checkouts/.staging.XXXXXX")
 PLAYBOOK_CHECKOUT="$TEMP_DIRECTORY/repository"
 
 cleanup_failed_install() {
@@ -773,8 +825,15 @@ git -C "$PLAYBOOK_CHECKOUT" checkout --quiet --detach "$REQUESTED_REVISION" ||
 
 RESOLVED_REVISION=$(git -C "$PLAYBOOK_CHECKOUT" rev-parse HEAD)
 RESOLVED_REPOSITORY=$(git -C "$PLAYBOOK_CHECKOUT" remote get-url origin)
+FINAL_CHECKOUT_DIRECTORY="$RUNTIME_DIRECTORY/checkouts/$RESOLVED_REVISION"
+[[ ! -e "$FINAL_CHECKOUT_DIRECTORY" ]] ||
+  fail "project-local checkout already exists: $FINAL_CHECKOUT_DIRECTORY"
+mv "$TEMP_DIRECTORY" "$FINAL_CHECKOUT_DIRECTORY"
+TEMP_DIRECTORY="$FINAL_CHECKOUT_DIRECTORY"
+PLAYBOOK_CHECKOUT="$FINAL_CHECKOUT_DIRECTORY/repository"
 MARKER_PATH="$PLAYBOOK_CHECKOUT/.sdd-owned-checkout"
-printf '%s\nproject-root=%s\n' "sdd-owned-checkout-v1" "$PROJECT_ROOT" >"$MARKER_PATH"
+printf '%s\nproject-root=%s\ngit-common-directory=%s\ngit-directory=%s\n' \
+  "sdd-owned-checkout-v2" "$PROJECT_ROOT" "$GIT_COMMON_DIRECTORY" "$GIT_DIRECTORY" >"$MARKER_PATH"
 
 GUIDE_PROFILE=$(profile_for_state "$MANIFEST_STATE" "$MANIFEST_STATE_BEFORE_BLOCK") ||
   fail "unsupported manifest state or missing State before block: $MANIFEST_STATE"
@@ -820,6 +879,8 @@ is not a project system contract or a prescribed implementation path.
 | Field | Value |
 | --- | --- |
 | Project root | \`$PROJECT_ROOT\` |
+| Git common directory | \`$GIT_COMMON_DIRECTORY\` |
+| Git worktree directory | \`$GIT_DIRECTORY\` |
 | Adoption manifest | \`$MANIFEST_RELATIVE_PATH\` |
 | Manifest state detected | \`$MANIFEST_STATE\` |
 | Manifest state before block | \`$MANIFEST_STATE_BEFORE_BLOCK\` |

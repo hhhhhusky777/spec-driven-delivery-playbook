@@ -105,12 +105,24 @@ test("installer resolves latest main, installs adoption skill, and emits one gui
   const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
   assert.equal(guideValue(guide, "Manifest state detected"), "ABSENT");
   assert.equal(guideValue(guide, "Manifest state before block"), "NONE");
-  assert.equal(guideValue(guide, "Generator version"), "2.1.0");
-  assert.equal(guideValue(guide, "Generator schema version"), "2");
+  assert.equal(guideValue(guide, "Generator version"), "2.2.0");
+  assert.equal(guideValue(guide, "Generator schema version"), "3");
   assert.equal(guideValue(guide, "Guide profile"), "adoption");
   assert.equal(guideValue(guide, "Required skill"), "sdd-project-adoption");
   assert.equal(guideValue(guide, "Requested revision"), "main");
   assert.equal(guideValue(guide, "Resolved revision"), source.latestRevision);
+  assert.equal(
+    guideValue(guide, "Playbook checkout"),
+    path.join(
+      guideValue(guide, "Project root"),
+      ".sdd-runtime",
+      "checkouts",
+      source.latestRevision,
+      "repository",
+    ),
+  );
+  assert.match(guideValue(guide, "Git common directory"), /\.git$/);
+  assert.match(guideValue(guide, "Git worktree directory"), /\.git$/);
   assert.doesNotMatch(guide, /^- Next action:/m);
   assert.match(guide, /^## Runtime replacement$/m);
   assert.match(guide, /^## Adoption outcome and boundaries$/m);
@@ -141,6 +153,25 @@ test("installer resolves latest main, installs adoption skill, and emits one gui
   assert.equal(guideValue(cleanedGuide, "Cleanup state"), "COMPLETE");
   const repeatedCleanup = runInstaller(project, ["--cleanup"]);
   assert.equal(repeatedCleanup.status, 0, repeatedCleanup.stderr);
+});
+
+test("manifest pin validates a bootstrap guide whose requested revision was main", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createTargetProject(t);
+  const installed = runInstaller(project, ["--repository", source.repository]);
+  assert.equal(installed.status, 0, installed.stderr);
+
+  const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
+  await mkdir(adoptionRoot, { recursive: true });
+  await writeFile(
+    path.join(adoptionRoot, "project-adoption-manifest.md"),
+    `# Manifest\n\n| Field | Value |\n| --- | --- |\n| Adoption state | \`DRAFT\` |\n| Playbook revision | \`${source.latestRevision}\` |\n`,
+    "utf8",
+  );
+
+  const validation = runInstaller(project, ["--validate"]);
+  assert.equal(validation.status, 0, validation.stderr);
+  assert.match(validation.stdout, /^STATE_ADVANCED: manifest moved from ABSENT to DRAFT/);
 });
 
 test("real workflow skill and generated guide resolve canonical goals and recovery after installation", async (t) => {
@@ -322,7 +353,7 @@ test("runtime validation fails closed on profile changes, tampering, and unsuppo
   assert.match(unsupported.stderr, /unsupported manifest state/);
 });
 
-test("cleanup rejects a guide whose checkout is outside the owned temporary boundary", async (t) => {
+test("cleanup rejects a guide whose checkout is outside the exact project runtime boundary", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createTargetProject(t);
   const result = runInstaller(project, ["--repository", source.repository]);
@@ -350,7 +381,7 @@ test("validation checks marker ownership and command modes are exclusive", async
 
   const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
   const marker = guideValue(guide, "Ownership marker");
-  await writeFile(marker, "sdd-owned-checkout-v1\nproject-root=/wrong/project\n", "utf8");
+  await writeFile(marker, "sdd-owned-checkout-v2\nproject-root=/wrong/project\n", "utf8");
   const validation = runInstaller(project, ["--validate"]);
   assert.notEqual(validation.status, 0);
   assert.match(validation.stderr, /ownership marker belongs to a different project/);
@@ -358,6 +389,31 @@ test("validation checks marker ownership and command modes are exclusive", async
   const conflictingModes = runInstaller(project, ["--cleanup", "--validate", "--upgrade"]);
   assert.notEqual(conflictingModes.status, 0);
   assert.match(conflictingModes.stderr, /mutually exclusive/);
+});
+
+test("runtime validation rejects a marker bound to a different worktree", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createTargetProject(t);
+  const result = runInstaller(project, ["--repository", source.repository]);
+  assert.equal(result.status, 0, result.stderr);
+
+  const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
+  const marker = guideValue(guide, "Ownership marker");
+  await writeFile(
+    marker,
+    [
+      "sdd-owned-checkout-v2",
+      `project-root=${guideValue(guide, "Project root")}`,
+      `git-common-directory=${guideValue(guide, "Git common directory")}`,
+      "git-directory=/different/worktree/git-directory",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+
+  const validation = runInstaller(project, ["--validate"]);
+  assert.notEqual(validation.status, 0);
+  assert.match(validation.stderr, /ownership marker belongs to a different worktree/);
 });
 
 test("upgrade prepares a newer immutable candidate without changing the active runtime", async (t) => {
