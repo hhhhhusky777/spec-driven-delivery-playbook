@@ -28,7 +28,7 @@ This is the only active-delivery state authority.
 | ID | State | Depends on | Outcome | Boundaries | Validation | PR |
 | --- | --- | --- | --- | --- | --- | --- |
 | T01 | `DONE` | None | README is a complete, attractive, navigable project guide consistent with the simplified playbook, with clear Apache-2.0 reuse permission | README, `LICENSE`, and required whiteboard/plan state; no runtime behavior change | Complete source documentation gate, canonical license verification, and exact-candidate review | [#72](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/72) |
-| T02 | `VERIFYING` | None | The three templates retain complete applicable delivery information while preserving one owner per document | The three maintained templates and focused regression only; do not recreate removed documents or duplicate PR evidence | Responsibility coverage assertions, lifecycle/Markdown/Mermaid checks, full suite, and exact-candidate review | Pending follow-up PR |
+| T02 | `VERIFYING` | None | The three templates retain complete applicable delivery information while preserving one owner per document | The three maintained templates and focused regression only; do not recreate removed documents or duplicate PR evidence | Responsibility coverage assertions, lifecycle/Markdown/Mermaid checks, full suite, and exact-candidate review | [#73](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/73) |
 
 ## Delivery Definition of Done
 
