@@ -52,6 +52,11 @@ test("implementation plan owns one coherent task state graph", () => {
   const parallel = source.replace("| Active tasks | T02 |", "| Active tasks | T02, T03 |") + "\n| T03 | VERIFYING | T01 |";
   assert.deepEqual(checkDocument("implementation-plan.md", parallel), []);
   assert.ok(checkDocument("implementation-plan.md", source.replace("| T01 | DONE |", "| T01 | CANCELLED |")).some(error => error.includes("unsatisfied dependency")));
+  const planned = source
+    .replace("| Active tasks | T02 |", "| Active tasks | None |")
+    .replace("| T01 | DONE |", "| T01 | PLANNED |")
+    .replace("| T02 | IN_PROGRESS |", "| T02 | PLANNED |");
+  assert.deepEqual(checkDocument("implementation-plan.md", planned), []);
   const incomplete = source
     .replace("| State | IMPLEMENTING |", "| State | COMPLETE |")
     .replace("| Active tasks | T02 |", "| Active tasks | None |")
