@@ -466,5 +466,5 @@ not a replacement for semantic review.
 
 ## License
 
-No license has been selected. Do not assume permission for external
-redistribution outside the repository owner's authorized environment.
+Licensed under the [Apache License 2.0](LICENSE). You may use, modify, and
+distribute the project under its terms.
