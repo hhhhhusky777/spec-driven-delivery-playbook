@@ -455,10 +455,11 @@ test("upgrade accepts a plain project-relative stable entry point", async (t) =>
   const source = await createPlaybookFixture(t);
   const project = await createInstalledProject(t, source);
   const manifestPath = path.join(project, ".github", "spec-driven-delivery", "project-adoption-manifest.md");
+  await writeFile(path.join(project, "CONTRIBUTING.md"), "# Contributing\n", "utf8");
   const manifest = await readFile(manifestPath, "utf8");
   await writeFile(
     manifestPath,
-    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point | README.md |"),
+    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point | CONTRIBUTING.md |"),
     "utf8",
   );
   const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
@@ -591,6 +592,15 @@ test("upgrade preflight fails closed for active work, blocked adoption, and unch
   const inconsistent = runInstaller(activeProject, ["--repository", source.repository, "--upgrade"]);
   assert.notEqual(inconsistent.status, 0);
   assert.match(inconsistent.stderr, /allowed only between tasks/);
+
+  await writeFile(
+    path.join(activeRoot, "implementation-plan.md"),
+    "| Field | Value |\n| --- | --- |\n| Active tasks | T01 |\n\n| ID | State | Depends on |\n| --- | --- | --- |\n| T01 | IN_PROGRESS | None |\n",
+    "utf8",
+  );
+  const plainCells = runInstaller(activeProject, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(plainCells.status, 0);
+  assert.match(plainCells.stderr, /allowed only between tasks/);
 
   const blockedProject = await createInstalledProject(t, source);
   const blockedManifest = path.join(

@@ -28,6 +28,8 @@ test("manifest rejects feature progress and non-immutable pins", () => {
   assert.ok(checkDocument("project-adoption-manifest.md", source.replace(sha, "main")).some(error => error.includes("full SHA")));
   assert.ok(checkDocument("project-adoption-manifest.md", `${source}\n| Current task | T01 |`).some(error => error.includes("feature field")));
   assert.ok(checkDocument("project-adoption-manifest.md", source.replace("INSTALLED", "BANANA")).some(error => error.includes("Adoption state")));
+  assert.ok(checkDocument("project-adoption-manifest.md", source.replace("INSTALLED", "BLOCKED")).some(error => error.includes("State before block")));
+  assert.deepEqual(checkDocument("project-adoption-manifest.md", source.replace("| Adoption state | INSTALLED |", "| Adoption state | BLOCKED |\n| State before block | DRAFT |")), []);
 });
 
 test("manifest requires an immutable candidate while upgrade is open", () => {
@@ -49,6 +51,7 @@ test("implementation plan owns one coherent task state graph", () => {
   assert.ok(checkDocument("implementation-plan.md", `${source}\n| T03 | VERIFYING | T01 |`).some(error => error.includes("Active tasks")));
   const parallel = source.replace("| Active tasks | T02 |", "| Active tasks | T02, T03 |") + "\n| T03 | VERIFYING | T01 |";
   assert.deepEqual(checkDocument("implementation-plan.md", parallel), []);
+  assert.ok(checkDocument("implementation-plan.md", source.replace("| T01 | DONE |", "| T01 | CANCELLED |")).some(error => error.includes("unsatisfied dependency")));
   const incomplete = source
     .replace("| State | IMPLEMENTING |", "| State | COMPLETE |")
     .replace("| Active tasks | T02 |", "| Active tasks | None |")

@@ -11,6 +11,7 @@ state.
 | --- | --- |
 | Project / repository | [hhhhhusky777/spec-driven-delivery-playbook](https://github.com/hhhhhusky777/spec-driven-delivery-playbook) |
 | Adoption state | `INSTALLED` |
+| State before block | `None` |
 | Playbook source repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook.git` |
 | Playbook revision | `69668f7f2a91788129da0c0b59253cf6288f61ba` |
 | Upgrade state | `COMPLETE` |

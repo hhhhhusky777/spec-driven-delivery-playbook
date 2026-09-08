@@ -206,7 +206,7 @@ entry_point_target() {
 }
 
 validate_project_entry_point() {
-  local entry target manifest_directory candidate_directory candidate
+  local entry target entry_base candidate_directory candidate
   if manifest_has_entry_point; then
     entry=$(manifest_entry_point)
     target=$(printf '%s\n' "$entry" | entry_point_target)
@@ -225,15 +225,19 @@ validate_project_entry_point() {
         ;;
     esac
 
-    manifest_directory=$(cd "$(dirname "$MANIFEST_PATH")" && pwd -P)
-    candidate_directory=$(cd "$(dirname "$manifest_directory/$target")" 2>/dev/null && pwd -P) ||
+    if [[ "$entry" == \[*\]\(*\) ]]; then
+      entry_base=$(cd "$(dirname "$MANIFEST_PATH")" && pwd -P)
+    else
+      entry_base=$PROJECT_ROOT
+    fi
+    candidate_directory=$(cd "$(dirname "$entry_base/$target")" 2>/dev/null && pwd -P) ||
       fail "recorded project entry point is unavailable: $target"
     candidate="$candidate_directory/$(basename "$target")"
     case "$candidate" in
       "$PROJECT_ROOT"/*) ;;
       *) fail "recorded project entry point must stay inside the project root: $target" ;;
     esac
-    [[ ! -L "$manifest_directory/$target" ]] ||
+    [[ ! -L "$entry_base/$target" ]] ||
       fail "recorded project entry point must not be a symbolic link: $target"
     [[ -f "$candidate" ]] || fail "recorded project entry point is unavailable: $target"
     return
@@ -578,8 +582,22 @@ prepare_upgrade() {
 
   plan="$PROJECT_ROOT/$ADOPTION_ROOT/implementation-plan.md"
   if [[ -f "$plan" ]]; then
-    active_tasks=$(markdown_value "Active tasks" "$plan")
-    active_rows=$(awk -F'|' '$3 ~ /`(IN_PROGRESS|VERIFYING)`/ { print; exit }' "$plan")
+    active_tasks=$(awk -F'|' '
+      function trim(value) {
+        gsub(/^[[:space:]]+|[[:space:]]+$/, "", value)
+        gsub(/^`|`$/, "", value)
+        return value
+      }
+      trim($2) == "Active tasks" { print trim($3); exit }
+    ' "$plan")
+    active_rows=$(awk -F'|' '
+      function trim(value) {
+        gsub(/^[[:space:]]+|[[:space:]]+$/, "", value)
+        gsub(/^`|`$/, "", value)
+        return value
+      }
+      trim($3) == "IN_PROGRESS" || trim($3) == "VERIFYING" { print; exit }
+    ' "$plan")
     [[ -z "$active_rows" && ( -z "$active_tasks" || "$active_tasks" == "None" ) ]] ||
       fail "upgrade is allowed only between tasks; active work found in ${plan#"$PROJECT_ROOT/"}"
   fi

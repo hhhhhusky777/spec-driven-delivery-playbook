@@ -45,7 +45,13 @@ function taskRows(text) {
 function manifestErrors(text) {
   const fields = fieldMap(text);
   const errors = [];
-  if (!ADOPTION_STATES.has(fields.get("Adoption state") || "")) errors.push("manifest Adoption state is unsupported");
+  const adoption = fields.get("Adoption state") || "";
+  const prior = fields.get("State before block") || "None";
+  if (!ADOPTION_STATES.has(adoption)) errors.push("manifest Adoption state is unsupported");
+  if (adoption === "BLOCKED" && !["DRAFT", "INSTALLED"].includes(prior)) {
+    errors.push("BLOCKED manifest requires State before block DRAFT or INSTALLED");
+  }
+  if (adoption !== "BLOCKED" && prior !== "None") errors.push("unblocked manifest State before block must be None");
   if (!SHA.test(fields.get("Playbook revision") || "")) errors.push("manifest Playbook revision must be a full SHA");
   const upgrade = fields.get("Upgrade state") || "";
   if (!UPGRADE_STATES.has(upgrade)) errors.push("manifest Upgrade state is unsupported");
@@ -105,7 +111,7 @@ function planErrors(text) {
     if (!["READY", "IN_PROGRESS", "VERIFYING"].includes(task.State)) continue;
     for (const dep of dependencies.get(task.ID) || []) {
       const state = tasks.find(candidate => candidate.ID === dep)?.State;
-      if (!["DONE", "CANCELLED"].includes(state)) errors.push(`${task.ID} has unfinished dependency ${dep}`);
+      if (state !== "DONE") errors.push(`${task.ID} has unsatisfied dependency ${dep}`);
     }
   }
   const next = fields.get("Next ready task") || "None";

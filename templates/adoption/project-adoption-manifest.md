@@ -10,6 +10,7 @@ This reusable installation contract contains no feature-specific state.
 | --- | --- |
 | Project / repository | `<link>` |
 | Adoption state | `DRAFT` |
+| State before block | `None` |
 | Playbook source repository | `<canonical Git URL>` |
 | Playbook revision | `<full commit SHA>` |
 | Upgrade state | `NONE` |
