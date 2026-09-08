@@ -214,6 +214,9 @@ test("completed adoption replaces its runtime before the first need", async (t) 
 
   const finalCleanup = runInstaller(project, ["--cleanup"]);
   assert.equal(finalCleanup.status, 0, finalCleanup.stderr);
+  const cleanedValidation = runInstaller(project, ["--validate"]);
+  assert.equal(cleanedValidation.status, 0, cleanedValidation.stderr);
+  assert.match(cleanedValidation.stdout, /^CURRENT:/);
 });
 
 test("the installed state selects the workflow profile and preserves its pinned revision", async (t) => {
@@ -448,6 +451,20 @@ test("upgrade accepts the stable project entry point recorded in the manifest", 
   assert.match(result.stdout, /Prepared candidate revision:/);
 });
 
+test("upgrade accepts a plain project-relative stable entry point", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const manifestPath = path.join(project, ".github", "spec-driven-delivery", "project-adoption-manifest.md");
+  const manifest = await readFile(manifestPath, "utf8");
+  await writeFile(
+    manifestPath,
+    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point | README.md |"),
+    "utf8",
+  );
+  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.equal(result.status, 0, result.stderr);
+});
+
 test("upgrade rejects an unavailable stable project entry point", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createInstalledProject(t, source);
@@ -565,6 +582,15 @@ test("upgrade preflight fails closed for active work, blocked adoption, and unch
   const active = runInstaller(activeProject, ["--repository", source.repository, "--upgrade"]);
   assert.notEqual(active.status, 0);
   assert.match(active.stderr, /allowed only between tasks/);
+
+  await writeFile(
+    path.join(activeRoot, "implementation-plan.md"),
+    "| Field | Value |\n| --- | --- |\n| Active tasks | `None` |\n\n| ID | State | Depends on |\n| --- | --- | --- |\n| `T01` | `IN_PROGRESS` | `None` |\n",
+    "utf8",
+  );
+  const inconsistent = runInstaller(activeProject, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(inconsistent.status, 0);
+  assert.match(inconsistent.stderr, /allowed only between tasks/);
 
   const blockedProject = await createInstalledProject(t, source);
   const blockedManifest = path.join(

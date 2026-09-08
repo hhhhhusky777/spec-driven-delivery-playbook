@@ -23,14 +23,15 @@ test("maintained three-document templates satisfy lifecycle ownership", async ()
 });
 
 test("manifest rejects feature progress and non-immutable pins", () => {
-  const source = `| Field | Value |\n| --- | --- |\n| Playbook revision | ${sha} |\n| Upgrade state | NONE |\n| Upgrade candidate | None |`;
+  const source = `| Field | Value |\n| --- | --- |\n| Adoption state | INSTALLED |\n| Playbook revision | ${sha} |\n| Upgrade state | NONE |\n| Upgrade candidate | None |`;
   assert.deepEqual(checkDocument("project-adoption-manifest.md", source), []);
   assert.ok(checkDocument("project-adoption-manifest.md", source.replace(sha, "main")).some(error => error.includes("full SHA")));
   assert.ok(checkDocument("project-adoption-manifest.md", `${source}\n| Current task | T01 |`).some(error => error.includes("feature field")));
+  assert.ok(checkDocument("project-adoption-manifest.md", source.replace("INSTALLED", "BANANA")).some(error => error.includes("Adoption state")));
 });
 
 test("manifest requires an immutable candidate while upgrade is open", () => {
-  const source = `| Field | Value |\n| --- | --- |\n| Playbook revision | ${sha} |\n| Upgrade state | ASSESSING |\n| Upgrade candidate | None |`;
+  const source = `| Field | Value |\n| --- | --- |\n| Adoption state | INSTALLED |\n| Playbook revision | ${sha} |\n| Upgrade state | ASSESSING |\n| Upgrade candidate | None |`;
   assert.ok(checkDocument("project-adoption-manifest.md", source).some(error => error.includes("Upgrade candidate")));
   assert.deepEqual(checkDocument("project-adoption-manifest.md", source.replace("None", "b".repeat(40))), []);
 });
@@ -42,8 +43,15 @@ test("concluded whiteboard requires resolved decisions and design outcomes", () 
 });
 
 test("implementation plan owns one coherent task state graph", () => {
-  const source = `| Field | Value |\n| --- | --- |\n| State | IMPLEMENTING |\n| Current task | T02 |\n\n| ID | State | Depends on |\n| --- | --- | --- |\n| T01 | DONE | None |\n| T02 | IN_PROGRESS | T01 |`;
+  const source = `| Field | Value |\n| --- | --- |\n| State | IMPLEMENTING |\n| Active tasks | T02 |\n| Next ready task | None |\n\n| ID | State | Depends on |\n| --- | --- | --- |\n| T01 | DONE | None |\n| T02 | IN_PROGRESS | T01 |`;
   assert.deepEqual(checkDocument("implementation-plan.md", source), []);
   assert.ok(checkDocument("implementation-plan.md", source.replace("| T01 |", "| T03 |")).some(error => error.includes("unknown task")));
-  assert.ok(checkDocument("implementation-plan.md", `${source}\n| T03 | VERIFYING | T01 |`).some(error => error.includes("only one active")));
+  assert.ok(checkDocument("implementation-plan.md", `${source}\n| T03 | VERIFYING | T01 |`).some(error => error.includes("Active tasks")));
+  const parallel = source.replace("| Active tasks | T02 |", "| Active tasks | T02, T03 |") + "\n| T03 | VERIFYING | T01 |";
+  assert.deepEqual(checkDocument("implementation-plan.md", parallel), []);
+  const incomplete = source
+    .replace("| State | IMPLEMENTING |", "| State | COMPLETE |")
+    .replace("| Active tasks | T02 |", "| Active tasks | None |")
+    .replace("| T02 | IN_PROGRESS |", "| T02 | PLANNED |");
+  assert.ok(checkDocument("implementation-plan.md", incomplete).some(error => error.includes("terminal")));
 });

@@ -9,7 +9,7 @@ This is the only active-delivery state authority.
 | Field | Value |
 | --- | --- |
 | State | `DRAFT` |
-| Current task | `None` |
+| Active tasks | `None` |
 | Next ready task | `None` |
 | Active blocker | `None` |
 | Implementation mode | `<human-review-before-merge or explicitly authorized alternative>` |

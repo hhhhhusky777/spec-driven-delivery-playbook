@@ -9,7 +9,7 @@ This is the example's only active-delivery state authority.
 | Field | Value |
 | --- | --- |
 | State | `DRAFT` |
-| Current task | `None` |
+| Active tasks | `None` |
 | Next ready task | `None` |
 | Active blocker | Exact SGLang sources, allowlist, compatibility owner, tests, and branch values are unverified |
 | Implementation mode | Human review before merge |

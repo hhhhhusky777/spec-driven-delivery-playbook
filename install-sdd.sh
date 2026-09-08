@@ -198,6 +198,10 @@ entry_point_target() {
       print substr($0, RSTART + 1, RLENGTH - 2)
       exit
     }
+    length($0) {
+      print $0
+      exit
+    }
   '
 }
 
@@ -292,7 +296,7 @@ validate_runtime() {
 
   local recorded_project recorded_generator recorded_schema recorded_profile recorded_state recorded_prior_state
   local recorded_skill recorded_requested recorded_revision recorded_hash actual_hash expected_profile
-  local expected_skill checkout marker cleanup_state checkout_revision checkout_origin
+  local expected_skill checkout marker cleanup_state checkout_revision checkout_origin installed_marker
   recorded_project=$(markdown_value "Project root" "$GUIDE_PATH")
   recorded_generator=$(markdown_value "Generator version" "$GUIDE_PATH")
   recorded_schema=$(markdown_value "Generator schema version" "$GUIDE_PATH")
@@ -328,24 +332,34 @@ validate_runtime() {
   fi
   [[ "$recorded_requested" == "$REQUESTED_REVISION" ]] ||
     fail "STALE_RUNTIME: guide revision differs from the manifest-pinned revision"
-  [[ "$cleanup_state" == "PENDING" ]] ||
-    fail "STALE_RUNTIME: installer-owned checkout is not available"
-  [[ -d "$checkout/.git" && -f "$marker" ]] ||
-    fail "INVALID_RUNTIME: checkout or ownership marker is missing"
-  [[ "$marker" == "$checkout/.sdd-owned-checkout" ]] ||
-    fail "INVALID_RUNTIME: ownership marker path does not match checkout"
-  grep -Fqx "sdd-owned-checkout-v1" "$marker" ||
-    fail "INVALID_RUNTIME: ownership marker signature is invalid"
-  grep -Fqx "project-root=$PROJECT_ROOT" "$marker" ||
-    fail "INVALID_RUNTIME: ownership marker belongs to a different project"
-  checkout_revision=$(git -C "$checkout" rev-parse HEAD 2>/dev/null) ||
-    fail "INVALID_RUNTIME: cannot read checkout revision"
-  checkout_origin=$(git -C "$checkout" remote get-url origin 2>/dev/null) ||
-    fail "INVALID_RUNTIME: cannot read checkout origin"
-  [[ "$checkout_revision" == "$recorded_revision" ]] ||
-    fail "INVALID_RUNTIME: checkout revision does not match guide provenance"
-  [[ "$checkout_origin" == "$(markdown_value "Source repository" "$GUIDE_PATH")" ]] ||
-    fail "INVALID_RUNTIME: checkout origin does not match guide provenance"
+  installed_marker="$PROJECT_ROOT/.agents/skills/$recorded_skill/.sdd-playbook-managed"
+  [[ -f "$installed_marker" && "$(head -n 1 "$installed_marker")" == "$recorded_revision" ]] ||
+    fail "INVALID_RUNTIME: installed skill differs from the guide revision"
+  case "$cleanup_state" in
+    PENDING)
+      [[ -d "$checkout/.git" && -f "$marker" ]] ||
+        fail "INVALID_RUNTIME: checkout or ownership marker is missing"
+      [[ "$marker" == "$checkout/.sdd-owned-checkout" ]] ||
+        fail "INVALID_RUNTIME: ownership marker path does not match checkout"
+      grep -Fqx "sdd-owned-checkout-v1" "$marker" ||
+        fail "INVALID_RUNTIME: ownership marker signature is invalid"
+      grep -Fqx "project-root=$PROJECT_ROOT" "$marker" ||
+        fail "INVALID_RUNTIME: ownership marker belongs to a different project"
+      checkout_revision=$(git -C "$checkout" rev-parse HEAD 2>/dev/null) ||
+        fail "INVALID_RUNTIME: cannot read checkout revision"
+      checkout_origin=$(git -C "$checkout" remote get-url origin 2>/dev/null) ||
+        fail "INVALID_RUNTIME: cannot read checkout origin"
+      [[ "$checkout_revision" == "$recorded_revision" ]] ||
+        fail "INVALID_RUNTIME: checkout revision does not match guide provenance"
+      [[ "$checkout_origin" == "$(markdown_value "Source repository" "$GUIDE_PATH")" ]] ||
+        fail "INVALID_RUNTIME: checkout origin does not match guide provenance"
+      ;;
+    COMPLETE)
+      [[ ! -e "$checkout" && ! -e "$marker" ]] ||
+        fail "INVALID_RUNTIME: cleaned checkout still exists"
+      ;;
+    *) fail "STALE_RUNTIME: installer cleanup state is unsupported" ;;
+  esac
 
   if [[ "$recorded_state" == "$MANIFEST_STATE" ]]; then
     printf 'CURRENT: runtime profile, provenance, skill, and manifest state match.\n'
@@ -530,7 +544,7 @@ prepare_upgrade() {
     fail "upgrade requires an exact 40-character Playbook revision in the manifest"
 
   local manifest_repository installed_marker recorded_hash actual_hash
-  local recorded_revision recorded_repository cleanup_state plan active_line
+  local recorded_revision recorded_repository cleanup_state plan active_tasks active_rows
   manifest_repository=$(markdown_value "Playbook source repository" "$MANIFEST_PATH")
   [[ -n "$manifest_repository" ]] ||
     fail "upgrade requires Playbook source repository in the manifest"
@@ -564,10 +578,9 @@ prepare_upgrade() {
 
   plan="$PROJECT_ROOT/$ADOPTION_ROOT/implementation-plan.md"
   if [[ -f "$plan" ]]; then
-    active_line=$(sed -n \
-      -e 's/^| Current task | `\([^`]*\)` |$/\1/p' \
-      -e '/| `[^`]*` | `\(IN_PROGRESS\|VERIFYING\)` |/p' "$plan" | head -n 1)
-    [[ -z "$active_line" || "$active_line" == "None" ]] ||
+    active_tasks=$(markdown_value "Active tasks" "$plan")
+    active_rows=$(awk -F'|' '$3 ~ /`(IN_PROGRESS|VERIFYING)`/ { print; exit }' "$plan")
+    [[ -z "$active_rows" && ( -z "$active_tasks" || "$active_tasks" == "None" ) ]] ||
       fail "upgrade is allowed only between tasks; active work found in ${plan#"$PROJECT_ROOT/"}"
   fi
 

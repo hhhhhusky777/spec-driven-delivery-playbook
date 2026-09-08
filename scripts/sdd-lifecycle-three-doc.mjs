@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SHA = /^[a-f0-9]{40}$/;
+const ADOPTION_STATES = new Set(["DRAFT", "INSTALLED", "BLOCKED"]);
 const UPGRADE_STATES = new Set(["NONE", "ASSESSING", "APPROVED", "APPLYING", "VALIDATING", "COMPLETE", "BLOCKED"]);
 const PLAN_STATES = new Set(["DRAFT", "READY", "IMPLEMENTING", "VALIDATING", "COMPLETE", "BLOCKED"]);
 const TASK_STATES = new Set(["PLANNED", "READY", "IN_PROGRESS", "VERIFYING", "DONE", "BLOCKED", "CANCELLED"]);
@@ -44,6 +45,7 @@ function taskRows(text) {
 function manifestErrors(text) {
   const fields = fieldMap(text);
   const errors = [];
+  if (!ADOPTION_STATES.has(fields.get("Adoption state") || "")) errors.push("manifest Adoption state is unsupported");
   if (!SHA.test(fields.get("Playbook revision") || "")) errors.push("manifest Playbook revision must be a full SHA");
   const upgrade = fields.get("Upgrade state") || "";
   if (!UPGRADE_STATES.has(upgrade)) errors.push("manifest Upgrade state is unsupported");
@@ -83,9 +85,10 @@ function planErrors(text) {
     if (!TASK_STATES.has(task.State)) errors.push(`unsupported task state: ${task.ID}/${task.State}`);
   }
   const active = tasks.filter(task => ["IN_PROGRESS", "VERIFYING"].includes(task.State));
-  if (active.length > 1) errors.push("implementation plan may have only one active task");
-  const current = fields.get("Current task") || "None";
-  if ((active[0]?.ID || "None") !== current) errors.push("Current task must match the active task row");
+  const recordedActive = (fields.get("Active tasks") || "None")
+    .split(/[,;]\s*/).filter(value => value && value !== "None").sort();
+  const actualActive = active.map(task => task.ID).sort();
+  if (recordedActive.join(",") !== actualActive.join(",")) errors.push("Active tasks must match active task rows");
   const dependencies = new Map(tasks.map(task => [task.ID, (task["Depends on"] || "None").split(/[,;]\s*/).filter(value => value && value !== "None")]));
   for (const [id, deps] of dependencies) for (const dep of deps) if (!ids.has(dep)) errors.push(`${id} depends on unknown task ${dep}`);
   const visiting = new Set();
@@ -98,6 +101,24 @@ function planErrors(text) {
     visiting.delete(id); visited.add(id);
   };
   for (const id of ids) visit(id);
+  for (const task of tasks) {
+    if (!["READY", "IN_PROGRESS", "VERIFYING"].includes(task.State)) continue;
+    for (const dep of dependencies.get(task.ID) || []) {
+      const state = tasks.find(candidate => candidate.ID === dep)?.State;
+      if (!["DONE", "CANCELLED"].includes(state)) errors.push(`${task.ID} has unfinished dependency ${dep}`);
+    }
+  }
+  const next = fields.get("Next ready task") || "None";
+  if (next !== "None" && !tasks.some(task => task.ID === next && task.State === "READY")) {
+    errors.push("Next ready task must identify a READY task");
+  }
+  const state = fields.get("State") || "";
+  if (["VALIDATING", "COMPLETE"].includes(state) && tasks.some(task => !["DONE", "CANCELLED"].includes(task.State))) {
+    errors.push(`${state} plan requires every task to be terminal`);
+  }
+  if (state === "COMPLETE" && (actualActive.length || next !== "None")) {
+    errors.push("COMPLETE plan cannot retain active or next-ready tasks");
+  }
   return errors;
 }
 
