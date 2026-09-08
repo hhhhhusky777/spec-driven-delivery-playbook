@@ -12,7 +12,7 @@ reusable-template design; [Contributing](../CONTRIBUTING.md) owns repository
 delivery. Project authorities and owner decisions must be mutually consistent.
 Do not guess between conflicting canonical sources.
 
-## Five goals and agent judgment
+## Six goals and agent judgment
 
 | Goal | Required outcome |
 | --- | --- |
@@ -21,11 +21,18 @@ Do not guess between conflicting canonical sources.
 | Key information only | Retain what decisions, verification, recovery, and maintenance require |
 | Proportional effort | Preparation, review, and records match complexity, risk, and value |
 | Agent discretion | The agent chooses methods and safe recovery within the boundaries |
+| Necessary complexity only | Every artifact, abstraction, dependency, and control earns its maintenance cost by protecting a required outcome |
 
 These are outcome constraints, not a prescribed path. A specific method is
 mandatory only when another valid method would threaten a named protected
 property. Reuse applicable authority instead of asking for it again; never
 broaden it or treat it as acceptance of unseen results.
+
+Complexity is justified by an accepted requirement, a named invariant, or
+evidence of a real recurring need. Prefer the smallest maintainable solution
+that satisfies those obligations. Hypothetical flexibility, speculative
+frameworks, duplicate records, and automation that costs more than the risk it
+controls are not required completeness.
 
 The [error-handling framework](error-handling.md) owns diagnosis, recovery, and
 escalation. Other documents link to it and state only local consequences.
@@ -94,6 +101,15 @@ run this repository's test suite in those projects.
 External links are advisory because remote availability is outside repository
 control. A changed claim still needs a stable primary source when practical.
 
+Validation matches the change. Documentation changes receive the complete
+documentation suite and semantic review; checker, installer, state, security,
+and compatibility changes also receive focused positive, negative, boundary,
+and recovery evidence for the behavior they alter. Tests use isolated,
+deterministic inputs and preserve the first meaningful failure. A rerun may
+diagnose an intermittent result, but it does not erase failed required
+evidence. Unmeasured coverage, performance, time, or cost remains unknown, not
+zero.
+
 ## Tooling boundaries
 
 - Node.js 24 and exact locked npm dependencies are the source-tooling runtime.
@@ -106,7 +122,7 @@ control. A changed claim still needs a stable primary source when practical.
 
 ## Review checklist
 
-- [ ] The five goals are satisfied without unnecessary instructions or records.
+- [ ] The six goals are satisfied without unnecessary instructions or records.
 - [ ] Changed claims, authorities, terminology, links, diagrams, examples, and
       README are mutually consistent.
 - [ ] Normative content has one canonical owner and no competing restatement.
