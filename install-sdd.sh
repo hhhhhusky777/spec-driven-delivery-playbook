@@ -299,7 +299,30 @@ refresh_guide_hash() {
   mv "$temporary" "$file"
 }
 
+validate_runtime_boundary() {
+  local checkout_root="$RUNTIME_DIRECTORY/checkouts" resolved
+  [[ ! -L "$RUNTIME_DIRECTORY" && ! -L "$checkout_root" ]] ||
+    fail "INVALID_RUNTIME: project runtime boundary must not be a symbolic link"
+  if [[ -d "$RUNTIME_DIRECTORY" ]]; then
+    resolved=$(cd "$RUNTIME_DIRECTORY" && pwd -P)
+    [[ "$resolved" == "$RUNTIME_DIRECTORY" ]] ||
+      fail "INVALID_RUNTIME: project runtime resolves outside the physical worktree"
+  fi
+  if [[ -d "$checkout_root" ]]; then
+    resolved=$(cd "$checkout_root" && pwd -P)
+    [[ "$resolved" == "$checkout_root" ]] ||
+      fail "INVALID_RUNTIME: checkout root resolves outside the physical worktree"
+  fi
+}
+
+prepare_runtime_storage() {
+  validate_runtime_boundary
+  mkdir -p "$RUNTIME_DIRECTORY/checkouts"
+  validate_runtime_boundary
+}
+
 validate_runtime() {
+  validate_runtime_boundary
   [[ -f "$GUIDE_PATH" ]] || fail "STALE_RUNTIME: no generated guide found"
 
   local recorded_project recorded_generator recorded_schema recorded_profile recorded_state recorded_prior_state
@@ -396,6 +419,7 @@ validate_runtime() {
 }
 
 validate_upgrade_runtime() {
+  validate_runtime_boundary
   [[ -f "$UPGRADE_GUIDE_PATH" ]] ||
     fail "STALE_UPGRADE_RUNTIME: no generated upgrade guide found"
 
@@ -468,6 +492,7 @@ validate_upgrade_runtime() {
 }
 
 cleanup_checkout() {
+  validate_runtime_boundary
   local guides=() guide
   [[ -f "$UPGRADE_GUIDE_PATH" ]] && guides+=("$UPGRADE_GUIDE_PATH")
   [[ -f "$GUIDE_PATH" ]] && guides+=("$GUIDE_PATH")
@@ -654,7 +679,7 @@ prepare_upgrade() {
 
   local staging_directory checkout final_directory marker resolved_revision resolved_repository
   local skill_source skill_destination
-  mkdir -p "$RUNTIME_DIRECTORY/checkouts"
+  prepare_runtime_storage
   staging_directory=$(mktemp -d "$RUNTIME_DIRECTORY/checkouts/.staging.XXXXXX")
   checkout="$staging_directory/repository"
   FAILED_UPGRADE_TEMP_DIRECTORY=$staging_directory
@@ -806,7 +831,7 @@ fi
 
 ensure_runtime_excludes
 
-mkdir -p "$RUNTIME_DIRECTORY/checkouts"
+prepare_runtime_storage
 TEMP_DIRECTORY=$(mktemp -d "$RUNTIME_DIRECTORY/checkouts/.staging.XXXXXX")
 PLAYBOOK_CHECKOUT="$TEMP_DIRECTORY/repository"
 

@@ -416,6 +416,17 @@ test("runtime validation rejects a marker bound to a different worktree", async 
   assert.match(validation.stderr, /ownership marker belongs to a different worktree/);
 });
 
+test("installer rejects a project runtime symlink that escapes the worktree", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createTargetProject(t);
+  const external = await temporaryDirectory(t, "sdd external runtime ");
+  await symlink(external, path.join(project, ".sdd-runtime"), "dir");
+
+  const result = runInstaller(project, ["--repository", source.repository]);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /project runtime boundary must not be a symbolic link/);
+});
+
 test("upgrade prepares a newer immutable candidate without changing the active runtime", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createInstalledProject(t, source);
