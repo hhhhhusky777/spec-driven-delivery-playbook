@@ -49,7 +49,7 @@ accepted installation.
 - [What the playbook gives you](#what-the-playbook-gives-you)
   - [Try it in a project](#try-it-in-a-project)
 - [Understand the model](#understand-the-model)
-  - [Five core goals](#five-core-goals)
+  - [Six core goals](#six-core-goals)
   - [Three durable documents](#three-durable-documents)
   - [Where evidence lives](#where-evidence-lives)
 - [Explore the features](#explore-the-features)
@@ -76,10 +76,10 @@ accepted installation.
 
 ## Understand the model
 
-### Five core goals
+### Six core goals
 
-The canonical [documentation quality policy](docs/documentation-quality-policy.md#five-goals-and-agent-judgment)
-defines five goals that apply across adoption, design, implementation, review,
+The canonical [documentation quality policy](docs/documentation-quality-policy.md#six-goals-and-agent-judgment)
+defines six goals that apply across adoption, design, implementation, review,
 recovery, and cleanup:
 
 | Goal | Required outcome |
@@ -89,6 +89,7 @@ recovery, and cleanup:
 | Key information only | Retain what decisions, verification, recovery, and maintenance require |
 | Proportional effort | Match preparation, review, and records to complexity, risk, and value |
 | Agent discretion | Let the agent choose methods and safe recovery inside the boundaries |
+| Necessary complexity only | Add artifacts, abstractions, dependencies, and controls only when they protect a required outcome |
 
 These goals are constraints on the result, not a script. Project policies and
 owner decisions remain authoritative, but routine engineering choices stay
@@ -100,6 +101,7 @@ flowchart LR
     K["Key information"] --> O
     P["Proportional effort"] --> O
     A["Agent discretion"] --> O
+    N["Necessary complexity"] --> O
     O --> D["Efficient and reliable delivery"]
 ```
 

@@ -9,7 +9,9 @@ description: Deliver work in an adopted SDD project using its manifest, whiteboa
 
 Deliver the requested result with clear boundaries, stable outcomes, key
 information only, proportional effort, and enough agent discretion to fit the
-project. Repository policies and explicit owner decisions remain authoritative.
+project. Apply necessary complexity only: every added artifact, abstraction,
+dependency, or control must protect the accepted outcome or a named invariant.
+Repository policies and explicit owner decisions remain authoritative.
 
 ## Durable model
 

@@ -43,6 +43,9 @@ This is the only active-delivery state authority.
 - Exactly three durable templates provide complete, proportional prompts for
   project adoption, solution design, and implementation/delivery state without
   recreating redundant documents or local review history.
+- The documentation audit retains necessary-complexity guidance, behavioral
+  readiness calibration, honest optional efficiency observations, and
+  uncertain-effect safety without restoring obsolete guides or fixed routes.
 - Each independent reviewer reports whether the introduction creates interest,
   whether the complete guide is convincing enough to try, and whether any
   unclear detail would cause questions or hesitation.
@@ -54,8 +57,8 @@ This is the only active-delivery state authority.
 | Attention | Summary |
 | --- | --- |
 | Tasks and outcomes | T01 delivered the complete README and Apache-2.0 permission in PR #72; T02 restores complete information inside exactly three templates |
-| Design consistency | D01-D09 are mapped; no unexplained task or known gap |
-| Important changes | Reader-facing guidance, licensing, and richer manifest/whiteboard/plan templates; no installer or runtime behavior change |
+| Design consistency | D01-D11 are mapped; no unexplained task or known gap |
+| Important changes | Reader-facing guidance, licensing, richer three-document templates, and compact preservation of still-valid policy outcomes; no installer or runtime behavior change |
 | Validation | Markdown, internal links, lifecycle, Mermaid, whitespace, canonical Apache-2.0 match, and all 29 tests passed locally |
 | Risks or open decisions | Completeness must not recreate duplicate status, prescribed internal steps, or PR evidence; no owner decision remains |
 | Decision requested | Review the completed PR before merge |

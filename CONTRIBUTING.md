@@ -3,7 +3,7 @@
 ## Delivery model
 
 This repository follows the playbook's
-[five goals](docs/documentation-quality-policy.md#five-goals-and-agent-judgment).
+[six goals](docs/documentation-quality-policy.md#six-goals-and-agent-judgment).
 The agent chooses a proportional route within the boundaries below.
 
 | Authority | Canonical owner |
