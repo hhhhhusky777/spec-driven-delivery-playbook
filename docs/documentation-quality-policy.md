@@ -1,545 +1,124 @@
 # Documentation Quality and Testing Policy
 
-## Optional batched route
+This policy owns the repository's documentation outcomes. It applies to
+Markdown, templates, examples, documentation tooling, and CI. Changes take
+effect only after reviewed merge.
 
-An explicitly adopted v3 batch may satisfy artifact-level review obligations
-in one exact coherent package. All semantic inventory, tests, retained reviewers
-and applicable human acceptance remain required. The linked contract owns the
-batch cadence, table-first brief and prospective PR evidence retention; ordinary
-unbatched review continues below.
+## Authority
 
-See [Batched review and recovery](../docs/batch-review-and-recovery.md) for authority, evidence and recovery
-requirements. This route takes effect only through reviewed project adoption.
+Legal, security, and upstream contracts take precedence. This policy owns
+documentation quality; [Template Governance](template-governance.md) owns
+reusable-template design; [Contributing](../CONTRIBUTING.md) owns repository
+delivery. Project authorities and owner decisions must be mutually consistent.
+Do not guess between conflicting canonical sources.
 
-This policy governs documentation and reusable template changes in this
-repository. It also defines the minimum documentation-quality prompts that the
-test-strategy template carries into an instantiated project.
+## Five goals and agent judgment
 
-## 1. Control and authority
-
-| Field | Value |
+| Goal | Required outcome |
 | --- | --- |
-| Status | Active on `main`; changes take effect only after reviewed merge |
-| Owner | Playbook maintainers |
-| Applies to | Markdown, templates, examples, documentation tooling, and CI |
-| Automated gate | `.github/workflows/documentation-quality.yml` |
-| Local entry point | `npm run docs:all` |
-| External-link evidence | `npm run docs:links:external` — advisory |
-| Review cadence | Quarterly and on the events in Section 6 |
-| Last source review | 2026-08-22 |
+| Clear boundaries | Scope, authority, protected invariants, and evidence are explicit |
+| Stable outcomes | The agreed result is demonstrated regardless of execution method |
+| Key information only | Retain what decisions, verification, recovery, and maintenance require |
+| Proportional effort | Preparation, review, and records match complexity, risk, and value |
+| Agent discretion | The agent chooses methods and safe recovery within the boundaries |
 
-The authority order is:
+These are outcome constraints, not a prescribed path. A specific method is
+mandatory only when another valid method would threaten a named protected
+property. Reuse applicable authority instead of asking for it again; never
+broaden it or treat it as acceptance of unseen results.
 
-1. Legal, security, and upstream contractual obligations.
-2. This policy for repository documentation quality and testing.
-3. [Template Governance](template-governance.md) for template ownership and
-   lifecycle.
-4. [Contributing](../CONTRIBUTING.md) for the contributor workflow.
-5. Individual template instructions and worked examples.
+The [error-handling framework](error-handling.md) owns diagnosis, recovery, and
+escalation. Other documents link to it and state only local consequences.
 
-Resolve conflicts at the higher authority. Do not copy this policy into every
-template or generated artifact.
+## Required quality outcomes
 
-### Five goals and agent judgment
-
-These goals govern how instructions are written and applied throughout delivery.
-Skills and templates route to this section instead of defining competing goals.
-
-| Goal | Expected outcome |
+| Outcome | Evidence expected |
 | --- | --- |
-| Clear boundaries | Identify approved scope, authority, protected invariants and required evidence |
-| Stable outcomes | Demonstrate the agreed result regardless of the chosen execution approach |
-| Key information only | Retain information needed for decisions, verification, recovery and maintenance |
-| Proportional effort | Match preparation, review and records to actual complexity, risk and value |
-| Agent discretion | Leave methods, sequencing and safe recovery to the agent within those boundaries |
+| Correctness | Claims agree with canonical project sources, implementation, or cited primary sources |
+| Clarity | A reasonable reader can identify the outcome, owner, state, and required decision |
+| Consistency | Authorities, terms, states, links, diagrams, examples, and README agree |
+| Canonical ownership | Every normative rule has one owner; other documents link instead of restating it |
+| Honest evidence | Proposals, assumptions, observations, checks, and approvals are not confused |
+| Currentness | Version-sensitive claims and affected dependents are reviewed together |
+| Safe content | No credentials, private project data, or unintended local paths are committed |
 
-Distinguish mandatory outcomes and controls from recommended methods and examples.
-Prescribe a particular method only when deviation threatens a concrete protected
-property; explain that property. Several valid implementation choices are not
-by themselves ambiguity requiring a human decision. Reuse current, applicable
-authorization rather than repeatedly asking for the same decision. This does
-not extend its scope or supply acceptance of unseen results.
+Git and pull requests preserve prior versions and detailed delivery evidence.
+The maintained tree keeps current reusable guidance and active feature state,
+not duplicate history or successful-tool transcripts.
 
-Canonical policies, contracts and owner decisions must be mutually consistent
-for the applicable scope and version. Where precedence and approved intent are
-clear, repair a subordinate inconsistency within authority. Do not guess between
-conflicting canonical owners. Skills and generated guides execute these
-authorities; they do not introduce a separate policy layer.
+## Review and human brief
 
-The existing [error-handling framework](batch-review-and-recovery.md#recovery-without-restarting-everything)
-owns diagnosis, recovery, isolation and escalation. Consumers link to it and
-retain only necessary local consequences, not restated error-handling rules.
+Every material candidate receives exact-candidate self-review, review by two
+isolated agents, and required human semantic acceptance. The pull request owns
+findings, revisions, checks, acceptance, and merge evidence. Agents may correct
+non-semantic mistakes and rerun checks within authority; a changed candidate
+returns to the same reviewer seats.
 
-### Required review evidence
+At each human gate, present a concise table because the human is not expected
+to reread every document:
 
-> [!IMPORTANT]
-> Automation can prove structure and known mechanical rules. It cannot approve
-> factual correctness, clarity, completeness, or methodological fitness. Every
-> material documentation change therefore requires automated evidence,
-> fresh-context agent review, and human semantic review.
-
-Every review gate requires exact-candidate
-[self-review](../templates/reviews/agent-self-review.md), followed by the
-[two-reviewer protocol](../templates/reviews/fresh-context-agent-review.md).
-Those owners define checks, isolation, findings and revised-candidate handling.
-Material documentation requires human semantic acceptance; this policy does
-not delegate that authority to agents or automated checks.
-
-## 2. Required semantic review
-
-Apply the canonical review protocol's finding dispositions and disagreement
-route alongside the documentation-specific checks below.
-
-### 2.1 Correctness and evidence
-
-- Compare changed statements with their governing repository contract, current
-  implementation when relevant, and authoritative external source.
-- Distinguish normative rules, recommendations, assumptions, proposals,
-  examples, and dated observations.
-- Cite a primary source for an external methodology or tooling claim. Record the
-  review date when freshness affects the decision.
-- Never claim that implementation, review, tests, or production evidence exists
-  when it was not produced.
-- Explain important trade-offs, applicability limits, and worst cases. Do not
-  present one context-dependent practice as universally correct.
-
-### 2.2 Clarity, simplicity, and accessibility
-
-- Lead with the outcome, owner, state, or required action.
-- Prefer short sentences, familiar words, defined terms, and one stable term for
-  one concept.
-- Write requirements so a reasonable reviewer reaches one interpretation.
-  Replace vague pronouns, undefined scope, and words such as “usually” or
-  “appropriate” with an explicit condition when they affect behavior.
-- Use headings, lists, tables, and diagrams only when they improve navigation or
-  understanding. Provide a text explanation for material diagram meaning.
-- Use descriptive link text and a logical heading hierarchy. Add alternative
-  text to informative images.
-- Keep necessary safety and correctness detail; concision must not erase a
-  boundary, exception, failure response, or owner.
-
-### 2.3 Cross-document consistency
-
-- Identify the canonical owner of every changed normative rule.
-- Search all templates, examples, indexes, workflow diagrams, and policies that
-  reference the changed term, state, gate, path, or responsibility.
-- Reconcile contradictions at their owning authority. Mark dependents stale or
-  update them in the same change when required.
-- Verify inbound and outbound links, terminology, lifecycle states, task IDs,
-  examples, and migration/adoption guidance.
-- If a workflow route, state, artifact trigger, or review gate changes, update
-  its diagram, normative workflow text, template fields, and worked example
-  together.
-- Treat README as a maintained user-facing contract summary. In the same PR,
-  reconcile its overview, procedures and diagrams with changed behavior, or
-  record a specific no-impact explanation after inspecting those sections.
-  A link to new guidance does not resolve contradictory existing instructions.
-  Label legacy and opt-in routes explicitly; preserve historical examples as
-  history rather than rewriting their recorded outcomes. Reviewers verify this
-  reconciliation before approval; syntax checks cannot prove semantic agreement.
-
-### 2.4 Canonical ownership and emphasis
-
-- State a normative rule once in its canonical policy or contract.
-- Elsewhere, link to the owner and summarize only the local consequence. Label a
-  non-normative summary when a reader might mistake it for the full rule.
-- Remove redundant passages that add no local decision, context, or evidence.
-- Emphasize an important rule with a descriptive heading, concise bold label, or
-  supported Markdown callout. Do not repeat it merely to make it visible.
-- A generated document may repeat the minimum context needed to stand alone,
-  but it must not create a competing version of a shared rule.
-
-For reviewed source, prefer retained Git base/candidate revisions plus concise
-findings, resolutions, acceptance and gate results over another full-file copy.
-Verify the exact bytes are retrievable: a digest alone cannot recover content.
-Retain unique non-Git/failure evidence and any local snapshot the active checker
-actually consumes; this guidance does not add a Git resolver to that checker.
-Do not prune historical evidence or weaken applicable retention periods merely
-to reduce size. Record what, why, evidence and unresolved risk, not every tool's
-successful output. PR versus non-PR receipt retention follows the
-[canonical retention contract](batch-review-and-recovery.md#pr-publication-and-retention).
-
-### 2.5 Instantiated and generated documents
-
-Content created from a template must pass the same review as a template change:
-
-- replace all applicable placeholders and remove template-only instructions;
-- use verified project names, paths, contracts, owners, environments, states,
-  and evidence rather than generic or invented values;
-- apply active project policies and explain feature-specific consequences;
-- resolve or explicitly mark every required non-applicable section;
-- preserve accepted history, rejected alternatives, and review state; and
-- run the project's documentation checks in addition to any product-code gates.
-
-Generation is not review. A producing agent or automation does not approve its
-own artifact. It must perform and record self-review, then obtain fresh-context
-review and human approval before the artifact passes its review gate.
-
-### 2.6 Attention and reviewability gate
-
-At every human review gate, the coordinator must present a current, concise
-table in the handoff or PR description before requesting acceptance. This
-human-facing brief is required even when the optional detailed attention map
-below is unnecessary. Do not assume the human will read every source document.
-Agents still inspect the complete candidate; the brief supports informed human
-judgment and cannot replace independent review or hide a material concern.
-
-| Required brief content | What the human must see |
+| Human need | Required content |
 | --- | --- |
-| Acceptance scope | Outcome, scope/non-scope, exact candidate and source versions, and the action acceptance authorizes |
-| Key decisions | Important choices and consequences; alternatives and recommendation for unsettled choices |
-| Risks and limits | Compatibility/security/operational risks, exceptions, deferred obligations, assumptions and owners |
-| Evidence | Passed checks and their scope, failed/unrun checks, uncertainty and residual limitations |
-| Required response | DECISION versus ATTENTION, specific questions or exact-package acceptance; explicitly state when no open design decisions remain |
+| Acceptance scope | Outcome, scope/non-scope, exact candidate, and authorized action |
+| Decisions | Important choices, consequences, unsettled alternatives, and recommendation |
+| Attention | Risks, compatibility effects, assumptions, exceptions, deferred obligations, and owners |
+| Evidence | Passed checks with scope, failed or unrun checks, uncertainty, and residual limits |
+| Response | Exact decision requested, or explicit confirmation that none remains |
 
-Include the following phase-specific content in that same brief:
+Phase-specific additions:
 
-| Existing gate | Required phase-specific summary |
+| Gate | Additional summary |
 | --- | --- |
-| Adoption acceptance | Discovered system contracts and sources; policies reused, changed or added and why; gaps/conflicts, exceptions and deferred items; owners; test/review/merge rules; pin/runtime and activation status |
-| Planning acceptance | Whiteboard design key points together with task IDs, brief work/outcome per task, dependency/order, validation and PR boundaries; show design-to-task alignment and gaps |
-| Implementation PR acceptance | Delivered behavior, deviations from accepted design/plan, compatibility and operational effects, evidence and exact merge target |
-| Validation and closure | Planned versus actual outcomes, unresolved follow-ups and evidence limits; versioned PR evidence plus exact archive/reset targets, authority and target proof for the installed schema |
-| Upgrade acceptance | Old/new source pins, contract/policy impact, migration, rollback, validation and explicit cutover authority |
+| Adoption | Discovered authorities and contracts, reused or changed policies, gaps, pin/runtime state, and activation boundary |
+| Planning | Whiteboard design points mapped to task outcomes, dependencies, validation, PR boundaries, and gaps |
+| Implementation PR | Delivered behavior, deviations, compatibility/operational effects, validation, and merge target |
+| Validation and cleanup | Planned versus actual outcomes, unresolved work, cleanup ownership, and target proof |
+| Upgrade | Old/new pins, reusable-document impact, migration, rollback, validation, and cutover authority |
 
-At combined planning review, present a comparison table with columns
-`Design point / source`, `Task(s) and brief work`, `Validation`, and
-`Consistency / gap`. Include uncovered design points, tasks without a design
-basis, deviations and justified non-code obligations—not only successful
-mappings. Task presence is not proof of implementation or design fulfillment.
-The existing batched boundary is unchanged: no separate whiteboard review stop
-is introduced. Ordinary projects retain their adopted review boundaries.
+The brief supports human judgment but does not replace complete agent review or
+canonical sources. It must be reconciled after candidate changes.
 
-Reconcile the brief after candidate changes and before the human handoff.
-Reviewers independently compare it with the complete candidate and report
-omissions or misleading statements as findings. A missing, stale or materially
-incomplete brief blocks the request for human acceptance until corrected;
-corrections stay within the existing review session. Source links offer detail,
-not a substitute for surfacing important information. Keep one canonical brief
-for the gate and link it from other records. Automated syntax checks alone do
-not establish completeness or semantic consistency.
+## Automated repository gates
 
-Use the additional detailed attention map when a document or change contains multiple material decisions,
-normative obligations, risks, exceptions, lifecycle states, open questions, or
-reviewer specialties. Do not use a fixed line, word, or page count as the
-trigger; generated text, tables, diagrams, and short high-risk contracts have
-different review costs.
+The source repository runs `npm run docs:all`. It checks Markdown, internal
+links and headings, Mermaid syntax, fences, placeholders, likely secrets,
+private paths, the three-document model, and focused installer/lifecycle
+behavior. New blocking behavior needs a regression that proves it fails.
+Diagnostics identify the affected file and actionable reason; CI never rewrites
+content.
 
-Place a concise attention map near the beginning of the artifact or pull-request
-description. It must identify:
+These checks protect the playbook source. Adopting projects use their own
+repository checks and installer runtime validation; upgrade does not install or
+run this repository's test suite in those projects.
 
-- the outcome and scope;
-- new or changed decisions and obligations, using stable IDs when available;
-- blockers, unresolved questions, material risks, and exceptions;
-- the required reviewer or specialty for each material item; and
-- a recommended reading order with links to the canonical sections and evidence.
+External links are advisory because remote availability is outside repository
+control. A changed claim still needs a stable primary source when practical.
 
-The map is navigation, not a substitute authority. It must not paraphrase a rule
-in a way that can compete with the canonical text, omit a material item merely
-to stay short, or claim approval/evidence that does not exist.
+## Tooling boundaries
 
-The reviewer performs two passes:
+- Node.js 24 and exact locked npm dependencies are the source-tooling runtime.
+- GitHub Actions use immutable commit SHAs, read-only permissions, and no
+  persisted credentials.
+- New dependencies or third-party actions require necessity, maintenance,
+  license, provenance, pinning, and replacement assessment.
+- Secret scanning is defense in depth; exposed credentials must be revoked or
+  rotated even after removal from Git.
 
-1. Independently inventory material decisions, obligations, risks, exceptions,
-   and blockers from the complete artifact/diff; reconcile that inventory with
-   the attention map.
-2. Review the mapped source sections and evidence in the stated dependency
-   order, recording `APPROVED`, `CHANGES_REQUESTED`, or `NOT_APPLICABLE` for
-   every material item.
+## Review checklist
 
-A reviewer must not approve from the map alone. If the full artifact or change
-still cannot be reviewed as one coherent unit, split it into dependency-ordered,
-independently reviewable artifacts or pull requests and record their links and
-gates.
+- [ ] The five goals are satisfied without unnecessary instructions or records.
+- [ ] Changed claims, authorities, terminology, links, diagrams, examples, and
+      README are mutually consistent.
+- [ ] Normative content has one canonical owner and no competing restatement.
+- [ ] The human brief exposes every material decision, risk, limit, and unrun
+      gate for the current phase.
+- [ ] Compatibility, migration, and historical impact are explicit.
+- [ ] Applicable semantic review and `npm run docs:all` pass.
 
-## 3. Automated blocking checks
-
-Every relevant pull request and push to `main` runs the following gates:
-
-| Check | Implementation | Required failure proof |
-| --- | --- | --- |
-| Markdown structure/style | `markdownlint-cli2` with repository configuration | Invalid Markdown fails |
-| Relative files and Markdown headings | Repository Node.js checker | Missing file and anchor fail |
-| SDD lifecycle and template conformance | Versioned lifecycle schema and checker | Illegal state/dependency/template combinations fail |
-| Fenced code blocks | Repository Node.js checker | Unclosed fence fails |
-| Mermaid syntax | Official `mermaid.parse` API | Invalid diagram fails |
-| Template placeholders | Repository Node.js checker | Placeholder outside `templates/` fails |
-| Likely secrets | Repository Node.js checker | Representative credential pattern fails |
-| Private/local paths | Repository Node.js checker | Representative workstation path fails |
-
-Exact absolute paths are permitted only in a structured reset-inventory
-`WORKTREE` or `RUNTIME` row, where the destructive-safety contract requires the
-identity, ownership evidence and authorized operation. The same value in prose,
-a `FILE` row or any unrelated table remains a blocking local-path finding.
-
-The regression suite creates intentional failures at runtime; it does not commit
-real credentials, private paths, or permanently invalid fixtures. A new blocking
-rule is incomplete until it has a negative regression test and one repository
-pass case.
-
-Diagnostics must include the affected file, line, rule, and actionable reason.
-CI never rewrites documentation.
-
-The lifecycle gate validates structured control fields and semantic markers,
-not prose inference. It enforces dependency-scoped blockers, transitive
-freshness, write scope, plan/task readiness, and selected template-mode
-requirements. Future `PLANNED` tasks may remain `SPEC_PENDING`; tasks marked
-`READY`, `NEXT`, or active require `Spec state: COMPLETE` and a matching task
-specification marker. Automation checks those structured facts; it does not
-infer prose quality or require one internal design when multiple implementations
-satisfy the same approved contracts.
-
-The scripts and regression suite in this repository verify the playbook itself.
-They are not installed into adopting projects and are not project-agent upgrade
-requirements. An adopting project uses its own documentation and repository
-checks to validate synchronized reusable files; the regenerated SDD runtime is
-validated by the installer.
-
-The likely-secret check is defense in depth for documentation changes, not a
-replacement for repository or organization secret scanning. If a credential is
-ever committed, revoke/rotate it before treating removal as complete.
-
-## 4. Advisory external-link checks
-
-External links are checked with bounded concurrency, a 10-second request
-timeout, two retries for transient network/timeout, rate-limit, and server
-responses, and normal redirect handling. Failures report the source and remote
-result but do not block a pull request because remote outages, authentication,
-rate limits, and bot protection are not repository defects.
-
-An exclusion must be a narrow URL pattern in
-`config/documentation-quality.json` with a reviewed reason in the pull request.
-Do not exclude a domain merely because one page is unstable. A maintainer
-classifies a repeated advisory failure as:
-
-- broken or moved source — update the link and re-check the claim;
-- temporarily unavailable — retain with dated evidence and recheck;
-- authentication/bot protected — replace with a stable primary source when
-  practical; or
-- obsolete methodology — route a reviewed policy/template update.
-
-## 5. Tool and workflow dependency policy
-
-- Node.js 24 is the documentation-tool runtime.
-- Direct npm dependencies use exact versions and `package-lock.json`; CI uses
-  `npm ci --ignore-scripts`.
-- GitHub Actions use full immutable commit SHAs with a version comment. Current
-  workflows use GitHub-owned actions only. Third-party actions are denied by
-  default and require a recorded exception under Section 8.
-- Workflow permissions are read-only, credentials are not persisted, no secrets
-  are exposed, and pull-request content never runs through
-  `pull_request_target`.
-- Dependabot proposes grouped npm and GitHub Actions updates monthly. A
-  maintainer reviews release notes, security impact, lockfile changes, negative
-  regression tests, repository output, and upstream compatibility before merge.
-- Security advisories, broken CI, or unsupported runtimes trigger immediate
-  review; routine version availability alone does not justify an unreviewed
-  upgrade.
-- New dependencies or third-party actions require a necessity, maintenance,
-  license, provenance, pinning, and replacement/removal assessment.
-
-The official Mermaid parser validates every repository diagram in a minimal
-`jsdom` environment without launching Chromium. This is the selected equivalent
-to Mermaid CLI because the repository does not need image rendering in CI and
-should not carry Puppeteer/Chromium cost or sandbox risk merely to parse
-diagrams.
-
-## 6. Freshness and methodology review
-
-Maintainers review this policy, tool pins, and external methodology references
-quarterly. Review sooner when:
-
-- an authoritative source changes a relied-on recommendation or contract;
-- a dependency release changes supported syntax or behavior;
-- a security advisory affects an action, npm dependency, or CI runtime;
-- a link repeatedly fails or redirects to materially different content;
-- a retrospective exposes ambiguity, duplication, stale guidance, or a missed
-  documentation defect; or
-- a generated project artifact repeatedly needs an undocumented workaround.
-
-Freshness means reassessing applicability, not automatically copying the newest
-external wording. Record the source date, relevant change, trade-off, affected
-documents, compatibility/adoption impact, and reviewer. Preserve historical
-records; update active authorities through their normal review gates.
-
-## 7. Local and CI commands
-
-```bash
-npm ci --ignore-scripts
-npm run docs:all
-npm run docs:links:external
-```
-
-`docs:all` runs every blocking gate and negative regression test. The external
-link command returns a non-zero status when advisory failures exist so local and
-CI output stays visible; the workflow marks only that step non-blocking.
-
-The workflow runs on relevant pull-request and `main` changes, monthly schedule,
-and manual dispatch. Relevant paths include Markdown, policy/tool configuration,
-dependency locks, documentation scripts/tests, and the workflow itself.
-
-## 8. Failure handling and exceptions
-
-For every exception, apply the shared
-[exception triage and upstream reporting contract](batch-review-and-recovery.md#exception-triage-and-upstream-reporting).
-The layer classification below diagnoses documentation failures; the shared
-contract determines whether a confirmed playbook gap needs an upstream issue.
-Issue filing does not replace the exception approval requirements here.
-
-Treat a failed documentation test as evidence, not automatically as a test bug:
-
-1. Record the command, observed diagnostic, changed statement/file, and expected
-   rule.
-2. Check the canonical policy, source, checker design, configuration, and
-   smallest reproducer.
-3. Classify the result as content defect, policy/design conflict, stale source,
-   configuration defect, checker/test defect, environment/external failure, or
-   unresolved.
-4. Fix the responsible layer, add or update the regression test, and rerun the
-   complete blocking suite.
-
-Do not weaken a checker, add a broad allowlist, change an assertion, or duplicate
-content merely to make CI green.
-
-An exception records the exact rule/file, evidence, reason, worst case, narrow
-allowlist or compensating review, owner/approver, expiry, and removal condition.
-External advisory failures do not require a gate exception, but their
-classification belongs in review evidence when they affect a changed source.
-
-## 9. Review checklist
-
-- [ ] Every changed claim is correct and traceable to its governing source.
-- [ ] Wording is clear, concise, accessible, and has no material ambiguity.
-- [ ] Cross-document owners, states, terms, links, diagrams, and examples agree.
-- [ ] README overview, procedures and diagrams match the changed behavior, or
-      the PR records a reviewed, section-specific no-impact explanation.
-- [ ] Normative content has one owner; summaries link rather than compete.
-- [ ] Instantiated/generated content is project-specific and claims only real
-      evidence.
-- [ ] When the attention gate applies, its map matches an independent inventory
-      of material items and every item has a recorded reviewer disposition.
-- [ ] The human-facing brief is current, complete for this phase, distinguishes
-      decisions from attention, and states exact acceptance scope and unverified
-      evidence; planning shows design points alongside task summaries and gaps.
-- [ ] Freshness, compatibility, adoption, and historical-record impact are
-      addressed.
-- [ ] Every new blocking rule has an intentional failure regression test.
-- [ ] `npm run docs:all` passes and external-link advisories are classified.
-
-## 10. Methodology and tooling references
-
-These sources inform this repository policy but do not override it:
+## References
 
 - [Google developer documentation style guide](https://developers.google.com/style)
-- [Google guidance for accessible documentation](https://developers.google.com/style/accessibility)
-- [Microsoft guidance for simple words and concise sentences](https://learn.microsoft.com/en-us/style-guide/word-choice/use-simple-words-concise-sentences)
-- [Microsoft guidance for scannable content](https://learn.microsoft.com/en-us/style-guide/scannable-content/)
-- [Google guidance for paragraph structure and critical information](https://developers.google.com/style/paragraph-structure)
-- [Google guidance for navigating a change in review](https://google.github.io/eng-practices/review/reviewer/navigate.html)
+- [Microsoft guidance for concise writing](https://learn.microsoft.com/en-us/style-guide/word-choice/use-simple-words-concise-sentences)
+- [Google engineering review guidance](https://google.github.io/eng-practices/review/reviewer/)
 - [GitHub Actions secure-use reference](https://docs.github.com/en/actions/reference/security/secure-use)
 - [Mermaid syntax validation API](https://mermaid.js.org/config/usage.html#syntax-validation-without-rendering)
-- [npm package-lock documentation](https://docs.npmjs.com/cli/configuring-npm/package-lock-json)
-
-## 11. Project tooling test strategy
-
-This supplement is proposed under the owner-authorized
-[installation batch](../.github/spec-driven-delivery/installation-batch.md).
-It becomes active after final acceptance and reviewed merge of that exact
-package, as required by Section 1. Sections 1-10
-retain their existing authority; this section supplies missing Node/Bash
-tooling decisions, rather than creating another test policy.
-
-### Scope, levels, and coverage
-
-Production tooling means `install-sdd.sh` and executable `scripts/` code.
-Tests and fixtures are test code; dependencies and machine-generated runtime
-files are excluded from production coverage. Local macOS and CI Linux use
-Node.js 24, Bash, Git, and locked npm dependencies. Tests needing a missing
-platform capability must report the unsupported boundary explicitly.
-
-| Change | Required evidence | Scope/claim |
-| --- | --- | --- |
-| Documentation only | Full docs:all and semantic review | No runtime behavior claim |
-| Test or harness | Full regression plus intentional failure proof for changed assertions | Test detects the failure it claims |
-| Checker/configuration | Focused positive/negative fixtures and full regression | Changed input, validation, and error paths |
-| Installer/runtime | Isolated subprocess/Git/filesystem scenarios and full regression | Install, resume, validation, cleanup, and upgrade paths affected |
-| Security/state/compatibility | Boundary/fault tests plus owner review | Ownership, scope escape, stale pin, partial state, and incompatible transitions as applicable |
-
-Unit tests cover pure parsing and local functions; contract tests cover schema
-and documentation invariants; integration tests exercise real child processes,
-temporary repositories, and filesystem effects. Fake remote repositories and
-HTTP responses are permitted for deterministic failures; they do not prove
-live authentication, network, or GitHub protection. The installer lifecycle
-suite is tooling end-to-end evidence. Product-service smoke, billing, database,
-and production-topology tests are inapplicable to this repository.
-
-Every changed observable branch, required rejection, and recovery path must
-map to a named assertion in the PR/plan evidence. Uncovered material paths
-require a documented exception. This is behavioral coverage, not a claimed
-line-coverage percentage. Numeric aggregate and line/branch coverage are
-informational: no percentage threshold is imposed in this initial strategy.
-The denominator for any future metric must name the changed-file/diff scope,
-exclusions, runtime, and collection command; aggregate results cannot replace
-changed-path evidence. Characterize existing behavior before refactoring it.
-
-Use Red-Green-Refactor for executable changes: capture the expected initial
-failure, fix the responsible behavior, then run the complete suite. Required
-tests must be green before merge. Documentation-only changes do not need an
-invented failing runtime test. Use boundary, malformed-input, state, fault, and
-property/seeded-random tests when the changed risk warrants them; no blanket
-fuzzing, mutation, load, or soak gate is imposed without a contract.
-
-### Determinism and environments
-
-Each integration test owns a uniquely created temporary directory and registers
-teardown. Use temporary Git repositories and fake remotes; never alter the
-developer checkout, real credentials, or shared runtime. Tests must run in any
-order without shared writable fixtures. Control clocks/randomness or preserve
-seeds and minimal reproducers. Do not rely on arbitrary sleeps or live data.
-Cleanup errors fail the test and identify the owned path; do not broaden cleanup
-targets. Sensitive production data and real tokens are prohibited.
-
-Preflight verifies Node/Bash/Git versions and `npm ci --ignore-scripts`, cleanly
-classifies the worktree, and scopes temporary ownership. It is not test evidence.
-Local and CI results are named separately. No live network is required for
-blocking tests; external links remain advisory under Section 4.
-
-No measured performance budget currently exists. New capacity/latency claims
-require an owner-approved workload, environment, metric, threshold, baseline,
-and repeatable benchmark before such claims pass review. Parser and installer
-resource risks still receive normal code and bounded-test review.
-
-### Defects, flaky tests, and evidence
-
-Apply Section 8 triage before changing failures. Create a durable issue for any
-unresolved required behavior, repeated regression, cross-task ownership,
-security impact, deferred correction, or release risk. Fixed executable defects
-need the lowest-level stable reproducer plus affected integration evidence.
-
-Reruns diagnose flakes; they do not erase a failed required gate. Preserve the
-first failure, seed, logs, environment, and reproducer. Quarantine requires an
-owner-approved issue with compensating evidence and an expiry within seven
-days. Required behavior with no equivalent passing evidence blocks merge.
-Restoration requires reproducer resolution and reviewed repeatable tests;
-remove obsolete tests only through review, never to hide a defect.
-
-Record command, exact source/candidate hash, dirty-state classification,
-environment, start/end or duration, pass/fail/skip counts, changed-path coverage,
-failure classification, and limitations in the active evidence owner. For v5,
-publish concise durable evidence on the feature PR and retain only the fixed-size
-manifest locator after the verified reset; do not copy feature history into a
-permanent repository record. Existing v2–v4 deliveries keep their adopted Git
-record/archive behavior. Preserve historical full reviewer receipts; new
-reviews under the adopted batch route use
-[PR-primary retention](batch-review-and-recovery.md#pr-publication-and-retention)
-with permanent identities, digests and disposition pointers. Non-PR reviews
-retain exact local receipts. Retain bulky
-sanitized logs for 30 days; unresolved failure evidence remains until resolution
-and at least 30 days afterward. Summaries link logs or state that no separate
-log artifact was retained. Do not claim unavailable logs are archived.
-
-All existing Section 8 exception fields apply. Maintainers review this strategy
-quarterly and after escaped defects, recurring flakes, platform changes, or
-new tooling boundaries; include feedback latency and false confidence from
-mocks in that review. Future automation gates require positive and negative
-state/scope/mode fixtures; this batch does not grant implementation auto-merge.

@@ -1,15 +1,16 @@
 # SGLang Diagnostic API-Key Redaction — Concluded Whiteboard
 
+<!-- sdd: whiteboard -->
+
 ## Control
 
 | Field | Value |
 | --- | --- |
 | State | `CONCLUDED` |
+| Topic | Diagnostic API-key redaction |
 | Input | [SGLang issue #37457](https://github.com/sgl-project/sglang/issues/37457) |
 | Target revision | `9a05b470fa849b349e384ef3c1381f9a85c6c550` |
-| Self-review evidence | `SELF_REVIEW_PASSED` against the example revision containing this packet |
-| Fresh-context review | Required for real adoption; no SGLang review claimed |
-| Human review | Required for real adoption; no SGLang approval claimed |
+| Open owner decisions | None in this teaching example; project verification remains required |
 | Authority | Teaching example only; no SGLang approval |
 
 ## Need and observed gap
@@ -68,4 +69,4 @@ but use a deterministic redacted marker.
 The shared positive allowlist closes the observed exposure and protects future
 fields without adding a generic secret-scanning framework. Exact allowlist
 contents and diagnostic-response compatibility remain explicit review gates.
-The conclusion is ready for a handoff, not for implementation.
+The conclusion is ready for planning, not for implementation.

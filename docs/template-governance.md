@@ -1,121 +1,55 @@
 # Template Governance
 
-## Optional batched route
+This document owns reusable-template design. Project-specific policy stays in
+the project, and Git plus pull requests preserve prior template versions.
 
-Version 3 permits explicitly scoped provisional preparation and coherent review
-packages. A provisional dependency can support preparation, never execution or
-approval. Every retained obligation still needs a satisfaction point; the
-per-artifact review procedure below applies outside a valid batch.
-
-See [Batched review and recovery](../docs/batch-review-and-recovery.md) for authority, evidence and recovery
-requirements. This route takes effect only through reviewed project adoption.
-
-This document governs the reusable templates in this repository. It is not a
-project development policy; projects instantiate and approve their own policies.
-All repository changes also follow the
-[Documentation Quality and Testing Policy](documentation-quality-policy.md).
-
-## Principles
+## Outcome boundaries
 
 Apply the quality policy's [five goals](documentation-quality-policy.md#five-goals-and-agent-judgment).
-Keep a required field when it protects a necessary decision or invariant, not
-merely because a previous example used it. Internal methods remain adaptable;
-do not turn every incident into another universal instruction.
 
-- Each template has one primary purpose.
-- Stable policy belongs in policy templates; uncertain discovery belongs in the
-  whiteboard; accepted feature behavior belongs in the implementation plan.
-- Templates provide required questions and fields without pretending every
-  answer applies to every project.
-- A template change must not silently weaken an instantiated project's active
-  obligations.
-- Machine-enforced template contracts use a versioned schema. A breaking field,
-  state, marker, or meaning change increments that schema and includes adoption
-  and migration guidance.
-- Examples demonstrate the templates and must not claim evidence that was not
-  produced.
-- Concision matters: reference canonical content instead of duplicating it.
-- Review and acceptance follow the quality policy's
-  [required review evidence](documentation-quality-policy.md#required-review-evidence),
-  not a second protocol here.
+- Each maintained template has one purpose and contains only information its
+  consumer needs.
+- Templates ask for project facts without inventing them or pretending every
+  field applies everywhere.
+- Rules remain with their canonical owner; templates link instead of copying.
+- A change cannot silently weaken an installed project's active obligation.
+- Examples are honest, current, and no more elaborate than the behavior they
+  demonstrate.
+- Internal agent methods remain adaptable unless a named invariant requires a
+  particular mechanism.
 
-## Change categories
+## Maintained model
 
-| Category | Example | Required review |
-| --- | --- | --- |
-| Editorial | Clarity, typo, link repair | Template owner |
-| Compatible enhancement | New optional risk prompt | Owner plus affected-domain reviewer |
-| Workflow change | New route, state, or gate | Development/test/PR template owners |
-| Breaking template change | Removed/renamed required field or changed meaning | Cross-template review, migration note, version change |
-| Methodology update | New external guidance | Applicability/trade-off review and source date |
+| Template | Owner responsibility |
+| --- | --- |
+| Project adoption manifest | Installed revision, canonical authorities, and stable boundaries |
+| Solution whiteboard | One active feature's discussion and concluded design |
+| Implementation plan | Tasks, Definition of Done, validation, and all active-delivery state |
 
-## Review procedure
+The pull request owns review, checks, acceptance, merge evidence, and detailed
+history. Additional templates require a distinct durable responsibility that
+cannot fit one of these owners or GitHub.
 
-1. State the problem in the PR rather than beginning with a preferred edit.
-2. Identify affected templates and examples.
-3. Explain whether the change is project-specific or reusable.
-4. Run a YAGNI audit: do current users need this requirement?
-5. Check for duplicated authority and move content to its canonical template.
-6. Update workflow routing when artifact triggers change.
-7. Update at least one worked example when behavior changes.
-8. Run the documentation policy's automated suite and semantic review.
-9. Record migration guidance for existing instantiated documents when needed.
-10. When review states or dependencies change, verify the handoff trigger,
-    manifest review, per-artifact review loop, and return paths together.
-11. Apply the canonical review protocol linked above to the resulting candidate.
+## Change outcome
 
-## Periodic review
+A template change explains the reusable problem, affected ownership,
+compatibility or migration impact, and proportional validation. The exact
+candidate has no duplicate authority; README, diagrams, examples, skills, and
+installer behavior agree; applicable automated and semantic reviews pass.
 
-Review at least when:
+Review when delivery evidence exposes repeated ambiguity, unnecessary work, a
+missing safety boundary, or obsolete behavior. Do not update merely to appear
+current.
 
-- repeated delivery retrospectives expose the same gap;
-- an example cannot represent a real workflow without workarounds;
-- a major methodology/source changes;
-- a policy or template repeatedly causes ambiguity or unnecessary work;
-- an incident exposes a missing safety gate; or
-- links, tools, or artifact formats become obsolete.
+Installed projects synchronize only at a safe boundary through the
+[upgrade skill](../skills/sdd-playbook-upgrade/SKILL.md). The old pin remains
+authoritative until the candidate is reviewed, accepted, and cut over.
 
-Do not update merely to appear current. Record the source, review date,
-applicability, rejected alternatives, and consequences.
+## Review checklist
 
-## Versioning
-
-Until a formal release process is adopted:
-
-- use repository history as the version record;
-- describe breaking template changes explicitly in PRs and the changelog;
-- preserve unmarked historical artifacts as version-zero evidence; migrate an
-  active artifact only through its normal review gate;
-- keep accepted ADRs and historical examples stable;
-- add migration notes when instantiated documents need manual updates; and
-- avoid modifying an example's historical evidence to match a newer template.
-
-## Project adoption and updates
-
-The [Project Adoption Runbook](project-adoption-runbook.md) owns how a project
-maps, instantiates, pilots, activates, and later updates this playbook. Template
-governance owns the upstream change; it does not grant that change authority in
-an adopting project. Migration guidance identifies possible impact, while each
-project's reviewed adoption manifest decides whether to accept, adapt, reject,
-or defer the update.
-
-An installed project prepares a candidate with `./install-sdd.sh --upgrade`
-only between tasks. The generated guide and
-[upgrade assessment](../templates/adoption/playbook-upgrade-assessment.md)
-preserve the current pin through independent review and migration validation;
-the manifest changes once at final cutover.
-
-## Definition of Done for a template change
-
-- [ ] Primary purpose remains clear.
-- [ ] No project-specific secret, endpoint, credential, or private data exists.
-- [ ] Cross-template references and routing are consistent.
-- [ ] Review owner, state, comments, and approval remain explicit and no
-      dependent artifact relies on an unapproved draft.
-- [ ] Self-review, fresh-context review, durable findings, and applicable human
-      approval are traceable to the exact candidate.
-- [ ] Affected examples and README guidance are updated.
-- [ ] Required/conditional fields are understandable.
-- [ ] External claims have primary-source links.
-- [ ] Documentation policy semantic review and automated gates pass.
-- [ ] Migration or compatibility impact is recorded.
+- [ ] Purpose and ownership are clear and non-duplicative.
+- [ ] Required fields protect a real decision or invariant.
+- [ ] Project data, secrets, and unsupported evidence are absent.
+- [ ] README, diagrams, skills, examples, and related templates agree.
+- [ ] Compatibility or migration impact and applicable validation are recorded.
+- [ ] Review follows the quality policy and remains traceable to the exact PR candidate.
