@@ -26,11 +26,11 @@ canonical authorities from the manifest instead of copying policy text.
 
 ## Judgment and review
 
-Apply the five goals: clear boundaries, stable outcomes, key information only,
-proportional effort, and agent discretion. Batch related discovery and owner
-decisions. Review one coherent adoption result, and present the owner a compact
-table of installed revision, discovered authorities, material choices,
-validation, gaps, and requested acceptance.
+Apply the six goals: clear boundaries, stable outcomes, key information only,
+proportional effort, agent discretion, and necessary complexity only. Batch
+related discovery and owner decisions. Review one coherent adoption result,
+and present the owner a compact table of installed revision, discovered
+authorities, material choices, validation, gaps, and requested acceptance.
 
 Correct agent mistakes within scope. Track genuine project or playbook gaps in
 their owning repository. Human acceptance is required before adoption becomes

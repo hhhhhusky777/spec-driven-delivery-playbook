@@ -78,9 +78,9 @@ test("the three templates preserve complete proportional delivery information", 
   ]) assert.match(plan, new RegExp(heading));
 });
 
-test("workflow skills state five goals and reject duplicate delivery documents", async () => {
+test("workflow skills state six goals and reject duplicate delivery documents", async () => {
   const workflow = await read("skills/sdd-project-workflow/SKILL.md");
-  for (const phrase of ["clear boundaries", "stable outcomes", "key information only", "proportional effort", "agent discretion"]) {
+  for (const phrase of ["clear boundaries", "stable outcomes", "key information only", "proportional effort", "agent discretion", "necessary complexity"]) {
     assert.match(workflow.toLowerCase().replace(/\s+/g, " "), new RegExp(phrase));
   }
   assert.match(workflow, /Do not create additional documents that duplicate/);

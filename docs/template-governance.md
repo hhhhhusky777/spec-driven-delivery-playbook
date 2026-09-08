@@ -5,7 +5,7 @@ the project, and Git plus pull requests preserve prior template versions.
 
 ## Outcome boundaries
 
-Apply the quality policy's [five goals](documentation-quality-policy.md#five-goals-and-agent-judgment).
+Apply the quality policy's [six goals](documentation-quality-policy.md#six-goals-and-agent-judgment).
 
 - Each maintained template has one purpose and contains only information its
   consumer needs.

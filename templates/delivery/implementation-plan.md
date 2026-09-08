@@ -133,6 +133,13 @@ without inventing product behavior. Required machine-local inputs and access
 must be available. Future implementation outputs are never prerequisites for
 starting the task that produces them.
 
+Readiness is behavioral, not measured by document or code detail. A short task
+with bounded observable behavior can be ready; a long task naming files,
+classes, or commands is not ready if failure behavior, compatibility, safety,
+or ownership decisions remain unresolved. High-risk migrations also make data
+invariants, old/new compatibility, deployment order, recovery, and rollback
+explicit while leaving contract-equivalent implementation choices to the agent.
+
 ## Design-to-task mapping
 
 | Design point | Task and brief work | Validation | Consistency or gap |
@@ -199,6 +206,16 @@ reusable facts here; detailed review discussion remains in the PR.
 | Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
 | --- | --- | --- | --- |
 | `<ID>` | `<plan>` | `<result>` | `<None or follow-up>` |
+
+### Delivery efficiency observations
+
+Record only what was actually observed when it will inform a retrospective or
+playbook improvement. Unknown effort is not zero, and this optional table must
+not become another progress ledger.
+
+| Review sessions / rounds | Owner interruptions | Repeated checks or recovery | Active / elapsed effort | Quality or limitation |
+| --- | --- | --- | --- | --- |
+| `<measured value or Unknown>` | `<measured value or Unknown>` | `<measured value or Unknown>` | `<measured value or Unknown>` | `<outcome or limitation>` |
 
 ### Cleanup inventory
 

@@ -9,11 +9,11 @@ This is the only active-delivery state authority.
 | Field | Value |
 | --- | --- |
 | State | `IMPLEMENTING` |
-| Active tasks | `T02` |
+| Active tasks | `T03` |
 | Next ready task | `None` |
 | Active blocker | None |
 | Implementation mode | `human-review-before-merge` |
-| Feature branch / target | `codex/complete-three-doc-templates` -> `main` |
+| Feature branch / target | `codex/audit-simplified-docs` -> `main` |
 | Last verified | Design accepted through owner request on 2026-09-08 Asia/Shanghai |
 
 ## Design-to-task mapping
@@ -22,13 +22,15 @@ This is the only active-delivery state authority.
 | --- | --- | --- | --- |
 | D01-D08 | T01 restores the README's introduction, nested navigation, feature explanations, diagrams, and efficiency/reliability rationale, and adds the owner-selected Apache-2.0 license | PR #72 validation, review, owner acceptance, merge, and target verification | Delivered by [#72](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/72); no gap |
 | D09 | T02 restores comprehensive project, design, contract, architecture, task, validation, recovery, and completion prompts inside exactly three templates | Template responsibility assertions, lifecycle checks, full repository suite, and semantic review against removed-template responsibilities | Covered; no duplicate durable document or PR evidence |
+| D10-D11 | T03 audits removed and shortened guidance, retaining only necessary-complexity, readiness, measurement, validation, and uncertain-effect outcomes | Old/new semantic comparison, canonical-owner review, documentation gates, and full regression | Covered without restoring a deleted guide or procedural route |
 
 ## Tasks
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | PR |
 | --- | --- | --- | --- | --- | --- | --- |
 | T01 | `DONE` | None | README is a complete, attractive, navigable project guide consistent with the simplified playbook, with clear Apache-2.0 reuse permission | README, `LICENSE`, and required whiteboard/plan state; no runtime behavior change | Complete source documentation gate, canonical license verification, and exact-candidate review | [#72](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/72) |
-| T02 | `VERIFYING` | None | The three templates retain complete applicable delivery information while preserving one owner per document | The three maintained templates and focused regression only; do not recreate removed documents or duplicate PR evidence | Responsibility coverage assertions, lifecycle/Markdown/Mermaid checks, full suite, and exact-candidate review | [#73](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/73) |
+| T02 | `DONE` | None | The three templates retain complete applicable delivery information while preserving one owner per document | The three maintained templates and focused regression only; do not recreate removed documents or duplicate PR evidence | Responsibility coverage assertions, lifecycle/Markdown/Mermaid checks, full suite, and exact-candidate review | [#73](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/73) |
+| T03 | `VERIFYING` | T02 | Still-valid outcomes from removed Markdown remain available without restoring over-engineered guides | Canonical policies, README, skills, plan template, and focused regression only | Semantic old/new audit, Markdown/links/lifecycle/Mermaid, and full suite | `Pending` |
 
 ## Delivery Definition of Done
 
@@ -43,6 +45,9 @@ This is the only active-delivery state authority.
 - Exactly three durable templates provide complete, proportional prompts for
   project adoption, solution design, and implementation/delivery state without
   recreating redundant documents or local review history.
+- The documentation audit retains necessary-complexity guidance, behavioral
+  readiness calibration, honest optional efficiency observations, and
+  uncertain-effect safety without restoring obsolete guides or fixed routes.
 - Each independent reviewer reports whether the introduction creates interest,
   whether the complete guide is convincing enough to try, and whether any
   unclear detail would cause questions or hesitation.
@@ -53,9 +58,9 @@ This is the only active-delivery state authority.
 
 | Attention | Summary |
 | --- | --- |
-| Tasks and outcomes | T01 delivered the complete README and Apache-2.0 permission in PR #72; T02 restores complete information inside exactly three templates |
-| Design consistency | D01-D09 are mapped; no unexplained task or known gap |
-| Important changes | Reader-facing guidance, licensing, and richer manifest/whiteboard/plan templates; no installer or runtime behavior change |
+| Tasks and outcomes | T01 delivered the README and license in PR #72; T02 delivered complete three-document templates in PR #73; T03 preserves the few still-valid outcomes found by the Markdown audit |
+| Design consistency | D01-D11 are mapped; no unexplained task or known gap |
+| Important changes | Reader-facing guidance, licensing, richer three-document templates, and compact preservation of still-valid policy outcomes; no installer or runtime behavior change |
 | Validation | Markdown, internal links, lifecycle, Mermaid, whitespace, canonical Apache-2.0 match, and all 29 tests passed locally |
 | Risks or open decisions | Completeness must not recreate duplicate status, prescribed internal steps, or PR evidence; no owner decision remains |
 | Decision requested | Review the completed PR before merge |
