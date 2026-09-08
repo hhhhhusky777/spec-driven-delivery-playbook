@@ -9,7 +9,7 @@
 | Need | [Issue #38](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/38) |
 | State | `DELIVERED` |
 | Owner | Repository owner |
-| Final delivery PR | Assigned after draft publication |
+| Final delivery PR | [PR #78](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/78) |
 | Open owner decisions | None |
 
 ## Accepted outcome
