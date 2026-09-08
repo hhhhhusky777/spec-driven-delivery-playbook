@@ -36,6 +36,11 @@ the plan, and review evidence in the pull request.
   routine progress or agent-correctable mistakes.
 - Preserve existing work and secrets. Validate in proportion to risk and never
   claim an unrun or failed gate passed.
+- When creating a worktree, provision the required machine-local untracked
+  inputs there, including files such as `.env` when the task depends on them.
+  Copy or recreate only what is needed, preserve appropriate permissions, keep
+  it ignored and untracked, and never commit secrets or overwrite an existing
+  worktree-local value without authority.
 - A concluded design or approved plan changes only through an explicit
   amendment when the observable outcome changes. Ordinary task status and
   evidence updates do not reopen the design.

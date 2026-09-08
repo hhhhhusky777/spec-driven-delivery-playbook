@@ -44,6 +44,8 @@ test("workflow skills state five goals and reject duplicate delivery documents",
   }
   assert.match(workflow, /Do not create additional documents that duplicate/);
   assert.match(workflow, /pull request owns review comments, checks, approvals/);
+  assert.match(workflow, /required machine-local untracked/);
+  assert.match(workflow, /keep\s+it ignored and untracked/);
 });
 
 test("upgrade never rewrites feature content and keeps exact acceptance boundaries", async () => {
