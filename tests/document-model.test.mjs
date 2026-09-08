@@ -96,16 +96,21 @@ test("final review requires merge-ready canonical state without predicting PR fa
   const policy = await read("docs/documentation-quality-policy.md");
   const readme = await read("README.md");
   const contributing = await read("CONTRIBUTING.md");
+  const example = await read("examples/project-adoption/sglang/delivery-api-key-redaction/04-implementation-plan.md");
   assert.match(plan, /Before final review/);
   assert.match(plan, /task is `DONE`/);
   assert.match(plan, /does not claim that the PR has\s+already been reviewed or merged/);
   assert.match(readme, /Before a pull request enters final review/);
   assert.match(readme, /If the PR does not merge/);
+  assert.match(readme, /Closing candidate<br\/>archive \+ reset/);
   assert.match(contributing, /Before final review/);
   assert.match(contributing, /every predictable\s+tracked canonical state/);
   assert.match(contributing, /after merge, verify the exact target/);
   assert.match(policy, /merge-ready state boundary/);
   assert.match(policy, /status-only correction as a defect rather than routine cleanup/);
+  assert.match(example, /Before final review, a delivery-closing candidate/);
+  assert.match(example, /Review, authorized merge, and exact-target\s+verification remain PR-owned facts/);
+  assert.doesNotMatch(example, /After delivery, link the merged PR/);
 });
 
 test("upgrade never rewrites feature content and keeps exact acceptance boundaries", async () => {

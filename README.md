@@ -113,8 +113,8 @@ one responsibility:
 | Document | Sole responsibility | Lifetime |
 | --- | --- | --- |
 | [Project adoption manifest](templates/adoption/project-adoption-manifest.md) | Installed immutable revision, canonical project authorities, and stable boundaries | Reused across features |
-| [Solution whiteboard](templates/discovery/solution-whiteboard.md) | One active feature's discussion and concluded design | Archived and reset after delivery |
-| [Implementation plan](templates/delivery/implementation-plan.md) | Tasks, dependencies, Definition of Done, validation, and all active-delivery state | Removed after verified delivery |
+| [Solution whiteboard](templates/discovery/solution-whiteboard.md) | One active feature's discussion and concluded design | A closing candidate archives it and resets the live copy |
+| [Implementation plan](templates/delivery/implementation-plan.md) | Tasks, dependencies, Definition of Done, validation, and all active-delivery state | Removed by the delivery-closing candidate |
 
 Project policies stay in their existing canonical files. The workflow skill
 guides the agent but owns no feature state.
@@ -129,9 +129,9 @@ plan. Agents keep the applicable information and omit irrelevant ceremony.
 flowchart LR
     M["Manifest<br/>installation + authority"] --> W["Whiteboard<br/>design"]
     W -->|"concluded"| P["Implementation plan<br/>tasks + live state"]
-    P --> PR["Pull request<br/>review + evidence"]
-    PR -->|"merged and verified"| C["Archive conclusion<br/>and reset"]
-    C --> W
+    P --> C["Closing candidate<br/>archive + reset"]
+    C --> PR["Pull request<br/>review + evidence"]
+    PR -->|"merged and verified"| W
 ```
 
 ### Where evidence lives
