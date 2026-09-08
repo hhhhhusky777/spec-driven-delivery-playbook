@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access, cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { access, cp, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import os from "node:os";
 import path from "node:path";
@@ -416,6 +416,22 @@ test("runtime validation rejects a marker bound to a different worktree", async 
   assert.match(validation.stderr, /ownership marker belongs to a different worktree/);
 });
 
+test("runtime validation rejects a branch switch in the same worktree", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createTargetProject(t);
+  run("git", ["config", "user.name", "Installer Test"], project);
+  run("git", ["config", "user.email", "installer@example.test"], project);
+  run("git", ["add", "install-sdd.sh"], project);
+  run("git", ["commit", "-m", "target fixture"], project);
+  const installed = runInstaller(project, ["--repository", source.repository]);
+  assert.equal(installed.status, 0, installed.stderr);
+
+  run("git", ["switch", "-c", "feature"], project);
+  const validation = runInstaller(project, ["--validate"]);
+  assert.notEqual(validation.status, 0);
+  assert.match(validation.stderr, /guide belongs to a different repository worktree/);
+});
+
 test("installer rejects a project runtime symlink that escapes the worktree", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createTargetProject(t);
@@ -425,6 +441,41 @@ test("installer rejects a project runtime symlink that escapes the worktree", as
   const result = runInstaller(project, ["--repository", source.repository]);
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /project runtime boundary must not be a symbolic link/);
+});
+
+test("cleanup accepts the exact owned checkout format from installer 2.1", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createTargetProject(t);
+  const installed = runInstaller(project, ["--repository", source.repository]);
+  assert.equal(installed.status, 0, installed.stderr);
+
+  const guidePath = path.join(project, ".sdd-runtime", "agent-guide.md");
+  const guide = await readFile(guidePath, "utf8");
+  const currentCheckout = guideValue(guide, "Playbook checkout");
+  const legacyRoot = await realpath(await temporaryDirectory(t, "sdd-playbook."));
+  const legacyCheckout = path.join(legacyRoot, "repository");
+  await cp(currentCheckout, legacyCheckout, { recursive: true });
+  const legacyMarker = path.join(legacyCheckout, ".sdd-owned-checkout");
+  await writeFile(
+    legacyMarker,
+    `sdd-owned-checkout-v1\nproject-root=${guideValue(guide, "Project root")}\n`,
+    "utf8",
+  );
+  await rm(path.dirname(currentCheckout), { recursive: true });
+
+  const legacyGuide = guide
+    .replace(/^\| Git common directory \|.*\n/m, "")
+    .replace(/^\| Git worktree directory \|.*\n/m, "")
+    .replace(/^\| Git worktree state \|.*\n/m, "")
+    .replace(/^\| Generator version \|.*$/m, "| Generator version | `2.1.0` |")
+    .replace(/^\| Generator schema version \|.*$/m, "| Generator schema version | `2` |")
+    .replace(/^\| Playbook checkout \|.*$/m, `| Playbook checkout | \`${legacyCheckout}\` |`)
+    .replace(/^\| Ownership marker \|.*$/m, `| Ownership marker | \`${legacyMarker}\` |`);
+  await writeFile(guidePath, legacyGuide, "utf8");
+
+  const cleanup = runInstaller(project, ["--cleanup"]);
+  assert.equal(cleanup.status, 0, cleanup.stderr);
+  await assert.rejects(access(legacyCheckout));
 });
 
 test("upgrade prepares a newer immutable candidate without changing the active runtime", async (t) => {
