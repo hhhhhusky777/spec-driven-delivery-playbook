@@ -1,99 +1,67 @@
 ---
 name: sdd-project-workflow
-description: Deliver project needs through the installed Spec-Driven Delivery Playbook while preserving authority, evidence, quality, and agent discretion.
+description: Deliver work in an adopted SDD project using its manifest, whiteboard, implementation plan, and pull requests.
 ---
 
 # SDD Project Workflow
 
-## Required outcome
+## Outcome
 
-Deliver the owner's approved need with current, mutually consistent project
-contracts; verified implementation; concise decision evidence; and a clean
-reusable state for the next need.
+Deliver the requested result with clear boundaries, stable outcomes, key
+information only, proportional effort, and enough agent discretion to fit the
+project. Repository policies and explicit owner decisions remain authoritative.
 
-Apply the five goals in the verified playbook checkout's
-`docs/documentation-quality-policy.md#five-goals-and-agent-judgment`:
-clear boundaries, stable outcomes, key information only, proportional effort,
-and agent discretion.
+## Durable model
 
-## Authority and safety boundaries
+- The adoption manifest owns the installed immutable playbook revision,
+  discovered project authorities, and stable project boundaries. It never owns
+  feature progress.
+- The whiteboard owns the active design discussion and concluded design.
+- The implementation plan owns tasks, dependencies, Definition of Done,
+  validation expectations, and all active-delivery state.
+- The pull request owns review comments, checks, approvals, merge evidence, and
+  detailed delivery history.
 
-- The manifest identifies the installed playbook revision and active delivery.
-- Canonical project contracts and owner decisions define intended behavior.
-- The working whiteboard holds the current need until it is concluded; the PR
-  holds durable delivery and review evidence.
-- Preserve unrelated work, secrets, repository protections, required project
-  quality controls, and explicit authority for destructive or external actions.
-- Stop for the owner when a decision changes intended behavior, policy,
-  authority, safety, irreversible data handling, or delivery acceptance.
-- Do not treat passing automation, agent review, or file presence as human
-  approval.
+Do not create additional documents that duplicate these responsibilities. Put
+unique design information in the whiteboard, unique execution information in
+the plan, and review evidence in the pull request.
 
-Only one need owns the project-owned solution whiteboard.
+## Boundaries
 
-- **`EMPTY`:** a new need may be admitted.
-- **`CONCLUDED`:** the approved design governs delivery.
-
-Do not overwrite it or admit a second need until PR evidence and reset are verified.
-
-For a multi-task delivery, verify the task branch starts from and the task PR
-targets the feature integration branch. Only the validated feature PR targets
-the protected branch.
+- Keep canonical project authorities mutually consistent. Resolve conflicts
+  from those authorities and explicit owner decisions; ask the owner when the
+  conflict changes policy, safety, intended behavior, or authority.
+- Pause for substantive human decisions, required review, merge authority,
+  destructive actions, or a critical mismatch. Do not invent pauses for
+  routine progress or agent-correctable mistakes.
+- Preserve existing work and secrets. Validate in proportion to risk and never
+  claim an unrun or failed gate passed.
+- A concluded design or approved plan changes only through an explicit
+  amendment when the observable outcome changes. Ordinary task status and
+  evidence updates do not reopen the design.
+- Before starting a new feature, check for a newer playbook revision and
+  synchronize it at a safe boundary.
 
 ## Agent discretion
 
-Within those boundaries, the agent chooses methods, sequencing, tools,
-artifacts, tests, recovery, and review depth according to actual risk and
-complexity. Routine corrections and agent mistakes do not require a human stop.
-When the owner or project has authorized batched review, use one coherent
-review package instead of repeated artifact-level reviews; otherwise preserve
-the project's existing review boundaries. Ordinary internal engineering
-choices remain with the agent.
+Choose the working order, batching, tools, tests, and recovery method that best
+achieve the accepted outcome. Prefer coherent review units and one human brief
+at each real decision boundary. Human briefs use a compact table covering the
+decision, important changes, risks or gaps, validation, and recommended action.
 
-`EXPLICIT_REVIEW`, `AUTO_CONTINUE`, and `REVIEW_ON_EXCEPTION` express owner
-authority and review risk. Implementation merge mode is user-selected as
-`HUMAN_REVIEW_BEFORE_MERGE` or `AGENT_AUTO_MERGE`.
-It is checked at task start or resumption, PR publication, review and merge boundaries. It does not apply
-to design acceptance, and automatic merges remain subject to post-merge human review.
+## Error handling
 
-At implementation review, the Current review target ID must be inside the
-recorded mode scope. Never weaken checks, use administrator bypass, or treat
-agent evidence as owner acceptance.
-Automatic authority reaches the final feature PR only when its recorded scope includes that PR and final validation is already approved.
+Correct agent mistakes inside existing authority and repeat only affected
+checks. Triage unexpected behavior as an agent mistake, project gap, or
+playbook gap. Track genuine gaps in the owning repository. Stop only when the
+remaining condition affects safety, policy, authority, intended behavior, or a
+required acceptance gate.
 
-The agent may prepare, implement, validate, and synchronize dependent work
-without artificial pauses when existing authority covers the work and required
-quality outcomes remain satisfied. A status question or tool boundary is not an
-approval boundary.
+## Completion
 
-## Required evidence
-
-Retain only information needed for decisions, verification, recovery, and
-maintenance. Human review briefs use a concise table covering scope, key design
-or task outcomes, risks, checks, reviewer findings, unresolved decisions, and
-the exact response requested. Link to canonical detail rather than repeating
-rules or review commentary.
-
-When independent review is applicable, use
-`templates/reviews/agent-self-review.md` and
-`templates/reviews/fresh-context-agent-review.md` as the evidence source rather
-than copying their protocol into this skill.
-
-## Exception routing
-
-Use `docs/batch-review-and-recovery.md#recovery-without-restarting-everything`
-and `docs/batch-review-and-recovery.md#exception-triage-and-upstream-reporting`
-as the single error-handling authority. Preserve valid work, repeat only what a
-failure affects, correct agent mistakes within scope, and open an owning issue
-for a genuine project or playbook gap. Human involvement is required only when
-the unresolved consequence crosses an authority or safety boundary.
-Use `templates/reviews/exception-triage.md` when a durable exception record is
-needed.
-
-## Completion outcome
-
-The delivered result satisfies the approved design and project checks, review
-findings are resolved, required human acceptance is recorded, merged-target
-behavior is verified, the concluded whiteboard links the delivery PR, and
-feature-only working material is removed or reset. Adoption and reusable
-project contracts remain available for the next feature.
+The accepted outcome and Definition of Done are satisfied, applicable checks
+pass, required review and merge authority are recorded in the pull request,
+and the implementation plan accurately reports the final state. After delivery,
+archive the concluded whiteboard with links to its merged pull requests, remove
+the feature plan and other non-reusable feature material, then reset the working
+whiteboard. Preserve the manifest and other reusable project authority.

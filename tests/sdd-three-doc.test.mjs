@@ -1,0 +1,49 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import test from "node:test";
+import { fileURLToPath } from "node:url";
+
+import { checkDocument } from "../scripts/sdd-lifecycle-three-doc.mjs";
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const sha = "a".repeat(40);
+
+test("maintained three-document templates satisfy lifecycle ownership", async () => {
+  for (const relative of [
+    "templates/adoption/project-adoption-manifest.md",
+    "templates/discovery/solution-whiteboard.md",
+    "templates/delivery/implementation-plan.md",
+  ]) {
+    const source = (await readFile(path.join(root, relative), "utf8"))
+      .replace("<full commit SHA>", sha)
+      .replace("<human-review-before-merge or explicitly authorized alternative>", "HUMAN_REVIEW_BEFORE_MERGE");
+    assert.deepEqual(checkDocument(relative, source), [], relative);
+  }
+});
+
+test("manifest rejects feature progress and non-immutable pins", () => {
+  const source = `| Field | Value |\n| --- | --- |\n| Playbook revision | ${sha} |\n| Upgrade state | NONE |\n| Upgrade candidate | None |`;
+  assert.deepEqual(checkDocument("project-adoption-manifest.md", source), []);
+  assert.ok(checkDocument("project-adoption-manifest.md", source.replace(sha, "main")).some(error => error.includes("full SHA")));
+  assert.ok(checkDocument("project-adoption-manifest.md", `${source}\n| Current task | T01 |`).some(error => error.includes("feature field")));
+});
+
+test("manifest requires an immutable candidate while upgrade is open", () => {
+  const source = `| Field | Value |\n| --- | --- |\n| Playbook revision | ${sha} |\n| Upgrade state | ASSESSING |\n| Upgrade candidate | None |`;
+  assert.ok(checkDocument("project-adoption-manifest.md", source).some(error => error.includes("Upgrade candidate")));
+  assert.deepEqual(checkDocument("project-adoption-manifest.md", source.replace("None", "b".repeat(40))), []);
+});
+
+test("concluded whiteboard requires resolved decisions and design outcomes", () => {
+  const source = `| Field | Value |\n| --- | --- |\n| State | CONCLUDED |\n| Open owner decisions | None |\n\n| Design point | Accepted outcome |\n| --- | --- |\n| D01 | outcome |`;
+  assert.deepEqual(checkDocument("solution-whiteboard.md", source), []);
+  assert.ok(checkDocument("solution-whiteboard.md", source.replace("| None |", "| D02 |"))[0]);
+});
+
+test("implementation plan owns one coherent task state graph", () => {
+  const source = `| Field | Value |\n| --- | --- |\n| State | IMPLEMENTING |\n| Current task | T02 |\n\n| ID | State | Depends on |\n| --- | --- | --- |\n| T01 | DONE | None |\n| T02 | IN_PROGRESS | T01 |`;
+  assert.deepEqual(checkDocument("implementation-plan.md", source), []);
+  assert.ok(checkDocument("implementation-plan.md", source.replace("| T01 |", "| T03 |")).some(error => error.includes("unknown task")));
+  assert.ok(checkDocument("implementation-plan.md", `${source}\n| T03 | VERIFYING | T01 |`).some(error => error.includes("only one active")));
+});

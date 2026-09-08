@@ -43,13 +43,6 @@ async function createPlaybookFixture(t) {
       "utf8",
     );
   }
-  const templateDirectory = path.join(repository, "templates", "adoption");
-  await mkdir(templateDirectory, { recursive: true });
-  await writeFile(
-    path.join(templateDirectory, "playbook-upgrade-assessment.md"),
-    "# Fixture upgrade assessment\n",
-    "utf8",
-  );
   run("git", ["init", "-b", "main"], repository);
   run("git", ["config", "user.name", "Installer Test"], repository);
   run("git", ["config", "user.email", "installer@example.test"], repository);
@@ -70,7 +63,7 @@ async function createTargetProject(t) {
   return project;
 }
 
-async function createInstalledProject(t, source, state = "ACTIVE") {
+async function createInstalledProject(t, source, state = "INSTALLED") {
   const project = await createTargetProject(t);
   const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
   await mkdir(adoptionRoot, { recursive: true });
@@ -78,7 +71,7 @@ async function createInstalledProject(t, source, state = "ACTIVE") {
   await writeFile(path.join(adoptionRoot, "solution-whiteboard.md"), "# Whiteboard\n", "utf8");
   await writeFile(
     path.join(adoptionRoot, "project-adoption-manifest.md"),
-    `# Manifest\n\n| Field | Value |\n| --- | --- |\n| Adoption state | \`${state}\` |\n| Playbook source repository | \`${source.repository}\` |\n| Playbook revision | \`${source.firstRevision}\` |\n| Current blocker | \`None\` |\n`,
+    `# Manifest\n\n| Field | Value |\n| --- | --- |\n| Adoption state | \`${state}\` |\n| Playbook source repository | \`${source.repository}\` |\n| Playbook revision | \`${source.firstRevision}\` |\n| Stable entry point | [SDD](README.md) |\n`,
     "utf8",
   );
   run("git", ["add", ".github"], project);
@@ -108,7 +101,7 @@ test("installer resolves latest main, installs adoption skill, and emits one gui
   const result = runInstaller(project, ["--repository", source.repository]);
 
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /Follow \.sdd-runtime\/agent-guide\.md exactly\./);
+  assert.match(result.stdout, /Use \.sdd-runtime\/agent-guide\.md for verified provenance/);
   const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
   assert.equal(guideValue(guide, "Manifest state detected"), "ABSENT");
   assert.equal(guideValue(guide, "Manifest state before block"), "NONE");
@@ -120,9 +113,9 @@ test("installer resolves latest main, installs adoption skill, and emits one gui
   assert.equal(guideValue(guide, "Resolved revision"), source.latestRevision);
   assert.doesNotMatch(guide, /^- Next action:/m);
   assert.match(guide, /^## Runtime replacement$/m);
-  assert.match(guide, /^## Adoption execution contract$/m);
-  assert.doesNotMatch(guide, /^## Delivery execution contract$/m);
-  assert.match(guide, /Never overwrite a pending checkout/);
+  assert.match(guide, /^## Adoption outcome and boundaries$/m);
+  assert.doesNotMatch(guide, /^## Delivery outcome and boundaries$/m);
+  assert.match(guide, /Finish and review the current boundary/);
   assert.match(guideValue(guide, "Content hash"), /^[0-9a-f]{40}$/);
   await access(path.join(project, ".agents", "skills", "sdd-project-adoption", "SKILL.md"));
   assert.equal(run("git", ["status", "--short"], project), "");
@@ -167,9 +160,8 @@ test("real workflow skill and generated guide resolve canonical goals and recove
   assert.equal(skill, await readFile(path.join(REPOSITORY_ROOT, "skills", "sdd-project-workflow", "SKILL.md"), "utf8"));
   assert.equal(guideValue(guide, "Resolved revision"), source.firstRevision);
   const checkout = guideValue(guide, "Playbook checkout");
-  for (const target of ["docs/documentation-quality-policy.md", "docs/batch-review-and-recovery.md", "templates/reviews/agent-self-review.md", "templates/reviews/fresh-context-agent-review.md"]) {
+  for (const target of ["templates/adoption/project-adoption-manifest.md", "templates/discovery/solution-whiteboard.md", "templates/delivery/implementation-plan.md"]) {
     await access(path.join(checkout, target));
-    assert.ok(skill.includes(target), target);
   }
   assert.doesNotMatch(guide + skill, /exactly one dependency-ready action|Before every project edit/);
   assert.match(guide, /required skill|sdd-project-workflow/);
@@ -217,25 +209,16 @@ test("completed adoption replaces its runtime before the first need", async (t) 
   assert.equal(guideValue(replacementGuide, "Requested revision"), source.latestRevision);
   assert.equal(guideValue(replacementGuide, "Resolved revision"), source.latestRevision);
   assert.equal(guideValue(replacementGuide, "Cleanup state"), "PENDING");
-  assert.match(replacementGuide, /^## Delivery execution contract$/m);
-  assert.doesNotMatch(replacementGuide, /^## Adoption execution contract$/m);
-
-  await writeFile(
-    manifest,
-    `# Manifest\n\n| Field | Value |\n| --- | --- |\n| Adoption state | \`PILOT\` |\n| Playbook revision | \`${source.latestRevision}\` |\n`,
-    "utf8",
-  );
-  const advanced = runInstaller(project, ["--validate"]);
-  assert.equal(advanced.status, 0, advanced.stderr);
-  assert.match(advanced.stdout, /^STATE_ADVANCED: manifest moved from INSTALLED to PILOT/);
+  assert.match(replacementGuide, /^## Delivery outcome and boundaries$/m);
+  assert.doesNotMatch(replacementGuide, /^## Adoption outcome and boundaries$/m);
 
   const finalCleanup = runInstaller(project, ["--cleanup"]);
   assert.equal(finalCleanup.status, 0, finalCleanup.stderr);
 });
 
-test("supported workflow states select the workflow profile and preserve their pinned revision", async (t) => {
+test("the installed state selects the workflow profile and preserves its pinned revision", async (t) => {
   const source = await createPlaybookFixture(t);
-  for (const state of ["INSTALLED", "PILOT", "REVIEW", "ACTIVE", "UPDATING", "EXAMPLE_REVIEWED"]) {
+  for (const state of ["INSTALLED"]) {
     const project = await createTargetProject(t);
     const manifest = path.join(
       project,
@@ -264,8 +247,8 @@ test("supported workflow states select the workflow profile and preserve their p
 test("BLOCKED retains the profile selected by its explicit prior state", async (t) => {
   const source = await createPlaybookFixture(t);
   for (const [priorState, expectedSkill] of [
-    ["MAPPED", "sdd-project-adoption"],
-    ["PILOT", "sdd-project-workflow"],
+    ["DRAFT", "sdd-project-adoption"],
+    ["INSTALLED", "sdd-project-workflow"],
   ]) {
     const project = await createTargetProject(t);
     const manifest = path.join(project, ".github", "spec-driven-delivery", "project-adoption-manifest.md");
@@ -445,7 +428,7 @@ test("upgrade rejects an explicit non-latest revision", async (t) => {
   assert.match(result.stderr, /upgrade always resolves latest main/);
 });
 
-test("upgrade accepts the existing project entry point recorded in navigation", async (t) => {
+test("upgrade accepts the stable project entry point recorded in the manifest", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createInstalledProject(t, source);
   const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
@@ -456,7 +439,7 @@ test("upgrade accepts the existing project entry point recorded in navigation", 
   const manifest = await readFile(manifestPath, "utf8");
   await writeFile(
     manifestPath,
-    `${manifest}\n## 7. Project-local navigation\n\n| Reader need | Canonical project entry/link | Required reading order |\n| --- | --- | --- |\n| Start contributing | [Contributing](../../CONTRIBUTING.md#contributing) | Contributing -> manifest |\n`,
+    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point | [Contributing](../../CONTRIBUTING.md#contributing) |"),
     "utf8",
   );
 
@@ -465,7 +448,7 @@ test("upgrade accepts the existing project entry point recorded in navigation", 
   assert.match(result.stdout, /Prepared candidate revision:/);
 });
 
-test("upgrade rejects an unavailable project entry point recorded in navigation", async (t) => {
+test("upgrade rejects an unavailable stable project entry point", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createInstalledProject(t, source);
   const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
@@ -475,7 +458,7 @@ test("upgrade rejects an unavailable project entry point recorded in navigation"
   const manifest = await readFile(manifestPath, "utf8");
   await writeFile(
     manifestPath,
-    `${manifest}\n## 7. Project-local navigation\n\n| Reader need | Canonical project entry/link | Required reading order |\n| --- | --- | --- |\n| Start contributing | [Missing](../../MISSING.md) | Missing -> manifest |\n`,
+    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point | [Missing](../../MISSING.md) |"),
     "utf8",
   );
 
@@ -484,7 +467,7 @@ test("upgrade rejects an unavailable project entry point recorded in navigation"
   assert.match(result.stderr, /recorded project entry point is unavailable/);
 });
 
-test("upgrade rejects a blank recorded entry point instead of using the legacy fallback", async (t) => {
+test("upgrade rejects a blank stable entry point", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createInstalledProject(t, source);
   const manifestPath = path.join(
@@ -496,7 +479,7 @@ test("upgrade rejects a blank recorded entry point instead of using the legacy f
   const manifest = await readFile(manifestPath, "utf8");
   await writeFile(
     manifestPath,
-    `${manifest}\n| Start contributing |  | Broken |\n`,
+    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point |  |"),
     "utf8",
   );
 
@@ -515,7 +498,7 @@ test("upgrade rejects URI-scheme entry points even when a matching file exists",
   await writeFile(path.join(adoptionRoot, "javascript:entry.md"), "# Not a local link\n", "utf8");
   await writeFile(
     manifestPath,
-    `${manifest}\n| Start contributing | [Script](javascript:entry.md) | Script |\n`,
+    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point | [Script](javascript:entry.md) |"),
     "utf8",
   );
 
@@ -534,7 +517,7 @@ test("upgrade rejects external and out-of-project navigation entry points", asyn
   await rm(path.join(adoptionRoot, "README.md"));
   await writeFile(
     manifestPath,
-    `${manifest}\n| Start contributing | [External](https://example.test/start) | External |\n`,
+    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point | [External](https://example.test/start) |"),
     "utf8",
   );
   const external = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
@@ -547,7 +530,7 @@ test("upgrade rejects external and out-of-project navigation entry points", asyn
   t.after(async () => rm(outsidePath, { force: true }));
   await writeFile(
     manifestPath,
-    `${manifest}\n| Start contributing | [Outside](../../../${outsideName}) | Outside |\n`,
+    manifest.replace("| Stable entry point | [SDD](README.md) |", `| Stable entry point | [Outside](../../../${outsideName}) |`),
     "utf8",
   );
   const outside = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
@@ -558,7 +541,7 @@ test("upgrade rejects external and out-of-project navigation entry points", asyn
   await symlink(outsidePath, linkedPath);
   await writeFile(
     manifestPath,
-    `${manifest}\n| Start contributing | [Linked](../../linked-entry.md) | Linked |\n`,
+    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point | [Linked](../../linked-entry.md) |"),
     "utf8",
   );
   const linked = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
@@ -573,13 +556,10 @@ test("upgrade preflight fails closed for active work, blocked adoption, and unch
     activeProject,
     ".github",
     "spec-driven-delivery",
-    "active",
-    "need",
   );
-  await mkdir(activeRoot, { recursive: true });
   await writeFile(
-    path.join(activeRoot, "04-implementation-plan.md"),
-    "| Field | Value |\n| --- | --- |\n| Current task | `T01` |\n",
+    path.join(activeRoot, "implementation-plan.md"),
+    "| Field | Value |\n| --- | --- |\n| Current task | `T01` |\n\n| ID | State | Depends on |\n| --- | --- | --- |\n| `T01` | `IN_PROGRESS` | `None` |\n",
     "utf8",
   );
   const active = runInstaller(activeProject, ["--repository", source.repository, "--upgrade"]);

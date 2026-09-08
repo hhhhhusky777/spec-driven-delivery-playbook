@@ -1,164 +1,48 @@
 # Pull request
 
-## Optional batched route
+## Human review brief
 
-For a batched change, link its exact artifact/control inventory and include a
-table of DECISION and ATTENTION items. Record the stable reviewer seats, exact
-head, findings and receipt links; same-account comments are agent-generated
-review evidence, not formal self-approval. Existing gates below remain required.
+| Need | Summary |
+| --- | --- |
+| Outcome and scope | |
+| Non-scope | |
+| Key decisions | |
+| Risks, limits, and deferred work | |
+| Evidence: passed, failed, unrun | |
+| Exact decision requested | |
 
-See [Batched review and recovery](../docs/batch-review-and-recovery.md) for authority, evidence and recovery
-requirements. This route takes effect only through reviewed project adoption.
+For planning changes, include design-to-task mapping. For upgrades, include old
+and new pins plus reusable-document impact. For implementation, include delivered
+behavior, deviations, compatibility effects, and the exact merge target.
 
-## Outcome and scope
-
-- Problem and expected improvement:
-- Affected canonical documents/templates:
-- Out of scope:
-
-For changes to this repository, apply [the project branch and review policy](../CONTRIBUTING.md#branches-and-pull-requests).
-
-- Integration model and implementation-unit count:
-- Source branch and target branch:
-- Owner approval or exact scoped implementation authority:
-- Hosted protection/check evidence and any policy-versus-hosting mismatch:
-
-## Reviewer attention map
-
-- Gate: Required / Not applicable — single-focus reason
-- Changed decisions/obligations and canonical sections:
-- Blockers, questions, risks, and exceptions:
-- Required reviewers or specialties:
-- Recommended reading order and evidence:
-
-## Versioned PR evidence (v5)
-
-Before owner acceptance, publish one PR comment beginning
-`<!-- sdd-pr-review/v1 -->` with this exact two-column field set. Populate
-actual values; do not leave the instructional table in the published comment.
+## Candidate and review
 
 | Field | Value |
 | --- | --- |
-| Repository and target | |
-| Design | |
-| Tasks | |
-| Candidate | |
-| Self-review | |
-| Independent review | |
-| Findings | |
-| Requested owner authority | `State=PENDING; Candidate=FULL_SHA; Scope=EXACT_MERGE_AND_RESET_SCOPE` |
-| Checks | |
-| Limits and follow-ups | |
-| Reset plan | |
+| Exact head | |
+| Source / target | |
+| Two reviewer seats | |
+| Findings and dispositions | |
+| Required checks | |
+| Human acceptance / merge authority | |
 
-Format `Reset plan` as `REMOVE=...; RESET=...; KEEP=...;
-Inventory=EXACT_HEAD_GITHUB_BLOB_URL`. Each disposition is `None` or a
-comma-separated list of exact identities matching the retrieved inventory.
-The self-review field contains its PR URL and SHA-256 body digest. Each reviewer
-publication uses the canonical Section 6 receipt table and identifies one stable
-`R1` or `R2` seat, a shared session, the exact candidate, and its disposition.
+## Contract-to-change map
 
-After the owner acts, publish `<!-- sdd-pr-acceptance/v1 -->` with `Candidate`,
-`Owner decision`, `Merge/reset scope`, `Owner comment`, `Owner comment body digest`,
-and `Review evidence digest`; the owner comment names the exact candidate and
-same merge/reset scope. After merge, publish
-`<!-- sdd-target-receipt/v1 -->` with `Merge identity`, `Target proof`,
-`Check proof`, `Evidence availability`, `Runtime/project proof`,
-`Reset authorization`, and `Exceptions/follow-ups`. Format reset authorization
-as `Scope=EXACT_ACCEPTED_SCOPE; Reset target=BRANCH; Reset mode=MODE;
-Authority=OWNER_COMMENT_URL`. Run the read-only
-GitHub-aware evidence gate with the exact head, base, and target before creating
-the reset PR, always supplying the expected owner login.
+| Material change | Governing design or authority | Evidence | Risk / non-scope |
+| --- | --- | --- | --- |
+| | | | |
 
-## Contract-to-change map and author annotations
+## Completion
 
-| Material change / PR annotation | Governing statement | Why / expected effect | Evidence | Risk / non-scope |
-| --- | --- | --- | --- | --- |
-| | | | | |
+- [ ] The exact candidate matches its design, plan, scope, and canonical authorities.
+- [ ] README, diagrams, templates, skills, examples, and tooling are consistent.
+- [ ] Required checks passed; failures and unrun gates are visible.
+- [ ] Two isolated agents reviewed the complete exact candidate; revisions returned to the same seats.
+- [ ] The human brief exposes every material decision, risk, limit, and requested action.
+- [ ] Merge and cleanup stay within recorded authority.
 
-- [ ] Material or non-obvious hunks have concise author annotations.
-- [ ] Routine mechanics were not annotated merely to increase comment count.
-- [ ] Every annotation still matches the exact current PR head.
-
-## Documentation review
-
-- [ ] Statements were checked against their governing contracts or primary sources.
-- [ ] Wording is clear, concise, project-oriented where applicable, and has one reasonable meaning.
-- [ ] Cross-document terminology, authority, workflow state, links, and examples are consistent.
-- [ ] Normative rules have one canonical owner; summaries link to it instead of duplicating it.
-- [ ] Generated/instantiated content contains no template instructions, invented
-      facts, or unexecuted evidence claims.
-- [ ] Source freshness and compatibility impact were assessed; relevant review
-      dates or event triggers were updated.
-- [ ] Important rules use a heading, concise bold label, or supported callout rather than repetition.
-- [ ] When required, the attention map was reconciled against an independent
-      inventory of the complete diff; every material item has a disposition.
-
-## Validation
-
-- [ ] Applicable implementation tasks had an approved, current pre-start
-      context receipt before `IN_PROGRESS`, or the recorded policy exception
-      was reviewed.
-- [ ] `npm ci --ignore-scripts`
-- [ ] `npm run docs:all`
-- [ ] `npm run docs:links:external` reviewed as advisory evidence.
-- [ ] Failures were justified and classified before content, configuration, or tests changed.
-
-## Agent self-review
-
-- Exact reviewed PR head:
-- Governing inputs and versions:
-- Self-review record or embedded findings:
-- Result: `SELF_REVIEW_PASSED / SELF_REVIEW_FAILED`
-
-- [ ] The complete diff and surrounding behavior were reviewed against approved
-      requirements, contracts, scope, non-scope, tests, risks, and policies.
-- [ ] Every material change is represented in the review map.
-- [ ] No blocking finding, unexplained change, or missing required gate remains.
-- [ ] This result is presented as pre-review evidence, not approval or merge authority.
-
-## Fresh-context and human review
-
-- Exact reviewed PR head:
-- Fresh-context session, round, assigned reviewer(s), packets, and receipts:
-- Approved reviewer roster for this exact head:
-- Fresh-context result: `NOT_STARTED / APPROVED / CHANGES_REQUESTED / BLOCKED`
-- Human review: `NOT_STARTED / APPROVED / CHANGES_REQUESTED / NOT_APPLICABLE_FOR_SCOPED_AGENT_AUTO_MERGE`
-- Publication channel and identity boundary:
-- Durable findings and resolutions: `links / None`
-
-- [ ] Each session reviewer was initially created without authoring context,
-      stayed read-only, and returned an exact-revision receipt; revised heads
-      returned to the same assigned reviewer(s).
-- [ ] A same-actor comment is not represented as a formal approval from a
-      different GitHub identity.
-- [ ] Any commit after independent review invalidates that revision result and
-      triggers author self-review plus another round in the same session.
-- [ ] Every finding has an explicit author disposition; rejected comments carry
-      evidence and unresolved conflicts are routed to human decision.
-- [ ] Human review follows fresh approval unless this is a live, scoped
-      implementation `AGENT_AUTO_MERGE` PR.
-
-## Implementation continuation
-
-- Phase: `DESIGN / IMPLEMENTATION`
-- Live workflow and revision:
-- Current mode: `NOT_SELECTED / HUMAN_REVIEW_BEFORE_MERGE / AGENT_AUTO_MERGE`
-- User authority, selection time, and task/PR scope:
-- Mode rechecked before this PR/merge: `YES / NOT_APPLICABLE`
-- Post-merge human review destination: `ledger link / NOT_APPLICABLE`
-
-- [ ] `AGENT_AUTO_MERGE`, if selected, applies only to implementation and does
-      not bypass repository protections or required checks.
-- [ ] Missing/invalid mode data, conflicts, inconsistencies, failed gates,
-      unresolved comments, drift, or scope expansion stop automatic merge.
-- [ ] An automatically merged PR will be recorded `PENDING` for post-merge
-      human review and cannot be omitted from delivery closure.
-
-## Risk and adoption
-
-- Worst case if incorrect:
-- Existing instantiated-document impact:
-- Rollback or correction:
+GitHub owns detailed comments, revisions, checks, acceptance, and merge evidence.
+Same-account agent comments are review evidence, not approval by another GitHub
+identity.
 
 Closes #

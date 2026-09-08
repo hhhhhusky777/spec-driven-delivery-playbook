@@ -159,26 +159,26 @@ markdown_value() {
   ' "$file"
 }
 
-manifest_navigation_entry_point() {
+manifest_entry_point() {
   awk -F'|' '
     function trim(value) {
       gsub(/^[[:space:]]+|[[:space:]]+$/, "", value)
       return value
     }
-    trim($2) == "Start contributing" {
+    trim($2) == "Stable entry point" {
       print trim($3)
       exit
     }
   ' "$MANIFEST_PATH"
 }
 
-manifest_has_navigation_entry_point() {
+manifest_has_entry_point() {
   awk -F'|' '
     function trim(value) {
       gsub(/^[[:space:]]+|[[:space:]]+$/, "", value)
       return value
     }
-    trim($2) == "Start contributing" {
+    trim($2) == "Stable entry point" {
       found = 1
       exit
     }
@@ -202,22 +202,22 @@ entry_point_target() {
 }
 
 validate_project_entry_point() {
-  local navigation_entry target manifest_directory candidate_directory candidate
-  if manifest_has_navigation_entry_point; then
-    navigation_entry=$(manifest_navigation_entry_point)
-    target=$(printf '%s\n' "$navigation_entry" | entry_point_target)
+  local entry target manifest_directory candidate_directory candidate
+  if manifest_has_entry_point; then
+    entry=$(manifest_entry_point)
+    target=$(printf '%s\n' "$entry" | entry_point_target)
     [[ -n "$target" ]] ||
-      fail "upgrade requires Start contributing to record a local project entry point"
+      fail "upgrade requires Stable entry point to record a local project entry point"
     target=${target#<}
     target=${target%>}
     target=${target%%\#*}
     target=${target%%\?*}
     if [[ "$target" =~ ^[[:alpha:]][[:alnum:].+-]*: ]]; then
-      fail "upgrade requires Start contributing to record a local project entry point"
+      fail "upgrade requires Stable entry point to record a local project entry point"
     fi
     case "$target" in
       ""|/*)
-        fail "upgrade requires Start contributing to record a local project entry point"
+        fail "upgrade requires Stable entry point to record a local project entry point"
         ;;
     esac
 
@@ -235,22 +235,21 @@ validate_project_entry_point() {
     return
   fi
 
-  [[ -f "$PROJECT_ROOT/$ADOPTION_ROOT/README.md" ]] ||
-    fail "upgrade requires a manifest Start contributing entry point or the legacy project SDD entry point: $ADOPTION_ROOT/README.md"
+  fail "upgrade requires Stable entry point in the manifest"
 }
 
 profile_for_state() {
   case "$1" in
-    ABSENT|DISCOVERY|MAPPED)
+    ABSENT|DRAFT)
       printf '%s\n' "adoption"
       ;;
-    INSTALLED|PILOT|REVIEW|ACTIVE|UPDATING|EXAMPLE_REVIEWED)
+    INSTALLED)
       printf '%s\n' "workflow"
       ;;
     BLOCKED)
       case "${2:-NONE}" in
-        DISCOVERY|MAPPED) printf '%s\n' "adoption" ;;
-        INSTALLED|PILOT|REVIEW|ACTIVE|UPDATING|EXAMPLE_REVIEWED)
+        DRAFT) printf '%s\n' "adoption" ;;
+        INSTALLED)
           printf '%s\n' "workflow"
           ;;
         *) return 1 ;;
@@ -524,13 +523,13 @@ prepare_upgrade() {
   [[ -f "$MANIFEST_PATH" ]] ||
     fail "upgrade requires an installed project adoption manifest"
   case "$MANIFEST_STATE" in
-    INSTALLED|PILOT|REVIEW|ACTIVE|EXAMPLE_REVIEWED) ;;
+    INSTALLED) ;;
     *) fail "upgrade requires a stable installed state; found $MANIFEST_STATE" ;;
   esac
   [[ -n "$PINNED_REVISION" ]] ||
     fail "upgrade requires an exact 40-character Playbook revision in the manifest"
 
-  local manifest_repository current_blocker installed_marker recorded_hash actual_hash
+  local manifest_repository installed_marker recorded_hash actual_hash
   local recorded_revision recorded_repository cleanup_state plan active_line
   manifest_repository=$(markdown_value "Playbook source repository" "$MANIFEST_PATH")
   [[ -n "$manifest_repository" ]] ||
@@ -538,10 +537,6 @@ prepare_upgrade() {
   [[ "$(canonical_repository "$manifest_repository")" == \
     "$(canonical_repository "$PLAYBOOK_REPOSITORY")" ]] ||
     fail "requested repository differs from the manifest playbook source"
-  current_blocker=$(markdown_value "Current blocker" "$MANIFEST_PATH")
-  [[ "$current_blocker" == "None" ]] ||
-    fail "upgrade requires Current blocker to be None"
-
   validate_project_entry_point
   [[ -f "$PROJECT_ROOT/$ADOPTION_ROOT/solution-whiteboard.md" ]] ||
     fail "upgrade requires the project solution whiteboard"
@@ -567,13 +562,14 @@ prepare_upgrade() {
   [[ "$(head -n 1 "$installed_marker")" == "$PINNED_REVISION" ]] ||
     fail "STALE_RUNTIME: installed workflow skill differs from the manifest pin"
 
-  while IFS= read -r plan; do
+  plan="$PROJECT_ROOT/$ADOPTION_ROOT/implementation-plan.md"
+  if [[ -f "$plan" ]]; then
     active_line=$(sed -n \
       -e 's/^| Current task | `\([^`]*\)` |$/\1/p' \
       -e '/| `[^`]*` | `\(IN_PROGRESS\|VERIFYING\)` |/p' "$plan" | head -n 1)
     [[ -z "$active_line" || "$active_line" == "None" ]] ||
       fail "upgrade is allowed only between tasks; active work found in ${plan#"$PROJECT_ROOT/"}"
-  done < <(find "$PROJECT_ROOT/$ADOPTION_ROOT/active" -type f -name '*implementation-plan.md' 2>/dev/null | sort)
+  fi
 
   if [[ -f "$UPGRADE_GUIDE_PATH" ]]; then
     [[ "$(markdown_value "Cleanup state" "$UPGRADE_GUIDE_PATH")" == "COMPLETE" ]] ||
@@ -583,7 +579,7 @@ prepare_upgrade() {
   ensure_runtime_excludes
 
   local temp_root temp_directory checkout marker resolved_revision resolved_repository
-  local skill_source skill_destination template_source
+  local skill_source skill_destination
   temp_root=$(cd "${TMPDIR:-/tmp}" && pwd -P)
   temp_directory=$(mktemp -d "$temp_root/sdd-playbook.XXXXXX")
   checkout="$temp_directory/repository"
@@ -605,13 +601,10 @@ prepare_upgrade() {
     fail "candidate revision does not descend from the manifest-pinned revision"
 
   skill_source="$checkout/skills/sdd-playbook-upgrade"
-  template_source="$checkout/templates/adoption/playbook-upgrade-assessment.md"
   [[ -f "$skill_source/SKILL.md" ]] ||
     fail "candidate playbook does not contain sdd-playbook-upgrade"
   [[ -z "$(find "$skill_source" -type l -print -quit)" ]] ||
     fail "candidate upgrade skill contains a symbolic link"
-  [[ -f "$template_source" ]] ||
-    fail "candidate playbook does not contain the upgrade assessment template"
   skill_destination="$PROJECT_ROOT/.agents/skills/sdd-playbook-upgrade"
   FAILED_UPGRADE_SKILL_DESTINATION=$skill_destination
   if [[ -e "$skill_destination" ]]; then
@@ -642,7 +635,7 @@ active project pin, approve compatibility, or authorize work in an active task.
 | Generator schema version | \`$UPGRADE_GUIDE_SCHEMA_VERSION\` |
 | Required skill | \`sdd-playbook-upgrade\` |
 | Installed skill | \`.agents/skills/sdd-playbook-upgrade/SKILL.md\` |
-| Assessment destination | \`$ADOPTION_ROOT/playbook-upgrade-assessment.md\` |
+| Review evidence destination | Pull request |
 | Content hash | \`<CONTENT_HASH>\` |
 
 ## Revision boundary
@@ -788,8 +781,8 @@ mkdir -p "$RUNTIME_DIRECTORY"
 cat >"$GUIDE_PATH" <<EOF
 # SDD Agent Guide
 
-This machine-local guide connects the installer to the agent. Follow the
-bounded workflow below; do not treat this file as a project system contract.
+This machine-local guide supplies verified provenance and safety boundaries; it
+is not a project system contract or a prescribed implementation path.
 
 ## Installation state
 
@@ -829,59 +822,46 @@ EOF
 
 if [[ "$GUIDE_PROFILE" == "adoption" ]]; then
   cat >>"$GUIDE_PATH" <<EOF
-## Adoption execution contract
+## Adoption outcome and boundaries
 
-1. Confirm the working directory is the recorded project root.
-2. Verify the checkout repository and resolved revision before reading it.
-3. Read and follow the installed required skill completely.
-4. Preserve project authority, unrelated changes, allowed write scopes, and
-   every independent review stop.
-5. When the manifest does not yet exist, use the runtime source information in
-   this guide to populate its durable repository, immutable revision, and
-   materialization mode. Do not copy machine-local paths into the manifest.
-6. Do not request, infer, or record a product need during playbook installation.
-7. After adoption reaches \`INSTALLED\`, instantiate an empty solution
-   whiteboard at \`$ADOPTION_ROOT/solution-whiteboard.md\`.
-8. Stop whenever reviewer approval, project authority, or user input is
-   required. Never approve an artifact or state transition you generated.
+- Verify the recorded project root, checkout repository, resolved revision,
+  ownership marker, and guide hash before using the checkout.
+- Read and follow the installed required skill. Preserve project authority,
+  unrelated changes, allowed write scope, and required review.
+- Create only the manifest and neutral whiteboard. Record durable repository
+  and revision values in the manifest; never copy machine-local paths or infer
+  a feature need.
+- Stop for required reviewer or owner acceptance, missing authority, or a
+  critical safety mismatch. Never self-approve.
 
 ## Expected completion boundary
 
 - The adoption manifest is \`INSTALLED\` through recorded reviewer authority.
 - The project solution whiteboard exists in its empty initial state.
-- No need, solution, handoff, plan, product code, or delivery claim has been
-  inferred or generated.
+- No feature plan, product code, or delivery claim has been inferred.
 EOF
 else
   cat >>"$GUIDE_PATH" <<EOF
-## Delivery execution contract
+## Delivery outcome and boundaries
 
-1. Confirm the working directory is the recorded project root.
-2. Verify the checkout repository, resolved revision, ownership marker, and
-   content hash before reading it. Run \`./install-sdd.sh --validate\` when the
-   runtime may have drifted.
-3. Read and follow \`sdd-project-workflow\` completely, then re-read the manifest
-   and active delivery workflow for live state and authorization.
-4. Treat \`Manifest state detected\` as generation-time provenance. A compatible
-   state advance within this workflow profile does not authorize a new action;
-   the reviewed manifest and workflow remain authoritative.
-5. Execute the dependency-ready work unit inside its authorized scope. Follow
-   the skill's canonical goals and error-handling references; choose internal
-   steps without inventing a new gate for each edit or conversation turn.
-6. Preserve structured freshness and the actual acceptance boundary. Combining
-   independently gated artifacts still requires the approved batch route.
-7. For v5, preserve active working state through feature target verification;
-   verify versioned PR evidence and exact reset authority before removing or
-   resetting any delivery-owned item. Adoption and reusable output remain.
-8. Preserve unrelated work and stop whenever approval, authority, or user input
-   is required. Never self-approve.
+- Verify the recorded project root, checkout repository, resolved revision,
+  ownership marker, and guide hash; run \`./install-sdd.sh --validate\` when the
+  runtime may have drifted.
+- Read and follow \`sdd-project-workflow\`. The manifest owns installation
+  authority, the whiteboard owns design, and the implementation plan owns all
+  task and delivery state.
+- Work inside authorized scope, preserve unrelated work, and keep required
+  checks, review, merge authority, and destructive-action safeguards.
+- Pull requests own review and delivery evidence. Stop for missing authority,
+  required acceptance, or a critical safety or policy mismatch. Never
+  self-approve.
 
 ## Expected completion boundary
 
 - The authorized work unit has reached its actual completion or review boundary.
 - Required checks and lifecycle invariants are reported separately.
-- Affected dependencies and any remaining recovery/reset work are recorded.
-- The next independent review or dependency-ready action is explicit.
+- The implementation plan, when present, accurately records task state and
+  remaining work.
 EOF
 fi
 
@@ -889,13 +869,11 @@ cat >>"$GUIDE_PATH" <<EOF
 
 ## Runtime replacement
 
-Reuse this guide only while its Required skill matches the reviewed manifest
-state. After an approved state change requires a different skill, finish and
-review the current boundary first. If cleanup is \`PENDING\`, run
-\`./install-sdd.sh --cleanup\` from the project root, then run
-\`./install-sdd.sh\` and verify the new guide's manifest state, required skill,
-repository, and immutable revision. Never overwrite a pending checkout or use
-an adoption guide to admit the first need.
+Reuse this guide only while its required skill and immutable revision match the
+manifest. Finish and review the current boundary before replacing a pending
+runtime. After an accepted state change, clean up the owned checkout,
+regenerate the guide, and verify its manifest state, skill, repository, and
+revision.
 EOF
 
 refresh_guide_hash "$GUIDE_PATH"
@@ -905,4 +883,4 @@ trap - EXIT
 printf 'Installed skill: %s\n' "$SKILL_NAME"
 printf 'Generated guide: %s\n\n' "$GUIDE_PATH"
 printf 'Prompt the agent with:\n\n'
-printf 'Follow %s exactly.\n' "$RUNTIME_ROOT/agent-guide.md"
+printf 'Use %s for verified provenance and follow its installed skill.\n' "$RUNTIME_ROOT/agent-guide.md"
