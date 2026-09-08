@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access, cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { access, cp, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import os from "node:os";
 import path from "node:path";
@@ -105,12 +105,24 @@ test("installer resolves latest main, installs adoption skill, and emits one gui
   const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
   assert.equal(guideValue(guide, "Manifest state detected"), "ABSENT");
   assert.equal(guideValue(guide, "Manifest state before block"), "NONE");
-  assert.equal(guideValue(guide, "Generator version"), "2.1.0");
-  assert.equal(guideValue(guide, "Generator schema version"), "2");
+  assert.equal(guideValue(guide, "Generator version"), "2.2.0");
+  assert.equal(guideValue(guide, "Generator schema version"), "3");
   assert.equal(guideValue(guide, "Guide profile"), "adoption");
   assert.equal(guideValue(guide, "Required skill"), "sdd-project-adoption");
   assert.equal(guideValue(guide, "Requested revision"), "main");
   assert.equal(guideValue(guide, "Resolved revision"), source.latestRevision);
+  assert.equal(
+    guideValue(guide, "Playbook checkout"),
+    path.join(
+      guideValue(guide, "Project root"),
+      ".sdd-runtime",
+      "checkouts",
+      source.latestRevision,
+      "repository",
+    ),
+  );
+  assert.match(guideValue(guide, "Git common directory"), /\.git$/);
+  assert.match(guideValue(guide, "Git worktree directory"), /\.git$/);
   assert.doesNotMatch(guide, /^- Next action:/m);
   assert.match(guide, /^## Runtime replacement$/m);
   assert.match(guide, /^## Adoption outcome and boundaries$/m);
@@ -141,6 +153,25 @@ test("installer resolves latest main, installs adoption skill, and emits one gui
   assert.equal(guideValue(cleanedGuide, "Cleanup state"), "COMPLETE");
   const repeatedCleanup = runInstaller(project, ["--cleanup"]);
   assert.equal(repeatedCleanup.status, 0, repeatedCleanup.stderr);
+});
+
+test("manifest pin validates a bootstrap guide whose requested revision was main", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createTargetProject(t);
+  const installed = runInstaller(project, ["--repository", source.repository]);
+  assert.equal(installed.status, 0, installed.stderr);
+
+  const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
+  await mkdir(adoptionRoot, { recursive: true });
+  await writeFile(
+    path.join(adoptionRoot, "project-adoption-manifest.md"),
+    `# Manifest\n\n| Field | Value |\n| --- | --- |\n| Adoption state | \`DRAFT\` |\n| Playbook revision | \`${source.latestRevision}\` |\n`,
+    "utf8",
+  );
+
+  const validation = runInstaller(project, ["--validate"]);
+  assert.equal(validation.status, 0, validation.stderr);
+  assert.match(validation.stdout, /^STATE_ADVANCED: manifest moved from ABSENT to DRAFT/);
 });
 
 test("real workflow skill and generated guide resolve canonical goals and recovery after installation", async (t) => {
@@ -322,7 +353,7 @@ test("runtime validation fails closed on profile changes, tampering, and unsuppo
   assert.match(unsupported.stderr, /unsupported manifest state/);
 });
 
-test("cleanup rejects a guide whose checkout is outside the owned temporary boundary", async (t) => {
+test("cleanup rejects a guide whose checkout is outside the exact project runtime boundary", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createTargetProject(t);
   const result = runInstaller(project, ["--repository", source.repository]);
@@ -350,7 +381,7 @@ test("validation checks marker ownership and command modes are exclusive", async
 
   const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
   const marker = guideValue(guide, "Ownership marker");
-  await writeFile(marker, "sdd-owned-checkout-v1\nproject-root=/wrong/project\n", "utf8");
+  await writeFile(marker, "sdd-owned-checkout-v2\nproject-root=/wrong/project\n", "utf8");
   const validation = runInstaller(project, ["--validate"]);
   assert.notEqual(validation.status, 0);
   assert.match(validation.stderr, /ownership marker belongs to a different project/);
@@ -358,6 +389,163 @@ test("validation checks marker ownership and command modes are exclusive", async
   const conflictingModes = runInstaller(project, ["--cleanup", "--validate", "--upgrade"]);
   assert.notEqual(conflictingModes.status, 0);
   assert.match(conflictingModes.stderr, /mutually exclusive/);
+});
+
+test("runtime validation rejects a marker bound to a different worktree", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createTargetProject(t);
+  const result = runInstaller(project, ["--repository", source.repository]);
+  assert.equal(result.status, 0, result.stderr);
+
+  const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
+  const marker = guideValue(guide, "Ownership marker");
+  await writeFile(
+    marker,
+    [
+      "sdd-owned-checkout-v2",
+      `project-root=${guideValue(guide, "Project root")}`,
+      `git-common-directory=${guideValue(guide, "Git common directory")}`,
+      "git-directory=/different/worktree/git-directory",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+
+  const validation = runInstaller(project, ["--validate"]);
+  assert.notEqual(validation.status, 0);
+  assert.match(validation.stderr, /ownership marker belongs to a different worktree/);
+});
+
+test("runtime validation rejects a branch switch in the same worktree", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createTargetProject(t);
+  run("git", ["config", "user.name", "Installer Test"], project);
+  run("git", ["config", "user.email", "installer@example.test"], project);
+  run("git", ["add", "install-sdd.sh"], project);
+  run("git", ["commit", "-m", "target fixture"], project);
+  const installed = runInstaller(project, ["--repository", source.repository]);
+  assert.equal(installed.status, 0, installed.stderr);
+
+  run("git", ["switch", "-c", "feature"], project);
+  const validation = runInstaller(project, ["--validate"]);
+  assert.notEqual(validation.status, 0);
+  assert.match(validation.stderr, /guide belongs to a different repository worktree/);
+
+  const cleanup = runInstaller(project, ["--cleanup"]);
+  assert.equal(cleanup.status, 0, cleanup.stderr);
+  const replacement = runInstaller(project, ["--repository", source.repository]);
+  assert.equal(replacement.status, 0, replacement.stderr);
+  assert.match(runInstaller(project, ["--validate"]).stdout, /^CURRENT:/);
+});
+
+test("upgrade preparation rejects runtime created on another branch", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  run("git", ["switch", "-c", "feature"], project);
+
+  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /current guide belongs to a different repository worktree/);
+});
+
+test("installer rejects a project runtime symlink that escapes the worktree", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createTargetProject(t);
+  const external = await temporaryDirectory(t, "sdd external runtime ");
+  await symlink(external, path.join(project, ".sdd-runtime"), "dir");
+
+  const result = runInstaller(project, ["--repository", source.repository]);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /project runtime boundary must not be a symbolic link/);
+});
+
+test("validation rejects a resolved-revision directory symlink", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createTargetProject(t);
+  const installed = runInstaller(project, ["--repository", source.repository]);
+  assert.equal(installed.status, 0, installed.stderr);
+
+  const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
+  const checkout = guideValue(guide, "Playbook checkout");
+  const revisionDirectory = path.dirname(checkout);
+  const externalRoot = await temporaryDirectory(t, "sdd moved checkout ");
+  const externalRevision = path.join(externalRoot, "revision");
+  await cp(revisionDirectory, externalRevision, { recursive: true });
+  await rm(revisionDirectory, { recursive: true });
+  await symlink(externalRevision, revisionDirectory, "dir");
+
+  const validation = runInstaller(project, ["--validate"]);
+  assert.notEqual(validation.status, 0);
+  assert.match(validation.stderr, /checkout boundary is missing or symbolic/);
+});
+
+test("cleanup accepts the exact owned checkout format from installer 2.1", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createTargetProject(t);
+  const installed = runInstaller(project, ["--repository", source.repository]);
+  assert.equal(installed.status, 0, installed.stderr);
+
+  const guidePath = path.join(project, ".sdd-runtime", "agent-guide.md");
+  const guide = await readFile(guidePath, "utf8");
+  const currentCheckout = guideValue(guide, "Playbook checkout");
+  const legacyRoot = await realpath(await temporaryDirectory(t, "sdd-playbook."));
+  const legacyCheckout = path.join(legacyRoot, "repository");
+  await cp(currentCheckout, legacyCheckout, { recursive: true });
+  const legacyMarker = path.join(legacyCheckout, ".sdd-owned-checkout");
+  await writeFile(
+    legacyMarker,
+    `sdd-owned-checkout-v1\nproject-root=${guideValue(guide, "Project root")}\n`,
+    "utf8",
+  );
+  await rm(path.dirname(currentCheckout), { recursive: true });
+
+  const legacyGuide = guide
+    .replace(/^\| Git common directory \|.*\n/m, "")
+    .replace(/^\| Git worktree directory \|.*\n/m, "")
+    .replace(/^\| Git worktree state \|.*\n/m, "")
+    .replace(/^\| Generator version \|.*$/m, "| Generator version | `2.1.0` |")
+    .replace(/^\| Generator schema version \|.*$/m, "| Generator schema version | `2` |")
+    .replace(/^\| Playbook checkout \|.*$/m, `| Playbook checkout | \`${legacyCheckout}\` |`)
+    .replace(/^\| Ownership marker \|.*$/m, `| Ownership marker | \`${legacyMarker}\` |`);
+  await writeFile(guidePath, legacyGuide, "utf8");
+
+  const cleanup = runInstaller(project, ["--cleanup"]);
+  assert.equal(cleanup.status, 0, cleanup.stderr);
+  await assert.rejects(access(legacyCheckout));
+});
+
+test("legacy cleanup rejects a nested temporary checkout", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createTargetProject(t);
+  const installed = runInstaller(project, ["--repository", source.repository]);
+  assert.equal(installed.status, 0, installed.stderr);
+
+  const guidePath = path.join(project, ".sdd-runtime", "agent-guide.md");
+  const guide = await readFile(guidePath, "utf8");
+  const currentCheckout = guideValue(guide, "Playbook checkout");
+  const legacyRoot = await realpath(await temporaryDirectory(t, "sdd-playbook."));
+  const nestedCheckout = path.join(legacyRoot, "nested", "repository");
+  await mkdir(path.dirname(nestedCheckout), { recursive: true });
+  await cp(currentCheckout, nestedCheckout, { recursive: true });
+  const nestedMarker = path.join(nestedCheckout, ".sdd-owned-checkout");
+  await writeFile(
+    nestedMarker,
+    `sdd-owned-checkout-v1\nproject-root=${guideValue(guide, "Project root")}\n`,
+    "utf8",
+  );
+  await rm(path.dirname(currentCheckout), { recursive: true });
+  const legacyGuide = guide
+    .replace(/^\| Git common directory \|.*\n/m, "")
+    .replace(/^\| Git worktree directory \|.*\n/m, "")
+    .replace(/^\| Git worktree state \|.*\n/m, "")
+    .replace(/^\| Playbook checkout \|.*$/m, `| Playbook checkout | \`${nestedCheckout}\` |`)
+    .replace(/^\| Ownership marker \|.*$/m, `| Ownership marker | \`${nestedMarker}\` |`);
+  await writeFile(guidePath, legacyGuide, "utf8");
+
+  const cleanup = runInstaller(project, ["--cleanup"]);
+  assert.notEqual(cleanup.status, 0);
+  assert.match(cleanup.stderr, /immediate temporary child/);
+  await access(nestedCheckout);
 });
 
 test("upgrade prepares a newer immutable candidate without changing the active runtime", async (t) => {

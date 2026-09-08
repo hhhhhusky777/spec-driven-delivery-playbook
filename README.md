@@ -366,11 +366,20 @@ worktree receives only the required machine-local untracked inputs, such as an
 environment file when the task actually depends on it. Those inputs remain
 ignored and untracked, with secrets kept out of Git.
 
+The installer follows the same boundary. Its immutable playbook checkout lives
+under that worktree's ignored `.sdd-runtime/checkouts/RESOLVED_SHA/` directory,
+not in an operating-system temporary directory. The generated guide and
+ownership marker bind it to the repository and physical worktree. Validation
+and cleanup reject a checkout copied from another worktree or moved outside the
+exact project-local runtime path.
+
 ```mermaid
 flowchart TD
     F["Accepted feature plan"] --> B["Feature integration target"]
     B --> T1["Task worktree A"]
     B --> T2["Task worktree B"]
+    T1 --> R1["Ignored runtime A"]
+    T2 --> R2["Ignored runtime B"]
     T1 --> P1["Self-contained task PR"]
     T2 --> P2["Self-contained task PR"]
     P1 --> B
