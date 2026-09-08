@@ -320,20 +320,23 @@ restating increasingly specific error rules.
 ### Finish, archive, and reset
 
 Delivery finishes only after the accepted outcome is merged and verified on
-its target. The accepted whiteboard is archived with links to the delivery PRs.
-Reusable source output and the adoption manifest remain; the implementation
-plan and other feature-only working material are removed; the live whiteboard
-returns to `EMPTY` for the next need.
+its target. Before final review, a delivery-closing candidate already archives
+the accepted whiteboard with links to its delivery PRs, removes the
+implementation plan and other feature-only working material, and resets the
+live whiteboard to `EMPTY`. Reusable source output and the adoption manifest
+remain. If the PR does not merge, none of that candidate state reaches the
+target; after merge, only exact-target verification remains.
 
 ```mermaid
 flowchart LR
-    M["Merged feature"] --> V["Verify target outcome"]
-    V --> A["Archive concluded whiteboard + PR links"]
+    C["Final candidate"] --> A["Archive concluded whiteboard + PR links"]
     A --> K["Keep reusable output + manifest"]
     A --> X["Remove feature-only material"]
     K --> R["Reset live whiteboard to EMPTY"]
     X --> R
-    R --> N["Ready for next feature"]
+    R --> H["Review + authorized merge"]
+    H --> V["Verify exact target"]
+    V --> N["Ready for next feature"]
 ```
 
 Git history and pull requests preserve the detailed evidence, so cleanup does

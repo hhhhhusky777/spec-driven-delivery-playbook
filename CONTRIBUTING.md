@@ -60,10 +60,14 @@ before coding. Before merge, publish the complete exact candidate, run
 applicable checks, reconcile comments, obtain review from the two retained
 agent seats, and obtain required owner acceptance. GitHub is the durable record.
 
-After verified delivery, archive the concluded whiteboard with links to its
-merged PRs, remove the feature plan and other non-reusable feature material,
-then reset the working whiteboard. Preserve the manifest and reusable project
-authority. Delete only owned merged branches after approval.
+Before final review, that candidate must already contain every predictable
+tracked canonical state that its merge will make true. If it closes the
+delivery, archive the concluded whiteboard with links to its PRs, remove the
+feature plan and other non-reusable feature material, and reset the working
+whiteboard in the same candidate. Preserve the manifest and reusable project
+authority. Pending review, merge, and target verification remain GitHub facts;
+after merge, verify the exact target without creating a status-only follow-up.
+Delete only owned merged branches after approval.
 
 ## Change expectations
 

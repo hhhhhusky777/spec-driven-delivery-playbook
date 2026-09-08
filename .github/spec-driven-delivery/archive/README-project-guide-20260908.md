@@ -10,6 +10,7 @@
 | State | `DELIVERED` |
 | Owner | Repository owner |
 | Design conclusion | Owner request on 2026-09-08 Asia/Shanghai |
+| D12 amendment | Owner request on 2026-09-09 Asia/Shanghai |
 | Final convergence | [PR #77](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/77) |
 
 ## Problem and accepted outcome

@@ -72,11 +72,11 @@ required acceptance gate.
 
 ## Completion
 
-Before final review, the candidate satisfies the accepted outcome and
-Definition of Done, passes applicable checks, and already contains its
-merge-resulting canonical state. After authorized merge, verify that exact
-state on the target. The pull request records review, merge authority, merge,
-and target evidence. When the candidate closes the delivery, it also archives
-the concluded whiteboard with pull-request links, removes the feature plan and
-other non-reusable feature material, and resets the working whiteboard. Preserve
-the manifest and other reusable project authority.
+Before final review, the candidate satisfies its implementation and task
+outcomes, passes applicable pre-review checks, and already contains its
+merge-resulting canonical state. After authorized merge, verify the complete
+delivery outcome on the exact target. The pull request records review, merge
+authority, merge, and target evidence. When the candidate closes the delivery,
+it also archives the concluded whiteboard with pull-request links, removes the
+feature plan and other non-reusable feature material, and resets the working
+whiteboard. Preserve the manifest and other reusable project authority.

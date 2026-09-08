@@ -53,11 +53,10 @@ Git and pull requests preserve prior versions and detailed delivery evidence.
 The maintained tree keeps current reusable guidance and active feature state,
 not duplicate history or successful-tool transcripts.
 
-Before final pull-request review, the candidate must update every affected
-tracked canonical source to the state that will result if it merges. Pending
-review, merge, and target verification remain pull-request facts. A reviewer
-must treat a predictable post-merge status-only correction as a currentness
-defect, not routine cleanup.
+Apply the repository's
+[merge-ready state boundary](../CONTRIBUTING.md#branches-review-and-merge).
+For documentation currentness, reviewers treat a predictable post-merge
+status-only correction as a defect rather than routine cleanup.
 
 ## Review and human brief
 
