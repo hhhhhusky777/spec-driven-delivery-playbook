@@ -117,6 +117,12 @@ one responsibility:
 Project policies stay in their existing canonical files. The workflow skill
 guides the agent but owns no feature state.
 
+Three documents is a storage model, not a reduced-information model. Each
+template provides a comprehensive menu for its responsibility: project
+authority in the manifest; discovery and design in the whiteboard; and
+contracts, architecture, tasks, validation, recovery, and completion in the
+plan. Agents keep the applicable information and omit irrelevant ceremony.
+
 ```mermaid
 flowchart LR
     M["Manifest<br/>installation + authority"] --> W["Whiteboard<br/>design"]

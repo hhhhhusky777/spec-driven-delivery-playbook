@@ -37,6 +37,47 @@ test("each durable document has one responsibility", async () => {
   assert.match(plan, /Delivery Definition of Done/);
 });
 
+test("the three templates preserve complete proportional delivery information", async () => {
+  const manifest = await read("templates/adoption/project-adoption-manifest.md");
+  for (const heading of [
+    "Adoption outcome and scope",
+    "Project discovery inventory",
+    "Stable project boundaries",
+    "Validation and enforcement",
+    "Gaps, deviations, and proportional exclusions",
+    "Adoption or upgrade human brief",
+  ]) assert.match(manifest, new RegExp(heading));
+
+  const whiteboard = await read("templates/discovery/solution-whiteboard.md");
+  for (const heading of [
+    "Current understanding",
+    "Authority and context",
+    "Facts, assumptions, and unknowns",
+    "Requirements and acceptance",
+    "Current system and gaps",
+    "Options, experiments, and tradeoffs",
+    "Policy applicability and gaps",
+    "Risks and consequences",
+    "Decision log",
+    "Concluded design",
+    "Design amendments",
+    "Human brief",
+  ]) assert.match(whiteboard, new RegExp(heading));
+
+  const plan = await read("templates/delivery/implementation-plan.md");
+  for (const heading of [
+    "Governing inputs and delivery boundaries",
+    "System contracts",
+    "Proposed design",
+    "Delivery strategy and readiness",
+    "Design-to-task mapping",
+    "Task specifications and context receipts",
+    "Recovery, decisions, and change control",
+    "Plan validation and completion",
+    "Human review brief",
+  ]) assert.match(plan, new RegExp(heading));
+});
+
 test("workflow skills state five goals and reject duplicate delivery documents", async () => {
   const workflow = await read("skills/sdd-project-workflow/SKILL.md");
   for (const phrase of ["clear boundaries", "stable outcomes", "key information only", "proportional effort", "agent discretion"]) {
