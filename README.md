@@ -225,6 +225,13 @@ The planning human brief shows design points beside task outcomes and
 validation. This makes omissions, unsupported tasks, and inconsistencies
 visible without requiring the owner to reread every document word by word.
 
+Before a pull request enters final review, its candidate updates every affected
+canonical document to the repository state that will result if it merges. A
+task can therefore be `DONE` in the candidate without claiming the PR has
+already merged: GitHub owns the pending review, merge, and target-verification
+facts. This prevents merged code from leaving stale plan status and avoids a
+second bookkeeping pull request.
+
 ### Implement efficiently
 
 Implementation is organized around coherent, self-contained merge units—not
@@ -237,7 +244,8 @@ authority remain at their real boundaries.
 flowchart LR
     R["Dependency-ready task"] --> I["Implement coherent unit"]
     I --> T["Targeted + required checks"]
-    T --> PR["Complete PR candidate"]
+    T --> C["Converge tracked canonical state"]
+    C --> PR["Complete PR candidate"]
     PR --> A["Two-agent review"]
     A -->|"findings"| F["Consolidated correction"]
     F --> T

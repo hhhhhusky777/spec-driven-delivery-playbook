@@ -87,6 +87,21 @@ test("workflow skills state six goals and reject duplicate delivery documents", 
   assert.match(workflow, /pull request owns review comments, checks, approvals/);
   assert.match(workflow, /required machine-local untracked/);
   assert.match(workflow, /keep\s+it ignored and untracked/);
+  assert.match(workflow, /Before final pull-request review/);
+  assert.match(workflow, /Do not defer predictable tracked-state updates/);
+});
+
+test("final review requires merge-ready canonical state without predicting PR facts", async () => {
+  const plan = await read("templates/delivery/implementation-plan.md");
+  const policy = await read("docs/documentation-quality-policy.md");
+  const readme = await read("README.md");
+  for (const source of [plan, policy, readme]) {
+    assert.match(source, /Before (?:a pull request enters|final (?:pull-request )?review)/);
+    assert.match(source, /canonical/);
+  }
+  assert.match(plan, /task is `DONE`/);
+  assert.match(plan, /does not claim that the PR has\s+already been reviewed or merged/);
+  assert.match(policy, /status-only correction as a currentness\s+defect/);
 });
 
 test("upgrade never rewrites feature content and keeps exact acceptance boundaries", async () => {

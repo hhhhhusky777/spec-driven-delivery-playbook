@@ -46,6 +46,12 @@ the plan, and review evidence in the pull request.
 - A concluded design or approved plan changes only through an explicit
   amendment when the observable outcome changes. Ordinary task status and
   evidence updates do not reopen the design.
+- Before final pull-request review, make the candidate converge every tracked
+  canonical document to the state that will be true if that candidate merges.
+  Candidate task and plan states describe that resulting repository state;
+  GitHub owns the still-pending review, merge, and target-verification facts.
+  Do not defer predictable tracked-state updates to a bookkeeping change after
+  merge.
 - Before starting a new feature, check for a newer playbook revision and
   synchronize it at a safe boundary.
 
@@ -66,9 +72,11 @@ required acceptance gate.
 
 ## Completion
 
-The accepted outcome and Definition of Done are satisfied, applicable checks
-pass, required review and merge authority are recorded in the pull request,
-and the implementation plan accurately reports the final state. After delivery,
-archive the concluded whiteboard with links to its merged pull requests, remove
-the feature plan and other non-reusable feature material, then reset the working
-whiteboard. Preserve the manifest and other reusable project authority.
+Before final review, the candidate satisfies the accepted outcome and
+Definition of Done, passes applicable checks, and already contains its
+merge-resulting canonical state. After authorized merge, verify that exact
+state on the target. The pull request records review, merge authority, merge,
+and target evidence. When the candidate closes the delivery, it also archives
+the concluded whiteboard with pull-request links, removes the feature plan and
+other non-reusable feature material, and resets the working whiteboard. Preserve
+the manifest and other reusable project authority.
