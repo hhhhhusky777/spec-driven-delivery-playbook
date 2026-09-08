@@ -4,6 +4,11 @@
 
 This is the only active-delivery state authority.
 
+Use the applicable sections needed to make implementation safe and reviewable.
+The template is a completeness menu, not a requirement to fill every row. Link
+canonical contracts instead of copying them, and keep PR review evidence in the
+pull request.
+
 ## Delivery status
 
 | Field | Value |
@@ -14,7 +19,119 @@ This is the only active-delivery state authority.
 | Active blocker | `None` |
 | Implementation mode | `<human-review-before-merge or explicitly authorized alternative>` |
 | Feature branch / target | `<values>` |
+| Owner | `<owner>` |
+| Primary issue / need | `<link>` |
+| Concluded whiteboard | `<link and accepted revision>` |
+| Required reviewers | `<project rule>` |
 | Last verified | `<date and evidence>` |
+
+## Governing inputs and delivery boundaries
+
+### Source hierarchy
+
+| Priority | Source | Authority / use |
+| --- | --- | --- |
+| 1 | `<owner decision or binding project authority>` | `<boundary>` |
+| 2 | `<accepted whiteboard and contracts>` | `<boundary>` |
+| 3 | `<implementation evidence>` | `<boundary>` |
+
+### Outcome, scope, and assumptions
+
+| Concern | Accepted value |
+| --- | --- |
+| Problem | `<observed behavior and consequence>` |
+| Required outcome | `<observable result>` |
+| In scope | `<systems, behavior, data, or users>` |
+| Out of scope / deferred | `<explicit exclusions and owners>` |
+| Success measures | `<signals and thresholds>` |
+| Assumptions / constraints | `<IDs, evidence, and validation>` |
+
+### Clarifications and gaps
+
+| ID | Question or gap | Why it matters | Resolution / owner | State |
+| --- | --- | --- | --- | --- |
+| `<G01>` | `<item>` | `<impact>` | `<decision or issue>` | `<open or resolved>` |
+
+## System contracts
+
+Record only contract classes that apply. Link stable project contracts and add
+feature-specific behavior here.
+
+### Functional and state contracts
+
+| ID | Trigger / precondition | Required behavior | Result / postcondition | Failure behavior |
+| --- | --- | --- | --- | --- |
+| `<FC01>` | `<condition>` | `<observable behavior>` | `<result>` | `<safe failure>` |
+
+| Entity | From | Event / guard | To | Atomic effects | Duplicate behavior |
+| --- | --- | --- | --- | --- | --- |
+| `<entity>` | `<state>` | `<event>` | `<state>` | `<effects>` | `<idempotent result>` |
+
+### Interface, data, and concurrency contracts
+
+| ID / concern | Inputs and outputs | Compatibility / invariants | Transaction, ordering, or idempotency | Failure / recovery |
+| --- | --- | --- | --- | --- |
+| `<IC01>` | `<API, event, schema, file, or UI>` | `<contract>` | `<ownership and race boundary>` | `<response>` |
+
+### Quality and operational contracts
+
+| Concern | Required outcome | Evidence / threshold | Owner or canonical source |
+| --- | --- | --- | --- |
+| Security, privacy, and abuse | `<invariants>` | `<tests or review>` | `<owner/link>` |
+| Performance and capacity | `<boundary>` | `<measurement>` | `<owner/link>` |
+| Observability and operations | `<signals, rollout, rollback>` | `<proof>` | `<owner/link>` |
+| Accessibility / usability | `<boundary>` | `<proof>` | `<owner/link>` |
+
+### Test and acceptance contracts
+
+| Contract or design IDs | Test level | Scenario | Required evidence |
+| --- | --- | --- | --- |
+| `<IDs>` | `<unit, contract, integration, E2E, manual, or review>` | `<positive and failure case>` | `<result>` |
+
+## Proposed design
+
+### Components and responsibility boundaries
+
+Include a diagram when relationships or sequencing are easier to understand
+visually.
+
+| Component | Owns | Must not own | Interfaces / dependencies |
+| --- | --- | --- | --- |
+| `<component>` | `<responsibility>` | `<boundary>` | `<contracts>` |
+
+### Key decisions
+
+| ID | Decision | Alternatives | Rationale / tradeoff | Affected contracts |
+| --- | --- | --- | --- | --- |
+| `<D01>` | `<choice>` | `<material alternatives>` | `<why>` | `<IDs>` |
+
+### Compatibility, migration, and rollout
+
+| Concern | Before / after compatibility | Migration or rollout | Rollback / recovery | Validation |
+| --- | --- | --- | --- | --- |
+| `<API, data, configuration, workflow, or user>` | `<boundary>` | `<approach>` | `<safe return>` | `<proof>` |
+
+### Risks and mitigations
+
+| ID | Scenario | Likelihood / impact | Prevention / detection | Owner | State |
+| --- | --- | --- | --- | --- | --- |
+| `<K01>` | `<worst case>` | `<assessment>` | `<control>` | `<owner>` | `<open or accepted>` |
+
+## Delivery strategy and readiness
+
+| Concern | This delivery |
+| --- | --- |
+| Integration model | `<single PR or feature integration branch>` |
+| Increment boundary | `<why each merge unit is self-contained>` |
+| Parallel ownership | `<worktrees and non-overlapping scope, or None>` |
+| Compatibility sequencing | `<foundation, consumer, migration, cleanup order>` |
+| Merge authority | `<human review or explicitly authorized alternative>` |
+
+A task is ready when its accepted outcome, scope, dependencies, applicable
+contracts, risks, validation, and merge boundary are sufficient to proceed
+without inventing product behavior. Required machine-local inputs and access
+must be available. Future implementation outputs are never prerequisites for
+starting the task that produces them.
 
 ## Design-to-task mapping
 
@@ -31,11 +148,69 @@ project-authority, or necessary-engineering basis.
 | --- | --- | --- | --- | --- | --- | --- |
 | `T01` | `PLANNED` | `None` | `<observable result>` | `<scope and compatibility>` | `<checks>` | `None` |
 
+## Task specifications and context receipts
+
+Repeat this compact section for each task when the ledger row alone is
+insufficient.
+
+### `<task ID>` — `<task name>`
+
+| Concern | Value |
+| --- | --- |
+| Outcome / non-scope | `<observable result and exclusions>` |
+| Source boundary | `<owned paths, components, or systems>` |
+| Consumed dependencies | `<task IDs, contracts, and exact revisions>` |
+| Critical obligations | `<safety, compatibility, data, or policy boundaries>` |
+| Required evidence | `<tests, review, deployment, or manual proof>` |
+| Context receipt | `<current sources read, conflicts or gaps, and disposition>` |
+| Actual result | `<summary when implemented>` |
+
+## Recovery, decisions, and change control
+
+Use the canonical error-handling framework. Keep only active or materially
+reusable facts here; detailed review discussion remains in the PR.
+
+### Failure and blocker log
+
+| ID | Task | Observed versus expected | Classification / evidence | Recovery or owner decision | State |
+| --- | --- | --- | --- | --- | --- |
+| `<E01>` | `<task>` | `<difference>` | `<agent mistake, execution failure, project gap, playbook gap, or critical mismatch>` | `<action>` | `<state>` |
+
+### Delivery decision and amendment log
+
+| ID / time | Decision or plan change | Reason / consequence | Affected design, contracts, or tasks | Authority |
+| --- | --- | --- | --- | --- |
+| `<entry>` | `<change>` | `<why>` | `<IDs>` | `<owner or evidence>` |
+
+## Plan validation and completion
+
+### Delivery Definition of Done
+
+| Outcome | Required evidence | Result / link |
+| --- | --- | --- |
+| Accepted design delivered | `<mapped design and contracts>` | `<pending or evidence>` |
+| Applicable validation passed | `<commands, environments, and manual proof>` | `<pending or evidence>` |
+| Compatibility and operations safe | `<migration, rollout, rollback, observability>` | `<pending or evidence>` |
+| Review and merge complete | `<PR checks, two-agent review, owner authority, target proof>` | `<pending or evidence>` |
+| Feature cleanup complete | `<archive link, exact owned removal inventory, reset proof>` | `<pending or evidence>` |
+
+### Planned versus actual outcome
+
+| Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
+| --- | --- | --- | --- |
+| `<ID>` | `<plan>` | `<result>` | `<None or follow-up>` |
+
+### Cleanup inventory
+
+| Item | Keep, archive, remove, or reset | Ownership and evidence | Result |
+| --- | --- | --- | --- |
+| `<path, branch, worktree, runtime item, or issue>` | `<action>` | `<proof and authority>` | `<pending or result>` |
+
 Use only the task detail needed to implement and judge the result. A task is
 done when its outcome, applicable validation, review, merge requirement, and
 dependent state are satisfied.
 
-## Delivery Definition of Done
+### Completion invariants
 
 - The concluded design is fully mapped with no unexplained task or gap.
 - Applicable project checks pass; unrun or failed checks remain explicit.
@@ -50,7 +225,7 @@ dependent state are satisfied.
 | --- | --- |
 | Tasks and outcomes | `<short task list>` |
 | Design consistency | `<mapping result and gaps>` |
-| Important changes | `<contracts, policies, compatibility, or migrations>` |
+| Important changes | `<contracts, architecture, policies, compatibility, migrations, or operations>` |
 | Validation | `<passed, failed, and unrun>` |
 | Risks or open decisions | `<summary or None>` |
 | Decision requested | `<exact request>` |
