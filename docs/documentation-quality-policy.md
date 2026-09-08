@@ -53,6 +53,11 @@ Git and pull requests preserve prior versions and detailed delivery evidence.
 The maintained tree keeps current reusable guidance and active feature state,
 not duplicate history or successful-tool transcripts.
 
+Apply the repository's
+[merge-ready state boundary](../CONTRIBUTING.md#branches-review-and-merge).
+For documentation currentness, reviewers treat a predictable post-merge
+status-only correction as a defect rather than routine cleanup.
+
 ## Review and human brief
 
 Every material candidate receives exact-candidate self-review, review by two

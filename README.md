@@ -113,8 +113,8 @@ one responsibility:
 | Document | Sole responsibility | Lifetime |
 | --- | --- | --- |
 | [Project adoption manifest](templates/adoption/project-adoption-manifest.md) | Installed immutable revision, canonical project authorities, and stable boundaries | Reused across features |
-| [Solution whiteboard](templates/discovery/solution-whiteboard.md) | One active feature's discussion and concluded design | Archived and reset after delivery |
-| [Implementation plan](templates/delivery/implementation-plan.md) | Tasks, dependencies, Definition of Done, validation, and all active-delivery state | Removed after verified delivery |
+| [Solution whiteboard](templates/discovery/solution-whiteboard.md) | One active feature's discussion and concluded design | A closing candidate archives it and resets the live copy |
+| [Implementation plan](templates/delivery/implementation-plan.md) | Tasks, dependencies, Definition of Done, validation, and all active-delivery state | Removed by the delivery-closing candidate |
 
 Project policies stay in their existing canonical files. The workflow skill
 guides the agent but owns no feature state.
@@ -129,9 +129,9 @@ plan. Agents keep the applicable information and omit irrelevant ceremony.
 flowchart LR
     M["Manifest<br/>installation + authority"] --> W["Whiteboard<br/>design"]
     W -->|"concluded"| P["Implementation plan<br/>tasks + live state"]
-    P --> PR["Pull request<br/>review + evidence"]
-    PR -->|"merged and verified"| C["Archive conclusion<br/>and reset"]
-    C --> W
+    P --> C["Closing candidate<br/>archive + reset"]
+    C --> PR["Pull request<br/>review + evidence"]
+    PR -->|"merged and verified"| W
 ```
 
 ### Where evidence lives
@@ -225,6 +225,13 @@ The planning human brief shows design points beside task outcomes and
 validation. This makes omissions, unsupported tasks, and inconsistencies
 visible without requiring the owner to reread every document word by word.
 
+Before a pull request enters final review, its candidate updates every affected
+canonical document to the repository state that will result if it merges. A
+task can therefore be `DONE` in the candidate without claiming the PR has
+already merged: GitHub owns the pending review, merge, and target-verification
+facts. This prevents merged code from leaving stale plan status and avoids a
+second bookkeeping pull request.
+
 ### Implement efficiently
 
 Implementation is organized around coherent, self-contained merge units—not
@@ -237,7 +244,8 @@ authority remain at their real boundaries.
 flowchart LR
     R["Dependency-ready task"] --> I["Implement coherent unit"]
     I --> T["Targeted + required checks"]
-    T --> PR["Complete PR candidate"]
+    T --> C["Converge tracked canonical state"]
+    C --> PR["Complete PR candidate"]
     PR --> A["Two-agent review"]
     A -->|"findings"| F["Consolidated correction"]
     F --> T
@@ -312,20 +320,23 @@ restating increasingly specific error rules.
 ### Finish, archive, and reset
 
 Delivery finishes only after the accepted outcome is merged and verified on
-its target. The accepted whiteboard is archived with links to the delivery PRs.
-Reusable source output and the adoption manifest remain; the implementation
-plan and other feature-only working material are removed; the live whiteboard
-returns to `EMPTY` for the next need.
+its target. Before final review, a delivery-closing candidate already archives
+the accepted whiteboard with links to its delivery PRs, removes the
+implementation plan and other feature-only working material, and resets the
+live whiteboard to `EMPTY`. Reusable source output and the adoption manifest
+remain. If the PR does not merge, none of that candidate state reaches the
+target; after merge, only exact-target verification remains.
 
 ```mermaid
 flowchart LR
-    M["Merged feature"] --> V["Verify target outcome"]
-    V --> A["Archive concluded whiteboard + PR links"]
+    C["Final candidate"] --> A["Archive concluded whiteboard + PR links"]
     A --> K["Keep reusable output + manifest"]
     A --> X["Remove feature-only material"]
     K --> R["Reset live whiteboard to EMPTY"]
     X --> R
-    R --> N["Ready for next feature"]
+    R --> H["Review + authorized merge"]
+    H --> V["Verify exact target"]
+    V --> N["Ready for next feature"]
 ```
 
 Git history and pull requests preserve the detailed evidence, so cleanup does

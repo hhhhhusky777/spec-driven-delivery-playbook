@@ -9,6 +9,12 @@ The template is a completeness menu, not a requirement to fill every row. Link
 canonical contracts instead of copying them, and keep PR review evidence in the
 pull request.
 
+Within a pull-request candidate, tracked states describe the repository state
+that will result if the candidate merges. Before final review, update every
+affected canonical document accordingly. Review, merge, and target verification
+remain live pull-request facts; do not predict or duplicate them in a later
+status-only change.
+
 ## Delivery status
 
 | Field | Value |
@@ -198,7 +204,8 @@ reusable facts here; detailed review discussion remains in the PR.
 | Accepted design delivered | `<mapped design and contracts>` | `<pending or evidence>` |
 | Applicable validation passed | `<commands, environments, and manual proof>` | `<pending or evidence>` |
 | Compatibility and operations safe | `<migration, rollout, rollback, observability>` | `<pending or evidence>` |
-| Review and merge complete | `<PR checks, two-agent review, owner authority, target proof>` | `<pending or evidence>` |
+| Merge-ready canonical state | `<affected tracked state reconciled before final review>` | `<result>` |
+| PR-owned review and delivery | `<PR checks, reviewers, owner authority, merge, and target proof>` | `<PR link; GitHub owns current state>` |
 | Feature cleanup complete | `<archive link, exact owned removal inventory, reset proof>` | `<pending or evidence>` |
 
 ### Planned versus actual outcome
@@ -223,15 +230,20 @@ not become another progress ledger.
 | --- | --- | --- | --- |
 | `<path, branch, worktree, runtime item, or issue>` | `<action>` | `<proof and authority>` | `<pending or result>` |
 
-Use only the task detail needed to implement and judge the result. A task is
-done when its outcome, applicable validation, review, merge requirement, and
-dependent state are satisfied.
+Use only the task detail needed to implement and judge the result. In a final
+PR candidate, a task is `DONE` when its accepted outcome, applicable validation,
+dependent state, and merge-ready canonical updates are complete. This is the
+state that becomes authoritative on merge; it does not claim that the PR has
+already been reviewed or merged.
 
 ### Completion invariants
 
 - The concluded design is fully mapped with no unexplained task or gap.
 - Applicable project checks pass; unrun or failed checks remain explicit.
-- Required review and merge authority are recorded in the pull request.
+- Every affected tracked canonical state already represents the result of
+  merging the candidate; no predictable status-only follow-up is required.
+- Required review, merge authority, merge, and target verification are recorded
+  in the pull request rather than predicted in the plan.
 - Canonical documents and user-facing entry points affected by the change are
   consistent.
 - The plan reports the actual final state and no unresolved critical mismatch.

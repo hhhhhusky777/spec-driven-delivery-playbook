@@ -86,8 +86,9 @@ applicable issue tracker.
 
 ## Completion and review
 
-Completion requires both task outcomes, current contracts, project-authorized
-checks, reviewed PR evidence, merge verification, and owned residual risks.
-After delivery, link the merged PR from the archived whiteboard, remove this
-feature plan, and reset the working whiteboard. This teaching example claims
-none of those outcomes.
+Before final review, a delivery-closing candidate must contain completed task
+outcomes, current contracts, project-authorized checks, owned residual risks,
+an archived whiteboard linked to its PR, removal of this feature plan, and a
+reset working whiteboard. Review, authorized merge, and exact-target
+verification remain PR-owned facts. This teaching example claims none of those
+outcomes.
