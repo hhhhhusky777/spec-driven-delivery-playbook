@@ -50,5 +50,5 @@ This is the only active-delivery state authority.
 | Design consistency | D01-D06 are covered; no unexplained task or known gap |
 | Important changes | Reader-facing structure and diagrams only; no policy, installer, template, or runtime behavior change |
 | Validation | Markdown, internal links, structure, lifecycle, Mermaid, whitespace, and all 28 tests passed locally |
-| Risks or open decisions | Diagram or terminology drift, weak first-impression value, or unresolved reader hesitation must be surfaced by review; no owner decision remains |
+| Risks or open decisions | One reviewer found a licensing hesitation: the public quick start invites use while the repository grants no external permission. The owner must choose whether to add a license or retain the restriction |
 | Decision requested | Review the completed PR before merge |

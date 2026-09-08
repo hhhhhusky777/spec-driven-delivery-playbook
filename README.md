@@ -436,10 +436,10 @@ state.
 | `install-sdd.sh` | Resolve immutable revisions and generate isolated runtime guidance |
 | `skills/` | Outcome and boundary guidance used by adoption, workflow, and upgrade agents |
 | `templates/` | Reusable manifest, whiteboard, plan, and review structures |
-| `docs/` | Canonical quality, governance, adoption, and error-handling policies |
+| `docs/` | Canonical quality, template-governance, and error-handling policies |
 | `scripts/` | Source repository documentation and lifecycle checks |
 | `tests/` | Installer and documentation behavior regression coverage |
-| `examples/` | Sanitized examples that demonstrate selected playbook capabilities |
+| `.github/spec-driven-delivery/` | This repository's installed manifest, active whiteboard, and delivery plan |
 
 ### Validation
 
