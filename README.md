@@ -30,10 +30,11 @@ The playbook defines goals, responsibilities, and protected boundaries; the
 agent chooses a proportional way to satisfy them.
 
 It also turns the repository into durable development context. A new agent can
-take over at any point by reading the accepted design, live plan, project
-authority, and pull-request evidence—without needing the previous agent's
-conversation history. That makes agent replacement, parallel work, and
-interrupted-session recovery routine rather than a restart.
+take over from the current recorded boundary by reading project authority, the
+working design, and the plan and pull-request evidence when they exist—without
+needing the previous agent's conversation history. That makes agent
+replacement, parallel work, and interrupted-session recovery routine rather
+than a restart.
 
 ### Try it in a project
 
@@ -250,17 +251,17 @@ canonical sources:
 | Source | What the next agent learns |
 | --- | --- |
 | Adoption manifest and project policies | Installed playbook revision, authority, and stable boundaries |
-| Concluded whiteboard | Why the feature exists, what was decided, and what must not change |
-| Implementation plan | Current state, task boundaries, dependencies, Definition of Done, and next eligible work |
-| Pull requests | Exact changes, review findings, checks, acceptance, and merged evidence |
+| Working or concluded whiteboard | Current discussion, decisions, accepted design, and unresolved questions |
+| Implementation plan, when present | Current state, task boundaries, dependencies, Definition of Done, and next eligible work |
+| Pull requests, when present | Exact changes, review findings, checks, acceptance, and merged evidence |
 
 ```mermaid
 flowchart LR
     A1["Agent A"] --> R["Canonical repository context"]
     R --> M["Manifest + policies"]
     R --> W["Whiteboard"]
-    R --> P["Implementation plan"]
-    R --> G["Pull-request evidence"]
+    R -. "when present" .-> P["Implementation plan"]
+    R -. "when present" .-> G["Pull-request evidence"]
     M --> A2["Fresh Agent B"]
     W --> A2
     P --> A2
