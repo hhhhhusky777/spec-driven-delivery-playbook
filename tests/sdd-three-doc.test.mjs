@@ -57,4 +57,6 @@ test("implementation plan owns one coherent task state graph", () => {
     .replace("| Active tasks | T02 |", "| Active tasks | None |")
     .replace("| T02 | IN_PROGRESS |", "| T02 | PLANNED |");
   assert.ok(checkDocument("implementation-plan.md", incomplete).some(error => error.includes("terminal")));
+  const falseComplete = `| Field | Value |\n| --- | --- |\n| State | COMPLETE |\n| Active tasks | None |\n| Next ready task | None |\n\n| ID | State | Depends on |\n| --- | --- | --- |\n| T01 | CANCELLED | None |\n| T02 | DONE | T01 |`;
+  assert.ok(checkDocument("implementation-plan.md", falseComplete).some(error => error.includes("unsatisfied dependency")));
 });

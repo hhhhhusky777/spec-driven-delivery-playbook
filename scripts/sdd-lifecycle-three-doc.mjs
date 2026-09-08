@@ -108,7 +108,7 @@ function planErrors(text) {
   };
   for (const id of ids) visit(id);
   for (const task of tasks) {
-    if (!["READY", "IN_PROGRESS", "VERIFYING"].includes(task.State)) continue;
+    if (task.State === "CANCELLED") continue;
     for (const dep of dependencies.get(task.ID) || []) {
       const state = tasks.find(candidate => candidate.ID === dep)?.State;
       if (state !== "DONE") errors.push(`${task.ID} has unsatisfied dependency ${dep}`);
