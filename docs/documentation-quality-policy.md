@@ -102,15 +102,28 @@ findings, revisions, checks, acceptance, and merge evidence. Agents may correct
 non-semantic mistakes and rerun checks within authority; a changed candidate
 returns to the same reviewer seats.
 
-Use fast affected validation to reach review early without representing it as
-complete proof. After both retained reviewers report no findings on the same
-candidate, run the full applicable validation on that exact head before human
-acceptance. A candidate-changing correction invalidates the prior agent review
-and final validation, so repeat affected fast checks, both retained reviews,
-and full validation. If the candidate did not change, a transient validation
+Use focused tests to reach review early without representing them as complete
+proof. Each task still implements the tests required by its accepted outcome.
+"Focused tests" means only the tests that cover the changed files and lines.
+Run them before both retained reviewers inspect the same exact head.
+
+After both reviewers report no findings on the final candidate that will merge
+back to the protected integration branch, run the full applicable validation
+on that exact head before human merge acceptance. A single-task PR targeting
+the protected branch is already final. Any candidate-changing correction
+repeats focused tests and both retained reviews; a final-candidate correction
+also invalidates prior full validation. An unchanged transient validation
 failure repeats only the affected validation. Project policy may require a
 more conservative sequence; this efficiency rule never waives a required
 check or exact-head evidence.
+
+One hour of active implementation on a single task is an owner-attention
+boundary, not a quality shortcut. If the task has not reached its planned
+review boundary, stop with a concise account of time spent, progress, cause,
+remaining work, and recommended next action; continue only after owner
+justification or authorization. Exclude network and environment interruptions,
+review time, and waits for people or external systems from active
+implementation time.
 
 At each human gate, present a concise table because the human is not expected
 to reread every document:
@@ -168,16 +181,26 @@ canonical sources. It must be reconciled after candidate changes.
 
 ## Automated repository gates
 
-The source repository runs `npm run docs:all`. It checks Markdown, internal
-links and headings, Mermaid syntax, fences, placeholders, likely secrets,
-private paths, the three-document model, and focused installer/lifecycle
-behavior. New blocking behavior needs a regression that proves it fails.
-Diagnostics identify the affected file and actionable reason; CI never rewrites
-content.
+For pull requests, source automation runs
+`npm run docs:focused -- BASE_REVISION HEAD`.
+It checks changed-line whitespace, changed Markdown and Mermaid blocks, and
+changed test files. This automated minimum does not replace the agent's
+semantic selection of tests that cover the changed files and lines.
 
-These checks protect the playbook source. Adopting projects use their own
-repository checks and installer runtime validation; upgrade does not install or
-run this repository's test suite in those projects.
+After exact-head agent review of the final candidate, run `npm run docs:all`
+before human merge acceptance. It checks Markdown, internal links and headings,
+Mermaid syntax, fences, placeholders, likely secrets, private paths, the
+three-document model, and focused installer/lifecycle behavior. Manual source
+runs, dispatches, scheduled checks, and the `main` target verification use this
+complete gate. New blocking behavior needs a regression that proves it fails.
+Diagnostics identify the affected file and actionable reason; CI never
+rewrites content.
+
+These checks protect the playbook source. They are the responsibility of an
+agent changing this repository, not a project agent adopting or using the
+playbook. Adopting projects use their own repository checks and installer
+runtime validation; upgrade does not install or run this repository's test
+suite in those projects.
 
 External links are advisory because remote availability is outside repository
 control. A changed claim still needs a stable primary source when practical.
@@ -210,7 +233,8 @@ zero.
 - [ ] The human brief exposes every material decision, risk, limit, and unrun
       gate for the current phase.
 - [ ] Compatibility, migration, and historical impact are explicit.
-- [ ] Applicable semantic review and `npm run docs:all` pass.
+- [ ] Focused tests pass before agent review, and `npm run docs:all` passes
+      on the approved final candidate before human merge acceptance.
 
 ## References
 

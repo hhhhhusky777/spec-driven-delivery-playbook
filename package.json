@@ -12,9 +12,10 @@
     "docs:sdd": "node scripts/sdd-lifecycle-three-doc.mjs",
     "docs:mermaid": "node scripts/check-mermaid.mjs",
     "docs:check": "npm run docs:lint && npm run docs:structure && npm run docs:sdd && npm run docs:mermaid",
-    "docs:test": "node --test tests/*.test.mjs",
+    "docs:test": "node --experimental-test-coverage --test tests/*.test.mjs",
     "docs:links:external": "node scripts/documentation-quality.mjs external",
-    "docs:all": "npm run docs:check && npm run docs:test"
+    "docs:all": "npm run docs:check && npm run docs:test",
+    "docs:focused": "node scripts/pr-focused-validation.mjs"
   },
   "devDependencies": {
     "jsdom": "30.0.1",

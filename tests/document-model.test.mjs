@@ -117,18 +117,27 @@ test("workflow skills state six goals and reject duplicate delivery documents", 
   assert.match(workflow, /Filenames are discovery\s+hints, not proof of authority/);
 });
 
-test("worktree readiness and expensive validation are outcome based", async () => {
+test("worktree readiness and focused-to-full validation are outcome based", async () => {
   const workflow = await read("skills/sdd-project-workflow/SKILL.md");
   const policy = await read("docs/documentation-quality-policy.md");
   const readme = await read("README.md");
   const contributing = await read("CONTRIBUTING.md");
+  const automation = await read(".github/workflows/documentation-quality.yml");
+  const packageSource = await read("package.json");
 
   for (const document of [workflow, policy, readme, contributing]) {
-    assert.match(document, /fast affected/i);
-    assert.match(document, /both retained\s+(?:agent\s+)?reviewer/i);
-    assert.match(document, /full applicable|full required/i);
-    assert.match(document, /exact head/i);
-    assert.match(document, /stricter .*policy|Project policy may require/i);
+    const normalized = document.replace(/\s+/g, " ");
+    assert.match(normalized, /Focused tests.*only the tests that cover the changed files and lines/i);
+    assert.match(normalized, /Implement each task's required tests|Each task still implements the tests|Every task still implements the tests/i);
+    assert.match(normalized, /both retained\s+(?:agent\s+)?reviewer/i);
+    assert.match(normalized, /full (?:applicable )?validation/i);
+    assert.doesNotMatch(normalized, /heavy|long-running|full-coverage/i);
+    assert.match(normalized, /exact[- ]head|exact candidate/i);
+    assert.match(normalized, /stricter .*policy|Project policy may require/i);
+    assert.match(normalized, /one hour of active implementation|one task reaches one hour/i);
+    assert.match(normalized, /network (?:or|and) environment interruptions/i);
+    assert.match(normalized, /review time|code review/i);
+    assert.match(normalized, /owner justification or authorization/i);
   }
   assert.match(readme, /representative project operation/);
   assert.match(readme, /copies, recreates, or safely shares only/);
@@ -138,15 +147,55 @@ test("worktree readiness and expensive validation are outcome based", async () =
   }
 
   const normalizedPolicy = policy.replace(/\s+/g, " ");
-  assert.match(normalizedPolicy, /fast affected validation.*both retained reviewers.*full applicable validation/);
+  assert.match(normalizedPolicy, /Each task still implements.*before both retained reviewers/i);
+  assert.match(normalizedPolicy, /Focused tests.*only the tests that cover the changed files and lines/);
+  assert.match(normalizedPolicy, /final candidate that will merge back to the protected integration branch.*full applicable validation/);
   assert.match(readme, /F --> P\["Open or update PR"\]/);
   assert.match(readme, /P --> R1\["Isolated reviewer 1"\]/);
   assert.match(readme, /P --> R2\["Isolated reviewer 2"\]/);
-  assert.match(readme, /J -->\|"yes"\| V\["Full required validation<br\/>on exact head"\]/);
+  assert.match(readme, /J -->\|"yes"\| G\{"Final candidate to protected target\?"\}/);
+  assert.match(readme, /G -->\|"no"\| B\["Task PR human brief"\]/);
+  assert.match(readme, /G -->\|"yes"\| V\["Full validation<br\/>on exact head"\]/);
   assert.match(readme, /D -->\|"yes"\| X/);
   assert.match(readme, /X --> F/);
   assert.match(readme, /D -->\|"no; transient"\| Q\["Rerun affected validation"\]/);
   assert.match(readme, /Q --> V/);
+  assert.match(contributing, /Defer full validation until the final candidate will merge back to\s+`main`/i);
+  assert.match(contributing, /single-task PR targeting `main` is (?:already )?final/i);
+  assert.match(automation, /if: github\.event_name == 'pull_request'[\s\S]*npm run docs:focused/);
+  assert.match(automation, /if: github\.event_name != 'pull_request'[\s\S]*npm run docs:all/);
+  assert.match(automation, /fetch-depth: 0/);
+  assert.match(packageSource, /"docs:focused": "node scripts\/pr-focused-validation\.mjs"/);
+  assert.match(packageSource, /"docs:test": "node --experimental-test-coverage --test tests/);
+  assert.match(policy, /responsibility of an\s+agent changing this repository, not a project agent/);
+  assert.match(workflow, /do not run the playbook repository's source suite/);
+});
+
+test("error handling stays simple, fail closed, and retry safe", async () => {
+  const errors = await read("docs/error-handling.md");
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const readme = await read("README.md");
+  const templates = await Promise.all([
+    read("templates/adoption/project-adoption-manifest.md"),
+    read("templates/discovery/solution-whiteboard.md"),
+    read("templates/delivery/implementation-plan.md"),
+  ]);
+  const normalizedErrors = errors.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+
+  assert.match(errors, /> \[!IMPORTANT\]/);
+  assert.match(normalizedErrors, /impossible to enumerate every edge case, race, timing, or failure interleaving/);
+  assert.match(normalizedErrors, /Preserve system consistency and fail closed/);
+  assert.match(normalizedErrors, /stable retryable outcome and let the client decide when to retry/);
+  assert.match(normalizedErrors, /reconcile the authoritative state or rely on an established idempotency boundary before permitting retry/);
+  assert.match(errors, /only by a required invariant or observed failure/);
+  assert.match(workflow, /preserve invariants, fail closed on uncertainty/);
+  assert.match(workflow, /client-controlled retry only when repeating the operation is safe/);
+  assert.match(readme, /no design can\s+enumerate every race or edge case/);
+  assert.match(readme, /reconcile ambiguous effects\s+before retrying/);
+  for (const template of templates) {
+    assert.doesNotMatch(template, /impossible to enumerate every edge case/);
+    assert.doesNotMatch(template, /stable retryable outcome/);
+  }
 });
 
 test("testing guidance is risk focused, proportional, and canonically owned", async () => {

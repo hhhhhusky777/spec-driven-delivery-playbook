@@ -65,12 +65,21 @@ Human review before merge is the default. Scoped agent auto-merge never supplies
 design, policy, validation, cleanup, or out-of-scope authority.
 
 Open the PR when it best supports collaboration; a draft PR is not required
-before coding. Fast affected checks prepare a coherent candidate for the two
-retained agent reviewers. After both report no findings on the same exact head, run
-the full applicable repository validation before required owner acceptance.
-Candidate-changing corrections return through affected checks, both retained
-reviewer seats, and final full validation. GitHub is the durable record, and a
-stricter project policy still applies.
+before coding. Each task still implements the tests required by its accepted
+outcome. "Focused tests" means only the tests that cover the changed files and
+lines. Run those tests before both retained agent reviewers inspect the exact
+candidate. Defer full validation until the final candidate will merge back to
+`main`; a single-task PR targeting `main` is already final. Candidate-changing
+corrections return through focused tests and both retained reviewer seats;
+final-candidate corrections also invalidate full validation. GitHub is the
+durable record, and a stricter project policy still applies.
+
+If active implementation of one task reaches one hour without reaching its
+planned review boundary, stop and give the owner a concise account of time
+spent, progress, cause, remaining work, and recommended next action. Continue
+only after owner justification or authorization. Count active
+implementation time only; network or environment interruptions, review time,
+and time waiting for people or external systems do not count.
 
 Before final review, that candidate must already contain every predictable
 tracked canonical state that its merge will make true. If it closes the
@@ -97,7 +106,14 @@ need, provenance, license, maintenance, pinning, and removal assessment.
 
 ## Validation
 
-The source repository's blocking command is:
+Pull-request automation runs focused validation against the PR base:
+
+```bash
+npm run docs:focused -- BASE_REVISION HEAD
+```
+
+After exact-head agent review of the final candidate, run the complete source
+gate before human merge acceptance:
 
 ```bash
 npm ci --ignore-scripts

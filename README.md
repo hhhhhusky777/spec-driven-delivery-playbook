@@ -20,7 +20,7 @@ project.
 | Context-native handoff | Let a fresh agent resume from repository state without inheriting another agent's chat history |
 | Efficient implementation | Batch coherent work and avoid unnecessary stops while preserving real gates |
 | Reliable review | Give two isolated reviewers and the owner one exact, reviewable candidate |
-| Cause-based recovery | Correct agent mistakes automatically and escalate genuine project or playbook gaps |
+| Simple fail-closed recovery | Preserve consistency, expose safe client retry, and avoid speculative error machinery |
 | Parallel delivery | Isolate worktrees and ownership while keeping integration boundaries explicit |
 | Clean completion | Keep reusable output and PR evidence, then remove feature-only working material |
 | Safe upgrades | Synchronize reusable playbook guidance without rewriting active feature content |
@@ -297,8 +297,11 @@ flowchart LR
     R["Dependency-ready task"] --> I["Implement coherent unit"]
     I --> C["Converge tracked canonical state"]
     C --> PR["Complete PR candidate"]
-    PR --> A["Review + exact-head validation"]
-    A --> H["Required owner / merge authority"]
+    PR --> A["Focused tests for changed files / lines<br/>+ exact-head review"]
+    A --> G{"Final candidate to protected target?"}
+    G -->|"no"| T["Required authority + merge task<br/>into feature branch"]
+    G -->|"yes"| V["Full validation"]
+    V --> H["Required owner / merge authority"]
     H --> M["Merge + target verification"]
 ```
 
@@ -348,6 +351,12 @@ defect easier to diagnose and prevents its return. The canonical
 defines the required outcome; implementation plans record only the applicable
 project-specific test and acceptance contracts.
 
+Every task still implements the tests its outcome and risks require. "Focused
+tests" means only the tests that cover the changed files and lines. Run them at
+the task gate; defer full validation until the reviewed final candidate will
+merge back to the protected target. This reduces repeated cost without
+deferring test implementation.
+
 ### Review for humans and agents
 
 Every material candidate receives self-review, two isolated agent reviews, and
@@ -396,7 +405,7 @@ shape without adding another gate or report artifact.
 
 ```mermaid
 flowchart TD
-    C["Coherent candidate"] --> F["Fast affected checks"]
+    C["Coherent candidate"] --> F["Focused tests covering<br/>changed files and lines"]
     F --> P["Open or update PR"]
     P --> R1["Isolated reviewer 1"]
     P --> R2["Isolated reviewer 2"]
@@ -404,7 +413,9 @@ flowchart TD
     R2 --> J
     J -->|"no"| X["Correct once; return to same seats"]
     X --> F
-    J -->|"yes"| V["Full required validation<br/>on exact head"]
+    J -->|"yes"| G{"Final candidate to protected target?"}
+    G -->|"no"| B["Task PR human brief"]
+    G -->|"yes"| V["Full validation<br/>on exact head"]
     V -->|"failed"| D{"Candidate change required?"}
     D -->|"yes"| X
     D -->|"no; transient"| Q["Rerun affected validation"]
@@ -413,11 +424,20 @@ flowchart TD
     B --> H["Human decision at the actual gate"]
 ```
 
-This ordering keeps expensive proof close to the human merge decision without
-weakening it. Any candidate change returns to fast checks and both retained
-reviewers before full validation; an unchanged transient check failure repeats
-only the affected validation. A project's stricter validation policy takes
-precedence.
+This ordering keeps full validation at the protected-target merge boundary
+without postponing the tests each task must implement. Intermediate task PRs
+retain exact-head review with focused tests covering their changed files and
+lines. Any candidate change returns to focused tests and both retained
+reviewers; a final-candidate change also invalidates full validation.
+An unchanged transient check failure repeats only the affected validation. A
+project's stricter validation policy takes precedence.
+
+Implementation should also remain inspectably proportional. If one task
+accumulates one hour of active implementation before its planned review
+boundary, the agent stops and explains the time spent, progress, cause,
+remaining work, and recommendation, then waits for owner justification or
+authorization to continue. Network or environment interruptions, code review,
+and waits for people or external systems do not consume that hour.
 
 See [Review and human brief](docs/documentation-quality-policy.md#review-and-human-brief)
 for the canonical review outcome.
@@ -429,6 +449,13 @@ corrected within existing authority. Recoverable failures preserve valid work
 and repeat only affected checks. Genuine project or playbook gaps are tracked
 in the owning repository. Critical mismatches stop only the affected work and
 request human judgment where it is actually needed.
+
+The default is deliberately small: protect named invariants, keep state
+consistent, and fail closed when the result is uncertain. Because no design can
+enumerate every race or edge case, add recovery machinery only for a required
+invariant or observed failure. When retry is safe, expose a stable retryable
+outcome and let the client control retry timing; reconcile ambiguous effects
+before retrying.
 
 ```mermaid
 flowchart TD
@@ -634,14 +661,21 @@ state.
 
 ### Validation
 
-Install the exact locked dependencies and run the complete source gate:
+Pull-request automation runs focused validation:
+
+```bash
+npm run docs:focused -- BASE_REVISION HEAD
+```
+
+After both agents approve the exact final candidate, install the exact locked
+dependencies and run the complete source gate before human merge acceptance:
 
 ```bash
 npm ci --ignore-scripts
 npm run docs:all
 ```
 
-The suite checks Markdown, links and headings, Mermaid syntax, fences,
+The full suite checks Markdown, links and headings, Mermaid syntax, fences,
 placeholders, likely secrets, private paths, the three-document model, and
 focused installer/lifecycle behavior. Automated checks are necessary evidence,
 not a replacement for semantic review.
