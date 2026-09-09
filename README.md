@@ -338,7 +338,10 @@ Evidence follows its actual consequence: correctable failures are
 `HUMAN_DECISION`.
 
 At the human review boundary for a pull request, the brief also gives the
-change shape for the exact candidate against its real target:
+change shape for the exact candidate against its real target. The
+[quality policy](docs/documentation-quality-policy.md#review-and-human-brief) owns the
+category semantics; these numbers are an illustrative example, not live
+evidence:
 
 | Change category | Files | Additions | Deletions | Changed lines |
 | --- | ---: | ---: | ---: | ---: |

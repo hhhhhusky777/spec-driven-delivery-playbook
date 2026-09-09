@@ -149,6 +149,7 @@ test("human PR review briefs expose the exact candidate change shape", async () 
   assert.match(workflow, /exact pull-request candidate/);
   assert.match(workflow, /actual PR target/);
   assert.match(policy, /Classify every changed file once by its primary responsibility/);
+  assert.match(readme, /illustrative example, not live\s+evidence/);
   assert.match(policy, /non-line-countable files/);
   assert.match(policy, /not a risk score\s+or an additional gate/);
 });
