@@ -23,7 +23,6 @@ keep feature progress in the implementation plan.
 | Project adoption root | `<project-relative path>` |
 | Materialization mode | `<pinned checkout or other verified mode>` |
 | Target base revision | `<full commit SHA or Not applicable>` |
-| Stable entry point | `<project-relative path>` |
 | Adoption owner | `<owner>` |
 | Required review | `<project rule>` |
 | Last verified | `<date and evidence>` |

@@ -71,7 +71,7 @@ async function createInstalledProject(t, source, state = "INSTALLED") {
   await writeFile(path.join(adoptionRoot, "solution-whiteboard.md"), "# Whiteboard\n", "utf8");
   await writeFile(
     path.join(adoptionRoot, "project-adoption-manifest.md"),
-    `# Manifest\n\n| Field | Value |\n| --- | --- |\n| Adoption state | \`${state}\` |\n| Playbook source repository | \`${source.repository}\` |\n| Playbook revision | \`${source.firstRevision}\` |\n| Stable entry point | [SDD](README.md) |\n`,
+    `# Manifest\n\n| Field | Value |\n| --- | --- |\n| Adoption state | \`${state}\` |\n| Playbook source repository | \`${source.repository}\` |\n| Playbook revision | \`${source.firstRevision}\` |\n`,
     "utf8",
   );
   run("git", ["add", ".github"], project);
@@ -619,140 +619,29 @@ test("upgrade rejects an explicit non-latest revision", async (t) => {
   assert.match(result.stderr, /upgrade always resolves latest main/);
 });
 
-test("upgrade accepts the stable project entry point recorded in the manifest", async (t) => {
+test("upgrade does not require a stable project entry point", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createInstalledProject(t, source);
-  const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
-  const manifestPath = path.join(adoptionRoot, "project-adoption-manifest.md");
-
-  await rm(path.join(adoptionRoot, "README.md"));
-  await writeFile(path.join(project, "CONTRIBUTING.md"), "# Contributing\n", "utf8");
-  const manifest = await readFile(manifestPath, "utf8");
-  await writeFile(
-    manifestPath,
-    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point | [Contributing](../../CONTRIBUTING.md#contributing) |"),
-    "utf8",
-  );
 
   const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /Prepared candidate revision:/);
 });
 
-test("upgrade accepts a plain project-relative stable entry point", async (t) => {
+test("upgrade ignores legacy stable-entry-point metadata", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createInstalledProject(t, source);
   const manifestPath = path.join(project, ".github", "spec-driven-delivery", "project-adoption-manifest.md");
-  await writeFile(path.join(project, "CONTRIBUTING.md"), "# Contributing\n", "utf8");
   const manifest = await readFile(manifestPath, "utf8");
   await writeFile(
     manifestPath,
-    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point | CONTRIBUTING.md |"),
-    "utf8",
-  );
-  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
-  assert.equal(result.status, 0, result.stderr);
-});
-
-test("upgrade rejects an unavailable stable project entry point", async (t) => {
-  const source = await createPlaybookFixture(t);
-  const project = await createInstalledProject(t, source);
-  const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
-  const manifestPath = path.join(adoptionRoot, "project-adoption-manifest.md");
-
-  await rm(path.join(adoptionRoot, "README.md"));
-  const manifest = await readFile(manifestPath, "utf8");
-  await writeFile(
-    manifestPath,
-    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point | [Missing](../../MISSING.md) |"),
+    `${manifest}| Stable entry point | [Missing](../../MISSING.md) |\n`,
     "utf8",
   );
 
   const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
-  assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /recorded project entry point is unavailable/);
-});
-
-test("upgrade rejects a blank stable entry point", async (t) => {
-  const source = await createPlaybookFixture(t);
-  const project = await createInstalledProject(t, source);
-  const manifestPath = path.join(
-    project,
-    ".github",
-    "spec-driven-delivery",
-    "project-adoption-manifest.md",
-  );
-  const manifest = await readFile(manifestPath, "utf8");
-  await writeFile(
-    manifestPath,
-    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point |  |"),
-    "utf8",
-  );
-
-  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
-  assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /record a local project entry point/);
-});
-
-test("upgrade rejects URI-scheme entry points even when a matching file exists", async (t) => {
-  const source = await createPlaybookFixture(t);
-  const project = await createInstalledProject(t, source);
-  const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
-  const manifestPath = path.join(adoptionRoot, "project-adoption-manifest.md");
-  const manifest = await readFile(manifestPath, "utf8");
-
-  await writeFile(path.join(adoptionRoot, "javascript:entry.md"), "# Not a local link\n", "utf8");
-  await writeFile(
-    manifestPath,
-    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point | [Script](javascript:entry.md) |"),
-    "utf8",
-  );
-
-  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
-  assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /record a local project entry point/);
-});
-
-test("upgrade rejects external and out-of-project navigation entry points", async (t) => {
-  const source = await createPlaybookFixture(t);
-  const project = await createInstalledProject(t, source);
-  const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
-  const manifestPath = path.join(adoptionRoot, "project-adoption-manifest.md");
-  const manifest = await readFile(manifestPath, "utf8");
-
-  await rm(path.join(adoptionRoot, "README.md"));
-  await writeFile(
-    manifestPath,
-    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point | [External](https://example.test/start) |"),
-    "utf8",
-  );
-  const external = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
-  assert.notEqual(external.status, 0);
-  assert.match(external.stderr, /record a local project entry point/);
-
-  const outsideName = `${path.basename(project)}-outside-entry.md`;
-  const outsidePath = path.join(project, "..", outsideName);
-  await writeFile(outsidePath, "# Outside\n", "utf8");
-  t.after(async () => rm(outsidePath, { force: true }));
-  await writeFile(
-    manifestPath,
-    manifest.replace("| Stable entry point | [SDD](README.md) |", `| Stable entry point | [Outside](../../../${outsideName}) |`),
-    "utf8",
-  );
-  const outside = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
-  assert.notEqual(outside.status, 0);
-  assert.match(outside.stderr, /must stay inside the project root/);
-
-  const linkedPath = path.join(project, "linked-entry.md");
-  await symlink(outsidePath, linkedPath);
-  await writeFile(
-    manifestPath,
-    manifest.replace("| Stable entry point | [SDD](README.md) |", "| Stable entry point | [Linked](../../linked-entry.md) |"),
-    "utf8",
-  );
-  const linked = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
-  assert.notEqual(linked.status, 0);
-  assert.match(linked.stderr, /must not be a symbolic link/);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Prepared candidate revision:/);
 });
 
 test("upgrade preflight fails closed for active work, blocked adoption, and unchanged candidates", async (t) => {

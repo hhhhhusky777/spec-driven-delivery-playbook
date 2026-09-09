@@ -13,8 +13,7 @@ deliveries without repeating adoption.
 ## Required result
 
 - A manifest records the source repository, full revision, adoption state,
-  stable entry points, discovered canonical policies, owner decisions, and
-  project boundaries.
+  discovered canonical policies, owner decisions, and project boundaries.
 - A neutral whiteboard is ready for design work.
 - No feature implementation plan exists until a feature is planned.
 - The generated runtime and managed workflow skill match the manifest pin.
