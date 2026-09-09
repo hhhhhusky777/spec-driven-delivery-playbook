@@ -473,7 +473,9 @@ ignored and untracked, with secrets kept out of Git. The agent exercises a
 representative project operation in the worktree itself and diagnoses missing
 runtime support. It then copies, recreates, or safely shares only what the
 worktree needs and is authorized to use, rather than assuming a source-complete
-checkout is operational or blindly cloning the whole main workspace.
+checkout is operational or blindly cloning the whole main workspace. A
+worktree never depends on mutable files or runtime owned by another checkout;
+shared support needs stable project-level ownership.
 
 The installer follows the same boundary. Its immutable playbook checkout lives
 under that worktree's ignored `.sdd-runtime/checkouts/RESOLVED_SHA/` directory,

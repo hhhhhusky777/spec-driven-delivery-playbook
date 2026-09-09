@@ -132,8 +132,21 @@ test("worktree readiness and expensive validation are outcome based", async () =
   }
   assert.match(readme, /representative project operation/);
   assert.match(readme, /copies, recreates, or safely shares only/);
-  assert.match(readme, /Candidate change required/);
-  assert.match(readme, /Rerun affected validation/);
+  for (const document of [workflow, readme]) {
+    assert.match(document, /never\s+(?:make\s+the\s+worktree\s+depend|depends?)\s+on\s+mutable\s+files\s+or\s+runtime\s+owned\s+by\s+another\s+checkout/i);
+    assert.match(document, /stable project-level ownership/);
+  }
+
+  const normalizedPolicy = policy.replace(/\s+/g, " ");
+  assert.match(normalizedPolicy, /fast affected validation.*both retained reviewers.*full applicable validation/);
+  assert.match(readme, /F --> P\["Open or update PR"\]/);
+  assert.match(readme, /P --> R1\["Isolated reviewer 1"\]/);
+  assert.match(readme, /P --> R2\["Isolated reviewer 2"\]/);
+  assert.match(readme, /J -->\|"yes"\| V\["Full required validation<br\/>on exact head"\]/);
+  assert.match(readme, /D -->\|"yes"\| X/);
+  assert.match(readme, /X --> F/);
+  assert.match(readme, /D -->\|"no; transient"\| Q\["Rerun affected validation"\]/);
+  assert.match(readme, /Q --> V/);
 });
 
 test("adoption remains reusable while project authority is refreshed", async () => {

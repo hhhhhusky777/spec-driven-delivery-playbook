@@ -55,7 +55,8 @@ the plan, and review evidence in the pull request.
   support is missing, diagnose the gap and copy, recreate, or safely share only
   the required authorized support from an authoritative source; repeat the
   affected check until the worktree is operational or error handling requires
-  escalation.
+  escalation. Never make the worktree depend on mutable files or runtime owned
+  by another checkout; shared support must have stable project-level ownership.
 - A concluded design or approved plan changes only through an explicit
   amendment when the observable outcome changes. Ordinary task status and
   evidence updates do not reopen the design.
