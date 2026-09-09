@@ -168,6 +168,7 @@ test("worktree readiness and expensive validation are outcome based", async () =
   assert.match(automation, /if: github\.event_name != 'pull_request'[\s\S]*npm run docs:all/);
   assert.match(automation, /fetch-depth: 0/);
   assert.match(packageSource, /"docs:fast": "node scripts\/pr-fast-validation\.mjs"/);
+  assert.match(packageSource, /"docs:test": "node --experimental-test-coverage --test tests/);
 });
 
 test("error handling stays simple, fail closed, and retry safe", async () => {
