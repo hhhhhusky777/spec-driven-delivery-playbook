@@ -167,10 +167,12 @@ owner authority; records the accepted immutable playbook revision; prepares an
 empty whiteboard; and obtains review of one coherent installation package.
 
 Future features do not repeat adoption. Each delivery first creates its
-isolated worktree and owned delivery branch, then checks for a newer playbook
-revision there before whiteboard or implementation work. An upgrade changes reusable
-playbook material only, stays in that delivery candidate, and never rewrites
-the active feature's whiteboard or plan.
+isolated worktree and owned delivery branch, checks for a newer playbook
+revision there, and semantically reconciles current project authority with the
+manifest before whiteboard work. New, moved, removed, or changed canonical
+policies update stable manifest links and boundaries without repeating adoption
+or copying policy text. An upgrade stays in that delivery candidate and never
+rewrites its feature-specific whiteboard or plan.
 
 ```mermaid
 flowchart TD
@@ -183,9 +185,10 @@ flowchart TD
     H --> U["Reusable installation"]
     U --> B["Create delivery worktree + branch"]
     B --> N["Check for an upgrade in place"]
-    N -->|"current"| W
+    N -->|"current"| A["Reconcile current project authority"]
     N -->|"newer revision"| C["Review and cut over reusable material"]
-    C --> W
+    C --> A
+    A --> W
 ```
 
 See the [adoption skill](skills/sdd-project-adoption/SKILL.md) and
@@ -315,13 +318,24 @@ seats. Their findings and dispositions belong in the PR.
 
 Humans receive a concise table with the information needed for judgment:
 
-| Human need | What the brief exposes |
-| --- | --- |
-| Acceptance scope | Outcome, scope/non-scope, exact candidate, and authorized action |
-| Decisions | Important choices, consequences, alternatives, and recommendation |
-| Attention | Risks, assumptions, compatibility effects, exceptions, and owners |
-| Evidence | Passed, failed, and unrun checks plus residual limits |
-| Response | The exact decision requested, or confirmation that none remains |
+| Human need | What the brief exposes | Handling |
+| --- | --- | --- |
+| Acceptance scope | Outcome, scope/non-scope, exact candidate, and authorized action | Appropriate class |
+| Decisions | Important choices, consequences, alternatives, and recommendation | Appropriate class |
+| Attention | Risks, assumptions, compatibility effects, exceptions, and owners | Appropriate class |
+| Evidence | Passed, failed, and unrun checks plus residual limits | Appropriate class |
+| Response | The exact decision requested, or confirmation that none remains | `HUMAN_DECISION` or `NONE` |
+
+The classes tell agents what the emphasis means: `HUMAN_DECISION` stops at an
+existing owner boundary, `AGENT_ACTION` is corrected within agent authority,
+`DISCLOSE` keeps material awareness-only information, including accepted
+limitations, visible without stopping, and `NONE` means no material attention
+or action remains.
+Split items when they need different handling. The classes add no document or
+review gate.
+Evidence follows its actual consequence: correctable failures are
+`AGENT_ACTION`, while waivers, changed acceptance, or missing authority are
+`HUMAN_DECISION`.
 
 ```mermaid
 flowchart TD

@@ -69,13 +69,24 @@ returns to the same reviewer seats.
 At each human gate, present a concise table because the human is not expected
 to reread every document:
 
-| Human need | Required content |
-| --- | --- |
-| Acceptance scope | Outcome, scope/non-scope, exact candidate, and authorized action |
-| Decisions | Important choices, consequences, unsettled alternatives, and recommendation |
-| Attention | Risks, compatibility effects, assumptions, exceptions, deferred obligations, and owners |
-| Evidence | Passed checks with scope, failed or unrun checks, uncertainty, and residual limits |
-| Response | Exact decision requested, or explicit confirmation that none remains |
+| Human need | Required content | Handling |
+| --- | --- | --- |
+| Acceptance scope | Outcome, scope/non-scope, exact candidate, and authorized action | Appropriate class |
+| Decisions | Important choices, consequences, unsettled alternatives, and recommendation | Appropriate class |
+| Attention | Risks, compatibility effects, assumptions, exceptions, deferred obligations, and owners | Appropriate class |
+| Evidence | Passed checks with scope, failed or unrun checks, uncertainty, and residual limits | Appropriate class |
+| Response | Exact decision requested, or explicit confirmation that none remains | `HUMAN_DECISION` or `NONE` |
+
+Use `HUMAN_DECISION` when progress needs human judgment under an existing stop
+boundary, `AGENT_ACTION` for correction within agent authority, `DISCLOSE` for
+material awareness-only information (including accepted limitations) that
+remains visible without stopping, and `NONE` when no material attention or
+action remains. These semantic labels guide agents even in raw Markdown;
+they do not create another gate or formatting requirement. Split items that
+need different handling instead of hiding them in one mixed row.
+Classify evidence by its actual consequence: a correctable failed check is
+`AGENT_ACTION`, while a waiver, changed acceptance, or missing authority is
+`HUMAN_DECISION`.
 
 Phase-specific additions:
 

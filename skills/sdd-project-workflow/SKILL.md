@@ -61,6 +61,16 @@ the plan, and review evidence in the pull request.
   check for and synchronize a newer playbook revision before whiteboard or
   implementation work. A maintenance-only upgrade is still a delivery; do not
   merge a separate target-branch upgrade solely to prepare another delivery.
+- Before whiteboard work, reconcile the manifest's project authorities with
+  current repository evidence. Semantically identify material policy sources
+  that were added, removed, moved, or changed after adoption and update stable
+  manifest links or boundaries in the same delivery. Filenames are discovery
+  hints, not proof of authority. Routine corrections stay with the agent;
+  conflicts that change policy, authority, safety, or intended behavior require
+  the applicable owner decision.
+- When candidate work changes canonical project policy, reconcile the manifest
+  before final review. Link the canonical source instead of copying its text,
+  and keep feature state out of the manifest.
 - Treat the branch point as the implementation baseline. Do not routinely
   merge or rebase the target during ordinary work. Synchronize the completed
   candidate with its target, then run affected checks on that exact candidate
@@ -73,6 +83,11 @@ Choose the working order, batching, tools, tests, and recovery method that best
 achieve the accepted outcome. Prefer coherent review units and one human brief
 at each real decision boundary. Human briefs use a compact table covering the
 decision, important changes, risks or gaps, validation, and recommended action.
+Classify material items as `HUMAN_DECISION`, `AGENT_ACTION`, `DISCLOSE`, or
+`NONE` so the next agent knows whether to stop, act within authority, preserve
+material awareness-only information (including accepted limitations), or
+recognize that no material attention or action remains. Classification adds no
+new gate.
 
 ## Error handling
 
