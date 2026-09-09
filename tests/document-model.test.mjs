@@ -122,6 +122,8 @@ test("worktree readiness and expensive validation are outcome based", async () =
   const policy = await read("docs/documentation-quality-policy.md");
   const readme = await read("README.md");
   const contributing = await read("CONTRIBUTING.md");
+  const automation = await read(".github/workflows/documentation-quality.yml");
+  const packageSource = await read("package.json");
 
   for (const document of [workflow, policy, readme, contributing]) {
     const normalized = document.replace(/\s+/g, " ");
@@ -162,6 +164,10 @@ test("worktree readiness and expensive validation are outcome based", async () =
   assert.match(readme, /Q --> V/);
   assert.match(contributing, /intermediate task PR targeting the feature\s+integration branch\s+does not run general full, heavy, long-running, or full-coverage validation/i);
   assert.match(contributing, /single-task PR targeting `main` is final/i);
+  assert.match(automation, /if: github\.event_name == 'pull_request'[\s\S]*npm run docs:fast/);
+  assert.match(automation, /if: github\.event_name != 'pull_request'[\s\S]*npm run docs:all/);
+  assert.match(automation, /fetch-depth: 0/);
+  assert.match(packageSource, /"docs:fast": "node scripts\/pr-fast-validation\.mjs"/);
 });
 
 test("error handling stays simple, fail closed, and retry safe", async () => {

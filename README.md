@@ -662,14 +662,21 @@ state.
 
 ### Validation
 
-Install the exact locked dependencies and run the complete source gate:
+Pull-request automation runs the narrow changed-file and changed-line gate:
+
+```bash
+npm run docs:fast -- <base-revision> HEAD
+```
+
+After both agents approve the exact final candidate, install the exact locked
+dependencies and run the complete source gate before human merge acceptance:
 
 ```bash
 npm ci --ignore-scripts
 npm run docs:all
 ```
 
-The suite checks Markdown, links and headings, Mermaid syntax, fences,
+The full suite checks Markdown, links and headings, Mermaid syntax, fences,
 placeholders, likely secrets, private paths, the three-document model, and
 focused installer/lifecycle behavior. Automated checks are necessary evidence,
 not a replacement for semantic review.

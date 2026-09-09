@@ -186,12 +186,19 @@ canonical sources. It must be reconciled after candidate changes.
 
 ## Automated repository gates
 
-The source repository runs `npm run docs:all`. It checks Markdown, internal
-links and headings, Mermaid syntax, fences, placeholders, likely secrets,
-private paths, the three-document model, and focused installer/lifecycle
-behavior. New blocking behavior needs a regression that proves it fails.
-Diagnostics identify the affected file and actionable reason; CI never rewrites
-content.
+For pull requests, source automation runs `npm run docs:fast -- <base> HEAD`.
+It checks changed-line whitespace, changed Markdown and Mermaid blocks, and
+changed test files. This automated minimum does not replace the agent's
+semantic selection of focused tests for directly affected behavior.
+
+After exact-head agent review of the final candidate, run `npm run docs:all`
+before human merge acceptance. It checks Markdown, internal links and headings,
+Mermaid syntax, fences, placeholders, likely secrets, private paths, the
+three-document model, and focused installer/lifecycle behavior. Manual source
+runs, dispatches, scheduled checks, and the `main` target verification use this
+complete gate. New blocking behavior needs a regression that proves it fails.
+Diagnostics identify the affected file and actionable reason; CI never
+rewrites content.
 
 These checks protect the playbook source. Adopting projects use their own
 repository checks and installer runtime validation; upgrade does not install or
@@ -228,7 +235,8 @@ zero.
 - [ ] The human brief exposes every material decision, risk, limit, and unrun
       gate for the current phase.
 - [ ] Compatibility, migration, and historical impact are explicit.
-- [ ] Applicable semantic review and `npm run docs:all` pass.
+- [ ] The fast gate passes before agent review, and `npm run docs:all` passes
+      on the approved final candidate before human merge acceptance.
 
 ## References
 

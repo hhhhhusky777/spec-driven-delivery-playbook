@@ -111,7 +111,15 @@ need, provenance, license, maintenance, pinning, and removal assessment.
 
 ## Validation
 
-The source repository's blocking command is:
+Pull-request automation runs the changed-file and changed-line gate against the
+PR base:
+
+```bash
+npm run docs:fast -- <base-revision> HEAD
+```
+
+After exact-head agent review of the final candidate, run the complete source
+gate before human merge acceptance:
 
 ```bash
 npm ci --ignore-scripts
