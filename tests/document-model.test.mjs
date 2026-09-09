@@ -129,7 +129,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
     const normalized = document.replace(/\s+/g, " ");
     assert.match(normalized, /Focused tests.*only the tests that cover the changed files and lines/i);
     assert.match(normalized, /Implement each task's required tests|Each task still implements the tests|Every task still implements the tests/i);
-    assert.match(normalized, /both retained\s+(?:agent\s+)?reviewer/i);
+    assert.match(normalized, /two (?:agent )?(?:reviewers?|agents) selected fresh|two fresh (?:agent )?reviewers?/i);
     assert.match(normalized, /full (?:applicable )?validation/i);
     assert.doesNotMatch(normalized, /heavy|long-running|full-coverage/i);
     assert.match(normalized, /exact[- ]head|exact candidate/i);
@@ -169,6 +169,31 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(packageSource, /"docs:test": "node --experimental-test-coverage --test tests/);
   assert.match(policy, /responsibility of an\s+agent changing this repository, not a project agent/);
   assert.match(workflow, /do not run the playbook repository's source suite/);
+});
+
+test("task review sessions use fresh reviewers and useful change requests", async () => {
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const policy = await read("docs/documentation-quality-policy.md");
+  const readme = await read("README.md");
+  const contributing = await read("CONTRIBUTING.md");
+
+  for (const document of [workflow, policy, readme, contributing]) {
+    const normalized = document.replace(/\s+/g, " ");
+    assert.match(normalized, /new task|Each task review session|that task review session/i);
+    assert.match(normalized, /fresh for (?:that|the) (?:task review )?session/i);
+    assert.match(normalized, /any prior task review session/i);
+    assert.match(normalized, /same two reviewer|same task reviewer|retained reviewer/i);
+    assert.doesNotMatch(normalized, /prior task.*same delivery|earlier task.*same delivery/i);
+  }
+
+  const normalizedPolicy = policy.replace(/\s+/g, " ");
+  assert.match(normalizedPolicy, /observed problem and impact/);
+  assert.match(normalizedPolicy, /smallest recommended correction/);
+  assert.match(normalizedPolicy, /recognized practice.*cite a primary industry standard or authoritative reference/);
+  assert.match(normalizedPolicy, /explain its relevance/);
+  assert.match(normalizedPolicy, /never fabricate a standard/);
+  assert.match(normalizedPolicy, /optional improvements visibly separate from blocking findings/);
+  assert.match(normalizedPolicy, /do not use a recommendation to expand the accepted scope/);
 });
 
 test("error handling stays simple, fail closed, and retry safe", async () => {
