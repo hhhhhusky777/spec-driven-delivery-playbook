@@ -60,7 +60,7 @@ async function existingChangedFiles(base, head) {
 async function main() {
   const [base, head = "HEAD"] = process.argv.slice(2);
   if (!base) {
-    throw new Error("usage: pr-fast-validation.mjs BASE_REVISION [HEAD_REVISION]");
+    throw new Error("usage: pr-focused-validation.mjs BASE_REVISION [HEAD_REVISION]");
   }
 
   run("git", ["diff", "--check", `${base}...${head}`]);
@@ -98,7 +98,7 @@ async function main() {
   }
 
   console.log(
-    `Fast validation: ${changed.length} changed files, ${markdown.length} Markdown files, ${changedTests.length} changed test files`,
+    `Focused validation: ${changed.length} changed files, ${markdown.length} Markdown files, ${changedTests.length} changed test files`,
   );
 }
 

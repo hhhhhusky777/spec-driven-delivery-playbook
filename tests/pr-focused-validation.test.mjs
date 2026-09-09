@@ -7,14 +7,14 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const validator = path.join(repositoryRoot, "scripts", "pr-fast-validation.mjs");
+const validator = path.join(repositoryRoot, "scripts", "pr-focused-validation.mjs");
 
 function git(root, args) {
   return execFileSync("git", args, { cwd: root, encoding: "utf8" }).trim();
 }
 
 async function fixture(t) {
-  const root = await mkdtemp(path.join(os.tmpdir(), "sdd-fast-validation-"));
+  const root = await mkdtemp(path.join(os.tmpdir(), "sdd-focused-validation-"));
   t.after(() => rm(root, { force: true, recursive: true }));
   git(root, ["init", "--quiet"]);
   git(root, ["config", "user.email", "tests@example.invalid"]);
@@ -53,7 +53,7 @@ async function commit(root, files, message) {
   git(root, ["commit", "--quiet", "-m", message]);
 }
 
-test("fast validation checks changed files and excludes unchanged failures", async (t) => {
+test("focused validation checks changed files and excludes unchanged failures", async (t) => {
   const { base, root } = await fixture(t);
   await commit(root, {
     "changed.md": "# Changed\n",
@@ -62,10 +62,10 @@ test("fast validation checks changed files and excludes unchanged failures", asy
 
   const result = runValidator(root, base);
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /Fast validation: 1 changed files, 1 Markdown files, 0 changed test files/);
+  assert.match(result.stdout, /Focused validation: 1 changed files, 1 Markdown files, 0 changed test files/);
 });
 
-test("fast validation rejects invalid changed Markdown", async (t) => {
+test("focused validation rejects invalid changed Markdown", async (t) => {
   const { base, root } = await fixture(t);
   await commit(root, { "changed.md": "#Broken changed Markdown\n" }, "invalid Markdown");
 
@@ -74,7 +74,7 @@ test("fast validation rejects invalid changed Markdown", async (t) => {
   assert.match(`${result.stdout}\n${result.stderr}`, /MD018|space after hash/i);
 });
 
-test("fast validation rejects changed-line whitespace errors", async (t) => {
+test("focused validation rejects changed-line whitespace errors", async (t) => {
   const { base, root } = await fixture(t);
   await commit(root, { "changed.md": "# Changed \n" }, "invalid whitespace");
 
@@ -83,7 +83,7 @@ test("fast validation rejects changed-line whitespace errors", async (t) => {
   assert.match(`${result.stdout}\n${result.stderr}`, /trailing whitespace/i);
 });
 
-test("fast validation rejects invalid changed Mermaid", async (t) => {
+test("focused validation rejects invalid changed Mermaid", async (t) => {
   const { base, root } = await fixture(t);
   await commit(root, {
     "changed.md": "# Changed\n\n```mermaid\nflowchart TD\n    A -->\n```\n",
@@ -94,7 +94,7 @@ test("fast validation rejects invalid changed Mermaid", async (t) => {
   assert.match(`${result.stdout}\n${result.stderr}`, /MERMAID_SYNTAX/);
 });
 
-test("fast validation executes and propagates changed test failures", async (t) => {
+test("focused validation executes and propagates changed test failures", async (t) => {
   const { base, root } = await fixture(t);
   await commit(root, {
     "tests/changed.test.mjs": 'import assert from "node:assert/strict";\nimport test from "node:test";\ntest("changed fails", () => assert.fail());\n',

@@ -68,7 +68,7 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           SDD_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        run: npm run docs:fast -- "$SDD_BASE_SHA" HEAD
+        run: npm run docs:focused -- "$SDD_BASE_SHA" HEAD
 
       - name: Run full checks and their negative regression tests
         if: github.event_name != 'pull_request'

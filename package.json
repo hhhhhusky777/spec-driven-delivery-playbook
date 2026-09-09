@@ -15,7 +15,7 @@
     "docs:test": "node --experimental-test-coverage --test tests/*.test.mjs",
     "docs:links:external": "node scripts/documentation-quality.mjs external",
     "docs:all": "npm run docs:check && npm run docs:test",
-    "docs:fast": "node scripts/pr-fast-validation.mjs"
+    "docs:focused": "node scripts/pr-focused-validation.mjs"
   },
   "devDependencies": {
     "jsdom": "30.0.1",

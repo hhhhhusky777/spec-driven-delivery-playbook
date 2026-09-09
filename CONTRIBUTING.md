@@ -66,16 +66,11 @@ design, policy, validation, cleanup, or out-of-scope authority.
 
 Open the PR when it best supports collaboration; a draft PR is not required
 before coding. Each task still implements the tests required by its accepted
-outcome. Its fast gate checks only changed files and lines plus the directly
-exercised behavior, using focused tests without full-project coverage. That
-evidence prepares the coherent task candidate for the two retained agent
-reviewers. An intermediate task PR targeting the feature integration branch
-does not run general full, heavy, long-running, or full-coverage validation.
-After both reviewers report no findings on the same exact head of the final
-candidate targeting `main`, run the full applicable repository validation
-including full coverage and selected heavy or long-running tests, before
-required owner acceptance. A single-task PR targeting `main` is final. Candidate-changing
-corrections return through affected checks and both retained reviewer seats;
+outcome. "Focused tests" means only the tests that cover the changed files and
+lines. Run those tests before both retained agent reviewers inspect the exact
+candidate. Defer full validation until the final candidate will merge back to
+`main`; a single-task PR targeting `main` is already final. Candidate-changing
+corrections return through focused tests and both retained reviewer seats;
 final-candidate corrections also invalidate full validation. GitHub is the
 durable record, and a stricter project policy still applies.
 
@@ -111,11 +106,10 @@ need, provenance, license, maintenance, pinning, and removal assessment.
 
 ## Validation
 
-Pull-request automation runs the changed-file and changed-line gate against the
-PR base:
+Pull-request automation runs focused validation against the PR base:
 
 ```bash
-npm run docs:fast -- BASE_REVISION HEAD
+npm run docs:focused -- BASE_REVISION HEAD
 ```
 
 After exact-head agent review of the final candidate, run the complete source

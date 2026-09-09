@@ -102,21 +102,16 @@ findings, revisions, checks, acceptance, and merge evidence. Agents may correct
 non-semantic mistakes and rerun checks within authority; a changed candidate
 returns to the same reviewer seats.
 
-Use a narrow fast gate to reach review early without representing it as
-complete proof. Each task still implements the tests required by its accepted
-outcome. Before both retained reviewers inspect the same exact head, validate
-only changed files and lines plus directly exercised behavior with focused unit
-or integration tests. Do not require full-project coverage at this gate. An
-intermediate task PR targeting a feature integration branch does not run the
-general full, heavy, long-running, or full-coverage suite unless project
-authority requires it.
+Use focused tests to reach review early without representing them as complete
+proof. Each task still implements the tests required by its accepted outcome.
+"Focused tests" means only the tests that cover the changed files and lines.
+Run them before both retained reviewers inspect the same exact head.
 
-After both reviewers report no findings on the final candidate targeting the
-protected integration branch, run the full applicable validation—including
-full coverage and selected heavy or long-running evidence—on that exact head
-before human merge acceptance. A single-task PR targeting the protected branch
-is already the final candidate. Any candidate-changing correction repeats
-affected fast checks and both retained reviews; a final-candidate correction
+After both reviewers report no findings on the final candidate that will merge
+back to the protected integration branch, run the full applicable validation
+on that exact head before human merge acceptance. A single-task PR targeting
+the protected branch is already final. Any candidate-changing correction
+repeats focused tests and both retained reviews; a final-candidate correction
 also invalidates prior full validation. An unchanged transient validation
 failure repeats only the affected validation. Project policy may require a
 more conservative sequence; this efficiency rule never waives a required
@@ -187,10 +182,10 @@ canonical sources. It must be reconciled after candidate changes.
 ## Automated repository gates
 
 For pull requests, source automation runs
-`npm run docs:fast -- BASE_REVISION HEAD`.
+`npm run docs:focused -- BASE_REVISION HEAD`.
 It checks changed-line whitespace, changed Markdown and Mermaid blocks, and
 changed test files. This automated minimum does not replace the agent's
-semantic selection of focused tests for directly affected behavior.
+semantic selection of tests that cover the changed files and lines.
 
 After exact-head agent review of the final candidate, run `npm run docs:all`
 before human merge acceptance. It checks Markdown, internal links and headings,
@@ -201,9 +196,11 @@ complete gate. New blocking behavior needs a regression that proves it fails.
 Diagnostics identify the affected file and actionable reason; CI never
 rewrites content.
 
-These checks protect the playbook source. Adopting projects use their own
-repository checks and installer runtime validation; upgrade does not install or
-run this repository's test suite in those projects.
+These checks protect the playbook source. They are the responsibility of an
+agent changing this repository, not a project agent adopting or using the
+playbook. Adopting projects use their own repository checks and installer
+runtime validation; upgrade does not install or run this repository's test
+suite in those projects.
 
 External links are advisory because remote availability is outside repository
 control. A changed claim still needs a stable primary source when practical.
@@ -236,7 +233,7 @@ zero.
 - [ ] The human brief exposes every material decision, risk, limit, and unrun
       gate for the current phase.
 - [ ] Compatibility, migration, and historical impact are explicit.
-- [ ] The fast gate passes before agent review, and `npm run docs:all` passes
+- [ ] Focused tests pass before agent review, and `npm run docs:all` passes
       on the approved final candidate before human merge acceptance.
 
 ## References

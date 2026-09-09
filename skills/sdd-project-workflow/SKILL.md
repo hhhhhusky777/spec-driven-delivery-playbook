@@ -116,19 +116,19 @@ tests, and other files. Derive it against the actual PR target, classify each
 file once by primary responsibility, and disclose non-line-countable files.
 The summary informs review; it does not add a gate or prescribe a helper tool.
 
-Implement each task's required tests while doing the task. Its fast gate checks
-only changed files and lines plus directly exercised behavior with focused
-tests; defer full-project coverage. Use that evidence to prepare the coherent
-task pull request for both retained agent reviewers. Intermediate task PRs
-targeting a feature integration branch do not run the general full, heavy,
-long-running, or full-coverage suite. After both reviewers approve the final
-candidate targeting the protected integration branch, run the project's full
-applicable validation, including full coverage and selected heavy or
-long-running tests, on that exact head before the human merge decision. A
-single-task PR to the protected branch is final. Candidate-changing corrections
-repeat affected checks and the same reviewers; a final-candidate correction
-also repeats full validation. Apply stricter project policy when it requires a
-more conservative sequence.
+Implement each task's required tests while doing the task. "Focused tests"
+means only the tests that cover the changed files and lines. Run them before
+both retained agent reviewers inspect the exact task candidate. After both
+reviewers approve the final candidate that will merge back to the protected
+integration branch, run the project's full applicable validation on that exact
+head before the human merge decision. A single-task PR to the protected branch
+is already final. Candidate-changing corrections repeat focused tests and the
+same reviewers; a final-candidate correction also repeats full validation.
+Apply stricter project policy when it requires a more conservative sequence.
+
+Playbook source tests belong only to changes in the playbook repository. In an
+adopting project, use that project's tests and the installed runtime validation;
+do not run the playbook repository's source suite.
 
 Track active implementation time proportionally. If one task reaches one hour
 of active implementation before its planned review boundary, stop and report
