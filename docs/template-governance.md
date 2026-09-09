@@ -22,7 +22,7 @@ Apply the quality policy's [six goals](documentation-quality-policy.md#six-goals
 
 | Template | Owner responsibility |
 | --- | --- |
-| Project adoption manifest | Installed revision, canonical authorities, and stable boundaries |
+| Project adoption manifest | Installed revision, current canonical authority index, and stable boundaries |
 | Solution whiteboard | One active feature's concise discussion draft, concluded design, and reconciliation between them |
 | Implementation plan | Tasks, Definition of Done, validation, and all active-delivery state |
 

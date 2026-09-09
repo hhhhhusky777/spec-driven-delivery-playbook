@@ -35,6 +35,9 @@ test("each durable document has one responsibility", async () => {
   assert.match(plan, /only active-delivery state authority/);
   assert.match(plan, /Design-to-task mapping/);
   assert.match(plan, /Delivery Definition of Done/);
+  for (const document of [manifest, whiteboard, plan]) {
+    assert.match(document, /\| Handling \|/);
+  }
 });
 
 test("the three templates preserve complete proportional delivery information", async () => {
@@ -95,6 +98,21 @@ test("workflow skills state six goals and reject duplicate delivery documents", 
   assert.match(workflow, /Synchronize the completed\s+candidate with its target, then run affected checks on that exact candidate/);
   assert.match(workflow, /After target verification, remove owned delivery\/task worktrees and retire\s+owned merged branches/);
   assert.match(workflow, /Return the coordinating checkout to the accepted target\s+branch when safe/);
+  for (const handling of ["HUMAN_DECISION", "AGENT_ACTION", "DISCLOSE", "NONE"]) {
+    assert.match(workflow, new RegExp(handling));
+  }
+  assert.match(workflow, /Semantically identify material policy sources/);
+  assert.match(workflow, /Filenames are discovery\s+hints, not proof of authority/);
+});
+
+test("adoption remains reusable while project authority is refreshed", async () => {
+  const adoption = await read("skills/sdd-project-adoption/SKILL.md");
+  const manifest = await read("templates/adoption/project-adoption-manifest.md");
+  const readme = await read("README.md");
+  assert.match(adoption, /Adoption is still one-time when project policy evolves/);
+  assert.match(manifest, /reconcile this authority index with current repository evidence/);
+  assert.match(manifest, /filenames are hints, not authority by themselves/i);
+  assert.match(readme, /semantically reconciles current project authority with the\s+manifest/);
 });
 
 test("final review requires merge-ready canonical state without predicting PR facts", async () => {

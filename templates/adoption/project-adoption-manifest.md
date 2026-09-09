@@ -67,6 +67,16 @@ Add rows only for authorities that materially govern delivery. Canonical
 sources and explicit owner decisions must agree before adoption or upgrade is
 accepted.
 
+After adoption, reconcile this authority index with current repository evidence
+before each feature's whiteboard work and whenever candidate work changes
+canonical policy. Semantically assess added, removed, moved, or changed policy
+sources; filenames are hints, not authority by themselves. Update stable links,
+boundaries, and material verification evidence in the same delivery. Refresh
+`Last verified` only when the authority index changes or accepted evidence
+materially advances; do not create bookkeeping churn. Routine corrections are
+agent work; substantive authority or policy conflicts require the applicable
+owner decision. Link canonical sources instead of copying them.
+
 ## Stable project boundaries
 
 | Boundary | Value |
@@ -111,15 +121,15 @@ These are project gates, not the playbook source repository's own test suite.
 
 ## Adoption or upgrade human brief
 
-| Human need | Summary |
-| --- | --- |
-| Acceptance scope | `<installation or reusable upgrade scope and exact candidate>` |
-| Authorities discovered | `<canonical sources and owners>` |
-| Policies reused or changed | `<links and concise impact>` |
-| Gaps, deviations, and risks | `<items or None>` |
-| Validation | `<passed, failed, and unrun project checks>` |
-| Pin and runtime state | `<old/new full SHAs and activation boundary>` |
-| Decision requested | `<exact owner decision>` |
+| Human need | Summary | Handling |
+| --- | --- | --- |
+| Acceptance scope | `<installation or reusable upgrade scope and exact candidate>` | `<class>` |
+| Authorities discovered | `<canonical sources and owners>` | `<class>` |
+| Policies reused or changed | `<links and concise impact>` | `<class>` |
+| Gaps, deviations, and risks | `<items or None>` | `<class>` |
+| Validation | `<passed, failed, and unrun project checks>` | `<class>` |
+| Pin and runtime state | `<old/new full SHAs and activation boundary>` | `<class>` |
+| Decision requested | `<exact owner decision>` | `<class>` |
 
 The active feature, task, branch, PR, review progress, and next action never
 belong in this manifest. The implementation plan owns active delivery state.

@@ -20,6 +20,12 @@ deliveries without repeating adoption.
 - Existing project authority is preserved unless the owner explicitly changes
   it.
 
+Adoption is still one-time when project policy evolves. Future deliveries
+semantically reconcile current repository authority with the manifest before
+design work and update stable links or boundaries when a canonical source is
+added, removed, moved, or changed. They do not rerun adoption or copy policy
+text into the manifest.
+
 Do not create additional status or evidence documents. Link the project's
 canonical authorities from the manifest instead of copying policy text.
 

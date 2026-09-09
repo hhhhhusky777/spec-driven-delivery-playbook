@@ -261,14 +261,14 @@ already been reviewed or merged.
 
 ## Human review brief
 
-| Attention | Summary |
-| --- | --- |
-| Tasks and outcomes | `<short task list>` |
-| Design consistency | `<mapping result and gaps>` |
-| Important changes | `<contracts, architecture, policies, compatibility, migrations, or operations>` |
-| Validation | `<passed, failed, and unrun>` |
-| Risks or open decisions | `<summary or None>` |
-| Decision requested | `<exact request>` |
+| Attention | Summary | Handling |
+| --- | --- | --- |
+| Tasks and outcomes | `<short task list>` | `<class>` |
+| Design consistency | `<mapping result and gaps>` | `<class>` |
+| Important changes | `<contracts, architecture, policies, compatibility, migrations, or operations>` | `<class>` |
+| Validation | `<passed, failed, and unrun>` | `<class>` |
+| Risks or open decisions | `<summary or None>` | `<class>` |
+| Decision requested | `<exact request>` | `<class>` |
 
 Detailed comments, checks, approvals, revisions, and merge evidence belong in
 the pull request rather than additional repository documents.

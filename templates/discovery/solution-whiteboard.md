@@ -142,13 +142,13 @@ implementation plan.
 
 ## Human brief
 
-| Attention | Summary |
-| --- | --- |
-| Decisions made | `<key decisions>` |
-| Important boundaries | `<safety, compatibility, policy, or authority>` |
-| Alternatives rejected | `<only material alternatives>` |
-| Remaining gaps or risks | `<summary or None>` |
-| Decision requested | `<exact request>` |
+| Attention | Summary | Handling |
+| --- | --- | --- |
+| Decisions made | `<key decisions>` | `<class>` |
+| Important boundaries | `<safety, compatibility, policy, or authority>` | `<class>` |
+| Alternatives rejected | `<only material alternatives>` | `<class>` |
+| Remaining gaps or risks | `<summary or None>` | `<class>` |
+| Decision requested | `<exact request>` | `<class>` |
 
 A concluded whiteboard is the design authority for its implementation plan.
 Ordinary implementation discoveries update the plan; an observable design
