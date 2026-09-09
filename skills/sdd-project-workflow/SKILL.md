@@ -52,8 +52,18 @@ the plan, and review evidence in the pull request.
   GitHub owns the still-pending review, merge, and target-verification facts.
   Do not defer predictable tracked-state updates to a bookkeeping change after
   merge.
-- Before starting a new feature, check for a newer playbook revision and
-  synchronize it at a safe boundary.
+- Begin every delivery in an isolated worktree and owned delivery branch
+  created from the accepted target. Provision required ignored machine-local
+  inputs there, including the existing project installer when an upgrade may
+  be needed. Regenerate the manifest-pinned runtime in that worktree, then
+  check for and synchronize a newer playbook revision before whiteboard or
+  implementation work. A maintenance-only upgrade is still a delivery; do not
+  merge a separate target-branch upgrade solely to prepare another delivery.
+- Treat the branch point as the implementation baseline. Do not routinely
+  merge or rebase the target during ordinary work. Synchronize the completed
+  candidate with its target, then run affected checks on that exact candidate
+  before final review. If the baseline cannot support safe progress, follow the
+  canonical error-handling authority.
 
 ## Agent discretion
 
@@ -78,3 +88,6 @@ authority, merge, and target evidence. When the candidate closes the delivery,
 it also archives the concluded whiteboard with pull-request links, removes the
 feature plan and other non-reusable feature material, and resets the working
 whiteboard. Preserve the manifest and other reusable project authority.
+After target verification, remove owned delivery/task worktrees and retire
+owned merged branches. Return the coordinating checkout to the accepted target
+branch when safe; never discard local changes or disrupt another active task.

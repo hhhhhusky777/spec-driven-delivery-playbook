@@ -588,8 +588,16 @@ prepare_upgrade() {
     fail "requested repository differs from the manifest playbook source"
   [[ -f "$PROJECT_ROOT/$ADOPTION_ROOT/solution-whiteboard.md" ]] ||
     fail "upgrade requires the project solution whiteboard"
-  [[ -f "$GUIDE_PATH" ]] ||
-    fail "upgrade requires the current generated agent guide"
+  if [[ ! -f "$GUIDE_PATH" ]]; then
+    local installer_path
+    installer_path=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)/$(basename "${BASH_SOURCE[0]}")
+    printf 'Bootstrapping the manifest-pinned runtime in this worktree.\n'
+    bash "$installer_path" \
+      --repository "$manifest_repository" \
+      --revision "$PINNED_REVISION" \
+      --adoption-root "$ADOPTION_ROOT" \
+      --manifest "$MANIFEST_RELATIVE_PATH"
+  fi
   recorded_hash=$(markdown_value "Content hash" "$GUIDE_PATH")
   actual_hash=$(guide_content_hash "$GUIDE_PATH")
   [[ "$recorded_hash" == "$actual_hash" ]] ||

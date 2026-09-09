@@ -12,6 +12,13 @@ revision while project authority and active feature content remain intact.
 
 ## Boundaries
 
+- Run the upgrade in the current delivery's isolated worktree and owned
+  delivery branch before whiteboard or implementation work. Include it in that
+  delivery's candidate instead of merging a separate target-branch upgrade.
+- Carry the project's existing ignored installer into a fresh worktree and use
+  it to regenerate that worktree's manifest-pinned runtime before preparing a
+  newer candidate. Current installers can do this automatically during
+  `--upgrade`; runtime from another worktree is never reused.
 - Upgrade only the manifest, neutral reusable whiteboard structure, managed
   skills, and generated runtime. Never rewrite feature-specific whiteboard
   content or implementation-plan content.
@@ -22,6 +29,10 @@ revision while project authority and active feature content remain intact.
 - Do not install playbook source tests, lifecycle engines, evidence helpers,
   publication tools, or CI into an adopting project.
 - Preserve canonical project policies and explicit owner decisions.
+- Keep the branch point as the ordinary working baseline; synchronize the
+  completed candidate with its target and run affected checks on the resulting
+  candidate before final review. Route exceptional recovery through the
+  project's canonical error-handling authority.
 
 ## Synchronization result
 

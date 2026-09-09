@@ -24,7 +24,7 @@ status-only change.
 | Next ready task | `None` |
 | Active blocker | `None` |
 | Implementation mode | `<human-review-before-merge or explicitly authorized alternative>` |
-| Feature branch / target | `<values>` |
+| Delivery branch / target | `<values>` |
 | Owner | `<owner>` |
 | Primary issue / need | `<link>` |
 | Concluded whiteboard | `<link and accepted revision>` |
@@ -139,6 +139,12 @@ without inventing product behavior. Required machine-local inputs and access
 must be available. Future implementation outputs are never prerequisites for
 starting the task that produces them.
 
+The delivery worktree's branch point is the ordinary implementation baseline.
+Do not require continuous target synchronization; reconcile the completed
+candidate with its target, then run affected checks on the resulting candidate
+before final review. Exceptional recovery follows the project's canonical
+error-handling authority.
+
 Readiness is behavioral, not measured by document or code detail. A short task
 with bounded observable behavior can be ready; a long task naming files,
 classes, or commands is not ready if failure behavior, compatibility, safety,
@@ -229,6 +235,11 @@ not become another progress ledger.
 | Item | Keep, archive, remove, or reset | Ownership and evidence | Result |
 | --- | --- | --- | --- |
 | `<path, branch, worktree, runtime item, or issue>` | `<action>` | `<proof and authority>` | `<pending or result>` |
+
+Tracked cleanup belongs in the merge candidate. After target verification,
+remove owned delivery/task worktrees and merged branches, then return the
+coordinating checkout to the accepted target branch when safe. Keep any unsafe
+or externally owned cleanup pending rather than discarding or disrupting work.
 
 Use only the task detail needed to implement and judge the result. In a final
 PR candidate, a task is `DONE` when its accepted outcome, applicable validation,
