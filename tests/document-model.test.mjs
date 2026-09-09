@@ -134,12 +134,18 @@ test("human PR review briefs expose the exact candidate change shape", async () 
     read("templates/discovery/solution-whiteboard.md"),
     read("templates/delivery/implementation-plan.md"),
   ]);
-  for (const document of [policy, readme, ...templates]) {
+  for (const document of [policy, readme]) {
     assert.match(document, /\| Change category \| Files \| Additions \| Deletions \| Changed lines \|/);
     for (const category of ["Product code", "Documentation", "Tests", "Other"]) {
       assert.match(document, new RegExp(`\\| ${category} \\|`));
     }
   }
+  for (const template of templates) {
+    assert.doesNotMatch(template, /\| Change category \| Files \| Additions \| Deletions \| Changed lines \|/);
+  }
+  assert.match(workflow, /> \[!IMPORTANT\]/);
+  assert.match(workflow, /Avoid over-engineering/);
+  assert.match(workflow, /Prefer one canonical owner and the smallest sufficient solution/);
   assert.match(workflow, /exact pull-request candidate/);
   assert.match(workflow, /actual PR target/);
   assert.match(policy, /Classify every changed file once by its primary responsibility/);

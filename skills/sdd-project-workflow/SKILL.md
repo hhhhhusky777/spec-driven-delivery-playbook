@@ -13,6 +13,12 @@ project. Apply necessary complexity only: every added artifact, abstraction,
 dependency, or control must protect the accepted outcome or a named invariant.
 Repository policies and explicit owner decisions remain authoritative.
 
+> [!IMPORTANT]
+> Avoid over-engineering. Before accepting a design or final candidate, remove
+> every artifact, rule, duplicate statement, automation, abstraction, or
+> dependency that does not protect an accepted outcome or named invariant.
+> Prefer one canonical owner and the smallest sufficient solution.
+
 ## Durable model
 
 - The adoption manifest owns the installed immutable playbook revision,
