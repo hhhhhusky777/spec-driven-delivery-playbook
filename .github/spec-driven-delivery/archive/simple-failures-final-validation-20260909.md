@@ -1,0 +1,49 @@
+# Simple failure handling and final validation
+
+| Field | Value |
+| --- | --- |
+| State | `CONCLUDED` |
+| Issue | [#97](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/97) |
+| Pull request | [#98](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/98) |
+| Owner | Repository owner |
+| Concluded design revision | `2026-09-09` |
+| Open owner decisions | `None` |
+
+## Discussion draft
+
+| ID | Agreed item, alternative, constraint, or gap | Resolution |
+| --- | --- | --- |
+| `DR01` | Error handling cannot enumerate every race, edge case, or failure interleaving. | Protect invariants with a simple fail-closed default. |
+| `DR02` | Consistent retry-safe failures should return control to the client. | Expose a stable retryable outcome only when repetition is safe. |
+| `DR03` | Ambiguous prior effects can make retries unsafe. | Reconcile authoritative state or use an established idempotency boundary first. |
+| `DR04` | Completed tasks need quick evidence before review. | Use focused unit/integration tests and applicable coverage, then retain exact-head two-agent review. |
+| `DR05` | Repeating heavy validation on intermediate task PRs wastes time. | Reserve it for the reviewed final candidate targeting the protected integration branch. |
+
+## Concluded design
+
+| Design point | Accepted outcome | Boundary or rationale | Validation signal |
+| --- | --- | --- | --- |
+| `D01` | Error handling is invariant-based, simple, and fail-closed. | Do not enumerate hypothetical race and edge cases or add speculative recovery machinery. | Canonical policy emphasizes consistency and the safe default. |
+| `D02` | Retry-safe failures return a stable outcome and leave retry timing to the client. | Ambiguous or unsafe effects require reconciliation or idempotency before retry. | Policy distinguishes safe retry from critical stop. |
+| `D03` | Each completed task candidate runs fast proportional checks before unchanged two-agent review. | Project authority selects the focused tests and applicable coverage. | Review guidance and regression agree. |
+| `D04` | Full/heavy/long-running validation runs only after review of the final candidate targeting the protected integration branch. | A single-task PR to `main` is already final; intermediate task PRs do not repeat the general full suite. | Policy, workflow, contributing guide, and README diagram agree. |
+| `D05` | Candidate corrections repeat affected fast checks and the same reviewers; final-candidate corrections also invalidate full validation. | Stricter project policy and human merge authority remain intact. | Tests lock both correction paths. |
+
+## Draft-to-conclusion reconciliation
+
+| Draft item | Concluded point | Disposition |
+| --- | --- | --- |
+| `DR01` | `D01` | Accepted |
+| `DR02`, `DR03` | `D02` | Accepted |
+| `DR04` | `D03` | Accepted |
+| `DR05` | `D04`, `D05` | Accepted |
+
+## Delivery map
+
+| Design | Delivered by | Evidence |
+| --- | --- | --- |
+| `D01`, `D02` | Canonical error policy plus concise skill/README consumers | Focused semantic regression |
+| `D03`–`D05` | Canonical testing policy, workflow skill, contributing guide, and README diagrams | Focused review-loop regression and documentation gates |
+
+Review, human acceptance, merge, and exact-target validation remain owned by
+pull request #98.
