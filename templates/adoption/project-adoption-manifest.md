@@ -131,6 +131,16 @@ These are project gates, not the playbook source repository's own test suite.
 | Pin and runtime state | `<old/new full SHAs and activation boundary>` | `<class>` |
 | Decision requested | `<exact owner decision>` | `<class>` |
 
+When this candidate is waiting for human PR review, report its exact
+target-relative change shape:
+
+| Change category | Files | Additions | Deletions | Changed lines |
+| --- | ---: | ---: | ---: | ---: |
+| Product code | `<count>` | `<count>` | `<count>` | `<sum>` |
+| Documentation | `<count>` | `<count>` | `<count>` | `<sum>` |
+| Tests | `<count>` | `<count>` | `<count>` | `<sum>` |
+| Other | `<count>` | `<count>` | `<count>` | `<sum>` |
+
 The active feature, task, branch, PR, review progress, and next action never
 belong in this manifest. The implementation plan owns active delivery state.
 Pull requests own detailed review findings, approvals, checks, and merge

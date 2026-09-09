@@ -270,5 +270,15 @@ already been reviewed or merged.
 | Risks or open decisions | `<summary or None>` | `<class>` |
 | Decision requested | `<exact request>` | `<class>` |
 
+When this candidate is waiting for human PR review, report its exact
+target-relative change shape:
+
+| Change category | Files | Additions | Deletions | Changed lines |
+| --- | ---: | ---: | ---: | ---: |
+| Product code | `<count>` | `<count>` | `<count>` | `<sum>` |
+| Documentation | `<count>` | `<count>` | `<count>` | `<sum>` |
+| Tests | `<count>` | `<count>` | `<count>` | `<sum>` |
+| Other | `<count>` | `<count>` | `<count>` | `<sum>` |
+
 Detailed comments, checks, approvals, revisions, and merge evidence belong in
 the pull request rather than additional repository documents.

@@ -150,6 +150,16 @@ implementation plan.
 | Remaining gaps or risks | `<summary or None>` | `<class>` |
 | Decision requested | `<exact request>` | `<class>` |
 
+When this candidate is waiting for human PR review, report its exact
+target-relative change shape:
+
+| Change category | Files | Additions | Deletions | Changed lines |
+| --- | ---: | ---: | ---: | ---: |
+| Product code | `<count>` | `<count>` | `<count>` | `<sum>` |
+| Documentation | `<count>` | `<count>` | `<count>` | `<sum>` |
+| Tests | `<count>` | `<count>` | `<count>` | `<sum>` |
+| Other | `<count>` | `<count>` | `<count>` | `<sum>` |
+
 A concluded whiteboard is the design authority for its implementation plan.
 Ordinary implementation discoveries update the plan; an observable design
 change requires an explicit whiteboard amendment and owner decision.

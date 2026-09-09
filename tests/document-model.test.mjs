@@ -125,6 +125,28 @@ test("adoption remains reusable while project authority is refreshed", async () 
   assert.match(readme, /semantically reconciles current project authority with the\s+manifest/);
 });
 
+test("human PR review briefs expose the exact candidate change shape", async () => {
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const policy = await read("docs/documentation-quality-policy.md");
+  const readme = await read("README.md");
+  const templates = await Promise.all([
+    read("templates/adoption/project-adoption-manifest.md"),
+    read("templates/discovery/solution-whiteboard.md"),
+    read("templates/delivery/implementation-plan.md"),
+  ]);
+  for (const document of [policy, readme, ...templates]) {
+    assert.match(document, /\| Change category \| Files \| Additions \| Deletions \| Changed lines \|/);
+    for (const category of ["Product code", "Documentation", "Tests", "Other"]) {
+      assert.match(document, new RegExp(`\\| ${category} \\|`));
+    }
+  }
+  assert.match(workflow, /exact pull-request candidate/);
+  assert.match(workflow, /actual PR target/);
+  assert.match(policy, /Classify every changed file once by its primary responsibility/);
+  assert.match(policy, /non-line-countable files/);
+  assert.match(policy, /not a risk score\s+or an additional gate/);
+});
+
 test("final review requires merge-ready canonical state without predicting PR facts", async () => {
   const plan = await read("templates/delivery/implementation-plan.md");
   const policy = await read("docs/documentation-quality-policy.md");
