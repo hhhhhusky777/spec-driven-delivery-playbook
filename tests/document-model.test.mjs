@@ -179,10 +179,15 @@ test("testing guidance is risk focused, proportional, and canonically owned", as
   assert.match(workflow, /do not impose universal suites or quotas/);
 
   for (const edge of [
-    'O --> E["Boundaries + error/recovery"]',
-    'O --> C["Concurrency + timing/order"]',
-    'F --> S["E2E smoke for critical journeys"]',
-    'S --> L["Production-like system/load/soak<br/>when risk warrants"]',
+    'O --> K{"Which material risks apply?"}',
+    'K -->|"if applicable"| E["Boundaries + error/recovery"]',
+    'K -->|"if applicable"| C["Concurrency + timing/order"]',
+    'F --> J{"Critical real journey?"}',
+    'J -->|"no"| D["Proportional evidence complete"]',
+    'L -->|"yes"| P["Production-like system/load/soak"]',
+    'L -->|"no"| D',
+    'X -->|"yes"| R["Preserve evidence + reduce failure<br/>to focused regression"]',
+    'X -->|"no"| D',
     "R --> F",
   ]) assert.match(readme, new RegExp(edge.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   assert.match(readme, /Not every change needs every layer/);
