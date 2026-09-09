@@ -166,93 +166,6 @@ markdown_value() {
   ' "$file"
 }
 
-manifest_entry_point() {
-  awk -F'|' '
-    function trim(value) {
-      gsub(/^[[:space:]]+|[[:space:]]+$/, "", value)
-      return value
-    }
-    trim($2) == "Stable entry point" {
-      print trim($3)
-      exit
-    }
-  ' "$MANIFEST_PATH"
-}
-
-manifest_has_entry_point() {
-  awk -F'|' '
-    function trim(value) {
-      gsub(/^[[:space:]]+|[[:space:]]+$/, "", value)
-      return value
-    }
-    trim($2) == "Stable entry point" {
-      found = 1
-      exit
-    }
-    END {
-      exit !found
-    }
-  ' "$MANIFEST_PATH"
-}
-
-entry_point_target() {
-  awk '
-    match($0, /\]\([^)]*\)/) {
-      print substr($0, RSTART + 2, RLENGTH - 3)
-      exit
-    }
-    match($0, /`[^`]+`/) {
-      print substr($0, RSTART + 1, RLENGTH - 2)
-      exit
-    }
-    length($0) {
-      print $0
-      exit
-    }
-  '
-}
-
-validate_project_entry_point() {
-  local entry target entry_base candidate_directory candidate
-  if manifest_has_entry_point; then
-    entry=$(manifest_entry_point)
-    target=$(printf '%s\n' "$entry" | entry_point_target)
-    [[ -n "$target" ]] ||
-      fail "upgrade requires Stable entry point to record a local project entry point"
-    target=${target#<}
-    target=${target%>}
-    target=${target%%\#*}
-    target=${target%%\?*}
-    if [[ "$target" =~ ^[[:alpha:]][[:alnum:].+-]*: ]]; then
-      fail "upgrade requires Stable entry point to record a local project entry point"
-    fi
-    case "$target" in
-      ""|/*)
-        fail "upgrade requires Stable entry point to record a local project entry point"
-        ;;
-    esac
-
-    if [[ "$entry" == \[*\]\(*\) ]]; then
-      entry_base=$(cd "$(dirname "$MANIFEST_PATH")" && pwd -P)
-    else
-      entry_base=$PROJECT_ROOT
-    fi
-    candidate_directory=$(cd "$(dirname "$entry_base/$target")" 2>/dev/null && pwd -P) ||
-      fail "recorded project entry point is unavailable: $target"
-    candidate="$candidate_directory/$(basename "$target")"
-    case "$candidate" in
-      "$PROJECT_ROOT"/*) ;;
-      *) fail "recorded project entry point must stay inside the project root: $target" ;;
-    esac
-    [[ ! -L "$entry_base/$target" ]] ||
-      fail "recorded project entry point must not be a symbolic link: $target"
-    [[ -f "$candidate" ]] || fail "recorded project entry point is unavailable: $target"
-    return
-  fi
-
-  fail "upgrade requires Stable entry point in the manifest"
-}
-
 profile_for_state() {
   case "$1" in
     ABSENT|DRAFT)
@@ -673,7 +586,6 @@ prepare_upgrade() {
   [[ "$(canonical_repository "$manifest_repository")" == \
     "$(canonical_repository "$PLAYBOOK_REPOSITORY")" ]] ||
     fail "requested repository differs from the manifest playbook source"
-  validate_project_entry_point
   [[ -f "$PROJECT_ROOT/$ADOPTION_ROOT/solution-whiteboard.md" ]] ||
     fail "upgrade requires the project solution whiteboard"
   [[ -f "$GUIDE_PATH" ]] ||

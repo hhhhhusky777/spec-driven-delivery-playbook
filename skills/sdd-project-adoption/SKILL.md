@@ -13,8 +13,7 @@ deliveries without repeating adoption.
 ## Required result
 
 - A manifest records the source repository, full revision, adoption state,
-  stable entry points, discovered canonical policies, owner decisions, and
-  project boundaries.
+  discovered canonical policies, owner decisions, and project boundaries.
 - A neutral whiteboard is ready for design work.
 - No feature implementation plan exists until a feature is planned.
 - The generated runtime and managed workflow skill match the manifest pin.
@@ -32,6 +31,6 @@ related discovery and owner decisions. Review one coherent adoption result,
 and present the owner a compact table of installed revision, discovered
 authorities, material choices, validation, gaps, and requested acceptance.
 
-Correct agent mistakes within scope. Track genuine project or playbook gaps in
-their owning repository. Human acceptance is required before adoption becomes
-installed.
+Follow the project's canonical error-handling authority rather than defining a
+second recovery procedure here. Human acceptance is required before adoption
+becomes installed.
