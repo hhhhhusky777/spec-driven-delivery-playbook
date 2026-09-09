@@ -56,16 +56,21 @@ starting whiteboard work. Apply any accepted upgrade in that worktree. Keep its
 creation point as the ordinary implementation baseline, then synchronize the
 completed candidate with its target and run affected checks on the resulting
 candidate before final review. Exceptional recovery follows the canonical
-error-handling framework.
+error-handling framework. Before dependent work proceeds, exercise a relevant
+project operation from the worktree itself and provision any missing required
+ignored support within its ownership and security boundaries.
 
 The implementation plan records any owner-selected merge mode and exact scope.
 Human review before merge is the default. Scoped agent auto-merge never supplies
 design, policy, validation, cleanup, or out-of-scope authority.
 
 Open the PR when it best supports collaboration; a draft PR is not required
-before coding. Before merge, publish the complete exact candidate, run
-applicable checks, reconcile comments, obtain review from the two retained
-agent seats, and obtain required owner acceptance. GitHub is the durable record.
+before coding. Fast affected checks prepare a coherent candidate for the two
+retained agent reviewers. After both report no findings on the same exact head, run
+the full applicable repository validation before required owner acceptance.
+Candidate-changing corrections return through affected checks, both retained
+reviewer seats, and final full validation. GitHub is the durable record, and a
+stricter project policy still applies.
 
 Before final review, that candidate must already contain every predictable
 tracked canonical state that its merge will make true. If it closes the

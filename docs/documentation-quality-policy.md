@@ -66,6 +66,16 @@ findings, revisions, checks, acceptance, and merge evidence. Agents may correct
 non-semantic mistakes and rerun checks within authority; a changed candidate
 returns to the same reviewer seats.
 
+Use fast affected validation to reach review early without representing it as
+complete proof. After both retained reviewers report no findings on the same
+candidate, run the full applicable validation on that exact head before human
+acceptance. A candidate-changing correction invalidates the prior agent review
+and final validation, so repeat affected fast checks, both retained reviews,
+and full validation. If the candidate did not change, a transient validation
+failure repeats only the affected validation. Project policy may require a
+more conservative sequence; this efficiency rule never waives a required
+check or exact-head evidence.
+
 At each human gate, present a concise table because the human is not expected
 to reread every document:
 

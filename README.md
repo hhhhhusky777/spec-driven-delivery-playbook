@@ -294,13 +294,10 @@ authority remain at their real boundaries.
 ```mermaid
 flowchart LR
     R["Dependency-ready task"] --> I["Implement coherent unit"]
-    I --> T["Targeted + required checks"]
-    T --> C["Converge tracked canonical state"]
+    I --> C["Converge tracked canonical state"]
     C --> PR["Complete PR candidate"]
-    PR --> A["Two-agent review"]
-    A -->|"findings"| F["Consolidated correction"]
-    F --> T
-    A -->|"approved"| H["Required owner / merge authority"]
+    PR --> A["Review + exact-head validation"]
+    A --> H["Required owner / merge authority"]
     H --> M["Merge + target verification"]
 ```
 
@@ -357,16 +354,28 @@ shape without adding another gate or report artifact.
 
 ```mermaid
 flowchart TD
-    C["Exact candidate"] --> S["Self-review"]
-    S --> R1["Isolated reviewer 1"]
-    S --> R2["Isolated reviewer 2"]
+    C["Coherent candidate"] --> F["Fast affected checks"]
+    F --> P["Open or update PR"]
+    P --> R1["Isolated reviewer 1"]
+    P --> R2["Isolated reviewer 2"]
     R1 --> J{"Findings resolved?"}
     R2 --> J
     J -->|"no"| X["Correct once; return to same seats"]
-    X --> C
-    J -->|"yes"| B["Concise human brief"]
+    X --> F
+    J -->|"yes"| V["Full required validation<br/>on exact head"]
+    V -->|"failed"| D{"Candidate change required?"}
+    D -->|"yes"| X
+    D -->|"no; transient"| Q["Rerun affected validation"]
+    Q --> V
+    V -->|"all green"| B["Concise human brief"]
     B --> H["Human decision at the actual gate"]
 ```
+
+This ordering keeps expensive proof close to the human merge decision without
+weakening it. Any candidate change returns to fast checks and both retained
+reviewers before full validation; an unchanged transient check failure repeats
+only the affected validation. A project's stricter validation policy takes
+precedence.
 
 See [Review and human brief](docs/documentation-quality-policy.md#review-and-human-brief)
 for the canonical review outcome.
@@ -460,7 +469,13 @@ Semantic review catches contradictions that syntax alone cannot understand.
 Deliveries and parallel tasks use isolated worktrees and non-overlapping write scopes. A
 worktree receives only the required machine-local untracked inputs, such as an
 environment file when the task actually depends on it. Those inputs remain
-ignored and untracked, with secrets kept out of Git.
+ignored and untracked, with secrets kept out of Git. The agent exercises a
+representative project operation in the worktree itself and diagnoses missing
+runtime support. It then copies, recreates, or safely shares only what the
+worktree needs and is authorized to use, rather than assuming a source-complete
+checkout is operational or blindly cloning the whole main workspace. A
+worktree never depends on mutable files or runtime owned by another checkout;
+shared support needs stable project-level ownership.
 
 The installer follows the same boundary. Its immutable playbook checkout lives
 under that worktree's ignored `.sdd-runtime/checkouts/RESOLVED_SHA/` directory,

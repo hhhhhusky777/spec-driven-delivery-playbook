@@ -50,7 +50,13 @@ the plan, and review evidence in the pull request.
   inputs there, including files such as `.env` when the task depends on them.
   Copy or recreate only what is needed, preserve appropriate permissions, keep
   it ignored and untracked, and never commit secrets or overwrite an existing
-  worktree-local value without authority.
+  worktree-local value without authority. Test the worktree itself with a
+  representative project operation before dependent work proceeds. If runtime
+  support is missing, diagnose the gap and copy, recreate, or safely share only
+  the required authorized support from an authoritative source; repeat the
+  affected check until the worktree is operational or error handling requires
+  escalation. Never make the worktree depend on mutable files or runtime owned
+  by another checkout; shared support must have stable project-level ownership.
 - A concluded design or approved plan changes only through an explicit
   amendment when the observable outcome changes. Ordinary task status and
   evidence updates do not reopen the design.
@@ -101,6 +107,15 @@ tests, and other files. Derive it against the actual PR target, classify each
 file once by primary responsibility, and disclose non-line-countable files.
 The summary informs review; it does not add a gate or prescribe a helper tool.
 
+Use fast affected checks to prepare a coherent pull request for both retained
+agent reviewers. After both reviewers report no findings on the same
+candidate, run the project's full applicable validation on that exact head
+before the human merge decision. A candidate-changing correction returns
+through affected checks, the same reviewer seats, and final full validation.
+An unchanged transient validation failure repeats only the affected
+validation. Apply stricter project policy when it requires a more conservative
+sequence.
+
 ## Error handling
 
 Follow the canonical error-handling authority recorded in the adoption
@@ -109,8 +124,9 @@ manifest; do not restate or fork it here. In this playbook repository,
 
 ## Completion
 
-Before final review, the candidate satisfies its implementation and task
-outcomes, passes applicable pre-review checks, and already contains its
+Before final human review, the candidate satisfies its implementation and task
+outcomes, has converged through required agent review and exact-head
+validation, and already contains its
 merge-resulting canonical state. After authorized merge, verify the complete
 delivery outcome on the exact target. The pull request records review, merge
 authority, merge, and target evidence. When the candidate closes the delivery,
