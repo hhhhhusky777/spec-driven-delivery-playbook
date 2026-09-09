@@ -11,15 +11,25 @@
 | Open owner decisions | `None` |
 
 Use this file as lightweight notes while discussing a feature. Do not force a
-formal structure during exploration. Preserve alternatives, constraints,
-unknowns, and owner decisions that affect the result.
+formal structure during exploration. Preserve agreed items, material
+alternatives, constraints, unknowns, and owner decisions that affect the
+result. Keep this concise discussion record when the design is concluded; do
+not retain a raw transcript.
 
 The sections below are a completeness menu, not mandatory ceremony. Use the
 smallest subset that makes the accepted design unambiguous and reviewable.
 
-## Working notes
+## Discussion draft
 
 `Empty until discussion starts.`
+
+Record material discussion items with stable IDs so conclusion can reconcile
+them. Combine or refine items as understanding improves instead of copying the
+conversation verbatim.
+
+| ID | Agreed item, alternative, constraint, or gap | State / resolution |
+| --- | --- | --- |
+| `<DR01>` | `<material discussion point>` | `<open, accepted, changed, deferred, or rejected>` |
 
 ## Current understanding
 
@@ -103,11 +113,22 @@ design. Git and the pull request preserve detailed discussion history.
 
 ## Concluded design
 
-When the design is ready, replace the working notes with a concise conclusion:
+When the design is ready, retain the concise discussion draft and add the
+authoritative conclusion:
 
 | Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
 | `<ID>` | `<observable outcome>` | `<important constraint>` | `<how the outcome can be judged>` |
+
+## Draft-to-conclusion reconciliation
+
+Map every material discussion-draft item to its conclusion. A concluded
+whiteboard has no unresolved draft item. Explain intentional changes,
+deferrals, and rejections instead of silently dropping them.
+
+| Draft item | Concluded design point | Disposition | Rationale / evidence |
+| --- | --- | --- | --- |
+| `<DR01>` | `<design point ID or None>` | `<accepted, changed, deferred, or rejected>` | `<why the conclusion preserves or intentionally changes the draft>` |
 
 ## Design amendments
 

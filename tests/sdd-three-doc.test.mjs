@@ -38,10 +38,19 @@ test("manifest requires an immutable candidate while upgrade is open", () => {
   assert.deepEqual(checkDocument("project-adoption-manifest.md", source.replace("None", "b".repeat(40))), []);
 });
 
-test("concluded whiteboard requires resolved decisions and design outcomes", () => {
-  const source = `| Field | Value |\n| --- | --- |\n| State | CONCLUDED |\n| Open owner decisions | None |\n\n| Design point | Accepted outcome |\n| --- | --- |\n| D01 | outcome |`;
+test("concluded whiteboard requires resolved decisions, outcomes, and draft reconciliation", () => {
+  const source = `| Field | Value |\n| --- | --- |\n| State | CONCLUDED |\n| Open owner decisions | None |\n\n| ID | Agreed item, alternative, constraint, or gap | State / resolution |\n| --- | --- | --- |\n| DR01 | need | accepted |\n\n| Design point | Accepted outcome |\n| --- | --- |\n| D01 | outcome |\n\n| Draft item | Concluded design point | Disposition |\n| --- | --- | --- |\n| DR01 | D01 | accepted |`;
   assert.deepEqual(checkDocument("solution-whiteboard.md", source), []);
   assert.ok(checkDocument("solution-whiteboard.md", source.replace("| None |", "| D02 |"))[0]);
+  assert.ok(checkDocument("solution-whiteboard.md", source.replace("| DR01 | D01 | accepted |", ""))
+    .some(error => error.includes("at least one reconciled")));
+  assert.ok(checkDocument("solution-whiteboard.md", source.replace("| DR01 | D01 | accepted |", "| DR01 | D01 | open |"))
+    .some(error => error.includes("unresolved whiteboard draft item")));
+  assert.ok(checkDocument("solution-whiteboard.md", source.split("\n\n| Draft item")[0])
+    .some(error => error.includes("draft-to-conclusion reconciliation")));
+  const missing = source.replace("| DR01 | need | accepted |", "| DR01 | need | accepted |\n| DR02 | another need | accepted |");
+  assert.ok(checkDocument("solution-whiteboard.md", missing)
+    .some(error => error.includes("DR02")));
 });
 
 test("implementation plan owns one coherent task state graph", () => {

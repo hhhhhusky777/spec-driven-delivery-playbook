@@ -71,8 +71,37 @@ function whiteboardErrors(text) {
   if (!new Set(["EMPTY", "OPEN", "CONCLUDED"]).has(state)) errors.push("whiteboard State must be EMPTY, OPEN, or CONCLUDED");
   if (state === "CONCLUDED") {
     if ((fields.get("Open owner decisions") || "") !== "None") errors.push("concluded whiteboard has open owner decisions");
-    if (!tables(text).some(table => table[0].includes("Design point") && table[0].includes("Accepted outcome"))) {
+    const documentTables = tables(text);
+    const design = documentTables.find(table => table[0].includes("Design point") && table[0].includes("Accepted outcome"));
+    if (!design) {
       errors.push("concluded whiteboard requires a design-outcome table");
+    }
+    const draft = documentTables.find(table =>
+      table[0].includes("ID") && table[0].includes("Agreed item, alternative, constraint, or gap")
+    );
+    if (!draft?.slice(2).length) errors.push("concluded whiteboard requires a retained discussion draft");
+    const reconciliation = documentTables.find(table =>
+      table[0].includes("Draft item") && table[0].includes("Concluded design point") && table[0].includes("Disposition")
+    );
+    if (!reconciliation) errors.push("concluded whiteboard requires draft-to-conclusion reconciliation");
+    else {
+      const rows = reconciliation.slice(2);
+      if (!rows.length) errors.push("concluded whiteboard requires at least one reconciled draft item");
+      const allowed = new Set(["accepted", "changed", "deferred", "rejected"]);
+      const dispositionIndex = reconciliation[0].indexOf("Disposition");
+      for (const row of rows) {
+        if (!allowed.has((row[dispositionIndex] || "").toLowerCase())) {
+          errors.push(`unresolved whiteboard draft item: ${row[0] || "unknown"}`);
+        }
+      }
+      const draftIds = new Set((draft?.slice(2) || []).map(row => row[0]).filter(Boolean));
+      const reconciledIds = new Set(rows.map(row => row[0]).filter(Boolean));
+      for (const id of draftIds) {
+        if (!reconciledIds.has(id)) errors.push(`whiteboard draft item lacks reconciliation: ${id}`);
+      }
+      for (const id of reconciledIds) {
+        if (!draftIds.has(id)) errors.push(`whiteboard reconciliation references unknown draft item: ${id}`);
+      }
     }
   }
   return errors;
