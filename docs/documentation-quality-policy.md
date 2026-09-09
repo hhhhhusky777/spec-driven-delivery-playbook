@@ -103,14 +103,22 @@ non-semantic mistakes and rerun checks within authority; a changed candidate
 returns to the same reviewer seats.
 
 Use fast affected validation to reach review early without representing it as
-complete proof. After both retained reviewers report no findings on the same
-candidate, run the full applicable validation on that exact head before human
-acceptance. A candidate-changing correction invalidates the prior agent review
-and final validation, so repeat affected fast checks, both retained reviews,
-and full validation. If the candidate did not change, a transient validation
-failure repeats only the affected validation. Project policy may require a
-more conservative sequence; this efficiency rule never waives a required
-check or exact-head evidence.
+complete proof. Each completed task candidate receives proportional fast
+evidence, such as focused unit or integration tests and applicable coverage,
+before both retained reviewers inspect the same exact head. An intermediate
+task PR targeting a feature integration branch does not repeat the general
+full or long-running suite unless project authority requires it.
+
+After both reviewers report no findings on the final candidate targeting the
+protected integration branch, run the full applicable validation—including
+selected heavy or long-running evidence—on that exact head before human merge
+acceptance. A single-task PR targeting the protected branch is already the
+final candidate. Any candidate-changing correction repeats affected fast
+checks and both retained reviews; a final-candidate correction also invalidates
+prior full validation. An unchanged transient validation failure repeats only
+the affected validation. Project policy may require a more conservative
+sequence; this efficiency rule never waives a required check or exact-head
+evidence.
 
 At each human gate, present a concise table because the human is not expected
 to reread every document:

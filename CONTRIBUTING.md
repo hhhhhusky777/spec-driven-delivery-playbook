@@ -65,12 +65,15 @@ Human review before merge is the default. Scoped agent auto-merge never supplies
 design, policy, validation, cleanup, or out-of-scope authority.
 
 Open the PR when it best supports collaboration; a draft PR is not required
-before coding. Fast affected checks prepare a coherent candidate for the two
-retained agent reviewers. After both report no findings on the same exact head, run
-the full applicable repository validation before required owner acceptance.
-Candidate-changing corrections return through affected checks, both retained
-reviewer seats, and final full validation. GitHub is the durable record, and a
-stricter project policy still applies.
+before coding. Fast affected checks prepare each coherent task candidate for
+the two retained agent reviewers. An intermediate task PR targeting the feature
+integration branch does not repeat the general full or long-running suite.
+After both reviewers report no findings on the same exact head of the final
+candidate targeting `main`, run the full applicable repository validation
+before required owner acceptance. A single-task PR targeting `main` is final. Candidate-changing
+corrections return through affected checks and both retained reviewer seats;
+final-candidate corrections also invalidate full validation. GitHub is the
+durable record, and a stricter project policy still applies.
 
 Before final review, that candidate must already contain every predictable
 tracked canonical state that its merge will make true. If it closes the

@@ -2,6 +2,21 @@
 
 Errors are triaged by their effect, not by a fixed procedural list.
 
+> [!IMPORTANT]
+> Keep error handling simple and invariant-based. It is impossible to enumerate
+> every edge case, race, timing, or failure interleaving; attempting to do so
+> usually creates more failure modes. Preserve system consistency and fail
+> closed when safe completion is uncertain. When the resulting state is known
+> to be consistent and repeating the operation is safe, return a stable
+> retryable outcome and let the client decide when to retry.
+
+Do not add recovery orchestration, state, or branches for hypothetical cases.
+A mechanism is justified only by a required invariant or observed failure. If
+an operation may already have taken effect, reconcile the authoritative state
+or rely on an established idempotency boundary before permitting retry. Errors
+that need a policy, safety, product, or authority decision remain non-retryable
+until that decision is resolved.
+
 | Class | Agent response | Human stop |
 | --- | --- | --- |
 | Agent mistake | Correct it within scope and repeat affected checks | Only if the correction changes an accepted outcome |

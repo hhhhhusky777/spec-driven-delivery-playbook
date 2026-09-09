@@ -116,20 +116,23 @@ tests, and other files. Derive it against the actual PR target, classify each
 file once by primary responsibility, and disclose non-line-countable files.
 The summary informs review; it does not add a gate or prescribe a helper tool.
 
-Use fast affected checks to prepare a coherent pull request for both retained
-agent reviewers. After both reviewers report no findings on the same
-candidate, run the project's full applicable validation on that exact head
-before the human merge decision. A candidate-changing correction returns
-through affected checks, the same reviewer seats, and final full validation.
-An unchanged transient validation failure repeats only the affected
-validation. Apply stricter project policy when it requires a more conservative
-sequence.
+Use fast affected checks to prepare each coherent task pull request for both
+retained agent reviewers. Intermediate task PRs targeting a feature integration
+branch do not repeat the general heavy or long-running suite. After both
+reviewers approve the final candidate targeting the protected integration
+branch, run the project's full applicable validation on that exact head before
+the human merge decision. A single-task PR to the protected branch is final.
+Candidate-changing corrections repeat affected checks and the same reviewers;
+a final-candidate correction also repeats full validation. Apply stricter
+project policy when it requires a more conservative sequence.
 
 ## Error handling
 
 Follow the canonical error-handling authority recorded in the adoption
 manifest; do not restate or fork it here. In this playbook repository,
 `docs/error-handling.md` owns triage, issue tracking, recovery, and escalation.
+Its core outcome is simple: preserve invariants, fail closed on uncertainty,
+and expose client-controlled retry only when repeating the operation is safe.
 
 ## Completion
 

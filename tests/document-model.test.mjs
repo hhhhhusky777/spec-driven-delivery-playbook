@@ -124,11 +124,12 @@ test("worktree readiness and expensive validation are outcome based", async () =
   const contributing = await read("CONTRIBUTING.md");
 
   for (const document of [workflow, policy, readme, contributing]) {
-    assert.match(document, /fast affected/i);
-    assert.match(document, /both retained\s+(?:agent\s+)?reviewer/i);
-    assert.match(document, /full applicable|full required/i);
-    assert.match(document, /exact head/i);
-    assert.match(document, /stricter .*policy|Project policy may require/i);
+    const normalized = document.replace(/\s+/g, " ");
+    assert.match(normalized, /fast affected/i);
+    assert.match(normalized, /both retained\s+(?:agent\s+)?reviewer/i);
+    assert.match(normalized, /full applicable|full required|full \/ long-running/i);
+    assert.match(normalized, /exact head/i);
+    assert.match(normalized, /stricter .*policy|Project policy may require/i);
   }
   assert.match(readme, /representative project operation/);
   assert.match(readme, /copies, recreates, or safely shares only/);
@@ -138,15 +139,48 @@ test("worktree readiness and expensive validation are outcome based", async () =
   }
 
   const normalizedPolicy = policy.replace(/\s+/g, " ");
-  assert.match(normalizedPolicy, /fast affected validation.*both retained reviewers.*full applicable validation/);
+  assert.match(normalizedPolicy, /Each completed task candidate.*fast evidence.*both retained reviewers/);
+  assert.match(normalizedPolicy, /intermediate task PR.*does not repeat.*full or long-running suite/);
+  assert.match(normalizedPolicy, /final candidate targeting the protected integration branch.*full applicable validation/);
   assert.match(readme, /F --> P\["Open or update PR"\]/);
   assert.match(readme, /P --> R1\["Isolated reviewer 1"\]/);
   assert.match(readme, /P --> R2\["Isolated reviewer 2"\]/);
-  assert.match(readme, /J -->\|"yes"\| V\["Full required validation<br\/>on exact head"\]/);
+  assert.match(readme, /J -->\|"yes"\| G\{"Final candidate to protected target\?"\}/);
+  assert.match(readme, /G -->\|"no"\| B\["Task PR human brief"\]/);
+  assert.match(readme, /G -->\|"yes"\| V\["Full \/ long-running validation<br\/>on exact head"\]/);
   assert.match(readme, /D -->\|"yes"\| X/);
   assert.match(readme, /X --> F/);
   assert.match(readme, /D -->\|"no; transient"\| Q\["Rerun affected validation"\]/);
   assert.match(readme, /Q --> V/);
+  assert.match(contributing, /intermediate task PR targeting the feature\s+integration branch does not repeat the general full or long-running suite/i);
+  assert.match(contributing, /single-task PR targeting `main` is final/i);
+});
+
+test("error handling stays simple, fail closed, and retry safe", async () => {
+  const errors = await read("docs/error-handling.md");
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const readme = await read("README.md");
+  const templates = await Promise.all([
+    read("templates/adoption/project-adoption-manifest.md"),
+    read("templates/discovery/solution-whiteboard.md"),
+    read("templates/delivery/implementation-plan.md"),
+  ]);
+  const normalizedErrors = errors.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+
+  assert.match(errors, /> \[!IMPORTANT\]/);
+  assert.match(normalizedErrors, /impossible to enumerate every edge case, race, timing, or failure interleaving/);
+  assert.match(normalizedErrors, /Preserve system consistency and fail closed/);
+  assert.match(normalizedErrors, /stable retryable outcome and let the client decide when to retry/);
+  assert.match(normalizedErrors, /reconcile the authoritative state or rely on an established idempotency boundary before permitting retry/);
+  assert.match(errors, /only by a required invariant or observed failure/);
+  assert.match(workflow, /preserve invariants, fail closed on uncertainty/);
+  assert.match(workflow, /client-controlled retry only when repeating the operation is safe/);
+  assert.match(readme, /no design can\s+enumerate every race or edge case/);
+  assert.match(readme, /reconcile ambiguous effects\s+before retrying/);
+  for (const template of templates) {
+    assert.doesNotMatch(template, /impossible to enumerate every edge case/);
+    assert.doesNotMatch(template, /stable retryable outcome/);
+  }
 });
 
 test("testing guidance is risk focused, proportional, and canonically owned", async () => {
