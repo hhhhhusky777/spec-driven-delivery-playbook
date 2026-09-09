@@ -64,11 +64,9 @@ decision, important changes, risks or gaps, validation, and recommended action.
 
 ## Error handling
 
-Correct agent mistakes inside existing authority and repeat only affected
-checks. Triage unexpected behavior as an agent mistake, project gap, or
-playbook gap. Track genuine gaps in the owning repository. Stop only when the
-remaining condition affects safety, policy, authority, intended behavior, or a
-required acceptance gate.
+Follow the canonical error-handling authority recorded in the adoption
+manifest; do not restate or fork it here. In this playbook repository,
+`docs/error-handling.md` owns triage, issue tracking, recovery, and escalation.
 
 ## Completion
 

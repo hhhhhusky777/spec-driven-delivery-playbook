@@ -31,9 +31,8 @@ material inconsistencies, applicable checks, reviewer results, and the human
 decision. Detailed history stays in GitHub.
 
 The agent chooses a proportional comparison, edit order, and recovery method.
-Correct agent mistakes without a new human stop. Track a genuine project or
-playbook gap in its owning repository and stop only for a critical mismatch or
-required acceptance.
+Follow the project's canonical error-handling authority instead of restating a
+second recovery or escalation procedure here.
 
 ## Completion
 
