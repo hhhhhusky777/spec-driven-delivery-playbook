@@ -125,11 +125,17 @@ test("worktree readiness and expensive validation are outcome based", async () =
 
   for (const document of [workflow, policy, readme, contributing]) {
     const normalized = document.replace(/\s+/g, " ");
-    assert.match(normalized, /fast affected/i);
+    assert.match(normalized, /changed files and lines|changed-file \/ changed-line/i);
+    assert.match(normalized, /Implement each task's required tests|Each task still implements the tests|Every task still implements the tests/i);
     assert.match(normalized, /both retained\s+(?:agent\s+)?reviewer/i);
-    assert.match(normalized, /full applicable|full required|full \/ long-running/i);
+    assert.match(normalized, /full coverage/i);
+    assert.match(normalized, /heavy \/ long-running|heavy or long-running/i);
     assert.match(normalized, /exact head/i);
     assert.match(normalized, /stricter .*policy|Project policy may require/i);
+    assert.match(normalized, /one hour of active implementation|one task reaches one hour/i);
+    assert.match(normalized, /network (?:or|and) environment interruptions/i);
+    assert.match(normalized, /review time|code review/i);
+    assert.match(normalized, /owner justification or authorization/i);
   }
   assert.match(readme, /representative project operation/);
   assert.match(readme, /copies, recreates, or safely shares only/);
@@ -139,20 +145,22 @@ test("worktree readiness and expensive validation are outcome based", async () =
   }
 
   const normalizedPolicy = policy.replace(/\s+/g, " ");
-  assert.match(normalizedPolicy, /Each completed task candidate.*fast evidence.*both retained reviewers/);
-  assert.match(normalizedPolicy, /intermediate task PR.*does not repeat.*full or long-running suite/);
+  assert.match(normalizedPolicy, /Each task still implements.*Before both retained reviewers/);
+  assert.match(normalizedPolicy, /validate only changed files and lines plus directly exercised behavior/);
+  assert.match(normalizedPolicy, /Do not require full-project coverage at this gate/);
+  assert.match(normalizedPolicy, /intermediate task PR.*does not run.*full-coverage suite/);
   assert.match(normalizedPolicy, /final candidate targeting the protected integration branch.*full applicable validation/);
   assert.match(readme, /F --> P\["Open or update PR"\]/);
   assert.match(readme, /P --> R1\["Isolated reviewer 1"\]/);
   assert.match(readme, /P --> R2\["Isolated reviewer 2"\]/);
   assert.match(readme, /J -->\|"yes"\| G\{"Final candidate to protected target\?"\}/);
   assert.match(readme, /G -->\|"no"\| B\["Task PR human brief"\]/);
-  assert.match(readme, /G -->\|"yes"\| V\["Full \/ long-running validation<br\/>on exact head"\]/);
+  assert.match(readme, /G -->\|"yes"\| V\["Full coverage \+ heavy \/ long-running validation<br\/>on exact head"\]/);
   assert.match(readme, /D -->\|"yes"\| X/);
   assert.match(readme, /X --> F/);
   assert.match(readme, /D -->\|"no; transient"\| Q\["Rerun affected validation"\]/);
   assert.match(readme, /Q --> V/);
-  assert.match(contributing, /intermediate task PR targeting the feature\s+integration branch does not repeat the general full or long-running suite/i);
+  assert.match(contributing, /intermediate task PR targeting the feature\s+integration branch\s+does not run general full, heavy, long-running, or full-coverage validation/i);
   assert.match(contributing, /single-task PR targeting `main` is final/i);
 });
 

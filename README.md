@@ -297,10 +297,10 @@ flowchart LR
     R["Dependency-ready task"] --> I["Implement coherent unit"]
     I --> C["Converge tracked canonical state"]
     C --> PR["Complete PR candidate"]
-    PR --> A["Fast evidence + exact-head review"]
+    PR --> A["Changed-file / changed-line evidence<br/>+ exact-head review"]
     A --> G{"Final candidate to protected target?"}
     G -->|"no"| T["Required authority + merge task<br/>into feature branch"]
-    G -->|"yes"| V["Full / long-running validation"]
+    G -->|"yes"| V["Full coverage + heavy / long-running validation"]
     V --> H["Required owner / merge authority"]
     H --> M["Merge + target verification"]
 ```
@@ -351,9 +351,12 @@ defect easier to diagnose and prevents its return. The canonical
 defines the required outcome; implementation plans record only the applicable
 project-specific test and acceptance contracts.
 
-Focused risk tests may run with each task's fast evidence. Selected heavy or
-long-running system evidence waits for the reviewed final candidate that will
-merge to the protected target, avoiding repeated cost on intermediate task PRs.
+Every task still implements the tests its outcome and risks require. The fast
+gate executes focused tests and checks only the changed files and lines plus
+directly exercised behavior; it does not calculate full-project coverage.
+Full coverage and selected heavy or long-running system evidence wait for the
+reviewed final candidate that will merge to the protected target, avoiding
+repeated cost on intermediate task PRs without deferring test implementation.
 
 ### Review for humans and agents
 
@@ -403,7 +406,7 @@ shape without adding another gate or report artifact.
 
 ```mermaid
 flowchart TD
-    C["Coherent candidate"] --> F["Fast affected checks"]
+    C["Coherent candidate"] --> F["Changed-file / changed-line checks<br/>+ focused tests"]
     F --> P["Open or update PR"]
     P --> R1["Isolated reviewer 1"]
     P --> R2["Isolated reviewer 2"]
@@ -413,7 +416,7 @@ flowchart TD
     X --> F
     J -->|"yes"| G{"Final candidate to protected target?"}
     G -->|"no"| B["Task PR human brief"]
-    G -->|"yes"| V["Full / long-running validation<br/>on exact head"]
+    G -->|"yes"| V["Full coverage + heavy / long-running validation<br/>on exact head"]
     V -->|"failed"| D{"Candidate change required?"}
     D -->|"yes"| X
     D -->|"no; transient"| Q["Rerun affected validation"]
@@ -423,11 +426,19 @@ flowchart TD
 ```
 
 This ordering keeps expensive proof at the protected-target merge boundary
-without weakening it. Intermediate task PRs retain exact-head review with fast
-evidence. Any candidate change returns to fast checks and both retained
-reviewers; a final-candidate change also invalidates full validation. An
-unchanged transient check failure repeats only the affected validation. A
+without weakening it or postponing the tests each task must implement.
+Intermediate task PRs retain exact-head review with changed-file, changed-line,
+and focused-test evidence. Any candidate change returns to fast checks and both
+retained reviewers; a final-candidate change also invalidates full validation.
+An unchanged transient check failure repeats only the affected validation. A
 project's stricter validation policy takes precedence.
+
+Implementation should also remain inspectably proportional. If one task
+accumulates one hour of active implementation before its planned review
+boundary, the agent stops and explains the time spent, progress, cause,
+remaining work, and recommendation, then waits for owner justification or
+authorization to continue. Network or environment interruptions, code review,
+and waits for people or external systems do not consume that hour.
 
 See [Review and human brief](docs/documentation-quality-policy.md#review-and-human-brief)
 for the canonical review outcome.

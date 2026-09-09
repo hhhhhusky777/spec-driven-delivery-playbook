@@ -116,15 +116,26 @@ tests, and other files. Derive it against the actual PR target, classify each
 file once by primary responsibility, and disclose non-line-countable files.
 The summary informs review; it does not add a gate or prescribe a helper tool.
 
-Use fast affected checks to prepare each coherent task pull request for both
-retained agent reviewers. Intermediate task PRs targeting a feature integration
-branch do not repeat the general heavy or long-running suite. After both
-reviewers approve the final candidate targeting the protected integration
-branch, run the project's full applicable validation on that exact head before
-the human merge decision. A single-task PR to the protected branch is final.
-Candidate-changing corrections repeat affected checks and the same reviewers;
-a final-candidate correction also repeats full validation. Apply stricter
-project policy when it requires a more conservative sequence.
+Implement each task's required tests while doing the task. Its fast gate checks
+only changed files and lines plus directly exercised behavior with focused
+tests; defer full-project coverage. Use that evidence to prepare the coherent
+task pull request for both retained agent reviewers. Intermediate task PRs
+targeting a feature integration branch do not run the general full, heavy,
+long-running, or full-coverage suite. After both reviewers approve the final
+candidate targeting the protected integration branch, run the project's full
+applicable validation, including full coverage and selected heavy or
+long-running tests, on that exact head before the human merge decision. A
+single-task PR to the protected branch is final. Candidate-changing corrections
+repeat affected checks and the same reviewers; a final-candidate correction
+also repeats full validation. Apply stricter project policy when it requires a
+more conservative sequence.
+
+Track active implementation time proportionally. If one task reaches one hour
+of active implementation before its planned review boundary, stop and report
+the time spent, progress, cause, remaining work, and recommended next action;
+wait for owner justification or authorization before continuing. Do not count
+network or environment interruptions, review time, or waits for people or
+external systems.
 
 ## Error handling
 

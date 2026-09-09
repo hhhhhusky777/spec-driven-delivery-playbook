@@ -65,15 +65,26 @@ Human review before merge is the default. Scoped agent auto-merge never supplies
 design, policy, validation, cleanup, or out-of-scope authority.
 
 Open the PR when it best supports collaboration; a draft PR is not required
-before coding. Fast affected checks prepare each coherent task candidate for
-the two retained agent reviewers. An intermediate task PR targeting the feature
-integration branch does not repeat the general full or long-running suite.
+before coding. Each task still implements the tests required by its accepted
+outcome. Its fast gate checks only changed files and lines plus the directly
+exercised behavior, using focused tests without full-project coverage. That
+evidence prepares the coherent task candidate for the two retained agent
+reviewers. An intermediate task PR targeting the feature integration branch
+does not run general full, heavy, long-running, or full-coverage validation.
 After both reviewers report no findings on the same exact head of the final
 candidate targeting `main`, run the full applicable repository validation
-before required owner acceptance. A single-task PR targeting `main` is final. Candidate-changing
+including full coverage and selected heavy or long-running tests, before
+required owner acceptance. A single-task PR targeting `main` is final. Candidate-changing
 corrections return through affected checks and both retained reviewer seats;
 final-candidate corrections also invalidate full validation. GitHub is the
 durable record, and a stricter project policy still applies.
+
+If active implementation of one task reaches one hour without reaching its
+planned review boundary, stop and give the owner a concise account of time
+spent, progress, cause, remaining work, and recommended next action. Continue
+only after owner justification or authorization. Count active
+implementation time only; network or environment interruptions, review time,
+and time waiting for people or external systems do not count.
 
 Before final review, that candidate must already contain every predictable
 tracked canonical state that its merge will make true. If it closes the
