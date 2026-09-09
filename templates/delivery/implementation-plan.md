@@ -139,6 +139,11 @@ without inventing product behavior. Required machine-local inputs and access
 must be available. Future implementation outputs are never prerequisites for
 starting the task that produces them.
 
+The delivery worktree's branch point is the ordinary implementation baseline.
+Do not require continuous target synchronization; reconcile the completed
+candidate with its target before final review. Exceptional recovery follows
+the project's canonical error-handling authority.
+
 Readiness is behavioral, not measured by document or code detail. A short task
 with bounded observable behavior can be ready; a long task naming files,
 classes, or commands is not ready if failure behavior, compatibility, safety,

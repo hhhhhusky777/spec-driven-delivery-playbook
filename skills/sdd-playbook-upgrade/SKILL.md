@@ -12,6 +12,9 @@ revision while project authority and active feature content remain intact.
 
 ## Boundaries
 
+- Run the upgrade in the current delivery's isolated worktree and feature
+  branch before whiteboard or implementation work. Include it in that
+  delivery's candidate instead of merging a separate target-branch upgrade.
 - Upgrade only the manifest, neutral reusable whiteboard structure, managed
   skills, and generated runtime. Never rewrite feature-specific whiteboard
   content or implementation-plan content.
@@ -22,6 +25,9 @@ revision while project authority and active feature content remain intact.
 - Do not install playbook source tests, lifecycle engines, evidence helpers,
   publication tools, or CI into an adopting project.
 - Preserve canonical project policies and explicit owner decisions.
+- Keep the branch point as the ordinary working baseline; synchronize the
+  completed candidate with its target before final review. Route exceptional
+  recovery through the project's canonical error-handling authority.
 
 ## Synchronization result
 

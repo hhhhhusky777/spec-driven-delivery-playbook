@@ -166,9 +166,11 @@ discovers contribution rules, test expectations, security boundaries, and
 owner authority; records the accepted immutable playbook revision; prepares an
 empty whiteboard; and obtains review of one coherent installation package.
 
-Future features do not repeat adoption. Before a new feature starts, the agent
-checks for a newer playbook revision. An upgrade changes reusable playbook
-material only and never rewrites the active feature's whiteboard or plan.
+Future features do not repeat adoption. Each delivery first creates its
+isolated worktree and feature branch, then checks for a newer playbook revision
+there before whiteboard or implementation work. An upgrade changes reusable
+playbook material only, stays in that delivery candidate, and never rewrites
+the active feature's whiteboard or plan.
 
 ```mermaid
 flowchart TD
@@ -179,7 +181,8 @@ flowchart TD
     W --> V
     V --> H["Owner acceptance"]
     H --> U["Reusable installation"]
-    U --> N["Next feature checks for an upgrade"]
+    U --> B["Create delivery worktree + branch"]
+    B --> N["Check for an upgrade in place"]
     N -->|"current"| W
     N -->|"newer revision"| C["Review and cut over reusable material"]
     C --> W
@@ -415,7 +418,7 @@ Semantic review catches contradictions that syntax alone cannot understand.
 
 ### Support parallel work safely
 
-Parallel tasks use isolated worktrees and non-overlapping write scopes. A
+Deliveries and parallel tasks use isolated worktrees and non-overlapping write scopes. A
 worktree receives only the required machine-local untracked inputs, such as an
 environment file when the task actually depends on it. Those inputs remain
 ignored and untracked, with secrets kept out of Git.
@@ -429,23 +432,32 @@ exact project-local runtime path.
 
 ```mermaid
 flowchart TD
-    F["Accepted feature plan"] --> B["Feature integration target"]
-    B --> T1["Task worktree A"]
-    B --> T2["Task worktree B"]
+    M["Accepted target baseline"] --> B["Delivery worktree + feature branch"]
+    B --> U["In-place playbook currentness / upgrade"]
+    U --> F["Accepted feature plan"]
+    F --> T1["Task worktree A"]
+    F --> T2["Task worktree B"]
     T1 --> R1["Ignored runtime A"]
     T2 --> R2["Ignored runtime B"]
     T1 --> P1["Self-contained task PR"]
     T2 --> P2["Self-contained task PR"]
     P1 --> B
     P2 --> B
-    B --> FP["Final feature PR"]
-    FP --> M["Protected target"]
+    B --> S["Synchronize target once before final review"]
+    S --> FP["Final feature PR"]
+    FP --> M
 ```
 
 If concurrent deliveries use different playbook revisions, the target branch's
 accepted immutable pin is the integration authority. Reconcile only affected
 reusable guidance and preserve applicable project decisions; never infer
 precedence from a branch name, timestamp, or hash ordering.
+
+The feature branch's creation point is its ordinary implementation baseline.
+Do not continuously merge or rebase the target during implementation. Bring
+the completed candidate current with its target before final review; if the
+baseline cannot support safe progress, use the canonical error-handling
+authority and let the agent choose a proportional recovery.
 
 ## Use the playbook
 
@@ -478,8 +490,9 @@ exact cleanup boundary.
 
 ### Upgrade an installed project
 
-Before admitting a new feature, the agent checks whether the configured
-playbook source has a newer revision. At a safe boundary, run:
+After creating the delivery worktree and feature branch, the agent checks
+whether the configured playbook source has a newer revision. Before whiteboard
+or implementation work, run there:
 
 ```bash
 ./install-sdd.sh --upgrade
@@ -490,6 +503,9 @@ changes pass project validation, two-agent review, owner acceptance, and
 cutover validation. Upgrade may read an active plan to judge boundary safety,
 but it never rewrites feature design, tasks, status, or evidence. The source
 repository's own test suite is not installed into adopting projects.
+
+Keep the upgrade in the delivery candidate. Do not merge a separate upgrade to
+the target solely to prepare that delivery.
 
 ## Develop this repository
 

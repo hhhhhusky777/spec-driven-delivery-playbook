@@ -51,6 +51,12 @@ worktrees and non-overlapping ownership. Do not rewrite shared history, bypass
 required checks, force-push `main`, or claim hosting protections without current
 evidence.
 
+Create the delivery worktree and branch before checking playbook currentness or
+starting whiteboard work. Apply any accepted upgrade in that worktree. Keep its
+creation point as the ordinary implementation baseline, then synchronize the
+completed candidate with its target before final review. Exceptional recovery
+follows the canonical error-handling framework.
+
 The implementation plan records any owner-selected merge mode and exact scope.
 Human review before merge is the default. Scoped agent auto-merge never supplies
 design, policy, validation, cleanup, or out-of-scope authority.

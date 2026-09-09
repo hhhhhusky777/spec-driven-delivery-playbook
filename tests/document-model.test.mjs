@@ -89,6 +89,9 @@ test("workflow skills state six goals and reject duplicate delivery documents", 
   assert.match(workflow, /keep\s+it ignored and untracked/);
   assert.match(workflow, /Before final pull-request review/);
   assert.match(workflow, /Do not defer predictable tracked-state updates/);
+  assert.match(workflow, /synchronize it\s+in that worktree before whiteboard or implementation work/);
+  assert.match(workflow, /Do not routinely\s+merge or rebase the target during ordinary work/);
+  assert.match(workflow, /Synchronize the completed\s+candidate with its target before final review/);
 });
 
 test("final review requires merge-ready canonical state without predicting PR facts", async () => {
@@ -120,6 +123,8 @@ test("upgrade never rewrites feature content and keeps exact acceptance boundari
   assert.match(upgrade, /previous pin authoritative/);
   assert.match(normalized, /two independent reviews, and human acceptance/);
   assert.match(normalized, /pull request brief records old and new revisions/);
+  assert.match(normalized, /Run the upgrade in the current delivery's isolated worktree and feature branch/);
+  assert.match(normalized, /instead of merging a separate target-branch upgrade/);
 });
 
 test("installer uses PR evidence and outcome guidance", async () => {
