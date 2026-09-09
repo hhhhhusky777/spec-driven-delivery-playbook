@@ -60,7 +60,7 @@ async function existingChangedFiles(base, head) {
 async function main() {
   const [base, head = "HEAD"] = process.argv.slice(2);
   if (!base) {
-    throw new Error("usage: pr-fast-validation.mjs <base-revision> [head-revision]");
+    throw new Error("usage: pr-fast-validation.mjs BASE_REVISION [HEAD_REVISION]");
   }
 
   run("git", ["diff", "--check", `${base}...${head}`]);

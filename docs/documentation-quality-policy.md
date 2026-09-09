@@ -186,7 +186,8 @@ canonical sources. It must be reconciled after candidate changes.
 
 ## Automated repository gates
 
-For pull requests, source automation runs `npm run docs:fast -- <base> HEAD`.
+For pull requests, source automation runs
+`npm run docs:fast -- BASE_REVISION HEAD`.
 It checks changed-line whitespace, changed Markdown and Mermaid blocks, and
 changed test files. This automated minimum does not replace the agent's
 semantic selection of focused tests for directly affected behavior.

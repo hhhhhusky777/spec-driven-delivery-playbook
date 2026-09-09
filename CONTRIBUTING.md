@@ -115,7 +115,7 @@ Pull-request automation runs the changed-file and changed-line gate against the
 PR base:
 
 ```bash
-npm run docs:fast -- <base-revision> HEAD
+npm run docs:fast -- BASE_REVISION HEAD
 ```
 
 After exact-head agent review of the final candidate, run the complete source

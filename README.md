@@ -665,7 +665,7 @@ state.
 Pull-request automation runs the narrow changed-file and changed-line gate:
 
 ```bash
-npm run docs:fast -- <base-revision> HEAD
+npm run docs:fast -- BASE_REVISION HEAD
 ```
 
 After both agents approve the exact final candidate, install the exact locked
