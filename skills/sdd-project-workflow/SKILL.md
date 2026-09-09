@@ -53,10 +53,12 @@ the plan, and review evidence in the pull request.
   Do not defer predictable tracked-state updates to a bookkeeping change after
   merge.
 - Begin every delivery in an isolated worktree and owned delivery branch
-  created from the accepted target. Check for a newer playbook revision and
-  synchronize it in that worktree before whiteboard or implementation work. A maintenance-only
-  upgrade is still a delivery; do not merge a separate target-branch upgrade
-  solely to prepare another delivery.
+  created from the accepted target. Provision required ignored machine-local
+  inputs there, including the existing project installer when an upgrade may
+  be needed. Regenerate the manifest-pinned runtime in that worktree, then
+  check for and synchronize a newer playbook revision before whiteboard or
+  implementation work. A maintenance-only upgrade is still a delivery; do not
+  merge a separate target-branch upgrade solely to prepare another delivery.
 - Treat the branch point as the implementation baseline. Do not routinely
   merge or rebase the target during ordinary work. Synchronize the completed
   candidate with its target, then run affected checks on that exact candidate

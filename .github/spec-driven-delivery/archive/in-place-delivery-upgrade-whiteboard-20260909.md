@@ -13,7 +13,7 @@
 | Design point | Accepted outcome | Boundary |
 | --- | --- | --- |
 | `D01` | Every delivery begins in an isolated worktree on an owned delivery branch | A single-unit delivery branch may also be its task branch |
-| `D02` | Check and upgrade the playbook in that worktree before whiteboard or implementation work | A fresh worktree regenerates runtime from the accepted manifest pin; it never reuses another worktree's runtime |
+| `D02` | Carry the ignored project installer into the worktree, regenerate runtime from the accepted manifest pin, then check and upgrade before whiteboard or implementation work | The path remains compatible with older installers and never reuses another worktree's runtime |
 | `D03` | Keep the upgrade in the delivery candidate | Do not merge a separate target upgrade solely to prepare the delivery |
 | `D04` | Use the branch point as the ordinary implementation baseline | Do not routinely merge or rebase the target during implementation |
 | `D05` | Synchronize the completed candidate with its target and validate the resulting candidate before final review | Review binds to the exact integrated candidate |

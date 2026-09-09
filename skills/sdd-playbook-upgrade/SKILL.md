@@ -15,8 +15,10 @@ revision while project authority and active feature content remain intact.
 - Run the upgrade in the current delivery's isolated worktree and owned
   delivery branch before whiteboard or implementation work. Include it in that
   delivery's candidate instead of merging a separate target-branch upgrade.
-- A fresh worktree regenerates its own manifest-pinned runtime before preparing
-  the newer candidate; runtime from another worktree is never reused.
+- Carry the project's existing ignored installer into a fresh worktree and use
+  it to regenerate that worktree's manifest-pinned runtime before preparing a
+  newer candidate. Current installers can do this automatically during
+  `--upgrade`; runtime from another worktree is never reused.
 - Upgrade only the manifest, neutral reusable whiteboard structure, managed
   skills, and generated runtime. Never rewrite feature-specific whiteboard
   content or implementation-plan content.

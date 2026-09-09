@@ -491,16 +491,20 @@ exact cleanup boundary.
 
 ### Upgrade an installed project
 
-After creating the delivery worktree and branch, the agent checks
-whether the configured playbook source has a newer revision. Before whiteboard
-or implementation work, run there:
+After creating the delivery worktree and branch, carry the project's existing
+ignored `install-sdd.sh` into it with any other required machine-local inputs.
+Bootstrap the accepted manifest pin there, then check for a newer revision
+before whiteboard or implementation work:
 
 ```bash
+./install-sdd.sh
 ./install-sdd.sh --upgrade
 ```
 
-In a fresh worktree, this command first regenerates the worktree-bound runtime
-at the manifest's accepted pin; it never copies runtime from another worktree.
+This two-command form also works with installers from before automatic
+fresh-worktree bootstrap was available. A current installer can perform that
+bootstrap during `--upgrade` when the guide is absent. Neither path copies
+runtime from another worktree.
 
 The old immutable pin remains authoritative until the candidate's reusable
 changes pass project validation, two-agent review, owner acceptance, and

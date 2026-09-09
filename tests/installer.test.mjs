@@ -635,6 +635,44 @@ test("upgrade bootstraps worktree-bound runtime in a fresh delivery worktree", a
   run("git", ["worktree", "remove", "--force", worktree], project);
 });
 
+test("an older installer can bootstrap then upgrade inside a fresh delivery worktree", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const currentInstaller = await readFile(INSTALLER, "utf8");
+  const legacyInstaller = currentInstaller.replace(
+    /  if \[\[ ! -f "\$GUIDE_PATH" \]\]; then\n[\s\S]*?\n  fi\n  recorded_hash=/,
+    "  [[ -f \"$GUIDE_PATH\" ]] ||\n" +
+      "    fail \"upgrade requires the current generated agent guide\"\n" +
+      "  recorded_hash=",
+  );
+  assert.notEqual(legacyInstaller, currentInstaller);
+
+  const parent = await temporaryDirectory(t, "sdd legacy delivery worktree ");
+  const worktree = path.join(parent, "delivery");
+  await rm(worktree, { recursive: true, force: true });
+  run("git", ["worktree", "add", "-b", "codex/legacy-in-place-upgrade", worktree], project);
+  await writeFile(path.join(worktree, "install-sdd.sh"), legacyInstaller, "utf8");
+
+  const premature = runInstaller(worktree, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(premature.status, 0);
+  assert.match(premature.stderr, /upgrade requires the current generated agent guide/);
+
+  const bootstrap = runInstaller(worktree, [
+    "--repository",
+    source.repository,
+    "--revision",
+    source.firstRevision,
+  ]);
+  assert.equal(bootstrap.status, 0, bootstrap.stderr);
+  const upgrade = runInstaller(worktree, ["--repository", source.repository, "--upgrade"]);
+  assert.equal(upgrade.status, 0, upgrade.stderr);
+  assert.match(upgrade.stdout, /Prepared candidate revision:/);
+  assert.match(runInstaller(worktree, ["--validate"]).stdout, /^UPGRADE_CURRENT:/);
+  assert.equal(run("git", ["status", "--short"], worktree), "");
+
+  run("git", ["worktree", "remove", "--force", worktree], project);
+});
+
 test("upgrade rejects an explicit non-latest revision", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createInstalledProject(t, source);

@@ -89,7 +89,7 @@ test("workflow skills state six goals and reject duplicate delivery documents", 
   assert.match(workflow, /keep\s+it ignored and untracked/);
   assert.match(workflow, /Before final pull-request review/);
   assert.match(workflow, /Do not defer predictable tracked-state updates/);
-  assert.match(workflow, /synchronize it\s+in that worktree before whiteboard or implementation work/);
+  assert.match(workflow, /Regenerate the manifest-pinned runtime in that worktree, then\s+check for and synchronize a newer playbook revision before whiteboard or\s+implementation work/);
   assert.match(workflow, /Do not routinely\s+merge or rebase the target during ordinary work/);
   assert.match(workflow, /Synchronize the completed\s+candidate with its target, then run affected checks on that exact candidate/);
 });
