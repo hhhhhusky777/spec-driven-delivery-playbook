@@ -118,13 +118,14 @@ The summary informs review; it does not add a gate or prescribe a helper tool.
 
 Implement each task's required tests while doing the task. "Focused tests"
 means only the tests that cover the changed files and lines. Run them before
-two fresh agent reviewers inspect the exact task candidate. Reviewers from an
-earlier task in the delivery are not reused for a new task; candidate-changing
-corrections return to the same two reviewers for that task. Actionable findings
+two agent reviewers selected fresh for that task review session. An agent from
+any prior task review session is not reused; candidate-changing corrections
+return to the same two reviewers for that task. Actionable findings
 follow the canonical quality policy: identify impact and blocking status,
-recommend the smallest correction, and cite a genuinely applicable recognized
-practice, primary authority, or project-grounded rationale without expanding
-scope. After both
+recommend the smallest correction, and cite a primary industry standard or
+authoritative reference when a recognized practice applies. Explain its
+relevance; otherwise cite project authority or state the technical reasoning.
+Do not expand scope. After both
 reviewers approve the final candidate that will merge back to the protected
 integration branch, run the project's full applicable validation on that exact
 head before the human merge decision. A single-task PR to the protected branch

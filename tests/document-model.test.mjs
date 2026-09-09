@@ -129,7 +129,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
     const normalized = document.replace(/\s+/g, " ");
     assert.match(normalized, /Focused tests.*only the tests that cover the changed files and lines/i);
     assert.match(normalized, /Implement each task's required tests|Each task still implements the tests|Every task still implements the tests/i);
-    assert.match(normalized, /two fresh\s+(?:agent\s+)?reviewer/i);
+    assert.match(normalized, /two (?:agent )?(?:reviewers?|agents) selected fresh|two fresh (?:agent )?reviewers?/i);
     assert.match(normalized, /full (?:applicable )?validation/i);
     assert.doesNotMatch(normalized, /heavy|long-running|full-coverage/i);
     assert.match(normalized, /exact[- ]head|exact candidate/i);
@@ -179,16 +179,18 @@ test("task review sessions use fresh reviewers and useful change requests", asyn
 
   for (const document of [workflow, policy, readme, contributing]) {
     const normalized = document.replace(/\s+/g, " ");
-    assert.match(normalized, /new task|Each task review session/i);
-    assert.match(normalized, /fresh (?:agent )?reviewer/i);
+    assert.match(normalized, /new task|Each task review session|that task review session/i);
+    assert.match(normalized, /fresh for (?:that|the) (?:task review )?session/i);
+    assert.match(normalized, /any prior task review session/i);
     assert.match(normalized, /same two reviewer|same task reviewer|retained reviewer/i);
+    assert.doesNotMatch(normalized, /prior task.*same delivery|earlier task.*same delivery/i);
   }
 
   const normalizedPolicy = policy.replace(/\s+/g, " ");
   assert.match(normalizedPolicy, /observed problem and impact/);
   assert.match(normalizedPolicy, /smallest recommended correction/);
-  assert.match(normalizedPolicy, /recognized industry practice or primary authoritative reference/);
-  assert.match(normalizedPolicy, /short explanation of its relevance/);
+  assert.match(normalizedPolicy, /recognized practice.*cite a primary industry standard or authoritative reference/);
+  assert.match(normalizedPolicy, /explain its relevance/);
   assert.match(normalizedPolicy, /never fabricate a standard/);
   assert.match(normalizedPolicy, /optional improvements visibly separate from blocking findings/);
   assert.match(normalizedPolicy, /do not use a recommendation to expand the accepted scope/);
