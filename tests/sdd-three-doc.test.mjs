@@ -51,6 +51,13 @@ test("concluded whiteboard requires resolved decisions, outcomes, and draft reco
   const missing = source.replace("| DR01 | need | accepted |", "| DR01 | need | accepted |\n| DR02 | another need | accepted |");
   assert.ok(checkDocument("solution-whiteboard.md", missing)
     .some(error => error.includes("DR02")));
+  assert.ok(checkDocument("solution-whiteboard.md", source.replace("| DR01 | need | accepted |", "| DR01 | need | open |"))
+    .some(error => error.includes("unresolved retained")));
+  assert.ok(checkDocument("solution-whiteboard.md", source.replace("| DR01 | D01 | accepted |", "| DR01 | D99 | accepted |"))
+    .some(error => error.includes("unknown design point")));
+  const duplicate = `${source}\n| DR01 | D01 | changed |`;
+  assert.ok(checkDocument("solution-whiteboard.md", duplicate)
+    .some(error => error.includes("duplicate whiteboard reconciliation")));
 });
 
 test("implementation plan owns one coherent task state graph", () => {
