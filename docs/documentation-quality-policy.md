@@ -97,10 +97,22 @@ status-only correction as a defect rather than routine cleanup.
 ## Review and human brief
 
 Every material candidate receives exact-candidate self-review, review by two
-isolated agents, and required human semantic acceptance. The pull request owns
-findings, revisions, checks, acceptance, and merge evidence. Agents may correct
-non-semantic mistakes and rerun checks within authority; a changed candidate
-returns to the same reviewer seats.
+isolated agents, and required human semantic acceptance. Each task review
+session starts with two fresh reviewers who did not review an earlier task in
+the same delivery. This freshness is a task boundary, not a correction
+boundary: a changed candidate returns to the same two reviewer seats until
+that task review converges. The pull request owns findings, revisions, checks,
+acceptance, and merge evidence.
+
+An actionable change request gives the author enough judgment-ready guidance
+to correct it without guessing: the observed problem and impact, whether it
+blocks acceptance, the smallest recommended correction, and—when one genuinely
+applies—a recognized industry practice or primary authoritative reference with
+a short explanation of its relevance. When no suitable external authority
+exists, cite the controlling project principle or state the technical
+reasoning; never fabricate a standard. Keep optional improvements visibly
+separate from blocking findings, and do not use a recommendation to expand the
+accepted scope.
 
 Use focused tests to reach review early without representing them as complete
 proof. Each task still implements the tests required by its accepted outcome.

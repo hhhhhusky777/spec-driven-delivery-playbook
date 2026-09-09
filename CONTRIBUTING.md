@@ -67,8 +67,12 @@ design, policy, validation, cleanup, or out-of-scope authority.
 Open the PR when it best supports collaboration; a draft PR is not required
 before coding. Each task still implements the tests required by its accepted
 outcome. "Focused tests" means only the tests that cover the changed files and
-lines. Run those tests before both retained agent reviewers inspect the exact
-candidate. Defer full validation until the final candidate will merge back to
+lines. Run those tests before two fresh agent reviewers inspect the exact
+candidate. A new task does not reuse reviewers from an earlier task in the
+delivery; corrections return to the same two reviewers for that task. Review
+findings follow the canonical
+[quality policy](docs/documentation-quality-policy.md#review-and-human-brief).
+Defer full validation until the final candidate will merge back to
 `main`; a single-task PR targeting `main` is already final. Candidate-changing
 corrections return through focused tests and both retained reviewer seats;
 final-candidate corrections also invalidate full validation. GitHub is the

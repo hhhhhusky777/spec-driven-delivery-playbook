@@ -361,8 +361,13 @@ deferring test implementation.
 
 Every material candidate receives self-review, two isolated agent reviews, and
 the required human semantic decision. The two agents review the same exact
-candidate independently; correction rounds return to the retained reviewer
-seats. Their findings and dispositions belong in the PR.
+candidate independently. Each new task gets two fresh reviewers who did not
+review an earlier task in that delivery; correction rounds for the same task
+return to those retained reviewer seats. Actionable change requests explain
+the impact and smallest correction and, when applicable, point to a recognized
+practice or primary authority with its relevance. Optional advice stays
+separate from blocking findings, and recommendations do not expand scope.
+Their findings and dispositions belong in the PR.
 
 Humans receive a concise table with the information needed for judgment:
 

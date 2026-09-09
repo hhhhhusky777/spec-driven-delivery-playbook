@@ -1,15 +1,57 @@
-# Solution whiteboard
+# Solution Whiteboard — Reviewer continuity and useful findings
 
 <!-- sdd: whiteboard -->
 
 | Field | Value |
 | --- | --- |
-| State | `EMPTY` |
-| Need / issue | `None` |
+| State | `CONCLUDED` |
+| Need / issue | [Issue #99](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/99) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
+| Concluded design revision | Owner decisions recorded on 2026-09-10 |
 | Open owner decisions | `None` |
 
 ## Discussion draft
 
-`Empty until discussion starts.`
+| ID | Agreed item, alternative, constraint, or gap | State / resolution |
+| --- | --- | --- |
+| `DR01` | Reviewers from one task should not be reused for a later task. | Accepted: each task review session starts with two fresh reviewers. |
+| `DR02` | A correction round benefits from reviewers who know the original findings. | Accepted: retain the same two reviewers within that task's review session. |
+| `DR03` | A change request should help the author reach a sound correction. | Accepted: include impact, blocking status, smallest correction, and applicable authoritative practice with relevance. |
+| `DR04` | Best-practice advice could create scope or false authority. | Bound it: separate optional advice, do not expand scope, and never invent a standard. |
+
+## Current understanding
+
+| Concern | Current understanding |
+| --- | --- |
+| Problem / observed need | Reviewer independence across tasks is not explicit, and findings may identify defects without giving useful correction context. |
+| Required outcome | Fresh task-level perspective, correction-loop continuity, and actionable recommendations grounded in applicable authority or transparent reasoning. |
+| In scope | Canonical quality policy, workflow behavior, contributor and README explanation, and semantic regression tests. |
+| Out of scope / deferred | New reviewer identities, automated GitHub approval, universal standards, and template duplication. |
+
+## Concluded design
+
+| Design point | Accepted outcome | Boundary or rationale | Validation signal |
+| --- | --- | --- | --- |
+| `D01` Fresh task reviewers | Every new task review session uses two agents that did not review an earlier task in the delivery. | Freshness is between tasks. | Policy and workflow state the task boundary. |
+| `D02` Retained correction reviewers | Candidate-changing corrections return to the same two reviewers until the task review converges. | Continuity is within one task session. | Review-loop wording remains consistent. |
+| `D03` Actionable findings | A blocking finding states evidence/impact, blocking status, and the smallest recommended correction. | Help authors correct without guessing. | Canonical policy and regression tests cover the content. |
+| `D04` Grounded reference | When applicable, the finding names a recognized practice or primary authority and explains relevance; otherwise it uses project authority or technical reasoning. | Never fabricate a standard. | Policy covers both applicable and no-authority cases. |
+| `D05` Proportional advice | Optional advice stays separate from blocking findings and recommendations cannot expand accepted scope. | Preserve proportional effort and owner authority. | Policy and tests enforce the boundary. |
+
+## Draft-to-conclusion reconciliation
+
+| Draft item | Concluded design point | Disposition | Rationale / evidence |
+| --- | --- | --- | --- |
+| `DR01` | `D01` | Accepted | Provides a fresh perspective for each task. |
+| `DR02` | `D02` | Accepted | Prevents correction rounds from losing finding context. |
+| `DR03` | `D03`, `D04` | Accepted | Combines a concrete correction with relevant authority when available. |
+| `DR04` | `D05` | Accepted | Prevents advice from becoming invented scope or ceremony. |
+
+## Human brief
+
+| Attention | Summary | Handling |
+| --- | --- | --- |
+| Decisions made | Fresh reviewers between tasks; retained reviewers within corrections; grounded, actionable change requests. | `DISCLOSE` |
+| Important boundaries | No invented standards, template duplication, or recommendation-driven scope expansion. | `DISCLOSE` |
+| Remaining gaps or risks | `None` | `NONE` |
+| Decision requested | `None`; implementation is authorized by the recorded owner decisions. | `NONE` |
