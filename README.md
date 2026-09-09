@@ -363,9 +363,10 @@ flowchart TD
     J -->|"no"| X["Correct once; return to same seats"]
     X --> F
     J -->|"yes"| V["Full required validation<br/>on exact head"]
-    V -->|"candidate unchanged; check failed"| Q["Fix or rerun affected validation"]
+    V -->|"failed"| D{"Candidate change required?"}
+    D -->|"yes"| X
+    D -->|"no; transient"| Q["Rerun affected validation"]
     Q --> V
-    V -->|"candidate changed"| F
     V -->|"all green"| B["Concise human brief"]
     B --> H["Human decision at the actual gate"]
 ```

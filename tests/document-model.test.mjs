@@ -132,8 +132,8 @@ test("worktree readiness and expensive validation are outcome based", async () =
   }
   assert.match(readme, /representative project operation/);
   assert.match(readme, /copies, recreates, or safely shares only/);
-  assert.match(readme, /candidate unchanged; check failed/);
-  assert.match(readme, /candidate changed/);
+  assert.match(readme, /Candidate change required/);
+  assert.match(readme, /Rerun affected validation/);
 });
 
 test("adoption remains reusable while project authority is refreshed", async () => {
