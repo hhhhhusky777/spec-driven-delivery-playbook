@@ -93,6 +93,8 @@ test("workflow skills state six goals and reject duplicate delivery documents", 
   assert.match(workflow, /pull request owns review comments, checks, approvals/);
   assert.match(workflow, /required machine-local untracked/);
   assert.match(workflow, /keep\s+it ignored and untracked/);
+  assert.match(workflow, /Test the worktree itself with a\s+representative project operation/);
+  assert.match(workflow, /copy, recreate, or safely share only\s+the required authorized support/);
   assert.match(workflow, /Before final pull-request review/);
   assert.match(workflow, /Do not defer predictable tracked-state updates/);
   assert.match(workflow, /Regenerate the manifest-pinned runtime in that worktree, then\s+check for and synchronize a newer playbook revision before whiteboard or\s+implementation work/);
@@ -113,6 +115,25 @@ test("workflow skills state six goals and reject duplicate delivery documents", 
   }
   assert.match(workflow, /Semantically identify material policy sources/);
   assert.match(workflow, /Filenames are discovery\s+hints, not proof of authority/);
+});
+
+test("worktree readiness and expensive validation are outcome based", async () => {
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const policy = await read("docs/documentation-quality-policy.md");
+  const readme = await read("README.md");
+  const contributing = await read("CONTRIBUTING.md");
+
+  for (const document of [workflow, policy, readme, contributing]) {
+    assert.match(document, /fast affected/i);
+    assert.match(document, /both retained\s+(?:agent\s+)?reviewer/i);
+    assert.match(document, /full applicable|full required/i);
+    assert.match(document, /exact head/i);
+    assert.match(document, /stricter .*policy|Project policy may require/i);
+  }
+  assert.match(readme, /representative project operation/);
+  assert.match(readme, /copies, recreates, or safely shares only/);
+  assert.match(readme, /candidate unchanged; check failed/);
+  assert.match(readme, /candidate changed/);
 });
 
 test("adoption remains reusable while project authority is refreshed", async () => {
