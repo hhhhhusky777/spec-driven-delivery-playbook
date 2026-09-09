@@ -11,10 +11,13 @@ import {
 import { validateMermaidBlocks } from "./check-mermaid.mjs";
 
 const MARKDOWN_EXTENSIONS = new Set([".md", ".markdown", ".mdx"]);
+const VALIDATION_ROOT = process.env.SDD_VALIDATION_ROOT
+  ? path.resolve(process.env.SDD_VALIDATION_ROOT)
+  : REPOSITORY_ROOT;
 
 function run(command, args) {
   execFileSync(command, args, {
-    cwd: REPOSITORY_ROOT,
+    cwd: VALIDATION_ROOT,
     env: {
       ...process.env,
       PATH: `${path.dirname(process.execPath)}${path.delimiter}${process.env.PATH ?? ""}`,
@@ -25,7 +28,7 @@ function run(command, args) {
 
 function gitOutput(args) {
   return execFileSync("git", args, {
-    cwd: REPOSITORY_ROOT,
+    cwd: VALIDATION_ROOT,
     encoding: "utf8",
   }).trim();
 }
@@ -40,7 +43,7 @@ async function existingChangedFiles(base, head) {
   const files = output ? output.split("\n") : [];
   const existing = [];
   for (const file of files) {
-    const absolute = path.join(REPOSITORY_ROOT, file);
+    const absolute = path.join(VALIDATION_ROOT, file);
     try {
       if ((await stat(absolute)).isFile()) {
         existing.push({ absolute, relative: file });
@@ -79,6 +82,7 @@ async function main() {
     run(executable, ["--no-globs", ...markdown.map(({ relative }) => `:${relative}`)]);
     const diagnostics = await validateMermaidBlocks(
       markdown.map(({ absolute }) => absolute),
+      VALIDATION_ROOT,
     );
     if (diagnostics.length > 0) {
       for (const item of diagnostics) {
