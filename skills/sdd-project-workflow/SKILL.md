@@ -101,6 +101,15 @@ material awareness-only information (including accepted limitations), or
 recognize that no material attention or action remains. Classification adds no
 new gate.
 
+Design test evidence from accepted outcomes and material failure risks. Keep
+essential critical-path proof, then emphasize applicable boundaries,
+error/recovery, concurrency/interleavings, timing/order, and interface
+contracts. Use end-to-end smoke and production-like concurrent system or load
+evidence when those risks warrant it. If broad or nondeterministic testing
+exposes a defect, preserve the reproducing evidence and add the smallest
+deterministic regression at the lowest useful layer when practical. Follow the
+canonical project testing authority; do not impose universal suites or quotas.
+
 When an exact pull-request candidate is waiting for human review, include the
 canonical four-category changed-line summary for product code, documentation,
 tests, and other files. Derive it against the actual PR target, classify each

@@ -1,16 +1,20 @@
 # Documentation Quality and Testing Policy
 
-This policy owns the repository's documentation outcomes. It applies to
-Markdown, templates, examples, documentation tooling, and CI. Changes take
-effect only after reviewed merge.
+This policy owns the repository's documentation outcomes and the playbook's
+reusable test-design outcomes. It applies to Markdown, templates, examples,
+documentation tooling, CI, and guidance for selecting test evidence. Changes
+take effect only after reviewed merge.
 
 ## Authority
 
-Legal, security, and upstream contracts take precedence. This policy owns
-documentation quality; [Template Governance](template-governance.md) owns
-reusable-template design; [Contributing](../CONTRIBUTING.md) owns repository
-delivery. Project authorities and owner decisions must be mutually consistent.
-Do not guess between conflicting canonical sources.
+Legal, security, upstream contracts, and a project's canonical testing
+authority take precedence. This policy owns documentation quality and the
+playbook's general risk-focused test design; it does not replace a project's
+suite, release, or assurance requirements.
+[Template Governance](template-governance.md) owns reusable-template design;
+[Contributing](../CONTRIBUTING.md) owns repository delivery. Project authorities
+and owner decisions must be mutually consistent. Do not guess between
+conflicting canonical sources.
 
 ## Six goals and agent judgment
 
@@ -52,6 +56,38 @@ escalation. Other documents link to it and state only local consequences.
 Git and pull requests preserve prior versions and detailed delivery evidence.
 The maintained tree keeps current reusable guidance and active feature state,
 not duplicate history or successful-tool transcripts.
+
+## Risk-focused test design
+
+Tests provide evidence about accepted outcomes and protected invariants; they
+do not guarantee absolute quality. Keep the smallest essential proof of each
+critical happy path, then put additional effort where failures are most likely
+to be costly, hidden, or difficult to reproduce.
+
+| Material risk | Suitable evidence when applicable |
+| --- | --- |
+| Boundaries and unexpected input | Empty, minimum, maximum, malformed, duplicate, partial, and incompatible cases |
+| Failure and recovery | Errors, retries, cancellation, rollback, restart, partial completion, and safe degradation |
+| Concurrency and timing | Interleavings, races, idempotency, deadlocks, timeouts, ordering, delayed work, and clock-sensitive behavior |
+| Interfaces and evolution | Contract, integration, compatibility, migration, and consumer/provider evidence |
+| Critical business journeys | End-to-end smoke tests that prove the smallest valuable real journey |
+| Production behavior | System, concurrent-load, stress, or soak tests with a representative workload when scale or contention is a material risk |
+| Difficult test oracles | Property, model/state, metamorphic, mutation, simulation, or formal checks when examples alone cannot protect the invariant |
+
+Choose the portfolio from the change's risks and project authority; do not
+impose universal test levels, quotas, load, or duration. Assertions should
+prefer observable outcomes and invariants over implementation details. Broad
+and concurrent tests are useful discovery tools. When they expose a defect,
+preserve the reproducing seed, schedule, workload, environment, or other
+evidence and add the smallest deterministic regression at the lowest useful
+layer when practical. Never hide a nondeterministic failure merely because it
+cannot immediately be reduced.
+
+Describe production-like evidence honestly: identify the business journey,
+environment, workload shape, concurrency, duration, data volume, injected
+failures, observed result, and material limitations that apply. A lighter
+simulation can still be useful, but it must not be represented as production
+proof.
 
 Apply the repository's
 [merge-ready state boundary](../CONTRIBUTING.md#branches-review-and-merge).
