@@ -21,7 +21,7 @@ state.
 | Accepted by | Repository owner through the adoption pull request |
 | Accepted at | `2026-09-07 Asia/Shanghai` |
 | Project adoption root | `.github/spec-driven-delivery` |
-| Last verified | In-place upgrade to merged PR #86 revision `098aa8ad5492d78b3c5c9cd171a909225c407482`; project authority revalidated for issue #87 on 2026-09-09 |
+| Last verified | In-place upgrade to merged PR #86 revision `098aa8ad5492d78b3c5c9cd171a909225c407482`; project authority revalidated in PR #88 candidate on 2026-09-09 |
 
 ## Canonical project authorities
 
