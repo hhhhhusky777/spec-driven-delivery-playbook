@@ -603,6 +603,38 @@ test("upgrade prepares a newer immutable candidate without changing the active r
   assert.equal(guideValue(cleanedNormalGuide, "Cleanup state"), "COMPLETE");
 });
 
+test("upgrade bootstraps worktree-bound runtime in a fresh delivery worktree", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const parent = await temporaryDirectory(t, "sdd delivery worktree ");
+  const worktree = path.join(parent, "delivery");
+  await rm(worktree, { recursive: true, force: true });
+  run("git", ["worktree", "add", "-b", "codex/in-place-upgrade", worktree], project);
+  await cp(INSTALLER, path.join(worktree, "install-sdd.sh"));
+
+  const result = runInstaller(worktree, [
+    "--repository",
+    source.repository,
+    "--upgrade",
+  ]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Bootstrapping the manifest-pinned runtime in this worktree/);
+  const guide = await readFile(path.join(worktree, ".sdd-runtime", "agent-guide.md"), "utf8");
+  assert.equal(guideValue(guide, "Project root"), await realpath(worktree));
+  assert.equal(guideValue(guide, "Resolved revision"), source.firstRevision);
+  assert.equal(guideValue(guide, "Git worktree state"), "refs/heads/codex/in-place-upgrade");
+  const upgradeGuide = await readFile(
+    path.join(worktree, ".sdd-runtime", "playbook-upgrade-guide.md"),
+    "utf8",
+  );
+  assert.equal(guideValue(upgradeGuide, "Current revision"), source.firstRevision);
+  assert.equal(guideValue(upgradeGuide, "Resolved revision"), source.latestRevision);
+  assert.match(runInstaller(worktree, ["--validate"]).stdout, /^UPGRADE_CURRENT:/);
+  assert.equal(run("git", ["status", "--short"], worktree), "");
+
+  run("git", ["worktree", "remove", "--force", worktree], project);
+});
+
 test("upgrade rejects an explicit non-latest revision", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createInstalledProject(t, source);

@@ -44,18 +44,19 @@ policy, safety, or required human acceptance cannot be resolved safely.
 The canonical repository is `hhhhhusky777/spec-driven-delivery-playbook` and the
 protected integration target is `main`.
 
-One implementation unit may use a task branch targeting `main`. Multiple
-dependent units use an owned feature integration branch; task PRs target it and
-the final reviewed feature PR targets `main`. Parallel work uses separate
-worktrees and non-overlapping ownership. Do not rewrite shared history, bypass
-required checks, force-push `main`, or claim hosting protections without current
-evidence.
+Every delivery uses an owned delivery branch. For one implementation unit, that
+branch is also the task branch and may target `main`. Multiple dependent units
+use it as the feature integration branch; task PRs target it and the final
+reviewed feature PR targets `main`. Parallel work uses separate worktrees and
+non-overlapping ownership. Do not rewrite shared history, bypass required
+checks, force-push `main`, or claim hosting protections without current evidence.
 
 Create the delivery worktree and branch before checking playbook currentness or
 starting whiteboard work. Apply any accepted upgrade in that worktree. Keep its
 creation point as the ordinary implementation baseline, then synchronize the
-completed candidate with its target before final review. Exceptional recovery
-follows the canonical error-handling framework.
+completed candidate with its target and run affected checks on the resulting
+candidate before final review. Exceptional recovery follows the canonical
+error-handling framework.
 
 The implementation plan records any owner-selected merge mode and exact scope.
 Human review before merge is the default. Scoped agent auto-merge never supplies

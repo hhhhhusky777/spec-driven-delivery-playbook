@@ -167,8 +167,8 @@ owner authority; records the accepted immutable playbook revision; prepares an
 empty whiteboard; and obtains review of one coherent installation package.
 
 Future features do not repeat adoption. Each delivery first creates its
-isolated worktree and feature branch, then checks for a newer playbook revision
-there before whiteboard or implementation work. An upgrade changes reusable
+isolated worktree and owned delivery branch, then checks for a newer playbook
+revision there before whiteboard or implementation work. An upgrade changes reusable
 playbook material only, stays in that delivery candidate, and never rewrites
 the active feature's whiteboard or plan.
 
@@ -432,7 +432,7 @@ exact project-local runtime path.
 
 ```mermaid
 flowchart TD
-    M["Accepted target baseline"] --> B["Delivery worktree + feature branch"]
+    M["Accepted target baseline"] --> B["Delivery worktree + branch"]
     B --> U["In-place playbook currentness / upgrade"]
     U --> F["Accepted feature plan"]
     F --> T1["Task worktree A"]
@@ -443,7 +443,7 @@ flowchart TD
     T2 --> P2["Self-contained task PR"]
     P1 --> B
     P2 --> B
-    B --> S["Synchronize target once before final review"]
+    B --> S["Synchronize target before final review"]
     S --> FP["Final feature PR"]
     FP --> M
 ```
@@ -453,11 +453,12 @@ accepted immutable pin is the integration authority. Reconcile only affected
 reusable guidance and preserve applicable project decisions; never infer
 precedence from a branch name, timestamp, or hash ordering.
 
-The feature branch's creation point is its ordinary implementation baseline.
+The delivery branch's creation point is its ordinary implementation baseline.
 Do not continuously merge or rebase the target during implementation. Bring
-the completed candidate current with its target before final review; if the
-baseline cannot support safe progress, use the canonical error-handling
-authority and let the agent choose a proportional recovery.
+the completed candidate current with its target, then run affected checks on
+that resulting candidate before final review. If the baseline cannot support
+safe progress, use the canonical error-handling authority and let the agent
+choose a proportional recovery.
 
 ## Use the playbook
 
@@ -490,13 +491,16 @@ exact cleanup boundary.
 
 ### Upgrade an installed project
 
-After creating the delivery worktree and feature branch, the agent checks
+After creating the delivery worktree and branch, the agent checks
 whether the configured playbook source has a newer revision. Before whiteboard
 or implementation work, run there:
 
 ```bash
 ./install-sdd.sh --upgrade
 ```
+
+In a fresh worktree, this command first regenerates the worktree-bound runtime
+at the manifest's accepted pin; it never copies runtime from another worktree.
 
 The old immutable pin remains authoritative until the candidate's reusable
 changes pass project validation, two-agent review, owner acceptance, and

@@ -24,7 +24,7 @@ status-only change.
 | Next ready task | `None` |
 | Active blocker | `None` |
 | Implementation mode | `<human-review-before-merge or explicitly authorized alternative>` |
-| Feature branch / target | `<values>` |
+| Delivery branch / target | `<values>` |
 | Owner | `<owner>` |
 | Primary issue / need | `<link>` |
 | Concluded whiteboard | `<link and accepted revision>` |
@@ -141,8 +141,9 @@ starting the task that produces them.
 
 The delivery worktree's branch point is the ordinary implementation baseline.
 Do not require continuous target synchronization; reconcile the completed
-candidate with its target before final review. Exceptional recovery follows
-the project's canonical error-handling authority.
+candidate with its target, then run affected checks on the resulting candidate
+before final review. Exceptional recovery follows the project's canonical
+error-handling authority.
 
 Readiness is behavioral, not measured by document or code detail. A short task
 with bounded observable behavior can be ready; a long task naming files,
