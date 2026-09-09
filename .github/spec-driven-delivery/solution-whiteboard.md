@@ -10,6 +10,6 @@
 | Concluded design revision | `None` |
 | Open owner decisions | `None` |
 
-## Working notes
+## Discussion draft
 
 `Empty until discussion starts.`

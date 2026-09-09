@@ -194,11 +194,12 @@ outcomes and boundaries.
 
 ### Discuss and conclude a design
 
-The whiteboard starts as lightweight working notes. Humans and agents can
+The whiteboard starts as a lightweight discussion draft. Humans and agents can
 explore requirements, constraints, alternatives, risks, and unknowns without
 prematurely forcing the conversation into a formal specification. When the
-open decisions are settled, the same document becomes a concise concluded
-design.
+open decisions are settled, the same document retains a concise record of the
+material discussion, adds the authoritative concluded design, and reconciles
+every draft item so omissions or intentional changes are visible.
 
 ```mermaid
 flowchart LR
@@ -207,7 +208,8 @@ flowchart LR
     Q -->|"yes"| T["Concise decision table"]
     T --> D
     Q -->|"no"| C["Concluded design points"]
-    C --> B["Human brief: boundaries, risks, gaps"]
+    C --> R["Reconcile every material draft item"]
+    R --> B["Human brief: boundaries, risks, gaps"]
     B --> P["Implementation planning"]
 ```
 

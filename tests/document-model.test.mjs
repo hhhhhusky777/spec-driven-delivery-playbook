@@ -60,6 +60,7 @@ test("the three templates preserve complete proportional delivery information", 
     "Risks and consequences",
     "Decision log",
     "Concluded design",
+    "Draft-to-conclusion reconciliation",
     "Design amendments",
     "Human brief",
   ]) assert.match(whiteboard, new RegExp(heading));

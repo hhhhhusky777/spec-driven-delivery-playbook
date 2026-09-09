@@ -23,7 +23,7 @@ Apply the quality policy's [six goals](documentation-quality-policy.md#six-goals
 | Template | Owner responsibility |
 | --- | --- |
 | Project adoption manifest | Installed revision, canonical authorities, and stable boundaries |
-| Solution whiteboard | One active feature's discussion and concluded design |
+| Solution whiteboard | One active feature's concise discussion draft, concluded design, and reconciliation between them |
 | Implementation plan | Tasks, Definition of Done, validation, and all active-delivery state |
 
 The pull request owns review, checks, acceptance, merge evidence, and detailed
