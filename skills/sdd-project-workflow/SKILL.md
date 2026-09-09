@@ -88,3 +88,6 @@ authority, merge, and target evidence. When the candidate closes the delivery,
 it also archives the concluded whiteboard with pull-request links, removes the
 feature plan and other non-reusable feature material, and resets the working
 whiteboard. Preserve the manifest and other reusable project authority.
+After target verification, remove owned delivery/task worktrees and retire
+owned merged branches. Return the coordinating checkout to the accepted target
+branch when safe; never discard local changes or disrupt another active task.

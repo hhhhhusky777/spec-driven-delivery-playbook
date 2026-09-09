@@ -74,7 +74,9 @@ feature plan and other non-reusable feature material, and reset the working
 whiteboard in the same candidate. Preserve the manifest and reusable project
 authority. Pending review, merge, and target verification remain GitHub facts;
 after merge, verify the exact target without creating a status-only follow-up.
-Delete only owned merged branches after approval.
+Then remove owned delivery/task worktrees, delete only owned merged branches,
+and return the coordinating checkout to `main` when doing so will not discard
+or disrupt other work.
 
 ## Change expectations
 

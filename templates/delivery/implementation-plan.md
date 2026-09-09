@@ -236,6 +236,11 @@ not become another progress ledger.
 | --- | --- | --- | --- |
 | `<path, branch, worktree, runtime item, or issue>` | `<action>` | `<proof and authority>` | `<pending or result>` |
 
+Tracked cleanup belongs in the merge candidate. After target verification,
+remove owned delivery/task worktrees and merged branches, then return the
+coordinating checkout to the accepted target branch when safe. Keep any unsafe
+or externally owned cleanup pending rather than discarding or disrupting work.
+
 Use only the task detail needed to implement and judge the result. In a final
 PR candidate, a task is `DONE` when its accepted outcome, applicable validation,
 dependent state, and merge-ready canonical updates are complete. This is the

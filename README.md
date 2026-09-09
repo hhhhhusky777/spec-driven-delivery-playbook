@@ -382,11 +382,16 @@ flowchart LR
     X --> R
     R --> H["Review + authorized merge"]
     H --> V["Verify exact target"]
-    V --> N["Ready for next feature"]
+    V --> W["Remove owned worktrees + merged branches"]
+    W --> M["Return coordinating checkout to target branch"]
+    M --> N["Ready for next feature"]
 ```
 
 Git history and pull requests preserve the detailed evidence, so cleanup does
-not need to manufacture a second archive of implementation records.
+not need to manufacture a second archive of implementation records. Operational
+cleanup after target verification removes only owned delivery/task worktrees
+and merged branches, then returns the coordinating checkout to the target
+branch (`main` here) when that will not discard or disrupt other work.
 
 ## How efficiency and reliability reinforce each other
 

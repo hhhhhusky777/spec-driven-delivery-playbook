@@ -18,3 +18,4 @@
 | `D04` | Use the branch point as the ordinary implementation baseline | Do not routinely merge or rebase the target during implementation |
 | `D05` | Synchronize the completed candidate with its target and validate the resulting candidate before final review | Review binds to the exact integrated candidate |
 | `D06` | Let the agent recover proportionally when the ordinary path cannot proceed safely | Canonical error handling, project authority, and required controls remain binding |
+| `D07` | After merge and target verification, remove owned delivery/task worktrees and merged branches and return the coordinating checkout to the target branch | Preserve local or externally owned work when cleanup is not safe |

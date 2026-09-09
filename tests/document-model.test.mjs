@@ -92,6 +92,8 @@ test("workflow skills state six goals and reject duplicate delivery documents", 
   assert.match(workflow, /Regenerate the manifest-pinned runtime in that worktree, then\s+check for and synchronize a newer playbook revision before whiteboard or\s+implementation work/);
   assert.match(workflow, /Do not routinely\s+merge or rebase the target during ordinary work/);
   assert.match(workflow, /Synchronize the completed\s+candidate with its target, then run affected checks on that exact candidate/);
+  assert.match(workflow, /After target verification, remove owned delivery\/task worktrees and retire\s+owned merged branches/);
+  assert.match(workflow, /Return the coordinating checkout to the accepted target\s+branch when safe/);
 });
 
 test("final review requires merge-ready canonical state without predicting PR facts", async () => {
