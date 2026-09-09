@@ -337,6 +337,24 @@ Evidence follows its actual consequence: correctable failures are
 `AGENT_ACTION`, while waivers, changed acceptance, or missing authority are
 `HUMAN_DECISION`.
 
+At the human review boundary for a pull request, the brief also gives the
+change shape for the exact candidate against its real target. The
+[quality policy](docs/documentation-quality-policy.md#review-and-human-brief) owns the
+category semantics; these numbers are an illustrative example, not live
+evidence:
+
+| Change category | Files | Additions | Deletions | Changed lines |
+| --- | ---: | ---: | ---: | ---: |
+| Product code | 4 | 120 | 18 | 138 |
+| Documentation | 2 | 34 | 9 | 43 |
+| Tests | 3 | 86 | 12 | 98 |
+| Other | 1 | 5 | 5 | 10 |
+
+Each file has one primary semantic category; filenames are only hints. Binary
+or otherwise non-line-countable files remain visible as limitations rather
+than receiving fabricated totals. The table helps a human understand review
+shape without adding another gate or report artifact.
+
 ```mermaid
 flowchart TD
     C["Exact candidate"] --> S["Self-review"]

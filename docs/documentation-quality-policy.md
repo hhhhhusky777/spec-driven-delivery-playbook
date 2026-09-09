@@ -98,6 +98,25 @@ Phase-specific additions:
 | Validation and cleanup | Planned versus actual outcomes, unresolved work, cleanup ownership, and target proof |
 | Upgrade | Old/new pins, reusable-document impact, migration, rollback, validation, and cutover authority |
 
+When a pull request is waiting at its human review boundary, the brief also
+shows the size and shape of the exact candidate against its actual PR target:
+
+| Change category | Files | Additions | Deletions | Changed lines |
+| --- | ---: | ---: | ---: | ---: |
+| Product code | Count | Count | Count | Sum |
+| Documentation | Count | Count | Count | Sum |
+| Tests | Count | Count | Count | Sum |
+| Other | Count | Count | Count | Sum |
+
+Classify every changed file once by its primary responsibility rather than by
+filename alone. Product code is shipped or runtime behavior; documentation is
+reader-facing or maintainer guidance; tests are test code, fixtures, and
+test-only assets; other covers remaining configuration, automation, metadata,
+and assets. `Changed lines` is additions plus deletions. Identify binary or
+otherwise non-line-countable files in the attention table instead of inventing
+numbers. These counts help humans judge review shape; they are not a risk score
+or an additional gate.
+
 The brief supports human judgment but does not replace complete agent review or
 canonical sources. It must be reconciled after candidate changes.
 

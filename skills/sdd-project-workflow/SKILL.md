@@ -13,6 +13,12 @@ project. Apply necessary complexity only: every added artifact, abstraction,
 dependency, or control must protect the accepted outcome or a named invariant.
 Repository policies and explicit owner decisions remain authoritative.
 
+> [!IMPORTANT]
+> Avoid over-engineering. Before accepting a design or final candidate, remove
+> every artifact, rule, duplicate statement, automation, abstraction, or
+> dependency that does not protect an accepted outcome or named invariant.
+> Prefer one canonical owner and the smallest sufficient solution.
+
 ## Durable model
 
 - The adoption manifest owns the installed immutable playbook revision,
@@ -88,6 +94,12 @@ Classify material items as `HUMAN_DECISION`, `AGENT_ACTION`, `DISCLOSE`, or
 material awareness-only information (including accepted limitations), or
 recognize that no material attention or action remains. Classification adds no
 new gate.
+
+When an exact pull-request candidate is waiting for human review, include the
+canonical four-category changed-line summary for product code, documentation,
+tests, and other files. Derive it against the actual PR target, classify each
+file once by primary responsibility, and disclose non-line-countable files.
+The summary informs review; it does not add a gate or prescribe a helper tool.
 
 ## Error handling
 
