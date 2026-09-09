@@ -17,6 +17,7 @@ project.
 | One-time project adoption | Connect the playbook to existing project authority without replacing it |
 | Solution whiteboarding | Turn an uncertain need into an accepted design before dependent implementation |
 | Outcome-based planning | Map design points to tasks, dependencies, validation, and Definition of Done |
+| Context-native handoff | Let a fresh agent resume from repository state without inheriting another agent's chat history |
 | Efficient implementation | Batch coherent work and avoid unnecessary stops while preserving real gates |
 | Reliable review | Give two isolated reviewers and the owner one exact, reviewable candidate |
 | Cause-based recovery | Correct agent mistakes automatically and escalate genuine project or playbook gaps |
@@ -27,6 +28,13 @@ project.
 The central promise is simple: **stable outcomes with less process overhead**.
 The playbook defines goals, responsibilities, and protected boundaries; the
 agent chooses a proportional way to satisfy them.
+
+It also turns the repository into durable development context. A new agent can
+take over from the current recorded boundary by reading project authority, the
+working design, and the plan and pull-request evidence when they exist—without
+needing the previous agent's conversation history. That makes agent
+replacement, parallel work, and interrupted-session recovery routine rather
+than a restart.
 
 ### Try it in a project
 
@@ -56,6 +64,7 @@ accepted installation.
   - [Adopt once and upgrade safely](#adopt-once-and-upgrade-safely)
   - [Discuss and conclude a design](#discuss-and-conclude-a-design)
   - [Plan and track delivery](#plan-and-track-delivery)
+  - [Hand off without chat history](#hand-off-without-chat-history)
   - [Implement efficiently](#implement-efficiently)
   - [Review for humans and agents](#review-for-humans-and-agents)
   - [Recover without restarting everything](#recover-without-restarting-everything)
@@ -231,6 +240,40 @@ task can therefore be `DONE` in the candidate without claiming the PR has
 already merged: GitHub owns the pending review, merge, and target-verification
 facts. This prevents merged code from leaving stale plan status and avoids a
 second bookkeeping pull request.
+
+### Hand off without chat history
+
+The playbook makes development context portable between agents. A fresh agent
+does not need a transcript, a proprietary memory, or access to the previous
+agent's context window. It reconstructs the delivery from the repository's
+canonical sources:
+
+| Source | What the next agent learns |
+| --- | --- |
+| Adoption manifest and project policies | Installed playbook revision, authority, and stable boundaries |
+| Working or concluded whiteboard | Current discussion, decisions, accepted design, and unresolved questions |
+| Implementation plan, when present | Current state, task boundaries, dependencies, Definition of Done, and next eligible work |
+| Pull requests, when present | Exact changes, review findings, checks, acceptance, and merged evidence |
+
+```mermaid
+flowchart LR
+    A1["Agent A"] --> R["Canonical repository context"]
+    R --> M["Manifest + policies"]
+    R --> W["Whiteboard"]
+    R -. "when present" .-> P["Implementation plan"]
+    R -. "when present" .-> G["Pull-request evidence"]
+    M --> A2["Fresh Agent B"]
+    W --> A2
+    P --> A2
+    G --> A2
+    A2 --> C["Continue from the current boundary"]
+```
+
+This portability covers information the project records. Required untracked
+machine-local inputs—such as environment files, credentials, running services,
+or unavailable external decisions—must still be provisioned or surfaced
+explicitly. The agent verifies current repository and runtime state before
+continuing rather than trusting stale status.
 
 ### Implement efficiently
 
