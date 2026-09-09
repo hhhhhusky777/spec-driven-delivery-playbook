@@ -149,6 +149,51 @@ test("worktree readiness and expensive validation are outcome based", async () =
   assert.match(readme, /Q --> V/);
 });
 
+test("testing guidance is risk focused, proportional, and canonically owned", async () => {
+  const policy = await read("docs/documentation-quality-policy.md");
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const readme = await read("README.md");
+  const templates = await Promise.all([
+    read("templates/adoption/project-adoption-manifest.md"),
+    read("templates/discovery/solution-whiteboard.md"),
+    read("templates/delivery/implementation-plan.md"),
+  ]);
+
+  for (const risk of [
+    "Boundaries and unexpected input",
+    "Failure and recovery",
+    "Concurrency and timing",
+    "Interfaces and evolution",
+    "Critical business journeys",
+    "Production behavior",
+    "Difficult test oracles",
+  ]) assert.match(policy, new RegExp(`\\| ${risk} \\|`));
+  assert.match(policy, /do not guarantee absolute quality/);
+  assert.match(policy, /do not\s+impose universal test levels, quotas, load, or duration/);
+  assert.match(policy, /smallest deterministic regression at the lowest useful\s+layer when practical/);
+  assert.match(policy, /it must not be represented as production\s+proof/);
+
+  assert.match(workflow, /material failure risks/);
+  assert.match(workflow, /essential critical-path proof/);
+  assert.match(workflow, /production-like concurrent system or load\s+evidence when those risks warrant it/);
+  assert.match(workflow, /do not impose universal suites or quotas/);
+
+  for (const edge of [
+    'O --> E["Boundaries + error/recovery"]',
+    'O --> C["Concurrency + timing/order"]',
+    'F --> S["E2E smoke for critical journeys"]',
+    'S --> L["Production-like system/load/soak<br/>when risk warrants"]',
+    "R --> F",
+  ]) assert.match(readme, new RegExp(edge.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  assert.match(readme, /Not every change needs every layer/);
+  assert.match(readme, /implementation plans record only the applicable\s+project-specific test and acceptance contracts/);
+
+  for (const template of templates) {
+    assert.doesNotMatch(template, /Risk-focused test design/);
+    assert.doesNotMatch(template, /Difficult test oracles/);
+  }
+});
+
 test("adoption remains reusable while project authority is refreshed", async () => {
   const adoption = await read("skills/sdd-project-adoption/SKILL.md");
   const manifest = await read("templates/adoption/project-adoption-manifest.md");

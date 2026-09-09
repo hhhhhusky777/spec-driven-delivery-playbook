@@ -53,6 +53,38 @@ Git and pull requests preserve prior versions and detailed delivery evidence.
 The maintained tree keeps current reusable guidance and active feature state,
 not duplicate history or successful-tool transcripts.
 
+## Risk-focused test design
+
+Tests provide evidence about accepted outcomes and protected invariants; they
+do not guarantee absolute quality. Keep the smallest essential proof of each
+critical happy path, then put additional effort where failures are most likely
+to be costly, hidden, or difficult to reproduce.
+
+| Material risk | Suitable evidence when applicable |
+| --- | --- |
+| Boundaries and unexpected input | Empty, minimum, maximum, malformed, duplicate, partial, and incompatible cases |
+| Failure and recovery | Errors, retries, cancellation, rollback, restart, partial completion, and safe degradation |
+| Concurrency and timing | Interleavings, races, idempotency, deadlocks, timeouts, ordering, delayed work, and clock-sensitive behavior |
+| Interfaces and evolution | Contract, integration, compatibility, migration, and consumer/provider evidence |
+| Critical business journeys | End-to-end smoke tests that prove the smallest valuable real journey |
+| Production behavior | System, concurrent-load, stress, or soak tests with a representative workload when scale or contention is a material risk |
+| Difficult test oracles | Property, model/state, metamorphic, mutation, simulation, or formal checks when examples alone cannot protect the invariant |
+
+Choose the portfolio from the change's risks and project authority; do not
+impose universal test levels, quotas, load, or duration. Assertions should
+prefer observable outcomes and invariants over implementation details. Broad
+and concurrent tests are useful discovery tools. When they expose a defect,
+preserve the reproducing seed, schedule, workload, environment, or other
+evidence and add the smallest deterministic regression at the lowest useful
+layer when practical. Never hide a nondeterministic failure merely because it
+cannot immediately be reduced.
+
+Describe production-like evidence honestly: identify the business journey,
+environment, workload shape, concurrency, duration, data volume, injected
+failures, observed result, and material limitations that apply. A lighter
+simulation can still be useful, but it must not be represented as production
+proof.
+
 Apply the repository's
 [merge-ready state boundary](../CONTRIBUTING.md#branches-review-and-merge).
 For documentation currentness, reviewers treat a predictable post-merge

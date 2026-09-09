@@ -66,6 +66,7 @@ accepted installation.
   - [Plan and track delivery](#plan-and-track-delivery)
   - [Hand off without chat history](#hand-off-without-chat-history)
   - [Implement efficiently](#implement-efficiently)
+  - [Design tests around risk](#design-tests-around-risk)
   - [Review for humans and agents](#review-for-humans-and-agents)
   - [Recover without restarting everything](#recover-without-restarting-everything)
   - [Finish, archive, and reset](#finish-archive-and-reset)
@@ -305,6 +306,40 @@ A task may depend on already delivered work, but it cannot depend on a future
 change to make its own required result safe or green. Draft-PR timing, internal
 working order, tools, and contract-equivalent implementation choices remain
 agent decisions unless project policy says otherwise.
+
+### Design tests around risk
+
+The playbook treats tests as evidence for accepted outcomes and invariants, not
+as a promise that defects are impossible. Keep essential proof of the critical
+happy path, then invest where failures hide: boundaries, malformed or partial
+input, errors and recovery, races and interleavings, timing and ordering, and
+interface evolution.
+
+```mermaid
+flowchart TD
+    O["Accepted outcomes + invariants"] --> H["Essential critical-path proof"]
+    O --> E["Boundaries + error/recovery"]
+    O --> C["Concurrency + timing/order"]
+    O --> I["Interface contracts"]
+    H --> F["Fast focused feedback"]
+    E --> F
+    C --> F
+    I --> F
+    F --> S["E2E smoke for critical journeys"]
+    S --> L["Production-like system/load/soak<br/>when risk warrants"]
+    L --> R["Preserve evidence + reduce failures<br/>to focused regressions"]
+    R --> F
+```
+
+Not every change needs every layer. The agent chooses a proportional portfolio
+under project policy. End-to-end smoke demonstrates a valuable real journey;
+production-like system, concurrent-load, stress, or soak testing probes scale
+and contention only when those risks matter. Broad tests find emergent
+failures, while the smallest useful deterministic regression makes a discovered
+defect easier to diagnose and prevents its return. The canonical
+[risk-focused test design](docs/documentation-quality-policy.md#risk-focused-test-design)
+defines the required outcome; implementation plans record only the applicable
+project-specific test and acceptance contracts.
 
 ### Review for humans and agents
 
