@@ -318,16 +318,23 @@ interface evolution.
 ```mermaid
 flowchart TD
     O["Accepted outcomes + invariants"] --> H["Essential critical-path proof"]
-    O --> E["Boundaries + error/recovery"]
-    O --> C["Concurrency + timing/order"]
-    O --> I["Interface contracts"]
+    O --> K{"Which material risks apply?"}
+    K -->|"if applicable"| E["Boundaries + error/recovery"]
+    K -->|"if applicable"| C["Concurrency + timing/order"]
+    K -->|"if applicable"| I["Interface contracts"]
     H --> F["Fast focused feedback"]
     E --> F
     C --> F
     I --> F
-    F --> S["E2E smoke for critical journeys"]
-    S --> L["Production-like system/load/soak<br/>when risk warrants"]
-    L --> R["Preserve evidence + reduce failures<br/>to focused regressions"]
+    F --> J{"Critical real journey?"}
+    J -->|"yes"| S["E2E smoke"]
+    J -->|"no"| D["Proportional evidence complete"]
+    S --> L{"Scale or contention risk?"}
+    L -->|"yes"| P["Production-like system/load/soak"]
+    L -->|"no"| D
+    P --> X{"Defect exposed?"}
+    X -->|"yes"| R["Preserve evidence + reduce failure<br/>to focused regression"]
+    X -->|"no"| D
     R --> F
 ```
 

@@ -1,16 +1,20 @@
 # Documentation Quality and Testing Policy
 
-This policy owns the repository's documentation outcomes. It applies to
-Markdown, templates, examples, documentation tooling, and CI. Changes take
-effect only after reviewed merge.
+This policy owns the repository's documentation outcomes and the playbook's
+reusable test-design outcomes. It applies to Markdown, templates, examples,
+documentation tooling, CI, and guidance for selecting test evidence. Changes
+take effect only after reviewed merge.
 
 ## Authority
 
-Legal, security, and upstream contracts take precedence. This policy owns
-documentation quality; [Template Governance](template-governance.md) owns
-reusable-template design; [Contributing](../CONTRIBUTING.md) owns repository
-delivery. Project authorities and owner decisions must be mutually consistent.
-Do not guess between conflicting canonical sources.
+Legal, security, upstream contracts, and a project's canonical testing
+authority take precedence. This policy owns documentation quality and the
+playbook's general risk-focused test design; it does not replace a project's
+suite, release, or assurance requirements.
+[Template Governance](template-governance.md) owns reusable-template design;
+[Contributing](../CONTRIBUTING.md) owns repository delivery. Project authorities
+and owner decisions must be mutually consistent. Do not guess between
+conflicting canonical sources.
 
 ## Six goals and agent judgment
 

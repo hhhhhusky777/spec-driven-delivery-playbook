@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| State | `DELIVERY_CANDIDATE` |
+| State | `CONCLUDED` |
 | Issue | [#95](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/95) |
 | Pull request | [#96](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/96) |
 | Owner | Repository owner |
