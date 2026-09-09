@@ -84,6 +84,8 @@ test("the three templates preserve complete proportional delivery information", 
 
 test("workflow skills state six goals and reject duplicate delivery documents", async () => {
   const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const policy = await read("docs/documentation-quality-policy.md");
+  const readme = await read("README.md");
   for (const phrase of ["clear boundaries", "stable outcomes", "key information only", "proportional effort", "agent discretion", "necessary complexity"]) {
     assert.match(workflow.toLowerCase().replace(/\s+/g, " "), new RegExp(phrase));
   }
@@ -100,6 +102,14 @@ test("workflow skills state six goals and reject duplicate delivery documents", 
   assert.match(workflow, /Return the coordinating checkout to the accepted target\s+branch when safe/);
   for (const handling of ["HUMAN_DECISION", "AGENT_ACTION", "DISCLOSE", "NONE"]) {
     assert.match(workflow, new RegExp(handling));
+  }
+  for (const document of [workflow, policy, readme]) {
+    assert.match(document, /material awareness-only information/);
+    assert.match(document, /no material attention\s+or\s+action remains/);
+  }
+  for (const document of [policy, readme]) {
+    assert.match(document, /Evidence.*Appropriate class/);
+    assert.match(document, /waivers?, changed acceptance, or missing authority/);
   }
   assert.match(workflow, /Semantically identify material policy sources/);
   assert.match(workflow, /Filenames are discovery\s+hints, not proof of authority/);

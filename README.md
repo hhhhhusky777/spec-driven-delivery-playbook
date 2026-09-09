@@ -321,16 +321,21 @@ Humans receive a concise table with the information needed for judgment:
 | Human need | What the brief exposes | Handling |
 | --- | --- | --- |
 | Acceptance scope | Outcome, scope/non-scope, exact candidate, and authorized action | Appropriate class |
-| Decisions | Important choices, consequences, alternatives, and recommendation | `HUMAN_DECISION` or `DISCLOSE` |
+| Decisions | Important choices, consequences, alternatives, and recommendation | Appropriate class |
 | Attention | Risks, assumptions, compatibility effects, exceptions, and owners | Appropriate class |
-| Evidence | Passed, failed, and unrun checks plus residual limits | `AGENT_ACTION` or `DISCLOSE` |
+| Evidence | Passed, failed, and unrun checks plus residual limits | Appropriate class |
 | Response | The exact decision requested, or confirmation that none remains | `HUMAN_DECISION` or `NONE` |
 
 The classes tell agents what the emphasis means: `HUMAN_DECISION` stops at an
 existing owner boundary, `AGENT_ACTION` is corrected within agent authority,
-`DISCLOSE` remains visible without stopping, and `NONE` means work may continue.
+`DISCLOSE` keeps material awareness-only information, including accepted
+limitations, visible without stopping, and `NONE` means no material attention
+or action remains.
 Split items when they need different handling. The classes add no document or
 review gate.
+Evidence follows its actual consequence: correctable failures are
+`AGENT_ACTION`, while waivers, changed acceptance, or missing authority are
+`HUMAN_DECISION`.
 
 ```mermaid
 flowchart TD

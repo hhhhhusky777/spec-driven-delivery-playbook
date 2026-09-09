@@ -85,7 +85,9 @@ at each real decision boundary. Human briefs use a compact table covering the
 decision, important changes, risks or gaps, validation, and recommended action.
 Classify material items as `HUMAN_DECISION`, `AGENT_ACTION`, `DISCLOSE`, or
 `NONE` so the next agent knows whether to stop, act within authority, preserve
-an explicit limitation, or continue. Classification adds no new gate.
+material awareness-only information (including accepted limitations), or
+recognize that no material attention or action remains. Classification adds no
+new gate.
 
 ## Error handling
 

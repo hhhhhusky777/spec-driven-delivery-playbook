@@ -72,17 +72,21 @@ to reread every document:
 | Human need | Required content | Handling |
 | --- | --- | --- |
 | Acceptance scope | Outcome, scope/non-scope, exact candidate, and authorized action | Appropriate class |
-| Decisions | Important choices, consequences, unsettled alternatives, and recommendation | `HUMAN_DECISION` or `DISCLOSE` |
+| Decisions | Important choices, consequences, unsettled alternatives, and recommendation | Appropriate class |
 | Attention | Risks, compatibility effects, assumptions, exceptions, deferred obligations, and owners | Appropriate class |
-| Evidence | Passed checks with scope, failed or unrun checks, uncertainty, and residual limits | `AGENT_ACTION` or `DISCLOSE` |
+| Evidence | Passed checks with scope, failed or unrun checks, uncertainty, and residual limits | Appropriate class |
 | Response | Exact decision requested, or explicit confirmation that none remains | `HUMAN_DECISION` or `NONE` |
 
 Use `HUMAN_DECISION` when progress needs human judgment under an existing stop
 boundary, `AGENT_ACTION` for correction within agent authority, `DISCLOSE` for
-an important limitation that remains visible without stopping, and `NONE` when
-no action remains. These semantic labels guide agents even in raw Markdown;
+material awareness-only information (including accepted limitations) that
+remains visible without stopping, and `NONE` when no material attention or
+action remains. These semantic labels guide agents even in raw Markdown;
 they do not create another gate or formatting requirement. Split items that
 need different handling instead of hiding them in one mixed row.
+Classify evidence by its actual consequence: a correctable failed check is
+`AGENT_ACTION`, while a waiver, changed acceptance, or missing authority is
+`HUMAN_DECISION`.
 
 Phase-specific additions:
 
