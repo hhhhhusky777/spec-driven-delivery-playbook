@@ -6,7 +6,7 @@
 | --- | --- |
 | State | `CONCLUDED` |
 | Need / issue | [Issue #99](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/99) |
-| Delivery PR | [PR #100](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/100) |
+| Delivery PRs | [PR #100](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/100), [PR #101](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/101) |
 | Owner | Repository owner |
 | Concluded design revision | Owner decisions recorded on 2026-09-10 |
 | Open owner decisions | `None` |
@@ -51,10 +51,10 @@
 
 | Design points | Delivered by | Evidence |
 | --- | --- | --- |
-| `D01`, `D02` | `T01`: concluded-design gate and retained feature reviewer cohort | [PR #100](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/100) |
+| `D01`, `D02` | `T01`: concluded-design gate and retained feature reviewer cohort | [PR #101](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/101) |
 | `D03`, `D04`, `D05` | `T01`: useful, grounded, proportional change-request content | [PR #100](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/100) |
-| `D06` | `T01`: proportional reviewer context bootstrap | [PR #100](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/100) |
-| `D07` | `T01`: installed reviewer skill and focused per-gate packet | [PR #100](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/100) |
+| `D06` | `T01`: proportional reviewer context bootstrap | [PR #101](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/101) |
+| `D07` | `T01`: installed reviewer skill and focused per-gate packet | [PR #101](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/101) |
 
 ## Human brief
 
