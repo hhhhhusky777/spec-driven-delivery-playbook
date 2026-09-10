@@ -96,6 +96,11 @@ conversation verbatim.
 | Concurrency, idempotency, and recovery | `<link or None>` | `<boundary>` | `<None or issue>` |
 | Performance and operations | `<link or None>` | `<boundary>` | `<None or issue>` |
 
+When edge cases, concurrency, races, timing, or failures are material, the
+concluded design states the smallest clear-cut handling that preserves system
+consistency and fails closed under the applicable authority. Avoid speculative
+case enumeration and over-engineered controls.
+
 ## Risks and consequences
 
 | ID | Scenario | Likelihood / impact | Prevention or detection | Recovery / owner | Residual risk |

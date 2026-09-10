@@ -188,7 +188,7 @@ test("feature review cohorts retain context and produce useful change requests",
   }
   const normalizedPolicy = policy.replace(/\s+/g, " ");
   const normalizedWorkflow = workflow.replace(/\s+/g, " ");
-  const normalizedReviewer = reviewer.replace(/\s+/g, " ");
+  const normalizedReviewer = reviewer.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
   assert.match(normalizedPolicy, /feature review skill.*single execution contract/);
   assert.match(normalizedPolicy, /retains their sessions through merge/);
   assert.match(normalizedWorkflow, /require each one to read the installed sdd-feature-review skill once/);
@@ -204,6 +204,11 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(normalizedReviewer, /validation evidence with failed and unrun checks explicit/);
   assert.match(normalizedReviewer, /prior findings and their dispositions/);
   assert.match(normalizedReviewer, /routing context, not authority/);
+  assert.match(reviewer, /> \[!IMPORTANT\]/);
+  assert.match(normalizedReviewer, /Actively challenge over-engineering/);
+  assert.match(normalizedReviewer, /Edge-case, concurrency, race, timing, and error handling/);
+  assert.match(normalizedReviewer, /simplest clear-cut behavior that preserves system consistency/);
+  assert.match(normalizedReviewer, /Do not demand speculative case enumeration, abstractions, or controls/);
   assert.match(readme, /feature review skill/);
   assert.match(policy, /\| Design conclusion \| Key design points/);
   assert.match(readme, /B --> A\["Two-agent design review"\]/);
@@ -233,6 +238,7 @@ test("error handling stays simple, fail closed, and retry safe", async () => {
     read("templates/delivery/implementation-plan.md"),
   ]);
   const normalizedErrors = errors.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+  const normalizedWhiteboard = templates[1].replace(/\s+/g, " ");
 
   assert.match(errors, /> \[!IMPORTANT\]/);
   assert.match(normalizedErrors, /impossible to enumerate every edge case, race, timing, or failure interleaving/);
@@ -244,6 +250,9 @@ test("error handling stays simple, fail closed, and retry safe", async () => {
   assert.match(workflow, /client-controlled retry only when repeating the operation is safe/);
   assert.match(readme, /no design can\s+enumerate every race or edge case/);
   assert.match(readme, /reconcile ambiguous effects\s+before retrying/);
+  assert.match(normalizedWhiteboard, /edge cases, concurrency, races, timing, or failures are material/);
+  assert.match(normalizedWhiteboard, /smallest clear-cut handling that preserves system consistency and fails closed/);
+  assert.match(normalizedWhiteboard, /Avoid speculative case enumeration and over-engineered controls/);
   for (const template of templates) {
     assert.doesNotMatch(template, /impossible to enumerate every edge case/);
     assert.doesNotMatch(template, /stable retryable outcome/);
