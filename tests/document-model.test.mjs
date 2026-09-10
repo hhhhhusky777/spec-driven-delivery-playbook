@@ -125,7 +125,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   const automation = await read(".github/workflows/documentation-quality.yml");
   const packageSource = await read("package.json");
 
-  for (const document of [workflow, policy, readme, contributing]) {
+  for (const document of [workflow, readme, contributing]) {
     const normalized = document.replace(/\s+/g, " ");
     assert.match(normalized, /Focused tests.*only the tests that cover the changed files and lines/i);
     assert.match(normalized, /Implement each task's required tests|Each task still implements the tests|Every task still implements the tests/i);
@@ -178,29 +178,24 @@ test("feature review cohorts retain context and produce useful change requests",
   const readme = await read("README.md");
   const contributing = await read("CONTRIBUTING.md");
 
-  for (const document of [workflow, policy, readme, contributing]) {
+  for (const document of [workflow, readme, contributing]) {
     const normalized = document.replace(/\s+/g, " ");
-    assert.match(normalized, /concluded whiteboard|whiteboard is formally concluded/i);
-    assert.match(normalized, /feature reviewer|feature's review cohort|reviewers for the feature/i);
+    assert.match(normalized, /concluded[- ]whiteboard|whiteboard is formally concluded/i);
+    assert.match(normalized, /feature reviewer|feature's review cohort|reviewers for the feature|feature selects its two reviewers/i);
     assert.match(normalized, /planning/);
     assert.match(normalized, /task/);
     assert.match(normalized, /final candidate/);
   }
-  for (const document of [reviewer, policy, readme, contributing]) {
-    const normalized = document.replace(/\s+/g, " ");
-    assert.match(normalized, /manifest/);
-    assert.match(normalized, /project README|entry documentation/i);
-    assert.match(normalized, /boundar/i);
-  }
-
   const normalizedPolicy = policy.replace(/\s+/g, " ");
-  assert.match(normalizedPolicy, /two reviewers .*inspect that exact design before the owner accepts it for planning/);
-  assert.match(normalizedPolicy, /same two reviewer seats|two reviewer sessions/);
-  assert.match(normalizedPolicy, /not every implementation detail/);
   const normalizedWorkflow = workflow.replace(/\s+/g, " ");
   const normalizedReviewer = reviewer.replace(/\s+/g, " ");
+  assert.match(normalizedPolicy, /feature review skill.*single execution contract/);
+  assert.match(normalizedPolicy, /retains their sessions through merge/);
   assert.match(normalizedWorkflow, /require each one to read the installed sdd-feature-review skill once/);
   assert.match(normalizedWorkflow, /focused context packet defined by the reviewer skill/);
+  assert.match(normalizedReviewer, /manifest/);
+  assert.match(normalizedReviewer, /project README|entry documentation/i);
+  assert.match(normalizedReviewer, /boundar/i);
   assert.match(normalizedReviewer, /Do not reload this skill at every gate/);
   assert.match(normalizedReviewer, /reviewer seat, current gate, exact base and candidate/);
   assert.match(normalizedReviewer, /what was completed and what changed since the previous review/);
@@ -216,13 +211,16 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(readme, /H --> P\["Implementation planning"\]/);
   assert.match(readme, /P --> R1\["Retained feature reviewer 1"\]/);
   assert.match(readme, /P --> R2\["Retained feature reviewer 2"\]/);
-  assert.match(normalizedPolicy, /observed problem and impact/);
-  assert.match(normalizedPolicy, /smallest recommended correction/);
-  assert.match(normalizedPolicy, /recognized practice.*cite a primary industry standard or authoritative reference/);
-  assert.match(normalizedPolicy, /explain its relevance/);
-  assert.match(normalizedPolicy, /never fabricate a standard/);
-  assert.match(normalizedPolicy, /optional improvements visibly separate from blocking findings/);
-  assert.match(normalizedPolicy, /do not use a recommendation to expand the accepted scope/);
+  assert.match(normalizedReviewer, /precise evidence and user or system impact/);
+  assert.match(normalizedReviewer, /smallest correction/);
+  assert.match(normalizedReviewer, /recognized practice genuinely applies, a primary industry standard or authoritative reference/);
+  assert.match(normalizedReviewer, /brief explanation of relevance/);
+  assert.match(normalizedReviewer, /Never fabricate authority/);
+  assert.match(normalizedReviewer, /optional improvements separate from blocking findings/);
+  assert.match(normalizedReviewer, /never expand the accepted scope/);
+  for (const document of [policy, readme, contributing, workflow]) {
+    assert.doesNotMatch(document, /smallest recommended correction|primary industry standard|Never fabricate authority/);
+  }
 });
 
 test("error handling stays simple, fail closed, and retry safe", async () => {

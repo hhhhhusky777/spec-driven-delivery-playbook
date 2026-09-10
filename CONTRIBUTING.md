@@ -70,11 +70,11 @@ outcome. "Focused tests" means only the tests that cover the changed files and
 lines. After the concluded whiteboard has been reviewed and accepted, run those
 tests before the same two feature reviewers inspect each exact candidate.
 Retain their sessions through planning, tasks, corrections, and the final
-candidate until merge. At the first gate, both reviewers read the manifest, its
-linked project authorities, and the concluded whiteboard; without a manifest,
-they use the project README or entry documentation and canonical policies.
-Review findings follow the canonical
-[quality policy](docs/documentation-quality-policy.md#review-and-human-brief).
+candidate until merge. Reviewer context, independence, packets, findings, and
+dispositions follow the
+[feature review skill](skills/sdd-feature-review/SKILL.md); the canonical
+[quality policy](docs/documentation-quality-policy.md#review-and-human-brief)
+defines the surrounding gates and human brief.
 Defer full validation until the final candidate will merge back to
 `main`; a single-task PR targeting `main` is already final. Candidate-changing
 corrections return through focused tests and both retained reviewer seats;

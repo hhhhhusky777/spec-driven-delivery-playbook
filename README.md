@@ -220,18 +220,11 @@ flowchart LR
 ```
 
 This is the first ordinary review gate for the feature. Two independent
-reviewers first establish the project boundaries. In an adopted project they
-use the manifest, its linked authorities, and the concluded whiteboard; without
-a manifest they use the project README or entry documentation and canonical
-policies. They inspect the design, findings return to the same seats, and the
-owner receives the standard concise human brief before accepting the design for
-planning. Those reviewer sessions then stay with the feature through merge.
-The project agent dispatches pointers to the exact candidate and canonical
-context rather than rewriting the background in a prompt. Each reviewer reads
-the installed
-[feature review skill](skills/sdd-feature-review/SKILL.md) once when its
-session starts. At later gates the project agent supplies only the focused
-packet for the completed work; the same sessions and skill context continue.
+reviewers inspect the design before the owner accepts it for planning, and
+their sessions stay with the feature through merge. The installed
+[feature review skill](skills/sdd-feature-review/SKILL.md) owns their context,
+independent review behavior, and findings; the project workflow only routes
+each exact candidate to those retained sessions.
 
 The concluded whiteboard states observable outcomes and important boundaries,
 not implementation trivia. If later work changes an observable outcome, the
@@ -380,19 +373,10 @@ the required human semantic decision. The two agents review the same exact
 candidate independently. The feature selects those reviewers when its
 whiteboard is formally concluded. They review the design before human
 acceptance, then their sessions remain assigned through planning, all tasks,
-corrections, and the final candidate until the feature merges. The next feature
-begins its own review context. Before their first review, the reviewers read the
-adoption manifest and linked authorities when present; otherwise they use the
-project README or entry documentation and canonical policies. They learn the
-relevant boundaries rather than every implementation detail. This continuity
-preserves the original problem, rationale, design, and prior findings
-throughout delivery.
-Actionable change requests explain the impact and smallest correction. When a
-recognized practice applies, they cite a primary industry standard or
-authoritative reference and explain its relevance; otherwise they use project
-authority or technical reasoning. Optional advice stays
-separate from blocking findings, and recommendations do not expand scope.
-Their findings and dispositions belong in the PR.
+corrections, and the final candidate until the feature merges. This continuity
+preserves feature context; the
+[feature review skill](skills/sdd-feature-review/SKILL.md) defines reviewer
+execution, and the PR owns findings and dispositions.
 
 Humans receive a concise table with the information needed for judgment:
 
