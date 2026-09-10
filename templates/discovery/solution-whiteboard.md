@@ -96,10 +96,11 @@ conversation verbatim.
 | Concurrency, idempotency, and recovery | `<link or None>` | `<boundary>` | `<None or issue>` |
 | Performance and operations | `<link or None>` | `<boundary>` | `<None or issue>` |
 
-When edge cases, concurrency, races, timing, or failures are material, the
-concluded design states the smallest clear-cut handling that preserves system
-consistency and fails closed under the applicable authority. Avoid speculative
-case enumeration and over-engineered controls.
+When edge cases, concurrency, races, timing, or failures are material, record
+the feature-specific handling and applicable authority in the concluded
+design. State the selected clear-cut boundary and any required fail-closed
+consequence; link the general framework instead of restating it or enumerating
+speculative cases.
 
 ## Risks and consequences
 

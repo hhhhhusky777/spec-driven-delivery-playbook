@@ -206,9 +206,9 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(normalizedReviewer, /routing context, not authority/);
   assert.match(reviewer, /> \[!IMPORTANT\]/);
   assert.match(normalizedReviewer, /Actively challenge over-engineering/);
-  assert.match(normalizedReviewer, /Edge-case, concurrency, race, timing, and error handling/);
-  assert.match(normalizedReviewer, /simplest clear-cut behavior that preserves system consistency/);
-  assert.match(normalizedReviewer, /Do not demand speculative case enumeration, abstractions, or controls/);
+  assert.match(normalizedReviewer, /material edge-case, concurrency, race, timing, and error risks/);
+  assert.match(normalizedReviewer, /accepted feature boundary and canonical error-handling authority proportionally/);
+  assert.match(normalizedReviewer, /not simple and clear-cut or adds speculative complexity/);
   assert.match(readme, /feature review skill/);
   assert.match(policy, /\| Design conclusion \| Key design points/);
   assert.match(readme, /B --> A\["Two-agent design review"\]/);
@@ -251,8 +251,9 @@ test("error handling stays simple, fail closed, and retry safe", async () => {
   assert.match(readme, /no design can\s+enumerate every race or edge case/);
   assert.match(readme, /reconcile ambiguous effects\s+before retrying/);
   assert.match(normalizedWhiteboard, /edge cases, concurrency, races, timing, or failures are material/);
-  assert.match(normalizedWhiteboard, /smallest clear-cut handling that preserves system consistency and fails closed/);
-  assert.match(normalizedWhiteboard, /Avoid speculative case enumeration and over-engineered controls/);
+  assert.match(normalizedWhiteboard, /feature-specific handling and applicable authority/);
+  assert.match(normalizedWhiteboard, /selected clear-cut boundary and any required fail-closed consequence/);
+  assert.match(normalizedWhiteboard, /link the general framework instead of restating it/);
   for (const template of templates) {
     assert.doesNotMatch(template, /impossible to enumerate every edge case/);
     assert.doesNotMatch(template, /stable retryable outcome/);

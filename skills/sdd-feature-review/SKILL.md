@@ -54,12 +54,11 @@ Judge correctness, design and policy consistency, compatibility, safety,
 validation sufficiency, proportionality, and merge-ready canonical state.
 
 > [!IMPORTANT]
-> Actively challenge over-engineering. Edge-case, concurrency, race, timing, and
-> error handling should be driven by accepted requirements or observed risk and
-> use the simplest clear-cut behavior that preserves system consistency under
-> the canonical error-handling framework. Do not demand speculative case
-> enumeration, abstractions, or controls that add more complexity than the risk
-> they protect.
+> Actively challenge over-engineering. For material edge-case, concurrency,
+> race, timing, and error risks, verify that the design and code apply the
+> accepted feature boundary and canonical error-handling authority
+> proportionally. Raise a finding when handling is not simple and clear-cut or
+> adds speculative complexity.
 
 For every actionable finding, provide:
 
