@@ -129,7 +129,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
     const normalized = document.replace(/\s+/g, " ");
     assert.match(normalized, /Focused tests.*only the tests that cover the changed files and lines/i);
     assert.match(normalized, /Implement each task's required tests|Each task still implements the tests|Every task still implements the tests/i);
-    assert.match(normalized, /two (?:agent )?(?:reviewers?|agents) selected fresh|two fresh (?:agent )?reviewers?/i);
+    assert.match(normalized, /retained (?:agent |feature )?reviewer|same two feature reviewer/i);
     assert.match(normalized, /full (?:applicable )?validation/i);
     assert.doesNotMatch(normalized, /heavy|long-running|full-coverage/i);
     assert.match(normalized, /exact[- ]head|exact candidate/i);
@@ -151,8 +151,8 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(normalizedPolicy, /Focused tests.*only the tests that cover the changed files and lines/);
   assert.match(normalizedPolicy, /final candidate that will merge back to the protected integration branch.*full applicable validation/);
   assert.match(readme, /F --> P\["Open or update PR"\]/);
-  assert.match(readme, /P --> R1\["Isolated reviewer 1"\]/);
-  assert.match(readme, /P --> R2\["Isolated reviewer 2"\]/);
+  assert.match(readme, /P --> R1\["Retained feature reviewer 1"\]/);
+  assert.match(readme, /P --> R2\["Retained feature reviewer 2"\]/);
   assert.match(readme, /J -->\|"yes"\| G\{"Final candidate to protected target\?"\}/);
   assert.match(readme, /G -->\|"no"\| B\["Task PR human brief"\]/);
   assert.match(readme, /G -->\|"yes"\| V\["Full validation<br\/>on exact head"\]/);
@@ -171,22 +171,51 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(workflow, /do not run the playbook repository's source suite/);
 });
 
-test("task review sessions use fresh reviewers and useful change requests", async () => {
+test("feature review cohorts retain context and produce useful change requests", async () => {
   const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const reviewer = await read("skills/sdd-feature-review/SKILL.md");
   const policy = await read("docs/documentation-quality-policy.md");
   const readme = await read("README.md");
   const contributing = await read("CONTRIBUTING.md");
 
   for (const document of [workflow, policy, readme, contributing]) {
     const normalized = document.replace(/\s+/g, " ");
-    assert.match(normalized, /new task|Each task review session|that task review session/i);
-    assert.match(normalized, /fresh for (?:that|the) (?:task review )?session/i);
-    assert.match(normalized, /any prior task review session/i);
-    assert.match(normalized, /same two reviewer|same task reviewer|retained reviewer/i);
-    assert.doesNotMatch(normalized, /prior task.*same delivery|earlier task.*same delivery/i);
+    assert.match(normalized, /concluded whiteboard|whiteboard is formally concluded/i);
+    assert.match(normalized, /feature reviewer|feature's review cohort|reviewers for the feature/i);
+    assert.match(normalized, /planning/);
+    assert.match(normalized, /task/);
+    assert.match(normalized, /final candidate/);
+  }
+  for (const document of [reviewer, policy, readme, contributing]) {
+    const normalized = document.replace(/\s+/g, " ");
+    assert.match(normalized, /manifest/);
+    assert.match(normalized, /project README|entry documentation/i);
+    assert.match(normalized, /boundar/i);
   }
 
   const normalizedPolicy = policy.replace(/\s+/g, " ");
+  assert.match(normalizedPolicy, /two reviewers .*inspect that exact design before the owner accepts it for planning/);
+  assert.match(normalizedPolicy, /same two reviewer seats|two reviewer sessions/);
+  assert.match(normalizedPolicy, /not every implementation detail/);
+  const normalizedWorkflow = workflow.replace(/\s+/g, " ");
+  const normalizedReviewer = reviewer.replace(/\s+/g, " ");
+  assert.match(normalizedWorkflow, /require each one to read the installed sdd-feature-review skill once/);
+  assert.match(normalizedWorkflow, /focused context packet defined by the reviewer skill/);
+  assert.match(normalizedReviewer, /Do not reload this skill at every gate/);
+  assert.match(normalizedReviewer, /reviewer seat, current gate, exact base and candidate/);
+  assert.match(normalizedReviewer, /what was completed and what changed since the previous review/);
+  assert.match(normalizedReviewer, /design points, contracts, or task outcomes/);
+  assert.match(normalizedReviewer, /expected outcome, scope and non-scope/);
+  assert.match(normalizedReviewer, /validation evidence with failed and unrun checks explicit/);
+  assert.match(normalizedReviewer, /prior findings and their dispositions/);
+  assert.match(normalizedReviewer, /routing context, not authority/);
+  assert.match(readme, /feature review skill/);
+  assert.match(policy, /\| Design conclusion \| Key design points/);
+  assert.match(readme, /B --> A\["Two-agent design review"\]/);
+  assert.match(readme, /A --> H\["Human design acceptance"\]/);
+  assert.match(readme, /H --> P\["Implementation planning"\]/);
+  assert.match(readme, /P --> R1\["Retained feature reviewer 1"\]/);
+  assert.match(readme, /P --> R2\["Retained feature reviewer 2"\]/);
   assert.match(normalizedPolicy, /observed problem and impact/);
   assert.match(normalizedPolicy, /smallest recommended correction/);
   assert.match(normalizedPolicy, /recognized practice.*cite a primary industry standard or authoritative reference/);

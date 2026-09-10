@@ -34,7 +34,7 @@ async function temporaryDirectory(t, prefix) {
 
 async function createPlaybookFixture(t) {
   const repository = await temporaryDirectory(t, "sdd-installer-source-");
-  for (const name of ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade"]) {
+  for (const name of ["sdd-project-adoption", "sdd-project-workflow", "sdd-feature-review", "sdd-playbook-upgrade"]) {
     const directory = path.join(repository, "skills", name);
     await mkdir(directory, { recursive: true });
     await writeFile(
@@ -105,7 +105,7 @@ test("installer resolves latest main, installs adoption skill, and emits one gui
   const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
   assert.equal(guideValue(guide, "Manifest state detected"), "ABSENT");
   assert.equal(guideValue(guide, "Manifest state before block"), "NONE");
-  assert.equal(guideValue(guide, "Generator version"), "2.2.0");
+  assert.equal(guideValue(guide, "Generator version"), "2.3.0");
   assert.equal(guideValue(guide, "Generator schema version"), "3");
   assert.equal(guideValue(guide, "Guide profile"), "adoption");
   assert.equal(guideValue(guide, "Required skill"), "sdd-project-adoption");
@@ -176,7 +176,7 @@ test("manifest pin validates a bootstrap guide whose requested revision was main
 
 test("real workflow skill and generated guide resolve canonical goals and recovery after installation", async (t) => {
   const source = await createPlaybookFixture(t);
-  for (const name of ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade"]) {
+  for (const name of ["sdd-project-adoption", "sdd-project-workflow", "sdd-feature-review", "sdd-playbook-upgrade"]) {
     await cp(path.join(REPOSITORY_ROOT, "skills", name), path.join(source.repository, "skills", name), { recursive: true });
   }
   for (const directory of ["docs", "templates"]) {
@@ -188,14 +188,17 @@ test("real workflow skill and generated guide resolve canonical goals and recove
   const project = await createInstalledProject(t, source);
   const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
   const skill = await readFile(path.join(project, ".agents", "skills", "sdd-project-workflow", "SKILL.md"), "utf8");
+  const reviewer = await readFile(path.join(project, ".agents", "skills", "sdd-feature-review", "SKILL.md"), "utf8");
   assert.equal(skill, await readFile(path.join(REPOSITORY_ROOT, "skills", "sdd-project-workflow", "SKILL.md"), "utf8"));
+  assert.equal(reviewer, await readFile(path.join(REPOSITORY_ROOT, "skills", "sdd-feature-review", "SKILL.md"), "utf8"));
   assert.equal(guideValue(guide, "Resolved revision"), source.firstRevision);
   const checkout = guideValue(guide, "Playbook checkout");
   for (const target of ["templates/adoption/project-adoption-manifest.md", "templates/discovery/solution-whiteboard.md", "templates/delivery/implementation-plan.md"]) {
     await access(path.join(checkout, target));
   }
   assert.doesNotMatch(guide + skill, /exactly one dependency-ready action|Before every project edit/);
-  assert.match(guide, /required skill|sdd-project-workflow/);
+  assert.match(guide, /sdd-project-workflow/);
+  assert.match(guide, /sdd-feature-review/);
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
   assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
 });
@@ -275,7 +278,24 @@ test("the installed state selects the workflow profile and preserves its pinned 
     assert.equal(guideValue(guide, "Requested revision"), source.firstRevision);
     assert.equal(guideValue(guide, "Resolved revision"), source.firstRevision);
     await access(path.join(project, ".agents", "skills", "sdd-project-workflow", "SKILL.md"));
+    await access(path.join(project, ".agents", "skills", "sdd-feature-review", "SKILL.md"));
   }
+});
+
+test("workflow runtime installs and validates the retained feature review skill", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const reviewerDirectory = path.join(project, ".agents", "skills", "sdd-feature-review");
+  const marker = path.join(reviewerDirectory, ".sdd-playbook-managed");
+
+  await access(path.join(reviewerDirectory, "SKILL.md"));
+  assert.equal((await readFile(marker, "utf8")).trim(), source.firstRevision);
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
+
+  await writeFile(marker, source.latestRevision + "\n", "utf8");
+  const invalid = runInstaller(project, ["--validate"]);
+  assert.notEqual(invalid.status, 0);
+  assert.match(invalid.stderr, /installed feature review skill differs/);
 });
 
 test("BLOCKED retains the profile selected by its explicit prior state", async (t) => {

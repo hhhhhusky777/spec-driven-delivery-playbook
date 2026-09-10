@@ -60,6 +60,14 @@ the plan, and review evidence in the pull request.
 - A concluded design or approved plan changes only through an explicit
   amendment when the observable outcome changes. Ordinary task status and
   evidence updates do not reopen the design.
+- When the whiteboard is formally concluded, select two isolated reviewers for
+  the feature and require each one to read the installed
+  sdd-feature-review skill once. They review the exact concluded design before
+  the owner accepts it for planning. Retain those same reviewer sessions
+  through planning, every task and correction round, and the final candidate
+  until the feature merges into its protected target. For each gate, send the
+  focused context packet defined by the reviewer skill; do not reload the skill
+  or recreate the sessions unless their runtime changes or recovery requires it.
 - Before final pull-request review, make the candidate converge every tracked
   canonical document to the state that will be true if that candidate merges.
   Candidate task and plan states describe that resulting repository state;
@@ -118,17 +126,13 @@ The summary informs review; it does not add a gate or prescribe a helper tool.
 
 Implement each task's required tests while doing the task. "Focused tests"
 means only the tests that cover the changed files and lines. Run them before
-two agent reviewers selected fresh for that task review session. An agent from
-any prior task review session is not reused; candidate-changing corrections
-return to the same two reviewers for that task. Actionable findings
-follow the canonical quality policy: identify impact and blocking status,
-recommend the smallest correction, and cite a primary industry standard or
-authoritative reference when a recognized practice applies. Explain its
-relevance; otherwise cite project authority or state the technical reasoning.
-Do not expand scope. After both
-reviewers approve the final candidate that will merge back to the protected
-integration branch, run the project's full applicable validation on that exact
-head before the human merge decision. A single-task PR to the protected branch
+the feature's two retained agent reviewers inspect the exact task candidate.
+Candidate-changing corrections return to the same two reviewers. The installed
+sdd-feature-review skill owns reviewer context and finding behavior. After both
+reviewers approve the final candidate that will
+merge back to the protected integration branch, run the project's full
+applicable validation on that exact head before the human merge decision. A
+single-task PR to the protected branch
 is already final. Candidate-changing corrections repeat focused tests and the
 same task reviewers; a final-candidate correction also repeats full validation.
 Apply stricter project policy when it requires a more conservative sequence.

@@ -13,7 +13,8 @@ VALIDATE_ONLY=false
 UPGRADE_MODE=false
 GUIDE_SCHEMA_VERSION="3"
 UPGRADE_GUIDE_SCHEMA_VERSION="2"
-GENERATOR_VERSION="2.2.0"
+GENERATOR_VERSION="2.3.0"
+FEATURE_REVIEW_SKILL="sdd-feature-review"
 
 usage() {
   cat <<'EOF'
@@ -257,6 +258,7 @@ validate_runtime() {
   local recorded_project recorded_generator recorded_schema recorded_profile recorded_state recorded_prior_state
   local recorded_skill recorded_requested recorded_revision recorded_hash actual_hash expected_profile
   local expected_skill checkout marker cleanup_state checkout_revision checkout_origin installed_marker
+  local review_marker
   local recorded_common_directory recorded_git_directory recorded_worktree_state
   recorded_project=$(markdown_value "Project root" "$GUIDE_PATH")
   recorded_generator=$(markdown_value "Generator version" "$GUIDE_PATH")
@@ -308,6 +310,11 @@ validate_runtime() {
   installed_marker="$PROJECT_ROOT/.agents/skills/$recorded_skill/.sdd-playbook-managed"
   [[ -f "$installed_marker" && "$(head -n 1 "$installed_marker")" == "$recorded_revision" ]] ||
     fail "INVALID_RUNTIME: installed skill differs from the guide revision"
+  if [[ "$expected_profile" == "workflow" ]]; then
+    review_marker="$PROJECT_ROOT/.agents/skills/$FEATURE_REVIEW_SKILL/.sdd-playbook-managed"
+    [[ -f "$review_marker" && "$(head -n 1 "$review_marker")" == "$recorded_revision" ]] ||
+      fail "INVALID_RUNTIME: installed feature review skill differs from the guide revision"
+  fi
   case "$cleanup_state" in
     PENDING)
       validate_checkout_boundary "$checkout" "$recorded_revision" "INVALID_RUNTIME"
@@ -553,6 +560,7 @@ ensure_runtime_excludes() {
     "/$RUNTIME_ROOT/" \
     "/.agents/skills/sdd-project-adoption/" \
     "/.agents/skills/sdd-project-workflow/" \
+    "/.agents/skills/sdd-feature-review/" \
     "/.agents/skills/sdd-playbook-upgrade/"; do
     grep -Fqx "$pattern" "$git_exclude" || printf '%s\n' "$pattern" >>"$git_exclude"
   done
@@ -860,6 +868,22 @@ mkdir -p "$(dirname "$SKILL_DESTINATION")"
 cp -R "$SKILL_SOURCE" "$SKILL_DESTINATION"
 printf '%s\n' "$RESOLVED_REVISION" >"$SKILL_DESTINATION/.sdd-playbook-managed"
 
+REVIEW_SKILL_DESTINATION="$PROJECT_ROOT/.agents/skills/$FEATURE_REVIEW_SKILL"
+if [[ "$GUIDE_PROFILE" == "workflow" ]]; then
+  REVIEW_SKILL_SOURCE="$PLAYBOOK_CHECKOUT/skills/$FEATURE_REVIEW_SKILL"
+  [[ -f "$REVIEW_SKILL_SOURCE/SKILL.md" ]] ||
+    fail "resolved playbook does not contain skill: $FEATURE_REVIEW_SKILL"
+  if [[ -e "$REVIEW_SKILL_DESTINATION" ]]; then
+    [[ -f "$REVIEW_SKILL_DESTINATION/.sdd-playbook-managed" ]] ||
+      fail "refusing to overwrite unmanaged skill: $REVIEW_SKILL_DESTINATION"
+    rm -rf "$REVIEW_SKILL_DESTINATION"
+  fi
+  cp -R "$REVIEW_SKILL_SOURCE" "$REVIEW_SKILL_DESTINATION"
+  printf '%s\n' "$RESOLVED_REVISION" >"$REVIEW_SKILL_DESTINATION/.sdd-playbook-managed"
+elif [[ -f "$REVIEW_SKILL_DESTINATION/.sdd-playbook-managed" ]]; then
+  rm -rf "$REVIEW_SKILL_DESTINATION"
+fi
+
 if [[ "$SKILL_NAME" == "sdd-project-adoption" ]]; then
   OTHER_SKILL="sdd-project-workflow"
 else
@@ -950,6 +974,9 @@ else
 - Read and follow \`sdd-project-workflow\`. The manifest owns installation
   authority, the whiteboard owns design, and the implementation plan owns all
   task and delivery state.
+- At the concluded-whiteboard review gate, require both retained reviewers to
+  read the installed \`sdd-feature-review\` skill once; later gates send the
+  focused packet defined by that skill.
 - Work inside authorized scope, preserve unrelated work, and keep required
   checks, review, merge authority, and destructive-action safeguards.
 - Pull requests own review and delivery evidence. Stop for missing authority,

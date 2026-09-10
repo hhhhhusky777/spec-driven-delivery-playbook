@@ -67,11 +67,13 @@ design, policy, validation, cleanup, or out-of-scope authority.
 Open the PR when it best supports collaboration; a draft PR is not required
 before coding. Each task still implements the tests required by its accepted
 outcome. "Focused tests" means only the tests that cover the changed files and
-lines. Run those tests before two agent reviewers selected fresh for that task
-review session inspect the exact candidate. A new task does not reuse an agent
-from any prior task review session; corrections return to the same two
-reviewers for that task. Review
-findings follow the canonical
+lines. After the concluded whiteboard has been reviewed and accepted, run those
+tests before the same two feature reviewers inspect each exact candidate.
+Retain their sessions through planning, tasks, corrections, and the final
+candidate until merge. At the first gate, both reviewers read the manifest, its
+linked project authorities, and the concluded whiteboard; without a manifest,
+they use the project README or entry documentation and canonical policies.
+Review findings follow the canonical
 [quality policy](docs/documentation-quality-policy.md#review-and-human-brief).
 Defer full validation until the final candidate will merge back to
 `main`; a single-task PR targeting `main` is already final. Candidate-changing
