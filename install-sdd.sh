@@ -258,7 +258,7 @@ validate_runtime() {
   local recorded_project recorded_generator recorded_schema recorded_profile recorded_state recorded_prior_state
   local recorded_skill recorded_requested recorded_revision recorded_hash actual_hash expected_profile
   local expected_skill checkout marker cleanup_state checkout_revision checkout_origin installed_marker
-  local review_marker
+  local recorded_review_skill review_marker
   local recorded_common_directory recorded_git_directory recorded_worktree_state
   recorded_project=$(markdown_value "Project root" "$GUIDE_PATH")
   recorded_generator=$(markdown_value "Generator version" "$GUIDE_PATH")
@@ -267,6 +267,7 @@ validate_runtime() {
   recorded_state=$(markdown_value "Manifest state detected" "$GUIDE_PATH")
   recorded_prior_state=$(markdown_value "Manifest state before block" "$GUIDE_PATH")
   recorded_skill=$(markdown_value "Required skill" "$GUIDE_PATH")
+  recorded_review_skill=$(markdown_value "Feature review skill" "$GUIDE_PATH")
   recorded_requested=$(markdown_value "Requested revision" "$GUIDE_PATH")
   recorded_revision=$(markdown_value "Resolved revision" "$GUIDE_PATH")
   recorded_hash=$(markdown_value "Content hash" "$GUIDE_PATH")
@@ -310,7 +311,18 @@ validate_runtime() {
   installed_marker="$PROJECT_ROOT/.agents/skills/$recorded_skill/.sdd-playbook-managed"
   [[ -f "$installed_marker" && "$(head -n 1 "$installed_marker")" == "$recorded_revision" ]] ||
     fail "INVALID_RUNTIME: installed skill differs from the guide revision"
-  if [[ "$expected_profile" == "workflow" ]]; then
+  case "$recorded_review_skill" in
+    available)
+      [[ "$expected_profile" == "workflow" ]] ||
+        fail "INVALID_RUNTIME: feature review skill is incompatible with the guide profile"
+      ;;
+    unavailable)
+      ;;
+    *)
+      fail "INVALID_RUNTIME: unsupported feature review skill state"
+      ;;
+  esac
+  if [[ "$recorded_review_skill" == "available" ]]; then
     review_marker="$PROJECT_ROOT/.agents/skills/$FEATURE_REVIEW_SKILL/.sdd-playbook-managed"
     [[ -f "$review_marker" && "$(head -n 1 "$review_marker")" == "$recorded_revision" ]] ||
       fail "INVALID_RUNTIME: installed feature review skill differs from the guide revision"
@@ -853,6 +865,7 @@ printf '%s\nproject-root=%s\ngit-common-directory=%s\ngit-directory=%s\ngit-work
 GUIDE_PROFILE=$(profile_for_state "$MANIFEST_STATE" "$MANIFEST_STATE_BEFORE_BLOCK") ||
   fail "unsupported manifest state or missing State before block: $MANIFEST_STATE"
 SKILL_NAME=$(skill_for_profile "$GUIDE_PROFILE")
+REVIEW_SKILL_AVAILABLE=false
 
 SKILL_SOURCE="$PLAYBOOK_CHECKOUT/skills/$SKILL_NAME"
 SKILL_DESTINATION="$PROJECT_ROOT/.agents/skills/$SKILL_NAME"
@@ -871,15 +884,18 @@ printf '%s\n' "$RESOLVED_REVISION" >"$SKILL_DESTINATION/.sdd-playbook-managed"
 REVIEW_SKILL_DESTINATION="$PROJECT_ROOT/.agents/skills/$FEATURE_REVIEW_SKILL"
 if [[ "$GUIDE_PROFILE" == "workflow" ]]; then
   REVIEW_SKILL_SOURCE="$PLAYBOOK_CHECKOUT/skills/$FEATURE_REVIEW_SKILL"
-  [[ -f "$REVIEW_SKILL_SOURCE/SKILL.md" ]] ||
-    fail "resolved playbook does not contain skill: $FEATURE_REVIEW_SKILL"
-  if [[ -e "$REVIEW_SKILL_DESTINATION" ]]; then
-    [[ -f "$REVIEW_SKILL_DESTINATION/.sdd-playbook-managed" ]] ||
-      fail "refusing to overwrite unmanaged skill: $REVIEW_SKILL_DESTINATION"
+  if [[ -f "$REVIEW_SKILL_SOURCE/SKILL.md" ]]; then
+    REVIEW_SKILL_AVAILABLE=true
+    if [[ -e "$REVIEW_SKILL_DESTINATION" ]]; then
+      [[ -f "$REVIEW_SKILL_DESTINATION/.sdd-playbook-managed" ]] ||
+        fail "refusing to overwrite unmanaged skill: $REVIEW_SKILL_DESTINATION"
+      rm -rf "$REVIEW_SKILL_DESTINATION"
+    fi
+    cp -R "$REVIEW_SKILL_SOURCE" "$REVIEW_SKILL_DESTINATION"
+    printf '%s\n' "$RESOLVED_REVISION" >"$REVIEW_SKILL_DESTINATION/.sdd-playbook-managed"
+  elif [[ -f "$REVIEW_SKILL_DESTINATION/.sdd-playbook-managed" ]]; then
     rm -rf "$REVIEW_SKILL_DESTINATION"
   fi
-  cp -R "$REVIEW_SKILL_SOURCE" "$REVIEW_SKILL_DESTINATION"
-  printf '%s\n' "$RESOLVED_REVISION" >"$REVIEW_SKILL_DESTINATION/.sdd-playbook-managed"
 elif [[ -f "$REVIEW_SKILL_DESTINATION/.sdd-playbook-managed" ]]; then
   rm -rf "$REVIEW_SKILL_DESTINATION"
 fi
@@ -921,6 +937,7 @@ is not a project system contract or a prescribed implementation path.
 | Guide profile | \`$GUIDE_PROFILE\` |
 | Required skill | \`$SKILL_NAME\` |
 | Installed skill | \`.agents/skills/$SKILL_NAME/SKILL.md\` |
+| Feature review skill | \`$([[ "$REVIEW_SKILL_AVAILABLE" == true ]] && printf available || printf unavailable)\` |
 | Content hash | \`<CONTENT_HASH>\` |
 
 ## Playbook runtime
@@ -974,9 +991,15 @@ else
 - Read and follow \`sdd-project-workflow\`. The manifest owns installation
   authority, the whiteboard owns design, and the implementation plan owns all
   task and delivery state.
+EOF
+  if [[ "$REVIEW_SKILL_AVAILABLE" == true ]]; then
+    cat >>"$GUIDE_PATH" <<EOF
 - At the concluded-whiteboard review gate, require both retained reviewers to
   read the installed \`sdd-feature-review\` skill once; later gates send the
   focused packet defined by that skill.
+EOF
+  fi
+  cat >>"$GUIDE_PATH" <<EOF
 - Work inside authorized scope, preserve unrelated work, and keep required
   checks, review, merge authority, and destructive-action safeguards.
 - Pull requests own review and delivery evidence. Stop for missing authority,

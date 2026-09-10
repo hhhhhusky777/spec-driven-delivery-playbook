@@ -32,9 +32,11 @@ async function temporaryDirectory(t, prefix) {
   return directory;
 }
 
-async function createPlaybookFixture(t) {
+async function createPlaybookFixture(t, { featureReviewInFirstRevision = true } = {}) {
   const repository = await temporaryDirectory(t, "sdd-installer-source-");
-  for (const name of ["sdd-project-adoption", "sdd-project-workflow", "sdd-feature-review", "sdd-playbook-upgrade"]) {
+  const initialSkills = ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade"];
+  if (featureReviewInFirstRevision) initialSkills.push("sdd-feature-review");
+  for (const name of initialSkills) {
     const directory = path.join(repository, "skills", name);
     await mkdir(directory, { recursive: true });
     await writeFile(
@@ -49,8 +51,17 @@ async function createPlaybookFixture(t) {
   run("git", ["add", "."], repository);
   run("git", ["commit", "-m", "fixture skills"], repository);
   const firstRevision = run("git", ["rev-parse", "HEAD"], repository).trim();
+  if (!featureReviewInFirstRevision) {
+    const directory = path.join(repository, "skills", "sdd-feature-review");
+    await mkdir(directory, { recursive: true });
+    await writeFile(
+      path.join(directory, "SKILL.md"),
+      "---\nname: sdd-feature-review\ndescription: Fixture skill.\n---\n\n# Fixture\n",
+      "utf8",
+    );
+  }
   await writeFile(path.join(repository, "README.md"), "# Fixture update\n", "utf8");
-  run("git", ["add", "README.md"], repository);
+  run("git", ["add", "."], repository);
   run("git", ["commit", "-m", "fixture update"], repository);
   const latestRevision = run("git", ["rev-parse", "HEAD"], repository).trim();
   return { repository, firstRevision, latestRevision };
@@ -108,6 +119,7 @@ test("installer resolves latest main, installs adoption skill, and emits one gui
   assert.equal(guideValue(guide, "Generator version"), "2.3.0");
   assert.equal(guideValue(guide, "Generator schema version"), "3");
   assert.equal(guideValue(guide, "Guide profile"), "adoption");
+  assert.equal(guideValue(guide, "Feature review skill"), "unavailable");
   assert.equal(guideValue(guide, "Required skill"), "sdd-project-adoption");
   assert.equal(guideValue(guide, "Requested revision"), "main");
   assert.equal(guideValue(guide, "Resolved revision"), source.latestRevision);
@@ -296,6 +308,17 @@ test("workflow runtime installs and validates the retained feature review skill"
   const invalid = runInstaller(project, ["--validate"]);
   assert.notEqual(invalid.status, 0);
   assert.match(invalid.stderr, /installed feature review skill differs/);
+});
+
+test("workflow runtime preserves an accepted pin from before the feature review skill", async (t) => {
+  const source = await createPlaybookFixture(t, { featureReviewInFirstRevision: false });
+  const project = await createInstalledProject(t, source);
+  const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
+
+  assert.equal(guideValue(guide, "Feature review skill"), "unavailable");
+  assert.doesNotMatch(guide, /read the installed `sdd-feature-review` skill/);
+  await assert.rejects(access(path.join(project, ".agents", "skills", "sdd-feature-review")));
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
 });
 
 test("BLOCKED retains the profile selected by its explicit prior state", async (t) => {

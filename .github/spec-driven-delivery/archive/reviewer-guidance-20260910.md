@@ -8,7 +8,7 @@
 | Need / issue | [Issue #99](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/99) |
 | Delivery PRs | [PR #100](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/100), [PR #101](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/101) |
 | Owner | Repository owner |
-| Concluded design revision | Owner decisions recorded on 2026-09-10 |
+| Concluded design revision | Original design delivered by PR #100; owner-approved amendment delivered by PR #101 |
 | Open owner decisions | `None` |
 
 ## Discussion draft
@@ -46,6 +46,12 @@
 | `DR05` | `D01`, `D02` | Accepted | Starts the retained cohort at concluded-design review and keeps its context through merge. |
 | `DR06` | `D06` | Accepted | Gives reviewers proportional project context through authoritative entry points. |
 | `DR07` | `D07` | Changed | The owner selected a dedicated skill because reviewers are independent, retained agents with their own context. |
+
+## Design amendments
+
+| Amendment | Changed design points | Reason and impact | Owner decision |
+| --- | --- | --- | --- |
+| `A01` | Replaced the original `D01` task-level freshness and expanded `D02` task-only continuity; added current `D01`, `D02`, `D06`, and `D07` | Preserve the feature problem, rationale, boundaries, and prior findings across every review gate; add exact-design review before planning and a proportional reviewer bootstrap. | Owner replaced the original design on 2026-09-10; [PR #101](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/101) delivers the amendment. |
 
 ## Delivery mapping
 
