@@ -208,7 +208,7 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(normalizedReviewer, /Actively challenge over-engineering/);
   assert.match(normalizedReviewer, /material edge-case, concurrency, race, timing, and error risks/);
   assert.match(normalizedReviewer, /accepted feature boundary and canonical error-handling authority proportionally/);
-  assert.match(normalizedReviewer, /not simple and clear-cut or adds speculative complexity/);
+  assert.match(normalizedReviewer, /not the simplest clear-cut approach that protects the accepted outcome, or when it adds speculative complexity/);
   assert.match(readme, /feature review skill/);
   assert.match(policy, /\| Design conclusion \| Key design points/);
   assert.match(readme, /B --> A\["Two-agent design review"\]/);

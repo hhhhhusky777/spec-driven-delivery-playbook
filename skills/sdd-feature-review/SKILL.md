@@ -57,8 +57,9 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > Actively challenge over-engineering. For material edge-case, concurrency,
 > race, timing, and error risks, verify that the design and code apply the
 > accepted feature boundary and canonical error-handling authority
-> proportionally. Raise a finding when handling is not simple and clear-cut or
-> adds speculative complexity.
+> proportionally. Raise a finding when handling is not the simplest clear-cut
+> approach that protects the accepted outcome, or when it adds speculative
+> complexity.
 
 For every actionable finding, provide:
 
