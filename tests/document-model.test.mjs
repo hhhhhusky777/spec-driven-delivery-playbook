@@ -125,11 +125,11 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   const automation = await read(".github/workflows/documentation-quality.yml");
   const packageSource = await read("package.json");
 
-  for (const document of [workflow, policy, readme, contributing]) {
+  for (const document of [workflow, readme, contributing]) {
     const normalized = document.replace(/\s+/g, " ");
     assert.match(normalized, /Focused tests.*only the tests that cover the changed files and lines/i);
     assert.match(normalized, /Implement each task's required tests|Each task still implements the tests|Every task still implements the tests/i);
-    assert.match(normalized, /two (?:agent )?(?:reviewers?|agents) selected fresh|two fresh (?:agent )?reviewers?/i);
+    assert.match(normalized, /retained (?:agent |feature )?reviewer|same two feature reviewer/i);
     assert.match(normalized, /full (?:applicable )?validation/i);
     assert.doesNotMatch(normalized, /heavy|long-running|full-coverage/i);
     assert.match(normalized, /exact[- ]head|exact candidate/i);
@@ -151,8 +151,8 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(normalizedPolicy, /Focused tests.*only the tests that cover the changed files and lines/);
   assert.match(normalizedPolicy, /final candidate that will merge back to the protected integration branch.*full applicable validation/);
   assert.match(readme, /F --> P\["Open or update PR"\]/);
-  assert.match(readme, /P --> R1\["Isolated reviewer 1"\]/);
-  assert.match(readme, /P --> R2\["Isolated reviewer 2"\]/);
+  assert.match(readme, /P --> R1\["Retained feature reviewer 1"\]/);
+  assert.match(readme, /P --> R2\["Retained feature reviewer 2"\]/);
   assert.match(readme, /J -->\|"yes"\| G\{"Final candidate to protected target\?"\}/);
   assert.match(readme, /G -->\|"no"\| B\["Task PR human brief"\]/);
   assert.match(readme, /G -->\|"yes"\| V\["Full validation<br\/>on exact head"\]/);
@@ -171,29 +171,61 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(workflow, /do not run the playbook repository's source suite/);
 });
 
-test("task review sessions use fresh reviewers and useful change requests", async () => {
+test("feature review cohorts retain context and produce useful change requests", async () => {
   const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const reviewer = await read("skills/sdd-feature-review/SKILL.md");
   const policy = await read("docs/documentation-quality-policy.md");
   const readme = await read("README.md");
   const contributing = await read("CONTRIBUTING.md");
 
-  for (const document of [workflow, policy, readme, contributing]) {
+  for (const document of [workflow, readme, contributing]) {
     const normalized = document.replace(/\s+/g, " ");
-    assert.match(normalized, /new task|Each task review session|that task review session/i);
-    assert.match(normalized, /fresh for (?:that|the) (?:task review )?session/i);
-    assert.match(normalized, /any prior task review session/i);
-    assert.match(normalized, /same two reviewer|same task reviewer|retained reviewer/i);
-    assert.doesNotMatch(normalized, /prior task.*same delivery|earlier task.*same delivery/i);
+    assert.match(normalized, /concluded[- ]whiteboard|whiteboard is formally concluded/i);
+    assert.match(normalized, /feature reviewer|feature's review cohort|reviewers for the feature|feature selects its two reviewers/i);
+    assert.match(normalized, /planning/);
+    assert.match(normalized, /task/);
+    assert.match(normalized, /final candidate/);
   }
-
   const normalizedPolicy = policy.replace(/\s+/g, " ");
-  assert.match(normalizedPolicy, /observed problem and impact/);
-  assert.match(normalizedPolicy, /smallest recommended correction/);
-  assert.match(normalizedPolicy, /recognized practice.*cite a primary industry standard or authoritative reference/);
-  assert.match(normalizedPolicy, /explain its relevance/);
-  assert.match(normalizedPolicy, /never fabricate a standard/);
-  assert.match(normalizedPolicy, /optional improvements visibly separate from blocking findings/);
-  assert.match(normalizedPolicy, /do not use a recommendation to expand the accepted scope/);
+  const normalizedWorkflow = workflow.replace(/\s+/g, " ");
+  const normalizedReviewer = reviewer.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+  assert.match(normalizedPolicy, /feature review skill.*single execution contract/);
+  assert.match(normalizedPolicy, /retains their sessions through merge/);
+  assert.match(normalizedWorkflow, /require each one to read the installed sdd-feature-review skill once/);
+  assert.match(normalizedWorkflow, /focused context packet defined by the reviewer skill/);
+  assert.match(normalizedReviewer, /manifest/);
+  assert.match(normalizedReviewer, /project README|entry documentation/i);
+  assert.match(normalizedReviewer, /boundar/i);
+  assert.match(normalizedReviewer, /Do not reload this skill at every gate/);
+  assert.match(normalizedReviewer, /reviewer seat, current gate, exact base and candidate/);
+  assert.match(normalizedReviewer, /what was completed and what changed since the previous review/);
+  assert.match(normalizedReviewer, /design points, contracts, or task outcomes/);
+  assert.match(normalizedReviewer, /expected outcome, scope and non-scope/);
+  assert.match(normalizedReviewer, /validation evidence with failed and unrun checks explicit/);
+  assert.match(normalizedReviewer, /prior findings and their dispositions/);
+  assert.match(normalizedReviewer, /routing context, not authority/);
+  assert.match(reviewer, /> \[!IMPORTANT\]/);
+  assert.match(normalizedReviewer, /Actively challenge over-engineering/);
+  assert.match(normalizedReviewer, /material edge-case, concurrency, race, timing, and error risks/);
+  assert.match(normalizedReviewer, /accepted feature boundary and canonical error-handling authority proportionally/);
+  assert.match(normalizedReviewer, /not the simplest clear-cut approach that protects the accepted outcome, or when it adds speculative complexity/);
+  assert.match(readme, /feature review skill/);
+  assert.match(policy, /\| Design conclusion \| Key design points/);
+  assert.match(readme, /B --> A\["Two-agent design review"\]/);
+  assert.match(readme, /A --> H\["Human design acceptance"\]/);
+  assert.match(readme, /H --> P\["Implementation planning"\]/);
+  assert.match(readme, /P --> R1\["Retained feature reviewer 1"\]/);
+  assert.match(readme, /P --> R2\["Retained feature reviewer 2"\]/);
+  assert.match(normalizedReviewer, /precise evidence and user or system impact/);
+  assert.match(normalizedReviewer, /smallest correction/);
+  assert.match(normalizedReviewer, /recognized practice genuinely applies, a primary industry standard or authoritative reference/);
+  assert.match(normalizedReviewer, /brief explanation of relevance/);
+  assert.match(normalizedReviewer, /Never fabricate authority/);
+  assert.match(normalizedReviewer, /optional improvements separate from blocking findings/);
+  assert.match(normalizedReviewer, /never expand the accepted scope/);
+  for (const document of [policy, readme, contributing, workflow]) {
+    assert.doesNotMatch(document, /smallest recommended correction|primary industry standard|Never fabricate authority/);
+  }
 });
 
 test("error handling stays simple, fail closed, and retry safe", async () => {
@@ -206,6 +238,7 @@ test("error handling stays simple, fail closed, and retry safe", async () => {
     read("templates/delivery/implementation-plan.md"),
   ]);
   const normalizedErrors = errors.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+  const normalizedWhiteboard = templates[1].replace(/\s+/g, " ");
 
   assert.match(errors, /> \[!IMPORTANT\]/);
   assert.match(normalizedErrors, /impossible to enumerate every edge case, race, timing, or failure interleaving/);
@@ -217,6 +250,10 @@ test("error handling stays simple, fail closed, and retry safe", async () => {
   assert.match(workflow, /client-controlled retry only when repeating the operation is safe/);
   assert.match(readme, /no design can\s+enumerate every race or edge case/);
   assert.match(readme, /reconcile ambiguous effects\s+before retrying/);
+  assert.match(normalizedWhiteboard, /edge cases, concurrency, races, timing, or failures are material/);
+  assert.match(normalizedWhiteboard, /feature-specific handling and applicable authority/);
+  assert.match(normalizedWhiteboard, /selected clear-cut boundary and any required fail-closed consequence/);
+  assert.match(normalizedWhiteboard, /link the general framework instead of restating it/);
   for (const template of templates) {
     assert.doesNotMatch(template, /impossible to enumerate every edge case/);
     assert.doesNotMatch(template, /stable retryable outcome/);

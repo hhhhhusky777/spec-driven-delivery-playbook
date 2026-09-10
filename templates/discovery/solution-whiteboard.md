@@ -96,6 +96,12 @@ conversation verbatim.
 | Concurrency, idempotency, and recovery | `<link or None>` | `<boundary>` | `<None or issue>` |
 | Performance and operations | `<link or None>` | `<boundary>` | `<None or issue>` |
 
+When edge cases, concurrency, races, timing, or failures are material, record
+the feature-specific handling and applicable authority in the concluded
+design. State the selected clear-cut boundary and any required fail-closed
+consequence; link the general framework instead of restating it or enumerating
+speculative cases.
+
 ## Risks and consequences
 
 | ID | Scenario | Likelihood / impact | Prevention or detection | Recovery / owner | Residual risk |

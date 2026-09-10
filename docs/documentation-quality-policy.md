@@ -97,22 +97,12 @@ status-only correction as a defect rather than routine cleanup.
 ## Review and human brief
 
 Every material candidate receives exact-candidate self-review, review by two
-isolated agents, and required human semantic acceptance. Each task review
-session starts with two agents selected fresh for that session and never reused
-from any prior task review session. This freshness is a task boundary, not a
-correction boundary: a changed candidate returns to the same two reviewer seats
-until that task review converges. The pull request owns findings, revisions,
+isolated agents, and required human semantic acceptance. The feature selects
+its two reviewers at the concluded-whiteboard gate and retains their sessions
+through merge. The [feature review skill](../skills/sdd-feature-review/SKILL.md)
+is the single execution contract for reviewer context, independence, packets,
+findings, advice, and dispositions. The pull request owns findings, revisions,
 checks, acceptance, and merge evidence.
-
-An actionable change request gives the author enough judgment-ready guidance
-to correct it without guessing: the observed problem and impact, whether it
-blocks acceptance, and the smallest recommended correction. When a recognized
-practice genuinely applies, cite a primary industry standard or authoritative
-reference and briefly explain its relevance. When no suitable external
-authority exists, cite the controlling project principle or state the
-technical reasoning; never fabricate a standard. Keep optional improvements visibly
-separate from blocking findings, and do not use a recommendation to expand the
-accepted scope.
 
 Use focused tests to reach review early without representing them as complete
 proof. Each task still implements the tests required by its accepted outcome.
@@ -164,6 +154,7 @@ Phase-specific additions:
 | Gate | Additional summary |
 | --- | --- |
 | Adoption | Discovered authorities and contracts, reused or changed policies, gaps, pin/runtime state, and activation boundary |
+| Design conclusion | Key design points, rationale, boundaries, risks, rejected alternatives, unresolved gaps, and the exact owner decision |
 | Planning | Whiteboard design points mapped to task outcomes, dependencies, validation, PR boundaries, and gaps |
 | Implementation PR | Delivered behavior, deviations, compatibility/operational effects, validation, and merge target |
 | Validation and cleanup | Planned versus actual outcomes, unresolved work, cleanup ownership, and target proof |

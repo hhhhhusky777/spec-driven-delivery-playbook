@@ -214,8 +214,17 @@ flowchart LR
     Q -->|"no"| C["Concluded design points"]
     C --> R["Reconcile every material draft item"]
     R --> B["Human brief: boundaries, risks, gaps"]
-    B --> P["Implementation planning"]
+    B --> A["Two-agent design review"]
+    A --> H["Human design acceptance"]
+    H --> P["Implementation planning"]
 ```
+
+This is the first ordinary review gate for the feature. Two independent
+reviewers inspect the design before the owner accepts it for planning, and
+their sessions stay with the feature through merge. The installed
+[feature review skill](skills/sdd-feature-review/SKILL.md) owns their context,
+independent review behavior, and findings; the project workflow only routes
+each exact candidate to those retained sessions.
 
 The concluded whiteboard states observable outcomes and important boundaries,
 not implementation trivia. If later work changes an observable outcome, the
@@ -361,15 +370,13 @@ deferring test implementation.
 
 Every material candidate receives self-review, two isolated agent reviews, and
 the required human semantic decision. The two agents review the same exact
-candidate independently. Each new task gets two reviewers selected fresh for
-that session; agents from any prior task review session are not reused.
-Correction rounds for the same task return to those retained reviewer seats.
-Actionable change requests explain the impact and smallest correction. When a
-recognized practice applies, they cite a primary industry standard or
-authoritative reference and explain its relevance; otherwise they use project
-authority or technical reasoning. Optional advice stays
-separate from blocking findings, and recommendations do not expand scope.
-Their findings and dispositions belong in the PR.
+candidate independently. The feature selects those reviewers when its
+whiteboard is formally concluded. They review the design before human
+acceptance, then their sessions remain assigned through planning, all tasks,
+corrections, and the final candidate until the feature merges. This continuity
+preserves feature context; the
+[feature review skill](skills/sdd-feature-review/SKILL.md) defines reviewer
+execution, and the PR owns findings and dispositions.
 
 Humans receive a concise table with the information needed for judgment:
 
@@ -414,8 +421,8 @@ shape without adding another gate or report artifact.
 flowchart TD
     C["Coherent candidate"] --> F["Focused tests covering<br/>changed files and lines"]
     F --> P["Open or update PR"]
-    P --> R1["Isolated reviewer 1"]
-    P --> R2["Isolated reviewer 2"]
+    P --> R1["Retained feature reviewer 1"]
+    P --> R2["Retained feature reviewer 2"]
     R1 --> J{"Findings resolved?"}
     R2 --> J
     J -->|"no"| X["Correct once; return to same seats"]
@@ -659,7 +666,7 @@ state.
 | Path | Purpose |
 | --- | --- |
 | `install-sdd.sh` | Resolve immutable revisions and generate isolated runtime guidance |
-| `skills/` | Outcome and boundary guidance used by adoption, workflow, and upgrade agents |
+| `skills/` | Outcome and boundary guidance used by adoption, workflow, feature-review, and upgrade agents |
 | `templates/` | Reusable manifest, whiteboard, plan, and review structures |
 | `docs/` | Canonical quality, template-governance, and error-handling policies |
 | `scripts/` | Source repository documentation and lifecycle checks |
@@ -693,6 +700,7 @@ not a replacement for semantic review.
 - [Template Governance](docs/template-governance.md)
 - [Error handling](docs/error-handling.md)
 - [Project adoption skill](skills/sdd-project-adoption/SKILL.md)
+- [Feature review skill](skills/sdd-feature-review/SKILL.md)
 - [Google engineering review guidance](https://google.github.io/eng-practices/review/reviewer/)
 - [GitHub documentation on pull-request reviews](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests)
 
