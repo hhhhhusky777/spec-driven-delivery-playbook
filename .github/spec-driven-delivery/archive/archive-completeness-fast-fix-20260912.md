@@ -9,7 +9,7 @@
 
 <!-- sdd: archived-whiteboard -->
 
-# Solution whiteboard — archive completeness and Fast Fix
+## Solution whiteboard — archive completeness and Fast Fix
 
 <!-- sdd: whiteboard -->
 
@@ -137,7 +137,7 @@
 
 <!-- sdd: archived-implementation-plan -->
 
-# Implementation Plan — archive completeness and Fast Fix
+## Implementation Plan — archive completeness and Fast Fix
 
 <!-- sdd: implementation-plan -->
 
