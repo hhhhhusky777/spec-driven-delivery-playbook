@@ -35,10 +35,8 @@ hosted on GitHub. Deduplicate it before opening a new issue. A delivery pull
 request links the issue and uses the host's supported automatic-close
 relationship only when it fully resolves the issue.
 
-The issue tracker remains the problem record. Normal-delivery cleanup follows
-the workflow skill's combined-archive contract and links to the issue and pull
-requests; it does not copy the issue body, review history, or detailed delivery
-evidence into a second record.
+The issue tracker remains the problem record; do not replace it with a local
+issue archive. Delivery closure follows the workflow skill.
 
 When an external write may have succeeded, inspect the actual effect before
 retrying; never create a duplicate merely because the response was lost. When

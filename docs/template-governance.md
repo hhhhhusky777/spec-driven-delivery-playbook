@@ -30,9 +30,8 @@ The pull request owns review, checks, acceptance, merge evidence, and detailed
 history. Additional templates require a distinct durable responsibility that
 cannot fit one of these owners or GitHub.
 
-The combined normal-delivery archive is an output assembled from the complete
-final whiteboard and plan, not another maintained template. It preserves their
-durable context after the live plan is removed and the whiteboard is reset.
+The combined normal-delivery archive is generated output, not a fourth
+maintained template.
 
 ## Change outcome
 
