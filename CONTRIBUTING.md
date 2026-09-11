@@ -17,6 +17,9 @@ The agent chooses a proportional route within the boundaries below.
 
 Do not create another document for these responsibilities. The generated
 runtime guide selects the applicable skill but adds no project policy or state.
+The workflow skill may route a clearly bounded correction through Issue plus PR
+without feature documents; ambiguity or a material decision fails closed to the
+normal whiteboard-and-plan model.
 
 ## Repository boundaries
 
@@ -67,8 +70,9 @@ design, policy, validation, cleanup, or out-of-scope authority.
 Open the PR when it best supports collaboration; a draft PR is not required
 before coding. Each task still implements the tests required by its accepted
 outcome. "Focused tests" means only the tests that cover the changed files and
-lines. After the concluded whiteboard has been reviewed and accepted, run those
-tests before the same two feature reviewers inspect each exact candidate.
+lines. After the concluded whiteboard has been reviewed and accepted—or, for an
+eligible Issue-only Fast Fix, after issue triage—run those tests before the same
+two feature reviewers inspect each exact candidate.
 Retain their sessions through planning, tasks, corrections, and the final
 candidate until merge. Reviewer context, independence, packets, findings, and
 dispositions follow the

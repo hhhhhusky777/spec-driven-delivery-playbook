@@ -15,6 +15,7 @@ project.
 | Feature | What it helps you achieve |
 | --- | --- |
 | One-time project adoption | Connect the playbook to existing project authority without replacing it |
+| Issue-only Fast Fix | Deliver a clearly bounded correction without duplicate feature documents or weaker gates |
 | Solution whiteboarding | Turn an uncertain need into an accepted design before dependent implementation |
 | Outcome-based planning | Map design points to tasks, dependencies, validation, and Definition of Done |
 | Context-native handoff | Let a fresh agent resume from repository state without inheriting another agent's chat history |
@@ -62,6 +63,7 @@ accepted installation.
   - [Where evidence lives](#where-evidence-lives)
 - [Explore the features](#explore-the-features)
   - [Adopt once and upgrade safely](#adopt-once-and-upgrade-safely)
+  - [Use an Issue-only Fast Fix when the boundary is already clear](#use-an-issue-only-fast-fix-when-the-boundary-is-already-clear)
   - [Discuss and conclude a design](#discuss-and-conclude-a-design)
   - [Plan and track delivery](#plan-and-track-delivery)
   - [Hand off without chat history](#hand-off-without-chat-history)
@@ -195,6 +197,40 @@ flowchart TD
 See the [adoption skill](skills/sdd-project-adoption/SKILL.md) and
 [upgrade skill](skills/sdd-playbook-upgrade/SKILL.md) for their canonical
 outcomes and boundaries.
+
+### Use an Issue-only Fast Fix when the boundary is already clear
+
+Small corrections should not manufacture design and planning documents merely
+to imitate a larger feature. When an issue already states an unambiguous
+outcome, bounded scope, applicable authority, and validation intent, the agent
+may disclose and use the Fast Fix route: the issue owns the need and boundary,
+while the PR owns the candidate, review, checks, acceptance, and merge evidence.
+There is no feature whiteboard, implementation plan, archive, or separate route
+approval.
+
+```mermaid
+flowchart TD
+    I["Issue: outcome + boundary + validation intent"] --> T{"Agent triage"}
+    T -->|"clearly bounded"| F["Issue-only Fast Fix"]
+    T -->|"decision or material ambiguity"| W["Normal whiteboard + plan"]
+    F --> E["Implement required evidence"]
+    E --> Q{"Disqualifying concern discovered?"}
+    Q -->|"no"| R["Focused tests + retained review"]
+    Q -->|"yes"| W
+    W --> R
+    R --> V["Full applicable validation on final head"]
+    V --> H["Human merge decision"]
+```
+
+Fast Fix preserves the same quality boundary. It creates two isolated reviewer
+sessions before first review and retains them through corrections and merge.
+For a UI-only fix, evidence can be the smallest applicable combination of
+component or interaction checks, rendered inspection at representative
+viewports, accessibility evidence, and smoke evidence. If implementation
+reveals a material architecture, schema, public-contract, security,
+concurrency, deployment, systemic-policy, accessibility-policy, product, or
+scope decision, the agent keeps valid work and the reviewer sessions but fails
+closed to normal whiteboard and planning before dependent work continues.
 
 ### Discuss and conclude a design
 
@@ -622,9 +658,10 @@ that produces the required result.
 
 ### Deliver a feature
 
-Tell the agent what you need. The agent uses the working whiteboard for the
-discussion, concludes the accepted design, creates one implementation plan,
-and delivers dependency-ready tasks through reviewable PRs. You should be asked
+Tell the agent what you need. A clearly bounded correction may use the
+Issue-only Fast Fix route; other work uses the working whiteboard for discussion,
+concludes the accepted design, creates one implementation plan, and delivers
+dependency-ready tasks through reviewable PRs. You should be asked
 to stop only for a real decision, required semantic review, merge authority,
 destructive scope, or a critical mismatch.
 

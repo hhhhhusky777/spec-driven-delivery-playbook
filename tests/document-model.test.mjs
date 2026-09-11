@@ -190,7 +190,7 @@ test("feature review cohorts retain context and produce useful change requests",
   const normalizedWorkflow = workflow.replace(/\s+/g, " ");
   const normalizedReviewer = reviewer.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
   assert.match(normalizedPolicy, /feature review skill.*single execution contract/);
-  assert.match(normalizedPolicy, /retains their sessions through merge/);
+  assert.match(normalizedPolicy, /retains? (?:their|those) sessions through merge/);
   assert.match(normalizedWorkflow, /require each one to read the installed sdd-feature-review skill once/);
   assert.match(normalizedWorkflow, /focused context packet defined by the reviewer skill/);
   assert.match(normalizedReviewer, /manifest/);
@@ -226,6 +226,31 @@ test("feature review cohorts retain context and produce useful change requests",
   for (const document of [policy, readme, contributing, workflow]) {
     assert.doesNotMatch(document, /smallest recommended correction|primary industry standard|Never fabricate authority/);
   }
+});
+
+test("Issue-only Fast Fix removes duplicate artifacts without bypassing gates", async () => {
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const reviewer = await read("skills/sdd-feature-review/SKILL.md");
+  const policy = await read("docs/documentation-quality-policy.md");
+  const readme = await read("README.md");
+  const contributing = await read("CONTRIBUTING.md");
+  const normalizedWorkflow = workflow.replace(/\s+/g, " ");
+  const normalizedReviewer = reviewer.replace(/\s+/g, " ");
+
+  assert.match(normalizedWorkflow, /Issue-only Fast Fix.*accepted outcome.*bounded scope.*applicable authority.*validation intent/i);
+  assert.match(normalizedWorkflow, /route selection does not create a separate approval gate/i);
+  assert.match(normalizedWorkflow, /Do not create a feature whiteboard, implementation plan, archive, or Fast Fix state record/i);
+  assert.match(normalizedWorkflow, /Fast Fix never waives testing, review, human merge authority, or project policy/i);
+  assert.match(normalizedWorkflow, /UI-only fix.*smallest evidence.*without inventing a new test framework/i);
+  assert.match(normalizedWorkflow, /fail closed to normal delivery.*Preserve valid code, tests, evidence, branch ownership, and the same reviewer sessions/i);
+  assert.match(normalizedReviewer, /concluded-whiteboard gate for normal delivery, or before the first candidate review for an Issue-only Fast Fix/i);
+  assert.match(normalizedReviewer, /governing issue for a Fast Fix/i);
+  assert.match(normalizedReviewer, /Fast Fix exposes a material decision or ambiguity.*keep the reviewer session/i);
+  assert.match(policy.replace(/\s+/g, " "), /Issue-only Fast Fix selects them before its first candidate review.*retains those sessions through merge/i);
+  assert.match(contributing.replace(/\s+/g, " "), /Issue plus PR without feature documents/i);
+  assert.match(readme.replace(/\s+/g, " "), /There is no feature whiteboard, implementation plan, archive, or separate route approval/i);
+  assert.match(readme, /Q -->\|"yes"\| W/);
+  assert.match(readme, /V --> H\["Human merge decision"\]/);
 });
 
 test("error handling stays simple, fail closed, and retry safe", async () => {

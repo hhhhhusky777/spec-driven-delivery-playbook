@@ -11,7 +11,7 @@ pull requests own review, checks, acceptance, merge, and target evidence.
 | --- | --- |
 | State | `IMPLEMENTING` |
 | Active tasks | `None` |
-| Next ready task | `T02` |
+| Next ready task | `None` |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge |
 | Delivery branch / target | `codex/archive-fast-fix` / `main` |
@@ -19,7 +19,7 @@ pull requests own review, checks, acceptance, merge, and target evidence.
 | Primary issue / need | [#102](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/102), [#103](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/103) |
 | Concluded whiteboard | [Accepted design](solution-whiteboard.md) at `81ab6e766768032c73f4000a93e8522fd0a943a3` |
 | Required reviewers | Same two isolated feature reviewers retained from design through merge |
-| Last verified | `T01` focused lifecycle and document-model checks passed on 2026-09-11; exact candidate awaits retained-reviewer inspection |
+| Last verified | `T02` document-model tests passed on 2026-09-12; exact candidate awaits focused validation and retained-reviewer inspection |
 
 ## Governing inputs and boundaries
 
@@ -87,7 +87,7 @@ done on the delivery branch.
 | ID | State | Depends on | Outcome | Boundaries | Validation | PR |
 | --- | --- | --- | --- | --- | --- | --- |
 | `T01` | `DONE` | `None` | Normal delivery archives concluded design and completed implementation context together in one discoverable document. | No history rewrite, fourth reusable template, copied PR evidence, or unrelated cleanup. | Focused lifecycle, archive, template, docs, and compatibility tests. | Final feature PR |
-| `T02` | `READY` | `T01` | Eligible small fixes use Issue plus PR with agent-selected routing, proportional evidence, retained reviewers, and safe escalation. | No reduced quality/human gates, new state engine, or speculative eligibility procedure. | Focused routing, review-loop, escalation, UI-guidance, docs, and compatibility tests. | Final feature PR |
+| `T02` | `DONE` | `T01` | Eligible small fixes use Issue plus PR with agent-selected routing, proportional evidence, retained reviewers, and safe escalation. | No reduced quality/human gates, new state engine, or speculative eligibility procedure. | Focused routing, review-loop, escalation, UI-guidance, docs, and compatibility tests. | Final feature PR |
 
 ### `T01` — combined delivery archive
 
@@ -110,8 +110,8 @@ done on the delivery branch.
 | Consumed dependencies | `T01`; `CD03`–`CD07`, `CD09`; stable normal-delivery archive model. |
 | Critical obligations | Agent discloses route; ambiguity escalates; reviewer cohort starts before first review and survives escalation; UI evidence is proportional. |
 | Required evidence | Eligible/disqualified/escalation fixtures, focused tests, both retained reviewers, final full validation. |
-| Context receipt | Pending after `T01` exact accepted result. |
-| Actual result | Pending. |
+| Context receipt | `T01` exact candidate `6a37110` approved by both retained reviewers; normal close model, review skill, quality policy, workflow, contribution guide, README routes, and document-model tests inspected with no unresolved authority conflict. |
+| Actual result | Added an agent-selected Issue-only Fast Fix route with Issue-plus-PR ownership, no duplicate feature documents or route-approval gate, proportional UI evidence, retained reviewers, unchanged focused/full validation and human merge boundaries, and in-place fail-closed escalation that preserves valid work and reviewer context. Updated the workflow and reviewer skills, canonical quality policy, contribution guidance, README feature table and route diagram, and focused document-model regression coverage without adding a template or state engine. |
 
 ## Recovery and change control
 
@@ -125,9 +125,9 @@ normal delivery without discarding valid work.
 
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
-| Accepted design delivered | `CD01`–`CD09` mapped to both tasks | `T01` complete; `T02` pending |
-| Applicable validation passed | Focused tests per task; full `npm run docs:all` on final reviewed candidate | `T01`: 19 focused lifecycle/document-model tests plus structure and lifecycle commands passed |
-| Compatibility safe | Active normal delivery, historical archive, eligible Fast Fix, and escalation cases | `T01` preserves historical archives and applies combined close prospectively; `T02` pending |
+| Accepted design delivered | `CD01`–`CD09` mapped to both tasks | `T01` and `T02` complete; closing candidate preparation remains |
+| Applicable validation passed | Focused tests per task; full `npm run docs:all` on final reviewed candidate | `T01`: 19 focused lifecycle/document-model tests plus structure and lifecycle commands passed; `T02`: 14 document-model tests passed, exact-head focused gate pending |
+| Compatibility safe | Active normal delivery, historical archive, eligible Fast Fix, and escalation cases | `T01` preserves historical archives and applies combined close prospectively; `T02` keeps all gates and fails closed to normal delivery |
 | Merge-ready canonical state | Manifest pin, reusable guidance, combined archive of this delivery, removed live plan, and reset whiteboard | Pending |
 | PR-owned review and delivery | Same two agents, human merge acceptance, issue auto-close, and target proof | Pending final PR |
 | Feature cleanup complete | Combined archive, owned file inventory, worktree/branch cleanup after target proof | Pending |
@@ -136,9 +136,9 @@ normal delivery without discarding valid work.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Tasks and outcomes | `T01` delivered the combined archive contract and focused regression coverage; `T02` is ready. | `DISCLOSE` |
+| Tasks and outcomes | `T01` delivered the combined archive contract; `T02` delivered the Issue-only Fast Fix route without another template or state engine. | `DISCLOSE` |
 | Design consistency | Every `CD01`–`CD09` point maps to one or both tasks; no unexplained work. | `NONE` |
 | Important boundaries | No new template or state engine; existing reviews, final validation, and human merge gate remain. | `DISCLOSE` |
-| Validation | `T01`: 19 focused tests, structure, lifecycle, Markdown, and Mermaid checks passed; full repository gate remains final-only. | `DISCLOSE` |
-| Risks or open decisions | No open decision; `T02` may proceed after retained-reviewer acceptance of corrected `T01`. | `NONE` |
+| Validation | `T01`: 19 focused tests, structure, lifecycle, Markdown, and Mermaid checks passed. `T02`: 14 document-model tests passed; exact-head focused review evidence is next, and the full repository gate remains final-only. | `DISCLOSE` |
+| Risks or open decisions | No open decision; T02 is ready for the retained reviewers. | `NONE` |
 | Decision requested | `None` | `NONE` |

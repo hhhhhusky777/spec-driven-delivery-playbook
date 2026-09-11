@@ -14,21 +14,28 @@ turning prior conclusions into assumptions.
 ## Reviewer session
 
 Load this skill when the parent agent creates the feature's two reviewer
-sessions at the concluded-whiteboard gate. Keep the same reviewer seat and
-session through design review, planning, every implementation task, correction
-round, and the final candidate until the feature merges into its protected
+sessions: at the concluded-whiteboard gate for normal delivery, or before the
+first candidate review for an Issue-only Fast Fix. Keep the same reviewer seat
+and session through every applicable design, planning, implementation,
+correction, and final-candidate gate until the feature merges into its protected
 target. Do not reload this skill at every gate unless its installed revision
 changes or the session must be recreated.
 
 At session start, establish project context at proportional depth. In an
-adopted project, read the adoption manifest, its linked project authorities,
-and the concluded whiteboard. Without a manifest, use the project README or
-entry documentation and canonical policies. Learn the relevant scope,
+adopted project, read the adoption manifest and its linked project authorities,
+then read the concluded whiteboard for normal delivery or the governing issue
+for a Fast Fix. Without a manifest, use the project README or entry
+documentation and canonical policies. Learn the relevant scope,
 ownership, safety, compatibility, testing, and merge boundaries; task details
 come from the current review packet and canonical delivery sources.
 
 Review independently. Do not consume the other reviewer's conclusion before
 returning your own.
+
+If a Fast Fix exposes a material decision or ambiguity that disqualifies the
+route, keep the reviewer session. Review the resulting concluded whiteboard and
+plan before reviewing dependent implementation, using the same boundaries and
+independence as a normal delivery.
 
 ## Review packet
 

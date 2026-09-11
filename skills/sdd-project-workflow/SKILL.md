@@ -36,6 +36,35 @@ Do not create additional documents that duplicate these responsibilities. Put
 unique design information in the whiteboard, unique execution information in
 the plan, and review evidence in the pull request.
 
+## Delivery routes
+
+Use normal delivery when design or execution needs durable clarification: the
+whiteboard concludes the design, the implementation plan owns execution, and
+completion creates the combined archive described below.
+
+An agent may instead select an Issue-only Fast Fix when the issue already makes
+the accepted outcome, bounded scope, applicable authority, and validation intent
+unambiguous. Disclose the selected route, reason, and evidence; route selection
+does not create a separate approval gate. The issue owns the need and boundary,
+and the pull request owns the candidate and delivery evidence. Do not create a
+feature whiteboard, implementation plan, archive, or Fast Fix state record.
+
+Fast Fix never waives testing, review, human merge authority, or project policy.
+Before its first candidate review, create two isolated reviewer sessions, have
+them load the installed sdd-feature-review skill once, and retain them through
+corrections and merge. Run focused tests before review and full applicable
+validation on the final reviewed candidate before human merge acceptance. For a
+UI-only fix, use the smallest evidence that proves the changed behavior—such as
+applicable component or interaction checks, rendered inspection at representative
+viewports, accessibility evidence, or smoke evidence—without inventing a new
+test framework merely to qualify for this route.
+
+If work exposes ambiguity or a material architecture, schema, public-contract,
+security, concurrency, deployment, systemic-policy, accessibility-policy,
+product, or scope decision, fail closed to normal delivery. Preserve valid code,
+tests, evidence, branch ownership, and the same reviewer sessions; conclude and
+review the required whiteboard and plan before dependent work continues.
+
 ## Boundaries
 
 - Keep canonical project authorities mutually consistent. Resolve conflicts
@@ -60,7 +89,7 @@ the plan, and review evidence in the pull request.
 - A concluded design or approved plan changes only through an explicit
   amendment when the observable outcome changes. Ordinary task status and
   evidence updates do not reopen the design.
-- When the whiteboard is formally concluded, select two isolated reviewers for
+- For normal delivery, when the whiteboard is formally concluded, select two isolated reviewers for
   the feature and require each one to read the installed
   sdd-feature-review skill once. They review the exact concluded design before
   the owner accepts it for planning. Retain those same reviewer sessions
