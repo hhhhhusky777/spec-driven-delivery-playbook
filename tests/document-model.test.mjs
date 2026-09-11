@@ -232,12 +232,14 @@ test("Issue-only Fast Fix removes duplicate artifacts without bypassing gates", 
   const workflow = await read("skills/sdd-project-workflow/SKILL.md");
   const reviewer = await read("skills/sdd-feature-review/SKILL.md");
   const policy = await read("docs/documentation-quality-policy.md");
+  const governance = await read("docs/template-governance.md");
+  const manifestTemplate = await read("templates/adoption/project-adoption-manifest.md");
   const readme = await read("README.md");
   const contributing = await read("CONTRIBUTING.md");
   const normalizedWorkflow = workflow.replace(/\s+/g, " ");
   const normalizedReviewer = reviewer.replace(/\s+/g, " ");
 
-  assert.match(normalizedWorkflow, /Issue-only Fast Fix.*accepted outcome.*bounded scope.*applicable authority.*validation intent/i);
+  assert.match(normalizedWorkflow, /Issue-only Fast Fix.*small correction.*accepted outcome.*bounded scope.*applicable authority.*validation intent/i);
   assert.match(normalizedWorkflow, /route selection does not create a separate approval gate/i);
   assert.match(normalizedWorkflow, /Do not create a feature whiteboard, implementation plan, archive, or Fast Fix state record/i);
   assert.match(normalizedWorkflow, /Fast Fix never waives testing, review, human merge authority, or project policy/i);
@@ -248,6 +250,11 @@ test("Issue-only Fast Fix removes duplicate artifacts without bypassing gates", 
   assert.match(normalizedReviewer, /Fast Fix exposes a material decision or ambiguity.*keep the reviewer session/i);
   assert.match(policy.replace(/\s+/g, " "), /Issue-only Fast Fix selects them before its first candidate review.*retains those sessions through merge/i);
   assert.match(contributing.replace(/\s+/g, " "), /Issue plus PR without feature documents/i);
+  assert.match(contributing.replace(/\s+/g, " "), /normal delivery.*whiteboard and plan.*Issue-only Fast Fix.*Issue.*PR/i);
+  assert.match(normalizedWorkflow, /For normal delivery, the whiteboard owns.*For normal delivery, the implementation plan owns/i);
+  assert.match(readme.replace(/\s+/g, " "), /For normal delivery.*Three durable documents|For normal delivery, the playbook deliberately keeps project state small/i);
+  assert.match(governance, /Normal-delivery tasks/);
+  assert.match(manifestTemplate.replace(/\s+/g, " "), /Issue-only Fast Fix without a plan.*Issue owns.*pull request owns/i);
   assert.match(readme.replace(/\s+/g, " "), /There is no feature whiteboard, implementation plan, archive, or separate route approval/i);
   assert.match(readme, /Q -->\|"yes"\| W/);
   assert.match(readme, /V --> H\["Human merge decision"\]/);

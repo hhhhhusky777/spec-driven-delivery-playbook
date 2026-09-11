@@ -133,5 +133,7 @@ These are project gates, not the playbook source repository's own test suite.
 
 The active feature, task, branch, PR, review progress, and next action never
 belong in this manifest. The implementation plan owns active delivery state.
+For an Issue-only Fast Fix without a plan, the Issue owns its bounded outcome
+and scope while the pull request owns delivery evidence.
 Pull requests own detailed review findings, approvals, checks, and merge
 evidence.

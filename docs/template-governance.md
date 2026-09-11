@@ -24,7 +24,7 @@ Apply the quality policy's [six goals](documentation-quality-policy.md#six-goals
 | --- | --- |
 | Project adoption manifest | Installed revision, current canonical authority index, and stable boundaries |
 | Solution whiteboard | One active feature's concise discussion draft, concluded design, and reconciliation between them |
-| Implementation plan | Tasks, Definition of Done, validation, and all active-delivery state |
+| Implementation plan | Normal-delivery tasks, Definition of Done, validation, and active state |
 
 The pull request owns review, checks, acceptance, merge evidence, and detailed
 history. Additional templates require a distinct durable responsibility that

@@ -119,14 +119,14 @@ flowchart LR
 
 ### Three durable documents
 
-The playbook deliberately keeps project state small. Each durable document has
-one responsibility:
+For normal delivery, the playbook deliberately keeps project state small. Each
+durable document has one responsibility:
 
 | Document | Sole responsibility | Lifetime |
 | --- | --- | --- |
 | [Project adoption manifest](templates/adoption/project-adoption-manifest.md) | Installed immutable revision, canonical project authorities, and stable boundaries | Reused across features |
-| [Solution whiteboard](templates/discovery/solution-whiteboard.md) | One active feature's discussion and concluded design | Preserved with the complete plan in one closing archive, then reset |
-| [Implementation plan](templates/delivery/implementation-plan.md) | Tasks, dependencies, Definition of Done, validation, and all active-delivery state | Preserved with the concluded whiteboard in that archive, then removed live |
+| [Solution whiteboard](templates/discovery/solution-whiteboard.md) | One normal delivery's discussion and concluded design | Preserved with the complete plan in one closing archive, then reset |
+| [Implementation plan](templates/delivery/implementation-plan.md) | Normal-delivery tasks, dependencies, Definition of Done, validation, and active state | Preserved with the concluded whiteboard in that archive, then removed live |
 
 Project policies stay in their existing canonical files. The workflow skill
 guides the agent but owns no feature state.

@@ -39,8 +39,9 @@ state.
   does not repeat adoption.
 - The manifest never records an active feature, task, next action, branch, or
   review result.
-- The working whiteboard owns design; the implementation plan, when present,
-  owns all active-delivery state; pull requests own review and delivery history.
+- For normal delivery, the working whiteboard owns design and the implementation
+  plan owns active-delivery state. For an Issue-only Fast Fix, the Issue owns its
+  bounded outcome and scope. Pull requests own review and delivery history.
 - Required checks, independent review, human decisions, merge authority,
   and destructive ownership remain mandatory at their actual boundaries.
 - Runtime files under `.sdd-runtime/` and installer-owned temporary checkouts

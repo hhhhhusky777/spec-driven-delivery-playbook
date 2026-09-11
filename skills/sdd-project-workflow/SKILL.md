@@ -24,10 +24,10 @@ Repository policies and explicit owner decisions remain authoritative.
 - The adoption manifest owns the installed immutable playbook revision,
   discovered project authorities, and stable project boundaries. It never owns
   feature progress.
-- The whiteboard owns the active design discussion and concluded design. It
+- For normal delivery, the whiteboard owns the active design discussion and concluded design. It
   retains a concise discussion draft and reconciles every material draft item
   to the authoritative conclusion; it does not preserve a raw transcript.
-- The implementation plan owns tasks, dependencies, Definition of Done,
+- For normal delivery, the implementation plan owns tasks, dependencies, Definition of Done,
   validation expectations, and all active-delivery state.
 - The pull request owns review comments, checks, approvals, merge evidence, and
   detailed delivery history.
@@ -42,9 +42,9 @@ Use normal delivery when design or execution needs durable clarification: the
 whiteboard concludes the design, the implementation plan owns execution, and
 completion creates the combined archive described below.
 
-An agent may instead select an Issue-only Fast Fix when the issue already makes
-the accepted outcome, bounded scope, applicable authority, and validation intent
-unambiguous. Disclose the selected route, reason, and evidence; route selection
+An agent may instead select an Issue-only Fast Fix when a small correction's
+issue already makes the accepted outcome, bounded scope, applicable authority,
+and validation intent unambiguous. Disclose the selected route, reason, and evidence; route selection
 does not create a separate approval gate. The issue owns the need and boundary,
 and the pull request owns the candidate and delivery evidence. Do not create a
 feature whiteboard, implementation plan, archive, or Fast Fix state record.

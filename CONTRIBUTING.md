@@ -27,11 +27,16 @@ This project ships reusable Markdown contracts, a Bash installer, Node.js
 checkers, tests, and CI. Project-specific policy belongs in its project unless
 it is a clearly labeled sanitized example.
 
-Every delivery must preserve:
+Every delivery must preserve applicable quality and authority boundaries. A
+normal delivery also preserves its accepted design and execution state in the
+whiteboard and plan; an Issue-only Fast Fix keeps its bounded outcome and scope
+in the Issue and delivery evidence in the PR.
+
+Repository changes preserve:
 
 - current and mutually consistent canonical authorities;
-- an accepted design before dependent implementation;
-- task outcomes, dependencies, validation, and state in one plan;
+- an accepted design before dependent implementation when design work is required;
+- task outcomes, dependencies, validation, and state in one plan for normal delivery;
 - self-contained merge units that keep their integration target working;
 - required checks, two isolated agent reviewers, and human authority;
 - explicit ownership before destructive cleanup; and
@@ -63,7 +68,8 @@ error-handling framework. Before dependent work proceeds, exercise a relevant
 project operation from the worktree itself and provision any missing required
 ignored support within its ownership and security boundaries.
 
-The implementation plan records any owner-selected merge mode and exact scope.
+For normal delivery, the implementation plan records any owner-selected merge
+mode and exact scope. A Fast Fix uses the governing Issue and PR instead.
 Human review before merge is the default. Scoped agent auto-merge never supplies
 design, policy, validation, cleanup, or out-of-scope authority.
 
