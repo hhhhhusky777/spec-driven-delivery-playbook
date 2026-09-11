@@ -201,19 +201,32 @@ function requireArchiveSection(errors, text, pattern, name) {
   if (!hasHeading(text, pattern)) errors.push(`delivery archive required section is missing: ${name}`);
 }
 
+function linkedUrl(value, kind) {
+  const pattern = kind === "issue"
+    ? /https?:\/\/[^\s)]+\/issues\/\d+/
+    : /https?:\/\/[^\s)]+\/pull\/\d+/;
+  return value.match(pattern)?.[0] || "";
+}
+
+function archiveMetadata(text) {
+  const marker = "<!-- sdd: archived-whiteboard -->";
+  const end = text.indexOf(marker);
+  return fieldMap(end === -1 ? text : text.slice(0, end));
+}
+
 function deliveryArchiveErrors(text) {
   const errors = [];
   const whiteboardMarker = "<!-- sdd: archived-whiteboard -->";
   const planMarker = "<!-- sdd: archived-implementation-plan -->";
-  const archiveFields = fieldMap(text);
+  const archiveFields = archiveMetadata(text);
   const whiteboardCount = markerCount(text, whiteboardMarker);
   const planCount = markerCount(text, planMarker);
   if (whiteboardCount !== 1) errors.push("delivery archive requires exactly one archived whiteboard");
   if (planCount !== 1) errors.push("delivery archive requires exactly one archived implementation plan");
-  if (!/https?:\/\/[^\s)]+\/issues\/\d+/.test(archiveFields.get("Issues") || "")) {
+  if (!linkedUrl(archiveFields.get("Issues") || "", "issue")) {
     errors.push("delivery archive requires an archive-level Issues link");
   }
-  if (!/https?:\/\/[^\s)]+\/pull\/\d+/.test(archiveFields.get("Closing pull request") || "")) {
+  if (!linkedUrl(archiveFields.get("Closing pull request") || "", "pull")) {
     errors.push("delivery archive requires an archive-level Closing pull request link");
   }
   if (whiteboardCount !== 1 || planCount !== 1) return errors;
@@ -233,9 +246,16 @@ function deliveryArchiveErrors(text) {
   requireArchiveSection(errors, plan, /Governing inputs.*boundaries/i, "plan governing inputs and boundaries");
   requireArchiveSection(errors, plan, /Design-to-task mapping/i, "plan design-to-task mapping");
   requireArchiveSection(errors, plan, /^#{2,6}\s+Tasks\s*$/i, "plan tasks");
+  requireArchiveSection(errors, plan, /Task specifications and context receipts/i, "plan task specifications and context receipts");
   requireArchiveSection(errors, plan, /Planned versus actual outcome/i, "plan actual outcomes and deviations");
   requireArchiveSection(errors, plan, /Delivery Definition of Done/i, "plan validation and Definition of Done");
   requireArchiveSection(errors, plan, /Cleanup inventory/i, "plan cleanup inventory");
+  const archivedTasks = tables(plan).find(table =>
+    table[0].includes("ID") && table[0].includes("State") && table[0].includes("Depends on")
+  );
+  if (!archivedTasks?.[0].includes("Outcome") || !archivedTasks?.[0].includes("Validation")) {
+    errors.push("archived plan task summary requires Outcome and Validation columns");
+  }
   if ((fieldMap(whiteboard).get("State") || "") !== "CONCLUDED") {
     errors.push("archived whiteboard must be CONCLUDED");
   }
@@ -252,8 +272,8 @@ export function checkArchiveSet(entries) {
   const errors = [];
   for (const [file, text] of entries) {
     if (!text.includes("<!-- sdd: delivery-archive -->")) continue;
-    const closingPullRequest = fieldMap(text).get("Closing pull request") || "";
-    if (!/https?:\/\/[^\s)]+\/pull\/\d+/.test(closingPullRequest)) continue;
+    const closingPullRequest = linkedUrl(archiveMetadata(text).get("Closing pull request") || "", "pull");
+    if (!closingPullRequest) continue;
     if (owners.has(closingPullRequest)) {
       errors.push(`${file} and ${owners.get(closingPullRequest)} claim the same closing pull request`);
     } else owners.set(closingPullRequest, file);

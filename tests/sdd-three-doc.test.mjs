@@ -137,6 +137,18 @@ test("combined delivery archive preserves complete concluded design and plan sta
 | --- | --- | --- | --- | --- |
 | T01 | DONE | None | archive context | archive check |
 
+## Task specifications and context receipts
+
+### T01 — archive context
+
+| Concern | Value |
+| --- | --- |
+| Outcome / non-scope | preserve context |
+| Source boundary | owned files |
+| Critical obligations | complete sources |
+| Required evidence | archive check |
+| Actual result | delivered |
+
 ## Planned versus actual outcome
 
 | Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
@@ -174,6 +186,7 @@ ${plan}`;
   for (const missing of [
     "## Authority and context",
     "## Design-to-task mapping",
+    "## Task specifications and context receipts",
     "## Planned versus actual outcome",
     "## Delivery Definition of Done",
     "## Cleanup inventory",
@@ -187,14 +200,27 @@ ${plan}`;
     .some(error => error.includes("archived implementation plan")));
   assert.ok(checkDocument("delivery-archive.md", source.replace("State | COMPLETE", "State | IMPLEMENTING"))
     .some(error => error.includes("must be COMPLETE")));
+  assert.ok(checkDocument("delivery-archive.md", source.replace(" | Outcome | Validation |", " | Result | Evidence |"))
+    .some(error => error.includes("Outcome and Validation")));
   const embeddedOnly = source.replace(
     "| Closing pull request | https://github.com/example/repository/pull/2 |",
     "| Closing pull request | None |",
-  ) + "\nTask pull request: https://github.com/example/repository/pull/3\n";
+  ).replace(
+    "| Actual result | delivered |",
+    "| Actual result | delivered |\n| Closing pull request | https://github.com/example/repository/pull/3 |",
+  );
   assert.ok(checkDocument("delivery-archive.md", embeddedOnly)
     .some(error => error.includes("Closing pull request")));
   assert.ok(checkArchiveSet([
-    ["first.md", source],
-    ["duplicate.md", source.replace("issues/1", "issues/9")],
+    ["first.md", source.replace(
+      "https://github.com/example/repository/pull/2",
+      "[PR 2](https://github.com/example/repository/pull/2)",
+    )],
+    ["duplicate.md", source
+      .replace("issues/1", "issues/9")
+      .replace(
+        "https://github.com/example/repository/pull/2",
+        "[Closing PR](https://github.com/example/repository/pull/2)",
+      )],
   ]).some(error => error.includes("same closing pull request")));
 });
