@@ -4,7 +4,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { checkDocument } from "../scripts/sdd-lifecycle-three-doc.mjs";
+import { checkArchiveSet, checkDocument } from "../scripts/sdd-lifecycle-three-doc.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sha = "a".repeat(40);
@@ -89,13 +89,25 @@ test("combined delivery archive preserves complete concluded design and plan sta
 | State | CONCLUDED |
 | Open owner decisions | None |
 
+## Discussion draft
+
 | ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
 | DR01 | preserve context | accepted |
 
+## Authority and context
+
+| Source | Authority or relevant content |
+| --- | --- |
+| Owner | accepted outcome |
+
+## Concluded design
+
 | Design point | Accepted outcome |
 | --- | --- |
 | D01 | one archive |
+
+## Draft-to-conclusion reconciliation
 
 | Draft item | Concluded design point | Disposition |
 | --- | --- | --- |
@@ -107,15 +119,49 @@ test("combined delivery archive preserves complete concluded design and plan sta
 | Active tasks | None |
 | Next ready task | None |
 
-| ID | State | Depends on |
+## Governing inputs and delivery boundaries
+
+| Priority | Source | Authority / use |
 | --- | --- | --- |
-| T01 | DONE | None |`;
+| 1 | design | delivery boundary |
+
+## Design-to-task mapping
+
+| Design point | Task and brief work | Validation | Consistency or gap |
+| --- | --- | --- | --- |
+| D01 | T01 | archive check | aligned |
+
+## Tasks
+
+| ID | State | Depends on | Outcome | Validation |
+| --- | --- | --- | --- | --- |
+| T01 | DONE | None | archive context | archive check |
+
+## Planned versus actual outcome
+
+| Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
+| --- | --- | --- | --- |
+| T01 | archive context | delivered without deviation | None |
+
+## Delivery Definition of Done
+
+| Outcome | Required evidence | Result / link |
+| --- | --- | --- |
+| Accepted design delivered | archive check | passed |
+
+## Cleanup inventory
+
+| Item | Keep, archive, remove, or reset | Ownership and evidence | Result |
+| --- | --- | --- | --- |
+| live plan | remove | owned | complete |`;
   const source = `# Delivery archive
 
 <!-- sdd: delivery-archive -->
 
-Issue: https://github.com/example/repository/issues/1
-Pull request: https://github.com/example/repository/pull/2
+| Field | Value |
+| --- | --- |
+| Issues | https://github.com/example/repository/issues/1 |
+| Closing pull request | https://github.com/example/repository/pull/2 |
 
 ## Concluded solution whiteboard
 
@@ -125,12 +171,30 @@ ${whiteboard}
 
 ${plan}`;
   assert.deepEqual(checkDocument("delivery-archive.md", source), []);
+  for (const missing of [
+    "## Authority and context",
+    "## Design-to-task mapping",
+    "## Planned versus actual outcome",
+    "## Delivery Definition of Done",
+    "## Cleanup inventory",
+  ]) {
+    assert.ok(checkDocument("delivery-archive.md", source.replace(missing, "## Removed"))
+      .some(error => error.includes("required section")), missing);
+  }
   assert.ok(checkDocument("delivery-archive.md", source.replace(whiteboard, ""))
     .some(error => error.includes("archived whiteboard")));
   assert.ok(checkDocument("delivery-archive.md", source.replace(plan, ""))
     .some(error => error.includes("archived implementation plan")));
   assert.ok(checkDocument("delivery-archive.md", source.replace("State | COMPLETE", "State | IMPLEMENTING"))
     .some(error => error.includes("must be COMPLETE")));
-  assert.ok(checkDocument("delivery-archive.md", source.replace("/pull/2", "/commit/2"))
-    .some(error => error.includes("pull request link")));
+  const embeddedOnly = source.replace(
+    "| Closing pull request | https://github.com/example/repository/pull/2 |",
+    "| Closing pull request | None |",
+  ) + "\nTask pull request: https://github.com/example/repository/pull/3\n";
+  assert.ok(checkDocument("delivery-archive.md", embeddedOnly)
+    .some(error => error.includes("Closing pull request")));
+  assert.ok(checkArchiveSet([
+    ["first.md", source],
+    ["duplicate.md", source.replace("issues/1", "issues/9")],
+  ]).some(error => error.includes("same closing pull request")));
 });

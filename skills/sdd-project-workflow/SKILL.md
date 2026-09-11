@@ -169,9 +169,13 @@ whiteboard and complete implementation plan. Mark the embedded sources with
 `<!-- sdd: archived-whiteboard -->` and
 `<!-- sdd: archived-implementation-plan -->` so applicable lifecycle checks can
 verify both source states without adding a fourth template. The archive links
-to its issues and pull requests, and the closing pull request links back to the
-archive; detailed review and merge evidence remains in GitHub. Only after that
-archive exists in the candidate may it remove the live plan and other
+to its issues through an archive-level `Issues` field and identifies its
+closing pull request through an archive-level `Closing pull request` field.
+The closing pull request links back to the archive; detailed review and merge
+evidence remains in GitHub. Preserve the source documents' durable authority,
+design, mapping, task, actual-outcome, validation, deviation, and cleanup
+sections rather than passing the archive gate with truncated summaries. Only
+after that archive exists in the candidate may it remove the live plan and other
 non-reusable feature material and reset the working whiteboard. Preserve the
 manifest and other reusable project authority. Existing active normal
 deliveries use this close boundary prospectively; do not rewrite historical

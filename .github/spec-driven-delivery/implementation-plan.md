@@ -136,9 +136,9 @@ normal delivery without discarding valid work.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Tasks and outcomes | `T01` combined archive, then `T02` Fast Fix route. | `DISCLOSE` |
+| Tasks and outcomes | `T01` delivered the combined archive contract and focused regression coverage; `T02` is ready. | `DISCLOSE` |
 | Design consistency | Every `CD01`–`CD09` point maps to one or both tasks; no unexplained work. | `NONE` |
 | Important boundaries | No new template or state engine; existing reviews, final validation, and human merge gate remain. | `DISCLOSE` |
-| Validation | Focused checks per task; full repository gate only on final reviewed candidate. | `DISCLOSE` |
-| Risks or open decisions | No open design decision; planning acceptance is required before `T01`. | `HUMAN_DECISION` |
-| Decision requested | Accept this two-task plan and authorize `T01` implementation. | `HUMAN_DECISION` |
+| Validation | `T01`: 19 focused tests, structure, lifecycle, Markdown, and Mermaid checks passed; full repository gate remains final-only. | `DISCLOSE` |
+| Risks or open decisions | No open decision; `T02` may proceed after retained-reviewer acceptance of corrected `T01`. | `NONE` |
+| Decision requested | `None` | `NONE` |

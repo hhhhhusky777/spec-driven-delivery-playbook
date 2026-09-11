@@ -193,16 +193,29 @@ function markerCount(text, marker) {
   return text.split(marker).length - 1;
 }
 
+function hasHeading(text, pattern) {
+  return text.split(/\r?\n/).some(line => /^#{2,6}\s+/.test(line) && pattern.test(line));
+}
+
+function requireArchiveSection(errors, text, pattern, name) {
+  if (!hasHeading(text, pattern)) errors.push(`delivery archive required section is missing: ${name}`);
+}
+
 function deliveryArchiveErrors(text) {
   const errors = [];
   const whiteboardMarker = "<!-- sdd: archived-whiteboard -->";
   const planMarker = "<!-- sdd: archived-implementation-plan -->";
+  const archiveFields = fieldMap(text);
   const whiteboardCount = markerCount(text, whiteboardMarker);
   const planCount = markerCount(text, planMarker);
   if (whiteboardCount !== 1) errors.push("delivery archive requires exactly one archived whiteboard");
   if (planCount !== 1) errors.push("delivery archive requires exactly one archived implementation plan");
-  if (!/https?:\/\/[^\s)]+\/issues\/\d+/.test(text)) errors.push("delivery archive requires an issue link");
-  if (!/https?:\/\/[^\s)]+\/pull\/\d+/.test(text)) errors.push("delivery archive requires a pull request link");
+  if (!/https?:\/\/[^\s)]+\/issues\/\d+/.test(archiveFields.get("Issues") || "")) {
+    errors.push("delivery archive requires an archive-level Issues link");
+  }
+  if (!/https?:\/\/[^\s)]+\/pull\/\d+/.test(archiveFields.get("Closing pull request") || "")) {
+    errors.push("delivery archive requires an archive-level Closing pull request link");
+  }
   if (whiteboardCount !== 1 || planCount !== 1) return errors;
 
   const whiteboardStart = text.indexOf(whiteboardMarker);
@@ -213,6 +226,16 @@ function deliveryArchiveErrors(text) {
   }
   const whiteboard = text.slice(whiteboardStart, planStart);
   const plan = text.slice(planStart);
+  requireArchiveSection(errors, whiteboard, /Discussion draft/i, "whiteboard discussion draft");
+  requireArchiveSection(errors, whiteboard, /Authority/i, "whiteboard authority and context");
+  requireArchiveSection(errors, whiteboard, /Concluded design/i, "whiteboard concluded design");
+  requireArchiveSection(errors, whiteboard, /Draft-to-conclusion reconciliation/i, "whiteboard draft reconciliation");
+  requireArchiveSection(errors, plan, /Governing inputs.*boundaries/i, "plan governing inputs and boundaries");
+  requireArchiveSection(errors, plan, /Design-to-task mapping/i, "plan design-to-task mapping");
+  requireArchiveSection(errors, plan, /^#{2,6}\s+Tasks\s*$/i, "plan tasks");
+  requireArchiveSection(errors, plan, /Planned versus actual outcome/i, "plan actual outcomes and deviations");
+  requireArchiveSection(errors, plan, /Delivery Definition of Done/i, "plan validation and Definition of Done");
+  requireArchiveSection(errors, plan, /Cleanup inventory/i, "plan cleanup inventory");
   if ((fieldMap(whiteboard).get("State") || "") !== "CONCLUDED") {
     errors.push("archived whiteboard must be CONCLUDED");
   }
@@ -221,6 +244,20 @@ function deliveryArchiveErrors(text) {
   }
   for (const message of whiteboardErrors(whiteboard)) errors.push(`archived whiteboard: ${message}`);
   for (const message of planErrors(plan)) errors.push(`archived implementation plan: ${message}`);
+  return errors;
+}
+
+export function checkArchiveSet(entries) {
+  const owners = new Map();
+  const errors = [];
+  for (const [file, text] of entries) {
+    if (!text.includes("<!-- sdd: delivery-archive -->")) continue;
+    const closingPullRequest = fieldMap(text).get("Closing pull request") || "";
+    if (!/https?:\/\/[^\s)]+\/pull\/\d+/.test(closingPullRequest)) continue;
+    if (owners.has(closingPullRequest)) {
+      errors.push(`${file} and ${owners.get(closingPullRequest)} claim the same closing pull request`);
+    } else owners.set(closingPullRequest, file);
+  }
   return errors;
 }
 
@@ -254,6 +291,7 @@ async function main() {
   }
   const archiveRoot = path.join(liveRoot, "archive");
   let archiveEntries = [];
+  const archiveDocuments = [];
   try { archiveEntries = await readdir(archiveRoot, { withFileTypes: true }); }
   catch (error) { if (error.code !== "ENOENT") throw error; }
   for (const entry of archiveEntries) {
@@ -261,8 +299,10 @@ async function main() {
     const file = path.join(archiveRoot, entry.name);
     const text = await readFile(file, "utf8");
     if (!text.includes("<!-- sdd: delivery-archive -->")) continue;
+    archiveDocuments.push([path.relative(ROOT, file), text]);
     for (const message of checkDocument(file, text)) errors.push(`${path.relative(ROOT, file)}: ${message}`);
   }
+  for (const message of checkArchiveSet(archiveDocuments)) errors.push(message);
   if (errors.length) {
     for (const error of errors) console.error(error);
     process.exitCode = 1;
