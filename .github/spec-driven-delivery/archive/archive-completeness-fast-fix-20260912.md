@@ -21,7 +21,7 @@
 | Concluded design revision | Git commit containing this conclusion; exact SHA is supplied to reviewers |
 | Open owner decisions | `None` |
 
-## Discussion draft
+### Discussion draft
 
 | ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
@@ -36,7 +36,7 @@
 | `DR09` | A Fast Fix has no concluded-whiteboard gate at which to select its retained reviewer cohort. | changed |
 | `DR10` | The combined archive must be discoverable from its closing PR as well as link back to its issues and PRs. | changed |
 
-## Current understanding
+### Current understanding
 
 | Concern | Accepted understanding |
 | --- | --- |
@@ -46,7 +46,7 @@
 | Out of scope | Automatic merge, fewer reviewers, reduced final validation, retrospective rewriting of prior archives, or replacing GitHub evidence. |
 | Confidence | High; existing three-document ownership and review gates provide the required boundaries. |
 
-## Authority and facts
+### Authority and facts
 
 | Source | Authority or verified fact | Consequence |
 | --- | --- | --- |
@@ -57,7 +57,7 @@
 | [Documentation quality policy](../../../docs/documentation-quality-policy.md) | Canonical ownership, focused evidence, full validation, review, and human briefs | No duplicated normative contract |
 | [Error handling](../../../docs/error-handling.md) | Proportional recovery and escalation | Valid work survives route escalation |
 
-## Requirements and acceptance
+### Requirements and acceptance
 
 | ID | Required outcome | Acceptance signal |
 | --- | --- | --- |
@@ -72,7 +72,7 @@
 | `R09` | Existing active normal deliveries finish under the normal route and adopt the combined archive at closure; prior completed archives are not rewritten. | Migration wording and compatibility tests are explicit. |
 | `R10` | README, diagrams, templates, skills, policies, examples, and lifecycle checks remain mutually consistent. | Focused and final repository validation pass. |
 
-## Options and decisions
+### Options and decisions
 
 | ID | Decision | Alternative rejected | Rationale |
 | --- | --- | --- | --- |
@@ -85,7 +85,7 @@
 | `D07` | Material uncertainty escalates to normal delivery and preserves valid work. | Stretch Fast Fix eligibility or discard/restart work. | Fail closed on route eligibility while avoiding duplicated recovery. |
 | `D08` | Implement as `T01` followed by `T02`. | One broad task or two unrelated deliveries. | Separate reviewable outcomes while sharing one consistent lifecycle change. |
 
-## Policy applicability and risks
+### Policy applicability and risks
 
 | Concern | Accepted boundary | Risk handling |
 | --- | --- | --- |
@@ -96,7 +96,7 @@
 | Migration | Active normal deliveries use the combined archive when they close; old completed archives stay historical. | No mass migration or history rewrite. |
 | Over-engineering | Add only artifacts and checks that protect an accepted outcome or invariant. | Reviewers challenge duplicated records, speculative eligibility rules, and unnecessary test machinery. |
 
-## Concluded design
+### Concluded design
 
 | Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
@@ -110,7 +110,7 @@
 | `CD08` | Existing normal deliveries adopt the new closing archive prospectively; prior archives remain untouched. | No retrospective history rewrite. | Migration guidance and compatibility coverage. |
 | `CD09` | Two sequential tasks implement the design and all reader-facing surfaces remain consistent. | `T01` establishes the normal archive model; `T02` adds the proportional alternative. | Complete design-to-task mapping and repository validation. |
 
-## Draft-to-conclusion reconciliation
+### Draft-to-conclusion reconciliation
 
 | Draft item | Concluded design point | Disposition | Rationale / evidence |
 | --- | --- | --- | --- |
@@ -125,7 +125,7 @@
 | `DR09` | `CD05`, `CD07` | changed | Fast Fix selects its cohort before first review and retains it if the route escalates. |
 | `DR10` | `CD01` | changed | Bidirectional links make the combined archive discoverable without copying evidence. |
 
-## Human brief
+### Human brief
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
@@ -144,7 +144,7 @@
 This is the only active-delivery state authority. GitHub issues own the needs;
 pull requests own review, checks, acceptance, merge, and target evidence.
 
-## Delivery status
+### Delivery status
 
 | Field | Value |
 | --- | --- |
@@ -160,7 +160,7 @@ pull requests own review, checks, acceptance, merge, and target evidence.
 | Required reviewers | Same two isolated feature reviewers retained from design through merge |
 | Last verified | Both retained reviewers approved `T02` exact candidate `59146e3f51f600e56c160604071209585f857c3f` after focused validation on 2026-09-12; final closing-candidate review and full validation remain PR-owned gates |
 
-## Governing inputs and boundaries
+### Governing inputs and boundaries
 
 | Priority | Source | Authority / use |
 | --- | --- | --- |
@@ -177,7 +177,7 @@ pull requests own review, checks, acceptance, merge, and target evidence.
 | Compatibility | Existing active normal deliveries close using the combined archive; existing completed archives remain valid; Fast Fix applies prospectively. |
 | Implementation baseline | Branch point `8b0bcdb184d3f4843979c1d5d55301122e6260e9`; prepared in-place upgrade resolves to the same revision. |
 
-## Contracts and risks
+### Contracts and risks
 
 | ID | Contract | Failure behavior / evidence |
 | --- | --- | --- |
@@ -196,7 +196,7 @@ pull requests own review, checks, acceptance, merge, and target evidence.
 | UI rule creates test over-engineering | Require the smallest applicable behavioral or visual evidence, not a universal test type or new framework. |
 | Existing delivery breaks | Prospective close behavior with compatibility fixtures; no rewriting completed archives. |
 
-## Delivery strategy and readiness
+### Delivery strategy and readiness
 
 | Concern | This delivery |
 | --- | --- |
@@ -210,7 +210,7 @@ Readiness does not require future implementation output. `T01` becomes ready
 after this plan is reviewed and accepted. `T02` becomes ready when `T01` is
 done on the delivery branch.
 
-## Design-to-task mapping
+### Design-to-task mapping
 
 | Design point | Task and brief work | Validation | Consistency or gap |
 | --- | --- | --- | --- |
@@ -221,16 +221,16 @@ done on the delivery branch.
 | `CD06` | `T02` — proportional UI evidence guidance | Documentation regression and semantic review | aligned |
 | `CD09` | `T01`, `T02` — reconcile all canonical and reader-facing surfaces | README/diagram, Markdown, lifecycle, and full repository validation | aligned |
 
-## Tasks
+### Tasks
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | PR |
 | --- | --- | --- | --- | --- | --- | --- |
 | `T01` | `DONE` | `None` | Normal delivery archives concluded design and completed implementation context together in one discoverable document. | No history rewrite, fourth reusable template, copied PR evidence, or unrelated cleanup. | Focused lifecycle, archive, template, docs, and compatibility tests. | Final feature PR |
 | `T02` | `DONE` | `T01` | Eligible small fixes use Issue plus PR with agent-selected routing, proportional evidence, retained reviewers, and safe escalation. | No reduced quality/human gates, new state engine, or speculative eligibility procedure. | Focused routing, review-loop, escalation, UI-guidance, docs, and compatibility tests. | Final feature PR |
 
-## Task specifications and context receipts
+### Task specifications and context receipts
 
-### `T01` — combined delivery archive
+#### `T01` — combined delivery archive
 
 | Concern | Value |
 | --- | --- |
@@ -242,7 +242,7 @@ done on the delivery branch.
 | Context receipt | Current policies, templates, lifecycle checker, tests, README references, and issue requirements inspected; no unresolved conflict. |
 | Actual result | Added a marker-based combined archive contract that validates one complete concluded whiteboard and one complete final plan, issue and PR links, and source ordering. Updated lifecycle guidance, templates, README diagrams, governance, error-handling linkage, and the representative example without adding a fourth template or rewriting historical archives. |
 
-### `T02` — Issue-only Fast Fix
+#### `T02` — Issue-only Fast Fix
 
 | Concern | Value |
 | --- | --- |
@@ -254,7 +254,7 @@ done on the delivery branch.
 | Context receipt | `T01` exact candidate `6a37110` approved by both retained reviewers; normal close model, review skill, quality policy, workflow, contribution guide, README routes, and document-model tests inspected with no unresolved authority conflict. |
 | Actual result | Added an agent-selected Issue-only Fast Fix route with Issue-plus-PR ownership, no duplicate feature documents or route-approval gate, proportional UI evidence, retained reviewers, unchanged focused/full validation and human merge boundaries, and in-place fail-closed escalation that preserves valid work and reviewer context. Updated the workflow and reviewer skills, canonical quality policy, contribution guidance, README feature table and route diagram, and focused document-model regression coverage without adding a template or state engine. |
 
-## Planned versus actual outcome
+### Planned versus actual outcome
 
 | Planned outcome | Actual outcome / deviation |
 | --- | --- |
@@ -262,7 +262,7 @@ done on the delivery branch.
 | Issue-only Fast Fix | Delivered agent-selected routing for a small, unambiguous correction using Issue plus PR, proportional evidence, retained reviewers, unchanged quality/human gates, and fail-closed in-place escalation. No deviation. |
 | Minimal maintained model | Added no template, status ledger, Fast Fix state engine, or duplicated GitHub evidence. Route ownership is explicit across canonical and reader-facing sources. No deviation. |
 
-## Recovery and change control
+### Recovery and change control
 
 Use the canonical [error-handling framework](../../../docs/error-handling.md).
 Agent-correctable checker, documentation, or fixture mistakes repeat only the
@@ -270,7 +270,7 @@ affected work. A discovered observable design change requires a whiteboard
 amendment and owner decision. A Fast Fix eligibility ambiguity fails closed to
 normal delivery without discarding valid work.
 
-## Cleanup inventory
+### Cleanup inventory
 
 | Item | Candidate or post-merge handling |
 | --- | --- |
@@ -281,7 +281,7 @@ normal delivery without discarding valid work.
 | PR review, check, acceptance, merge, and target evidence | Keep in [PR #104](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/104), not copied into the archive. |
 | Owned worktree and merged branch | Remove after exact-target verification without disturbing unrelated work. |
 
-## Delivery Definition of Done
+### Delivery Definition of Done
 
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
@@ -292,7 +292,7 @@ normal delivery without discarding valid work.
 | PR-owned review and delivery | Same two agents, human merge acceptance, issue auto-close, and target proof | [PR #104](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/104); final review, full validation, acceptance, merge, and target proof remain pending |
 | Feature cleanup complete | Combined archive, owned file inventory, worktree/branch cleanup after target proof | Repository cleanup is in candidate; owned worktree and branch retire after target proof |
 
-## Human review brief
+### Human review brief
 
 | Attention | Summary | Handling |
 | --- | --- | --- |

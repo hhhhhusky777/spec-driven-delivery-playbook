@@ -201,6 +201,16 @@ function requireArchiveSection(errors, text, pattern, name) {
   if (!hasHeading(text, pattern)) errors.push(`delivery archive required section is missing: ${name}`);
 }
 
+function requireEmbeddedOutline(errors, text, name) {
+  const headings = text.split(/\r?\n/).flatMap(line => {
+    const match = line.match(/^(#{1,6})\s+/);
+    return match ? [match[1].length] : [];
+  });
+  if (headings[0] !== 2 || headings.slice(1).some(level => level <= 2)) {
+    errors.push(`archived ${name} must have one level-two title with nested sections`);
+  }
+}
+
 function linkedUrl(value, kind) {
   const pattern = kind === "issue"
     ? /https?:\/\/[^\s)]+\/issues\/\d+/
@@ -239,6 +249,8 @@ function deliveryArchiveErrors(text) {
   }
   const whiteboard = text.slice(whiteboardStart, planStart);
   const plan = text.slice(planStart);
+  requireEmbeddedOutline(errors, whiteboard, "whiteboard");
+  requireEmbeddedOutline(errors, plan, "implementation plan");
   requireArchiveSection(errors, whiteboard, /Discussion draft/i, "whiteboard discussion draft");
   requireArchiveSection(errors, whiteboard, /Authority/i, "whiteboard authority and context");
   requireArchiveSection(errors, whiteboard, /Concluded design/i, "whiteboard concluded design");
