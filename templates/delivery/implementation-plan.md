@@ -241,11 +241,6 @@ remove owned delivery/task worktrees and merged branches, then return the
 coordinating checkout to the accepted target branch when safe. Keep any unsafe
 or externally owned cleanup pending rather than discarding or disrupting work.
 
-For a normal delivery, preserve this complete final plan with the complete
-concluded whiteboard in one archive before removing the live plan or resetting
-the whiteboard. Follow the workflow skill's archive markers and bidirectional
-link boundary; this combined output is not a fourth reusable template.
-
 Use only the task detail needed to implement and judge the result. In a final
 PR candidate, a task is `DONE` when its accepted outcome, applicable validation,
 dependent state, and merge-ready canonical updates are complete. This is the
