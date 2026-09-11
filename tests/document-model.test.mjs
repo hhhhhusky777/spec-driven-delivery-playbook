@@ -254,7 +254,14 @@ test("Issue-only Fast Fix removes duplicate artifacts without bypassing gates", 
   assert.match(normalizedWorkflow, /For normal delivery, the whiteboard owns.*For normal delivery, the implementation plan owns/i);
   assert.match(readme.replace(/\s+/g, " "), /For normal delivery.*Three durable documents|For normal delivery, the playbook deliberately keeps project state small/i);
   assert.match(governance, /Normal-delivery tasks/);
+  assert.match(governance, /Solution whiteboard \| One normal delivery's/);
   assert.match(manifestTemplate.replace(/\s+/g, " "), /Issue-only Fast Fix without a plan.*Issue owns.*pull request owns/i);
+  assert.match(manifestTemplate, /For normal delivery, the implementation plan owns\s+active-delivery state/);
+  assert.doesNotMatch(manifestTemplate, /\. The implementation plan owns active delivery state/);
+  assert.match(readme, /Normal-delivery intent and design decisions \| Whiteboard/);
+  assert.match(readme, /Fast Fix outcome and bounded scope \| Issue/);
+  assert.doesNotMatch(readme, /\| Feature intent and design decisions \| Whiteboard \|/);
+  assert.doesNotMatch(readme, /implementation-plan\.md` owns all active-delivery/);
   assert.match(readme.replace(/\s+/g, " "), /There is no feature whiteboard, implementation plan, archive, or separate route approval/i);
   assert.match(readme, /Q -->\|"yes"\| W/);
   assert.match(readme, /V --> H\["Human merge decision"\]/);

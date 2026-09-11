@@ -155,8 +155,9 @@ that history into extra ledgers or status documents.
 | Information | Canonical location |
 | --- | --- |
 | Project authority and accepted playbook pin | Adoption manifest |
-| Feature intent and design decisions | Whiteboard |
-| Current task and delivery state | Implementation plan |
+| Normal-delivery intent and design decisions | Whiteboard |
+| Normal-delivery task and state | Implementation plan |
+| Fast Fix outcome and bounded scope | Issue |
 | Review findings, checks, acceptance, and merge | Pull request |
 | Reusable policy | The owning project policy document |
 
@@ -701,9 +702,9 @@ the target solely to prepare that delivery.
 This repository self-adopts the same model. Start with [Contributing](CONTRIBUTING.md),
 the live [adoption manifest](.github/spec-driven-delivery/project-adoption-manifest.md),
 the [working whiteboard](.github/spec-driven-delivery/solution-whiteboard.md),
-and the installer-generated `.sdd-runtime/agent-guide.md`. When present,
-`.github/spec-driven-delivery/implementation-plan.md` owns all active-delivery
-state.
+and the installer-generated `.sdd-runtime/agent-guide.md`. For normal delivery,
+the implementation plan owns active-delivery state when present; an Issue-only
+Fast Fix instead uses its Issue and PR.
 
 ### Repository map
 
