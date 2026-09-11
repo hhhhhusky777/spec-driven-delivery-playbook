@@ -212,7 +212,7 @@ reusable facts here; detailed review discussion remains in the PR.
 | Compatibility and operations safe | `<migration, rollout, rollback, observability>` | `<pending or evidence>` |
 | Merge-ready canonical state | `<affected tracked state reconciled before final review>` | `<result>` |
 | PR-owned review and delivery | `<PR checks, reviewers, owner authority, merge, and target proof>` | `<PR link; GitHub owns current state>` |
-| Feature cleanup complete | `<archive link, exact owned removal inventory, reset proof>` | `<pending or evidence>` |
+| Feature cleanup complete | `<combined whiteboard-and-plan archive link, exact owned removal inventory, reset proof>` | `<pending or evidence>` |
 
 ### Planned versus actual outcome
 

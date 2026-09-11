@@ -15,6 +15,7 @@ project.
 | Feature | What it helps you achieve |
 | --- | --- |
 | One-time project adoption | Connect the playbook to existing project authority without replacing it |
+| Issue-only Fast Fix | Deliver a clearly bounded correction without duplicate feature documents or weaker gates |
 | Solution whiteboarding | Turn an uncertain need into an accepted design before dependent implementation |
 | Outcome-based planning | Map design points to tasks, dependencies, validation, and Definition of Done |
 | Context-native handoff | Let a fresh agent resume from repository state without inheriting another agent's chat history |
@@ -62,6 +63,7 @@ accepted installation.
   - [Where evidence lives](#where-evidence-lives)
 - [Explore the features](#explore-the-features)
   - [Adopt once and upgrade safely](#adopt-once-and-upgrade-safely)
+  - [Use an Issue-only Fast Fix when the boundary is already clear](#use-an-issue-only-fast-fix-when-the-boundary-is-already-clear)
   - [Discuss and conclude a design](#discuss-and-conclude-a-design)
   - [Plan and track delivery](#plan-and-track-delivery)
   - [Hand off without chat history](#hand-off-without-chat-history)
@@ -117,14 +119,14 @@ flowchart LR
 
 ### Three durable documents
 
-The playbook deliberately keeps project state small. Each durable document has
-one responsibility:
+For normal delivery, the playbook deliberately keeps project state small. Each
+durable document has one responsibility:
 
 | Document | Sole responsibility | Lifetime |
 | --- | --- | --- |
 | [Project adoption manifest](templates/adoption/project-adoption-manifest.md) | Installed immutable revision, canonical project authorities, and stable boundaries | Reused across features |
-| [Solution whiteboard](templates/discovery/solution-whiteboard.md) | One active feature's discussion and concluded design | A closing candidate archives it and resets the live copy |
-| [Implementation plan](templates/delivery/implementation-plan.md) | Tasks, dependencies, Definition of Done, validation, and all active-delivery state | Removed by the delivery-closing candidate |
+| [Solution whiteboard](templates/discovery/solution-whiteboard.md) | One normal delivery's discussion and concluded design | Preserved with the complete plan in one closing archive, then reset |
+| [Implementation plan](templates/delivery/implementation-plan.md) | Normal-delivery tasks, dependencies, Definition of Done, validation, and active state | Preserved with the concluded whiteboard in that archive, then removed live |
 
 Project policies stay in their existing canonical files. The workflow skill
 guides the agent but owns no feature state.
@@ -139,7 +141,7 @@ plan. Agents keep the applicable information and omit irrelevant ceremony.
 flowchart LR
     M["Manifest<br/>installation + authority"] --> W["Whiteboard<br/>design"]
     W -->|"concluded"| P["Implementation plan<br/>tasks + live state"]
-    P --> C["Closing candidate<br/>archive + reset"]
+    P --> C["Closing candidate<br/>combined archive + reset"]
     C --> PR["Pull request<br/>review + evidence"]
     PR -->|"merged and verified"| W
 ```
@@ -153,8 +155,9 @@ that history into extra ledgers or status documents.
 | Information | Canonical location |
 | --- | --- |
 | Project authority and accepted playbook pin | Adoption manifest |
-| Feature intent and design decisions | Whiteboard |
-| Current task and delivery state | Implementation plan |
+| Normal-delivery intent and design decisions | Whiteboard |
+| Normal-delivery task and state | Implementation plan |
+| Fast Fix outcome and bounded scope | Issue |
 | Review findings, checks, acceptance, and merge | Pull request |
 | Reusable policy | The owning project policy document |
 
@@ -195,6 +198,40 @@ flowchart TD
 See the [adoption skill](skills/sdd-project-adoption/SKILL.md) and
 [upgrade skill](skills/sdd-playbook-upgrade/SKILL.md) for their canonical
 outcomes and boundaries.
+
+### Use an Issue-only Fast Fix when the boundary is already clear
+
+Small corrections should not manufacture design and planning documents merely
+to imitate a larger feature. When an issue already states an unambiguous
+outcome, bounded scope, applicable authority, and validation intent, the agent
+may disclose and use the Fast Fix route: the issue owns the need and boundary,
+while the PR owns the candidate, review, checks, acceptance, and merge evidence.
+There is no feature whiteboard, implementation plan, archive, or separate route
+approval.
+
+```mermaid
+flowchart TD
+    I["Issue: outcome + boundary + validation intent"] --> T{"Agent triage"}
+    T -->|"clearly bounded"| F["Issue-only Fast Fix"]
+    T -->|"decision or material ambiguity"| W["Normal whiteboard + plan"]
+    F --> E["Implement required evidence"]
+    E --> Q{"Disqualifying concern discovered?"}
+    Q -->|"no"| R["Focused tests + retained review"]
+    Q -->|"yes"| W
+    W --> R
+    R --> V["Full applicable validation on final head"]
+    V --> H["Human merge decision"]
+```
+
+Fast Fix preserves the same quality boundary. It creates two isolated reviewer
+sessions before first review and retains them through corrections and merge.
+For a UI-only fix, evidence can be the smallest applicable combination of
+component or interaction checks, rendered inspection at representative
+viewports, accessibility evidence, and smoke evidence. If implementation
+reveals a material architecture, schema, public-contract, security,
+concurrency, deployment, systemic-policy, accessibility-policy, product, or
+scope decision, the agent keeps valid work and the reviewer sessions but fails
+closed to normal whiteboard and planning before dependent work continues.
 
 ### Discuss and conclude a design
 
@@ -492,18 +529,23 @@ restating increasingly specific error rules.
 ### Finish, archive, and reset
 
 Delivery finishes only after the accepted outcome is merged and verified on
-its target. Before final review, a delivery-closing candidate already archives
-the accepted whiteboard with links to its delivery PRs, removes the
-implementation plan and other feature-only working material, and resets the
-live whiteboard to `EMPTY`. Reusable source output and the adoption manifest
-remain. If the PR does not merge, none of that candidate state reaches the
-target; after merge, only exact-target verification remains.
+its target. Before final review, a normal delivery-closing candidate combines
+the complete accepted whiteboard and complete final implementation plan into
+one archive. The archive links to its issues and PRs, and the closing PR links
+back to the archive; GitHub continues to own detailed review and merge
+evidence. Only then does the candidate remove the live plan and other
+feature-only working material and reset the live whiteboard to `EMPTY`.
+Reusable source output and the adoption manifest remain. Existing active
+normal deliveries use this close boundary; completed historical archives are
+not rewritten. If the PR does not merge, none of that candidate state reaches
+the target; after merge, only exact-target verification remains.
 
 ```mermaid
 flowchart LR
-    C["Final candidate"] --> A["Archive concluded whiteboard + PR links"]
-    A --> K["Keep reusable output + manifest"]
-    A --> X["Remove feature-only material"]
+    C["Final candidate"] --> A["Combine complete whiteboard + plan"]
+    A --> L["Link archive ↔ closing PR"]
+    L --> K["Keep reusable output + manifest"]
+    L --> X["Remove live plan + feature-only material"]
     K --> R["Reset live whiteboard to EMPTY"]
     X --> R
     R --> H["Review + authorized merge"]
@@ -513,9 +555,11 @@ flowchart LR
     M --> N["Ready for next feature"]
 ```
 
-Git history and pull requests preserve the detailed evidence, so cleanup does
-not need to manufacture a second archive of implementation records. Operational
-cleanup after target verification removes only owned delivery/task worktrees
+Git history and pull requests preserve detailed review and merge evidence; the
+combined archive preserves only the durable design and implementation context
+needed for handoff and future maintenance. It is assembled from the two live
+documents, not maintained as a fourth template. Operational cleanup after
+target verification removes only owned delivery/task worktrees
 and merged branches, then returns the coordinating checkout to the target
 branch (`main` here) when that will not discard or disrupt other work.
 
@@ -615,9 +659,10 @@ that produces the required result.
 
 ### Deliver a feature
 
-Tell the agent what you need. The agent uses the working whiteboard for the
-discussion, concludes the accepted design, creates one implementation plan,
-and delivers dependency-ready tasks through reviewable PRs. You should be asked
+Tell the agent what you need. A clearly bounded correction may use the
+Issue-only Fast Fix route; other work uses the working whiteboard for discussion,
+concludes the accepted design, creates one implementation plan, and delivers
+dependency-ready tasks through reviewable PRs. You should be asked
 to stop only for a real decision, required semantic review, merge authority,
 destructive scope, or a critical mismatch.
 
@@ -657,9 +702,9 @@ the target solely to prepare that delivery.
 This repository self-adopts the same model. Start with [Contributing](CONTRIBUTING.md),
 the live [adoption manifest](.github/spec-driven-delivery/project-adoption-manifest.md),
 the [working whiteboard](.github/spec-driven-delivery/solution-whiteboard.md),
-and the installer-generated `.sdd-runtime/agent-guide.md`. When present,
-`.github/spec-driven-delivery/implementation-plan.md` owns all active-delivery
-state.
+and the installer-generated `.sdd-runtime/agent-guide.md`. For normal delivery,
+the implementation plan owns active-delivery state when present; an Issue-only
+Fast Fix instead uses its Issue and PR.
 
 ### Repository map
 

@@ -190,7 +190,7 @@ test("feature review cohorts retain context and produce useful change requests",
   const normalizedWorkflow = workflow.replace(/\s+/g, " ");
   const normalizedReviewer = reviewer.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
   assert.match(normalizedPolicy, /feature review skill.*single execution contract/);
-  assert.match(normalizedPolicy, /retains their sessions through merge/);
+  assert.match(normalizedPolicy, /retains? (?:their|those) sessions through merge/);
   assert.match(normalizedWorkflow, /require each one to read the installed sdd-feature-review skill once/);
   assert.match(normalizedWorkflow, /focused context packet defined by the reviewer skill/);
   assert.match(normalizedReviewer, /manifest/);
@@ -226,6 +226,45 @@ test("feature review cohorts retain context and produce useful change requests",
   for (const document of [policy, readme, contributing, workflow]) {
     assert.doesNotMatch(document, /smallest recommended correction|primary industry standard|Never fabricate authority/);
   }
+});
+
+test("Issue-only Fast Fix removes duplicate artifacts without bypassing gates", async () => {
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const reviewer = await read("skills/sdd-feature-review/SKILL.md");
+  const policy = await read("docs/documentation-quality-policy.md");
+  const governance = await read("docs/template-governance.md");
+  const manifestTemplate = await read("templates/adoption/project-adoption-manifest.md");
+  const readme = await read("README.md");
+  const contributing = await read("CONTRIBUTING.md");
+  const normalizedWorkflow = workflow.replace(/\s+/g, " ");
+  const normalizedReviewer = reviewer.replace(/\s+/g, " ");
+
+  assert.match(normalizedWorkflow, /Issue-only Fast Fix.*small correction.*accepted outcome.*bounded scope.*applicable authority.*validation intent/i);
+  assert.match(normalizedWorkflow, /route selection does not create a separate approval gate/i);
+  assert.match(normalizedWorkflow, /Do not create a feature whiteboard, implementation plan, archive, or Fast Fix state record/i);
+  assert.match(normalizedWorkflow, /Fast Fix never waives testing, review, human merge authority, or project policy/i);
+  assert.match(normalizedWorkflow, /UI-only fix.*smallest evidence.*without inventing a new test framework/i);
+  assert.match(normalizedWorkflow, /fail closed to normal delivery.*Preserve valid code, tests, evidence, branch ownership, and the same reviewer sessions/i);
+  assert.match(normalizedReviewer, /concluded-whiteboard gate for normal delivery, or before the first candidate review for an Issue-only Fast Fix/i);
+  assert.match(normalizedReviewer, /governing issue for a Fast Fix/i);
+  assert.match(normalizedReviewer, /Fast Fix exposes a material decision or ambiguity.*keep the reviewer session/i);
+  assert.match(policy.replace(/\s+/g, " "), /Issue-only Fast Fix selects them before its first candidate review.*retains those sessions through merge/i);
+  assert.match(contributing.replace(/\s+/g, " "), /Issue plus PR without feature documents/i);
+  assert.match(contributing.replace(/\s+/g, " "), /normal delivery.*whiteboard and plan.*Issue-only Fast Fix.*Issue.*PR/i);
+  assert.match(normalizedWorkflow, /For normal delivery, the whiteboard owns.*For normal delivery, the implementation plan owns/i);
+  assert.match(readme.replace(/\s+/g, " "), /For normal delivery.*Three durable documents|For normal delivery, the playbook deliberately keeps project state small/i);
+  assert.match(governance, /Normal-delivery tasks/);
+  assert.match(governance, /Solution whiteboard \| One normal delivery's/);
+  assert.match(manifestTemplate.replace(/\s+/g, " "), /Issue-only Fast Fix without a plan.*Issue owns.*pull request owns/i);
+  assert.match(manifestTemplate, /For normal delivery, the implementation plan owns\s+active-delivery state/);
+  assert.doesNotMatch(manifestTemplate, /\. The implementation plan owns active delivery state/);
+  assert.match(readme, /Normal-delivery intent and design decisions \| Whiteboard/);
+  assert.match(readme, /Fast Fix outcome and bounded scope \| Issue/);
+  assert.doesNotMatch(readme, /\| Feature intent and design decisions \| Whiteboard \|/);
+  assert.doesNotMatch(readme, /implementation-plan\.md` owns all active-delivery/);
+  assert.match(readme.replace(/\s+/g, " "), /There is no feature whiteboard, implementation plan, archive, or separate route approval/i);
+  assert.match(readme, /Q -->\|"yes"\| W/);
+  assert.match(readme, /V --> H\["Human merge decision"\]/);
 });
 
 test("error handling stays simple, fail closed, and retry safe", async () => {
@@ -360,14 +399,20 @@ test("final review requires merge-ready canonical state without predicting PR fa
   assert.match(plan, /does not claim that the PR has\s+already been reviewed or merged/);
   assert.match(readme, /Before a pull request enters final review/);
   assert.match(readme, /If the PR does not merge/);
-  assert.match(readme, /Closing candidate<br\/>archive \+ reset/);
+  assert.match(readme, /Closing candidate<br\/>combined archive \+ reset/);
+  assert.match(readme, /complete accepted whiteboard and complete final implementation plan/);
+  assert.match(readme, /closing PR links\s+back to the archive/);
   assert.match(contributing, /Before final review/);
   assert.match(contributing, /every predictable\s+tracked canonical state/);
   assert.match(contributing, /after merge, verify the exact target/);
   assert.match(policy, /merge-ready state boundary/);
   assert.match(policy, /status-only correction as a defect rather than routine cleanup/);
-  assert.match(example, /Before final review, a delivery-closing candidate/);
-  assert.match(example, /Review, authorized merge, and exact-target\s+verification remain PR-owned facts/);
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  assert.match(workflow, /<!-- sdd: archived-whiteboard -->/);
+  assert.match(workflow, /<!-- sdd: archived-implementation-plan -->/);
+  assert.match(workflow, /without adding a fourth template/);
+  assert.match(example, /Before final review, a normal delivery-closing candidate/);
+  assert.match(example, /Review, authorized merge, and\s+exact-target verification remain PR-owned facts/);
   assert.doesNotMatch(example, /After delivery, link the merged PR/);
 });
 

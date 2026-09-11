@@ -4,7 +4,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { checkDocument } from "../scripts/sdd-lifecycle-three-doc.mjs";
+import { checkArchiveSet, checkDocument } from "../scripts/sdd-lifecycle-three-doc.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sha = "a".repeat(40);
@@ -80,4 +80,149 @@ test("implementation plan owns one coherent task state graph", () => {
   assert.ok(checkDocument("implementation-plan.md", incomplete).some(error => error.includes("terminal")));
   const falseComplete = `| Field | Value |\n| --- | --- |\n| State | COMPLETE |\n| Active tasks | None |\n| Next ready task | None |\n\n| ID | State | Depends on |\n| --- | --- | --- |\n| T01 | CANCELLED | None |\n| T02 | DONE | T01 |`;
   assert.ok(checkDocument("implementation-plan.md", falseComplete).some(error => error.includes("unsatisfied dependency")));
+});
+
+test("combined delivery archive preserves complete concluded design and plan state", () => {
+  const whiteboard = `<!-- sdd: archived-whiteboard -->
+## Solution whiteboard
+
+| Field | Value |
+| --- | --- |
+| State | CONCLUDED |
+| Open owner decisions | None |
+
+### Discussion draft
+
+| ID | Agreed item, alternative, constraint, or gap | State / resolution |
+| --- | --- | --- |
+| DR01 | preserve context | accepted |
+
+### Authority and context
+
+| Source | Authority or relevant content |
+| --- | --- |
+| Owner | accepted outcome |
+
+### Concluded design
+
+| Design point | Accepted outcome |
+| --- | --- |
+| D01 | one archive |
+
+### Draft-to-conclusion reconciliation
+
+| Draft item | Concluded design point | Disposition |
+| --- | --- | --- |
+| DR01 | D01 | accepted |`;
+  const plan = `<!-- sdd: archived-implementation-plan -->
+## Implementation plan
+
+| Field | Value |
+| --- | --- |
+| State | COMPLETE |
+| Active tasks | None |
+| Next ready task | None |
+
+### Governing inputs and delivery boundaries
+
+| Priority | Source | Authority / use |
+| --- | --- | --- |
+| 1 | design | delivery boundary |
+
+### Design-to-task mapping
+
+| Design point | Task and brief work | Validation | Consistency or gap |
+| --- | --- | --- | --- |
+| D01 | T01 | archive check | aligned |
+
+### Tasks
+
+| ID | State | Depends on | Outcome | Validation |
+| --- | --- | --- | --- | --- |
+| T01 | DONE | None | archive context | archive check |
+
+### Task specifications and context receipts
+
+#### T01 — archive context
+
+| Concern | Value |
+| --- | --- |
+| Outcome / non-scope | preserve context |
+| Source boundary | owned files |
+| Critical obligations | complete sources |
+| Required evidence | archive check |
+| Actual result | delivered |
+
+### Planned versus actual outcome
+
+| Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
+| --- | --- | --- | --- |
+| T01 | archive context | delivered without deviation | None |
+
+### Delivery Definition of Done
+
+| Outcome | Required evidence | Result / link |
+| --- | --- | --- |
+| Accepted design delivered | archive check | passed |
+
+### Cleanup inventory
+
+| Item | Keep, archive, remove, or reset | Ownership and evidence | Result |
+| --- | --- | --- | --- |
+| live plan | remove | owned | complete |`;
+  const source = `# Delivery archive
+
+<!-- sdd: delivery-archive -->
+
+| Field | Value |
+| --- | --- |
+| Issues | https://github.com/example/repository/issues/1 |
+| Closing pull request | https://github.com/example/repository/pull/2 |
+
+${whiteboard}
+
+${plan}`;
+  assert.deepEqual(checkDocument("delivery-archive.md", source), []);
+  for (const missing of [
+    "### Authority and context",
+    "### Design-to-task mapping",
+    "### Task specifications and context receipts",
+    "### Planned versus actual outcome",
+    "### Delivery Definition of Done",
+    "### Cleanup inventory",
+  ]) {
+    assert.ok(checkDocument("delivery-archive.md", source.replace(missing, "## Removed"))
+      .some(error => error.includes("required section")), missing);
+  }
+  assert.ok(checkDocument("delivery-archive.md", source.replace(whiteboard, ""))
+    .some(error => error.includes("archived whiteboard")));
+  assert.ok(checkDocument("delivery-archive.md", source.replace(plan, ""))
+    .some(error => error.includes("archived implementation plan")));
+  assert.ok(checkDocument("delivery-archive.md", source.replace("State | COMPLETE", "State | IMPLEMENTING"))
+    .some(error => error.includes("must be COMPLETE")));
+  assert.ok(checkDocument("delivery-archive.md", source.replace(" | Outcome | Validation |", " | Result | Evidence |"))
+    .some(error => error.includes("Outcome and Validation")));
+  assert.ok(checkDocument("delivery-archive.md", source.replace("### Discussion draft", "## Discussion draft"))
+    .some(error => error.includes("nested sections")));
+  const embeddedOnly = source.replace(
+    "| Closing pull request | https://github.com/example/repository/pull/2 |",
+    "| Closing pull request | None |",
+  ).replace(
+    "| Actual result | delivered |",
+    "| Actual result | delivered |\n| Closing pull request | https://github.com/example/repository/pull/3 |",
+  );
+  assert.ok(checkDocument("delivery-archive.md", embeddedOnly)
+    .some(error => error.includes("Closing pull request")));
+  assert.ok(checkArchiveSet([
+    ["first.md", source.replace(
+      "https://github.com/example/repository/pull/2",
+      "[PR 2](https://github.com/example/repository/pull/2)",
+    )],
+    ["duplicate.md", source
+      .replace("issues/1", "issues/9")
+      .replace(
+        "https://github.com/example/repository/pull/2",
+        "[Closing PR](https://github.com/example/repository/pull/2)",
+      )],
+  ]).some(error => error.includes("same closing pull request")));
 });

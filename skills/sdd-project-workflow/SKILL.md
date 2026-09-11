@@ -24,10 +24,10 @@ Repository policies and explicit owner decisions remain authoritative.
 - The adoption manifest owns the installed immutable playbook revision,
   discovered project authorities, and stable project boundaries. It never owns
   feature progress.
-- The whiteboard owns the active design discussion and concluded design. It
+- For normal delivery, the whiteboard owns the active design discussion and concluded design. It
   retains a concise discussion draft and reconciles every material draft item
   to the authoritative conclusion; it does not preserve a raw transcript.
-- The implementation plan owns tasks, dependencies, Definition of Done,
+- For normal delivery, the implementation plan owns tasks, dependencies, Definition of Done,
   validation expectations, and all active-delivery state.
 - The pull request owns review comments, checks, approvals, merge evidence, and
   detailed delivery history.
@@ -35,6 +35,35 @@ Repository policies and explicit owner decisions remain authoritative.
 Do not create additional documents that duplicate these responsibilities. Put
 unique design information in the whiteboard, unique execution information in
 the plan, and review evidence in the pull request.
+
+## Delivery routes
+
+Use normal delivery when design or execution needs durable clarification: the
+whiteboard concludes the design, the implementation plan owns execution, and
+completion creates the combined archive described below.
+
+An agent may instead select an Issue-only Fast Fix when a small correction's
+issue already makes the accepted outcome, bounded scope, applicable authority,
+and validation intent unambiguous. Disclose the selected route, reason, and evidence; route selection
+does not create a separate approval gate. The issue owns the need and boundary,
+and the pull request owns the candidate and delivery evidence. Do not create a
+feature whiteboard, implementation plan, archive, or Fast Fix state record.
+
+Fast Fix never waives testing, review, human merge authority, or project policy.
+Before its first candidate review, create two isolated reviewer sessions, have
+them load the installed sdd-feature-review skill once, and retain them through
+corrections and merge. Run focused tests before review and full applicable
+validation on the final reviewed candidate before human merge acceptance. For a
+UI-only fix, use the smallest evidence that proves the changed behavior—such as
+applicable component or interaction checks, rendered inspection at representative
+viewports, accessibility evidence, or smoke evidence—without inventing a new
+test framework merely to qualify for this route.
+
+If work exposes ambiguity or a material architecture, schema, public-contract,
+security, concurrency, deployment, systemic-policy, accessibility-policy,
+product, or scope decision, fail closed to normal delivery. Preserve valid code,
+tests, evidence, branch ownership, and the same reviewer sessions; conclude and
+review the required whiteboard and plan before dependent work continues.
 
 ## Boundaries
 
@@ -60,7 +89,7 @@ the plan, and review evidence in the pull request.
 - A concluded design or approved plan changes only through an explicit
   amendment when the observable outcome changes. Ordinary task status and
   evidence updates do not reopen the design.
-- When the whiteboard is formally concluded, select two isolated reviewers for
+- For normal delivery, when the whiteboard is formally concluded, select two isolated reviewers for
   the feature and require each one to read the installed
   sdd-feature-review skill once. They review the exact concluded design before
   the owner accepts it for planning. Retain those same reviewer sessions
@@ -163,10 +192,23 @@ outcomes, has converged through required agent review and exact-head
 validation, and already contains its
 merge-resulting canonical state. After authorized merge, verify the complete
 delivery outcome on the exact target. The pull request records review, merge
-authority, merge, and target evidence. When the candidate closes the delivery,
-it also archives the concluded whiteboard with pull-request links, removes the
-feature plan and other non-reusable feature material, and resets the working
-whiteboard. Preserve the manifest and other reusable project authority.
+authority, merge, and target evidence. When the candidate closes a normal
+delivery, it creates one combined archive from the complete concluded
+whiteboard and complete implementation plan. Mark the embedded sources with
+`<!-- sdd: archived-whiteboard -->` and
+`<!-- sdd: archived-implementation-plan -->` so applicable lifecycle checks can
+verify both source states without adding a fourth template. The archive links
+to its issues through an archive-level `Issues` field and identifies its
+closing pull request through an archive-level `Closing pull request` field.
+The closing pull request links back to the archive; detailed review and merge
+evidence remains in GitHub. Preserve the source documents' durable authority,
+design, mapping, task, actual-outcome, validation, deviation, and cleanup
+sections rather than passing the archive gate with truncated summaries. Only
+after that archive exists in the candidate may it remove the live plan and other
+non-reusable feature material and reset the working whiteboard. Preserve the
+manifest and other reusable project authority. Existing active normal
+deliveries use this close boundary prospectively; do not rewrite historical
+archives.
 After target verification, remove owned delivery/task worktrees and retire
 owned merged branches. Return the coordinating checkout to the accepted target
 branch when safe; never discard local changes or disrupt another active task.

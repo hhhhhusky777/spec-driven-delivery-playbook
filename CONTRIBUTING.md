@@ -17,6 +17,9 @@ The agent chooses a proportional route within the boundaries below.
 
 Do not create another document for these responsibilities. The generated
 runtime guide selects the applicable skill but adds no project policy or state.
+The workflow skill may route a clearly bounded correction through Issue plus PR
+without feature documents; ambiguity or a material decision fails closed to the
+normal whiteboard-and-plan model.
 
 ## Repository boundaries
 
@@ -24,11 +27,16 @@ This project ships reusable Markdown contracts, a Bash installer, Node.js
 checkers, tests, and CI. Project-specific policy belongs in its project unless
 it is a clearly labeled sanitized example.
 
-Every delivery must preserve:
+Every delivery must preserve applicable quality and authority boundaries. A
+normal delivery also preserves its accepted design and execution state in the
+whiteboard and plan; an Issue-only Fast Fix keeps its bounded outcome and scope
+in the Issue and delivery evidence in the PR.
+
+Repository changes preserve:
 
 - current and mutually consistent canonical authorities;
-- an accepted design before dependent implementation;
-- task outcomes, dependencies, validation, and state in one plan;
+- an accepted design before dependent implementation when design work is required;
+- task outcomes, dependencies, validation, and state in one plan for normal delivery;
 - self-contained merge units that keep their integration target working;
 - required checks, two isolated agent reviewers, and human authority;
 - explicit ownership before destructive cleanup; and
@@ -60,15 +68,17 @@ error-handling framework. Before dependent work proceeds, exercise a relevant
 project operation from the worktree itself and provision any missing required
 ignored support within its ownership and security boundaries.
 
-The implementation plan records any owner-selected merge mode and exact scope.
+For normal delivery, the implementation plan records any owner-selected merge
+mode and exact scope. A Fast Fix uses the governing Issue and PR instead.
 Human review before merge is the default. Scoped agent auto-merge never supplies
 design, policy, validation, cleanup, or out-of-scope authority.
 
 Open the PR when it best supports collaboration; a draft PR is not required
 before coding. Each task still implements the tests required by its accepted
 outcome. "Focused tests" means only the tests that cover the changed files and
-lines. After the concluded whiteboard has been reviewed and accepted, run those
-tests before the same two feature reviewers inspect each exact candidate.
+lines. After the concluded whiteboard has been reviewed and accepted—or, for an
+eligible Issue-only Fast Fix, after issue triage—run those tests before the same
+two feature reviewers inspect each exact candidate.
 Retain their sessions through planning, tasks, corrections, and the final
 candidate until merge. Reviewer context, independence, packets, findings, and
 dispositions follow the
@@ -89,11 +99,13 @@ implementation time only; network or environment interruptions, review time,
 and time waiting for people or external systems do not count.
 
 Before final review, that candidate must already contain every predictable
-tracked canonical state that its merge will make true. If it closes the
-delivery, archive the concluded whiteboard with links to its PRs, remove the
-feature plan and other non-reusable feature material, and reset the working
-whiteboard in the same candidate. Preserve the manifest and reusable project
-authority. Pending review, merge, and target verification remain GitHub facts;
+tracked canonical state that its merge will make true. If it closes a normal
+delivery, follow the workflow skill's combined-archive contract: preserve the
+complete concluded whiteboard and complete final plan in one archive, link it
+with the closing PR in both directions, then remove the live plan and other
+non-reusable feature material and reset the working whiteboard in the same
+candidate. Preserve the manifest and reusable project authority. Pending
+review, merge, and target verification remain GitHub facts;
 after merge, verify the exact target without creating a status-only follow-up.
 Then remove owned delivery/task worktrees, delete only owned merged branches,
 and return the coordinating checkout to `main` when doing so will not discard

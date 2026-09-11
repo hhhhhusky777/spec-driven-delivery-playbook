@@ -86,9 +86,9 @@ applicable issue tracker.
 
 ## Completion and review
 
-Before final review, a delivery-closing candidate must contain completed task
-outcomes, current contracts, project-authorized checks, owned residual risks,
-an archived whiteboard linked to its PR, removal of this feature plan, and a
-reset working whiteboard. Review, authorized merge, and exact-target
-verification remain PR-owned facts. This teaching example claims none of those
-outcomes.
+Before final review, a normal delivery-closing candidate must preserve the
+complete concluded whiteboard and this complete final plan in one archive,
+link that archive with its closing PR in both directions, remove this live
+feature plan, and reset the working whiteboard. Review, authorized merge, and
+exact-target verification remain PR-owned facts. This teaching example claims
+none of those outcomes.

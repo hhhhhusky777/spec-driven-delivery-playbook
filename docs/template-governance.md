@@ -23,12 +23,15 @@ Apply the quality policy's [six goals](documentation-quality-policy.md#six-goals
 | Template | Owner responsibility |
 | --- | --- |
 | Project adoption manifest | Installed revision, current canonical authority index, and stable boundaries |
-| Solution whiteboard | One active feature's concise discussion draft, concluded design, and reconciliation between them |
-| Implementation plan | Tasks, Definition of Done, validation, and all active-delivery state |
+| Solution whiteboard | One normal delivery's concise discussion draft, concluded design, and reconciliation between them |
+| Implementation plan | Normal-delivery tasks, Definition of Done, validation, and active state |
 
 The pull request owns review, checks, acceptance, merge evidence, and detailed
 history. Additional templates require a distinct durable responsibility that
 cannot fit one of these owners or GitHub.
+
+The combined normal-delivery archive is generated output, not a fourth
+maintained template.
 
 ## Change outcome
 

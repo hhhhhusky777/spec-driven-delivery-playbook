@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -189,7 +189,112 @@ function planErrors(text) {
   return errors;
 }
 
+function markerCount(text, marker) {
+  return text.split(marker).length - 1;
+}
+
+function hasHeading(text, pattern) {
+  return text.split(/\r?\n/).some(line => /^#{2,6}\s+/.test(line) && pattern.test(line));
+}
+
+function requireArchiveSection(errors, text, pattern, name) {
+  if (!hasHeading(text, pattern)) errors.push(`delivery archive required section is missing: ${name}`);
+}
+
+function requireEmbeddedOutline(errors, text, name) {
+  const headings = text.split(/\r?\n/).flatMap(line => {
+    const match = line.match(/^(#{1,6})\s+/);
+    return match ? [match[1].length] : [];
+  });
+  if (headings[0] !== 2 || headings.slice(1).some(level => level <= 2)) {
+    errors.push(`archived ${name} must have one level-two title with nested sections`);
+  }
+}
+
+function linkedUrl(value, kind) {
+  const pattern = kind === "issue"
+    ? /https?:\/\/[^\s)]+\/issues\/\d+/
+    : /https?:\/\/[^\s)]+\/pull\/\d+/;
+  return value.match(pattern)?.[0] || "";
+}
+
+function archiveMetadata(text) {
+  const marker = "<!-- sdd: archived-whiteboard -->";
+  const end = text.indexOf(marker);
+  return fieldMap(end === -1 ? text : text.slice(0, end));
+}
+
+function deliveryArchiveErrors(text) {
+  const errors = [];
+  const whiteboardMarker = "<!-- sdd: archived-whiteboard -->";
+  const planMarker = "<!-- sdd: archived-implementation-plan -->";
+  const archiveFields = archiveMetadata(text);
+  const whiteboardCount = markerCount(text, whiteboardMarker);
+  const planCount = markerCount(text, planMarker);
+  if (whiteboardCount !== 1) errors.push("delivery archive requires exactly one archived whiteboard");
+  if (planCount !== 1) errors.push("delivery archive requires exactly one archived implementation plan");
+  if (!linkedUrl(archiveFields.get("Issues") || "", "issue")) {
+    errors.push("delivery archive requires an archive-level Issues link");
+  }
+  if (!linkedUrl(archiveFields.get("Closing pull request") || "", "pull")) {
+    errors.push("delivery archive requires an archive-level Closing pull request link");
+  }
+  if (whiteboardCount !== 1 || planCount !== 1) return errors;
+
+  const whiteboardStart = text.indexOf(whiteboardMarker);
+  const planStart = text.indexOf(planMarker);
+  if (whiteboardStart > planStart) {
+    errors.push("delivery archive must place the concluded whiteboard before the completed implementation plan");
+    return errors;
+  }
+  const whiteboard = text.slice(whiteboardStart, planStart);
+  const plan = text.slice(planStart);
+  requireEmbeddedOutline(errors, whiteboard, "whiteboard");
+  requireEmbeddedOutline(errors, plan, "implementation plan");
+  requireArchiveSection(errors, whiteboard, /Discussion draft/i, "whiteboard discussion draft");
+  requireArchiveSection(errors, whiteboard, /Authority/i, "whiteboard authority and context");
+  requireArchiveSection(errors, whiteboard, /Concluded design/i, "whiteboard concluded design");
+  requireArchiveSection(errors, whiteboard, /Draft-to-conclusion reconciliation/i, "whiteboard draft reconciliation");
+  requireArchiveSection(errors, plan, /Governing inputs.*boundaries/i, "plan governing inputs and boundaries");
+  requireArchiveSection(errors, plan, /Design-to-task mapping/i, "plan design-to-task mapping");
+  requireArchiveSection(errors, plan, /^#{2,6}\s+Tasks\s*$/i, "plan tasks");
+  requireArchiveSection(errors, plan, /Task specifications and context receipts/i, "plan task specifications and context receipts");
+  requireArchiveSection(errors, plan, /Planned versus actual outcome/i, "plan actual outcomes and deviations");
+  requireArchiveSection(errors, plan, /Delivery Definition of Done/i, "plan validation and Definition of Done");
+  requireArchiveSection(errors, plan, /Cleanup inventory/i, "plan cleanup inventory");
+  const archivedTasks = tables(plan).find(table =>
+    table[0].includes("ID") && table[0].includes("State") && table[0].includes("Depends on")
+  );
+  if (!archivedTasks?.[0].includes("Outcome") || !archivedTasks?.[0].includes("Validation")) {
+    errors.push("archived plan task summary requires Outcome and Validation columns");
+  }
+  if ((fieldMap(whiteboard).get("State") || "") !== "CONCLUDED") {
+    errors.push("archived whiteboard must be CONCLUDED");
+  }
+  if ((fieldMap(plan).get("State") || "") !== "COMPLETE") {
+    errors.push("archived implementation plan must be COMPLETE");
+  }
+  for (const message of whiteboardErrors(whiteboard)) errors.push(`archived whiteboard: ${message}`);
+  for (const message of planErrors(plan)) errors.push(`archived implementation plan: ${message}`);
+  return errors;
+}
+
+export function checkArchiveSet(entries) {
+  const owners = new Map();
+  const errors = [];
+  for (const [file, text] of entries) {
+    if (!text.includes("<!-- sdd: delivery-archive -->")) continue;
+    const closingPullRequest = linkedUrl(archiveMetadata(text).get("Closing pull request") || "", "pull");
+    if (!closingPullRequest) continue;
+    if (owners.has(closingPullRequest)) {
+      errors.push(`${file} and ${owners.get(closingPullRequest)} claim the same closing pull request`);
+    } else owners.set(closingPullRequest, file);
+  }
+  return errors;
+}
+
 export function checkDocument(file, text) {
+  if (text.includes("<!-- sdd: delivery-archive -->")) return deliveryArchiveErrors(text);
   const name = path.basename(file);
   if (name === "project-adoption-manifest.md") return manifestErrors(text);
   if (name === "solution-whiteboard.md") return whiteboardErrors(text);
@@ -216,6 +321,20 @@ async function main() {
     }
     for (const message of checkDocument(file, text)) errors.push(`${path.relative(ROOT, file)}: ${message}`);
   }
+  const archiveRoot = path.join(liveRoot, "archive");
+  let archiveEntries = [];
+  const archiveDocuments = [];
+  try { archiveEntries = await readdir(archiveRoot, { withFileTypes: true }); }
+  catch (error) { if (error.code !== "ENOENT") throw error; }
+  for (const entry of archiveEntries) {
+    if (!entry.isFile() || path.extname(entry.name) !== ".md") continue;
+    const file = path.join(archiveRoot, entry.name);
+    const text = await readFile(file, "utf8");
+    if (!text.includes("<!-- sdd: delivery-archive -->")) continue;
+    archiveDocuments.push([path.relative(ROOT, file), text]);
+    for (const message of checkDocument(file, text)) errors.push(`${path.relative(ROOT, file)}: ${message}`);
+  }
+  for (const message of checkArchiveSet(archiveDocuments)) errors.push(message);
   if (errors.length) {
     for (const error of errors) console.error(error);
     process.exitCode = 1;

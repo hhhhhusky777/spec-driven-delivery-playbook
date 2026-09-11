@@ -97,9 +97,10 @@ status-only correction as a defect rather than routine cleanup.
 ## Review and human brief
 
 Every material candidate receives exact-candidate self-review, review by two
-isolated agents, and required human semantic acceptance. The feature selects
-its two reviewers at the concluded-whiteboard gate and retains their sessions
-through merge. The [feature review skill](../skills/sdd-feature-review/SKILL.md)
+isolated agents, and required human semantic acceptance. Normal delivery selects
+its two reviewers at the concluded-whiteboard gate; an eligible Issue-only Fast
+Fix selects them before its first candidate review. Either route retains those
+sessions through merge. The [feature review skill](../skills/sdd-feature-review/SKILL.md)
 is the single execution contract for reviewer context, independence, packets,
 findings, advice, and dispositions. The pull request owns findings, revisions,
 checks, acceptance, and merge evidence.
