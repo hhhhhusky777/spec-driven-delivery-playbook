@@ -360,14 +360,20 @@ test("final review requires merge-ready canonical state without predicting PR fa
   assert.match(plan, /does not claim that the PR has\s+already been reviewed or merged/);
   assert.match(readme, /Before a pull request enters final review/);
   assert.match(readme, /If the PR does not merge/);
-  assert.match(readme, /Closing candidate<br\/>archive \+ reset/);
+  assert.match(readme, /Closing candidate<br\/>combined archive \+ reset/);
+  assert.match(readme, /complete accepted whiteboard and complete final implementation plan/);
+  assert.match(readme, /closing PR links\s+back to the archive/);
   assert.match(contributing, /Before final review/);
   assert.match(contributing, /every predictable\s+tracked canonical state/);
   assert.match(contributing, /after merge, verify the exact target/);
   assert.match(policy, /merge-ready state boundary/);
   assert.match(policy, /status-only correction as a defect rather than routine cleanup/);
-  assert.match(example, /Before final review, a delivery-closing candidate/);
-  assert.match(example, /Review, authorized merge, and exact-target\s+verification remain PR-owned facts/);
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  assert.match(workflow, /<!-- sdd: archived-whiteboard -->/);
+  assert.match(workflow, /<!-- sdd: archived-implementation-plan -->/);
+  assert.match(workflow, /without adding a fourth template/);
+  assert.match(example, /Before final review, a normal delivery-closing candidate/);
+  assert.match(example, /Review, authorized merge, and\s+exact-target verification remain PR-owned facts/);
   assert.doesNotMatch(example, /After delivery, link the merged PR/);
 });
 

@@ -8,3 +8,7 @@ The playbook has three durable document templates:
 
 Pull requests own review and delivery evidence. Do not create additional
 documents that duplicate these responsibilities.
+
+A normal delivery's closing candidate combines its complete concluded
+whiteboard and complete final plan into one archive; that output is assembled
+from the two live documents and is not a fourth reusable template.

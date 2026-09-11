@@ -81,3 +81,56 @@ test("implementation plan owns one coherent task state graph", () => {
   const falseComplete = `| Field | Value |\n| --- | --- |\n| State | COMPLETE |\n| Active tasks | None |\n| Next ready task | None |\n\n| ID | State | Depends on |\n| --- | --- | --- |\n| T01 | CANCELLED | None |\n| T02 | DONE | T01 |`;
   assert.ok(checkDocument("implementation-plan.md", falseComplete).some(error => error.includes("unsatisfied dependency")));
 });
+
+test("combined delivery archive preserves complete concluded design and plan state", () => {
+  const whiteboard = `<!-- sdd: archived-whiteboard -->
+| Field | Value |
+| --- | --- |
+| State | CONCLUDED |
+| Open owner decisions | None |
+
+| ID | Agreed item, alternative, constraint, or gap | State / resolution |
+| --- | --- | --- |
+| DR01 | preserve context | accepted |
+
+| Design point | Accepted outcome |
+| --- | --- |
+| D01 | one archive |
+
+| Draft item | Concluded design point | Disposition |
+| --- | --- | --- |
+| DR01 | D01 | accepted |`;
+  const plan = `<!-- sdd: archived-implementation-plan -->
+| Field | Value |
+| --- | --- |
+| State | COMPLETE |
+| Active tasks | None |
+| Next ready task | None |
+
+| ID | State | Depends on |
+| --- | --- | --- |
+| T01 | DONE | None |`;
+  const source = `# Delivery archive
+
+<!-- sdd: delivery-archive -->
+
+Issue: https://github.com/example/repository/issues/1
+Pull request: https://github.com/example/repository/pull/2
+
+## Concluded solution whiteboard
+
+${whiteboard}
+
+## Completed implementation plan
+
+${plan}`;
+  assert.deepEqual(checkDocument("delivery-archive.md", source), []);
+  assert.ok(checkDocument("delivery-archive.md", source.replace(whiteboard, ""))
+    .some(error => error.includes("archived whiteboard")));
+  assert.ok(checkDocument("delivery-archive.md", source.replace(plan, ""))
+    .some(error => error.includes("archived implementation plan")));
+  assert.ok(checkDocument("delivery-archive.md", source.replace("State | COMPLETE", "State | IMPLEMENTING"))
+    .some(error => error.includes("must be COMPLETE")));
+  assert.ok(checkDocument("delivery-archive.md", source.replace("/pull/2", "/commit/2"))
+    .some(error => error.includes("pull request link")));
+});

@@ -159,3 +159,6 @@ implementation plan.
 A concluded whiteboard is the design authority for its implementation plan.
 Ordinary implementation discoveries update the plan; an observable design
 change requires an explicit whiteboard amendment and owner decision.
+At normal delivery close, preserve this complete conclusion together with the
+complete final plan in the single combined archive defined by the workflow
+skill before resetting this live file.

@@ -9,17 +9,17 @@ pull requests own review, checks, acceptance, merge, and target evidence.
 
 | Field | Value |
 | --- | --- |
-| State | `DRAFT` |
+| State | `IMPLEMENTING` |
 | Active tasks | `None` |
-| Next ready task | `None` |
-| Active blocker | Planning review and owner acceptance |
+| Next ready task | `T02` |
+| Active blocker | `None` |
 | Implementation mode | Human review before merge |
 | Delivery branch / target | `codex/archive-fast-fix` / `main` |
 | Owner | Repository owner |
 | Primary issue / need | [#102](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/102), [#103](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/103) |
 | Concluded whiteboard | [Accepted design](solution-whiteboard.md) at `81ab6e766768032c73f4000a93e8522fd0a943a3` |
 | Required reviewers | Same two isolated feature reviewers retained from design through merge |
-| Last verified | Design approved by both reviewers and repository owner; lifecycle check passed on 2026-09-11 |
+| Last verified | `T01` focused lifecycle and document-model checks passed on 2026-09-11; exact candidate awaits retained-reviewer inspection |
 
 ## Governing inputs and boundaries
 
@@ -86,8 +86,8 @@ done on the delivery branch.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | PR |
 | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `PLANNED` | `None` | Normal delivery archives concluded design and completed implementation context together in one discoverable document. | No history rewrite, fourth reusable template, copied PR evidence, or unrelated cleanup. | Focused lifecycle, archive, template, docs, and compatibility tests. | Final feature PR |
-| `T02` | `PLANNED` | `T01` | Eligible small fixes use Issue plus PR with agent-selected routing, proportional evidence, retained reviewers, and safe escalation. | No reduced quality/human gates, new state engine, or speculative eligibility procedure. | Focused routing, review-loop, escalation, UI-guidance, docs, and compatibility tests. | Final feature PR |
+| `T01` | `DONE` | `None` | Normal delivery archives concluded design and completed implementation context together in one discoverable document. | No history rewrite, fourth reusable template, copied PR evidence, or unrelated cleanup. | Focused lifecycle, archive, template, docs, and compatibility tests. | Final feature PR |
+| `T02` | `READY` | `T01` | Eligible small fixes use Issue plus PR with agent-selected routing, proportional evidence, retained reviewers, and safe escalation. | No reduced quality/human gates, new state engine, or speculative eligibility procedure. | Focused routing, review-loop, escalation, UI-guidance, docs, and compatibility tests. | Final feature PR |
 
 ### `T01` — combined delivery archive
 
@@ -99,7 +99,7 @@ done on the delivery branch.
 | Critical obligations | Archive exists before live sources are removed; closing PR and archive link each other; prior archives remain valid. |
 | Required evidence | Focused changed-file/line tests, positive and fail-closed fixtures, both retained reviewers. |
 | Context receipt | Current policies, templates, lifecycle checker, tests, README references, and issue requirements inspected; no unresolved conflict. |
-| Actual result | Pending. |
+| Actual result | Added a marker-based combined archive contract that validates one complete concluded whiteboard and one complete final plan, issue and PR links, and source ordering. Updated lifecycle guidance, templates, README diagrams, governance, error-handling linkage, and the representative example without adding a fourth template or rewriting historical archives. |
 
 ### `T02` — Issue-only Fast Fix
 
@@ -125,9 +125,9 @@ normal delivery without discarding valid work.
 
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
-| Accepted design delivered | `CD01`–`CD09` mapped to both tasks | Pending |
-| Applicable validation passed | Focused tests per task; full `npm run docs:all` on final reviewed candidate | Pending |
-| Compatibility safe | Active normal delivery, historical archive, eligible Fast Fix, and escalation cases | Pending |
+| Accepted design delivered | `CD01`–`CD09` mapped to both tasks | `T01` complete; `T02` pending |
+| Applicable validation passed | Focused tests per task; full `npm run docs:all` on final reviewed candidate | `T01`: 19 focused lifecycle/document-model tests plus structure and lifecycle commands passed |
+| Compatibility safe | Active normal delivery, historical archive, eligible Fast Fix, and escalation cases | `T01` preserves historical archives and applies combined close prospectively; `T02` pending |
 | Merge-ready canonical state | Manifest pin, reusable guidance, combined archive of this delivery, removed live plan, and reset whiteboard | Pending |
 | PR-owned review and delivery | Same two agents, human merge acceptance, issue auto-close, and target proof | Pending final PR |
 | Feature cleanup complete | Combined archive, owned file inventory, worktree/branch cleanup after target proof | Pending |

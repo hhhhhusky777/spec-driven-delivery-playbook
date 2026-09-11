@@ -212,7 +212,7 @@ reusable facts here; detailed review discussion remains in the PR.
 | Compatibility and operations safe | `<migration, rollout, rollback, observability>` | `<pending or evidence>` |
 | Merge-ready canonical state | `<affected tracked state reconciled before final review>` | `<result>` |
 | PR-owned review and delivery | `<PR checks, reviewers, owner authority, merge, and target proof>` | `<PR link; GitHub owns current state>` |
-| Feature cleanup complete | `<archive link, exact owned removal inventory, reset proof>` | `<pending or evidence>` |
+| Feature cleanup complete | `<combined whiteboard-and-plan archive link, exact owned removal inventory, reset proof>` | `<pending or evidence>` |
 
 ### Planned versus actual outcome
 
@@ -240,6 +240,11 @@ Tracked cleanup belongs in the merge candidate. After target verification,
 remove owned delivery/task worktrees and merged branches, then return the
 coordinating checkout to the accepted target branch when safe. Keep any unsafe
 or externally owned cleanup pending rather than discarding or disrupting work.
+
+For a normal delivery, preserve this complete final plan with the complete
+concluded whiteboard in one archive before removing the live plan or resetting
+the whiteboard. Follow the workflow skill's archive markers and bidirectional
+link boundary; this combined output is not a fourth reusable template.
 
 Use only the task detail needed to implement and judge the result. In a final
 PR candidate, a task is `DONE` when its accepted outcome, applicable validation,

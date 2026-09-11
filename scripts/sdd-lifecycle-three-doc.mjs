@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -189,7 +189,43 @@ function planErrors(text) {
   return errors;
 }
 
+function markerCount(text, marker) {
+  return text.split(marker).length - 1;
+}
+
+function deliveryArchiveErrors(text) {
+  const errors = [];
+  const whiteboardMarker = "<!-- sdd: archived-whiteboard -->";
+  const planMarker = "<!-- sdd: archived-implementation-plan -->";
+  const whiteboardCount = markerCount(text, whiteboardMarker);
+  const planCount = markerCount(text, planMarker);
+  if (whiteboardCount !== 1) errors.push("delivery archive requires exactly one archived whiteboard");
+  if (planCount !== 1) errors.push("delivery archive requires exactly one archived implementation plan");
+  if (!/https?:\/\/[^\s)]+\/issues\/\d+/.test(text)) errors.push("delivery archive requires an issue link");
+  if (!/https?:\/\/[^\s)]+\/pull\/\d+/.test(text)) errors.push("delivery archive requires a pull request link");
+  if (whiteboardCount !== 1 || planCount !== 1) return errors;
+
+  const whiteboardStart = text.indexOf(whiteboardMarker);
+  const planStart = text.indexOf(planMarker);
+  if (whiteboardStart > planStart) {
+    errors.push("delivery archive must place the concluded whiteboard before the completed implementation plan");
+    return errors;
+  }
+  const whiteboard = text.slice(whiteboardStart, planStart);
+  const plan = text.slice(planStart);
+  if ((fieldMap(whiteboard).get("State") || "") !== "CONCLUDED") {
+    errors.push("archived whiteboard must be CONCLUDED");
+  }
+  if ((fieldMap(plan).get("State") || "") !== "COMPLETE") {
+    errors.push("archived implementation plan must be COMPLETE");
+  }
+  for (const message of whiteboardErrors(whiteboard)) errors.push(`archived whiteboard: ${message}`);
+  for (const message of planErrors(plan)) errors.push(`archived implementation plan: ${message}`);
+  return errors;
+}
+
 export function checkDocument(file, text) {
+  if (text.includes("<!-- sdd: delivery-archive -->")) return deliveryArchiveErrors(text);
   const name = path.basename(file);
   if (name === "project-adoption-manifest.md") return manifestErrors(text);
   if (name === "solution-whiteboard.md") return whiteboardErrors(text);
@@ -214,6 +250,17 @@ async function main() {
       else throw error;
       continue;
     }
+    for (const message of checkDocument(file, text)) errors.push(`${path.relative(ROOT, file)}: ${message}`);
+  }
+  const archiveRoot = path.join(liveRoot, "archive");
+  let archiveEntries = [];
+  try { archiveEntries = await readdir(archiveRoot, { withFileTypes: true }); }
+  catch (error) { if (error.code !== "ENOENT") throw error; }
+  for (const entry of archiveEntries) {
+    if (!entry.isFile() || path.extname(entry.name) !== ".md") continue;
+    const file = path.join(archiveRoot, entry.name);
+    const text = await readFile(file, "utf8");
+    if (!text.includes("<!-- sdd: delivery-archive -->")) continue;
     for (const message of checkDocument(file, text)) errors.push(`${path.relative(ROOT, file)}: ${message}`);
   }
   if (errors.length) {

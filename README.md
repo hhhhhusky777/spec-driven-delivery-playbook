@@ -123,8 +123,8 @@ one responsibility:
 | Document | Sole responsibility | Lifetime |
 | --- | --- | --- |
 | [Project adoption manifest](templates/adoption/project-adoption-manifest.md) | Installed immutable revision, canonical project authorities, and stable boundaries | Reused across features |
-| [Solution whiteboard](templates/discovery/solution-whiteboard.md) | One active feature's discussion and concluded design | A closing candidate archives it and resets the live copy |
-| [Implementation plan](templates/delivery/implementation-plan.md) | Tasks, dependencies, Definition of Done, validation, and all active-delivery state | Removed by the delivery-closing candidate |
+| [Solution whiteboard](templates/discovery/solution-whiteboard.md) | One active feature's discussion and concluded design | Preserved with the complete plan in one closing archive, then reset |
+| [Implementation plan](templates/delivery/implementation-plan.md) | Tasks, dependencies, Definition of Done, validation, and all active-delivery state | Preserved with the concluded whiteboard in that archive, then removed live |
 
 Project policies stay in their existing canonical files. The workflow skill
 guides the agent but owns no feature state.
@@ -139,7 +139,7 @@ plan. Agents keep the applicable information and omit irrelevant ceremony.
 flowchart LR
     M["Manifest<br/>installation + authority"] --> W["Whiteboard<br/>design"]
     W -->|"concluded"| P["Implementation plan<br/>tasks + live state"]
-    P --> C["Closing candidate<br/>archive + reset"]
+    P --> C["Closing candidate<br/>combined archive + reset"]
     C --> PR["Pull request<br/>review + evidence"]
     PR -->|"merged and verified"| W
 ```
@@ -492,18 +492,23 @@ restating increasingly specific error rules.
 ### Finish, archive, and reset
 
 Delivery finishes only after the accepted outcome is merged and verified on
-its target. Before final review, a delivery-closing candidate already archives
-the accepted whiteboard with links to its delivery PRs, removes the
-implementation plan and other feature-only working material, and resets the
-live whiteboard to `EMPTY`. Reusable source output and the adoption manifest
-remain. If the PR does not merge, none of that candidate state reaches the
-target; after merge, only exact-target verification remains.
+its target. Before final review, a normal delivery-closing candidate combines
+the complete accepted whiteboard and complete final implementation plan into
+one archive. The archive links to its issues and PRs, and the closing PR links
+back to the archive; GitHub continues to own detailed review and merge
+evidence. Only then does the candidate remove the live plan and other
+feature-only working material and reset the live whiteboard to `EMPTY`.
+Reusable source output and the adoption manifest remain. Existing active
+normal deliveries use this close boundary; completed historical archives are
+not rewritten. If the PR does not merge, none of that candidate state reaches
+the target; after merge, only exact-target verification remains.
 
 ```mermaid
 flowchart LR
-    C["Final candidate"] --> A["Archive concluded whiteboard + PR links"]
-    A --> K["Keep reusable output + manifest"]
-    A --> X["Remove feature-only material"]
+    C["Final candidate"] --> A["Combine complete whiteboard + plan"]
+    A --> L["Link archive ↔ closing PR"]
+    L --> K["Keep reusable output + manifest"]
+    L --> X["Remove live plan + feature-only material"]
     K --> R["Reset live whiteboard to EMPTY"]
     X --> R
     R --> H["Review + authorized merge"]
@@ -513,9 +518,11 @@ flowchart LR
     M --> N["Ready for next feature"]
 ```
 
-Git history and pull requests preserve the detailed evidence, so cleanup does
-not need to manufacture a second archive of implementation records. Operational
-cleanup after target verification removes only owned delivery/task worktrees
+Git history and pull requests preserve detailed review and merge evidence; the
+combined archive preserves only the durable design and implementation context
+needed for handoff and future maintenance. It is assembled from the two live
+documents, not maintained as a fourth template. Operational cleanup after
+target verification removes only owned delivery/task worktrees
 and merged branches, then returns the coordinating checkout to the target
 branch (`main` here) when that will not discard or disrupt other work.
 

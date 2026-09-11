@@ -163,10 +163,19 @@ outcomes, has converged through required agent review and exact-head
 validation, and already contains its
 merge-resulting canonical state. After authorized merge, verify the complete
 delivery outcome on the exact target. The pull request records review, merge
-authority, merge, and target evidence. When the candidate closes the delivery,
-it also archives the concluded whiteboard with pull-request links, removes the
-feature plan and other non-reusable feature material, and resets the working
-whiteboard. Preserve the manifest and other reusable project authority.
+authority, merge, and target evidence. When the candidate closes a normal
+delivery, it creates one combined archive from the complete concluded
+whiteboard and complete implementation plan. Mark the embedded sources with
+`<!-- sdd: archived-whiteboard -->` and
+`<!-- sdd: archived-implementation-plan -->` so applicable lifecycle checks can
+verify both source states without adding a fourth template. The archive links
+to its issues and pull requests, and the closing pull request links back to the
+archive; detailed review and merge evidence remains in GitHub. Only after that
+archive exists in the candidate may it remove the live plan and other
+non-reusable feature material and reset the working whiteboard. Preserve the
+manifest and other reusable project authority. Existing active normal
+deliveries use this close boundary prospectively; do not rewrite historical
+archives.
 After target verification, remove owned delivery/task worktrees and retire
 owned merged branches. Return the coordinating checkout to the accepted target
 branch when safe; never discard local changes or disrupt another active task.

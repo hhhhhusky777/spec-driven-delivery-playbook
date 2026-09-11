@@ -89,11 +89,13 @@ implementation time only; network or environment interruptions, review time,
 and time waiting for people or external systems do not count.
 
 Before final review, that candidate must already contain every predictable
-tracked canonical state that its merge will make true. If it closes the
-delivery, archive the concluded whiteboard with links to its PRs, remove the
-feature plan and other non-reusable feature material, and reset the working
-whiteboard in the same candidate. Preserve the manifest and reusable project
-authority. Pending review, merge, and target verification remain GitHub facts;
+tracked canonical state that its merge will make true. If it closes a normal
+delivery, follow the workflow skill's combined-archive contract: preserve the
+complete concluded whiteboard and complete final plan in one archive, link it
+with the closing PR in both directions, then remove the live plan and other
+non-reusable feature material and reset the working whiteboard in the same
+candidate. Preserve the manifest and reusable project authority. Pending
+review, merge, and target verification remain GitHub facts;
 after merge, verify the exact target without creating a status-only follow-up.
 Then remove owned delivery/task worktrees, delete only owned merged branches,
 and return the coordinating checkout to `main` when doing so will not discard
