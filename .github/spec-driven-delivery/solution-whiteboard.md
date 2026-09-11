@@ -22,6 +22,8 @@
 | `DR06` | A material design, contract, security, concurrency, deployment, policy, accessibility, or scope decision disqualifies Fast Fix and escalates to normal delivery. | accepted |
 | `DR07` | UI-only Fast Fix uses the smallest applicable behavioral and visual evidence without inventing disproportionate test infrastructure. | accepted |
 | `DR08` | The agent selects and discloses Fast Fix when eligibility is unambiguous; only ambiguity or missing owner authority creates a human decision. | accepted |
+| `DR09` | A Fast Fix has no concluded-whiteboard gate at which to select its retained reviewer cohort. | changed |
+| `DR10` | The combined archive must be discoverable from its closing PR as well as link back to its issues and PRs. | changed |
 
 ## Current understanding
 
@@ -48,14 +50,14 @@
 
 | ID | Required outcome | Acceptance signal |
 | --- | --- | --- |
-| `R01` | A normal delivery closes with one archive containing the final concluded whiteboard and completed implementation plan. | Lifecycle fixture retains design, task mapping, actual results, validation expectations, deviations, and links in one archive. |
+| `R01` | A normal delivery closes with one archive containing the final concluded whiteboard and completed implementation plan. | Lifecycle fixture retains design, task mapping, actual results, validation expectations, deviations, and links in one archive; the closing PR links to that archive. |
 | `R02` | The closing candidate creates the archive before resetting the live whiteboard and removing the live plan. | Positive and negative lifecycle tests prove ordering and reject missing or competing archives. |
 | `R03` | GitHub remains authoritative for detailed findings, approvals, checks, merge, and issue history. | Templates and guidance link instead of copying that evidence. |
 | `R04` | An agent may select Fast Fix only for a small, bounded correction with an unambiguous accepted outcome and no material design decision. | Guidance and fixtures distinguish eligible, ambiguous, and disqualifying cases. |
 | `R05` | Fast Fix uses its GitHub Issue for the problem, accepted outcome, scope, and validation intent, and its PR for candidate, review, checks, acceptance, and merge evidence. | No feature whiteboard, plan, or archive is created for an eligible Fast Fix. |
-| `R06` | Fast Fix keeps applicable focused evidence, two retained reviewers, final full validation, and human merge acceptance. | Review-loop tests and documentation preserve the exact-candidate sequence. |
+| `R06` | Fast Fix selects two isolated reviewer sessions before its first candidate review and retains them through corrections and merge, final full validation, and human merge acceptance. | Review-loop tests and documentation preserve cohort initialization and the exact-candidate sequence. |
 | `R07` | UI evidence matches changed behavior proportionally. | Applicable component, interaction, rendered, viewport, accessibility, or smoke proof is recorded; unrelated infrastructure is not required. |
-| `R08` | Discovery of material uncertainty or scope expansion escalates Fast Fix to normal delivery without losing valid work or evidence. | Escalation fixtures preserve the issue and candidate while creating the required whiteboard and plan. |
+| `R08` | Discovery of material uncertainty or scope expansion escalates Fast Fix to normal delivery without losing valid work, evidence, or its retained reviewers. | Escalation fixtures preserve the issue, candidate, and reviewer sessions while creating and reviewing the required whiteboard and plan. |
 | `R09` | Existing active normal deliveries finish under the normal route and adopt the combined archive at closure; prior completed archives are not rewritten. | Migration wording and compatibility tests are explicit. |
 | `R10` | README, diagrams, templates, skills, policies, examples, and lifecycle checks remain mutually consistent. | Focused and final repository validation pass. |
 
@@ -64,7 +66,7 @@
 | ID | Decision | Alternative rejected | Rationale |
 | --- | --- | --- | --- |
 | `D01` | Combine the final whiteboard and completed plan into one archive per normal delivery. | Continue archiving only the whiteboard or keep two archives. | One document preserves context without duplicating ownership. |
-| `D02` | The combined archive contains durable design and execution context, with links to issues and PRs. | Copy PR review and merge evidence into Markdown. | GitHub already owns detailed evidence and history. |
+| `D02` | The combined archive contains durable design and execution context with links to issues and PRs, and the closing PR links to the archive. | Copy PR review and merge evidence into Markdown. | Bidirectional links preserve discoverability while GitHub already owns detailed evidence and history. |
 | `D03` | Fast Fix is a separate proportional route with no feature whiteboard, implementation plan, or delivery archive. | Make a smaller duplicate set of those documents. | The issue and PR already provide the necessary canonical owners. |
 | `D04` | The agent chooses Fast Fix and discloses the rationale when every eligibility boundary is clear. | Require owner approval merely to select the route. | An extra route gate would recreate avoidable overhead; substantive decisions still stop. |
 | `D05` | Fast Fix retains focused evidence, two reviewers, final full validation, and human merge acceptance. | Reduce quality gates because the change is small. | Artifact reduction must not become evidence reduction. |
@@ -87,13 +89,13 @@
 
 | Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
-| `CD01` | Normal delivery closes into one combined design-and-implementation archive. | Preserve final decisions, mapping, tasks, actual results, validation expectations, deviations, and issue/PR links; do not copy detailed GitHub evidence. | Archive fixture and lifecycle checks. |
+| `CD01` | Normal delivery closes into one combined design-and-implementation archive that is linked from its closing PR. | Preserve final decisions, mapping, tasks, actual results, validation expectations, deviations, and issue/PR links; do not copy detailed GitHub evidence. | Archive fixture, bidirectional link evidence, and lifecycle checks. |
 | `CD02` | Archive creation, live-plan removal, and whiteboard reset are one merge-ready canonical transition. | Never remove the live sources before their durable content exists in the candidate. | Positive, missing-archive, and competing-archive cases. |
 | `CD03` | Fast Fix uses Issue plus PR instead of whiteboard, plan, or archive. | Eligible only when outcome, scope, non-scope, validation intent, and authority are unambiguous and bounded. | Eligible-route fixture contains no redundant feature artifacts. |
 | `CD04` | Agent selects and discloses Fast Fix without a separate route-approval gate. | Missing authority, material ambiguity, or disqualifying scope requires human input or normal delivery. | Routing tests and human-brief wording. |
-| `CD05` | Fast Fix preserves the standard quality loop. | Applicable focused evidence, same two reviewers through merge, final full validation, and human merge acceptance remain required. | Exact-candidate positive and invalidation tests. |
+| `CD05` | Fast Fix preserves the standard quality loop and initializes its cohort before first candidate review. | The same two isolated reviewer sessions remain through corrections, escalation, and merge; applicable focused evidence, final full validation, and human merge acceptance remain required. | Cohort-routing, exact-candidate, and invalidation tests. |
 | `CD06` | UI-only Fast Fix uses proportional behavioral and visual evidence. | Validate material UI behavior and risk; do not require unrelated tests or infrastructure. | Representative UI guidance and fixture. |
-| `CD07` | Fast Fix escalates in place when a material design boundary appears. | Preserve valid issue, branch, code, tests, and evidence; add normal artifacts before dependent work continues. | Escalation-path fixture. |
+| `CD07` | Fast Fix escalates in place when a material design boundary appears. | Preserve valid issue, branch, code, tests, evidence, and reviewer cohort; add and review normal artifacts before dependent work continues. | Escalation-path fixture. |
 | `CD08` | Existing normal deliveries adopt the new closing archive prospectively; prior archives remain untouched. | No retrospective history rewrite. | Migration guidance and compatibility coverage. |
 | `CD09` | Two sequential tasks implement the design and all reader-facing surfaces remain consistent. | `T01` establishes the normal archive model; `T02` adds the proportional alternative. | Complete design-to-task mapping and repository validation. |
 
@@ -109,6 +111,8 @@
 | `DR06` | `CD04`, `CD07` | accepted | Material expansion fails closed to normal delivery. |
 | `DR07` | `CD06` | accepted | UI proof follows observable behavior rather than an unrelated test type. |
 | `DR08` | `CD04` | accepted | Clear cases stay agent-routable; substantive ambiguity still stops. |
+| `DR09` | `CD05`, `CD07` | changed | Fast Fix selects its cohort before first review and retains it if the route escalates. |
+| `DR10` | `CD01` | changed | Bidirectional links make the combined archive discoverable without copying evidence. |
 
 ## Human brief
 
