@@ -65,6 +65,18 @@ product, or scope decision, fail closed to normal delivery. Preserve valid code,
 tests, evidence, branch ownership, and the same reviewer sessions; conclude and
 review the required whiteboard and plan before dependent work continues.
 
+## Reviewer creation boundary
+
+> [!IMPORTANT]
+> For each independent new design or Issue-only Fast Fix, create two brand-new
+> reviewer sessions with no inherited parent conversation or prior-work context.
+> Do not reuse reviewers from another delivery. Disable conversation/history
+> inheritance when spawning them. Initially supply only canonical source entry
+> points and the current review packet; reviewers establish project context by
+> reading the review skill and applicable sources themselves. Retain this pair
+> within the same feature through its review gates, corrections, and final merge;
+> escalation of that Fast Fix to normal delivery is still the same feature.
+
 ## Boundaries
 
 - Keep canonical project authorities mutually consistent. Resolve conflicts

@@ -13,7 +13,7 @@ state.
 | Adoption state | `INSTALLED` |
 | State before block | `None` |
 | Playbook source repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook.git` |
-| Playbook revision | `32e9be3d4c302ab50c06f5ca97742169014b221f` |
+| Playbook revision | `a697df2ddf42a831d8481c334df57b71361f376e` |
 | Upgrade state | `COMPLETE` |
 | Upgrade candidate | `None` |
 | Playbook materialization mode | `pinned local checkout` |
@@ -21,7 +21,7 @@ state.
 | Accepted by | Repository owner through the adoption pull request |
 | Accepted at | `2026-09-07 Asia/Shanghai` |
 | Project adoption root | `.github/spec-driven-delivery` |
-| Last verified | In-place runtime synchronization to merged PR #104 revision `32e9be3d4c302ab50c06f5ca97742169014b221f` on 2026-09-17; canonical authority links remain current |
+| Last verified | In-place runtime synchronization to merged PR #106 revision `a697df2ddf42a831d8481c334df57b71361f376e` on 2026-09-17; canonical authority links remain current |
 
 ## Canonical project authorities
 
