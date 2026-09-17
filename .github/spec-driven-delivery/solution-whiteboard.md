@@ -12,7 +12,7 @@
 
 ## Discussion draft
 
-| ID | Agreed item | Resolution |
+| ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
 | DR01 | Review protects a reasonable accepted outcome, not impossible perfection | D01 |
 | DR02 | A real, valuable low-likelihood case need not block expensive current work | D02 |
