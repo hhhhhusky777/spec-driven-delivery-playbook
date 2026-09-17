@@ -177,6 +177,20 @@ wait for owner justification or authorization before continuing. Do not count
 network or environment interruptions, review time, or waits for people or
 external systems.
 
+## Author disposition of review
+
+> [!IMPORTANT]
+> Independently assess each finding; do not implement reviewer requests by default.
+> Accept a necessary correction, reject an unsupported or disproportionate request
+> with evidence and tradeoffs, or defer valuable nonblocking work to a linked issue
+> in its owning tracker. Explain the disposition in the PR. Discuss disagreements
+> before unnecessary code changes; a reviewer suggestion is not authority to
+> expand scope or add speculative complexity. The author is responsible for
+> reasonable rejection as well as correction. Use the reviewer skill's judgment
+> contract, not a second set of finding rules. Neither rejection nor issue
+> deferral waives a required control or critical invariant; unresolved critical
+> disagreements follow the existing authority and error-handling boundary.
+
 ## Error handling
 
 Follow the canonical error-handling authority recorded in the adoption
