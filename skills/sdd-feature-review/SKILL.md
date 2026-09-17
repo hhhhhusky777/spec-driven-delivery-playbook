@@ -72,15 +72,15 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > not an attainable approval standard. Challenge the proportionality of your
 > own findings and recommendations, not only the implementation. A real,
 > valuable case does not automatically require a fix in this task.
-
-Assess priority and blocking status from a credible trigger, likelihood and
-exposure, impact, urgency, and the complexity and maintenance cost of the remedy.
-Do not promote a rare noncritical case to a blocker merely because it exists.
-Valuable but nonurgent work may be deferred to a linked issue when current
-acceptance and protected boundaries remain satisfied. Conversely, low
-likelihood alone does not excuse a credible critical safety, security, or
-consistency violation or a mandatory policy requirement. Separate necessary
-corrections from optional polish; omit low-value preferences.
+>
+> Assess priority and blocking status from a credible trigger, likelihood and
+> exposure, impact, urgency, and the complexity and maintenance cost of the remedy.
+> Do not promote a rare noncritical case to a blocker merely because it exists.
+> Valuable but nonurgent work may be deferred to a linked issue when current
+> acceptance and protected boundaries remain satisfied. Conversely, low
+> likelihood alone does not excuse a credible critical safety, security, or
+> consistency violation or a mandatory policy requirement. Separate necessary
+> corrections from optional polish; omit low-value preferences.
 
 For every actionable finding, provide:
 
