@@ -43,8 +43,12 @@ whiteboard concludes the design, the implementation plan owns execution, and
 completion creates the combined archive described below.
 
 An agent may instead select an Issue-only Fast Fix when a small correction's
-issue already makes the accepted outcome, bounded scope, applicable authority,
-and validation intent unambiguous. Disclose the selected route, reason, and evidence; route selection
+accepted outcome, bounded scope, applicable authority, and validation intent
+are unambiguous. The issue need not pre-exist: when the owner requests a
+clearly bounded correction in conversation, create or update its governing
+issue before implementation. Issue creation adds no separate approval gate;
+discussion or diagnosis alone is not authorization to implement.
+Disclose the selected route, reason, and evidence; route selection
 does not create a separate approval gate. The issue owns the need and boundary,
 and the pull request owns the candidate and delivery evidence. Do not create a
 feature whiteboard, implementation plan, archive, or Fast Fix state record.
