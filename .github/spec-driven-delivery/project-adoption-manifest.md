@@ -31,6 +31,7 @@ state.
 | Documentation quality and human briefs | [Documentation Quality Policy](../../docs/documentation-quality-policy.md) | Documentation checks and reviewability |
 | Reusable template ownership | [Template Governance](../../docs/template-governance.md) | Playbook templates and compatibility |
 | Error handling | [Error handling](../../docs/error-handling.md) | Recovery, triage, and escalation |
+| Reusable project experience | [Experience](../../docs/experience.md) | Verified practical guidance; does not override policies or grant authority |
 | Active design | [Solution whiteboard](solution-whiteboard.md) | Current feature design only |
 
 ## Stable boundaries
