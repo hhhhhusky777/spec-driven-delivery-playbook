@@ -67,11 +67,26 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > proportionally. Raise a finding when handling is not the simplest clear-cut
 > approach that protects the accepted outcome, or when it adds speculative
 > complexity.
+>
+> Review for fitness to the accepted outcome, not perfection: perfect code is
+> not an attainable approval standard. Challenge the proportionality of your
+> own findings and recommendations, not only the implementation. A real,
+> valuable case does not automatically require a fix in this task.
+
+Assess priority and blocking status from a credible trigger, likelihood and
+exposure, impact, urgency, and the complexity and maintenance cost of the remedy.
+Do not promote a rare noncritical case to a blocker merely because it exists.
+Valuable but nonurgent work may be deferred to a linked issue when current
+acceptance and protected boundaries remain satisfied. Conversely, low
+likelihood alone does not excuse a credible critical safety, security, or
+consistency violation or a mandatory policy requirement. Separate necessary
+corrections from optional polish; omit low-value preferences.
 
 For every actionable finding, provide:
 
 - precise evidence and user or system impact;
-- blocking status and priority;
+- blocking status and priority, with reasons it warrants action now rather
+  than optional advice or issue follow-up;
 - the smallest correction that protects the accepted outcome; and
 - when a recognized practice genuinely applies, a primary industry standard or
   authoritative reference with a brief explanation of relevance.
@@ -81,6 +96,20 @@ principle or state the technical reasoning. Never fabricate authority. Keep
 optional improvements separate from blocking findings and never expand the
 accepted scope through review advice.
 
-Approve only the exact candidate you inspected when no actionable finding
-remains. A candidate-changing correction returns to both retained reviewers;
+Discuss an author's reasoned rejection or deferral using technical evidence and
+tradeoffs before demanding another code change. Accept justified dispositions
+within project authority; do not reopen a settled finding without new evidence
+or a changed candidate that invalidates its rationale. If a critical dispute
+cannot be resolved, use the existing authority and escalation boundary, not an
+indefinite review-change loop.
+
+These judgments follow Google's
+[review standard](https://google.github.io/eng-practices/review/reviewer/standard.html)
+and [handling-comments guidance](https://google.github.io/eng-practices/review/developer/handling-comments.html):
+balance progress with code health and resolve disagreement through facts and
+tradeoffs, not personal preference.
+
+Approve only the exact candidate you inspected when no unresolved blocking
+finding remains. Optional suggestions and justified nonblocking deferrals do
+not prevent approval. A candidate-changing correction returns to both retained reviewers;
 each reviewer independently checks the new candidate and prior dispositions.

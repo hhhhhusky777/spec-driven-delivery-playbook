@@ -110,7 +110,7 @@ proof. Each task still implements the tests required by its accepted outcome.
 "Focused tests" means only the tests that cover the changed files and lines.
 Run them before both retained reviewers inspect the same exact head.
 
-After both reviewers report no findings on the final candidate that will merge
+After both reviewers report no unresolved blocking findings on the final candidate that will merge
 back to the protected integration branch, run the full applicable validation
 on that exact head before human merge acceptance. A single-task PR targeting
 the protected branch is already final. Any candidate-changing correction
