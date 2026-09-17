@@ -131,7 +131,8 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
     assert.match(normalized, /Implement each task's required tests|Each task still implements the tests|Every task still implements the tests/i);
     assert.match(normalized, /retained (?:agent |feature )?reviewer|same two feature reviewer/i);
     assert.match(normalized, /full (?:applicable )?validation/i);
-    assert.doesNotMatch(normalized, /heavy|long-running|full-coverage/i);
+    // Reject ambiguous test categories, not unrelated background-command guidance.
+    assert.doesNotMatch(normalized, /\b(?:heavy|long-running)\s+(?:tests?\b|test\s+suites?\b)|full-coverage/i);
     assert.match(normalized, /exact[- ]head|exact candidate/i);
     assert.match(normalized, /stricter .*policy|Project policy may require/i);
     assert.match(normalized, /one hour of active implementation|one task reaches one hour/i);
