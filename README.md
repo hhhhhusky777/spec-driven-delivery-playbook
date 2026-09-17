@@ -10,6 +10,11 @@ design discussion, explicit delivery boundaries, proportional validation, and
 auditable pull-request review without prescribing one rigid path for every
 project.
 
+Keep delivery moving: overlap independent commands and tests, put long-running
+waits to productive use, and delegate bounded work to agents with the context
+they need. Clear ownership and the same quality gates keep that concurrency
+useful rather than adding process overhead.
+
 ## What the playbook gives you
 
 | Feature | What it helps you achieve |
@@ -20,6 +25,7 @@ project.
 | Outcome-based planning | Map design points to tasks, dependencies, validation, and Definition of Done |
 | Context-native handoff | Let a fresh agent resume from repository state without inheriting another agent's chat history |
 | Efficient implementation | Batch coherent work and avoid unnecessary stops while preserving real gates |
+| Efficiency and concurrency | Overlap independent execution and delegate worthwhile work while the main agent advances delivery |
 | Reliable review | Give two isolated reviewers and the owner one exact, reviewable candidate |
 | Simple fail-closed recovery | Preserve consistency, expose safe client retry, and avoid speculative error machinery |
 | Parallel delivery | Isolate worktrees and ownership while keeping integration boundaries explicit |
@@ -68,6 +74,7 @@ accepted installation.
   - [Plan and track delivery](#plan-and-track-delivery)
   - [Hand off without chat history](#hand-off-without-chat-history)
   - [Implement efficiently](#implement-efficiently)
+  - [Efficiency and Concurrency](#efficiency-and-concurrency)
   - [Design tests around risk](#design-tests-around-risk)
   - [Review for humans and agents](#review-for-humans-and-agents)
   - [Recover without restarting everything](#recover-without-restarting-everything)
@@ -355,6 +362,35 @@ A task may depend on already delivered work, but it cannot depend on a future
 change to make its own required result safe or green. Draft-PR timing, internal
 working order, tools, and contract-equivalent implementation choices remain
 agent decisions unless project policy says otherwise.
+
+### Efficiency and Concurrency
+
+Long-running work does not have to stall the whole delivery. The agent can
+overlap independent commands and tests, continue useful work while background
+operations run, and delegate bounded investigation or implementation when the
+benefit exceeds briefing and integration cost. Independence depends on actual
+inputs, ownership, environments, and resources—not just task names.
+
+| Approach | How it helps |
+| --- | --- |
+| Concurrent execution | Independent commands and tests run together; their results are collected before dependent work proceeds |
+| Multi-agent collaboration | Workers receive focused context and return verifiable outcomes while the parent advances the mainline |
+| Parent coordination | One agent integrates results, resolves cross-task tradeoffs, and remains responsible for final evidence and delivery |
+
+```mermaid
+flowchart TD
+    P["Parent: identify ready independent work"] --> M["Advance mainline"]
+    P --> B["Background commands and tests"]
+    P --> W["Workers: bounded independent work"]
+    M --> I["Integrate outcomes and collect evidence"]
+    B --> I
+    W --> I
+    I --> G["Existing review and validation gates"]
+```
+
+This is an execution strategy for the existing core goals, not another goal or
+gate. The [workflow skill](skills/sdd-project-workflow/SKILL.md#efficiency-and-concurrency)
+owns the judgment framework; the agent chooses a proportional way to apply it.
 
 ### Design tests around risk
 
