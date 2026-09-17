@@ -14,10 +14,10 @@
 
 | ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
-| DR01 | Review protects a reasonable accepted outcome, not impossible perfection | D01 |
-| DR02 | A real, valuable low-likelihood case need not block expensive current work | D02 |
-| DR03 | Author must independently evaluate and reasonably reject or defer findings | D03 |
-| DR04 | Avoid endless review-change loops and duplicate error-handling rules | D04 |
+| DR01 | Review protects a reasonable accepted outcome, not impossible perfection | accepted: D01 |
+| DR02 | A real, valuable low-likelihood case need not block expensive current work | accepted: D02 |
+| DR03 | Author must independently evaluate and reasonably reject or defer findings | accepted: D03 |
+| DR04 | Avoid endless review-change loops and duplicate error-handling rules | accepted: D04 |
 
 ## Authority and context
 
