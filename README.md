@@ -316,6 +316,7 @@ canonical sources:
 | Working or concluded whiteboard | Current discussion, decisions, accepted design, and unresolved questions |
 | Implementation plan, when present | Current state, task boundaries, dependencies, Definition of Done, and next eligible work |
 | Pull requests, when present | Exact changes, review findings, checks, acceptance, and merged evidence |
+| [Project Experience](docs/experience.md) or existing equivalent | Discoverable, verified lessons that help fresh agents avoid repeated trial and error |
 
 ```mermaid
 flowchart LR
@@ -387,6 +388,11 @@ flowchart TD
     W --> I
     I --> G["Existing review and validation gates"]
 ```
+
+Efficiency also carries across sessions: agents consult and improve durable
+[project Experience](docs/experience.md), reusing verified lessons instead of
+rediscovering the same problems. It survives feature cleanup and links to
+existing solution owners rather than duplicating their guidance.
 
 This is an execution strategy for the existing core goals, not another goal or
 gate. The [workflow skill](skills/sdd-project-workflow/SKILL.md#efficiency-and-concurrency)
@@ -749,7 +755,7 @@ Fast Fix instead uses its Issue and PR.
 | `install-sdd.sh` | Resolve immutable revisions and generate isolated runtime guidance |
 | `skills/` | Outcome and boundary guidance used by adoption, workflow, feature-review, and upgrade agents |
 | `templates/` | Reusable manifest, whiteboard, plan, and review structures |
-| `docs/` | Canonical quality, template-governance, and error-handling policies |
+| `docs/` | Canonical quality, template-governance, error handling, and durable project Experience |
 | `scripts/` | Source repository documentation and lifecycle checks |
 | `tests/` | Installer and documentation behavior regression coverage |
 | `.github/spec-driven-delivery/` | This repository's installed manifest, active whiteboard, and delivery plan |
