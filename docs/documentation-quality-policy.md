@@ -57,6 +57,23 @@ Git and pull requests preserve prior versions and detailed delivery evidence.
 The maintained tree keeps current reusable guidance and active feature state,
 not duplicate history or successful-tool transcripts.
 
+## Accepted design authority
+
+> [!IMPORTANT]
+> **Hard rule.** Both reviewers MUST approve the design before the human gate.
+> The human brief MUST list every new fail-closed behavior. The human MUST
+> accept the design and every disposition. The conclusion commit MUST change
+> only state, revision, and approved dispositions. Both reviewers MUST verify
+> that exact commit before the whiteboard freezes and planning starts.
+>
+> After freeze, agents MUST NOT change any whiteboard byte without prior human
+> authorization for the exact amendment. They MUST change only that scope,
+> reconclude the complete design, and repeat reviewer and human acceptance.
+> This includes formatting, metadata, status, and archive/reset.
+>
+> Every plan and candidate addition MUST trace to the accepted design or an
+> authority it explicitly consumes. Unexplained scope MUST block approval.
+
 ## Risk-focused test design
 
 Tests provide evidence about accepted outcomes and protected invariants; they
@@ -98,7 +115,7 @@ status-only correction as a defect rather than routine cleanup.
 
 Every material candidate receives exact-candidate self-review, review by two
 isolated agents, and required human semantic acceptance. Normal delivery selects
-its two reviewers at the concluded-whiteboard gate; an eligible Issue-only Fast
+its two reviewers at the whiteboard conclusion-candidate gate; an eligible Issue-only Fast
 Fix selects them before its first candidate review. Either route retains those
 sessions through merge. The [feature review skill](../skills/sdd-feature-review/SKILL.md)
 is the single execution contract for reviewer context, independence, packets,

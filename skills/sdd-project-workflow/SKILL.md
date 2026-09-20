@@ -72,14 +72,19 @@ review the required whiteboard and plan before dependent work continues.
 ## Boundaries
 
 > [!IMPORTANT]
-> For each independent new design or Issue-only Fast Fix, create two brand-new
-> reviewer sessions with no inherited parent conversation or prior-work context.
-> Do not reuse reviewers from another delivery. Disable conversation/history
-> inheritance when spawning them. Initially supply only canonical source entry
-> points and the current review packet; reviewers establish project context by
-> reading the review skill and applicable sources themselves. Retain this pair
-> within the same feature through its review gates, corrections, and final merge;
-> escalation of that Fast Fix to normal delivery is still the same feature.
+> **Hard rule.** Each independent design or Issue-only Fast Fix MUST use two
+> brand-new reviewer sessions with no inherited parent or prior-work context.
+> Reviewers MUST NOT be reused across deliveries. They MUST read the review
+> skill and applicable canonical sources. The same pair MUST remain through all
+> gates, corrections, and final merge for that delivery.
+>
+> **Hard rule.** Both reviewers MUST approve the design before the human gate.
+> The parent response MUST list every new fail-closed behavior. The human MUST
+> accept the design and every disposition. The conclusion commit MUST change
+> only state, revision, and approved dispositions. The same reviewers MUST
+> verify that exact commit before planning starts. After freeze, agents MUST NOT
+> change any whiteboard byte without prior human authorization. Every addition MUST trace
+> to the frozen design. Unexplained scope MUST block delivery.
 
 - Keep canonical project authorities mutually consistent. Resolve conflicts
   from those authorities and explicit owner decisions; ask the owner when the
@@ -100,13 +105,14 @@ review the required whiteboard and plan before dependent work continues.
   affected check until the worktree is operational or error handling requires
   escalation. Never make the worktree depend on mutable files or runtime owned
   by another checkout; shared support must have stable project-level ownership.
-- A concluded design or approved plan changes only through an explicit
-  amendment when the observable outcome changes. Ordinary task status and
-  evidence updates do not reopen the design.
-- For normal delivery, when the whiteboard is formally concluded, select two isolated reviewers for
-  the feature and require each one to read the installed
-  sdd-feature-review skill once. They review the exact concluded design before
-  the owner accepts it for planning. Retain those same reviewer sessions
+- Follow the project's canonical accepted-design authority. An authorized
+  amendment changes only its named scope and repeats conclusion review and
+  human acceptance before dependent work resumes.
+- For normal delivery, when the whiteboard conclusion candidate is ready,
+  select two isolated reviewers for the feature and require each one to read
+  the installed sdd-feature-review skill once. They review the exact design
+  candidate before the owner concludes and accepts it for planning. Retain
+  those same reviewer sessions
   through planning, every task and correction round, and the final candidate
   until the feature merges into its protected target. For each gate, send the
   focused context packet defined by the reviewer skill; do not reload the skill
@@ -191,6 +197,12 @@ Classify material items as `HUMAN_DECISION`, `AGENT_ACTION`, `DISCLOSE`, or
 material awareness-only information (including accepted limitations), or
 recognize that no material attention or action remains. Classification adds no
 new gate.
+
+Map every plan item and candidate addition of content, behavior, logic, or
+fail-closed effect to the frozen concluded design or an explicitly consumed
+project authority. Contract-equivalent methods remain discretionary. Stop
+affected work when new scope appears; remove it or obtain prior human authority
+for a design amendment instead of implementing it opportunistically.
 
 Design test evidence from accepted outcomes and material failure risks. Keep
 essential critical-path proof, then emphasize applicable boundaries,

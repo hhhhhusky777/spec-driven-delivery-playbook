@@ -136,11 +136,29 @@ deferrals, and rejections instead of silently dropping them.
 | --- | --- | --- | --- |
 | `<DR01>` | `<design point ID or None>` | `<accepted, changed, deferred, or rejected>` | `<why the conclusion preserves or intentionally changes the draft>` |
 
+## Newly introduced fail-closed behaviors
+
+> [!IMPORTANT]
+> **Hard rule.** Both reviewers MUST approve the candidate before the human
+> gate. The parent response MUST then list every new fail-closed behavior for
+> human disposition. A concluded whiteboard MUST NOT contain a pending row.
+> Use one all-`None` row when none exists.
+
+| ID | Trigger | Required fail-closed response | Impact | Owner disposition |
+| --- | --- | --- | --- | --- |
+| `<FC01 or None>` | `<condition or None>` | `<behavior or None>` | `<effect or None>` | `<Pending, Approved, Rejected, or None>` |
+
 ## Design amendments
 
-Add a row only when an accepted observable outcome changes. Ordinary task
-status, evidence, and contract-equivalent implementation choices stay in the
-implementation plan.
+> [!IMPORTANT]
+> **Hard rule.** Freeze begins only after the declared metadata transition is
+> committed and both reviewers verify no semantic change. After freeze, agents
+> MUST NOT change any whiteboard byte without prior human authorization for the exact
+> amendment. They MUST change only that scope, then reconclude, review, and
+> obtain human acceptance again.
+
+Ordinary task status, evidence, and contract-equivalent implementation choices
+stay in the implementation plan.
 
 | Amendment | Changed design points | Reason and impact | Owner decision |
 | --- | --- | --- | --- |
@@ -154,8 +172,5 @@ implementation plan.
 | Important boundaries | `<safety, compatibility, policy, or authority>` | `<class>` |
 | Alternatives rejected | `<only material alternatives>` | `<class>` |
 | Remaining gaps or risks | `<summary or None>` | `<class>` |
+| Newly introduced fail-closed behavior | `<complete list after two-agent design review, with effect and recommendation, or None>` | `<HUMAN_DECISION or NONE>` |
 | Decision requested | `<exact request>` | `<class>` |
-
-A concluded whiteboard is the design authority for its implementation plan.
-Ordinary implementation discoveries update the plan; an observable design
-change requires an explicit whiteboard amendment and owner decision.

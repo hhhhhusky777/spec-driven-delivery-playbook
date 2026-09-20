@@ -64,7 +64,7 @@ function manifestErrors(text) {
   return errors;
 }
 
-function whiteboardErrors(text) {
+function whiteboardErrors(text, requireFailClosedTable = true) {
   const fields = fieldMap(text);
   const state = fields.get("State") || "";
   const errors = [];
@@ -75,6 +75,25 @@ function whiteboardErrors(text) {
     const design = documentTables.find(table => table[0].includes("Design point") && table[0].includes("Accepted outcome"));
     if (!design) {
       errors.push("concluded whiteboard requires a design-outcome table");
+    }
+    const failClosed = documentTables.find(table =>
+      table[0].includes("ID") && table[0].includes("Trigger") && table[0].includes("Owner disposition")
+    );
+    if (!failClosed && requireFailClosedTable) {
+      errors.push("concluded whiteboard requires a fail-closed behavior approval table");
+    } else if (failClosed) {
+      const rows = failClosed.slice(2);
+      if (!rows.length) errors.push("fail-closed behavior approval table requires a disposition row");
+      const dispositionIndex = failClosed[0].indexOf("Owner disposition");
+      for (const row of rows) {
+        const id = (row[0] || "").toLowerCase();
+        const disposition = (row[dispositionIndex] || "").toLowerCase();
+        const noneSentinel = disposition === "none" && id === "none"
+          && row.slice(1, dispositionIndex).every(value => value.toLowerCase() === "none");
+        if (!(noneSentinel || /^(approved|accepted|rejected)\b/.test(disposition))) {
+          errors.push(`unresolved fail-closed behavior disposition: ${row[0] || "unknown"}`);
+        }
+      }
     }
     const draft = documentTables.find(table =>
       table[0].includes("ID") && table[0].includes("Agreed item, alternative, constraint, or gap")
@@ -274,7 +293,7 @@ function deliveryArchiveErrors(text) {
   if ((fieldMap(plan).get("State") || "") !== "COMPLETE") {
     errors.push("archived implementation plan must be COMPLETE");
   }
-  for (const message of whiteboardErrors(whiteboard)) errors.push(`archived whiteboard: ${message}`);
+  for (const message of whiteboardErrors(whiteboard, false)) errors.push(`archived whiteboard: ${message}`);
   for (const message of planErrors(plan)) errors.push(`archived implementation plan: ${message}`);
   return errors;
 }

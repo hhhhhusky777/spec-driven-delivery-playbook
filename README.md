@@ -255,12 +255,15 @@ flowchart LR
     D --> Q{"Owner decision needed?"}
     Q -->|"yes"| T["Concise decision table"]
     T --> D
-    Q -->|"no"| C["Concluded design points"]
+    Q -->|"no"| C["Conclusion candidate"]
     C --> R["Reconcile every material draft item"]
-    R --> B["Human brief: boundaries, risks, gaps"]
-    B --> A["Two-agent design review"]
-    A --> H["Human design acceptance"]
-    H --> P["Implementation planning"]
+    R --> A["Two-agent design review"]
+    A --> B["Human brief: design + all new fail-closed behavior"]
+    B --> H["Human design acceptance"]
+    H --> M["Commit declared conclusion metadata"]
+    M --> V["Same reviewers verify no semantic change"]
+    V --> F["Freeze exact concluded whiteboard bytes"]
+    F --> P["Implementation planning"]
 ```
 
 This is the first ordinary review gate for the feature. Two independent
@@ -271,9 +274,12 @@ independent review behavior, and findings; the project workflow only routes
 each exact candidate to those retained sessions.
 
 The concluded whiteboard states observable outcomes and important boundaries,
-not implementation trivia. If later work changes an observable outcome, the
-design receives an explicit amendment; ordinary task progress does not reopen
-it.
+not implementation trivia. Human acceptance authorizes the declared conclusion
+metadata transition; the same reviewers verify its exact committed candidate
+before the bytes freeze. Any later change needs prior human authorization for the concrete amendment,
+then reconclusion, both retained reviewers, and human acceptance before
+dependent work resumes. Every planned or implemented addition must trace to the
+frozen design; useful but unauthorized scope remains out of scope.
 
 ### Plan and track delivery
 
@@ -450,7 +456,7 @@ deferring test implementation.
 Every material candidate receives self-review, two isolated agent reviews, and
 the required human semantic decision. The two agents review the same exact
 candidate independently. The feature selects those reviewers when its
-whiteboard is formally concluded. They review the design before human
+whiteboard conclusion candidate is ready. They review the design before human
 acceptance, then their sessions remain assigned through planning, all tasks,
 corrections, and the final candidate until the feature merges. This continuity
 preserves feature context; the
@@ -576,7 +582,9 @@ the complete accepted whiteboard and complete final implementation plan into
 one archive. The archive links to its issues and PRs, and the closing PR links
 back to the archive; GitHub continues to own detailed review and merge
 evidence. Only then does the candidate remove the live plan and other
-feature-only working material and reset the live whiteboard to `EMPTY`.
+feature-only working material and reset the live whiteboard to `EMPTY`. Obtain
+human authority for that named mutation before constructing the candidate;
+design acceptance may preauthorize it explicitly.
 Reusable source output and the adoption manifest remain. Existing active
 normal deliveries use this close boundary; completed historical archives are
 not rewritten. If the PR does not merge, none of that candidate state reaches

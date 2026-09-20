@@ -122,6 +122,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   const policy = await read("docs/documentation-quality-policy.md");
   const readme = await read("README.md");
   const contributing = await read("CONTRIBUTING.md");
+  const whiteboard = await read("templates/discovery/solution-whiteboard.md");
   const automation = await read(".github/workflows/documentation-quality.yml");
   const packageSource = await read("package.json");
 
@@ -147,7 +148,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
     assert.match(document, /stable project-level ownership/);
   }
 
-  const normalizedPolicy = policy.replace(/\s+/g, " ");
+  const normalizedPolicy = policy.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
   assert.match(normalizedPolicy, /Each task still implements.*before both retained reviewers/i);
   assert.match(normalizedPolicy, /Focused tests.*only the tests that cover the changed files and lines/);
   assert.match(normalizedPolicy, /final candidate that will merge back to the protected integration branch.*full applicable validation/);
@@ -178,6 +179,7 @@ test("feature review cohorts retain context and produce useful change requests",
   const policy = await read("docs/documentation-quality-policy.md");
   const readme = await read("README.md");
   const contributing = await read("CONTRIBUTING.md");
+  const whiteboard = await read("templates/discovery/solution-whiteboard.md");
 
   for (const document of [workflow, readme, contributing]) {
     const normalized = document.replace(/\s+/g, " ");
@@ -187,9 +189,10 @@ test("feature review cohorts retain context and produce useful change requests",
     assert.match(normalized, /task/);
     assert.match(normalized, /final candidate/);
   }
-  const normalizedPolicy = policy.replace(/\s+/g, " ");
+  const normalizedPolicy = policy.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
   const normalizedWorkflow = workflow.replace(/\s+/g, " ");
   const normalizedReviewer = reviewer.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+  const normalizedWhiteboard = whiteboard.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
   assert.match(normalizedPolicy, /feature review skill.*single execution contract/);
   assert.match(normalizedPolicy, /retains? (?:their|those) sessions through merge/);
   assert.match(normalizedWorkflow, /require each one to read the installed sdd-feature-review skill once/);
@@ -212,9 +215,13 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(normalizedReviewer, /not the simplest clear-cut approach that protects the accepted outcome, or when it adds speculative complexity/);
   assert.match(readme, /feature review skill/);
   assert.match(policy, /\| Design conclusion \| Key design points/);
-  assert.match(readme, /B --> A\["Two-agent design review"\]/);
-  assert.match(readme, /A --> H\["Human design acceptance"\]/);
-  assert.match(readme, /H --> P\["Implementation planning"\]/);
+  assert.match(readme, /R --> A\["Two-agent design review"\]/);
+  assert.match(readme, /A --> B\["Human brief: design \+ all new fail-closed behavior"\]/);
+  assert.match(readme, /B --> H\["Human design acceptance"\]/);
+  assert.match(readme, /H --> M\["Commit declared conclusion metadata"\]/);
+  assert.match(readme, /M --> V\["Same reviewers verify no semantic change"\]/);
+  assert.match(readme, /V --> F\["Freeze exact concluded whiteboard bytes"\]/);
+  assert.match(readme, /F --> P\["Implementation planning"\]/);
   assert.match(readme, /P --> R1\["Retained feature reviewer 1"\]/);
   assert.match(readme, /P --> R2\["Retained feature reviewer 2"\]/);
   assert.match(normalizedReviewer, /precise evidence and user or system impact/);
@@ -224,6 +231,17 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(normalizedReviewer, /Never fabricate authority/);
   assert.match(normalizedReviewer, /optional improvements separate from blocking findings/);
   assert.match(normalizedReviewer, /never expand the accepted scope/);
+  assert.match(policy, /> \[!IMPORTANT\]/);
+  assert.match(normalizedPolicy, /After freeze, agents MUST NOT change any whiteboard byte without prior human authorization/);
+  assert.match(normalizedWorkflow, /parent response MUST list every new fail-closed behavior/);
+  assert.match(normalizedReviewer, /Unexplained scope MUST block approval/);
+  assert.match(normalizedReviewer, /accept only state, revision, and approved-disposition changes/);
+  assert.match(normalizedReviewer, /any whiteboard byte change without prior human authorization.*MUST block approval/);
+  assert.match(normalizedWhiteboard, /A concluded whiteboard MUST NOT contain a pending row/);
+  for (const document of [policy, workflow, reviewer, whiteboard]) {
+    assert.doesNotMatch(document, /\bany byte\b/);
+  }
+  assert.doesNotMatch(whiteboard, /After human acceptance, the concluded whiteboard is byte-frozen/);
   for (const document of [policy, readme, contributing, workflow]) {
     assert.doesNotMatch(document, /smallest recommended correction|primary industry standard|Never fabricate authority/);
   }
@@ -246,7 +264,7 @@ test("Issue-only Fast Fix removes duplicate artifacts without bypassing gates", 
   assert.match(normalizedWorkflow, /Fast Fix never waives testing, review, human merge authority, or project policy/i);
   assert.match(normalizedWorkflow, /UI-only fix.*smallest evidence.*without inventing a new test framework/i);
   assert.match(normalizedWorkflow, /fail closed to normal delivery.*Preserve valid code, tests, evidence, branch ownership, and the same reviewer sessions/i);
-  assert.match(normalizedReviewer, /concluded-whiteboard gate for normal delivery, or before the first candidate review for an Issue-only Fast Fix/i);
+  assert.match(normalizedReviewer, /whiteboard conclusion-candidate gate for normal delivery, or before the first candidate review for an Issue-only Fast Fix/i);
   assert.match(normalizedReviewer, /governing issue for a Fast Fix/i);
   assert.match(normalizedReviewer, /Fast Fix exposes a material decision or ambiguity.*keep the reviewer session/i);
   assert.match(policy.replace(/\s+/g, " "), /Issue-only Fast Fix selects them before its first candidate review.*retains those sessions through merge/i);

@@ -14,7 +14,7 @@ turning prior conclusions into assumptions.
 ## Reviewer session
 
 Load this skill when the parent agent creates the feature's two reviewer
-sessions: at the concluded-whiteboard gate for normal delivery, or before the
+sessions: at the whiteboard conclusion-candidate gate for normal delivery, or before the
 first candidate review for an Issue-only Fast Fix. Keep the same reviewer seat
 and session through every applicable design, planning, implementation,
 correction, and final-candidate gate until the feature merges into its protected
@@ -23,7 +23,7 @@ changes or the session must be recreated.
 
 At session start, establish project context at proportional depth. In an
 adopted project, read the adoption manifest and its linked project authorities,
-then read the concluded whiteboard for normal delivery or the governing issue
+then read the whiteboard conclusion candidate for normal delivery or the governing issue
 for a Fast Fix. Without a manifest, use the project README or entry
 documentation and canonical policies. Learn the relevant scope,
 ownership, safety, compatibility, testing, and merge boundaries; task details
@@ -61,6 +61,14 @@ Judge correctness, design and policy consistency, compatibility, safety,
 validation sufficiency, proportionality, and merge-ready canonical state.
 
 > [!IMPORTANT]
+> **Hard rule.** Compare every plan and candidate addition with the accepted
+> design. Unexplained scope MUST block approval, even when useful. Verify that
+> every new fail-closed behavior is listed for human disposition. For the
+> conclusion transition, accept only state, revision, and approved-disposition
+> changes. Both reviewers MUST verify that exact commit before freeze. After
+> freeze, any whiteboard byte change without prior human authorization for the exact
+> amendment MUST block approval.
+>
 > Actively challenge over-engineering. For material edge-case, concurrency,
 > race, timing, and error risks, verify that the design and code apply the
 > accepted feature boundary and canonical error-handling authority
