@@ -4,7 +4,7 @@
 
 | Field | Value |
 | --- | --- |
-| State | `REVIEW_READY` |
+| State | `OPEN` |
 | Need / issue | [Issue #115](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/115) |
 | Owner | Repository owner |
 | Concluded design revision | `None` |
@@ -89,6 +89,7 @@ and this whiteboard is formally concluded.
 | WB115-03 | Reviewers block unauthorized scope | A useful improvement is still out of scope until human authorization changes the design | Reviewer skill and findings explicitly assess whiteboard traceability |
 | WB115-04 | Every newly introduced fail-closed behavior is listed and human-approved before conclusion | Existing canonical behavior need only be linked; newly imposed rejection behavior must be explicit | Dedicated table has no undisposed row at conclusion |
 | WB115-05 | Archive/reset is allowed only as an explicitly human-authorized lifecycle transition | The archive preserves complete concluded content and Git preserves exact bytes; reset cannot happen solely on agent authority | Human authorization precedes closing-candidate mutation and may be granted when accepting this design or at a later pre-mutation gate |
+| WB115-06 | Human approval authorizes only the declared conclusion metadata transition | After approval, change `OPEN` to `CONCLUDED`, assign the revision, and record approved dispositions; both retained reviewers verify that no other semantic change occurred | Freeze begins on the committed, reviewer-verified concluded candidate before planning |
 
 ## Draft-to-conclusion reconciliation
 
@@ -102,7 +103,8 @@ and this whiteboard is formally concluded.
 
 ## Design amendments
 
-After human acceptance, this concluded whiteboard is byte-immutable. An
+After human acceptance and reviewer verification of the declared conclusion
+metadata transition, this concluded whiteboard is byte-immutable. An
 amendment requires explicit human authorization for the concrete change before
 any byte changes. The agent then changes only the authorized scope, reconcludes
 the complete whiteboard, returns the new candidate to both retained reviewers,
@@ -120,4 +122,4 @@ and diff; do not add an amendment row autonomously.
 | Newly introduced fail-closed behavior | FC01–FC05 are reviewer inputs; the parent agent must list the final set in its response after review | `HUMAN_DECISION` pending |
 | Lifecycle consequence | Archive preserves complete content and Git exact bytes; reset needs prior human authorization | `HUMAN_DECISION` pending |
 | Remaining gaps or risks | Borderline traceability may require owner judgment; agents and reviewers cannot self-expand scope | `DISCLOSE` |
-| Decision requested | After both reviewers approve, accept the exact proposed design and listed fail-closed behaviors; that acceptance formally concludes and freezes the whiteboard | `HUMAN_DECISION` |
+| Decision requested | After both reviewers approve, accept the exact proposed design and listed fail-closed behaviors, and authorize only the declared metadata transition to a committed `CONCLUDED` candidate; the same reviewers verify that transition before freeze and planning | `HUMAN_DECISION` |
