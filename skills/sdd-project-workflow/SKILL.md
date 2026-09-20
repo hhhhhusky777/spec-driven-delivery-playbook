@@ -72,14 +72,19 @@ review the required whiteboard and plan before dependent work continues.
 ## Boundaries
 
 > [!IMPORTANT]
-> For each independent new design or Issue-only Fast Fix, create two brand-new
-> reviewer sessions with no inherited parent conversation or prior-work context.
-> Do not reuse reviewers from another delivery. Disable conversation/history
-> inheritance when spawning them. Initially supply only canonical source entry
-> points and the current review packet; reviewers establish project context by
-> reading the review skill and applicable sources themselves. Retain this pair
-> within the same feature through its review gates, corrections, and final merge;
-> escalation of that Fast Fix to normal delivery is still the same feature.
+> **Hard rule.** Each independent design or Issue-only Fast Fix MUST use two
+> brand-new reviewer sessions with no inherited parent or prior-work context.
+> Reviewers MUST NOT be reused across deliveries. They MUST read the review
+> skill and applicable canonical sources. The same pair MUST remain through all
+> gates, corrections, and final merge for that delivery.
+>
+> **Hard rule.** Both reviewers MUST approve the design before the human gate.
+> The parent response MUST list every new fail-closed behavior. The human MUST
+> accept the design and every disposition. The conclusion commit MUST change
+> only state, revision, and approved dispositions. The same reviewers MUST
+> verify that exact commit before planning starts. After freeze, agents MUST NOT
+> change any whiteboard byte without prior human authorization. Every addition MUST trace
+> to the frozen design. Unexplained scope MUST block delivery.
 
 - Keep canonical project authorities mutually consistent. Resolve conflicts
   from those authorities and explicit owner decisions; ask the owner when the
@@ -100,17 +105,9 @@ review the required whiteboard and plan before dependent work continues.
   affected check until the worktree is operational or error handling requires
   escalation. Never make the worktree depend on mutable files or runtime owned
   by another checkout; shared support must have stable project-level ownership.
-- Follow the canonical accepted-design authority in the project's quality
-  policy. Both reviewers inspect the conclusion candidate first; the parent
-  response then lists every newly introduced fail-closed behavior for human
-  disposition. Human approval authorizes only the declared conclusion metadata
-  transition. Commit that transition, return the exact `CONCLUDED` candidate to
-  both retained reviewers to verify no semantic change, then freeze its bytes
-  before planning. Do not change any byte afterward without prior human
-  authorization for the concrete amendment, including formatting, metadata,
-  status, and lifecycle mutations. Reconclude, return the new exact candidate
-  to both retained reviewers, and obtain human acceptance before dependent work
-  resumes.
+- Follow the project's canonical accepted-design authority. An authorized
+  amendment changes only its named scope and repeats conclusion review and
+  human acceptance before dependent work resumes.
 - For normal delivery, when the whiteboard conclusion candidate is ready,
   select two isolated reviewers for the feature and require each one to read
   the installed sdd-feature-review skill once. They review the exact design

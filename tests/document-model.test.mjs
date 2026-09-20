@@ -148,7 +148,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
     assert.match(document, /stable project-level ownership/);
   }
 
-  const normalizedPolicy = policy.replace(/\s+/g, " ");
+  const normalizedPolicy = policy.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
   assert.match(normalizedPolicy, /Each task still implements.*before both retained reviewers/i);
   assert.match(normalizedPolicy, /Focused tests.*only the tests that cover the changed files and lines/);
   assert.match(normalizedPolicy, /final candidate that will merge back to the protected integration branch.*full applicable validation/);
@@ -189,9 +189,10 @@ test("feature review cohorts retain context and produce useful change requests",
     assert.match(normalized, /task/);
     assert.match(normalized, /final candidate/);
   }
-  const normalizedPolicy = policy.replace(/\s+/g, " ");
+  const normalizedPolicy = policy.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
   const normalizedWorkflow = workflow.replace(/\s+/g, " ");
   const normalizedReviewer = reviewer.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+  const normalizedWhiteboard = whiteboard.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
   assert.match(normalizedPolicy, /feature review skill.*single execution contract/);
   assert.match(normalizedPolicy, /retains? (?:their|those) sessions through merge/);
   assert.match(normalizedWorkflow, /require each one to read the installed sdd-feature-review skill once/);
@@ -230,13 +231,16 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(normalizedReviewer, /Never fabricate authority/);
   assert.match(normalizedReviewer, /optional improvements separate from blocking findings/);
   assert.match(normalizedReviewer, /never expand the accepted scope/);
-  assert.match(normalizedPolicy, /concluded whiteboard is the exhaustive design authority/);
-  assert.match(normalizedPolicy, /no agent may change any whiteboard byte without prior human authorization/);
-  assert.match(normalizedWorkflow, /lists every newly introduced fail-closed behavior for human disposition/);
-  assert.match(normalizedReviewer, /Treat unexplained scope as blocking/);
-  assert.match(normalizedReviewer, /recorded whiteboard bytes did not change/);
-  assert.match(normalizedReviewer, /only state, revision, and approved dispositions with no semantic change/);
-  assert.match(whiteboard.replace(/\s+/g, " "), /A concluded whiteboard has no pending disposition/);
+  assert.match(policy, /> \[!IMPORTANT\]/);
+  assert.match(normalizedPolicy, /After freeze, agents MUST NOT change any whiteboard byte without prior human authorization/);
+  assert.match(normalizedWorkflow, /parent response MUST list every new fail-closed behavior/);
+  assert.match(normalizedReviewer, /Unexplained scope MUST block approval/);
+  assert.match(normalizedReviewer, /accept only state, revision, and approved-disposition changes/);
+  assert.match(normalizedReviewer, /any whiteboard byte change without prior human authorization.*MUST block approval/);
+  assert.match(normalizedWhiteboard, /A concluded whiteboard MUST NOT contain a pending row/);
+  for (const document of [policy, workflow, reviewer, whiteboard]) {
+    assert.doesNotMatch(document, /\bany byte\b/);
+  }
   assert.doesNotMatch(whiteboard, /After human acceptance, the concluded whiteboard is byte-frozen/);
   for (const document of [policy, readme, contributing, workflow]) {
     assert.doesNotMatch(document, /smallest recommended correction|primary industry standard|Never fabricate authority/);

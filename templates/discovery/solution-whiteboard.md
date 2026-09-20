@@ -138,9 +138,11 @@ deferrals, and rejections instead of silently dropping them.
 
 ## Newly introduced fail-closed behaviors
 
-Reviewers inspect these proposals before the parent lists the complete set in
-the human review response. A concluded whiteboard has no pending disposition.
-Use one `None` row when the design introduces no fail-closed behavior.
+> [!IMPORTANT]
+> **Hard rule.** Both reviewers MUST approve the candidate before the human
+> gate. The parent response MUST then list every new fail-closed behavior for
+> human disposition. A concluded whiteboard MUST NOT contain a pending row.
+> Use one all-`None` row when none exists.
 
 | ID | Trigger | Required fail-closed response | Impact | Owner disposition |
 | --- | --- | --- | --- | --- |
@@ -148,12 +150,13 @@ Use one `None` row when the design introduces no fail-closed behavior.
 
 ## Design amendments
 
-After the declared conclusion metadata transition is committed and both
-retained reviewers verify no semantic change, the concluded whiteboard is
-byte-frozen. Before any change—including formatting, metadata, status, or lifecycle mutation—the agent
-must obtain human authorization for the concrete amendment. Change only that
-scope, reconclude the complete design, return the new exact candidate to both
-retained reviewers, and obtain human acceptance before dependent work resumes.
+> [!IMPORTANT]
+> **Hard rule.** Freeze begins only after the declared metadata transition is
+> committed and both reviewers verify no semantic change. After freeze, agents
+> MUST NOT change any whiteboard byte without prior human authorization for the exact
+> amendment. They MUST change only that scope, then reconclude, review, and
+> obtain human acceptance again.
+
 Ordinary task status, evidence, and contract-equivalent implementation choices
 stay in the implementation plan.
 
@@ -171,12 +174,3 @@ stay in the implementation plan.
 | Remaining gaps or risks | `<summary or None>` | `<class>` |
 | Newly introduced fail-closed behavior | `<complete list after two-agent design review, with effect and recommendation, or None>` | `<HUMAN_DECISION or NONE>` |
 | Decision requested | `<exact request>` | `<class>` |
-
-Both retained reviewers inspect the conclusion candidate before this human
-brief requests acceptance. Human approval authorizes only the declared update
-of state, revision, and approved dispositions. After that transition is
-committed, both reviewers verify no semantic change; their approval freezes the
-exact `CONCLUDED` candidate before planning. The concluded whiteboard is the
-exhaustive design authority: every later addition of content, behavior, logic,
-or fail-closed effect must trace to it or an explicitly consumed project
-authority.

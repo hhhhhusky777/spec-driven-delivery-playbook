@@ -60,20 +60,15 @@ mismatch prevents a sound disposition.
 Judge correctness, design and policy consistency, compatibility, safety,
 validation sufficiency, proportionality, and merge-ready canonical state.
 
-For normal delivery, compare the plan and every candidate addition of content,
-behavior, logic, and fail-closed effect with the exact human-accepted concluded
-whiteboard. Treat unexplained scope as blocking even when it appears useful;
-remove it or require a prior human-authorized design amendment. Before design
-conclusion, verify that the parent will list every newly introduced fail-closed
-behavior in the human review response. After conclusion, verify the recorded
-whiteboard bytes did not change unless the packet supplies prior human authority
-for the concrete amendment and the complete design was reconcluded.
-When human approval authorizes the declared conclusion metadata transition,
-inspect the committed `CONCLUDED` candidate again and verify the diff contains
-only state, revision, and approved dispositions with no semantic change. Freeze
-begins only after both retained reviewers approve that exact candidate.
-
 > [!IMPORTANT]
+> **Hard rule.** Compare every plan and candidate addition with the accepted
+> design. Unexplained scope MUST block approval, even when useful. Verify that
+> every new fail-closed behavior is listed for human disposition. For the
+> conclusion transition, accept only state, revision, and approved-disposition
+> changes. Both reviewers MUST verify that exact commit before freeze. After
+> freeze, any whiteboard byte change without prior human authorization for the exact
+> amendment MUST block approval.
+>
 > Actively challenge over-engineering. For material edge-case, concurrency,
 > race, timing, and error risks, verify that the design and code apply the
 > accepted feature boundary and canonical error-handling authority

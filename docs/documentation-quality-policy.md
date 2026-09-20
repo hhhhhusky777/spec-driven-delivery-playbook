@@ -59,27 +59,20 @@ not duplicate history or successful-tool transcripts.
 
 ## Accepted design authority
 
-For normal delivery, the concluded whiteboard is the exhaustive design
-authority. Before asking the owner to conclude it, both retained reviewers
-inspect the design; the human brief then lists every newly introduced
-fail-closed behavior and requests an explicit disposition. Human approval
-authorizes only the declared conclusion transition: record approved
-dispositions, change `OPEN` to `CONCLUDED`, and assign the revision. Both
-retained reviewers verify that committed exact candidate contains no semantic
-change; only then are its bytes frozen and planning may begin.
-
-After that freeze, no agent may change any whiteboard byte without prior human
-authorization for the concrete amendment. Change only the authorized scope,
-reconclude the complete design, return the new exact candidate to both retained
-reviewers, and obtain human acceptance before dependent work resumes. The same
-rule applies to formatting, metadata, status, archive/reset, and other lifecycle
-mutations. A disclosed lifecycle transition may be authorized in advance.
-
-Every plan item and candidate addition of content, behavior, logic, or
-fail-closed effect must trace to the accepted design or an existing project
-authority that the design explicitly consumes. Contract-equivalent technical
-choices remain agent-owned; new scope does not. Reviewers block unexplained
-scope rather than using review advice to expand the feature.
+> [!IMPORTANT]
+> **Hard rule.** Both reviewers MUST approve the design before the human gate.
+> The human brief MUST list every new fail-closed behavior. The human MUST
+> accept the design and every disposition. The conclusion commit MUST change
+> only state, revision, and approved dispositions. Both reviewers MUST verify
+> that exact commit before the whiteboard freezes and planning starts.
+>
+> After freeze, agents MUST NOT change any whiteboard byte without prior human
+> authorization for the exact amendment. They MUST change only that scope,
+> reconclude the complete design, and repeat reviewer and human acceptance.
+> This includes formatting, metadata, status, and archive/reset.
+>
+> Every plan and candidate addition MUST trace to the accepted design or an
+> authority it explicitly consumes. Unexplained scope MUST block approval.
 
 ## Risk-focused test design
 
