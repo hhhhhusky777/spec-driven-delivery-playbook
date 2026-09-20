@@ -138,9 +138,13 @@ deferrals, and rejections instead of silently dropping them.
 
 ## Design amendments
 
-Add a row only when an accepted observable outcome changes. Ordinary task
-status, evidence, and contract-equivalent implementation choices stay in the
-implementation plan.
+After human acceptance, the concluded whiteboard is byte-frozen. Before any
+change—including formatting, metadata, status, or lifecycle mutation—the agent
+must obtain human authorization for the concrete amendment. Change only that
+scope, reconclude the complete design, return the new exact candidate to both
+retained reviewers, and obtain human acceptance before dependent work resumes.
+Ordinary task status, evidence, and contract-equivalent implementation choices
+stay in the implementation plan.
 
 | Amendment | Changed design points | Reason and impact | Owner decision |
 | --- | --- | --- | --- |
@@ -154,8 +158,11 @@ implementation plan.
 | Important boundaries | `<safety, compatibility, policy, or authority>` | `<class>` |
 | Alternatives rejected | `<only material alternatives>` | `<class>` |
 | Remaining gaps or risks | `<summary or None>` | `<class>` |
+| Newly introduced fail-closed behavior | `<complete list after two-agent design review, with effect and recommendation, or None>` | `<HUMAN_DECISION or NONE>` |
 | Decision requested | `<exact request>` | `<class>` |
 
-A concluded whiteboard is the design authority for its implementation plan.
-Ordinary implementation discoveries update the plan; an observable design
-change requires an explicit whiteboard amendment and owner decision.
+Both retained reviewers inspect the conclusion candidate before this human
+brief requests acceptance. Human acceptance concludes and byte-freezes that
+exact design before planning. The concluded whiteboard is the exhaustive design
+authority: every later addition of content, behavior, logic, or fail-closed
+effect must trace to it or an explicitly consumed project authority.

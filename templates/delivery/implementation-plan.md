@@ -159,7 +159,10 @@ explicit while leaving contract-equivalent implementation choices to the agent.
 | `<whiteboard ID>` | `<task ID and outcome>` | `<proof>` | `<aligned, gap, or non-code obligation>` |
 
 Every accepted design point must be covered, and every task must have a design,
-project-authority, or necessary-engineering basis.
+project-authority explicitly consumed by the design, or necessary
+contract-equivalent engineering basis. Every planned addition of content,
+behavior, logic, or fail-closed effect must be traceable here; unexplained scope
+blocks readiness rather than becoming implementation discretion.
 
 ## Tasks
 

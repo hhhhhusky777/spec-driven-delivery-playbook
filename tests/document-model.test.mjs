@@ -212,9 +212,11 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(normalizedReviewer, /not the simplest clear-cut approach that protects the accepted outcome, or when it adds speculative complexity/);
   assert.match(readme, /feature review skill/);
   assert.match(policy, /\| Design conclusion \| Key design points/);
-  assert.match(readme, /B --> A\["Two-agent design review"\]/);
-  assert.match(readme, /A --> H\["Human design acceptance"\]/);
-  assert.match(readme, /H --> P\["Implementation planning"\]/);
+  assert.match(readme, /R --> A\["Two-agent design review"\]/);
+  assert.match(readme, /A --> B\["Human brief: design \+ all new fail-closed behavior"\]/);
+  assert.match(readme, /B --> H\["Human design acceptance"\]/);
+  assert.match(readme, /H --> F\["Freeze exact concluded whiteboard bytes"\]/);
+  assert.match(readme, /F --> P\["Implementation planning"\]/);
   assert.match(readme, /P --> R1\["Retained feature reviewer 1"\]/);
   assert.match(readme, /P --> R2\["Retained feature reviewer 2"\]/);
   assert.match(normalizedReviewer, /precise evidence and user or system impact/);
@@ -224,6 +226,11 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(normalizedReviewer, /Never fabricate authority/);
   assert.match(normalizedReviewer, /optional improvements separate from blocking findings/);
   assert.match(normalizedReviewer, /never expand the accepted scope/);
+  assert.match(normalizedPolicy, /concluded whiteboard is the exhaustive design authority/);
+  assert.match(normalizedPolicy, /no agent may change any whiteboard byte without prior human authorization/);
+  assert.match(normalizedWorkflow, /lists every newly introduced fail-closed behavior for human disposition/);
+  assert.match(normalizedReviewer, /Treat unexplained scope as blocking/);
+  assert.match(normalizedReviewer, /recorded whiteboard bytes did not change/);
   for (const document of [policy, readme, contributing, workflow]) {
     assert.doesNotMatch(document, /smallest recommended correction|primary industry standard|Never fabricate authority/);
   }
@@ -246,7 +253,7 @@ test("Issue-only Fast Fix removes duplicate artifacts without bypassing gates", 
   assert.match(normalizedWorkflow, /Fast Fix never waives testing, review, human merge authority, or project policy/i);
   assert.match(normalizedWorkflow, /UI-only fix.*smallest evidence.*without inventing a new test framework/i);
   assert.match(normalizedWorkflow, /fail closed to normal delivery.*Preserve valid code, tests, evidence, branch ownership, and the same reviewer sessions/i);
-  assert.match(normalizedReviewer, /concluded-whiteboard gate for normal delivery, or before the first candidate review for an Issue-only Fast Fix/i);
+  assert.match(normalizedReviewer, /whiteboard conclusion-candidate gate for normal delivery, or before the first candidate review for an Issue-only Fast Fix/i);
   assert.match(normalizedReviewer, /governing issue for a Fast Fix/i);
   assert.match(normalizedReviewer, /Fast Fix exposes a material decision or ambiguity.*keep the reviewer session/i);
   assert.match(policy.replace(/\s+/g, " "), /Issue-only Fast Fix selects them before its first candidate review.*retains those sessions through merge/i);

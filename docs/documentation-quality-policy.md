@@ -57,6 +57,27 @@ Git and pull requests preserve prior versions and detailed delivery evidence.
 The maintained tree keeps current reusable guidance and active feature state,
 not duplicate history or successful-tool transcripts.
 
+## Accepted design authority
+
+For normal delivery, the concluded whiteboard is the exhaustive design
+authority. Before asking the owner to conclude it, both retained reviewers
+inspect the design; the human brief then lists every newly introduced
+fail-closed behavior and requests an explicit disposition. Human acceptance
+concludes the exact candidate and freezes its bytes before planning.
+
+After that freeze, no agent may change any whiteboard byte without prior human
+authorization for the concrete amendment. Change only the authorized scope,
+reconclude the complete design, return the new exact candidate to both retained
+reviewers, and obtain human acceptance before dependent work resumes. The same
+rule applies to formatting, metadata, status, archive/reset, and other lifecycle
+mutations. A disclosed lifecycle transition may be authorized in advance.
+
+Every plan item and candidate addition of content, behavior, logic, or
+fail-closed effect must trace to the accepted design or an existing project
+authority that the design explicitly consumes. Contract-equivalent technical
+choices remain agent-owned; new scope does not. Reviewers block unexplained
+scope rather than using review advice to expand the feature.
+
 ## Risk-focused test design
 
 Tests provide evidence about accepted outcomes and protected invariants; they
@@ -98,7 +119,7 @@ status-only correction as a defect rather than routine cleanup.
 
 Every material candidate receives exact-candidate self-review, review by two
 isolated agents, and required human semantic acceptance. Normal delivery selects
-its two reviewers at the concluded-whiteboard gate; an eligible Issue-only Fast
+its two reviewers at the whiteboard conclusion-candidate gate; an eligible Issue-only Fast
 Fix selects them before its first candidate review. Either route retains those
 sessions through merge. The [feature review skill](../skills/sdd-feature-review/SKILL.md)
 is the single execution contract for reviewer context, independence, packets,

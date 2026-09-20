@@ -14,7 +14,7 @@ turning prior conclusions into assumptions.
 ## Reviewer session
 
 Load this skill when the parent agent creates the feature's two reviewer
-sessions: at the concluded-whiteboard gate for normal delivery, or before the
+sessions: at the whiteboard conclusion-candidate gate for normal delivery, or before the
 first candidate review for an Issue-only Fast Fix. Keep the same reviewer seat
 and session through every applicable design, planning, implementation,
 correction, and final-candidate gate until the feature merges into its protected
@@ -23,7 +23,7 @@ changes or the session must be recreated.
 
 At session start, establish project context at proportional depth. In an
 adopted project, read the adoption manifest and its linked project authorities,
-then read the concluded whiteboard for normal delivery or the governing issue
+then read the whiteboard conclusion candidate for normal delivery or the governing issue
 for a Fast Fix. Without a manifest, use the project README or entry
 documentation and canonical policies. Learn the relevant scope,
 ownership, safety, compatibility, testing, and merge boundaries; task details
@@ -59,6 +59,15 @@ mismatch prevents a sound disposition.
 
 Judge correctness, design and policy consistency, compatibility, safety,
 validation sufficiency, proportionality, and merge-ready canonical state.
+
+For normal delivery, compare the plan and every candidate addition of content,
+behavior, logic, and fail-closed effect with the exact human-accepted concluded
+whiteboard. Treat unexplained scope as blocking even when it appears useful;
+remove it or require a prior human-authorized design amendment. Before design
+conclusion, verify that the parent will list every newly introduced fail-closed
+behavior in the human review response. After conclusion, verify the recorded
+whiteboard bytes did not change unless the packet supplies prior human authority
+for the concrete amendment and the complete design was reconcluded.
 
 > [!IMPORTANT]
 > Actively challenge over-engineering. For material edge-case, concurrency,

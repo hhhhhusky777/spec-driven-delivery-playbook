@@ -104,7 +104,11 @@ delivery, follow the workflow skill's combined-archive contract: preserve the
 complete concluded whiteboard and complete final plan in one archive, link it
 with the closing PR in both directions, then remove the live plan and other
 non-reusable feature material and reset the working whiteboard in the same
-candidate. Preserve the manifest and reusable project authority. Pending
+candidate. Because reset mutates an accepted concluded whiteboard, obtain
+explicit human authority for that named transition before constructing the
+closing candidate; prior design acceptance may supply that authority when it
+clearly names the transition. Preserve the manifest and reusable project
+authority. Pending
 review, merge, and target verification remain GitHub facts;
 after merge, verify the exact target without creating a status-only follow-up.
 Then remove owned delivery/task worktrees, delete only owned merged branches,

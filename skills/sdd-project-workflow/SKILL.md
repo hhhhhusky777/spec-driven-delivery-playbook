@@ -100,13 +100,19 @@ review the required whiteboard and plan before dependent work continues.
   affected check until the worktree is operational or error handling requires
   escalation. Never make the worktree depend on mutable files or runtime owned
   by another checkout; shared support must have stable project-level ownership.
-- A concluded design or approved plan changes only through an explicit
-  amendment when the observable outcome changes. Ordinary task status and
-  evidence updates do not reopen the design.
-- For normal delivery, when the whiteboard is formally concluded, select two isolated reviewers for
-  the feature and require each one to read the installed
-  sdd-feature-review skill once. They review the exact concluded design before
-  the owner accepts it for planning. Retain those same reviewer sessions
+- Follow the canonical accepted-design authority in the project's quality
+  policy. Both reviewers inspect the conclusion candidate first; the parent
+  response then lists every newly introduced fail-closed behavior for human
+  disposition. Human acceptance freezes the exact concluded whiteboard before
+  planning. Do not change any byte afterward without prior human authorization
+  for the concrete amendment, including formatting, metadata, status, and
+  lifecycle mutations. Reconclude, return the new exact candidate to both
+  retained reviewers, and obtain human acceptance before dependent work resumes.
+- For normal delivery, when the whiteboard conclusion candidate is ready,
+  select two isolated reviewers for the feature and require each one to read
+  the installed sdd-feature-review skill once. They review the exact design
+  candidate before the owner concludes and accepts it for planning. Retain
+  those same reviewer sessions
   through planning, every task and correction round, and the final candidate
   until the feature merges into its protected target. For each gate, send the
   focused context packet defined by the reviewer skill; do not reload the skill
@@ -191,6 +197,12 @@ Classify material items as `HUMAN_DECISION`, `AGENT_ACTION`, `DISCLOSE`, or
 material awareness-only information (including accepted limitations), or
 recognize that no material attention or action remains. Classification adds no
 new gate.
+
+Map every plan item and candidate addition of content, behavior, logic, or
+fail-closed effect to the frozen concluded design or an explicitly consumed
+project authority. Contract-equivalent methods remain discretionary. Stop
+affected work when new scope appears; remove it or obtain prior human authority
+for a design amendment instead of implementing it opportunistically.
 
 Design test evidence from accepted outcomes and material failure risks. Keep
 essential critical-path proof, then emphasize applicable boundaries,
