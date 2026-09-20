@@ -8,9 +8,9 @@ This is the only active-delivery state authority.
 
 | Field | Value |
 | --- | --- |
-| State | `READY` |
+| State | `VALIDATING` |
 | Active tasks | `None` |
-| Next ready task | `T01` |
+| Next ready task | `None` |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge |
 | Delivery branch / target | `codex/whiteboard-freeze` → `main` |
@@ -18,7 +18,7 @@ This is the only active-delivery state authority.
 | Primary issue / need | [Issue #115](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/115) |
 | Concluded whiteboard | `WB-115-1`, commit `f06400c46f4bd0e9794ec28b5d0fd2e347ed1a83`, SHA-256 `7850ff22e47a85f1a724f9b8af6734ba567f05b4fb32806e64a63d7988f2cdd5` |
 | Required reviewers | The two retained Issue #115 reviewer sessions |
-| Last verified | Both reviewers approved the exact concluded whiteboard; lifecycle, structure, focused validation, and 51/51 tests passed |
+| Last verified | T01 focused validation passed: lifecycle, structure, changed Markdown lint, and 14/14 document-model tests; exact task candidate review pending |
 
 ## Governing inputs and delivery boundaries
 
@@ -95,7 +95,7 @@ This is the only active-delivery state authority.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | PR |
 | --- | --- | --- | --- | --- | --- | --- |
-| T01 | `READY` | `None` | Deliver WB115-01–WB115-06 consistently across canonical policy, skills, templates, README, and tests | No whiteboard change, Fast Fix change, new document, or unrelated rule | Focused checks, two retained reviewers, then full final validation | `None` |
+| T01 | `DONE` | `None` | Deliver WB115-01–WB115-06 consistently across canonical policy, skills, templates, README, and tests | No whiteboard change, Fast Fix change, new document, or unrelated rule | Focused checks passed; two retained reviewers and full final validation pending | [PR #116](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/116) |
 
 ## Task specifications and context receipts
 
@@ -109,7 +109,7 @@ This is the only active-delivery state authority.
 | Critical obligations | Canonical single-source wording; prior human authority; exact traceability; no speculative restriction |
 | Required evidence | Focused validation, lifecycle checks, both retained reviewer approvals, full exact-head validation, human merge acceptance |
 | Context receipt | Existing policy, skills, templates, README, lifecycle checker, and tests inspected; reviewer findings reconciled before freeze |
-| Actual result | Pending |
+| Actual result | Canonical policy owns accepted-design authority; CONTRIBUTING, author/reviewer skills, whiteboard/plan templates, README, and tests consistently apply WB115-01–WB115-06. Frozen whiteboard hash is unchanged |
 
 ## Recovery, decisions, and change control
 
@@ -131,10 +131,10 @@ This is the only active-delivery state authority.
 
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
-| Accepted design delivered | Complete design-to-task mapping and exact scope review | Pending |
-| Applicable validation passed | Focused checks and full final `docs:all` | Pending |
+| Accepted design delivered | Complete design-to-task mapping and exact scope review | Implemented; retained reviewer review pending |
+| Applicable validation passed | Focused checks and full final `docs:all` | Focused checks pass; full final gate pending after reviewers |
 | Merge-ready canonical state | Policy, contribution authority, skills, templates, README, tests, plan, and archive/reset contract consistent; manifest remains unchanged | Pending |
-| PR-owned review and delivery | Two retained reviewers, checks, owner authority, merge and target proof | Pending GitHub PR |
+| PR-owned review and delivery | Two retained reviewers, checks, owner authority, merge and target proof | [PR #116](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/116); review pending |
 | Feature cleanup complete | Complete combined archive, authorized reset, owned branch/worktree cleanup | Pending |
 
 ### Completion invariants
@@ -153,6 +153,6 @@ This is the only active-delivery state authority.
 | Tasks and outcomes | One task aligns policy, skills, templates, README, and tests with the frozen design | `DISCLOSE` |
 | Design consistency | WB115-01–WB115-06 all map to T01; no design gap | `NONE` |
 | Important changes | Prior human authorization, byte freeze, exhaustive scope, reviewer blocking, and fail-closed disclosure | `DISCLOSE` |
-| Validation | Plan lifecycle validation and two-agent plan review are next | `AGENT_ACTION` |
+| Validation | Focused task checks passed; two-agent exact-candidate review is next, followed by full final validation | `AGENT_ACTION` |
 | Risks or open decisions | None; whiteboard remains frozen | `NONE` |
 | Decision requested | None; owner already authorized implementation | `NONE` |
