@@ -4,11 +4,11 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [Issue #115](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/115) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
-| Open owner decisions | Final approval of reviewer-approved design and every proposed fail-closed behavior |
+| Concluded design revision | `WB-115-1` |
+| Open owner decisions | `None` |
 
 ## Discussion draft
 
@@ -57,11 +57,11 @@ and this whiteboard is formally concluded.
 
 | ID | Trigger | Required fail-closed response | Impact | Owner disposition |
 | --- | --- | --- | --- | --- |
-| FC01 | Any proposed byte change after human acceptance of a concluded design lacks prior explicit human authorization | Stop the change and retain the exact accepted whiteboard | Prevents agent-authored amendments, formatting, status edits, or cleanup changes | Pending final human approval |
-| FC02 | Planning, implementation, or correction would add content, behavior, or logic not authorized by the accepted concluded design | Stop affected work and obtain human authorization before changing design or proceeding | Rejects scope expansion even when suggested by an agent or reviewer | Pending final human approval |
-| FC03 | A newly introduced fail-closed behavior was not listed in the final human review response and approved before conclusion | Do not conclude the whiteboard or implement that behavior | Makes restrictive runtime behavior visible to the owner before it becomes authoritative | Pending final human approval |
-| FC04 | Reviewer finds candidate scope that cannot be traced to the accepted concluded design | Block approval until the scope is removed or a human-authorized design amendment is completed | Makes out-of-scope work an explicit review failure | Pending final human approval |
-| FC05 | A lifecycle action would mutate the accepted concluded whiteboard without prior human authorization | Do not perform the mutation | Applies the byte freeze to archive/reset while allowing the owner to preauthorize a named transition | Pending final human approval |
+| FC01 | Any proposed byte change after human acceptance of a concluded design lacks prior explicit human authorization | Stop the change and retain the exact accepted whiteboard | Prevents agent-authored amendments, formatting, status edits, or cleanup changes | Approved by owner on 2026-09-20 |
+| FC02 | Planning, implementation, or correction would add content, behavior, or logic not authorized by the accepted concluded design | Stop affected work and obtain human authorization before changing design or proceeding | Rejects scope expansion even when suggested by an agent or reviewer | Approved by owner on 2026-09-20 |
+| FC03 | A newly introduced fail-closed behavior was not listed in the final human review response and approved before conclusion | Do not conclude the whiteboard or implement that behavior | Makes restrictive runtime behavior visible to the owner before it becomes authoritative | Approved by owner on 2026-09-20 |
+| FC04 | Reviewer finds candidate scope that cannot be traced to the accepted concluded design | Block approval until the scope is removed or a human-authorized design amendment is completed | Makes out-of-scope work an explicit review failure | Approved by owner on 2026-09-20 |
+| FC05 | A lifecycle action would mutate the accepted concluded whiteboard without prior human authorization | Do not perform the mutation | Applies the byte freeze to archive/reset while allowing the owner to preauthorize a named transition | Approved by owner on 2026-09-20 |
 
 ## Risks and consequences
 
@@ -117,9 +117,9 @@ and diff; do not add an amendment row autonomously.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Proposed decisions | Exact byte freeze after human acceptance; exhaustive authorized scope; reviewer scope blocking; pre-conclusion fail-closed approval | `HUMAN_DECISION` pending after agent review |
+| Decisions made | Exact byte freeze after human acceptance; exhaustive authorized scope; reviewer scope blocking; pre-conclusion fail-closed approval | `HUMAN_DECISION` approved on 2026-09-20 |
 | Important boundaries | Technical method remains agent-selected only when it is contract-equivalent and adds no unauthorized content, behavior, logic, or restriction | `DISCLOSE` |
-| Newly introduced fail-closed behavior | FC01–FC05 are reviewer inputs; the parent agent must list the final set in its response after review | `HUMAN_DECISION` pending |
-| Lifecycle consequence | Archive preserves complete content and Git exact bytes; reset needs prior human authorization | `HUMAN_DECISION` pending |
+| Newly introduced fail-closed behavior | FC01–FC05 were listed in the parent response after review and approved by the owner | `HUMAN_DECISION` resolved on 2026-09-20 |
+| Lifecycle consequence | Archive preserves complete content and Git exact bytes; reset needs prior human authorization | `HUMAN_DECISION` approved on 2026-09-20 |
 | Remaining gaps or risks | Borderline traceability may require owner judgment; agents and reviewers cannot self-expand scope | `DISCLOSE` |
-| Decision requested | After both reviewers approve, accept the exact proposed design and listed fail-closed behaviors, and authorize only the declared metadata transition to a committed `CONCLUDED` candidate; the same reviewers verify that transition before freeze and planning | `HUMAN_DECISION` |
+| Decision requested | Exact proposed design, FC01–FC05, and the declared metadata transition | `HUMAN_DECISION` approved on 2026-09-20 |
