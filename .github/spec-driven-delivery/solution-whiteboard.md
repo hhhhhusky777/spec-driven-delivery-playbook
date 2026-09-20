@@ -14,11 +14,11 @@
 
 | ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
-| DR01 | A concluded whiteboard must be byte-immutable without human authorization | Accepted; includes amendments, formatting, status changes, and cleanup transitions |
-| DR02 | Implementation must add no content, behavior, or logic outside the concluded design | Accepted; implementation discretion remains only for contract-equivalent choices inside the boundary |
-| DR03 | Reviewers must treat unauthorized scope as a finding | Accepted; review compares every candidate with the exact concluded whiteboard |
-| DR04 | Every newly introduced fail-closed behavior must be disclosed before conclusion | Accepted; owner approval is required before it becomes design authority |
-| DR05 | Existing archive-and-reset cleanup changes the live whiteboard | Proposed as a named lifecycle transition authorized before mutation; the archive preserves complete content while Git preserves exact bytes |
+| DR01 | A concluded whiteboard must be byte-immutable without human authorization | Accepted |
+| DR02 | Implementation must add no content, behavior, or logic outside the concluded design | Accepted |
+| DR03 | Reviewers must treat unauthorized scope as a finding | Accepted |
+| DR04 | Every newly introduced fail-closed behavior must be disclosed before conclusion | Accepted |
+| DR05 | Existing archive-and-reset cleanup changes the live whiteboard | Accepted |
 
 ## Current understanding
 
@@ -49,11 +49,11 @@
 | R04 | Before conclusion, list every newly introduced fail-closed behavior for human approval | Required | Whiteboard template contains a dedicated approval table and conclusion is invalid while any row lacks owner disposition | Owner |
 | R05 | Preserve necessary implementation judgment only for choices equivalent to the authorized design | Required | Guidance distinguishes execution method from new outcomes, behaviors, logic, or fail-closed effects | Existing six-goal model |
 
-## Proposed newly introduced fail-closed behaviors
+## Newly introduced fail-closed behaviors
 
-Reviewers evaluate these proposals before the parent agent lists them in its
-human review response. None becomes authoritative until the owner approves it
-and this whiteboard is formally concluded.
+Reviewers evaluated these behaviors before the parent agent listed them in its
+human review response. The owner approved FC01–FC05 before this whiteboard was
+formally concluded.
 
 | ID | Trigger | Required fail-closed response | Impact | Owner disposition |
 | --- | --- | --- | --- | --- |
@@ -80,7 +80,7 @@ and this whiteboard is formally concluded.
 | D03 | Require pre-conclusion approval of every new fail-closed behavior | Infer approval from general safety policy | Fail-closed behavior can reject valid work and therefore needs visible owner acceptance | Owner request / Issue #115 |
 | D04 | Keep implementation discretion for contract-equivalent methods only | Prescribe every implementation step | Protects strict outcomes without converting the playbook into a step-by-step program | Existing playbook goals |
 
-## Proposed concluded design
+## Concluded design
 
 | Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
