@@ -86,8 +86,11 @@ function whiteboardErrors(text, requireFailClosedTable = true) {
       if (!rows.length) errors.push("fail-closed behavior approval table requires a disposition row");
       const dispositionIndex = failClosed[0].indexOf("Owner disposition");
       for (const row of rows) {
+        const id = (row[0] || "").toLowerCase();
         const disposition = (row[dispositionIndex] || "").toLowerCase();
-        if (!(disposition === "none" || /^(approved|accepted|rejected)\b/.test(disposition))) {
+        const noneSentinel = disposition === "none" && id === "none"
+          && row.slice(1, dispositionIndex).every(value => value.toLowerCase() === "none");
+        if (!(noneSentinel || /^(approved|accepted|rejected)\b/.test(disposition))) {
           errors.push(`unresolved fail-closed behavior disposition: ${row[0] || "unknown"}`);
         }
       }

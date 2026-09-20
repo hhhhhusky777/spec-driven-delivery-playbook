@@ -148,8 +148,9 @@ Use one `None` row when the design introduces no fail-closed behavior.
 
 ## Design amendments
 
-After human acceptance, the concluded whiteboard is byte-frozen. Before any
-change—including formatting, metadata, status, or lifecycle mutation—the agent
+After the declared conclusion metadata transition is committed and both
+retained reviewers verify no semantic change, the concluded whiteboard is
+byte-frozen. Before any change—including formatting, metadata, status, or lifecycle mutation—the agent
 must obtain human authorization for the concrete amendment. Change only that
 scope, reconclude the complete design, return the new exact candidate to both
 retained reviewers, and obtain human acceptance before dependent work resumes.

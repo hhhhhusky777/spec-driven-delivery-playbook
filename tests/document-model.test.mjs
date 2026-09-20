@@ -237,6 +237,7 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(normalizedReviewer, /recorded whiteboard bytes did not change/);
   assert.match(normalizedReviewer, /only state, revision, and approved dispositions with no semantic change/);
   assert.match(whiteboard.replace(/\s+/g, " "), /A concluded whiteboard has no pending disposition/);
+  assert.doesNotMatch(whiteboard, /After human acceptance, the concluded whiteboard is byte-frozen/);
   for (const document of [policy, readme, contributing, workflow]) {
     assert.doesNotMatch(document, /smallest recommended correction|primary industry standard|Never fabricate authority/);
   }

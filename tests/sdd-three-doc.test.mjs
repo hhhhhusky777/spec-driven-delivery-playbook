@@ -57,6 +57,8 @@ test("concluded whiteboard requires resolved decisions, outcomes, and draft reco
     .some(error => error.includes("unknown design point")));
   assert.ok(checkDocument("solution-whiteboard.md", source.replace("| None | None | None |", "| FC01 | condition | Pending |"))
     .some(error => error.includes("unresolved fail-closed")));
+  assert.ok(checkDocument("solution-whiteboard.md", source.replace("| None | None | None |", "| FC01 | condition | None |"))
+    .some(error => error.includes("unresolved fail-closed")));
   const noFailClosedTable = source.replace(/\n\| ID \| Trigger \| Owner disposition \|[\s\S]*?\| None \| None \| None \|\n/, "\n");
   assert.ok(checkDocument("solution-whiteboard.md", noFailClosedTable)
     .some(error => error.includes("fail-closed behavior approval table")));
