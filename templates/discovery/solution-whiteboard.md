@@ -136,6 +136,16 @@ deferrals, and rejections instead of silently dropping them.
 | --- | --- | --- | --- |
 | `<DR01>` | `<design point ID or None>` | `<accepted, changed, deferred, or rejected>` | `<why the conclusion preserves or intentionally changes the draft>` |
 
+## Newly introduced fail-closed behaviors
+
+Reviewers inspect these proposals before the parent lists the complete set in
+the human review response. A concluded whiteboard has no pending disposition.
+Use one `None` row when the design introduces no fail-closed behavior.
+
+| ID | Trigger | Required fail-closed response | Impact | Owner disposition |
+| --- | --- | --- | --- | --- |
+| `<FC01 or None>` | `<condition or None>` | `<behavior or None>` | `<effect or None>` | `<Pending, Approved, Rejected, or None>` |
+
 ## Design amendments
 
 After human acceptance, the concluded whiteboard is byte-frozen. Before any
@@ -162,7 +172,10 @@ stay in the implementation plan.
 | Decision requested | `<exact request>` | `<class>` |
 
 Both retained reviewers inspect the conclusion candidate before this human
-brief requests acceptance. Human acceptance concludes and byte-freezes that
-exact design before planning. The concluded whiteboard is the exhaustive design
-authority: every later addition of content, behavior, logic, or fail-closed
-effect must trace to it or an explicitly consumed project authority.
+brief requests acceptance. Human approval authorizes only the declared update
+of state, revision, and approved dispositions. After that transition is
+committed, both reviewers verify no semantic change; their approval freezes the
+exact `CONCLUDED` candidate before planning. The concluded whiteboard is the
+exhaustive design authority: every later addition of content, behavior, logic,
+or fail-closed effect must trace to it or an explicitly consumed project
+authority.

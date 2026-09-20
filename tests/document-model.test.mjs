@@ -122,6 +122,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   const policy = await read("docs/documentation-quality-policy.md");
   const readme = await read("README.md");
   const contributing = await read("CONTRIBUTING.md");
+  const whiteboard = await read("templates/discovery/solution-whiteboard.md");
   const automation = await read(".github/workflows/documentation-quality.yml");
   const packageSource = await read("package.json");
 
@@ -178,6 +179,7 @@ test("feature review cohorts retain context and produce useful change requests",
   const policy = await read("docs/documentation-quality-policy.md");
   const readme = await read("README.md");
   const contributing = await read("CONTRIBUTING.md");
+  const whiteboard = await read("templates/discovery/solution-whiteboard.md");
 
   for (const document of [workflow, readme, contributing]) {
     const normalized = document.replace(/\s+/g, " ");
@@ -215,7 +217,9 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(readme, /R --> A\["Two-agent design review"\]/);
   assert.match(readme, /A --> B\["Human brief: design \+ all new fail-closed behavior"\]/);
   assert.match(readme, /B --> H\["Human design acceptance"\]/);
-  assert.match(readme, /H --> F\["Freeze exact concluded whiteboard bytes"\]/);
+  assert.match(readme, /H --> M\["Commit declared conclusion metadata"\]/);
+  assert.match(readme, /M --> V\["Same reviewers verify no semantic change"\]/);
+  assert.match(readme, /V --> F\["Freeze exact concluded whiteboard bytes"\]/);
   assert.match(readme, /F --> P\["Implementation planning"\]/);
   assert.match(readme, /P --> R1\["Retained feature reviewer 1"\]/);
   assert.match(readme, /P --> R2\["Retained feature reviewer 2"\]/);
@@ -231,6 +235,8 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(normalizedWorkflow, /lists every newly introduced fail-closed behavior for human disposition/);
   assert.match(normalizedReviewer, /Treat unexplained scope as blocking/);
   assert.match(normalizedReviewer, /recorded whiteboard bytes did not change/);
+  assert.match(normalizedReviewer, /only state, revision, and approved dispositions with no semantic change/);
+  assert.match(whiteboard.replace(/\s+/g, " "), /A concluded whiteboard has no pending disposition/);
   for (const document of [policy, readme, contributing, workflow]) {
     assert.doesNotMatch(document, /smallest recommended correction|primary industry standard|Never fabricate authority/);
   }

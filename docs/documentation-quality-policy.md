@@ -62,8 +62,11 @@ not duplicate history or successful-tool transcripts.
 For normal delivery, the concluded whiteboard is the exhaustive design
 authority. Before asking the owner to conclude it, both retained reviewers
 inspect the design; the human brief then lists every newly introduced
-fail-closed behavior and requests an explicit disposition. Human acceptance
-concludes the exact candidate and freezes its bytes before planning.
+fail-closed behavior and requests an explicit disposition. Human approval
+authorizes only the declared conclusion transition: record approved
+dispositions, change `OPEN` to `CONCLUDED`, and assign the revision. Both
+retained reviewers verify that committed exact candidate contains no semantic
+change; only then are its bytes frozen and planning may begin.
 
 After that freeze, no agent may change any whiteboard byte without prior human
 authorization for the concrete amendment. Change only the authorized scope,

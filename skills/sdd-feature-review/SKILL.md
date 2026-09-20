@@ -68,6 +68,10 @@ conclusion, verify that the parent will list every newly introduced fail-closed
 behavior in the human review response. After conclusion, verify the recorded
 whiteboard bytes did not change unless the packet supplies prior human authority
 for the concrete amendment and the complete design was reconcluded.
+When human approval authorizes the declared conclusion metadata transition,
+inspect the committed `CONCLUDED` candidate again and verify the diff contains
+only state, revision, and approved dispositions with no semantic change. Freeze
+begins only after both retained reviewers approve that exact candidate.
 
 > [!IMPORTANT]
 > Actively challenge over-engineering. For material edge-case, concurrency,

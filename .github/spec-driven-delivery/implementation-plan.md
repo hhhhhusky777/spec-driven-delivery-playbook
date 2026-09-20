@@ -18,7 +18,7 @@ This is the only active-delivery state authority.
 | Primary issue / need | [Issue #115](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/115) |
 | Concluded whiteboard | `WB-115-1`, commit `f06400c46f4bd0e9794ec28b5d0fd2e347ed1a83`, SHA-256 `7850ff22e47a85f1a724f9b8af6734ba567f05b4fb32806e64a63d7988f2cdd5` |
 | Required reviewers | The two retained Issue #115 reviewer sessions |
-| Last verified | T01 focused validation passed: lifecycle, structure, changed Markdown lint, and 14/14 document-model tests; exact task candidate review pending |
+| Last verified | Corrected T01 focused validation passed: lifecycle, structure, changed Markdown lint, and 20/20 applicable tests; exact correction review pending |
 
 ## Governing inputs and delivery boundaries
 
@@ -104,12 +104,12 @@ This is the only active-delivery state authority.
 | Concern | Value |
 | --- | --- |
 | Outcome / non-scope | Enforce the accepted design exactly; do not add process beyond WB115-01–WB115-06 |
-| Source boundary | `docs/documentation-quality-policy.md`, `CONTRIBUTING.md`, `skills/sdd-project-workflow/SKILL.md`, `skills/sdd-feature-review/SKILL.md`, `templates/discovery/solution-whiteboard.md`, `templates/delivery/implementation-plan.md`, `README.md`, and applicable tests. The manifest was inspected and remains unchanged because WB115 grants no adoption-cutover authority |
+| Source boundary | `docs/documentation-quality-policy.md`, `CONTRIBUTING.md`, `skills/sdd-project-workflow/SKILL.md`, `skills/sdd-feature-review/SKILL.md`, `templates/discovery/solution-whiteboard.md`, `templates/delivery/implementation-plan.md`, `README.md`, `scripts/sdd-lifecycle-three-doc.mjs`, and applicable tests. The manifest was inspected and remains unchanged because WB115 grants no adoption-cutover authority |
 | Consumed dependencies | Frozen whiteboard `WB-115-1`; current lifecycle checker; existing archive/reset contract |
 | Critical obligations | Canonical single-source wording; prior human authority; exact traceability; no speculative restriction |
 | Required evidence | Focused validation, lifecycle checks, both retained reviewer approvals, full exact-head validation, human merge acceptance |
 | Context receipt | Existing policy, skills, templates, README, lifecycle checker, and tests inspected; reviewer findings reconciled before freeze |
-| Actual result | Canonical policy owns accepted-design authority; CONTRIBUTING, author/reviewer skills, whiteboard/plan templates, README, and tests consistently apply WB115-01–WB115-06. Frozen whiteboard hash is unchanged |
+| Actual result | Canonical policy owns accepted-design authority; CONTRIBUTING, author/reviewer skills, whiteboard/plan templates, README, lifecycle checker, and tests consistently apply WB115-01–WB115-06. Frozen whiteboard hash is unchanged |
 
 ## Recovery, decisions, and change control
 
@@ -132,7 +132,7 @@ This is the only active-delivery state authority.
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
 | Accepted design delivered | Complete design-to-task mapping and exact scope review | Implemented; retained reviewer review pending |
-| Applicable validation passed | Focused checks and full final `docs:all` | Focused checks pass; full final gate pending after reviewers |
+| Applicable validation passed | Focused checks and full final `docs:all` | Corrected focused checks and 20/20 applicable tests pass; full final gate pending after reviewers |
 | Merge-ready canonical state | Policy, contribution authority, skills, templates, README, tests, plan, and archive/reset contract consistent; manifest remains unchanged | Pending |
 | PR-owned review and delivery | Two retained reviewers, checks, owner authority, merge and target proof | [PR #116](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/116); review pending |
 | Feature cleanup complete | Complete combined archive, authorized reset, owned branch/worktree cleanup | Pending |

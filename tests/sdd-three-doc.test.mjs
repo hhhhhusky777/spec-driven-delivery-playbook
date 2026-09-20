@@ -39,7 +39,7 @@ test("manifest requires an immutable candidate while upgrade is open", () => {
 });
 
 test("concluded whiteboard requires resolved decisions, outcomes, and draft reconciliation", () => {
-  const source = `| Field | Value |\n| --- | --- |\n| State | CONCLUDED |\n| Open owner decisions | None |\n\n| ID | Agreed item, alternative, constraint, or gap | State / resolution |\n| --- | --- | --- |\n| DR01 | need | accepted |\n\n| Design point | Accepted outcome |\n| --- | --- |\n| D01 | outcome |\n\n| Draft item | Concluded design point | Disposition |\n| --- | --- | --- |\n| DR01 | D01 | accepted |`;
+  const source = `| Field | Value |\n| --- | --- |\n| State | CONCLUDED |\n| Open owner decisions | None |\n\n| ID | Agreed item, alternative, constraint, or gap | State / resolution |\n| --- | --- | --- |\n| DR01 | need | accepted |\n\n| Design point | Accepted outcome |\n| --- | --- |\n| D01 | outcome |\n\n| ID | Trigger | Owner disposition |\n| --- | --- | --- |\n| None | None | None |\n\n| Draft item | Concluded design point | Disposition |\n| --- | --- | --- |\n| DR01 | D01 | accepted |`;
   assert.deepEqual(checkDocument("solution-whiteboard.md", source), []);
   assert.ok(checkDocument("solution-whiteboard.md", source.replace("| None |", "| D02 |"))[0]);
   assert.ok(checkDocument("solution-whiteboard.md", source.replace("| DR01 | D01 | accepted |", ""))
@@ -55,6 +55,11 @@ test("concluded whiteboard requires resolved decisions, outcomes, and draft reco
     .some(error => error.includes("unresolved retained")));
   assert.ok(checkDocument("solution-whiteboard.md", source.replace("| DR01 | D01 | accepted |", "| DR01 | D99 | accepted |"))
     .some(error => error.includes("unknown design point")));
+  assert.ok(checkDocument("solution-whiteboard.md", source.replace("| None | None | None |", "| FC01 | condition | Pending |"))
+    .some(error => error.includes("unresolved fail-closed")));
+  const noFailClosedTable = source.replace(/\n\| ID \| Trigger \| Owner disposition \|[\s\S]*?\| None \| None \| None \|\n/, "\n");
+  assert.ok(checkDocument("solution-whiteboard.md", noFailClosedTable)
+    .some(error => error.includes("fail-closed behavior approval table")));
   const duplicate = `${source}\n| DR01 | D01 | changed |`;
   assert.ok(checkDocument("solution-whiteboard.md", duplicate)
     .some(error => error.includes("duplicate whiteboard reconciliation")));

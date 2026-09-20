@@ -103,11 +103,14 @@ review the required whiteboard and plan before dependent work continues.
 - Follow the canonical accepted-design authority in the project's quality
   policy. Both reviewers inspect the conclusion candidate first; the parent
   response then lists every newly introduced fail-closed behavior for human
-  disposition. Human acceptance freezes the exact concluded whiteboard before
-  planning. Do not change any byte afterward without prior human authorization
-  for the concrete amendment, including formatting, metadata, status, and
-  lifecycle mutations. Reconclude, return the new exact candidate to both
-  retained reviewers, and obtain human acceptance before dependent work resumes.
+  disposition. Human approval authorizes only the declared conclusion metadata
+  transition. Commit that transition, return the exact `CONCLUDED` candidate to
+  both retained reviewers to verify no semantic change, then freeze its bytes
+  before planning. Do not change any byte afterward without prior human
+  authorization for the concrete amendment, including formatting, metadata,
+  status, and lifecycle mutations. Reconclude, return the new exact candidate
+  to both retained reviewers, and obtain human acceptance before dependent work
+  resumes.
 - For normal delivery, when the whiteboard conclusion candidate is ready,
   select two isolated reviewers for the feature and require each one to read
   the installed sdd-feature-review skill once. They review the exact design
