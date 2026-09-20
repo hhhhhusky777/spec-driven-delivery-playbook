@@ -36,7 +36,7 @@ This is the only active-delivery state authority.
 | --- | --- |
 | Problem | Accepted design can be silently reinterpreted or expanded during planning, implementation, review, or cleanup |
 | Required outcome | Enforce prior human authority for every concluded-whiteboard byte change, exhaustive design traceability, reviewer scope blocking, and pre-conclusion approval of new fail-closed behavior |
-| In scope | Canonical quality policy; author and reviewer skills; whiteboard and plan templates; README lifecycle explanation and diagram; regression tests; required installed-playbook pin reconciliation |
+| In scope | Canonical quality policy; contribution lifecycle authority; author and reviewer skills; whiteboard and plan templates; README lifecycle explanation and diagram; regression tests |
 | Out of scope / deferred | Changing Fast Fix issue authority, prescribing implementation steps, introducing another document or service, or altering unrelated error-handling behavior |
 | Success measures | Every changed rule traces to WB115-01–WB115-06; source tests and documentation checks pass; reviewers find no unauthorized scope |
 | Assumptions / constraints | Whiteboard bytes remain exactly frozen; contract-equivalent wording choices remain agent-owned |
@@ -104,7 +104,7 @@ This is the only active-delivery state authority.
 | Concern | Value |
 | --- | --- |
 | Outcome / non-scope | Enforce the accepted design exactly; do not add process beyond WB115-01–WB115-06 |
-| Source boundary | `docs/documentation-quality-policy.md`, `skills/sdd-project-workflow/SKILL.md`, `skills/sdd-feature-review/SKILL.md`, `templates/discovery/solution-whiteboard.md`, `templates/delivery/implementation-plan.md`, `README.md`, applicable tests, and manifest pin only if required for accepted runtime consistency |
+| Source boundary | `docs/documentation-quality-policy.md`, `CONTRIBUTING.md`, `skills/sdd-project-workflow/SKILL.md`, `skills/sdd-feature-review/SKILL.md`, `templates/discovery/solution-whiteboard.md`, `templates/delivery/implementation-plan.md`, `README.md`, and applicable tests. The manifest was inspected and remains unchanged because WB115 grants no adoption-cutover authority |
 | Consumed dependencies | Frozen whiteboard `WB-115-1`; current lifecycle checker; existing archive/reset contract |
 | Critical obligations | Canonical single-source wording; prior human authority; exact traceability; no speculative restriction |
 | Required evidence | Focused validation, lifecycle checks, both retained reviewer approvals, full exact-head validation, human merge acceptance |
@@ -133,7 +133,7 @@ This is the only active-delivery state authority.
 | --- | --- | --- |
 | Accepted design delivered | Complete design-to-task mapping and exact scope review | Pending |
 | Applicable validation passed | Focused checks and full final `docs:all` | Pending |
-| Merge-ready canonical state | Policy, skills, templates, README, tests, plan, archive/reset and manifest state consistent | Pending |
+| Merge-ready canonical state | Policy, contribution authority, skills, templates, README, tests, plan, and archive/reset contract consistent; manifest remains unchanged | Pending |
 | PR-owned review and delivery | Two retained reviewers, checks, owner authority, merge and target proof | Pending GitHub PR |
 | Feature cleanup complete | Complete combined archive, authorized reset, owned branch/worktree cleanup | Pending |
 
