@@ -411,17 +411,27 @@ test("human replies pair reviewer findings with solutions and dispositions", asy
   const policy = await read("docs/documentation-quality-policy.md");
   const workflow = await read("skills/sdd-project-workflow/SKILL.md");
   const reviewer = await read("skills/sdd-feature-review/SKILL.md");
-  const normalized = policy.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
-  assert.match(policy, /> \[!IMPORTANT\]/);
-  assert.match(normalized, /parent agent's reply MUST include a table pairing each reviewer finding with its proposed solution/);
-  assert.match(normalized, /author's current disposition/);
-  assert.match(normalized, /State `None` when there are no findings/);
+  const normalized = workflow.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+  assert.match(workflow, /> \[!IMPORTANT\]/);
+  assert.match(normalized, /parent MUST reply with a compact table pairing each reviewer finding with its proposed solution/);
+  assert.match(normalized, /author's disposition/);
+  assert.match(normalized, /Use `None` when there are no findings/);
   assert.match(normalized, /Link the PR when it exists/);
   assert.match(normalized, /no review gate or early-PR requirement/);
-  assert.match(policy, /\| Reviewer finding \| Proposed solution \| Author disposition \/ result \|/);
-  assert.match(workflow, /\[canonical rule\]\(\.\.\/\.\.\/docs\/documentation-quality-policy\.md#review-and-human-brief\)/);
-  assert.doesNotMatch(workflow, /table pairing each reviewer finding/);
+  assert.doesNotMatch(policy, /table pairing each reviewer finding/);
   assert.doesNotMatch(reviewer, /table pairing each reviewer finding/);
+});
+
+test("installed skills do not link outside their copied directories", async () => {
+  for (const name of await readdir(path.join(root, "skills"))) {
+    const skillDirectory = path.join(root, "skills", name);
+    const skill = await readFile(path.join(skillDirectory, "SKILL.md"), "utf8");
+    for (const [, target] of skill.matchAll(/\]\((\.\.?\/[^)#]+)(?:#[^)]*)?\)/g)) {
+      const relative = path.relative(skillDirectory, path.resolve(skillDirectory, target));
+      assert.ok(relative && relative !== ".." && !relative.startsWith(`..${path.sep}`),
+        `${name} links outside its installed skill directory: ${target}`);
+    }
+  }
 });
 
 test("final review requires merge-ready canonical state without predicting PR facts", async () => {
