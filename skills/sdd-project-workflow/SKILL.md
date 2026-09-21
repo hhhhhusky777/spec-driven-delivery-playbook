@@ -192,6 +192,9 @@ Choose the working order, batching, tools, tests, and recovery method that best
 achieve the accepted outcome. Prefer coherent review units and one human brief
 at each real decision boundary. Human briefs use a compact table covering the
 decision, important changes, risks or gaps, validation, and recommended action.
+Follow the manifest-linked human-brief policy; in this repository, its
+[canonical rule](../../docs/documentation-quality-policy.md#review-and-human-brief)
+owns the reply format.
 Classify material items as `HUMAN_DECISION`, `AGENT_ACTION`, `DISCLOSE`, or
 `NONE` so the next agent knows whether to stop, act within authority, preserve
 material awareness-only information (including accepted limitations), or

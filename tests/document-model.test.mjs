@@ -407,6 +407,23 @@ test("human PR review briefs expose the exact candidate change shape", async () 
   assert.match(policy, /not a risk score\s+or an additional gate/);
 });
 
+test("human replies pair reviewer findings with solutions and dispositions", async () => {
+  const policy = await read("docs/documentation-quality-policy.md");
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const reviewer = await read("skills/sdd-feature-review/SKILL.md");
+  const normalized = policy.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+  assert.match(policy, /> \[!IMPORTANT\]/);
+  assert.match(normalized, /parent agent's reply MUST include a table pairing each reviewer finding with its proposed solution/);
+  assert.match(normalized, /author's current disposition/);
+  assert.match(normalized, /State `None` when there are no findings/);
+  assert.match(normalized, /Link the PR when it exists/);
+  assert.match(normalized, /no review gate or early-PR requirement/);
+  assert.match(policy, /\| Reviewer finding \| Proposed solution \| Author disposition \/ result \|/);
+  assert.match(workflow, /\[canonical rule\]\(\.\.\/\.\.\/docs\/documentation-quality-policy\.md#review-and-human-brief\)/);
+  assert.doesNotMatch(workflow, /table pairing each reviewer finding/);
+  assert.doesNotMatch(reviewer, /table pairing each reviewer finding/);
+});
+
 test("final review requires merge-ready canonical state without predicting PR facts", async () => {
   const plan = await read("templates/delivery/implementation-plan.md");
   const policy = await read("docs/documentation-quality-policy.md");
