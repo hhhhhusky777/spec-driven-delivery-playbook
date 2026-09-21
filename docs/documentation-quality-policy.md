@@ -156,17 +156,6 @@ to reread every document:
 | Evidence | Passed checks with scope, failed or unrun checks, uncertainty, and residual limits | Appropriate class |
 | Response | Exact decision requested, or explicit confirmation that none remains | `HUMAN_DECISION` or `NONE` |
 
-> [!IMPORTANT]
-> After agent review, the parent agent's reply MUST include a table pairing each
-> reviewer finding with its proposed solution and the author's current disposition
-> (`fixed`, `rejected`, `deferred`, or `open`). State `None` when there are no
-> findings. Link the PR when it exists; do not copy full review history into
-> project documents. This adds no review gate or early-PR requirement.
-
-| Reviewer finding | Proposed solution | Author disposition / result |
-| --- | --- | --- |
-| None | None | None |
-
 Use `HUMAN_DECISION` when progress needs human judgment under an existing stop
 boundary, `AGENT_ACTION` for correction within agent authority, `DISCLOSE` for
 material awareness-only information (including accepted limitations) that
