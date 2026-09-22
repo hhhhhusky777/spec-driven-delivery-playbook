@@ -160,6 +160,8 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(normalizedPolicy, /task may be `DONE` with missing non-focused tests/i);
   assert.doesNotMatch(normalizedPolicy, /one hour of active implementation|Each task still implements the tests/i);
   assert.match(normalizedPolicy, /final readiness.*including gaps not previously recorded.*Add required missing tests before final candidate review/i);
+  assert.match(normalizedPolicy, /Do not present the candidate as merge-ready while required tests remain missing/i);
+  assert.match(normalizedPolicy, /expected work versus unexpected work or cases.*over-engineering/i);
   assert.match(normalizedPolicy, /Focused tests.*only the tests that cover the changed files and lines/);
   assert.match(normalizedPolicy, /final candidate that will merge back to the protected integration branch.*full applicable validation/);
   assert.match(readme, /F --> P\["Open or update PR"\]/);
@@ -184,6 +186,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(policy, /responsibility of an\s+agent changing this repository, not a project agent/);
   assert.match(workflow, /do not run the playbook repository's source suite/);
   assert.match(workflow.replace(/\s+/g, " "), /At final readiness, reconcile all accepted changed outcomes and material risks.*including unrecorded gaps.*Add required missing tests before final candidate review/i);
+  assert.match(workflow.replace(/\s+/g, " "), /expected work or unexpected cases.*over-engineering/i);
   assert.match(plan, /\| Owning task \| Contract, changed outcome, or risk \| Test or scenario \| Coverage \| Work boundary \|/);
   assert.match(plan.replace(/\s+/g, " "), /recorded gaps do not block task `DONE`.*including unrecorded gaps.*add required missing tests before final candidate review/i);
 });
