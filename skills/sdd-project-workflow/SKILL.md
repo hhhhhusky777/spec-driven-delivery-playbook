@@ -231,12 +231,27 @@ The summary informs review; it does not add a gate or prescribe a helper tool.
 Run them before the feature's two retained agent reviewers inspect the exact
 task candidate. A normal-delivery task may be `DONE` with missing non-focused
 tests when the plan records each gap, its owning task, and its final-gate
-obligation; keep actual run evidence in the PR. At final readiness, reconcile
-all accepted changed outcomes and material risks against that inventory,
-including unrecorded gaps. Add required missing tests before final candidate
-review, then run affected focused checks and return the changed candidate to
-both retained reviewers. Do not claim merge readiness with required tests
-still missing.
+obligation; keep actual run evidence in the PR.
+
+> [!IMPORTANT]
+> When all implementation tasks are `DONE` and final readiness begins, the
+> author and both retained reviewers MUST audit the exact implementation
+> content before any missing test is added or any final-gate test is run. They
+> MUST verify that every addition strictly follows the concluded whiteboard and
+> its explicitly consumed authorities, reuses suitable existing code,
+> abstractions, libraries, and project frameworks wherever reasonably possible,
+> and contains no unauthorized behavior, redundant code or logic, unnecessary
+> abstraction, or avoidable parallel implementation. Any violation or missing
+> approval MUST block final-test work. Approval binds to the exact audited
+> implementation content; any later change to that content invalidates approval
+> and repeats the audit. A subsequent test-only addition does not by itself
+> invalidate this audit.
+
+Only after this audit passes, reconcile all accepted changed outcomes and
+material risks against the test inventory, including unrecorded gaps. Add
+required missing tests before final candidate review, then run affected focused
+checks and return the changed candidate to both retained reviewers. Do not
+claim merge readiness with required tests still missing.
 Candidate-changing corrections return to the same two reviewers. The installed
 sdd-feature-review skill owns reviewer context and finding behavior. After both
 reviewers approve the final candidate that will

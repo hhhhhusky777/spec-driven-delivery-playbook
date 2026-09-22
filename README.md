@@ -505,7 +505,10 @@ shape without adding another gate or report artifact.
 ```mermaid
 flowchart TD
     C["Coherent candidate"] --> E{"Final candidate?"}
-    E -->|"yes"| A["Reconcile coverage;<br/>add missing required tests"]
+    E -->|"yes"| S["Author + retained reviewers:<br/>scope and reuse audit"]
+    S --> U{"Audit approved on exact<br/>implementation content?"}
+    U -->|"no"| X
+    U -->|"yes"| A["Reconcile coverage;<br/>add missing required tests"]
     E -->|"no"| F["Focused tests covering<br/>changed files and lines"]
     A --> F
     F --> P["Open or update PR"]
@@ -527,11 +530,17 @@ flowchart TD
 ```
 
 This ordering keeps full validation at the protected-target merge boundary.
-A task may finish with missing non-focused tests recorded in the plan; the
-final gate reconciles all accepted outcomes and risks, adds required tests,
-then sends the final candidate through focused checks and both retained
-reviewers before full validation. Any candidate change returns to focused
-tests and both reviewers; a final-candidate change also invalidates full validation.
+A task may finish with missing non-focused tests recorded in the plan. When all
+implementation tasks are `DONE`, before adding any missing test or running any
+final-gate test, the author and both retained reviewers audit the exact
+implementation content against the concluded whiteboard, suitable existing
+project mechanisms, and unauthorized or redundant implementation. Only after
+all three approve may the final gate reconcile coverage, add required tests,
+and send the resulting candidate through focused checks and both retained
+reviewers before full validation. Any later
+implementation-content change repeats the audit; a test-only addition does not.
+Any candidate change returns to focused tests and both reviewers; a
+final-candidate change also invalidates full validation.
 An unchanged transient check failure repeats only the affected validation. A
 project's stricter validation policy takes precedence.
 

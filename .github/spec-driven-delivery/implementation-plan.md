@@ -8,9 +8,9 @@ This is the only active-delivery state authority for Issue #123.
 
 | Field | Value |
 | --- | --- |
-| State | `READY` |
+| State | `VALIDATING` |
 | Active tasks | `None` |
-| Next ready task | `T01` |
+| Next ready task | `None` |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge |
 | Delivery branch / target | `codex/final-gate-scope-reuse-review` → `main` |
@@ -18,7 +18,7 @@ This is the only active-delivery state authority for Issue #123.
 | Primary issue / need | [Issue #123](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/123) |
 | Concluded whiteboard | [Whiteboard](solution-whiteboard.md), accepted design `71633c37eba39dd45dc26ed728d622793e3a4e0d`, freeze commit `fbe15e0c5e6394ce922da15cb51862118e48a900` |
 | Required reviewers | Same two retained independent reviewer sessions selected for Issue #123 |
-| Last verified | 2026-09-23: both reviewers verified the freeze; runtime pin `55fd410c7bcc57aba95c8ea6e132b5bd87534d55` validates `CURRENT` |
+| Last verified | 2026-09-23: T01 focused model tests 16/16 plus Markdown, structure, lifecycle, Mermaid, runtime, and diff checks passed; pre-final-test audit pending |
 
 ## Governing inputs and delivery boundaries
 
@@ -61,9 +61,9 @@ This is the only active-delivery state authority for Issue #123.
 
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
-| `T01` | `D01`, `D02`, `FC01`: audit precedes missing-test additions and final tests, binds exact implementation content, and repeats after content changes | `tests/document-model.test.mjs` ordering and invalidation assertions | Planned | Focused task work |
-| `T01` | `D03`, `D04`: strict whiteboard traceability, suitable reuse, and redundant-logic rejection appear in author and reviewer guidance | `tests/document-model.test.mjs` cross-document assertions | Planned | Focused task work |
-| `T01` | `D05`: downstream test completion, focused checks, exact-candidate review, full validation, and human merge authority remain | Existing lifecycle assertions plus focused additions | Existing plus planned | Focused task work |
+| `T01` | `D01`, `D02`, `FC01`: audit precedes missing-test additions and final tests, binds exact implementation content, and repeats after content changes | `tests/document-model.test.mjs` ordering and invalidation assertions | Implemented; focused test passed | Focused task work |
+| `T01` | `D03`, `D04`: strict whiteboard traceability, suitable reuse, and redundant-logic rejection appear in author and reviewer guidance | `tests/document-model.test.mjs` cross-document assertions | Implemented; focused test passed | Focused task work |
+| `T01` | `D05`: downstream test completion, focused checks, exact-candidate review, full validation, and human merge authority remain | Existing lifecycle assertions plus focused additions | Implemented; focused test passed | Focused task work |
 | `T01` | Complete source repository remains internally consistent | `npm run docs:all` | Existing; unrun | Final-gate run after exact-candidate review |
 
 ## Proposed design
@@ -131,7 +131,7 @@ This is the only active-delivery state authority for Issue #123.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | PR |
 | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `READY` | `None` | Canonical and portable guidance, lifecycle entry points, template, diagram, and focused tests consistently require the approved pre-final-test audit | One review gate only; no automation, new artifact, architecture prescription, or weakened downstream gate | Focused document-model test, Markdown/structure/lifecycle/Mermaid checks, runtime validation; full source gate at final readiness | `None` |
+| `T01` | `DONE` | `None` | Canonical and portable guidance, lifecycle entry points, template, diagram, and focused tests consistently require the approved pre-final-test audit | One review gate only; no automation, new artifact, architecture prescription, or weakened downstream gate | Focused model tests 16/16; Markdown/structure/lifecycle/Mermaid, runtime, and diff checks passed; full source gate pending final readiness | `None` |
 
 ## Task specifications and context receipts
 
@@ -145,7 +145,7 @@ This is the only active-delivery state authority for Issue #123.
 | Critical obligations | Strong mandatory wording; author plus both retained reviewers; exact implementation content; suitable reuse; no redundant implementation; no downstream-gate weakening. |
 | Required evidence | Focused tests and documentation checks, same retained reviewers on exact task candidate, then final-gate audit/test/review sequence and human merge approval. |
 | Context receipt | Manifest, frozen whiteboard, installed workflow/review skills, policy, Contributing, plan template, README testing section/diagram, and existing model tests reviewed; no unresolved conflict. |
-| Actual result | Pending |
+| Actual result | Policy, portable author and reviewer skills, plan template, README diagram and explanation, Contributing, and focused regression now require the approved audit ordering and exact-content invalidation. Focused model tests passed 16/16 and all affected documentation/runtime checks passed. |
 
 ## Recovery, decisions, and change control
 
@@ -161,7 +161,7 @@ This is the only active-delivery state authority for Issue #123.
 
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
-| Accepted design delivered | `D01`–`D05` and `FC01` mapped with no extra scope | Pending T01 |
+| Accepted design delivered | `D01`–`D05` and `FC01` mapped with no extra scope | T01 implementation complete; pre-final-test audit pending |
 | Applicable validation passed | Focused tests per task; pre-final-test audit; completed required tests; exact-candidate review; full source gate | Pending |
 | Compatibility safe | Existing deliveries and downstream gates remain valid; portable skill stays self-contained | Pending |
 | Merge-ready canonical state | Manifest, frozen design, final plan, reusable guidance, README/diagram, and tests agree | Pending |
@@ -172,7 +172,7 @@ This is the only active-delivery state authority for Issue #123.
 
 | Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
 | --- | --- | --- | --- |
-| `D01`–`D05`, `FC01` / `T01` | One consistent pre-final-test audit contract | Pending | T01, reviewers, and final human gate |
+| `D01`–`D05`, `FC01` / `T01` | One consistent pre-final-test audit contract | Implemented across canonical policy, portable skills, template, README/diagram, Contributing, and focused regression | Pre-final-test audit, final checks/review, and human merge gate |
 
 ### Cleanup inventory
 
@@ -189,6 +189,6 @@ This is the only active-delivery state authority for Issue #123.
 | Tasks and outcomes | One task updates the complete canonical/portable/documentation/test surface for the approved audit. | `HUMAN_DECISION` |
 | Design consistency | `D01`–`D05` and `FC01` all map to T01; no unexplained addition. | `NONE` |
 | Important changes | Strong pre-final-test author/reviewer audit; exact-content invalidation; suitable reuse and redundancy checks; downstream gates preserved. | `DISCLOSE` |
-| Validation | Plan checks pending two retained reviewers; implementation/full validation unrun by design. | `DISCLOSE` |
-| Risks or open decisions | No design gap; only plan acceptance remains. | `HUMAN_DECISION` |
-| Decision requested | After two-agent plan review, approve T01 for implementation. | `HUMAN_DECISION` |
+| Validation | T01 focused model tests 16/16 and affected documentation/runtime checks passed; pre-final-test audit and full validation remain unrun in the required order. | `DISCLOSE` |
+| Risks or open decisions | No design gap; pre-final-test audit is the next gate. | `NONE` |
+| Decision requested | None until the candidate reaches the human merge gate. | `NONE` |

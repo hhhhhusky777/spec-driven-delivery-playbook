@@ -93,9 +93,18 @@ feature-specific behavior here.
 Keep this as the single coverage inventory, not a test-run log. After each
 task's focused tests, map changed outcomes and material risks to tests, naming
 the owning task and any missing non-focused tests to add at the final gate.
-Those recorded gaps do not block task `DONE`. At final readiness, reconcile all
-accepted outcomes and material risks, including unrecorded gaps; add required
-missing tests before final candidate review. The PR owns actual run results.
+Those recorded gaps do not block task `DONE`.
+
+At final readiness, before adding any missing test or running any final-gate
+test, record the author and both retained reviewers' approval of the exact
+implementation content. They MUST verify strict conformance to the concluded
+whiteboard and its explicitly consumed authorities, suitable reuse of existing
+code and project frameworks, and the absence of unauthorized or redundant
+implementation. Any later implementation-content change invalidates approval
+and repeats the audit; a test-only addition does not. Only after approval,
+reconcile all accepted outcomes and material risks, including unrecorded gaps,
+and add required missing tests before final candidate review. The PR owns actual
+run results.
 
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |

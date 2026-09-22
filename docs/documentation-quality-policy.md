@@ -129,13 +129,26 @@ task may be `DONE` with missing non-focused tests when the plan records each
 gap, its owning task, and its final-gate obligation; do not claim those tests
 were implemented or run.
 
-At final readiness, reconcile every accepted changed outcome and material risk
-against the plan's test inventory, including gaps not previously recorded. Add
-required missing tests before final candidate review, run affected focused
-checks, and return the changed candidate to both retained reviewers. Do not
-present the candidate as merge-ready while required tests remain missing.
-Correct an obsolete test obligation with evidence when accepted design is
-unchanged; a design change requires an authorized amendment.
+When all implementation tasks are `DONE` and final readiness begins, the author
+and both retained reviewers MUST audit the exact implementation content before
+any missing test is added or any final-gate test is run. They MUST verify that
+every implementation addition strictly follows the concluded whiteboard and
+its explicitly consumed authorities, reuses suitable existing code,
+abstractions, libraries, and project frameworks wherever reasonably possible,
+and contains no unauthorized behavior, redundant code or logic, unnecessary
+abstraction, or avoidable parallel implementation. Any violation or missing
+approval MUST block final-test work. Approval binds to the exact audited
+implementation content; any later change to that content invalidates approval
+and repeats the audit. A subsequent test-only addition does not by itself
+invalidate this audit.
+
+Only after this audit passes, reconcile every accepted changed outcome and
+material risk against the plan's test inventory, including gaps not previously
+recorded. Add required missing tests before final candidate review, run
+affected focused checks, and return the changed candidate to both retained
+reviewers. Do not present the candidate as merge-ready while required tests
+remain missing. Correct an obsolete test obligation with evidence when
+accepted design is unchanged; a design change requires an authorized amendment.
 
 After both reviewers report no unresolved blocking findings on the final candidate that will merge
 back to the protected integration branch, run the full applicable validation
