@@ -8,19 +8,19 @@
 | Need / issue | [#121](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/121) |
 | Owner | Repository owner |
 | Concluded design revision | `None` |
-| Open owner decisions | `None`; owner accepted revised design and final-gate FC01 on 2026-09-23 |
+| Open owner decisions | `None` |
 
 ## Discussion draft
 
 | ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
-| DR01 | A task runs focused tests for its changed files and lines; full applicable validation runs at the final merge-back gate. | Accepted; preserve the existing run boundary. |
-| DR02 | The plan should show which tests are deferred to the final gate and which coverage is still missing for all changed outcomes and material risks. | Accepted; extend its existing test/acceptance table, not a new document or run log. |
-| DR03 | Increase the active-implementation attention boundary from 60 to 90 minutes per task, excluding interruptions, review, and external waits. | Accepted. |
-| DR04 | At that boundary, explain expected work versus unexpected cases and whether remaining work protects the accepted outcome or is over-engineering. | Accepted; keep detailed rule in one canonical policy. |
-| DR05 | Do not make every task run the entire suite or duplicate PR evidence in the plan. | Accepted boundary. |
-| DR06 | Reviewer challenge: tie each coverage item to its owning task and allow justified plan-level correction of an obsolete test row without changing accepted design. | Incorporated into candidate D01, D02, and FC01. |
-| DR07 | Owner correction at the human gate: a task may be `DONE` with required non-focused tests still missing if their addition is recorded for the final gate. | Supersedes the earlier D02 and FC01 task-level stop; final gate owns test addition and full validation. |
+| DR01 | A task runs focused tests for its changed files and lines; full applicable validation runs at the final merge-back gate. | accepted |
+| DR02 | The plan should show which tests are deferred to the final gate and which coverage is still missing for all changed outcomes and material risks. | changed |
+| DR03 | Increase the active-implementation attention boundary from 60 to 90 minutes per task, excluding interruptions, review, and external waits. | accepted |
+| DR04 | At that boundary, explain expected work versus unexpected cases and whether remaining work protects the accepted outcome or is over-engineering. | accepted |
+| DR05 | Do not make every task run the entire suite or duplicate PR evidence in the plan. | accepted |
+| DR06 | Reviewer challenge: tie each coverage item to its owning task and allow justified plan-level correction of an obsolete test row without changing accepted design. | changed |
+| DR07 | Owner correction at the human gate: a task may be `DONE` with required non-focused tests still missing if their addition is recorded for the final gate. | accepted |
 
 ## Current understanding
 
@@ -45,7 +45,7 @@
 
 The owner accepted this design and final-gate FC01 on 2026-09-23.
 
-| Design point | Proposed outcome | Boundary or rationale | Validation signal |
+| Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
 | D01 | The implementation plan's existing test/acceptance table is the single coverage inventory: owning task ID, changed outcome or material risk, test/scenario, whether coverage exists or is missing, and focused versus final-gate work. | Keep actual run evidence in the PR; no parallel test log. | Template can identify each task's focused proof and remaining final-gate test work without inventing a suite. |
 | D02 | A task may be `DONE` after focused tests pass and its missing non-focused tests are recorded with an owner and final-gate obligation. At final readiness, reconcile all accepted changed outcomes and material risks against that inventory, including unrecorded gaps; before final candidate review, add needed tests, run affected focused checks, and have both retained reviewers inspect the changed candidate; then run full applicable validation on the reviewed exact head before human merge acceptance. | Both test creation and broad execution may be deferred, but neither may silently disappear or be represented as passed. Evidence-backed plan correction may remove an unnecessary row when accepted design is unchanged. | Task completion exposes known test debt; final merge candidate covers recorded and newly found gaps and has exact-head review and full validation evidence. |
@@ -54,21 +54,21 @@ The owner accepted this design and final-gate FC01 on 2026-09-23.
 
 ## Draft-to-conclusion reconciliation
 
-| Draft item | Design point | Disposition | Rationale |
+| Draft item | Concluded design point | Disposition | Rationale |
 | --- | --- | --- | --- |
-| DR01 | D01, D02 | Changed by owner | Keeps focused execution per task and full execution at final gate; non-focused test creation may also wait for final gate. |
-| DR02 | D01, D02 | Changed by owner | One plan inventory makes omissions visible without blocking task `DONE` for deferred tests. |
-| DR03 | D03 | Accepted | Changes only the active-time threshold. |
-| DR04 | D03, D04 | Accepted | The stop evaluates value and complexity, rather than elapsed time alone. |
-| DR05 | D01, D02, D04 | Accepted | No new document, test framework, or premature full run. |
-| DR06 | D01, D02 | Changed by review | Task ownership is explicit; plan-level test correction remains agent-discretionary within accepted design. |
-| DR07 | D02, FC01 | Accepted | Task `DONE` needs a recorded obligation, not completed non-focused tests; final merge still requires their completion and proof. |
+| DR01 | D01, D02 | changed | Keeps focused execution per task and full execution at final gate; non-focused test creation may also wait for final gate. |
+| DR02 | D01, D02 | changed | One plan inventory makes omissions visible without blocking task `DONE` for deferred tests. |
+| DR03 | D03 | accepted | Changes only the active-time threshold. |
+| DR04 | D03, D04 | accepted | The stop evaluates value and complexity, rather than elapsed time alone. |
+| DR05 | D01, D02, D04 | accepted | No new document, test framework, or premature full run. |
+| DR06 | D01, D02 | changed | Task ownership is explicit; plan-level test correction remains agent-discretionary within accepted design. |
+| DR07 | D02 | accepted | Task `DONE` needs a recorded obligation, not completed non-focused tests; final merge still requires their completion and proof. |
 
 ## Newly introduced fail-closed behaviors
 
 | ID | Trigger | Required fail-closed response | Impact | Owner disposition |
 | --- | --- | --- | --- | --- |
-| FC01 | At final readiness, an accepted changed outcome or material risk has a required test missing from the candidate, whether already recorded or newly found during inventory reconciliation. | Do not present the candidate as merge-ready. Add and record the test, repeat affected focused checks and both retained reviews, then run full applicable validation on the exact reviewed head; correct an obsolete obligation with evidence if design is unchanged, or amend the design first if it changes. | Merge can be delayed, but task `DONE` is not blocked and omitted tests cannot silently pass the final gate. | Owner rejected task-level guard and requested this final-gate boundary on 2026-09-23; confirm in revised design acceptance. |
+| FC01 | At final readiness, an accepted changed outcome or material risk has a required test missing from the candidate, whether already recorded or newly found during inventory reconciliation. | Do not present the candidate as merge-ready. Add and record the test, repeat affected focused checks and both retained reviews, then run full applicable validation on the exact reviewed head; correct an obsolete obligation with evidence if design is unchanged, or amend the design first if it changes. | Merge can be delayed, but task `DONE` is not blocked and omitted tests cannot silently pass the final gate. | Owner requested this final-gate boundary on 2026-09-23; formal disposition follows in the conclusion transition. |
 
 ## Human brief candidate
 
