@@ -12,12 +12,12 @@
 
 ## Discussion draft
 
-| ID | Agreed item, constraint, or gap | State / resolution |
+| ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
-| `DR01` | Final readiness reconciles test coverage but does not require a separate implementation-scope and reuse audit before missing tests are added or final tests run. | Accepted gap |
-| `DR02` | The author and both retained reviewers must inspect all implementation changes against the concluded whiteboard before final-gate test completion begins. | Accepted direction |
-| `DR03` | The audit must reject unauthorized behavior, redundant code or logic, avoidable parallel implementations, and failure to reuse suitable existing code or project frameworks. | Accepted direction |
-| `DR04` | The audit is an additional check inside the existing final gate; it does not replace later exact-candidate review, tests, full validation, or human merge authority. | Accepted boundary |
+| `DR01` | Final readiness reconciles test coverage but does not require a separate implementation-scope and reuse audit before missing tests are added or final tests run. | `accepted` |
+| `DR02` | The author and both retained reviewers must inspect all implementation changes against the concluded whiteboard before final-gate test completion begins. | `accepted` |
+| `DR03` | The audit must reject unauthorized behavior, redundant code or logic, avoidable parallel implementations, and failure to reuse suitable existing code or project frameworks. | `accepted` |
+| `DR04` | The audit is an additional check inside the existing final gate; it does not replace later exact-candidate review, tests, full validation, or human merge authority. | `accepted` |
 
 ## Current understanding
 
