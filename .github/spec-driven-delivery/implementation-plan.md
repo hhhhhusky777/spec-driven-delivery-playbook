@@ -131,7 +131,7 @@ This is the only active-delivery state authority for Issue #123.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | PR |
 | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `DONE` | `None` | Canonical and portable guidance, lifecycle entry points, template, diagram, and focused tests consistently require the approved pre-final-test audit | One review gate only; no automation, new artifact, architecture prescription, or weakened downstream gate | Focused model tests 16/16; Markdown/structure/lifecycle/Mermaid, runtime, and diff checks passed; full source gate pending final readiness | `None` |
+| `T01` | `DONE` | `None` | Canonical and portable guidance, lifecycle entry points, template, diagram, and focused tests consistently require the approved pre-final-test audit | One review gate only; no automation, new artifact, architecture prescription, or weakened downstream gate | Focused model tests 16/16; Markdown/structure/lifecycle/Mermaid, runtime, and diff checks passed; full source gate pending final readiness | [#124](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/124) |
 
 ## Task specifications and context receipts
 
@@ -165,7 +165,7 @@ This is the only active-delivery state authority for Issue #123.
 | Applicable validation passed | Focused tests per task; pre-final-test audit; completed required tests; exact-candidate review; full source gate | Pending |
 | Compatibility safe | Existing deliveries and downstream gates remain valid; portable skill stays self-contained | Pending |
 | Merge-ready canonical state | Manifest, frozen design, final plan, reusable guidance, README/diagram, and tests agree | Pending |
-| PR-owned review and delivery | Same reviewer seats, owner authority, merge, and target proof | Pending PR |
+| PR-owned review and delivery | Same reviewer seats, owner authority, merge, and target proof | [PR #124](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/124); review and merge facts remain pending |
 | Feature cleanup complete | Combined archive, live-plan removal, whiteboard reset, then owned worktree/branch cleanup after target verification | Pending |
 
 ### Planned versus actual outcome
