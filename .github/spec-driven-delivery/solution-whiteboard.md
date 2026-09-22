@@ -4,11 +4,11 @@
 
 | Field | Value |
 | --- | --- |
-| State | `DISCUSSION` |
+| State | `CONCLUDED` |
 | Need / issue | [Issue #123](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/123) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
-| Open owner decisions | Approve the design and `FC01` after two-agent review |
+| Concluded design revision | `71633c37eba39dd45dc26ed728d622793e3a4e0d` |
+| Open owner decisions | `None` |
 
 ## Discussion draft
 
@@ -93,7 +93,7 @@
 
 | ID | Trigger | Required fail-closed response | Impact | Owner disposition |
 | --- | --- | --- | --- | --- |
-| `FC01` | The author or either retained reviewer has not approved the implementation-scope and reuse audit; finds unauthorized scope, avoidable redundancy, or unjustified failure to reuse a suitable existing mechanism; or the approved implementation content changes afterward. | Do not add final-gate missing tests and do not run final-gate tests or full validation. Correct the implementation and repeat the audit, or obtain prior human approval for the exact design amendment. A test-only addition after approval does not itself invalidate the audit. | Final readiness pauses before test-completion work; valid prior task evidence is preserved. | `Pending` |
+| `FC01` | The author or either retained reviewer has not approved the implementation-scope and reuse audit; finds unauthorized scope, avoidable redundancy, or unjustified failure to reuse a suitable existing mechanism; or the approved implementation content changes afterward. | Do not add final-gate missing tests and do not run final-gate tests or full validation. Correct the implementation and repeat the audit, or obtain prior human approval for the exact design amendment. A test-only addition after approval does not itself invalidate the audit. | Final readiness pauses before test-completion work; valid prior task evidence is preserved. | `Approved` |
 
 ## Bundled upgrade brief
 
