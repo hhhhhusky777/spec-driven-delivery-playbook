@@ -62,7 +62,7 @@
 | ID | Scenario | Likelihood / impact | Prevention or detection | Recovery / owner | Residual risk |
 | --- | --- | --- | --- | --- | --- |
 | `K01` | Review becomes stylistic perfectionism. | Medium / medium | Limit blocking findings to design authority, real redundancy, and suitable reuse with material value. | Author may reject unsupported findings under existing disposition rules. | Judgment remains necessary. |
-| `K02` | Review passes, then added tests change production implementation. | Low / high | Any production change invalidates the audit and repeats it before test completion continues. | Author and same retained reviewers. | None beyond reviewer error. |
+| `K02` | Review passes, then the audited implementation content changes. | Low / high | Approval binds to the exact audited implementation content. Any later change to that content invalidates the audit and requires the author and both retained reviewers to repeat it before test completion continues; test-only additions do not by themselves invalidate this audit. | Author and same retained reviewers. | None beyond reviewer error. |
 | `K03` | New gate is mistaken for final approval. | Medium / medium | State explicitly that downstream exact-candidate review, validation, and human merge authority remain mandatory. | Workflow guidance and regression tests. | Low. |
 
 ## Concluded design candidate
@@ -70,7 +70,7 @@
 | Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
 | `D01` | Final readiness begins with a mandatory pre-final-test implementation audit. | It occurs before recorded missing tests are added and before any final-gate tests or full validation run. | Ordering is explicit and regression-tested. |
-| `D02` | The author self-reviews and both retained reviewers independently approve the same complete implementation candidate. | All implementation changes are inspected; reviewer sessions remain the delivery's retained pair. | Review evidence identifies the exact candidate and all three dispositions. |
+| `D02` | The author self-reviews and both retained reviewers independently approve the same complete implementation content. | Approval binds to the exact audited implementation content, including documentation, configuration, infrastructure, and runtime behavior. Any later change to that content invalidates the audit and requires repetition; subsequent test-only additions do not by themselves invalidate it. | Review evidence identifies the exact audited content and all three dispositions. |
 | `D03` | The audit blocks any implementation not fully traceable to the concluded whiteboard or its explicitly consumed authorities. | No new behavior, logic, or scope may be justified by tests alone. | Untraceable additions prevent progression. |
 | `D04` | The audit blocks redundant code or logic and avoidable new mechanisms when suitable existing code or project frameworks are available. | A new mechanism is allowed only when existing options are unsuitable and the reason is documented. | Review evidence records reuse assessment and any justified exception. |
 | `D05` | Passing this audit does not replace subsequent test completion, focused checks, exact-candidate review, full validation, or human merge acceptance. | This is an early final-gate safeguard, not approval to merge. | Existing downstream gates remain present and ordered. |
@@ -93,7 +93,19 @@
 
 | ID | Trigger | Required fail-closed response | Impact | Owner disposition |
 | --- | --- | --- | --- | --- |
-| `FC01` | The author or either retained reviewer has not approved the implementation-scope and reuse audit, or finds unauthorized scope, avoidable redundancy, or unjustified failure to reuse a suitable existing mechanism. | Do not add final-gate missing tests and do not run final-gate tests or full validation. Correct the implementation and repeat the audit, or obtain prior human approval for the exact design amendment. | Final readiness pauses before test-completion work; valid prior task evidence is preserved. | `Pending` |
+| `FC01` | The author or either retained reviewer has not approved the implementation-scope and reuse audit; finds unauthorized scope, avoidable redundancy, or unjustified failure to reuse a suitable existing mechanism; or the approved implementation content changes afterward. | Do not add final-gate missing tests and do not run final-gate tests or full validation. Correct the implementation and repeat the audit, or obtain prior human approval for the exact design amendment. A test-only addition after approval does not itself invalidate the audit. | Final readiness pauses before test-completion work; valid prior task evidence is preserved. | `Pending` |
+
+## Bundled upgrade brief
+
+| Concern | Exact result |
+| --- | --- |
+| Old pin | `55fd9494bb7b96984114db27c0995a910da82f6b` remains authoritative until human acceptance and cutover. |
+| New pin | `55fd410c7bcc57aba95c8ea6e132b5bd87534d55`, the current immutable `origin/main` revision. |
+| Reusable-document impact | Absorbs the merged Issue #121 final-coverage inventory and 90-minute task boundary that this design extends; no feature-specific content is imported. |
+| Migration | On acceptance, update the manifest pin, regenerate this worktree's managed workflow runtime from the accepted revision, and validate it as `CURRENT` before planning. |
+| Rollback / recovery | Until cutover, keep the old pin and runtime authoritative. If regeneration or validation fails, restore or retain that accepted pin/runtime and preserve failure evidence. |
+| Validation | Upgrade candidate preparation succeeded; `55fd410c` is current `origin/main` and contains the old pin. Final cutover still requires regenerated-runtime validation in this worktree. |
+| Cutover authority | Human acceptance of this design gate authorizes the bundled pin cutover; it does not authorize implementation or merge. |
 
 ## Human brief
 
@@ -103,5 +115,5 @@
 | Important boundaries | The audit blocks out-of-design or redundant implementation and unjustified non-reuse; later test/review/merge gates remain mandatory. | `HUMAN_DECISION` |
 | Alternatives rejected | Existing final review alone is too late; unconditional reuse can be harmful. | `DISCLOSE` |
 | Remaining gaps or risks | Reviewer judgment must remain material and avoid stylistic perfectionism. | `DISCLOSE` |
-| Newly introduced fail-closed behavior | `FC01`: final test completion cannot start until author and both retained reviewers pass this audit. | `HUMAN_DECISION` |
+| Newly introduced fail-closed behavior | `FC01`: final test completion cannot start until author and both retained reviewers approve the exact implementation content; an implementation-content change invalidates approval. | `HUMAN_DECISION` |
 | Decision requested | After two-agent review, approve `D01`–`D05`, `FC01`, and the bundled pin upgrade to `55fd410c7bcc57aba95c8ea6e132b5bd87534d55`. | `HUMAN_DECISION` |
