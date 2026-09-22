@@ -123,9 +123,19 @@ findings, advice, and dispositions. The pull request owns findings, revisions,
 checks, acceptance, and merge evidence.
 
 Use focused tests to reach review early without representing them as complete
-proof. Each task still implements the tests required by its accepted outcome.
-"Focused tests" means only the tests that cover the changed files and lines.
-Run them before both retained reviewers inspect the same exact head.
+proof. "Focused tests" means only the tests that cover the changed files and
+lines. Run them before both retained reviewers inspect the same exact head. A
+task may be `DONE` with missing non-focused tests when the plan records each
+gap, its owning task, and its final-gate obligation; do not claim those tests
+were implemented or run.
+
+At final readiness, reconcile every accepted changed outcome and material risk
+against the plan's test inventory, including gaps not previously recorded. Add
+required missing tests before final candidate review, run affected focused
+checks, and return the changed candidate to both retained reviewers. Do not
+present the candidate as merge-ready while required tests remain missing.
+Correct an obsolete test obligation with evidence when accepted design is
+unchanged; a design change requires an authorized amendment.
 
 After both reviewers report no unresolved blocking findings on the final candidate that will merge
 back to the protected integration branch, run the full applicable validation
@@ -137,10 +147,12 @@ failure repeats only the affected validation. Project policy may require a
 more conservative sequence; this efficiency rule never waives a required
 check or exact-head evidence.
 
-One hour of active implementation on a single task is an owner-attention
+90 minutes of active implementation on a single task is an owner-attention
 boundary, not a quality shortcut. If the task has not reached its planned
-review boundary, stop with a concise account of time spent, progress, cause,
-remaining work, and recommended next action; continue only after owner
+review boundary, stop and explain where the time went: expected work versus
+unexpected work or cases. Assess whether the extra work protects the accepted
+outcome or is over-engineering. Report progress, remaining work, simpler or
+deferrable options, and a recommendation; continue only after owner
 justification or authorization. Exclude network and environment interruptions,
 review time, and waits for people or external systems from active
 implementation time.

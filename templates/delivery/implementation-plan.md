@@ -90,9 +90,16 @@ feature-specific behavior here.
 
 ### Test and acceptance contracts
 
-| Contract or design IDs | Test level | Scenario | Required evidence |
-| --- | --- | --- | --- |
-| `<IDs>` | `<unit, contract, integration, E2E, manual, or review>` | `<positive and failure case>` | `<result>` |
+Keep this as the single coverage inventory, not a test-run log. After each
+task's focused tests, map changed outcomes and material risks to tests, naming
+the owning task and any missing non-focused tests to add at the final gate.
+Those recorded gaps do not block task `DONE`. At final readiness, reconcile all
+accepted outcomes and material risks, including unrecorded gaps; add required
+missing tests before final candidate review. The PR owns actual run results.
+
+| Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
+| --- | --- | --- | --- | --- |
+| `<task ID>` | `<IDs or material risk>` | `<test path/case or planned test>` | `<existing, implemented, or missing>` | `<focused task work or final-gate addition/run>` |
 
 ## Proposed design
 
