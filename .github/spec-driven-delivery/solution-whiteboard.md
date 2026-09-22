@@ -4,10 +4,10 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [#121](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/121) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
+| Concluded design revision | `WB-121-1` |
 | Open owner decisions | `None` |
 
 ## Discussion draft
@@ -68,7 +68,7 @@ The owner accepted this design and final-gate FC01 on 2026-09-23.
 
 | ID | Trigger | Required fail-closed response | Impact | Owner disposition |
 | --- | --- | --- | --- | --- |
-| FC01 | At final readiness, an accepted changed outcome or material risk has a required test missing from the candidate, whether already recorded or newly found during inventory reconciliation. | Do not present the candidate as merge-ready. Add and record the test, repeat affected focused checks and both retained reviews, then run full applicable validation on the exact reviewed head; correct an obsolete obligation with evidence if design is unchanged, or amend the design first if it changes. | Merge can be delayed, but task `DONE` is not blocked and omitted tests cannot silently pass the final gate. | Owner requested this final-gate boundary on 2026-09-23; formal disposition follows in the conclusion transition. |
+| FC01 | At final readiness, an accepted changed outcome or material risk has a required test missing from the candidate, whether already recorded or newly found during inventory reconciliation. | Do not present the candidate as merge-ready. Add and record the test, repeat affected focused checks and both retained reviews, then run full applicable validation on the exact reviewed head; correct an obsolete obligation with evidence if design is unchanged, or amend the design first if it changes. | Merge can be delayed, but task `DONE` is not blocked and omitted tests cannot silently pass the final gate. | Approved by owner on 2026-09-23. |
 
 ## Human brief candidate
 
