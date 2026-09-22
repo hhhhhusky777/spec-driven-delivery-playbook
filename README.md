@@ -514,7 +514,7 @@ flowchart TD
     R1 --> J{"Findings resolved?"}
     R2 --> J
     J -->|"no"| X["Correct once; return to same seats"]
-    X --> F
+    X --> E
     J -->|"yes"| G{"Final candidate to protected target?"}
     G -->|"no"| B["Task PR human brief"]
     G -->|"yes"| V["Full validation<br/>on exact head"]

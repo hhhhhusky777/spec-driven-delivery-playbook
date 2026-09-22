@@ -138,6 +138,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
     assert.match(normalized, /exact[- ]head|exact candidate/i);
     assert.match(normalized, /stricter .*policy|Project policy may require/i);
     assert.match(normalized, /90 minutes of active implementation|one task reaches 90 minutes/i);
+    assert.doesNotMatch(normalized, /one hour of active implementation|one task reaches one hour|Implement each task's required tests|Each task still implements the tests/i);
   }
   for (const document of [workflow, policy]) {
     const normalized = document.replace(/\s+/g, " ");
@@ -157,6 +158,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
 
   const normalizedPolicy = policy.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
   assert.match(normalizedPolicy, /task may be `DONE` with missing non-focused tests/i);
+  assert.doesNotMatch(normalizedPolicy, /one hour of active implementation|Each task still implements the tests/i);
   assert.match(normalizedPolicy, /final readiness.*including gaps not previously recorded.*Add required missing tests before final candidate review/i);
   assert.match(normalizedPolicy, /Focused tests.*only the tests that cover the changed files and lines/);
   assert.match(normalizedPolicy, /final candidate that will merge back to the protected integration branch.*full applicable validation/);
@@ -169,7 +171,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(readme, /G -->\|"no"\| B\["Task PR human brief"\]/);
   assert.match(readme, /G -->\|"yes"\| V\["Full validation<br\/>on exact head"\]/);
   assert.match(readme, /D -->\|"yes"\| X/);
-  assert.match(readme, /X --> F/);
+  assert.match(readme, /X --> E/);
   assert.match(readme, /D -->\|"no; transient"\| Q\["Rerun affected validation"\]/);
   assert.match(readme, /Q --> V/);
   assert.match(contributing, /Defer full validation until the final candidate will merge back to\s+`main`/i);

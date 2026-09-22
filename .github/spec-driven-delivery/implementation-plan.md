@@ -57,7 +57,7 @@ This is the feature's coverage inventory, not a run log. The task ID identifies 
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | PR |
 | --- | --- | --- | --- | --- | --- | --- |
-| T01 | `DONE` | `None` | Reusable template, canonical policy, workflow guidance, entry points, and focused regression tests consistently implement D01–D04 | Preserve frozen design, existing final-gate review/merge controls, no new artifact or quota | Focused tests for changed files/lines passed; no specific missing non-focused test identified yet; final gate must reconcile again | `None` |
+| T01 | `DONE` | `None` | Reusable template, canonical policy, workflow guidance, entry points, and focused regression tests consistently implement D01–D04 | Preserve frozen design, existing final-gate review/merge controls, no new artifact or quota | Focused tests for changed files/lines passed; no specific missing non-focused test identified yet; final gate must reconcile again | [#122](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/122) |
 
 ### T01 — reusable rule and coverage inventory
 
@@ -73,7 +73,7 @@ This is the feature's coverage inventory, not a run log. The task ID identifies 
 
 ## Final-gate and completion obligations
 
-Before the final candidate review, reconcile accepted changed outcomes and material risks against the inventory, add any missing required tests, run affected focused checks, and return the exact candidate to the same two reviewers. After both approve, run full applicable validation on that exact head. Corrections invalidate affected reviews and checks as required by the [quality policy](../../docs/documentation-quality-policy.md#review-and-human-brief). Human acceptance is required before merge. No current focused or final test result is claimed by this plan.
+Before the final candidate review, reconcile accepted changed outcomes and material risks against the inventory, add any missing required tests, run affected focused checks, and return the exact candidate to the same two reviewers. After both approve, run full applicable validation on that exact head. Corrections invalidate affected reviews and checks as required by the [quality policy](../../docs/documentation-quality-policy.md#review-and-human-brief). Human acceptance is required before merge. T01 focused checks passed as recorded above; full applicable validation remains unrun.
 
 | Outcome | Required evidence | Current state |
 | --- | --- | --- |
