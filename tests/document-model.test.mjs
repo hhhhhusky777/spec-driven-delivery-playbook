@@ -175,6 +175,10 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
     assert.match(normalized, /implementation content.*invalidates approval|implementation-content change.*repeats (?:this|the) audit/i);
     assert.match(normalized, /test-only additions?.*do(?:es)? not/i);
   }
+  assert.match(
+    reviewer.replace(/^>\s?/gm, "").replace(/\s+/g, " "),
+    /verify the author's self-review of that same content.*MUST remain blocked until the author and both retained reviewers approve/i,
+  );
   assert.match(readme, /F --> P\["Open or update PR"\]/);
   assert.match(readme, /E -->\|"yes"\| S\["Author \+ retained reviewers:<br\/>scope and reuse audit"\]/);
   assert.match(readme, /S --> U\{"Audit approved on exact<br\/>implementation content\?"\}/);
@@ -187,7 +191,10 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(readme, /G -->\|"no"\| B\["Task PR human brief"\]/);
   assert.match(readme, /G -->\|"yes"\| V\["Full validation<br\/>on exact head"\]/);
   assert.match(readme, /D -->\|"yes"\| X/);
-  assert.match(readme, /X --> E/);
+  assert.match(readme, /X --> I\{"Audited implementation<br\/>content changed\?"\}/);
+  assert.match(readme, /I -->\|"yes"\| E/);
+  assert.match(readme, /I -->\|"no; test-only"\| F/);
+  assert.doesNotMatch(readme, /X --> E/);
   assert.match(readme, /D -->\|"no; transient"\| Q\["Rerun affected validation"\]/);
   assert.match(readme, /Q --> V/);
   assert.match(contributing, /Defer full validation until the final candidate will merge back to\s+`main`/i);

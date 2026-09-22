@@ -70,8 +70,10 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > amendment MUST block approval.
 >
 > At the pre-final-test implementation audit, before any missing test is added
-> or any final-gate test is run, inspect the exact implementation content. MUST
-> block unless every addition strictly follows the concluded whiteboard and its
+> or any final-gate test is run, inspect the exact implementation content and
+> verify the author's self-review of that same content. The gate MUST remain
+> blocked until the author and both retained reviewers approve. MUST block
+> unless every addition strictly follows the concluded whiteboard and its
 > explicitly consumed authorities, suitable existing code, abstractions,
 > libraries, and project frameworks were reused wherever reasonably possible,
 > and no unauthorized behavior, redundant code or logic, unnecessary
