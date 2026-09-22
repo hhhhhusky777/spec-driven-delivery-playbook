@@ -504,7 +504,10 @@ shape without adding another gate or report artifact.
 
 ```mermaid
 flowchart TD
-    C["Coherent candidate"] --> F["Focused tests covering<br/>changed files and lines"]
+    C["Coherent candidate"] --> E{"Final candidate?"}
+    E -->|"yes"| A["Reconcile coverage;<br/>add missing required tests"]
+    E -->|"no"| F["Focused tests covering<br/>changed files and lines"]
+    A --> F
     F --> P["Open or update PR"]
     P --> R1["Retained feature reviewer 1"]
     P --> R2["Retained feature reviewer 2"]
@@ -523,20 +526,19 @@ flowchart TD
     B --> H["Human decision at the actual gate"]
 ```
 
-This ordering keeps full validation at the protected-target merge boundary
-without postponing the tests each task must implement. Intermediate task PRs
-retain exact-head review with focused tests covering their changed files and
-lines. Any candidate change returns to focused tests and both retained
-reviewers; a final-candidate change also invalidates full validation.
+This ordering keeps full validation at the protected-target merge boundary.
+A task may finish with missing non-focused tests recorded in the plan; the
+final gate reconciles all accepted outcomes and risks, adds required tests,
+then sends the final candidate through focused checks and both retained
+reviewers before full validation. Any candidate change returns to focused
+tests and both reviewers; a final-candidate change also invalidates full validation.
 An unchanged transient check failure repeats only the affected validation. A
 project's stricter validation policy takes precedence.
 
 Implementation should also remain inspectably proportional. If one task
-accumulates one hour of active implementation before its planned review
-boundary, the agent stops and explains the time spent, progress, cause,
-remaining work, and recommendation, then waits for owner justification or
-authorization to continue. Network or environment interruptions, code review,
-and waits for people or external systems do not consume that hour.
+accumulates 90 minutes of active implementation before its planned review
+boundary, the agent stops for owner attention under the
+[quality policy](docs/documentation-quality-policy.md#review-and-human-brief).
 
 See [Review and human brief](docs/documentation-quality-policy.md#review-and-human-brief)
 for the canonical review outcome.

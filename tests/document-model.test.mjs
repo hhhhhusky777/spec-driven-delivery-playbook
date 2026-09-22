@@ -123,23 +123,30 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   const readme = await read("README.md");
   const contributing = await read("CONTRIBUTING.md");
   const whiteboard = await read("templates/discovery/solution-whiteboard.md");
+  const plan = await read("templates/delivery/implementation-plan.md");
   const automation = await read(".github/workflows/documentation-quality.yml");
   const packageSource = await read("package.json");
 
   for (const document of [workflow, readme, contributing]) {
     const normalized = document.replace(/\s+/g, " ");
     assert.match(normalized, /Focused tests.*only the tests that cover the changed files and lines/i);
-    assert.match(normalized, /Implement each task's required tests|Each task still implements the tests|Every task still implements the tests/i);
+    assert.match(normalized, /non-focused test/i);
     assert.match(normalized, /retained (?:agent |feature )?reviewer|same two feature reviewer/i);
     assert.match(normalized, /full (?:applicable )?validation/i);
     // Reject ambiguous test categories, not unrelated background-command guidance.
     assert.doesNotMatch(normalized, /\b(?:heavy|long-running)\s+(?:tests?\b|test\s+suites?\b)|full-coverage/i);
     assert.match(normalized, /exact[- ]head|exact candidate/i);
     assert.match(normalized, /stricter .*policy|Project policy may require/i);
-    assert.match(normalized, /one hour of active implementation|one task reaches one hour/i);
+    assert.match(normalized, /90 minutes of active implementation|one task reaches 90 minutes/i);
+  }
+  for (const document of [workflow, policy]) {
+    const normalized = document.replace(/\s+/g, " ");
     assert.match(normalized, /network (?:or|and) environment interruptions/i);
     assert.match(normalized, /review time|code review/i);
     assert.match(normalized, /owner justification or authorization/i);
+  }
+  for (const document of [readme, contributing]) {
+    assert.match(document, /\[quality policy\]\(docs\/documentation-quality-policy\.md#review-and-human-brief\)/);
   }
   assert.match(readme, /representative project operation/);
   assert.match(readme, /copies, recreates, or safely shares only/);
@@ -149,10 +156,13 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   }
 
   const normalizedPolicy = policy.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
-  assert.match(normalizedPolicy, /Each task still implements.*before both retained reviewers/i);
+  assert.match(normalizedPolicy, /task may be `DONE` with missing non-focused tests/i);
+  assert.match(normalizedPolicy, /final readiness.*including gaps not previously recorded.*Add required missing tests before final candidate review/i);
   assert.match(normalizedPolicy, /Focused tests.*only the tests that cover the changed files and lines/);
   assert.match(normalizedPolicy, /final candidate that will merge back to the protected integration branch.*full applicable validation/);
   assert.match(readme, /F --> P\["Open or update PR"\]/);
+  assert.match(readme, /E -->\|"yes"\| A\["Reconcile coverage;<br\/>add missing required tests"\]/);
+  assert.match(readme, /A --> F/);
   assert.match(readme, /P --> R1\["Retained feature reviewer 1"\]/);
   assert.match(readme, /P --> R2\["Retained feature reviewer 2"\]/);
   assert.match(readme, /J -->\|"yes"\| G\{"Final candidate to protected target\?"\}/);
@@ -171,6 +181,9 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(packageSource, /"docs:test": "node --experimental-test-coverage --test tests/);
   assert.match(policy, /responsibility of an\s+agent changing this repository, not a project agent/);
   assert.match(workflow, /do not run the playbook repository's source suite/);
+  assert.match(workflow.replace(/\s+/g, " "), /At final readiness, reconcile all accepted changed outcomes and material risks.*including unrecorded gaps.*Add required missing tests before final candidate review/i);
+  assert.match(plan, /\| Owning task \| Contract, changed outcome, or risk \| Test or scenario \| Coverage \| Work boundary \|/);
+  assert.match(plan.replace(/\s+/g, " "), /recorded gaps do not block task `DONE`.*including unrecorded gaps.*add required missing tests before final candidate review/i);
 });
 
 test("feature review cohorts retain context and produce useful change requests", async () => {

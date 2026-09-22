@@ -227,9 +227,16 @@ tests, and other files. Derive it against the actual PR target, classify each
 file once by primary responsibility, and disclose non-line-countable files.
 The summary informs review; it does not add a gate or prescribe a helper tool.
 
-Implement each task's required tests while doing the task. "Focused tests"
-means only the tests that cover the changed files and lines. Run them before
-the feature's two retained agent reviewers inspect the exact task candidate.
+"Focused tests" means only the tests that cover the changed files and lines.
+Run them before the feature's two retained agent reviewers inspect the exact
+task candidate. A normal-delivery task may be `DONE` with missing non-focused
+tests when the plan records each gap, its owning task, and its final-gate
+obligation; keep actual run evidence in the PR. At final readiness, reconcile
+all accepted changed outcomes and material risks against that inventory,
+including unrecorded gaps. Add required missing tests before final candidate
+review, then run affected focused checks and return the changed candidate to
+both retained reviewers. Do not claim merge readiness with required tests
+still missing.
 Candidate-changing corrections return to the same two reviewers. The installed
 sdd-feature-review skill owns reviewer context and finding behavior. After both
 reviewers approve the final candidate that will
@@ -244,12 +251,13 @@ Playbook source tests belong only to changes in the playbook repository. In an
 adopting project, use that project's tests and the installed runtime validation;
 do not run the playbook repository's source suite.
 
-Track active implementation time proportionally. If one task reaches one hour
-of active implementation before its planned review boundary, stop and report
-the time spent, progress, cause, remaining work, and recommended next action;
-wait for owner justification or authorization before continuing. Do not count
-network or environment interruptions, review time, or waits for people or
-external systems.
+Track active implementation time proportionally. If one task reaches 90 minutes
+of active implementation before its planned review boundary, stop. Explain
+whether the time reflects expected work or unexpected cases, whether extra work
+protects the accepted outcome or is over-engineering, and what remains. Offer
+a simpler or deferrable path when appropriate; wait for owner justification or
+authorization before continuing. Do not count network or environment
+interruptions, review time, or waits for people or external systems.
 
 ## Author disposition of review
 

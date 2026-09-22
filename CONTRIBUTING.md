@@ -74,11 +74,13 @@ Human review before merge is the default. Scoped agent auto-merge never supplies
 design, policy, validation, cleanup, or out-of-scope authority.
 
 Open the PR when it best supports collaboration; a draft PR is not required
-before coding. Each task still implements the tests required by its accepted
-outcome. "Focused tests" means only the tests that cover the changed files and
-lines. After the concluded whiteboard has been reviewed and accepted—or, for an
-eligible Issue-only Fast Fix, after issue triage—run those tests before the same
-two feature reviewers inspect each exact candidate.
+before coding. "Focused tests" means only the tests that cover the changed files
+and lines. A normal-delivery task may finish with owned, recorded non-focused
+test work for the final gate; the [quality policy](docs/documentation-quality-policy.md#review-and-human-brief)
+defines the final coverage boundary. After the concluded whiteboard has been
+reviewed and accepted—or, for an eligible Issue-only Fast Fix, after issue
+triage—run focused tests before the same two feature reviewers inspect each
+exact candidate.
 Retain their sessions through planning, tasks, corrections, and the final
 candidate until merge. Reviewer context, independence, packets, findings, and
 dispositions follow the
@@ -91,12 +93,9 @@ corrections return through focused tests and both retained reviewer seats;
 final-candidate corrections also invalidate full validation. GitHub is the
 durable record, and a stricter project policy still applies.
 
-If active implementation of one task reaches one hour without reaching its
-planned review boundary, stop and give the owner a concise account of time
-spent, progress, cause, remaining work, and recommended next action. Continue
-only after owner justification or authorization. Count active
-implementation time only; network or environment interruptions, review time,
-and time waiting for people or external systems do not count.
+If active implementation of one task reaches 90 minutes without reaching its
+planned review boundary, stop for owner attention under the
+[quality policy](docs/documentation-quality-policy.md#review-and-human-brief).
 
 Before final review, that candidate must already contain every predictable
 tracked canonical state that its merge will make true. If it closes a normal
