@@ -692,8 +692,11 @@ flowchart TD
     T2 --> P2["Self-contained task PR"]
     P1 --> B
     P2 --> B
-    B --> S["Synchronize target before final review"]
-    S --> FP["Final feature PR"]
+    B --> S{"Target sync required<br/>for mergeability?"}
+    S -->|"no"| A["Pre-final implementation audit"]
+    S -->|"yes"| C["Sync target; resolve conflicts<br/>+ affected focused checks"]
+    C --> A
+    A --> FP["Final feature PR"]
     FP --> M
 ```
 
@@ -703,11 +706,11 @@ reusable guidance and preserve applicable project decisions; never infer
 precedence from a branch name, timestamp, or hash ordering.
 
 The delivery branch's creation point is its ordinary implementation baseline.
-Do not continuously merge or rebase the target during implementation. Bring
-the completed candidate current with its target, then run affected checks on
-that resulting candidate before final review. If the baseline cannot support
-safe progress, use the canonical error-handling authority and let the agent
-choose a proportional recovery.
+Do not continuously merge or rebase the target during implementation. At final
+readiness, synchronize only when required for a mergeable candidate; resolve
+conflicts and run affected focused checks before the pre-final implementation
+audit. If the baseline cannot support safe progress, use the canonical
+error-handling authority and let the agent choose a proportional recovery.
 
 ## Use the playbook
 

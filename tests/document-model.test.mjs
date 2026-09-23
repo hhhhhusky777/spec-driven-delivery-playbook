@@ -203,6 +203,11 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.doesNotMatch(readme, /X --> E/);
   assert.match(readme, /D -->\|"no; transient"\| Q\["Rerun affected validation"\]/);
   assert.match(readme, /Q --> V/);
+  assert.match(readme, /B --> S\{"Target sync required<br\/>for mergeability\?"\}/);
+  assert.match(readme, /S -->\|"no"\| A\["Pre-final implementation audit"\]/);
+  assert.match(readme, /S -->\|"yes"\| C\["Sync target; resolve conflicts<br\/>\+ affected focused checks"\]/);
+  assert.match(readme, /C --> A/);
+  assert.doesNotMatch(readme, /Synchronize target before final review|Bring\s+the completed candidate current/i);
   assert.match(contributing, /Defer full validation until the final candidate will merge back to\s+`main`/i);
   assert.match(contributing, /single-task PR targeting `main` is (?:already )?final/i);
   assert.match(automation, /if: github\.event_name == 'pull_request'[\s\S]*npm run docs:focused/);
