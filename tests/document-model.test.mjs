@@ -122,6 +122,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   const policy = await read("docs/documentation-quality-policy.md");
   const readme = await read("README.md");
   const contributing = await read("CONTRIBUTING.md");
+  const reviewer = await read("skills/sdd-feature-review/SKILL.md");
   const whiteboard = await read("templates/discovery/solution-whiteboard.md");
   const plan = await read("templates/delivery/implementation-plan.md");
   const automation = await read(".github/workflows/documentation-quality.yml");
@@ -164,8 +165,25 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(normalizedPolicy, /expected work versus unexpected work or cases.*over-engineering/i);
   assert.match(normalizedPolicy, /Focused tests.*only the tests that cover the changed files and lines/);
   assert.match(normalizedPolicy, /final candidate that will merge back to the protected integration branch.*full applicable validation/);
+  for (const document of [policy, workflow, reviewer, plan, readme, contributing]) {
+    const normalized = document.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+    assert.match(normalized, /author and both retained reviewers/i);
+    assert.match(normalized, /before (?:adding )?(?:any )?missing test.*(?:final-gate|final gate) test/i);
+    assert.match(normalized, /concluded whiteboard/i);
+    assert.match(normalized, /reuse|reused/i);
+    assert.match(normalized, /redundant/i);
+    assert.match(normalized, /implementation content.*invalidates approval|implementation-content change.*repeats (?:this|the) audit/i);
+    assert.match(normalized, /test-only additions?.*do(?:es)? not/i);
+  }
+  assert.match(
+    reviewer.replace(/^>\s?/gm, "").replace(/\s+/g, " "),
+    /verify the author's self-review of that same content.*MUST remain blocked until the author and both retained reviewers approve/i,
+  );
   assert.match(readme, /F --> P\["Open or update PR"\]/);
-  assert.match(readme, /E -->\|"yes"\| A\["Reconcile coverage;<br\/>add missing required tests"\]/);
+  assert.match(readme, /E -->\|"yes"\| S\["Author \+ retained reviewers:<br\/>scope and reuse audit"\]/);
+  assert.match(readme, /S --> U\{"Audit approved on exact<br\/>implementation content\?"\}/);
+  assert.match(readme, /U -->\|"no"\| X/);
+  assert.match(readme, /U -->\|"yes"\| A\["Reconcile coverage;<br\/>add missing required tests"\]/);
   assert.match(readme, /A --> F/);
   assert.match(readme, /P --> R1\["Retained feature reviewer 1"\]/);
   assert.match(readme, /P --> R2\["Retained feature reviewer 2"\]/);
@@ -173,7 +191,10 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(readme, /G -->\|"no"\| B\["Task PR human brief"\]/);
   assert.match(readme, /G -->\|"yes"\| V\["Full validation<br\/>on exact head"\]/);
   assert.match(readme, /D -->\|"yes"\| X/);
-  assert.match(readme, /X --> E/);
+  assert.match(readme, /X --> I\{"Audited implementation<br\/>content changed\?"\}/);
+  assert.match(readme, /I -->\|"yes"\| E/);
+  assert.match(readme, /I -->\|"no; test-only"\| F/);
+  assert.doesNotMatch(readme, /X --> E/);
   assert.match(readme, /D -->\|"no; transient"\| Q\["Rerun affected validation"\]/);
   assert.match(readme, /Q --> V/);
   assert.match(contributing, /Defer full validation until the final candidate will merge back to\s+`main`/i);
@@ -185,7 +206,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(packageSource, /"docs:test": "node --experimental-test-coverage --test tests/);
   assert.match(policy, /responsibility of an\s+agent changing this repository, not a project agent/);
   assert.match(workflow, /do not run the playbook repository's source suite/);
-  assert.match(workflow.replace(/\s+/g, " "), /At final readiness, reconcile all accepted changed outcomes and material risks.*including unrecorded gaps.*Add required missing tests before final candidate review/i);
+  assert.match(workflow.replace(/\s+/g, " "), /Only after this audit passes, reconcile all accepted changed outcomes and material risks.*including unrecorded gaps.*Add required missing tests before final candidate review/i);
   assert.match(workflow.replace(/\s+/g, " "), /expected work or unexpected cases.*over-engineering/i);
   assert.match(plan, /\| Owning task \| Contract, changed outcome, or risk \| Test or scenario \| Coverage \| Work boundary \|/);
   assert.match(plan.replace(/\s+/g, " "), /recorded gaps do not block task `DONE`.*including unrecorded gaps.*add required missing tests before final candidate review/i);

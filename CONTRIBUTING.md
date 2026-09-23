@@ -87,6 +87,13 @@ dispositions follow the
 [feature review skill](skills/sdd-feature-review/SKILL.md); the canonical
 [quality policy](docs/documentation-quality-policy.md#review-and-human-brief)
 defines the surrounding gates and human brief.
+When all implementation tasks are `DONE`, the author and both retained
+reviewers MUST approve the exact implementation content before missing tests
+are added or final-gate tests run. They MUST block content that exceeds the
+concluded whiteboard, fails to reuse a suitable existing project mechanism, or
+adds unauthorized or redundant behavior, code, logic, abstraction, or parallel
+implementation. Any later implementation-content change repeats this audit;
+test-only additions do not.
 Defer full validation until the final candidate will merge back to
 `main`; a single-task PR targeting `main` is already final. Candidate-changing
 corrections return through focused tests and both retained reviewer seats;

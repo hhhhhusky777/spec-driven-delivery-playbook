@@ -69,6 +69,20 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > freeze, any whiteboard byte change without prior human authorization for the exact
 > amendment MUST block approval.
 >
+> At the pre-final-test implementation audit, before any missing test is added
+> or any final-gate test is run, inspect the exact implementation content and
+> verify the author's self-review of that same content. The gate MUST remain
+> blocked until the author and both retained reviewers approve. MUST block
+> unless every addition strictly follows the concluded whiteboard and its
+> explicitly consumed authorities, suitable existing code, abstractions,
+> libraries, and project frameworks were reused wherever reasonably possible,
+> and no unauthorized behavior, redundant code or logic, unnecessary
+> abstraction, or avoidable parallel implementation remains. Approval binds to
+> the exact audited implementation content. Any later change to that content
+> invalidates approval and requires the author and both retained reviewers to
+> repeat the audit; a subsequent test-only addition does not by itself
+> invalidate it.
+>
 > Actively challenge over-engineering. For material edge-case, concurrency,
 > race, timing, and error risks, verify that the design and code apply the
 > accepted feature boundary and canonical error-handling authority
