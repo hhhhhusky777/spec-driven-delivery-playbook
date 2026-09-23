@@ -141,9 +141,9 @@ review the required whiteboard and plan before dependent work continues.
   before final review. Link the canonical source instead of copying its text,
   and keep feature state out of the manifest.
 - Treat the branch point as the implementation baseline. Do not routinely
-  merge or rebase the target during ordinary work. Synchronize the completed
-  candidate with its target, then run affected checks on that exact candidate
-  before final review. If the baseline cannot support safe progress, follow the
+  merge or rebase the target during ordinary work. The final-readiness
+  implementation-audit contract below owns target-synchronization timing and
+  invalidation. If the baseline cannot support safe progress, follow the
   canonical error-handling authority.
 
 ## Agent discretion
@@ -234,18 +234,21 @@ tests when the plan records each gap, its owning task, and its final-gate
 obligation; keep actual run evidence in the PR.
 
 > [!IMPORTANT]
-> When all implementation tasks are `DONE` and final readiness begins, the
-> author and both retained reviewers MUST audit the exact implementation
-> content before any missing test is added or any final-gate test is run. They
+> When all implementation tasks are `DONE` and final readiness begins, first
+> perform any required target synchronization, resolve conflicts, and run
+> affected focused checks. Do not resynchronize merely because the target
+> advanced. The author and both retained reviewers MUST then audit the exact
+> implementation content before any missing test is added or any final-gate
+> test is run. They
 > MUST verify that every addition strictly follows the concluded whiteboard and
 > its explicitly consumed authorities, reuses suitable existing code,
 > abstractions, libraries, and project frameworks wherever reasonably possible,
 > and contains no unauthorized behavior, redundant code or logic, unnecessary
 > abstraction, or avoidable parallel implementation. Any violation or missing
 > approval MUST block final-test work. Approval binds to the exact audited
-> implementation content; any later change to that content invalidates approval
-> and repeats the audit. A subsequent test-only addition does not by itself
-> invalidate this audit.
+> implementation content; any later change to that content, including a required
+> resynchronization, invalidates approval and repeats the audit. A subsequent
+> test-only addition does not by itself invalidate this audit.
 
 Only after this audit passes, reconcile all accepted changed outcomes and
 material risks against the test inventory, including unrecorded gaps. Add

@@ -61,10 +61,13 @@ checks, force-push `main`, or claim hosting protections without current evidence
 
 Create the delivery worktree and branch before checking playbook currentness or
 starting whiteboard work. Apply any accepted upgrade in that worktree. Keep its
-creation point as the ordinary implementation baseline, then synchronize the
-completed candidate with its target and run affected checks on the resulting
-candidate before final review. Exceptional recovery follows the canonical
-error-handling framework. Before dependent work proceeds, exercise a relevant
+creation point as the ordinary implementation baseline; do not continuously
+resynchronize it merely because the target advances. At final readiness,
+perform any synchronization required for a mergeable candidate, resolve
+conflicts, and run affected focused checks before the implementation audit
+below. A later required synchronization that changes audited implementation
+content repeats the audit and affected downstream gates. Exceptional recovery
+follows the canonical error-handling framework. Before dependent work proceeds, exercise a relevant
 project operation from the worktree itself and provision any missing required
 ignored support within its ownership and security boundaries.
 

@@ -505,7 +505,8 @@ shape without adding another gate or report artifact.
 ```mermaid
 flowchart TD
     C["Coherent candidate"] --> E{"Final candidate?"}
-    E -->|"yes"| S["Author + retained reviewers:<br/>scope and reuse audit"]
+    E -->|"yes"| Y["Necessary target sync;<br/>resolve conflicts + affected checks"]
+    Y --> S["Author + retained reviewers:<br/>scope and reuse audit"]
     S --> U{"Audit approved on exact<br/>implementation content?"}
     U -->|"no"| X
     U -->|"yes"| A["Reconcile coverage;<br/>add missing required tests"]
@@ -533,14 +534,18 @@ flowchart TD
 
 This ordering keeps full validation at the protected-target merge boundary.
 A task may finish with missing non-focused tests recorded in the plan. When all
-implementation tasks are `DONE`, before adding any missing test or running any
-final-gate test, the author and both retained reviewers audit the exact
+implementation tasks are `DONE`, first perform any target synchronization
+required for a mergeable candidate, resolve conflicts, and run affected focused
+checks; do not resynchronize merely because the target advanced. Before adding
+any missing test or running any final-gate test, the author and both retained
+reviewers audit the exact
 implementation content against the concluded whiteboard, suitable existing
 project mechanisms, and unauthorized or redundant implementation. Only after
 all three approve may the final gate reconcile coverage, add required tests,
 and send the resulting candidate through focused checks and both retained
 reviewers before full validation. Any later
-implementation-content change repeats the audit; a test-only addition does not.
+implementation-content change, including a required later synchronization,
+repeats the audit; a test-only addition does not.
 Any candidate change returns to focused tests and both reviewers; a
 final-candidate change also invalidates full validation.
 An unchanged transient check failure repeats only the affected validation. A
@@ -687,8 +692,11 @@ flowchart TD
     T2 --> P2["Self-contained task PR"]
     P1 --> B
     P2 --> B
-    B --> S["Synchronize target before final review"]
-    S --> FP["Final feature PR"]
+    B --> S{"Target sync required<br/>for mergeability?"}
+    S -->|"no"| A["Pre-final implementation audit"]
+    S -->|"yes"| C["Sync target; resolve conflicts<br/>+ affected focused checks"]
+    C --> A
+    A --> FP["Final feature PR"]
     FP --> M
 ```
 
@@ -698,11 +706,11 @@ reusable guidance and preserve applicable project decisions; never infer
 precedence from a branch name, timestamp, or hash ordering.
 
 The delivery branch's creation point is its ordinary implementation baseline.
-Do not continuously merge or rebase the target during implementation. Bring
-the completed candidate current with its target, then run affected checks on
-that resulting candidate before final review. If the baseline cannot support
-safe progress, use the canonical error-handling authority and let the agent
-choose a proportional recovery.
+Do not continuously merge or rebase the target during implementation. At final
+readiness, synchronize only when required for a mergeable candidate; resolve
+conflicts and run affected focused checks before the pre-final implementation
+audit. If the baseline cannot support safe progress, use the canonical
+error-handling authority and let the agent choose a proportional recovery.
 
 ## Use the playbook
 

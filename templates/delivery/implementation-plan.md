@@ -95,13 +95,16 @@ task's focused tests, map changed outcomes and material risks to tests, naming
 the owning task and any missing non-focused tests to add at the final gate.
 Those recorded gaps do not block task `DONE`.
 
-At final readiness, before adding any missing test or running any final-gate
-test, record the author and both retained reviewers' approval of the exact
-implementation content. They MUST verify strict conformance to the concluded
-whiteboard and its explicitly consumed authorities, suitable reuse of existing
-code and project frameworks, and the absence of unauthorized or redundant
-implementation. Any later implementation-content change invalidates approval
-and repeats the audit; a test-only addition does not. Only after approval,
+At final readiness, first perform any required target synchronization, resolve
+conflicts, and run affected focused checks. Before adding any missing test or
+running any final-gate test, record the author and both retained reviewers'
+approval of the exact implementation content. They MUST verify strict
+conformance to the concluded whiteboard and its explicitly consumed authorities,
+suitable reuse of existing code and project frameworks, and the absence of
+unauthorized or redundant implementation. Any later implementation-content
+change, including a required
+resynchronization, invalidates approval and repeats the audit; a test-only
+addition does not. Only after approval,
 reconcile all accepted outcomes and material risks, including unrecorded gaps,
 and add required missing tests before final candidate review. The PR owns actual
 run results.
@@ -156,9 +159,9 @@ must be available. Future implementation outputs are never prerequisites for
 starting the task that produces them.
 
 The delivery worktree's branch point is the ordinary implementation baseline.
-Do not require continuous target synchronization; reconcile the completed
-candidate with its target, then run affected checks on the resulting candidate
-before final review. Exceptional recovery follows the project's canonical
+Do not require continuous target synchronization. The final-readiness test and
+acceptance contract above owns synchronization, conflict-resolution, and
+affected-check timing. Exceptional recovery follows the project's canonical
 error-handling authority.
 
 Readiness is behavioral, not measured by document or code detail. A short task

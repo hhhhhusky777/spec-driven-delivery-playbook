@@ -99,7 +99,7 @@ test("workflow skills state six goals and reject duplicate delivery documents", 
   assert.match(workflow, /Do not defer predictable tracked-state updates/);
   assert.match(workflow, /Regenerate the manifest-pinned runtime in that worktree, then\s+check for and synchronize a newer playbook revision before whiteboard or\s+implementation work/);
   assert.match(workflow, /Do not routinely\s+merge or rebase the target during ordinary work/);
-  assert.match(workflow, /Synchronize the completed\s+candidate with its target, then run affected checks on that exact candidate/);
+  assert.match(workflow.replace(/^>\s?/gm, "").replace(/\s+/g, " "), /final readiness begins.*required target synchronization.*affected focused checks.*MUST then audit/i);
   assert.match(workflow, /After target verification, remove owned delivery\/task worktrees and retire\s+owned merged branches/);
   assert.match(workflow, /Return the coordinating checkout to the accepted target\s+branch when safe/);
   for (const handling of ["HUMAN_DECISION", "AGENT_ACTION", "DISCLOSE", "NONE"]) {
@@ -175,12 +175,18 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
     assert.match(normalized, /implementation content.*invalidates approval|implementation-content change.*repeats (?:this|the) audit/i);
     assert.match(normalized, /test-only additions?.*do(?:es)? not/i);
   }
+  for (const document of [policy, workflow, plan, readme, contributing]) {
+    const normalized = document.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+    assert.match(normalized, /(?:target synchronization|synchronization required|synchronize the completed candidate).*?(?:author and both retained reviewers|pre-final-test implementation audit)/i);
+    assert.match(normalized, /required (?:later )?(?:target )?(?:synchronization|resynchronization).*?(?:invalidates|repeats).*?audit/i);
+  }
   assert.match(
     reviewer.replace(/^>\s?/gm, "").replace(/\s+/g, " "),
     /verify the author's self-review of that same content.*MUST remain blocked until the author and both retained reviewers approve/i,
   );
   assert.match(readme, /F --> P\["Open or update PR"\]/);
-  assert.match(readme, /E -->\|"yes"\| S\["Author \+ retained reviewers:<br\/>scope and reuse audit"\]/);
+  assert.match(readme, /E -->\|"yes"\| Y\["Necessary target sync;<br\/>resolve conflicts \+ affected checks"\]/);
+  assert.match(readme, /Y --> S\["Author \+ retained reviewers:<br\/>scope and reuse audit"\]/);
   assert.match(readme, /S --> U\{"Audit approved on exact<br\/>implementation content\?"\}/);
   assert.match(readme, /U -->\|"no"\| X/);
   assert.match(readme, /U -->\|"yes"\| A\["Reconcile coverage;<br\/>add missing required tests"\]/);
@@ -197,6 +203,11 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.doesNotMatch(readme, /X --> E/);
   assert.match(readme, /D -->\|"no; transient"\| Q\["Rerun affected validation"\]/);
   assert.match(readme, /Q --> V/);
+  assert.match(readme, /B --> S\{"Target sync required<br\/>for mergeability\?"\}/);
+  assert.match(readme, /S -->\|"no"\| A\["Pre-final implementation audit"\]/);
+  assert.match(readme, /S -->\|"yes"\| C\["Sync target; resolve conflicts<br\/>\+ affected focused checks"\]/);
+  assert.match(readme, /C --> A/);
+  assert.doesNotMatch(readme, /Synchronize target before final review|Bring\s+the completed candidate current/i);
   assert.match(contributing, /Defer full validation until the final candidate will merge back to\s+`main`/i);
   assert.match(contributing, /single-task PR targeting `main` is (?:already )?final/i);
   assert.match(automation, /if: github\.event_name == 'pull_request'[\s\S]*npm run docs:focused/);
