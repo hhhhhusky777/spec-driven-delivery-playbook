@@ -232,7 +232,7 @@ This is the only active-delivery state authority for Issue #123.
 | --- | --- | --- | --- | --- | --- |
 | `K01` | Review becomes stylistic perfectionism. | Medium / medium | Limit blocking findings to accepted scope, material redundancy, and suitable reuse with material value; author disposition rules remain. | Author and retained reviewers | Accepted |
 | `K02` | Implementation changes after audit without repetition. | Low / high | Exact-content invalidation language in author and reviewer guidance plus regression. | Author and retained reviewers | Mitigated by `FC01` |
-| `K03` | New audit is mistaken for final approval. | Medium / medium | Preserve and explicitly name every downstream gate. | T01 | Planned |
+| `K03` | New audit is mistaken for final approval. | Medium / medium | Preserve and explicitly name every downstream gate. | T01 | Mitigated |
 
 ### Delivery strategy and readiness
 
