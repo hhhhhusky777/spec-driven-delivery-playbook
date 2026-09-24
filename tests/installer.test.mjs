@@ -1,5 +1,17 @@
 import assert from "node:assert/strict";
-import { access, cp, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from "node:fs/promises";
+import {
+  access,
+  cp,
+  lstat,
+  mkdir,
+  mkdtemp,
+  readFile,
+  readlink,
+  realpath,
+  rm,
+  symlink,
+  writeFile,
+} from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import os from "node:os";
 import path from "node:path";
@@ -802,6 +814,8 @@ test("upgrade preserves and rejects a symlinked legacy SDD entry README", async 
   const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /unsupported ownership or file type/);
+  assert.equal((await lstat(entryPath)).isSymbolicLink(), true);
+  assert.equal(await readlink(entryPath), linkedPath);
   assert.equal(await readFile(linkedPath, "utf8"), LEGACY_ENTRY_README);
 });
 
@@ -819,6 +833,8 @@ test("upgrade preserves and rejects a legacy README below a symlinked adoption r
   const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /uncertain linked ownership/);
+  assert.equal((await lstat(adoptionRoot)).isSymbolicLink(), true);
+  assert.equal(await readlink(adoptionRoot), "relocated-sdd");
   assert.equal(
     await readFile(path.join(relocatedRoot, "README.md"), "utf8"),
     LEGACY_ENTRY_README,
