@@ -61,10 +61,13 @@ not duplicate history or successful-tool transcripts.
 
 > [!IMPORTANT]
 > **Hard rule.** Both reviewers MUST approve the design before the human gate.
-> The human brief MUST list every new fail-closed behavior. The human MUST
-> accept the design and every disposition. The conclusion commit MUST change
-> only state, revision, and approved dispositions. Both reviewers MUST verify
-> that exact commit before the whiteboard freezes and planning starts.
+> The human brief MUST list every new fail-closed behavior with one concise
+> concrete example. The example is explanatory, not normative or exhaustive;
+> it MUST NOT expand the behavior or substitute for its trigger, effect,
+> impact, or recovery boundary. The human MUST accept the design and every
+> disposition. The conclusion commit MUST change only state, revision, and
+> approved dispositions. Both reviewers MUST verify that exact commit before
+> the whiteboard freezes and planning starts.
 >
 > After freeze, agents MUST NOT change any whiteboard byte without prior human
 > authorization for the exact amendment. They MUST change only that scope,

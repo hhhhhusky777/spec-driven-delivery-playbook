@@ -85,11 +85,19 @@ function whiteboardErrors(text, requireFailClosedTable = true) {
       const rows = failClosed.slice(2);
       if (!rows.length) errors.push("fail-closed behavior approval table requires a disposition row");
       const dispositionIndex = failClosed[0].indexOf("Owner disposition");
+      const exampleIndex = failClosed[0].indexOf("Concrete example");
+      if (requireFailClosedTable && exampleIndex < 0) {
+        errors.push("fail-closed behavior approval table requires a Concrete example column");
+      }
       for (const row of rows) {
         const id = (row[0] || "").toLowerCase();
         const disposition = (row[dispositionIndex] || "").toLowerCase();
         const noneSentinel = disposition === "none" && id === "none"
           && row.slice(1, dispositionIndex).every(value => value.toLowerCase() === "none");
+        const example = exampleIndex < 0 ? "" : (row[exampleIndex] || "").trim();
+        if (requireFailClosedTable && !noneSentinel && (!example || example.toLowerCase() === "none")) {
+          errors.push(`fail-closed behavior requires a concrete example: ${row[0] || "unknown"}`);
+        }
         if (!(noneSentinel || /^(approved|accepted|rejected)\b/.test(disposition))) {
           errors.push(`unresolved fail-closed behavior disposition: ${row[0] || "unknown"}`);
         }
