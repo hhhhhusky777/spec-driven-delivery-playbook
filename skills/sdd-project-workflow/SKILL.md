@@ -79,10 +79,11 @@ review the required whiteboard and plan before dependent work continues.
 > gates, corrections, and final merge for that delivery.
 >
 > **Hard rule.** Both reviewers MUST approve the design before the human gate.
-> The parent response MUST list every new fail-closed behavior. The human MUST
-> accept the design and every disposition. The conclusion commit MUST change
-> only state, revision, and approved dispositions. The same reviewers MUST
-> verify that exact commit before planning starts. After freeze, agents MUST NOT
+> The parent response MUST list every new fail-closed behavior with one concise
+> concrete example. The human MUST accept the design and every disposition.
+> The conclusion commit MUST change only state, revision, and approved
+> dispositions. The same reviewers MUST verify that exact commit before
+> planning starts. After freeze, agents MUST NOT
 > change any whiteboard byte without prior human authorization. Every addition MUST trace
 > to the frozen design. Unexplained scope MUST block delivery.
 
@@ -197,9 +198,13 @@ Follow the manifest-linked human-brief policy.
 > [!IMPORTANT]
 > After agent review, the parent MUST reply with a compact table pairing each
 > reviewer finding with its proposed solution and the author's disposition
-> (`fixed`, `rejected`, `deferred`, or `open`). Use `None` when there are no
-> findings. Link the PR when it exists; keep full review history in the PR.
-> This adds no review gate or early-PR requirement.
+> (`fixed`, `rejected`, `deferred`, or `open`). The same table MUST include one
+> concise concrete example for each finding. The example explains how the
+> finding manifests and why it warrants the stated disposition; it MUST NOT
+> replace evidence, impact, or blocking rationale.
+> Use `None` when there are no findings; do not invent an example. Link the PR
+> when it exists; keep full review history in the PR. This adds no review gate
+> or early-PR requirement.
 Classify material items as `HUMAN_DECISION`, `AGENT_ACTION`, `DISCLOSE`, or
 `NONE` so the next agent knows whether to stop, act within authority, preserve
 material awareness-only information (including accepted limitations), or

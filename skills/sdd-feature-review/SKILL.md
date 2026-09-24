@@ -63,9 +63,12 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > [!IMPORTANT]
 > **Hard rule.** Compare every plan and candidate addition with the accepted
 > design. Unexplained scope MUST block approval, even when useful. Verify that
-> every new fail-closed behavior is listed for human disposition. For the
-> conclusion transition, accept only state, revision, and approved-disposition
-> changes. Both reviewers MUST verify that exact commit before freeze. After
+> every new fail-closed behavior is listed for human disposition with one
+> concise concrete example. The example MUST be realistic, align with the
+> declared behavior, and remain explanatory rather than expand its scope. When
+> no new behavior exists, require `None`; do not invent a behavior or example.
+> For the conclusion transition, accept only state, revision, and
+> approved-disposition changes. Both reviewers MUST verify that exact commit before freeze. After
 > freeze, any whiteboard byte change without prior human authorization for the exact
 > amendment MUST block approval.
 >
@@ -107,6 +110,9 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 For every actionable finding, provide:
 
 - precise evidence and user or system impact;
+- one concise concrete example or counterexample from the exact candidate that
+  shows how the issue manifests, its credible consequence, and why it warrants
+  action now rather than optional advice or issue follow-up;
 - blocking status and priority, with reasons it warrants action now rather
   than optional advice or issue follow-up;
 - the smallest correction that protects the accepted outcome; and
@@ -116,7 +122,10 @@ For every actionable finding, provide:
 When no suitable external authority exists, cite the controlling project
 principle or state the technical reasoning. Never fabricate authority. Keep
 optional improvements separate from blocking findings and never expand the
-accepted scope through review advice.
+accepted scope through review advice. A concrete example supports explanation;
+it does not replace evidence, impact, priority, or blocking rationale. Do not
+use a speculative or extremely unlikely example to promote low-value polish
+into a finding or blocker.
 
 Discuss an author's reasoned rejection or deferral using technical evidence and
 tradeoffs before demanding another code change. Accept justified dispositions

@@ -240,7 +240,7 @@ test("feature review cohorts retain context and produce useful change requests",
     assert.match(normalized, /final candidate/);
   }
   const normalizedPolicy = policy.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
-  const normalizedWorkflow = workflow.replace(/\s+/g, " ");
+  const normalizedWorkflow = workflow.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
   const normalizedReviewer = reviewer.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
   const normalizedWhiteboard = whiteboard.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
   assert.match(normalizedPolicy, /feature review skill.*single execution contract/);
@@ -281,6 +281,14 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(normalizedReviewer, /Never fabricate authority/);
   assert.match(normalizedReviewer, /optional improvements separate from blocking findings/);
   assert.match(normalizedReviewer, /never expand the accepted scope/);
+  assert.match(normalizedPolicy, /every new fail-closed behavior with one concise concrete example/);
+  assert.match(normalizedPolicy, /example is explanatory, not normative or exhaustive/);
+  assert.match(normalizedWorkflow, /list every new fail-closed behavior with one concise concrete example/);
+  assert.match(normalizedReviewer, /every new fail-closed behavior is listed for human disposition with one concise concrete example/);
+  assert.match(normalizedReviewer, /When no new behavior exists, require `None`; do not invent a behavior or example/);
+  assert.match(normalizedWhiteboard, /Concrete example/);
+  assert.match(normalizedWhiteboard, /example MUST only explain the behavior; it MUST NOT expand its scope/);
+  assert.match(readme, /each new fail-closed behavior\s+one concise concrete example/);
   assert.match(policy, /> \[!IMPORTANT\]/);
   assert.match(normalizedPolicy, /After freeze, agents MUST NOT change any whiteboard byte without prior human authorization/);
   assert.match(normalizedWorkflow, /parent response MUST list every new fail-closed behavior/);
@@ -464,10 +472,16 @@ test("human replies pair reviewer findings with solutions and dispositions", asy
   const normalized = workflow.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
   assert.match(workflow, /> \[!IMPORTANT\]/);
   assert.match(normalized, /parent MUST reply with a compact table pairing each reviewer finding with its proposed solution/);
+  assert.match(normalized, /same table MUST include one concise concrete example for each finding/);
   assert.match(normalized, /author's disposition/);
   assert.match(normalized, /Use `None` when there are no findings/);
   assert.match(normalized, /Link the PR when it exists/);
   assert.match(normalized, /no review gate or early-PR requirement/);
+  const normalizedReviewer = reviewer.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+  assert.match(normalizedReviewer, /one concise concrete example or counterexample from the exact candidate/);
+  assert.match(normalizedReviewer, /does not replace evidence, impact, priority, or blocking rationale/);
+  assert.match(normalizedReviewer, /Do not use a speculative or extremely unlikely example to promote low-value polish/);
+  assert.match(await read("README.md"), /Each actionable finding includes a concise exact-candidate example/);
   assert.doesNotMatch(policy, /table pairing each reviewer finding/);
   assert.doesNotMatch(reviewer, /table pairing each reviewer finding/);
 });

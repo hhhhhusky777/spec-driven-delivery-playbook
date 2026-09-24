@@ -141,12 +141,15 @@ deferrals, and rejections instead of silently dropping them.
 > [!IMPORTANT]
 > **Hard rule.** Both reviewers MUST approve the candidate before the human
 > gate. The parent response MUST then list every new fail-closed behavior for
-> human disposition. A concluded whiteboard MUST NOT contain a pending row.
-> Use one all-`None` row when none exists.
+> human disposition with one concise concrete example. The example MUST only
+> explain the behavior; it MUST NOT expand its scope or replace the trigger,
+> response, impact, or recovery boundary. A concluded whiteboard MUST NOT
+> contain a pending row. Use one all-`None` row when none exists; do not invent
+> a behavior or example.
 
-| ID | Trigger | Required fail-closed response | Impact | Owner disposition |
-| --- | --- | --- | --- | --- |
-| `<FC01 or None>` | `<condition or None>` | `<behavior or None>` | `<effect or None>` | `<Pending, Approved, Rejected, or None>` |
+| ID | Trigger | Required fail-closed response | Concrete example | Impact | Owner disposition |
+| --- | --- | --- | --- | --- | --- |
+| `<FC01 or None>` | `<condition or None>` | `<behavior or None>` | `<realistic trigger, stopped action, visible or state effect, and recovery or retry when applicable; or None>` | `<effect or None>` | `<Pending, Approved, Rejected, or None>` |
 
 ## Design amendments
 
@@ -172,5 +175,5 @@ stay in the implementation plan.
 | Important boundaries | `<safety, compatibility, policy, or authority>` | `<class>` |
 | Alternatives rejected | `<only material alternatives>` | `<class>` |
 | Remaining gaps or risks | `<summary or None>` | `<class>` |
-| Newly introduced fail-closed behavior | `<complete list after two-agent design review, with effect and recommendation, or None>` | `<HUMAN_DECISION or NONE>` |
+| Newly introduced fail-closed behavior | `<complete list after two-agent design review, with effect, one concise explanatory example, and recommendation; or None>` | `<HUMAN_DECISION or NONE>` |
 | Decision requested | `<exact request>` | `<class>` |

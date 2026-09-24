@@ -274,9 +274,11 @@ independent review behavior, and findings; the project workflow only routes
 each exact candidate to those retained sessions.
 
 The concluded whiteboard states observable outcomes and important boundaries,
-not implementation trivia. Human acceptance authorizes the declared conclusion
-metadata transition; the same reviewers verify its exact committed candidate
-before the bytes freeze. Any later change needs prior human authorization for the concrete amendment,
+not implementation trivia. The human brief gives each new fail-closed behavior
+one concise concrete example so the owner can judge it; the example explains
+the boundary without expanding it. Human acceptance authorizes the declared
+conclusion metadata transition; the same reviewers verify its exact committed
+candidate before the bytes freeze. Any later change needs prior human authorization for the concrete amendment,
 then reconclusion, both retained reviewers, and human acceptance before
 dependent work resumes. Every planned or implemented addition must trace to the
 frozen design; useful but unauthorized scope remains out of scope.
@@ -462,6 +464,11 @@ corrections, and the final candidate until the feature merges. This continuity
 preserves feature context; the
 [feature review skill](skills/sdd-feature-review/SKILL.md) defines reviewer
 execution, and the PR owns findings and dispositions.
+
+Each actionable finding includes a concise exact-candidate example showing how
+it manifests and why the stated priority is warranted. The example aids human
+judgment; it does not replace evidence, impact, proportionality, or blocking
+rationale.
 
 Humans receive a concise table with the information needed for judgment:
 
