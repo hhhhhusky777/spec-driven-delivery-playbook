@@ -758,7 +758,7 @@ test("upgrade removes only the exact legacy SDD entry README", async (t) => {
 
   const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /Removed verified legacy SDD entry point/);
+  assert.match(result.stdout, /Removing verified legacy SDD entry point/);
   await assert.rejects(access(entryPath));
   assert.match(run("git", ["status", "--short"], project), / D \.github\/spec-driven-delivery\/README\.md/);
 });
@@ -777,6 +777,52 @@ test("upgrade preserves and rejects a customized legacy SDD entry README", async
   assert.match(result.stderr, /legacy SDD entry point is customized/);
   assert.equal(await readFile(entryPath, "utf8"), customized);
   assert.equal(run("git", ["status", "--short"], project), "");
+});
+
+test("upgrade preserves and rejects an untracked exact legacy SDD entry README", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const entryPath = path.join(project, ".github", "spec-driven-delivery", "README.md");
+  await writeFile(entryPath, LEGACY_ENTRY_README, "utf8");
+
+  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /legacy SDD entry point is not tracked by HEAD/);
+  assert.equal(await readFile(entryPath, "utf8"), LEGACY_ENTRY_README);
+});
+
+test("upgrade preserves and rejects a symlinked legacy SDD entry README", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const entryPath = path.join(project, ".github", "spec-driven-delivery", "README.md");
+  const linkedPath = path.join(project, "linked-entry-readme.md");
+  await writeFile(linkedPath, LEGACY_ENTRY_README, "utf8");
+  await symlink(linkedPath, entryPath);
+
+  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /unsupported ownership or file type/);
+  assert.equal(await readFile(linkedPath, "utf8"), LEGACY_ENTRY_README);
+});
+
+test("upgrade preserves and rejects a legacy README below a symlinked adoption root", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const githubRoot = path.join(project, ".github");
+  const adoptionRoot = path.join(githubRoot, "spec-driven-delivery");
+  const relocatedRoot = path.join(githubRoot, "relocated-sdd");
+  await cp(adoptionRoot, relocatedRoot, { recursive: true });
+  await rm(adoptionRoot, { recursive: true, force: true });
+  await writeFile(path.join(relocatedRoot, "README.md"), LEGACY_ENTRY_README, "utf8");
+  await symlink("relocated-sdd", adoptionRoot, "dir");
+
+  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /uncertain linked ownership/);
+  assert.equal(
+    await readFile(path.join(relocatedRoot, "README.md"), "utf8"),
+    LEGACY_ENTRY_README,
+  );
 });
 
 test("upgrade ignores legacy stable-entry-point metadata", async (t) => {

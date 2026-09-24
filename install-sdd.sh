@@ -558,14 +558,22 @@ legacy_entry_readme_blob() {
 }
 
 inspect_legacy_entry_readme() {
-  local actual_blob expected_blob
+  local actual_blob adoption_directory expected_blob head_blob relative_path
+  LEGACY_ENTRY_README_PENDING=false
   LEGACY_ENTRY_README_PATH="$PROJECT_ROOT/$ADOPTION_ROOT/README.md"
   [[ -e "$LEGACY_ENTRY_README_PATH" || -L "$LEGACY_ENTRY_README_PATH" ]] || return 0
+  adoption_directory=$(dirname "$LEGACY_ENTRY_README_PATH")
+  [[ "$(cd "$adoption_directory" && pwd -P)" == "$PROJECT_ROOT/$ADOPTION_ROOT" ]] ||
+    fail "legacy SDD entry point has uncertain linked ownership: ${LEGACY_ENTRY_README_PATH#"$PROJECT_ROOT/"}"
   [[ -f "$LEGACY_ENTRY_README_PATH" && ! -L "$LEGACY_ENTRY_README_PATH" ]] ||
     fail "legacy SDD entry point has unsupported ownership or file type: ${LEGACY_ENTRY_README_PATH#"$PROJECT_ROOT/"}"
+  relative_path=${LEGACY_ENTRY_README_PATH#"$PROJECT_ROOT/"}
+  git cat-file -e "HEAD:$relative_path" 2>/dev/null ||
+    fail "legacy SDD entry point is not tracked by HEAD; preserve it and resolve ownership before upgrade: $relative_path"
   actual_blob=$(git hash-object "$LEGACY_ENTRY_README_PATH")
   expected_blob=$(legacy_entry_readme_blob)
-  [[ "$actual_blob" == "$expected_blob" ]] ||
+  head_blob=$(git rev-parse "HEAD:$relative_path")
+  [[ "$head_blob" == "$expected_blob" && "$actual_blob" == "$expected_blob" ]] ||
     fail "legacy SDD entry point is customized; preserve it and resolve ownership before upgrade: ${LEGACY_ENTRY_README_PATH#"$PROJECT_ROOT/"}"
   LEGACY_ENTRY_README_PENDING=true
 }
@@ -816,18 +824,20 @@ Use \`.sdd-runtime/playbook-upgrade-guide.md\` to synchronize the project with
 the latest playbook revision.
 EOF
   refresh_guide_hash "$UPGRADE_GUIDE_PATH"
-  if [[ "$LEGACY_ENTRY_README_PENDING" == true ]]; then
-    rm "$LEGACY_ENTRY_README_PATH"
-    printf 'Removed verified legacy SDD entry point: %s\n' \
-      "${LEGACY_ENTRY_README_PATH#"$PROJECT_ROOT/"}"
-  fi
-  trap - EXIT
-
   printf 'Prepared candidate revision: %s\n' "$resolved_revision"
   printf 'Installed skill: sdd-playbook-upgrade\n'
   printf 'Generated guide: %s\n\n' "$UPGRADE_GUIDE_PATH"
   printf 'Prompt the agent with:\n\n'
   printf 'Use %s to synchronize the project with the latest playbook revision.\n' "$RUNTIME_ROOT/playbook-upgrade-guide.md"
+  if [[ "$LEGACY_ENTRY_README_PENDING" == true ]]; then
+    inspect_legacy_entry_readme
+    [[ "$LEGACY_ENTRY_README_PENDING" == true ]] ||
+      fail "verified legacy SDD entry point changed before removal"
+    printf 'Removing verified legacy SDD entry point: %s\n' \
+      "${LEGACY_ENTRY_README_PATH#"$PROJECT_ROOT/"}"
+    rm "$LEGACY_ENTRY_README_PATH"
+  fi
+  trap - EXIT
 }
 
 if [[ "$CLEANUP_ONLY" == true ]]; then
