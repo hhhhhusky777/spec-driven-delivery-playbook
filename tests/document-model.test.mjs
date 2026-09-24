@@ -311,6 +311,7 @@ test("implementation tasks obey the canonical branch and PR target model", async
   const workflow = await read("skills/sdd-project-workflow/SKILL.md");
   const reviewer = await read("skills/sdd-feature-review/SKILL.md");
   const readme = await read("README.md");
+  const example = await read("examples/project-adoption/sglang/delivery-api-key-redaction/04-implementation-plan.md");
   const normalize = value => value.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
 
   assert.match(normalize(contributing), /implementation plan's integration model binds every task branch and pull-request target/);
@@ -325,6 +326,9 @@ test("implementation tasks obey the canonical branch and PR target model", async
   assert.match(normalize(reviewer), /actual pull request/);
   assert.match(normalize(reviewer), /task PR targeting the protected integration branch MUST block approval/);
   assert.match(normalize(readme), /task PRs target the declared feature branch and only the final reviewed feature PR targets the protected integration branch/);
+  assert.match(example, /Branch \/ PR \/ required target/);
+  assert.match(normalize(example), /T01 branch.*target the declared feature integration branch/);
+  assert.match(normalize(example), /T02 branch.*target the declared feature integration branch/);
 });
 
 test("Issue-only Fast Fix removes duplicate artifacts without bypassing gates", async () => {
