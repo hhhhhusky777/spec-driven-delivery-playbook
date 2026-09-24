@@ -199,9 +199,10 @@ Follow the manifest-linked human-brief policy.
 > After agent review, the parent MUST reply with a compact table pairing each
 > reviewer finding with its proposed solution and the author's disposition
 > (`fixed`, `rejected`, `deferred`, or `open`). The same table MUST include one
-> concise concrete example for each finding. The example explains how the
-> finding manifests and why it warrants the stated disposition; it MUST NOT
-> replace evidence, impact, or blocking rationale.
+> concise concrete example for each finding, preserving the reviewer's meaning.
+> The example explains how the finding manifests and why the finding warrants
+> its priority; the author's solution and disposition remain separate. The
+> example MUST NOT replace evidence, impact, or blocking rationale.
 > Use `None` when there are no findings; do not invent an example. Link the PR
 > when it exists; keep full review history in the PR. This adds no review gate
 > or early-PR requirement.

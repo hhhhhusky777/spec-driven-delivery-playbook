@@ -119,6 +119,9 @@ For every actionable finding, provide:
 - when a recognized practice genuinely applies, a primary industry standard or
   authoritative reference with a brief explanation of relevance.
 
+When there are no actionable findings, report `None`; do not invent a finding
+or example.
+
 When no suitable external authority exists, cite the controlling project
 principle or state the technical reasoning. Never fabricate authority. Keep
 optional improvements separate from blocking findings and never expand the

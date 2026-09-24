@@ -473,12 +473,15 @@ test("human replies pair reviewer findings with solutions and dispositions", asy
   assert.match(workflow, /> \[!IMPORTANT\]/);
   assert.match(normalized, /parent MUST reply with a compact table pairing each reviewer finding with its proposed solution/);
   assert.match(normalized, /same table MUST include one concise concrete example for each finding/);
+  assert.match(normalized, /preserving the reviewer's meaning/);
+  assert.match(normalized, /author's solution and disposition remain separate/);
   assert.match(normalized, /author's disposition/);
   assert.match(normalized, /Use `None` when there are no findings/);
   assert.match(normalized, /Link the PR when it exists/);
   assert.match(normalized, /no review gate or early-PR requirement/);
   const normalizedReviewer = reviewer.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
   assert.match(normalizedReviewer, /one concise concrete example or counterexample from the exact candidate/);
+  assert.match(normalizedReviewer, /When there are no actionable findings, report `None`; do not invent a finding or example/);
   assert.match(normalizedReviewer, /does not replace evidence, impact, priority, or blocking rationale/);
   assert.match(normalizedReviewer, /Do not use a speculative or extremely unlikely example to promote low-value polish/);
   assert.match(await read("README.md"), /Each actionable finding includes a concise exact-candidate example/);
