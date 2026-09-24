@@ -22,6 +22,11 @@ revision while project authority and active feature content remain intact.
 - Upgrade only the manifest, neutral reusable whiteboard structure, managed
   skills, and generated runtime. Never rewrite feature-specific whiteboard
   content or implementation-plan content.
+- Remove the obsolete `.github/spec-driven-delivery/README.md` only when its
+  bytes exactly match the known legacy playbook-generated entry point. A
+  customized, linked, or ownership-uncertain file MUST remain untouched and
+  block the upgrade for explicit resolution. Do not generalize this migration
+  into repository mirroring or broad tracked-file cleanup.
 - Read the implementation plan only to determine whether work is at a safe
   boundary. It is not an upgrade output and its status is not copied elsewhere.
 - Keep the previous pin authoritative until applicable validation, two
@@ -48,6 +53,7 @@ second recovery or escalation procedure here.
 ## Completion
 
 The accepted full revision is in the manifest, managed skills and runtime match
-it, reusable documents are mutually consistent, obsolete installer-owned
-temporary content is removed, and validation reports current. A rejected or
-failed candidate leaves or restores the previous pin.
+it, reusable documents are mutually consistent, the verified legacy entry
+point and obsolete installer-owned temporary content are removed, and
+validation reports current. A rejected or failed candidate leaves or restores
+the previous pin.

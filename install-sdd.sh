@@ -15,6 +15,8 @@ GUIDE_SCHEMA_VERSION="3"
 UPGRADE_GUIDE_SCHEMA_VERSION="2"
 GENERATOR_VERSION="2.3.0"
 FEATURE_REVIEW_SKILL="sdd-feature-review"
+LEGACY_ENTRY_README_PENDING=false
+LEGACY_ENTRY_README_PATH=""
 
 usage() {
   cat <<'EOF'
@@ -543,6 +545,39 @@ canonical_repository() {
   printf '%s' "$1" | sed -e 's#/$##' -e 's#\.git$##'
 }
 
+legacy_entry_readme_blob() {
+  printf '%s\n' \
+    "# Spec-Driven Delivery entry point" \
+    "" \
+    "Start with [Contributing](../../CONTRIBUTING.md), then read the" \
+    "[adoption manifest](project-adoption-manifest.md)," \
+    "[project contracts](project-contracts.md), and verified machine-local runtime." \
+    "" \
+    "This compatibility entry point supplies no independent policy or live state." |
+    git hash-object --stdin
+}
+
+inspect_legacy_entry_readme() {
+  local actual_blob adoption_directory expected_blob head_blob relative_path
+  LEGACY_ENTRY_README_PENDING=false
+  LEGACY_ENTRY_README_PATH="$PROJECT_ROOT/$ADOPTION_ROOT/README.md"
+  [[ -e "$LEGACY_ENTRY_README_PATH" || -L "$LEGACY_ENTRY_README_PATH" ]] || return 0
+  adoption_directory=$(dirname "$LEGACY_ENTRY_README_PATH")
+  [[ "$(cd "$adoption_directory" && pwd -P)" == "$PROJECT_ROOT/$ADOPTION_ROOT" ]] ||
+    fail "legacy SDD entry point has uncertain linked ownership: ${LEGACY_ENTRY_README_PATH#"$PROJECT_ROOT/"}"
+  [[ -f "$LEGACY_ENTRY_README_PATH" && ! -L "$LEGACY_ENTRY_README_PATH" ]] ||
+    fail "legacy SDD entry point has unsupported ownership or file type: ${LEGACY_ENTRY_README_PATH#"$PROJECT_ROOT/"}"
+  relative_path=${LEGACY_ENTRY_README_PATH#"$PROJECT_ROOT/"}
+  git cat-file -e "HEAD:$relative_path" 2>/dev/null ||
+    fail "legacy SDD entry point is not tracked by HEAD; preserve it and resolve ownership before upgrade: $relative_path"
+  actual_blob=$(git hash-object "$LEGACY_ENTRY_README_PATH")
+  expected_blob=$(legacy_entry_readme_blob)
+  head_blob=$(git rev-parse "HEAD:$relative_path")
+  [[ "$head_blob" == "$expected_blob" && "$actual_blob" == "$expected_blob" ]] ||
+    fail "legacy SDD entry point is customized; preserve it and resolve ownership before upgrade: ${LEGACY_ENTRY_README_PATH#"$PROJECT_ROOT/"}"
+  LEGACY_ENTRY_README_PENDING=true
+}
+
 cleanup_failed_upgrade() {
   local status=$?
   if ((status != 0)); then
@@ -608,6 +643,7 @@ prepare_upgrade() {
     fail "requested repository differs from the manifest playbook source"
   [[ -f "$PROJECT_ROOT/$ADOPTION_ROOT/solution-whiteboard.md" ]] ||
     fail "upgrade requires the project solution whiteboard"
+  inspect_legacy_entry_readme
   if [[ ! -f "$GUIDE_PATH" ]]; then
     local installer_path
     installer_path=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)/$(basename "${BASH_SOURCE[0]}")
@@ -788,13 +824,20 @@ Use \`.sdd-runtime/playbook-upgrade-guide.md\` to synchronize the project with
 the latest playbook revision.
 EOF
   refresh_guide_hash "$UPGRADE_GUIDE_PATH"
-  trap - EXIT
-
   printf 'Prepared candidate revision: %s\n' "$resolved_revision"
   printf 'Installed skill: sdd-playbook-upgrade\n'
   printf 'Generated guide: %s\n\n' "$UPGRADE_GUIDE_PATH"
   printf 'Prompt the agent with:\n\n'
   printf 'Use %s to synchronize the project with the latest playbook revision.\n' "$RUNTIME_ROOT/playbook-upgrade-guide.md"
+  if [[ "$LEGACY_ENTRY_README_PENDING" == true ]]; then
+    inspect_legacy_entry_readme
+    [[ "$LEGACY_ENTRY_README_PENDING" == true ]] ||
+      fail "verified legacy SDD entry point changed before removal"
+    printf 'Removing verified legacy SDD entry point: %s\n' \
+      "${LEGACY_ENTRY_README_PATH#"$PROJECT_ROOT/"}"
+    rm "$LEGACY_ENTRY_README_PATH"
+  fi
+  trap - EXIT
 }
 
 if [[ "$CLEANUP_ONLY" == true ]]; then
