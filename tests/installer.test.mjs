@@ -8,6 +8,14 @@ import { fileURLToPath } from "node:url";
 
 const REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const INSTALLER = path.join(REPOSITORY_ROOT, "install-sdd.sh");
+const LEGACY_ENTRY_README = `# Spec-Driven Delivery entry point
+
+Start with [Contributing](../../CONTRIBUTING.md), then read the
+[adoption manifest](project-adoption-manifest.md),
+[project contracts](project-contracts.md), and verified machine-local runtime.
+
+This compatibility entry point supplies no independent policy or live state.
+`;
 
 function run(command, args, cwd) {
   const result = spawnSync(command, args, { cwd, encoding: "utf8" });
@@ -78,7 +86,6 @@ async function createInstalledProject(t, source, state = "INSTALLED") {
   const project = await createTargetProject(t);
   const adoptionRoot = path.join(project, ".github", "spec-driven-delivery");
   await mkdir(adoptionRoot, { recursive: true });
-  await writeFile(path.join(adoptionRoot, "README.md"), "# SDD entry point\n", "utf8");
   await writeFile(path.join(adoptionRoot, "solution-whiteboard.md"), "# Whiteboard\n", "utf8");
   await writeFile(
     path.join(adoptionRoot, "project-adoption-manifest.md"),
@@ -739,6 +746,37 @@ test("upgrade does not require a stable project entry point", async (t) => {
   const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /Prepared candidate revision:/);
+});
+
+test("upgrade removes only the exact legacy SDD entry README", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const entryPath = path.join(project, ".github", "spec-driven-delivery", "README.md");
+  await writeFile(entryPath, LEGACY_ENTRY_README, "utf8");
+  run("git", ["add", entryPath], project);
+  run("git", ["commit", "-m", "add legacy SDD entry point"], project);
+
+  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Removed verified legacy SDD entry point/);
+  await assert.rejects(access(entryPath));
+  assert.match(run("git", ["status", "--short"], project), / D \.github\/spec-driven-delivery\/README\.md/);
+});
+
+test("upgrade preserves and rejects a customized legacy SDD entry README", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const entryPath = path.join(project, ".github", "spec-driven-delivery", "README.md");
+  const customized = `${LEGACY_ENTRY_README}\nProject-owned guidance.\n`;
+  await writeFile(entryPath, customized, "utf8");
+  run("git", ["add", entryPath], project);
+  run("git", ["commit", "-m", "customize legacy SDD entry point"], project);
+
+  const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /legacy SDD entry point is customized/);
+  assert.equal(await readFile(entryPath, "utf8"), customized);
+  assert.equal(run("git", ["status", "--short"], project), "");
 });
 
 test("upgrade ignores legacy stable-entry-point metadata", async (t) => {
