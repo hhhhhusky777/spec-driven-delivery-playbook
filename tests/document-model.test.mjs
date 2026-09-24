@@ -305,6 +305,32 @@ test("feature review cohorts retain context and produce useful change requests",
   }
 });
 
+test("implementation tasks obey the canonical branch and PR target model", async () => {
+  const contributing = await read("CONTRIBUTING.md");
+  const plan = await read("templates/delivery/implementation-plan.md");
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const reviewer = await read("skills/sdd-feature-review/SKILL.md");
+  const readme = await read("README.md");
+  const example = await read("examples/project-adoption/sglang/delivery-api-key-redaction/04-implementation-plan.md");
+  const normalize = value => value.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+
+  assert.match(normalize(contributing), /implementation plan's integration model binds every task branch and pull-request target/);
+  assert.match(normalize(contributing), /every task PR MUST target the declared feature integration branch/);
+  assert.match(normalize(contributing), /MUST NOT invent an exception.*retarget a task PR to `main`.*merge a task directly to `main`/);
+  assert.match(normalize(contributing), /mismatch MUST block task readiness, review, and merge/);
+  assert.match(plan, /Branch \/ PR \/ required target/);
+  assert.match(normalize(plan), /record every task's exact branch and required PR target/);
+  assert.match(normalize(plan), /plan and its agents MUST NOT add an exception/);
+  assert.match(normalize(workflow), /record every task's exact branch and required pull-request target/);
+  assert.match(normalize(workflow), /Any mismatch MUST block readiness, review, and merge/);
+  assert.match(normalize(reviewer), /actual pull request/);
+  assert.match(normalize(reviewer), /task PR targeting the protected integration branch MUST block approval/);
+  assert.match(normalize(readme), /task PRs target the declared feature branch and only the final reviewed feature PR targets the protected integration branch/);
+  assert.match(example, /Branch \/ PR \/ required target/);
+  assert.match(normalize(example), /T01 branch.*target the declared feature integration branch/);
+  assert.match(normalize(example), /T02 branch.*target the declared feature integration branch/);
+});
+
 test("Issue-only Fast Fix removes duplicate artifacts without bypassing gates", async () => {
   const workflow = await read("skills/sdd-project-workflow/SKILL.md");
   const reviewer = await read("skills/sdd-feature-review/SKILL.md");

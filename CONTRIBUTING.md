@@ -59,6 +59,15 @@ reviewed feature PR targets `main`. Parallel work uses separate worktrees and
 non-overlapping ownership. Do not rewrite shared history, bypass required
 checks, force-push `main`, or claim hosting protections without current evidence.
 
+> [!IMPORTANT]
+> **Hard rule.** The accepted implementation plan's integration model binds
+> every task branch and pull-request target. Under a feature integration model,
+> every task PR MUST target the declared feature integration branch; only the
+> final reviewed feature PR may target `main`. A delivery document or agent
+> MUST NOT invent an exception, override this policy, retarget a task PR to
+> `main`, or merge a task directly to `main`. Any mismatch MUST block task
+> readiness, review, and merge until the branch and target comply.
+
 Create the delivery worktree and branch before checking playbook currentness or
 starting whiteboard work. Apply any accepted upgrade in that worktree. Keep its
 creation point as the ordinary implementation baseline; do not continuously

@@ -72,6 +72,13 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > freeze, any whiteboard byte change without prior human authorization for the exact
 > amendment MUST block approval.
 >
+> Verify every task's recorded branch and required PR target against the
+> canonical branch policy and the actual pull request. Under a feature
+> integration model, a task PR targeting the protected integration branch MUST
+> block approval; only the final reviewed feature PR may target that branch.
+> Reject any delivery-local exception, policy override, opportunistic retarget,
+> or direct task merge that bypasses the declared feature integration branch.
+>
 > At the pre-final-test implementation audit, before any missing test is added
 > or any final-gate test is run, inspect the exact implementation content and
 > verify the author's self-review of that same content. The gate MUST remain

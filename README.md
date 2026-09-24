@@ -367,6 +367,12 @@ flowchart LR
     H --> M["Merge + target verification"]
 ```
 
+The plan selects one integration model and records each task's exact branch and
+required PR target. In feature-integration mode, task PRs target the declared
+feature branch and only the final reviewed feature PR targets the protected
+integration branch. Delivery-local exceptions and opportunistic retargeting
+are not allowed.
+
 A task may depend on already delivered work, but it cannot depend on a future
 change to make its own required result safe or green. Draft-PR timing, internal
 working order, tools, and contract-equivalent implementation choices remain

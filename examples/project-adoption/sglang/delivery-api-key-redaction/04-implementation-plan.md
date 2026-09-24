@@ -15,7 +15,7 @@ This is the example's only active-delivery state authority.
 | Implementation mode | Human review before merge |
 | Primary issue | [SGLang #37457](https://github.com/sgl-project/sglang/issues/37457) |
 | Target source boundary | SGLang at `9a05b470fa849b349e384ef3c1381f9a85c6c550`; refresh before approval |
-| Feature branch / target | Project owner must define |
+| Delivery branch / target | Project owner must define the feature integration branch and final protected target |
 | Last verified | Teaching example only; no live project validation claimed |
 
 ## Needs, requirements, and acceptance
@@ -61,10 +61,10 @@ sanitized tests. If unchanged, credentials may persist in logs or responses.
 
 ## Tasks
 
-| ID | State | Depends on | Outcome | Boundaries | Validation | PR |
+| ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `PLANNED` | None | Add the shared projection and switch startup logging | No endpoint or authentication behavior change | Projection unit tests and sanitized log capture | Not opened |
-| `T02` | `PLANNED` | `T01` | Switch all server-information responses and update canonical diagnostic/API documentation | Preserve the approved response compatibility contract | Endpoint, compatibility, regression, and documentation checks | Not opened |
+| `T01` | `PLANNED` | None | Add the shared projection and switch startup logging | No endpoint or authentication behavior change | Projection unit tests and sanitized startup-log capture | Owner must define T01 branch; PR not opened; target the declared feature integration branch |
+| `T02` | `PLANNED` | `T01` | Switch all server-information responses and update canonical diagnostic/API documentation | Preserve the approved response compatibility contract | Endpoint, compatibility, regression, and documentation checks | Owner must define T02 branch; PR not opened; target the declared feature integration branch |
 
 ## Readiness boundary
 
