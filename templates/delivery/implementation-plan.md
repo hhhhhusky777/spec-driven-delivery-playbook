@@ -152,6 +152,15 @@ visually.
 | Compatibility sequencing | `<foundation, consumer, migration, cleanup order>` |
 | Merge authority | `<human review or explicitly authorized alternative>` |
 
+> [!IMPORTANT]
+> **Hard rule.** Select an integration model allowed by the project's canonical
+> branch policy and record every task's exact branch and required PR target.
+> Under a feature integration model, every task PR MUST target the declared
+> feature integration branch; only the final reviewed feature PR may target the
+> protected integration branch. This plan and its agents MUST NOT add an
+> exception, override the canonical policy, or retarget a task directly to the
+> protected branch. A mismatch MUST block readiness, review, and merge.
+
 A task is ready when its accepted outcome, scope, dependencies, applicable
 contracts, risks, validation, and merge boundary are sufficient to proceed
 without inventing product behavior. Required machine-local inputs and access
@@ -185,9 +194,9 @@ explicit while leaving contract-equivalent implementation choices to the agent.
 
 ## Tasks
 
-| ID | State | Depends on | Outcome | Boundaries | Validation | PR |
+| ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `PLANNED` | `None` | `<observable result>` | `<scope and compatibility>` | `<checks>` | `None` |
+| `T01` | `PLANNED` | `None` | `<observable result>` | `<scope and compatibility>` | `<checks>` | `<owned branch; PR or None; exact target>` |
 
 ## Task specifications and context receipts
 

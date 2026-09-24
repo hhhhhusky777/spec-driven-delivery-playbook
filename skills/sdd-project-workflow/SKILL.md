@@ -131,6 +131,14 @@ review the required whiteboard and plan before dependent work continues.
   check for and synchronize a newer playbook revision before whiteboard or
   implementation work. A maintenance-only upgrade is still a delivery; do not
   merge a separate target-branch upgrade solely to prepare another delivery.
+- The implementation plan MUST select an integration model allowed by the
+  canonical project branch policy and record every task's exact branch and
+  required pull-request target. Under a feature integration model, every task
+  PR MUST target the declared feature integration branch; only the final
+  reviewed feature PR may target the protected integration branch. An agent
+  MUST NOT invent an exception, override the canonical policy, retarget a task
+  PR to the protected branch, or merge a task directly there. Any mismatch
+  MUST block readiness, review, and merge until corrected.
 - Before whiteboard work, reconcile the manifest's project authorities with
   current repository evidence. Semantically identify material policy sources
   that were added, removed, moved, or changed after adoption and update stable
