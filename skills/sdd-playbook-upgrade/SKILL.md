@@ -27,6 +27,11 @@ revision while project authority and active feature content remain intact.
   customized, linked, or ownership-uncertain file MUST remain untouched and
   block the upgrade for explicit resolution. Do not generalize this migration
   into repository mirroring or broad tracked-file cleanup.
+- When that legacy file is removed, inspect tracked live agent and contributor
+  entry points, including every applicable `AGENTS.md`, for references to its
+  path. Update project-owned references in the same candidate to valid
+  canonical entry points while preserving unrelated project instructions. A
+  dangling reference to the removed path blocks completion.
 - Read the implementation plan only to determine whether work is at a safe
   boundary. It is not an upgrade output and its status is not copied elsewhere.
 - Keep the previous pin authoritative until applicable validation, two
@@ -54,6 +59,6 @@ second recovery or escalation procedure here.
 
 The accepted full revision is in the manifest, managed skills and runtime match
 it, reusable documents are mutually consistent, the verified legacy entry
-point and obsolete installer-owned temporary content are removed, and
-validation reports current. A rejected or failed candidate leaves or restores
-the previous pin.
+point and obsolete installer-owned temporary content are removed, no tracked
+live entry point references the removed path, and validation reports current.
+A rejected or failed candidate leaves or restores the previous pin.
