@@ -765,12 +765,13 @@ test("upgrade removes only the exact legacy SDD entry README and requires entry 
   const project = await createInstalledProject(t, source);
   const entryPath = path.join(project, ".github", "spec-driven-delivery", "README.md");
   const agentsPath = path.join(project, "AGENTS.md");
+  const agentsContents = `# Project-owned agent instructions
+
+Preserve this unrelated project boundary byte for byte.
+Read [.github/spec-driven-delivery/README.md](.github/spec-driven-delivery/README.md).
+`;
   await writeFile(entryPath, LEGACY_ENTRY_README, "utf8");
-  await writeFile(
-    agentsPath,
-    "Read [.github/spec-driven-delivery/README.md](.github/spec-driven-delivery/README.md).\n",
-    "utf8",
-  );
+  await writeFile(agentsPath, agentsContents, "utf8");
   run("git", ["add", entryPath, agentsPath], project);
   run("git", ["commit", "-m", "add legacy SDD entry point"], project);
 
@@ -784,7 +785,7 @@ test("upgrade removes only the exact legacy SDD entry README and requires entry 
   );
   assert.match(guide, /including applicable AGENTS\.md files/);
   assert.match(guide, /A dangling reference blocks completion/);
-  assert.match(await readFile(agentsPath, "utf8"), /spec-driven-delivery\/README\.md/);
+  assert.equal(await readFile(agentsPath, "utf8"), agentsContents);
   assert.match(run("git", ["status", "--short"], project), / D \.github\/spec-driven-delivery\/README\.md/);
 });
 
