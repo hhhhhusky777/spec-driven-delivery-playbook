@@ -760,18 +760,32 @@ test("upgrade does not require a stable project entry point", async (t) => {
   assert.match(result.stdout, /Prepared candidate revision:/);
 });
 
-test("upgrade removes only the exact legacy SDD entry README", async (t) => {
+test("upgrade removes only the exact legacy SDD entry README and requires entry reconciliation", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createInstalledProject(t, source);
   const entryPath = path.join(project, ".github", "spec-driven-delivery", "README.md");
+  const agentsPath = path.join(project, "AGENTS.md");
+  const agentsContents = `# Project-owned agent instructions
+
+Preserve this unrelated project boundary byte for byte.
+Read [.github/spec-driven-delivery/README.md](.github/spec-driven-delivery/README.md).
+`;
   await writeFile(entryPath, LEGACY_ENTRY_README, "utf8");
-  run("git", ["add", entryPath], project);
+  await writeFile(agentsPath, agentsContents, "utf8");
+  run("git", ["add", entryPath, agentsPath], project);
   run("git", ["commit", "-m", "add legacy SDD entry point"], project);
 
   const result = runInstaller(project, ["--repository", source.repository, "--upgrade"]);
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /Removing verified legacy SDD entry point/);
   await assert.rejects(access(entryPath));
+  const guide = await readFile(
+    path.join(project, ".sdd-runtime", "playbook-upgrade-guide.md"),
+    "utf8",
+  );
+  assert.match(guide, /including applicable AGENTS\.md files/);
+  assert.match(guide, /A dangling reference blocks completion/);
+  assert.equal(await readFile(agentsPath, "utf8"), agentsContents);
   assert.match(run("git", ["status", "--short"], project), / D \.github\/spec-driven-delivery\/README\.md/);
 });
 
