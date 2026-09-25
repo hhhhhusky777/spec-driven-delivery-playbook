@@ -564,6 +564,9 @@ test("upgrade never rewrites feature content and keeps exact acceptance boundari
   assert.match(normalized, /pull request brief records old and new revisions/);
   assert.match(normalized, /Run the upgrade in the current delivery's isolated worktree and owned\s+delivery branch/);
   assert.match(normalized, /instead of merging a separate target-branch upgrade/);
+  assert.match(upgrade, /including every applicable `AGENTS\.md`/);
+  assert.match(normalized, /dangling reference to the removed path blocks completion/);
+  assert.match(normalized, /no tracked live entry point references the removed path/);
 });
 
 test("installer uses PR evidence and outcome guidance", async () => {

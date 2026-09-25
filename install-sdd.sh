@@ -809,6 +809,7 @@ active project pin, approve compatibility, or authorize work in an active task.
 | --- | --- |
 | Authority | The current pin remains authoritative until the exact synchronized candidate receives independent and human acceptance. |
 | Scope | Reusable SDD documents match the resolved immutable revision; unrelated project content and active work remain unchanged. |
+| Legacy entry migration | If the verified legacy SDD README is removed, inspect tracked live agent and contributor entry points, including applicable AGENTS.md files, and update references to its path in the same candidate. A dangling reference blocks completion. |
 | Project responsibility | No playbook lifecycle validators, evidence helpers, publication tooling, CI workflows, or playbook tests are added to the project. |
 | Pre-work runtime | Before candidate content is consumed or project files change, this runtime validates as \`UPGRADE_CURRENT\`; provenance, hash, marker, pin, or installed-skill mismatch blocks work. |
 | Consistency | Canonical terminology, links, states, authority, and continuation rules agree; unresolved canonical conflict or failed applicable validation blocks acceptance. |
