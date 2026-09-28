@@ -277,9 +277,9 @@ test("agent responses expose material assumptions explicitly", async () => {
   const readme = await read("README.md");
   const normalize = value => value.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
 
-  for (const document of [policy, workflow, reviewer]) {
+  for (const document of [policy, workflow]) {
     const normalized = normalize(document);
-    assert.match(normalized, /(?:human-gate|review) response.*assumptions table/i);
+    assert.match(normalized, /parent response.*MUST.*assumptions table/i);
     for (const field of [
       /assumption/i,
       /dangerous-assumption category/i,
@@ -290,6 +290,9 @@ test("agent responses expose material assumptions explicitly", async () => {
     assert.match(normalized, /none.*row/i);
     assert.match(normalized, /verified facts.*immaterial/i);
   }
+
+  assert.doesNotMatch(normalize(reviewer), /every review response.*assumptions table/i);
+  assert.match(normalize(reviewer), /material premise.*scope finding/i);
 
   assert.match(normalize(readme), /every human-gate response.*material assumptions.*own compact table/i);
   assert.match(normalize(readme), /`none` row.*absence of material assumptions/i);

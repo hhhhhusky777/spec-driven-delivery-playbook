@@ -148,13 +148,6 @@ For every actionable finding, provide:
 When there are no actionable findings, report `None`; do not invent a finding
 or example.
 
-Every review response also includes a distinct material-assumptions table with
-`Assumption`, `Dangerous-assumption category`, `Evidence / validation state`,
-`Impact if false`, and `Handling`. Record assumptions that materially affect
-the reviewed candidate, its supported domain, or the review disposition. If
-none exist, include one `None` row; do not manufacture entries from verified
-facts or immaterial details.
-
 When no suitable external authority exists, cite the controlling project
 principle or state the technical reasoning. Never fabricate authority. Keep
 optional improvements separate from blocking findings and never expand the

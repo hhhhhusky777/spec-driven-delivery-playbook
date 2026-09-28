@@ -222,12 +222,7 @@ Choose the working order, batching, tools, tests, and recovery method that best
 achieve the accepted outcome. Prefer coherent review units and one human brief
 at each real decision boundary. Human briefs use a compact table covering the
 decision, important changes, risks or gaps, validation, and recommended action.
-Every human-gate response also includes a distinct material-assumptions table:
-`Assumption`, `Dangerous-assumption category`, `Evidence / validation state`,
-`Impact if false`, and `Handling`. If no material assumption affects the
-candidate or decision, include one `None` row; do not manufacture entries from
-verified facts or immaterial details. Follow the manifest-linked human-brief
-policy.
+Follow the manifest-linked human-brief policy.
 
 > [!IMPORTANT]
 > After agent review, the parent MUST reply with a compact table pairing each
@@ -240,6 +235,12 @@ policy.
 > Use `None` when there are no findings; do not invent an example. Link the PR
 > when it exists; keep full review history in the PR. This adds no review gate
 > or early-PR requirement.
+>
+> The parent response MUST also include a separate material-assumptions table:
+> `Assumption`, `Dangerous-assumption category`, `Evidence / validation state`,
+> `Impact if false`, and `Handling`. List every material assumption affecting
+> the candidate or human decision. Use one `None` row when none exist. Do not
+> manufacture entries from verified facts or immaterial details.
 Classify material items as `HUMAN_DECISION`, `AGENT_ACTION`, `DISCLOSE`, or
 `NONE` so the next agent knows whether to stop, act within authority, preserve
 material awareness-only information (including accepted limitations), or
