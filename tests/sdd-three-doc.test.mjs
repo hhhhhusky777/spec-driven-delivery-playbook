@@ -83,6 +83,10 @@ test("concluded whiteboard requires resolved decisions, outcomes, and draft reco
     "solution-whiteboard.md",
     source.replace("| None | None | None | None | None |", "| FC01 | condition | request stops | None | Approved |"),
   ).some(error => error.includes("requires a recovery / best next action")));
+  assert.ok(checkDocument(
+    "solution-whiteboard.md",
+    source.replace("| None | None | None | None | None |", "| FC01 | condition | request stops |  | Approved |"),
+  ).some(error => error.includes("requires a recovery / best next action")));
   const noFailClosedTable = source.replace(/\n\| ID \| Trigger \| Concrete example \| Recovery \/ best next action \| Owner disposition \|[\s\S]*?\| None \| None \| None \| None \| None \|\n/, "\n");
   assert.ok(checkDocument("solution-whiteboard.md", noFailClosedTable)
     .some(error => error.includes("fail-closed behavior approval table")));
