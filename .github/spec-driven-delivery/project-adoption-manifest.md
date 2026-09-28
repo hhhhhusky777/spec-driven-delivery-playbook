@@ -21,7 +21,7 @@ state.
 | Accepted by | Repository owner through the adoption pull request |
 | Accepted at | `2026-09-07 Asia/Shanghai` |
 | Project adoption root | `.github/spec-driven-delivery` |
-| Last verified | Issue #140 delivery prepared the current reusable runtime at revision `43bbda6cc71f08473522b62bd43f0e29d98699b2` on 2026-09-28; final acceptance and normal-runtime validation remain delivery gates |
+| Last verified | Reusable installation baseline and canonical authority links verified for revision `43bbda6cc71f08473522b62bd43f0e29d98699b2` on 2026-09-28 |
 
 ## Canonical project authorities
 
