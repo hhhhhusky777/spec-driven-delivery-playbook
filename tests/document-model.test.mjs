@@ -256,6 +256,12 @@ test("evidence-bounded scope uses one dangerous-assumption vocabulary", async ()
 
   assert.match(readme, /https:\/\/learn\.microsoft\.com\/en-us\/dotnet\/architecture\/modern-web-apps-azure\/architectural-principles/);
   assert.match(readme, /https:\/\/docs\.aws\.amazon\.com\/wellarchitected\/latest\/userguide\/workload-and-scope\.html/);
+  for (const skill of [workflow, reviewer]) {
+    assert.match(skill, /https:\/\/learn\.microsoft\.com\/en-us\/dotnet\/architecture\/modern-web-apps-azure\/architectural-principles/);
+    assert.match(skill, /https:\/\/docs\.aws\.amazon\.com\/wellarchitected\/latest\/userguide\/workload-and-scope\.html/);
+    assert.match(normalize(skill), /genuine uncertainty about ownership, dependency, or supported-domain interpretation/i);
+    assert.match(normalize(skill), /Do not browse them routinely or treat them as project authority/i);
+  }
   assert.match(
     normalize(workflow),
     /Verify the premise from authority.*owning public contract.*narrow and disclose the supported domain.*material authority remains unresolved.*block only the affected work.*ask the human to define or expand scope/i,

@@ -123,6 +123,13 @@ Repeat review when candidate bytes or meaning changed.
   material authority remains unresolved, block only the affected work and ask
   the human to define or expand scope. Do not demand universal proof for
   unsupported or imagined cases.
+  When there is genuine uncertainty about ownership, dependency, or
+  supported-domain interpretation, consult Microsoft's
+  [Architectural principles](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles)
+  and AWS's
+  [Workload and scope](https://docs.aws.amazon.com/wellarchitected/latest/userguide/workload-and-scope.html)
+  as supporting references. Do not browse them routinely or treat them as
+  project authority.
 - For normal delivery, when the whiteboard conclusion candidate is ready,
   select two isolated reviewers for the feature and require each one to read
   the installed sdd-feature-review skill once. They review the exact design
