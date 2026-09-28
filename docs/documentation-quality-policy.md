@@ -229,7 +229,7 @@ Every human-gate response MUST also include a distinct assumptions table:
 
 | Assumption | Dangerous-assumption category | Evidence / validation state | Impact if false | Handling |
 | --- | --- | --- | --- | --- |
-| `<material premise>` | `<one of the six categories above>` | `<verified, bounded, or unresolved evidence>` | `<credible consequence>` | `<agent action, disclosure, or human decision>` |
+| Material premise | One of the six categories above | Verified, bounded, or unresolved evidence | Credible consequence | Agent action, disclosure, or human decision |
 
 List only material assumptions that affect the candidate, decision, supported
 domain, or residual risk. If none exist, include one `None` row. Do not turn
