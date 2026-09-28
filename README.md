@@ -258,7 +258,7 @@ flowchart LR
     Q -->|"no"| C["Conclusion candidate"]
     C --> R["Reconcile every material draft item"]
     R --> A["Two-agent design review"]
-    A --> B["Human brief: design + all new fail-closed behavior"]
+    A --> B["Human brief: design + fail-close example + recovery"]
     B --> H["Human design acceptance"]
     H --> M["Commit declared conclusion metadata"]
     M --> V["Same reviewers verify no semantic change"]
@@ -275,8 +275,10 @@ each exact candidate to those retained sessions.
 
 The concluded whiteboard states observable outcomes and important boundaries,
 not implementation trivia. The human brief gives each new fail-closed behavior
-one concise concrete example so the owner can judge it; the example explains
-the boundary without expanding it. Human acceptance authorizes the declared
+one concise concrete example plus the smallest safe recovery action, responsible
+actor, and retry/resume condition or required human decision. It also preserves
+both reviewers' dispositions. The example explains the boundary without
+expanding it. Human acceptance authorizes the declared
 conclusion metadata transition; the same reviewers verify its exact committed
 candidate before the bytes freeze. Any later change needs prior human authorization for the concrete amendment,
 then reconclusion, both retained reviewers, and human acceptance before
