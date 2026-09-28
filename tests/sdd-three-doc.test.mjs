@@ -39,7 +39,7 @@ test("manifest requires an immutable candidate while upgrade is open", () => {
 });
 
 test("concluded whiteboard requires resolved decisions, outcomes, and draft reconciliation", () => {
-  const source = `| Field | Value |\n| --- | --- |\n| State | CONCLUDED |\n| Open owner decisions | None |\n\n| ID | Agreed item, alternative, constraint, or gap | State / resolution |\n| --- | --- | --- |\n| DR01 | need | accepted |\n\n| Design point | Accepted outcome |\n| --- | --- |\n| D01 | outcome |\n\n| ID | Trigger | Concrete example | Owner disposition |\n| --- | --- | --- | --- |\n| None | None | None | None |\n\n| Draft item | Concluded design point | Disposition |\n| --- | --- | --- |\n| DR01 | D01 | accepted |`;
+  const source = `| Field | Value |\n| --- | --- |\n| State | CONCLUDED |\n| Open owner decisions | None |\n\n| ID | Agreed item, alternative, constraint, or gap | State / resolution |\n| --- | --- | --- |\n| DR01 | need | accepted |\n\n| Design point | Accepted outcome |\n| --- | --- |\n| D01 | outcome |\n\n| ID | Trigger | Concrete example | Recovery / best next action | Owner disposition |\n| --- | --- | --- | --- | --- |\n| None | None | None | None | None |\n\n| Draft item | Concluded design point | Disposition |\n| --- | --- | --- |\n| DR01 | D01 | accepted |`;
   assert.deepEqual(checkDocument("solution-whiteboard.md", source), []);
   assert.ok(checkDocument("solution-whiteboard.md", source.replace("| None |", "| D02 |"))[0]);
   assert.ok(checkDocument("solution-whiteboard.md", source.replace("| DR01 | D01 | accepted |", ""))
@@ -55,25 +55,35 @@ test("concluded whiteboard requires resolved decisions, outcomes, and draft reco
     .some(error => error.includes("unresolved retained")));
   assert.ok(checkDocument("solution-whiteboard.md", source.replace("| DR01 | D01 | accepted |", "| DR01 | D99 | accepted |"))
     .some(error => error.includes("unknown design point")));
-  assert.ok(checkDocument("solution-whiteboard.md", source.replace("| None | None | None | None |", "| FC01 | condition | request stops and client retries | Pending |"))
+  assert.ok(checkDocument("solution-whiteboard.md", source.replace("| None | None | None | None | None |", "| FC01 | condition | request stops | Author corrects input; client retries after correction | Pending |"))
     .some(error => error.includes("unresolved fail-closed")));
-  assert.ok(checkDocument("solution-whiteboard.md", source.replace("| None | None | None | None |", "| FC01 | condition | request stops and client retries | None |"))
+  assert.ok(checkDocument("solution-whiteboard.md", source.replace("| None | None | None | None | None |", "| FC01 | condition | request stops | Author corrects input; client retries after correction | None |"))
     .some(error => error.includes("unresolved fail-closed")));
   assert.deepEqual(checkDocument(
     "solution-whiteboard.md",
-    source.replace("| None | None | None | None |", "| FC01 | condition | request stops and client retries | Approved |"),
+    source.replace("| None | None | None | None | None |", "| FC01 | condition | request stops | Author corrects input; client retries after correction | Approved |"),
   ), []);
   const missingExample = source
-    .replace("| ID | Trigger | Concrete example | Owner disposition |", "| ID | Trigger | Owner disposition |")
-    .replace("| --- | --- | --- | --- |", "| --- | --- | --- |")
-    .replace("| None | None | None | None |", "| None | None | None |");
+    .replace("| ID | Trigger | Concrete example | Recovery / best next action | Owner disposition |", "| ID | Trigger | Recovery / best next action | Owner disposition |")
+    .replace("| --- | --- | --- | --- | --- |", "| --- | --- | --- | --- |")
+    .replace("| None | None | None | None | None |", "| None | None | None | None |");
   assert.ok(checkDocument("solution-whiteboard.md", missingExample)
     .some(error => error.includes("Concrete example column")));
   assert.ok(checkDocument(
     "solution-whiteboard.md",
-    source.replace("| None | None | None | None |", "| FC01 | condition | None | Approved |"),
+    source.replace("| None | None | None | None | None |", "| FC01 | condition | None | Author corrects input; client retries after correction | Approved |"),
   ).some(error => error.includes("requires a concrete example")));
-  const noFailClosedTable = source.replace(/\n\| ID \| Trigger \| Concrete example \| Owner disposition \|[\s\S]*?\| None \| None \| None \| None \|\n/, "\n");
+  const missingRecovery = source
+    .replace("| ID | Trigger | Concrete example | Recovery / best next action | Owner disposition |", "| ID | Trigger | Concrete example | Owner disposition |")
+    .replace("| --- | --- | --- | --- | --- |", "| --- | --- | --- | --- |")
+    .replace("| None | None | None | None | None |", "| None | None | None | None |");
+  assert.ok(checkDocument("solution-whiteboard.md", missingRecovery)
+    .some(error => error.includes("Recovery / best next action column")));
+  assert.ok(checkDocument(
+    "solution-whiteboard.md",
+    source.replace("| None | None | None | None | None |", "| FC01 | condition | request stops | None | Approved |"),
+  ).some(error => error.includes("requires a recovery / best next action")));
+  const noFailClosedTable = source.replace(/\n\| ID \| Trigger \| Concrete example \| Recovery \/ best next action \| Owner disposition \|[\s\S]*?\| None \| None \| None \| None \| None \|\n/, "\n");
   assert.ok(checkDocument("solution-whiteboard.md", noFailClosedTable)
     .some(error => error.includes("fail-closed behavior approval table")));
   const duplicate = `${source}\n| DR01 | D01 | changed |`;

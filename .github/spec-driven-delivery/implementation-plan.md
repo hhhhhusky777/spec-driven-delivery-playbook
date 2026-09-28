@@ -8,10 +8,10 @@ This is the only active-delivery state authority.
 
 | Field | Value |
 | --- | --- |
-| State | `DRAFT` |
+| State | `VALIDATING` |
 | Active tasks | `None` |
 | Next ready task | `None` |
-| Active blocker | Plan review and owner acceptance |
+| Active blocker | Pre-final-test implementation audit and retained reviewer approval |
 | Implementation mode | Human review before merge |
 | Delivery branch / target | `codex/issue-135-fail-close-recovery` → `main` |
 | Owner | Repository owner |
@@ -53,10 +53,10 @@ This is the only active-delivery state authority.
 
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
-| `T01` | `WB135-01`: canonical recovery column exists | Document-model assertion and maintained-template fixture | planned | focused task work |
-| `T01` | `WB135-02`: recovery names an action, actor, and safe retry/resume condition or human decision | Cross-document assertions plus author and reviewer semantic inspection | planned | focused task work and exact-candidate review |
-| `T01` | `WB135-03`: author, reviewer, and human-brief contracts agree | Cross-document assertions | planned | focused task work |
-| `T01` | `WB135-04`: missing-column and blank/`None` material recovery fail structurally while historical archives remain valid and prose is not parsed semantically | Positive/negative lifecycle fixtures plus full repository suite | planned; full run deferred | focused implementation; full run at final gate |
+| `T01` | `WB135-01`: canonical recovery column exists | Document-model assertion and maintained-template fixture | implemented; focused tests passed | focused task work |
+| `T01` | `WB135-02`: recovery names an action, actor, and safe retry/resume condition or human decision | Cross-document assertions plus author and reviewer semantic inspection | implemented; semantic review pending | focused task work and exact-candidate review |
+| `T01` | `WB135-03`: author, reviewer, and human-brief contracts agree | Cross-document assertions | implemented; focused tests passed | focused task work |
+| `T01` | `WB135-04`: missing-column and blank/`None` material recovery fail structurally while historical archives remain valid and prose is not parsed semantically | Positive/negative lifecycle fixtures plus full repository suite | focused tests passed; full run deferred | focused implementation; full run at final gate |
 
 ## Proposed design
 
@@ -119,7 +119,7 @@ This is the only active-delivery state authority.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `PLANNED` | `None` | Deliver the reviewed recovery column across its canonical schema, consumers, validator, and regressions. | No new artifact, semantic parser, automatic remediation, historical rewrite, or whiteboard amendment. | Focused affected tests; retained reviewers; final full repository gate. | `codex/issue-135-fail-close-recovery`; [PR #136](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/136); target `main` |
+| `T01` | `DONE` | `None` | Deliver the reviewed recovery column across its canonical schema, consumers, validator, and regressions. | No new artifact, semantic parser, automatic remediation, historical rewrite, or whiteboard amendment. | Focused affected tests passed; retained reviewer audit and final full repository gate pending. | `codex/issue-135-fail-close-recovery`; [PR #136](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/136); target `main` |
 
 ## Task specifications and context receipts
 
@@ -133,7 +133,7 @@ This is the only active-delivery state authority.
 | Critical obligations | Do not modify frozen whiteboard; do not parse semantic prose in automation; preserve historical archives; keep one canonical schema. |
 | Required evidence | Focused positive/negative lifecycle tests, cross-document assertions, both retained reviewers, full repository validation, human merge authority. |
 | Context receipt | Manifest/runtime current; owner-approved design frozen; reviewer findings resolved; source boundaries inspected. |
-| Actual result | Pending implementation. |
+| Actual result | Added one canonical recovery column, portable author/reviewer/human-brief contracts, deterministic presence validation, and prospective regressions without changing historical archives or the frozen whiteboard. |
 
 ## Recovery, decisions, and change control
 
@@ -155,10 +155,10 @@ This is the only active-delivery state authority.
 
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
-| Accepted design delivered | `WB135-01`–`WB135-04` and `FC01` mapped to `T01`. | Pending implementation. |
-| Applicable validation passed | Focused affected checks, exact-head review, and full repository gate. | Focused plan checks pending. |
-| Compatibility and operations safe | Prospective enforcement only; historical archives remain valid; prior pin remains recoverable. | Pending implementation evidence. |
-| Merge-ready canonical state | Template, policy, skills, README, checker, tests, plan, and closing archive agree. | Pending. |
+| Accepted design delivered | `WB135-01`–`WB135-04` and `FC01` mapped to `T01`. | Implemented in the exact T01 candidate; reviewer audit pending. |
+| Applicable validation passed | Focused affected checks, exact-head review, and full repository gate. | 23/23 focused tests, lifecycle, diff, and runtime checks passed; full repository gate deferred. |
+| Compatibility and operations safe | Prospective enforcement only; historical archives remain valid; prior pin remains recoverable. | Archive validation remains backward compatible; no semantic prose parser or historical rewrite added. |
+| Merge-ready canonical state | Template, policy, skills, README, checker, tests, plan, and closing archive agree. | Implementation candidate coherent; review, full validation, and closing candidate remain. |
 | PR-owned review and delivery | PR #136 checks, retained reviewers, human merge, and target proof. | [PR #136](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/136) owns live state. |
 | Feature cleanup complete | Combined whiteboard/plan archive, live plan removal, whiteboard reset, worktree/branch cleanup after target verification. | Pending authorized closing candidate. |
 
@@ -166,7 +166,7 @@ This is the only active-delivery state authority.
 
 | Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
 | --- | --- | --- | --- |
-| `WB-135-1` / `T01` | Recovery action becomes a reviewed, validated part of every prospective fail-closed disposition. | Pending. | Implement, review, validate, and merge. |
+| `WB-135-1` / `T01` | Recovery action becomes a reviewed, validated part of every prospective fail-closed disposition. | Implemented across template, policy, skills, README, checker, and focused regressions; 23/23 focused tests passed. | Retained reviewer audit, full validation, closing candidate, human review, and merge. |
 
 ### Cleanup inventory
 
@@ -181,9 +181,9 @@ This is the only active-delivery state authority.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Tasks and outcomes | One task updates schema, policy/skills, README, checker, and regressions as one coherent contract. | `HUMAN_DECISION` |
+| Tasks and outcomes | T01 is done: schema, policy/skills, README, checker, and regressions form one coherent candidate. | `DISCLOSE` |
 | Design consistency | Every `WB135` point and `FC01` maps to `T01`; no gap or extra task exists. | `NONE` |
 | Important changes | Structural validation is deterministic; semantic quality remains author/reviewer judgment; enforcement is prospective. | `DISCLOSE` |
-| Validation | Plan structure, lifecycle, runtime, and diff checks; implementation tests remain pending. | `DISCLOSE` |
-| Risks or open decisions | Only plan acceptance; no design amendment or additional fail-closed behavior. | `HUMAN_DECISION` |
-| Decision requested | Approve this one-task plan and authorize `T01` implementation. | `HUMAN_DECISION` |
+| Validation | 23/23 focused tests, lifecycle checker, diff check, and runtime validation passed; full repository validation remains deferred to the final gate. | `DISCLOSE` |
+| Risks or open decisions | No design amendment, missing test, or additional fail-closed behavior; retained reviewer audit is next. | `NONE` |
+| Decision requested | None at this gate. | `NONE` |

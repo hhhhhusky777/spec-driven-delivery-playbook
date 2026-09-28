@@ -86,8 +86,12 @@ function whiteboardErrors(text, requireFailClosedTable = true) {
       if (!rows.length) errors.push("fail-closed behavior approval table requires a disposition row");
       const dispositionIndex = failClosed[0].indexOf("Owner disposition");
       const exampleIndex = failClosed[0].indexOf("Concrete example");
+      const recoveryIndex = failClosed[0].indexOf("Recovery / best next action");
       if (requireFailClosedTable && exampleIndex < 0) {
         errors.push("fail-closed behavior approval table requires a Concrete example column");
+      }
+      if (requireFailClosedTable && recoveryIndex < 0) {
+        errors.push("fail-closed behavior approval table requires a Recovery / best next action column");
       }
       for (const row of rows) {
         const id = (row[0] || "").toLowerCase();
@@ -95,8 +99,12 @@ function whiteboardErrors(text, requireFailClosedTable = true) {
         const noneSentinel = disposition === "none" && id === "none"
           && row.slice(1, dispositionIndex).every(value => value.toLowerCase() === "none");
         const example = exampleIndex < 0 ? "" : (row[exampleIndex] || "").trim();
+        const recovery = recoveryIndex < 0 ? "" : (row[recoveryIndex] || "").trim();
         if (requireFailClosedTable && !noneSentinel && (!example || example.toLowerCase() === "none")) {
           errors.push(`fail-closed behavior requires a concrete example: ${row[0] || "unknown"}`);
+        }
+        if (requireFailClosedTable && !noneSentinel && (!recovery || recovery.toLowerCase() === "none")) {
+          errors.push(`fail-closed behavior requires a recovery / best next action: ${row[0] || "unknown"}`);
         }
         if (!(noneSentinel || /^(approved|accepted|rejected)\b/.test(disposition))) {
           errors.push(`unresolved fail-closed behavior disposition: ${row[0] || "unknown"}`);

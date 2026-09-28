@@ -64,9 +64,14 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > **Hard rule.** Compare every plan and candidate addition with the accepted
 > design. Unexplained scope MUST block approval, even when useful. Verify that
 > every new fail-closed behavior is listed for human disposition with one
-> concise concrete example. The example MUST be realistic, align with the
-> declared behavior, and remain explanatory rather than expand its scope. When
-> no new behavior exists, require `None`; do not invent a behavior or example.
+> concise concrete example and its `Recovery / best next action`. Recovery MUST
+> name the smallest safe action, responsible actor, and retry/resume condition,
+> or the required human decision; it MUST be proportionate to the material
+> risk. The example MUST be realistic, align with the declared behavior, and
+> remain explanatory rather than expand its scope. Require the parent human
+> brief to preserve the recovery and both reviewers' exact dispositions. When
+> no new behavior exists, require `None`; do not invent a behavior, example, or
+> recovery.
 > For the conclusion transition, accept only state, revision, and
 > approved-disposition changes. Both reviewers MUST verify that exact commit before freeze. After
 > freeze, any whiteboard byte change without prior human authorization for the exact

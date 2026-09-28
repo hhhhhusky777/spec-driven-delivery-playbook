@@ -80,12 +80,19 @@ review the required whiteboard and plan before dependent work continues.
 >
 > **Hard rule.** Both reviewers MUST approve the design before the human gate.
 > The parent response MUST list every new fail-closed behavior with one concise
-> concrete example. The human MUST accept the design and every disposition.
+> concrete example and its `Recovery / best next action`, naming the smallest
+> safe action, responsible actor, and retry/resume condition or required human
+> decision. It MUST also preserve both reviewers' exact dispositions. The human
+> MUST accept the design and every disposition.
 > The conclusion commit MUST change only state, revision, and approved
 > dispositions. The same reviewers MUST verify that exact commit before
 > planning starts. After freeze, agents MUST NOT
 > change any whiteboard byte without prior human authorization. Every addition MUST trace
 > to the frozen design. Unexplained scope MUST block delivery.
+
+If only the parent brief omitted unchanged, already approved recovery
+information, re-present it without another review. Repeat review when candidate
+bytes or meaning changed.
 
 - Keep canonical project authorities mutually consistent. Resolve conflicts
   from those authorities and explicit owner decisions; ask the owner when the

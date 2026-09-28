@@ -141,15 +141,17 @@ deferrals, and rejections instead of silently dropping them.
 > [!IMPORTANT]
 > **Hard rule.** Both reviewers MUST approve the candidate before the human
 > gate. The parent response MUST then list every new fail-closed behavior for
-> human disposition with one concise concrete example. The example MUST only
-> explain the behavior; it MUST NOT expand its scope or replace the trigger,
-> response, impact, or recovery boundary. A concluded whiteboard MUST NOT
-> contain a pending row. Use one all-`None` row when none exists; do not invent
-> a behavior or example.
+> human disposition with one concise concrete example and its `Recovery / best
+> next action`. Recovery MUST name the smallest safe action, responsible actor,
+> and retry/resume condition, or the required human decision. The example MUST
+> only explain the behavior; it MUST NOT expand its scope or replace the
+> trigger, response, impact, or recovery boundary. A concluded whiteboard MUST
+> NOT contain a pending row. Use one all-`None` row when none exists; do not
+> invent a behavior, example, or recovery.
 
-| ID | Trigger | Required fail-closed response | Concrete example | Impact | Owner disposition |
-| --- | --- | --- | --- | --- | --- |
-| `<FC01 or None>` | `<condition or None>` | `<behavior or None>` | `<realistic trigger, stopped action, visible or state effect, and recovery or retry when applicable; or None>` | `<effect or None>` | `<Pending, Approved, Rejected, or None>` |
+| ID | Trigger | Required fail-closed response | Concrete example | Impact | Recovery / best next action | Owner disposition |
+| --- | --- | --- | --- | --- | --- | --- |
+| `<FC01 or None>` | `<condition or None>` | `<behavior or None>` | `<realistic trigger, stopped action, and visible or state effect; or None>` | `<effect or None>` | `<smallest safe action, responsible actor, and retry/resume condition—or required human decision; or None>` | `<Pending, Approved, Rejected, or None>` |
 
 ## Design amendments
 
