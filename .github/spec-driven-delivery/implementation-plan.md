@@ -8,9 +8,9 @@ This is the only active-delivery state authority.
 
 | Field | Value |
 | --- | --- |
-| State | `DRAFT` |
+| State | `READY` |
 | Active tasks | `None` |
-| Next ready task | `None` |
+| Next ready task | `T01` |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge |
 | Delivery branch / target | `codex/issue-138-evidence-scope` → `main` |
@@ -18,7 +18,7 @@ This is the only active-delivery state authority.
 | Primary issue / need | [#138](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/138) |
 | Concluded whiteboard | [Working whiteboard](solution-whiteboard.md), `WB-138-1`, frozen at commit `34123b78ca336525978b95e654a5497b801334cb` |
 | Required reviewers | Retained reviewer seats 1 and 2 from design through merge |
-| Last verified | Exact conclusion transition approved by both retained reviewers on 2026-09-28 |
+| Last verified | Exact plan `ff651ee6b7d5cf6692ae725b8052b47d0eca9610` approved by both retained reviewers and accepted by the owner on 2026-09-28 |
 
 ## Governing inputs and delivery boundaries
 
@@ -132,7 +132,7 @@ delivery branch is also the task branch and PR #139 targets `main`.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `PLANNED` | `None` | Deliver evidence-bounded scope as one canonical rule with concise author/reviewer/template/reader guidance and regressions. | No whiteboard change, new policy, universal-proof demand, runtime detector, project-specific migration rule, historical rewrite, or duplicated full policy. | Focused document-model and affected documentation checks; retained reviewer pair; full repository validation at final gate. | `codex/issue-138-evidence-scope`; [PR #139](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/139); target `main` |
+| `T01` | `READY` | `None` | Deliver evidence-bounded scope as one canonical rule with concise author/reviewer/template/reader guidance and regressions. | No whiteboard change, new policy, universal-proof demand, runtime detector, project-specific migration rule, historical rewrite, or duplicated full policy. | Focused document-model and affected documentation checks; retained reviewer pair; full repository validation at final gate. | `codex/issue-138-evidence-scope`; [PR #139](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/139); target `main` |
 
 ## Task specifications and context receipts
 
@@ -161,6 +161,7 @@ delivery branch is also the task branch and PR #139 targets `main`.
 | ID / time | Decision or plan change | Reason / consequence | Affected design, contracts, or tasks | Authority |
 | --- | --- | --- | --- | --- |
 | `2026-09-28` | Use one task and the existing PR targeting `main`. | All changed surfaces express one indivisible small contract; splitting would add coordination without independent value. | `WB138-01`–`WB138-05`, `FC01`, `T01` | Repository branch policy and necessary-complexity goal |
+| `2026-09-28` | Accept implementation plan `ff651ee6b7d5cf6692ae725b8052b47d0eca9610` and release `T01`. | Both retained reviewers approved the corrected plan with no remaining findings. | `T01` readiness | Repository owner |
 
 ## Plan validation and completion
 
