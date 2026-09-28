@@ -225,6 +225,17 @@ to reread every document:
 | Evidence | Passed checks with scope, failed or unrun checks, uncertainty, and residual limits | Appropriate class |
 | Response | Exact decision requested, or explicit confirmation that none remains | `HUMAN_DECISION` or `NONE` |
 
+Every human-gate response MUST also include a distinct assumptions table:
+
+| Assumption | Dangerous-assumption category | Evidence / validation state | Impact if false | Handling |
+| --- | --- | --- | --- | --- |
+| `<material premise>` | `<one of the six categories above>` | `<verified, bounded, or unresolved evidence>` | `<credible consequence>` | `<agent action, disclosure, or human decision>` |
+
+List only material assumptions that affect the candidate, decision, supported
+domain, or residual risk. If none exist, include one `None` row. Do not turn
+verified facts or immaterial implementation details into assumptions merely to
+populate the table.
+
 Use `HUMAN_DECISION` when progress needs human judgment under an existing stop
 boundary, `AGENT_ACTION` for correction within agent authority, `DISCLOSE` for
 material awareness-only information (including accepted limitations) that

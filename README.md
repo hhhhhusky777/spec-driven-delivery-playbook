@@ -509,6 +509,11 @@ Humans receive a concise table with the information needed for judgment:
 | Evidence | Passed, failed, and unrun checks plus residual limits | Appropriate class |
 | Response | The exact decision requested, or confirmation that none remains | `HUMAN_DECISION` or `NONE` |
 
+Every human-gate response also shows material assumptions in their own compact
+table: the assumption, its dangerous-assumption category, current evidence or
+validation state, impact if false, and handling. A `None` row makes the absence
+of material assumptions explicit without filling routine replies with noise.
+
 The classes tell agents what the emphasis means: `HUMAN_DECISION` stops at an
 existing owner boundary, `AGENT_ACTION` is corrected within agent authority,
 `DISCLOSE` keeps material awareness-only information, including accepted

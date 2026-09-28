@@ -270,6 +270,31 @@ test("evidence-bounded scope uses one dangerous-assumption vocabulary", async ()
   assert.match(normalize(whiteboard), /unresolved material scope belongs to the owner.*Do not demand proof for unsupported or imagined cases/i);
 });
 
+test("agent responses expose material assumptions explicitly", async () => {
+  const policy = await read("docs/documentation-quality-policy.md");
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const reviewer = await read("skills/sdd-feature-review/SKILL.md");
+  const readme = await read("README.md");
+  const normalize = value => value.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+
+  for (const document of [policy, workflow, reviewer]) {
+    const normalized = normalize(document);
+    assert.match(normalized, /(?:human-gate|review) response.*assumptions table/i);
+    for (const field of [
+      /assumption/i,
+      /dangerous-assumption category/i,
+      /evidence \/ validation state/i,
+      /impact if false/i,
+      /handling/i,
+    ]) assert.match(normalized, field);
+    assert.match(normalized, /none.*row/i);
+    assert.match(normalized, /verified facts.*immaterial/i);
+  }
+
+  assert.match(normalize(readme), /every human-gate response.*material assumptions.*own compact table/i);
+  assert.match(normalize(readme), /`none` row.*absence of material assumptions/i);
+});
+
 test("feature review cohorts retain context and produce useful change requests", async () => {
   const workflow = await read("skills/sdd-project-workflow/SKILL.md");
   const reviewer = await read("skills/sdd-feature-review/SKILL.md");
