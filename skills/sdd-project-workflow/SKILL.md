@@ -116,6 +116,13 @@ Repeat review when candidate bytes or meaning changed.
 - Follow the project's canonical accepted-design authority. An authorized
   amendment changes only its named scope and repeats conclusion review and
   human acceptance before dependent work resumes.
+- Keep material premises evidence-bounded. Check for unsupported,
+  foreign-owned, incidental-state, single-case-generalization, hidden-dependency,
+  and speculative assumptions. Verify the premise from authority, consume the
+  owning public contract, or narrow and disclose the supported domain. If
+  material authority remains unresolved, block only the affected work and ask
+  the human to define or expand scope. Do not demand universal proof for
+  unsupported or imagined cases.
 - For normal delivery, when the whiteboard conclusion candidate is ready,
   select two isolated reviewers for the feature and require each one to read
   the installed sdd-feature-review skill once. They review the exact design

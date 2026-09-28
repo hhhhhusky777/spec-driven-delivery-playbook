@@ -38,6 +38,34 @@ that satisfies those obligations. Hypothetical flexibility, speculative
 frameworks, duplicate records, and automation that costs more than the risk it
 controls are not required completeness.
 
+## Evidence-bounded scope
+
+> [!IMPORTANT]
+> **Hard rule.** Every material design or implementation premise MUST trace to
+> the accepted outcome and either the current component's owned responsibility
+> or an authoritative external contract. Its evidence MUST be valid for the
+> declared supported domain. An agent MUST NOT turn another component's
+> internals, incidental current state, or one observed case into a durable rule.
+
+Authors and reviewers use one dangerous-assumption vocabulary:
+
+| Category | Scope warning |
+| --- | --- |
+| Unsupported | No accepted authority or sufficient evidence supports the premise |
+| Foreign-owned | The premise depends on another component's internal decision instead of its public contract |
+| Incidental-state | A current observation is treated as a stable invariant |
+| Single-case generalization | One case is assumed to represent the declared supported domain |
+| Hidden dependency | Correctness relies on an undeclared coupling, order, environment, or actor |
+| Speculative assumption | Imagined future behavior expands the accepted outcome without authority |
+
+For a material dangerous assumption, verify it from current authority, replace
+it with the owning component's public contract, or narrow and disclose the
+supported domain. If the required authority remains unresolved, block only the
+affected work and ask the human to define or expand scope. Nonmaterial
+limitations and safely verifiable facts remain agent work. Evidence need not
+prove unsupported or imagined cases, and reviewers MUST NOT demand universal
+proof or speculative generalization.
+
 The [error-handling framework](error-handling.md) owns diagnosis, recovery, and
 escalation. Other documents link to it and state only local consequences.
 

@@ -114,6 +114,27 @@ These goals are constraints on the result, not a script. Project policies and
 owner decisions remain authoritative, but routine engineering choices stay
 with the agent.
 
+### Keep scope evidence-bounded
+
+The playbook prevents a current observation or another component's internal
+state from silently becoming a permanent design rule. Material premises must
+support the accepted outcome, respect component ownership or public contracts,
+and have evidence valid for the declared supported domain. Agents check for
+unsupported, foreign-owned, incidental-state, single-case-generalization,
+hidden-dependency, and speculative assumptions, then verify, replace, or bound
+them. Only unresolved material authority returns to the human; the playbook does
+not demand proof for every imaginable future case.
+
+For example, a deployment change should not hard-code every database migration
+as `1 → 2` when the upgrade component owns migration paths. It should consume
+that component's public contract or explicitly bound what it supports. The
+canonical rule is in the
+[documentation quality policy](docs/documentation-quality-policy.md#evidence-bounded-scope).
+Its industry foundations are Microsoft's
+[Architectural principles](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles)
+and AWS's
+[Workload and scope](https://docs.aws.amazon.com/wellarchitected/latest/userguide/workload-and-scope.html).
+
 ```mermaid
 flowchart LR
     B["Clear boundaries"] --> O["Stable outcome"]

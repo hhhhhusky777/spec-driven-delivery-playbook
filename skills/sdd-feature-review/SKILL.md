@@ -105,6 +105,13 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > approach that protects the accepted outcome, or when it adds speculative
 > complexity.
 >
+> Treat a material premise that is unsupported, foreign-owned,
+> incidental-state, a single-case generalization, a hidden dependency, or a
+> speculative assumption as a scope finding. Require authoritative evidence,
+> the owning public contract, or an explicit supported-domain boundary. Block
+> only when material authority remains unresolved; do not demand universal
+> proof or future-case generalization beyond the accepted outcome.
+>
 > Review for fitness to the accepted outcome, not perfection: perfect code is
 > not an attainable approval standard. Challenge the proportionality of your
 > own findings and recommendations, not only the implementation. A real,

@@ -58,6 +58,12 @@ conversation verbatim.
 
 ### Assumptions
 
+For every material premise, check whether it is unsupported, foreign-owned,
+incidental-state, a single-case generalization, a hidden dependency, or
+a speculative assumption. Verify it, consume the owning public contract, or
+bound the supported domain; unresolved material scope belongs to the owner. Do
+not demand proof for unsupported or imagined cases.
+
 | ID | Assumption | Failure impact | Validation / state |
 | --- | --- | --- | --- |
 | `<A01>` | `<temporary belief>` | `<consequence if false>` | `<how and when resolved>` |

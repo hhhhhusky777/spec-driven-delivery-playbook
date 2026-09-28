@@ -8,9 +8,9 @@ This is the only active-delivery state authority.
 
 | Field | Value |
 | --- | --- |
-| State | `READY` |
+| State | `VALIDATING` |
 | Active tasks | `None` |
-| Next ready task | `T01` |
+| Next ready task | `None` |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge |
 | Delivery branch / target | `codex/issue-138-evidence-scope` → `main` |
@@ -18,7 +18,7 @@ This is the only active-delivery state authority.
 | Primary issue / need | [#138](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/138) |
 | Concluded whiteboard | [Working whiteboard](solution-whiteboard.md), `WB-138-1`, frozen at commit `34123b78ca336525978b95e654a5497b801334cb` |
 | Required reviewers | Retained reviewer seats 1 and 2 from design through merge |
-| Last verified | Exact plan `ff651ee6b7d5cf6692ae725b8052b47d0eca9610` approved by both retained reviewers and accepted by the owner on 2026-09-28 |
+| Last verified | `T01` implementation complete; 18/18 focused document-model tests and all affected documentation checks passed on 2026-09-28; final audit/review pending |
 
 ## Governing inputs and delivery boundaries
 
@@ -66,12 +66,12 @@ require the final-candidate review.
 
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
-| `T01` | `WB138-01`: canonical policy defines evidence-bounded scope and declared supported domain | Document-model assertions and semantic author/reviewer inspection | planned | focused task work |
-| `T01` | `WB138-02`: author and reviewer guidance use exactly the six accepted categories without copying the full policy | Cross-document assertions | planned | focused task work |
-| `T01` | `WB138-03`, `FC01`: only unresolved material scope authority blocks; verification, public contract, or explicit bounding permits progress | Workflow/reviewer assertions and concrete example inspection | planned | focused task work |
-| `T01` | `WB138-04`: reviewers reject unsupported premises without demanding universal proof or speculative generalization | Reviewer-skill assertions and retained-reviewer inspection | planned | focused task work |
-| `T01` | `WB138-05`: README cites only the selected Microsoft and AWS references for this rule | Link/text assertions and documentation checks | planned | focused task work |
-| `T01` | All changed Markdown, templates, skills, and links remain coherent | Full repository validation | deferred until final gate; any missing non-focused coverage is recorded after focused tests | final-gate addition/run |
+| `T01` | `WB138-01`: canonical policy defines evidence-bounded scope and declared supported domain | Document-model assertions and semantic author/reviewer inspection | implemented; focused checks passed | focused task work |
+| `T01` | `WB138-02`: author and reviewer guidance use exactly the six accepted categories without copying the full policy | Cross-document assertions | implemented; focused checks passed | focused task work |
+| `T01` | `WB138-03`, `FC01`: only unresolved material scope authority blocks; verification, public contract, or explicit bounding permits progress | Workflow/reviewer assertions and concrete example inspection | implemented; focused checks passed | focused task work |
+| `T01` | `WB138-04`: reviewers reject unsupported premises without demanding universal proof or speculative generalization | Reviewer-skill assertions and retained-reviewer inspection | implemented; focused checks passed | focused task work |
+| `T01` | `WB138-05`: README cites only the selected Microsoft and AWS references for this rule | Link/text assertions and documentation checks | implemented; focused checks passed | focused task work |
+| `T01` | All changed Markdown, templates, skills, and links remain coherent | Full repository validation | No missing non-focused test identified; full suite remains unrun until final gate. | final-gate run |
 
 ## Proposed design
 
@@ -132,7 +132,7 @@ delivery branch is also the task branch and PR #139 targets `main`.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `READY` | `None` | Deliver evidence-bounded scope as one canonical rule with concise author/reviewer/template/reader guidance and regressions. | No whiteboard change, new policy, universal-proof demand, runtime detector, project-specific migration rule, historical rewrite, or duplicated full policy. | Focused document-model and affected documentation checks; retained reviewer pair; full repository validation at final gate. | `codex/issue-138-evidence-scope`; [PR #139](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/139); target `main` |
+| `T01` | `DONE` | `None` | Deliver the canonical evidence-bounded scope rule with concise author/reviewer/template/reader guidance and regressions. | No whiteboard change, new policy, universal-proof demand, runtime detector, project-specific migration rule, historical rewrite, or duplicated full policy. | 18/18 focused document-model tests; documentation lint, structure, lifecycle, Mermaid, and diff checks passed; retained review and full final validation pending. | `codex/issue-138-evidence-scope`; [PR #139](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/139); target `main` |
 
 ## Task specifications and context receipts
 
@@ -146,7 +146,7 @@ delivery branch is also the task branch and PR #139 targets `main`.
 | Critical obligations | Do not modify frozen whiteboard; keep one canonical policy; use exactly six categories; stop only at material unresolved authority; preserve anti-over-engineering rules. |
 | Required evidence | Focused cross-document tests; exact implementation audit by the author and both retained reviewers before final-gate test additions/runs; recorded missing-test completion and affected focused checks; exact final-candidate approval by both retained reviewers; full validation; human merge authority. |
 | Context receipt | Manifest/runtime current at `d1df74c1dc548ac4397b14018a4d162d8ba32135`; owner-approved whiteboard frozen at `34123b7`; both retained reviewers approved the conclusion transition; no open owner decision. |
-| Actual result | Pending. |
+| Actual result | Added one canonical rule, six-category author/reviewer/template prompts, proportional material-scope routing, README explanation with the two approved references, and focused cross-document regression coverage. No missing non-focused test was identified; full validation remains deferred to the final gate. |
 
 ## Recovery, decisions, and change control
 
@@ -169,9 +169,9 @@ delivery branch is also the task branch and PR #139 targets `main`.
 
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
-| Accepted design delivered | Every `WB138` point and `FC01` maps to `T01` with no unexplained addition. | pending |
-| Applicable validation passed | Focused affected checks; pre-final author-plus-two-reviewer implementation audit; missing-test reconciliation/addition; focused recheck; exact final-candidate approval; then full validation. | pending |
-| Compatibility and operations safe | Existing scope, review, and error-handling contracts remain coherent; no historical archive rewrite. | pending |
+| Accepted design delivered | Every `WB138` point and `FC01` maps to `T01` with no unexplained addition. | Implemented; author audit and retained-reviewer approval pending. |
+| Applicable validation passed | Focused affected checks; pre-final author-plus-two-reviewer implementation audit; missing-test reconciliation/addition; focused recheck; exact final-candidate approval; then full validation. | Focused checks passed; audit/review/full validation pending. |
+| Compatibility and operations safe | Existing scope, review, and error-handling contracts remain coherent; no historical archive rewrite. | Implemented prospectively; final review pending. |
 | Merge-ready canonical state | Policy, template, skills, README, tests, plan, archive/reset candidate, and PR summary agree before final review. | pending |
 | PR-owned review and delivery | PR #139 holds reviewer findings, checks, human authority, merge, and target verification. | [PR #139](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/139) |
 | Feature cleanup complete | Concluded whiteboard and completed plan archived together; live whiteboard reset; live plan removed; owned worktree and branch cleaned after verified merge. | pending |
@@ -180,4 +180,4 @@ delivery branch is also the task branch and PR #139 targets `main`.
 
 | Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
 | --- | --- | --- | --- |
-| `WB-138-1` / `T01` | Evidence-bounded scope is canonical, portable, concise, proportional, and regression-protected. | Pending implementation. | Plan review/acceptance, implementation, final gates, human merge, and cleanup. |
+| `WB-138-1` / `T01` | Evidence-bounded scope is canonical, portable, concise, proportional, and regression-protected. | Implemented across policy, template, skills, README, and focused tests with no whiteboard or historical rewrite. | Author/reviewer audit, final review/full validation, human merge, and cleanup. |
