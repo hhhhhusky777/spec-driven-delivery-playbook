@@ -4,11 +4,11 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [#135](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/135) |
 | Owner | Repository owner |
-| Concluded design revision | `WB-135-1 candidate` |
-| Open owner decisions | Approve `WB-135-1` and `FC01` after two-agent design review |
+| Concluded design revision | `WB-135-1` |
+| Open owner decisions | `None` |
 
 ## Discussion draft
 
@@ -92,7 +92,7 @@
 
 | ID | Trigger | Required fail-closed response | Concrete example | Impact | Recovery / best next action | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- |
-| `FC01` | A prospective concluded whiteboard lacks the recovery column, has blank/`None` material recovery, has recovery the author or reviewers judge semantically insufficient, or the parent human brief drops the reviewed recovery information or reviewer dispositions. | Block conclusion, reviewer approval, or the human decision request at the boundary that detects the omission; do not begin dependent planning. | A conflict rejection names no responsible actor or retry condition, or the whiteboard contains them but the parent brief omits them; the applicable gate stops instead of asking the owner to infer recovery. | Adds one explicit design field and prevents approval of an operationally incomplete or incompletely presented stop boundary. | For a candidate gap, the author adds the smallest safe action, actor, and retry/resume condition (or required human decision), reruns validation, and returns it to the same reviewers. For a brief-only omission, the parent corrects and re-presents the exact reviewer-approved information with links to both approvals; repeat candidate review only if bytes or meaning change. | Pending owner approval after reviewer approval |
+| `FC01` | A prospective concluded whiteboard lacks the recovery column, has blank/`None` material recovery, has recovery the author or reviewers judge semantically insufficient, or the parent human brief drops the reviewed recovery information or reviewer dispositions. | Block conclusion, reviewer approval, or the human decision request at the boundary that detects the omission; do not begin dependent planning. | A conflict rejection names no responsible actor or retry condition, or the whiteboard contains them but the parent brief omits them; the applicable gate stops instead of asking the owner to infer recovery. | Adds one explicit design field and prevents approval of an operationally incomplete or incompletely presented stop boundary. | For a candidate gap, the author adds the smallest safe action, actor, and retry/resume condition (or required human decision), reruns validation, and returns it to the same reviewers. For a brief-only omission, the parent corrects and re-presents the exact reviewer-approved information with links to both approvals; repeat candidate review only if bytes or meaning change. | Approved by owner on 2026-09-28 |
 
 ## Design amendments
 
