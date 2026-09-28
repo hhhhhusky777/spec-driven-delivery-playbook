@@ -256,6 +256,10 @@ test("evidence-bounded scope uses one dangerous-assumption vocabulary", async ()
 
   assert.match(readme, /https:\/\/learn\.microsoft\.com\/en-us\/dotnet\/architecture\/modern-web-apps-azure\/architectural-principles/);
   assert.match(readme, /https:\/\/docs\.aws\.amazon\.com\/wellarchitected\/latest\/userguide\/workload-and-scope\.html/);
+  assert.match(
+    normalize(workflow),
+    /Verify the premise from authority.*owning public contract.*narrow and disclose the supported domain.*material authority remains unresolved.*block only the affected work.*ask the human to define or expand scope/i,
+  );
   assert.match(normalize(reviewer), /Block only when material authority remains unresolved.*do not demand universal proof/i);
   assert.match(normalize(whiteboard), /unresolved material scope belongs to the owner.*Do not demand proof for unsupported or imagined cases/i);
 });
