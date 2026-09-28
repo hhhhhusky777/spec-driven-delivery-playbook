@@ -58,10 +58,11 @@ MUST audit the exact implementation candidate before any missing final-gate test
 is added or any full validation is run. They MUST verify strict conformance to
 the frozen whiteboard, maximum practical reuse of existing code and frameworks,
 and absence of unauthorized or redundant behavior. After that audit, add the
-recorded missing tests, run the full applicable validation, and return the exact
-final candidate to the same reviewers. Any implementation-content correction
-invalidates the audit and repeats it; test-only additions still require the
-final-candidate review.
+recorded missing tests, run affected focused checks, and return the exact final
+candidate to the same reviewers. Run full applicable validation only after both
+reviewers approve that exact final candidate. Any implementation-content
+correction invalidates the audit and repeats it; test-only additions still
+require the final-candidate review.
 
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
@@ -143,7 +144,7 @@ delivery branch is also the task branch and PR #139 targets `main`.
 | Source boundary | `docs/documentation-quality-policy.md`, `templates/discovery/solution-whiteboard.md`, `skills/sdd-project-workflow/SKILL.md`, `skills/sdd-feature-review/SKILL.md`, `README.md`, and directly affected tests. |
 | Consumed dependencies | Frozen `WB-138-1`, approved `FC01`, current branch/review/error-handling policies, Microsoft Architectural Principles, and AWS Workload and Scope. |
 | Critical obligations | Do not modify frozen whiteboard; keep one canonical policy; use exactly six categories; stop only at material unresolved authority; preserve anti-over-engineering rules. |
-| Required evidence | Focused cross-document tests; exact implementation audit by the author and both retained reviewers before final-gate test additions/runs; recorded missing-test completion; full validation; exact final-candidate approval by both retained reviewers; human merge authority. |
+| Required evidence | Focused cross-document tests; exact implementation audit by the author and both retained reviewers before final-gate test additions/runs; recorded missing-test completion and affected focused checks; exact final-candidate approval by both retained reviewers; full validation; human merge authority. |
 | Context receipt | Manifest/runtime current at `d1df74c1dc548ac4397b14018a4d162d8ba32135`; owner-approved whiteboard frozen at `34123b7`; both retained reviewers approved the conclusion transition; no open owner decision. |
 | Actual result | Pending. |
 
@@ -168,7 +169,7 @@ delivery branch is also the task branch and PR #139 targets `main`.
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
 | Accepted design delivered | Every `WB138` point and `FC01` maps to `T01` with no unexplained addition. | pending |
-| Applicable validation passed | Focused affected checks; pre-final author-plus-two-reviewer implementation audit; missing-test reconciliation/addition; full final gate; exact final-candidate re-review. | pending |
+| Applicable validation passed | Focused affected checks; pre-final author-plus-two-reviewer implementation audit; missing-test reconciliation/addition; focused recheck; exact final-candidate approval; then full validation. | pending |
 | Compatibility and operations safe | Existing scope, review, and error-handling contracts remain coherent; no historical archive rewrite. | pending |
 | Merge-ready canonical state | Policy, template, skills, README, tests, plan, archive/reset candidate, and PR summary agree before final review. | pending |
 | PR-owned review and delivery | PR #139 holds reviewer findings, checks, human authority, merge, and target verification. | [PR #139](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/139) |
