@@ -19,6 +19,7 @@
 | `DR03` | The recovery entry must identify the smallest safe action, responsible actor, and retry or resume condition. | accepted |
 | `DR04` | Preserve agent discretion: require an actionable outcome, not one prescribed implementation method. | accepted |
 | `DR05` | Keep one canonical table and concise consuming guidance; do not duplicate a new policy section. | accepted |
+| `DR06` | Automated validation can prove structure and presence; authors and reviewers must judge semantic actionability and proportionality. The human brief must preserve the reviewed recovery information. | accepted |
 
 ## Current understanding
 
@@ -45,8 +46,8 @@
 | --- | --- | --- | --- | --- |
 | `R01` | Add `Recovery / best next action` to the fail-closed approval table without removing existing fields. | Required | Template and examples expose the column. | Owner |
 | `R02` | Each material row states the smallest safe recovery action, responsible actor, and retry or resume condition. | Required | Policy, author skill, reviewer skill, and validation agree. | Owner / error-handling authority |
-| `R03` | The human response preserves the recovery information after reviewer approval. | Required | Human-brief guidance explicitly requires it. | Owner |
-| `R04` | Missing or non-actionable recovery information blocks conclusion prospectively. | Required | Lifecycle checker and negative regression reject it. | Stable outcome |
+| `R03` | The human response preserves the recovery information and cites both reviewers' exact-candidate approval of it. | Required | Human-brief guidance explicitly requires it and blocks an incomplete owner request. | Owner |
+| `R04` | Automated validation rejects a missing column or blank/`None` material recovery; authors and reviewers judge action, actor, safe resume, and proportionality. | Required | Structural negative regressions and semantic review enforce their respective boundaries. | Stable outcome |
 | `R05` | Guidance remains concise and outcome-based. | Required | No new document or prescriptive recovery workflow is added. | Six goals |
 
 ## Options, experiments, and tradeoffs
@@ -64,16 +65,17 @@
 | `D01` | Add a dedicated `Recovery / best next action` column after `Impact`. | `O01`, `O03` | Makes recovery independently reviewable with the smallest schema change. | Owner / `O02` |
 | `D02` | Require action, actor, and retry/resume condition, or an explicit human-decision boundary. | Free-form advice. | Produces operationally useful information without prescribing implementation. | Owner / error-handling authority |
 | `D03` | Enforce the column only for prospective concluded whiteboards and preserve historical archives. | Rewrite history. | Keeps current guidance correct without altering accepted evidence. | Compatibility boundary |
-| `D04` | Reviewers assess whether the recovery path makes the fail-closed behavior proportionate. | Check only column presence. | The column exists to improve human judgment, not merely satisfy syntax. | Owner |
+| `D04` | Automation checks column presence and nonblank/non-`None` material values; authors and reviewers assess action, actor, safe resume, and proportionality. | Free-text semantic heuristics. | Separates deterministic structure from contextual engineering judgment. | Owner / reviewers |
+| `D05` | An owner-decision request that drops reviewed recovery information is incomplete and must be corrected before the human gate. | Treat the whiteboard as sufficient even when the brief omits the field. | The human is not expected to reconstruct missing information from the document. | Owner |
 
 ## Concluded design
 
 | Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
 | `WB135-01` | Every new fail-closed behavior has a distinct `Recovery / best next action`. | Keep trigger, required response, concrete example, impact, and disposition unchanged. | Template and reader guidance agree. |
-| `WB135-02` | Recovery identifies the smallest safe action, responsible actor, and condition for retry or resume; otherwise it names the required human decision. | Outcome-based wording preserves project-specific judgment. | Positive and negative fixtures cover the rule. |
-| `WB135-03` | The parent human response includes the recovery field after two-agent design review. | The example remains explanatory and cannot expand the behavior. | Workflow and reviewer contracts agree. |
-| `WB135-04` | A prospective conclusion missing actionable recovery information is invalid. | Historical archives remain unchanged. | Lifecycle validation rejects missing or empty recovery. |
+| `WB135-02` | Recovery identifies the smallest safe action, responsible actor, and condition for retry or resume; otherwise it names the required human decision. | Outcome-based wording preserves project-specific judgment. | Authors and reviewers approve semantic sufficiency and proportionality. |
+| `WB135-03` | The parent human response includes the recovery field and both exact-candidate reviewer dispositions. | The example remains explanatory and cannot expand the behavior. | Workflow and reviewer contracts block an incomplete human gate. |
+| `WB135-04` | A prospective conclusion without the column or with blank/`None` material recovery is structurally invalid; semantic insufficiency blocks author/reviewer approval. | Historical archives remain unchanged; automation does not interpret free-form prose. | Lifecycle validation and review each enforce their bounded responsibility. |
 
 ## Draft-to-conclusion reconciliation
 
@@ -84,12 +86,13 @@
 | `DR03` | `WB135-02` | accepted | The minimum operational fields are explicit. |
 | `DR04` | `WB135-02` | accepted | Only the outcome is fixed; the safe method remains contextual. |
 | `DR05` | `WB135-03`, `WB135-04` | accepted | Existing canonical surfaces carry the rule without a new artifact. |
+| `DR06` | `WB135-02`, `WB135-03`, `WB135-04` | accepted | Structure, semantic review, and human presentation have distinct enforcement boundaries. |
 
 ## Newly introduced fail-closed behaviors
 
 | ID | Trigger | Required fail-closed response | Concrete example | Impact | Recovery / best next action | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- |
-| `FC01` | A prospective concluded whiteboard omits `Recovery / best next action`, or a material row leaves it empty or non-actionable. | Do not conclude the whiteboard or begin dependent planning. | A design says a conflicting request is rejected but gives no actor or condition for retry; validation blocks conclusion rather than leaving the owner to infer recovery. | Adds one explicit design field and prevents approval of an operationally incomplete stop boundary. | Author supplies the smallest safe action, responsible actor, and retry/resume condition—or names the required human decision—then reruns validation and returns the candidate to the same reviewers. | Pending owner approval after reviewer approval |
+| `FC01` | A prospective concluded whiteboard lacks the recovery column, has blank/`None` material recovery, has recovery the author or reviewers judge semantically insufficient, or the parent human brief drops the reviewed recovery information or reviewer dispositions. | Block conclusion, reviewer approval, or the human decision request at the boundary that detects the omission; do not begin dependent planning. | A conflict rejection names no responsible actor or retry condition, or the whiteboard contains them but the parent brief omits them; the applicable gate stops instead of asking the owner to infer recovery. | Adds one explicit design field and prevents approval of an operationally incomplete or incompletely presented stop boundary. | For a candidate gap, the author adds the smallest safe action, actor, and retry/resume condition (or required human decision), reruns validation, and returns it to the same reviewers. For a brief-only omission, the parent corrects and re-presents the exact reviewer-approved information with links to both approvals; repeat candidate review only if bytes or meaning change. | Pending owner approval after reviewer approval |
 
 ## Design amendments
 
@@ -101,9 +104,9 @@
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Decisions made | Add one recovery column; require action, actor, and retry/resume condition; preserve historical archives. | `HUMAN_DECISION` |
+| Decisions made | Add one recovery column; require action, actor, and retry/resume condition; separate structural automation from semantic review; preserve historical archives. | `HUMAN_DECISION` |
 | Important boundaries | Examples stay explanatory; recovery cannot expand scope or prescribe one implementation method. | `DISCLOSE` |
 | Alternatives rejected | Optional recovery inside examples and a separate recovery artifact. | `DISCLOSE` |
 | Remaining gaps or risks | None identified before independent design review. | `NONE` |
-| Newly introduced fail-closed behavior | `FC01`: incomplete recovery information blocks prospective conclusion; the author completes it and repeats validation/review. | `HUMAN_DECISION` |
+| Newly introduced fail-closed behavior | `FC01`: incomplete recovery structure, semantics, or human-brief presentation blocks the applicable gate; candidate gaps repeat validation/review, while brief-only omissions are corrected against unchanged reviewer-approved evidence. | `HUMAN_DECISION` |
 | Decision requested | After both reviewers approve, accept `WB-135-1` and `FC01` so planning may begin. | `HUMAN_DECISION` |
