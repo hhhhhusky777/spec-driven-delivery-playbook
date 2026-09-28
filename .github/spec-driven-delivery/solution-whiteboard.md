@@ -4,11 +4,11 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [#138](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/138) |
 | Owner | Repository owner |
-| Concluded design revision | Candidate `WB-138-1` |
-| Open owner decisions | `None` before independent design review |
+| Concluded design revision | `WB-138-1` |
+| Open owner decisions | `None` |
 
 ## Discussion draft
 
@@ -105,7 +105,7 @@
 
 | ID | Trigger | Required fail-closed response | Concrete example | Impact | Recovery / best next action | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- |
-| `FC01` | A material design or implementation decision matches any of the six dangerous-assumption categories and the agent cannot verify, replace, or bound it within current authority. | Block the affected design, implementation, or approval; do not encode the assumption as an invariant or silently expand scope. | A deployment change hard-codes that every database upgrade is `1 → 2` although the upgrade script owns migration paths; a later `3 → 4` release would fail for a reason outside deployment's contract. | May pause one material boundary, but prevents brittle cross-component coupling and unsupported long-lived rules. | The author verifies authoritative evidence, changes the design to consume the owning component's public contract, or explicitly narrows the supported domain. If none is authorized, the repository owner defines or expands scope. Affected work resumes only after required validation, both retained reviewers approve changed candidate bytes, and the owner accepts any human-defined scope. | Pending independent review and owner acceptance |
+| `FC01` | A material design or implementation decision matches any of the six dangerous-assumption categories and the agent cannot verify, replace, or bound it within current authority. | Block the affected design, implementation, or approval; do not encode the assumption as an invariant or silently expand scope. | A deployment change hard-codes that every database upgrade is `1 → 2` although the upgrade script owns migration paths; a later `3 → 4` release would fail for a reason outside deployment's contract. | May pause one material boundary, but prevents brittle cross-component coupling and unsupported long-lived rules. | The author verifies authoritative evidence, changes the design to consume the owning component's public contract, or explicitly narrows the supported domain. If none is authorized, the repository owner defines or expands scope. Affected work resumes only after required validation, both retained reviewers approve changed candidate bytes, and the owner accepts any human-defined scope. | Approved by owner on 2026-09-28 |
 
 ## Design amendments
 
