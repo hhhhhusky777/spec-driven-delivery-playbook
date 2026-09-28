@@ -53,10 +53,10 @@ This is the only active-delivery state authority.
 
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
-| `T01` | `WB135-01`: canonical recovery column exists | Document-model assertion and maintained-template fixture | implemented in task | focused task work |
-| `T01` | `WB135-02`: material recovery cannot be blank/`None` | Positive/negative lifecycle fixtures | implemented in task | focused task work |
-| `T01` | `WB135-03`: author, reviewer, and human-brief contracts agree | Cross-document assertions | implemented in task | focused task work |
-| `T01` | `WB135-04`: structural versus semantic boundaries remain distinct and historical archives stay valid | Lifecycle regression plus full repository suite | implemented in task; full run deferred | focused implementation; full run at final gate |
+| `T01` | `WB135-01`: canonical recovery column exists | Document-model assertion and maintained-template fixture | planned | focused task work |
+| `T01` | `WB135-02`: recovery names an action, actor, and safe retry/resume condition or human decision | Cross-document assertions plus author and reviewer semantic inspection | planned | focused task work and exact-candidate review |
+| `T01` | `WB135-03`: author, reviewer, and human-brief contracts agree | Cross-document assertions | planned | focused task work |
+| `T01` | `WB135-04`: missing-column and blank/`None` material recovery fail structurally while historical archives remain valid and prose is not parsed semantically | Positive/negative lifecycle fixtures plus full repository suite | planned; full run deferred | focused implementation; full run at final gate |
 
 ## Proposed design
 
