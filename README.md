@@ -125,10 +125,10 @@ hidden-dependency, and speculative assumptions, then verify, replace, or bound
 them. Only unresolved material authority returns to the human; the playbook does
 not demand proof for every imaginable future case.
 
-For example, a deployment change should not hard-code every database migration
-as `1 → 2` when the upgrade component owns migration paths. It should consume
-that component's public contract or explicitly bound what it supports. The
-canonical rule is in the
+For example, a consumer should not assume the first item from an API is the
+newest merely because current responses happen to be sorted that way. It should
+use an ordering guarantee from the API contract, request an explicit sort, or
+bound and disclose that behavior as unsupported. The canonical rule is in the
 [documentation quality policy](docs/documentation-quality-policy.md#evidence-bounded-scope).
 Its industry foundations are Microsoft's
 [Architectural principles](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles)
