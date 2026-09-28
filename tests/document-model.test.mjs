@@ -284,6 +284,7 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(normalizedPolicy, /every new fail-closed behavior with one concise concrete example/);
   assert.match(normalizedPolicy, /example is explanatory, not normative or exhaustive/);
   assert.match(normalizedPolicy, /smallest safe action, responsible actor, and retry\/resume condition/);
+  assert.match(normalizedPolicy, /brief MUST preserve both reviewers' exact dispositions/);
   assert.match(normalizedPolicy, /Automation MUST verify that the recovery column exists/);
   assert.match(normalizedPolicy, /MUST NOT infer semantic quality from free-form prose/);
   assert.match(normalizedWorkflow, /list every new fail-closed behavior with one concise concrete example/);
@@ -295,6 +296,7 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(normalizedReviewer, /When no new behavior exists, require `None`; do not invent a behavior, example, or recovery/);
   assert.match(normalizedWhiteboard, /Concrete example/);
   assert.match(normalizedWhiteboard, /Recovery \/ best next action/);
+  assert.match(normalizedWhiteboard, /both reviewers' exact dispositions/);
   assert.match(normalizedWhiteboard, /example MUST only explain the behavior; it MUST NOT expand its scope/);
   assert.match(readme, /each new fail-closed behavior\s+one concise concrete example/);
   assert.match(readme, /smallest safe recovery action, responsible\s+actor, and retry\/resume condition/);

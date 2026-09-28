@@ -177,5 +177,5 @@ stay in the implementation plan.
 | Important boundaries | `<safety, compatibility, policy, or authority>` | `<class>` |
 | Alternatives rejected | `<only material alternatives>` | `<class>` |
 | Remaining gaps or risks | `<summary or None>` | `<class>` |
-| Newly introduced fail-closed behavior | `<complete list after two-agent design review, with effect, one concise explanatory example, and recommendation; or None>` | `<HUMAN_DECISION or NONE>` |
+| Newly introduced fail-closed behavior | `<complete list after two-agent design review, with effect, one concise explanatory example, Recovery / best next action, and both reviewers' exact dispositions; or None>` | `<HUMAN_DECISION or NONE>` |
 | Decision requested | `<exact request>` | `<class>` |

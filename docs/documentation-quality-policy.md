@@ -64,10 +64,11 @@ not duplicate history or successful-tool transcripts.
 > The human brief MUST list every new fail-closed behavior with one concise
 > concrete example and its `Recovery / best next action`. Recovery MUST name
 > the smallest safe action, responsible actor, and retry/resume condition, or
-> the required human decision. The example is explanatory, not normative or
-> exhaustive; it MUST NOT expand the behavior or substitute for its trigger,
-> effect, impact, or recovery boundary. The human MUST accept the design and
-> every disposition. The conclusion commit MUST change only state, revision, and
+> the required human decision. The brief MUST preserve both reviewers' exact
+> dispositions. The example is explanatory, not normative or exhaustive; it
+> MUST NOT expand the behavior or substitute for its trigger, effect, impact,
+> or recovery boundary. The human MUST accept the design and every disposition.
+> The conclusion commit MUST change only state, revision, and
 > approved dispositions. Both reviewers MUST verify that exact commit before
 > the whiteboard freezes and planning starts.
 >
@@ -83,7 +84,8 @@ Automation MUST verify that the recovery column exists and that every material
 row has a nonblank, non-`None` value. It MUST NOT infer semantic quality from
 free-form prose. Authors and reviewers MUST judge whether the action, actor,
 safe retry/resume condition, and proportionality are adequate. Missing recovery
-in the candidate or human brief blocks the applicable gate.
+or reviewer disposition in the candidate or human brief blocks the applicable
+gate.
 
 ## Risk-focused test design
 

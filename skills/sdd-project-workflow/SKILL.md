@@ -91,8 +91,8 @@ review the required whiteboard and plan before dependent work continues.
 > to the frozen design. Unexplained scope MUST block delivery.
 
 If only the parent brief omitted unchanged, already approved recovery
-information, re-present it without another review. Repeat review when candidate
-bytes or meaning changed.
+information or reviewer dispositions, re-present them without another review.
+Repeat review when candidate bytes or meaning changed.
 
 - Keep canonical project authorities mutually consistent. Resolve conflicts
   from those authorities and explicit owner decisions; ask the owner when the
