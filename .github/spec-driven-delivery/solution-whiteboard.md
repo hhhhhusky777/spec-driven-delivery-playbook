@@ -56,7 +56,7 @@
 | ID | Option or experiment | Benefits | Costs / risks | Evidence needed | Disposition |
 | --- | --- | --- | --- | --- | --- |
 | `O01` | Ban assumptions. | Simple slogan. | Impossible in real design; would cause excessive human stops. | Industry principles and practical review. | rejected |
-| `O02` | Use an evidence/ownership/stability/generality/consequence/authority self-check backed by six dangerous categories. | Detects the harmful assumptions while preserving judgment. | Requires concise semantic review. | Cross-document review and tests. | accepted |
+| `O02` | Use the six dangerous-assumption categories as the sole self-check vocabulary. | Detects the harmful assumptions while preserving judgment. | Requires concise semantic review. | Cross-document review and tests. | accepted |
 | `O03` | Require proof for every possible case. | Appears maximally safe. | Unbounded, impossible, and over-engineered; expands beyond the declared supported domain. | None. | rejected |
 | `O04` | Let only reviewers identify scope assumptions. | Less author guidance. | Finds avoidable mistakes late and encourages review loops. | Existing review experience. | rejected |
 | `O05` | Create a separate scope policy. | Dedicated space. | Adds another authority and duplicates documentation policy. | None. | rejected |
@@ -76,7 +76,7 @@
 | --- | --- | --- | --- | --- |
 | `D01` | Name the rule **Evidence-bounded scope**. | “Avoid assumptions”; “universal design.” | States the positive outcome without banning legitimate assumptions. | Owner discussion |
 | `D02` | Define in-scope decisions by outcome authority, ownership/contract, and evidence for the declared supported domain. | One-case intuition or universal applicability. | Matches established explicit-dependency and bounded-context principles. | Microsoft; AWS |
-| `D03` | Require author self-check across evidence, ownership, stability, generality, consequence, and authority. | A prescriptive implementation workflow. | Provides reusable judgment criteria without fixing one path. | Owner discussion |
+| `D03` | Require author self-check against the six dangerous-assumption categories. | A second checklist or prescriptive implementation workflow. | Keeps one vocabulary and reusable judgment criteria without fixing one path. | Owner discussion |
 | `D04` | Material unresolved assumptions fail closed to human scope definition; ordinary verifiable assumptions remain agent work. | Always continue; always stop. | Preserves both safety and agent discretion. | Owner discussion |
 | `D05` | Reviewers block only material unsupported scope and reject speculative expansion. | Perfect-generalization review. | Prevents brittle coupling without creating over-engineering loops. | Existing proportional review authority |
 
@@ -105,7 +105,7 @@
 
 | ID | Trigger | Required fail-closed response | Concrete example | Impact | Recovery / best next action | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- |
-| `FC01` | A material design or implementation decision depends on an assumption that lacks authoritative evidence, belongs to another component's internal responsibility, or generalizes a single case, and the agent cannot verify or bound it within current authority. | Block the affected design, implementation, or approval; do not encode the assumption as an invariant or silently expand scope. | A deployment change hard-codes that every database upgrade is `1 → 2` although the upgrade script owns migration paths; a later `3 → 4` release would fail for a reason outside deployment's contract. | May pause one material boundary, but prevents brittle cross-component coupling and unsupported long-lived rules. | The author verifies an authoritative contract, changes the design to consume the owning component's public interface, or explicitly narrows the supported domain. If none is authorized, the repository owner defines or expands scope; changed candidate bytes return to the same reviewers. | Pending independent review and owner acceptance |
+| `FC01` | A material design or implementation decision matches any of the six dangerous-assumption categories and the agent cannot verify, replace, or bound it within current authority. | Block the affected design, implementation, or approval; do not encode the assumption as an invariant or silently expand scope. | A deployment change hard-codes that every database upgrade is `1 → 2` although the upgrade script owns migration paths; a later `3 → 4` release would fail for a reason outside deployment's contract. | May pause one material boundary, but prevents brittle cross-component coupling and unsupported long-lived rules. | The author verifies authoritative evidence, changes the design to consume the owning component's public contract, or explicitly narrows the supported domain. If none is authorized, the repository owner defines or expands scope. Affected work resumes only after required validation, both retained reviewers approve changed candidate bytes, and the owner accepts any human-defined scope. | Pending independent review and owner acceptance |
 
 ## Design amendments
 
@@ -121,5 +121,5 @@
 | Important boundaries | Assumptions are not banned; supported-domain evidence is required only for material premises, and universal proof or speculative future-case design is rejected. | `DISCLOSE` |
 | Alternatives rejected | Ban all assumptions, require universal proof, reviewer-only detection, or create another policy document. | `DISCLOSE` |
 | Remaining gaps or risks | Independent reviewers must verify concision, non-duplication, and that `FC01` stops only material unresolved scope. | `DISCLOSE` |
-| Newly introduced fail-closed behavior | `FC01`: an unresolved material unsupported, foreign-owned, or single-case assumption blocks the affected gate. Example: deployment hard-codes `1 → 2` migration logic owned by the upgrade script. Recovery: verify the owning contract, consume its public interface, narrow the supported domain, or ask the owner to define scope. Reviewer dispositions pending. | `HUMAN_DECISION` |
+| Newly introduced fail-closed behavior | `FC01`: an unresolved material assumption in any of the six dangerous categories blocks the affected gate. Example: deployment hard-codes `1 → 2` migration logic owned by the upgrade script. Recovery: the author verifies evidence, consumes the owning public contract, narrows the supported domain, or asks the owner to define scope; work resumes after validation, both reviewers approve changed bytes, and any required owner acceptance. Reviewer dispositions pending. | `HUMAN_DECISION` |
 | Decision requested | After both reviewers approve, accept `WB-138-1` and `FC01` so planning may begin. | `HUMAN_DECISION` |
