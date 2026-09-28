@@ -223,6 +223,53 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(plan.replace(/\s+/g, " "), /recorded gaps do not block task `DONE`.*including unrecorded gaps.*add required missing tests before final candidate review/i);
 });
 
+test("evidence-bounded scope uses one dangerous-assumption vocabulary", async () => {
+  const policy = await read("docs/documentation-quality-policy.md");
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const reviewer = await read("skills/sdd-feature-review/SKILL.md");
+  const whiteboard = await read("templates/discovery/solution-whiteboard.md");
+  const readme = await read("README.md");
+  const normalize = value => value.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+
+  for (const document of [policy, workflow, reviewer, whiteboard, readme]) {
+    const normalized = normalize(document);
+    for (const category of [
+      /unsupported/i,
+      /foreign-owned/i,
+      /incidental-state/i,
+      /single-case(?:-| )generalization/i,
+      /hidden(?:-| )dependency/i,
+      /speculative(?:-| )assumption/i,
+    ]) assert.match(normalized, category);
+  }
+
+  const normalizedPolicy = normalize(policy);
+  assert.match(normalizedPolicy, /material design or implementation premise.*accepted outcome.*owned responsibility.*authoritative external contract/i);
+  assert.match(normalizedPolicy, /evidence.*valid for the declared supported domain/i);
+  assert.match(normalizedPolicy, /verify it from current authority.*public contract.*narrow and disclose the supported domain/i);
+  assert.match(normalizedPolicy, /authority remains unresolved.*ask the human to define or expand scope/i);
+  assert.match(normalizedPolicy, /MUST NOT demand universal proof or speculative generalization/i);
+  assert.match(policy, /\| Category \| Scope warning \|/);
+  for (const consumer of [workflow, reviewer, whiteboard, readme]) {
+    assert.doesNotMatch(consumer, /\| Category \| Scope warning \|/);
+  }
+
+  assert.match(readme, /https:\/\/learn\.microsoft\.com\/en-us\/dotnet\/architecture\/modern-web-apps-azure\/architectural-principles/);
+  assert.match(readme, /https:\/\/docs\.aws\.amazon\.com\/wellarchitected\/latest\/userguide\/workload-and-scope\.html/);
+  for (const skill of [workflow, reviewer]) {
+    assert.match(skill, /https:\/\/learn\.microsoft\.com\/en-us\/dotnet\/architecture\/modern-web-apps-azure\/architectural-principles/);
+    assert.match(skill, /https:\/\/docs\.aws\.amazon\.com\/wellarchitected\/latest\/userguide\/workload-and-scope\.html/);
+    assert.match(normalize(skill), /genuine uncertainty about ownership, dependency, or supported-domain interpretation/i);
+    assert.match(normalize(skill), /Do not browse them routinely or treat them as project authority/i);
+  }
+  assert.match(
+    normalize(workflow),
+    /Verify the premise from authority.*owning public contract.*narrow and disclose the supported domain.*material authority remains unresolved.*block only the affected work.*ask the human to define or expand scope/i,
+  );
+  assert.match(normalize(reviewer), /Block only when material authority remains unresolved.*do not demand universal proof/i);
+  assert.match(normalize(whiteboard), /unresolved material scope belongs to the owner.*Do not demand proof for unsupported or imagined cases/i);
+});
+
 test("feature review cohorts retain context and produce useful change requests", async () => {
   const workflow = await read("skills/sdd-project-workflow/SKILL.md");
   const reviewer = await read("skills/sdd-feature-review/SKILL.md");

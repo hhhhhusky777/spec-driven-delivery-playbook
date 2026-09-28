@@ -116,6 +116,20 @@ Repeat review when candidate bytes or meaning changed.
 - Follow the project's canonical accepted-design authority. An authorized
   amendment changes only its named scope and repeats conclusion review and
   human acceptance before dependent work resumes.
+- Keep material premises evidence-bounded. Check for unsupported,
+  foreign-owned, incidental-state, single-case-generalization, hidden-dependency,
+  and speculative assumptions. Verify the premise from authority, consume the
+  owning public contract, or narrow and disclose the supported domain. If
+  material authority remains unresolved, block only the affected work and ask
+  the human to define or expand scope. Do not demand universal proof for
+  unsupported or imagined cases.
+  When there is genuine uncertainty about ownership, dependency, or
+  supported-domain interpretation, consult Microsoft's
+  [Architectural principles](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles)
+  and AWS's
+  [Workload and scope](https://docs.aws.amazon.com/wellarchitected/latest/userguide/workload-and-scope.html)
+  as supporting references. Do not browse them routinely or treat them as
+  project authority.
 - For normal delivery, when the whiteboard conclusion candidate is ready,
   select two isolated reviewers for the feature and require each one to read
   the installed sdd-feature-review skill once. They review the exact design
