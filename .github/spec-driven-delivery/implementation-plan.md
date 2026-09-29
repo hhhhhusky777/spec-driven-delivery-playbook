@@ -9,16 +9,16 @@ This file owns active delivery state. GitHub PR owns review, check, merge, and t
 | Field | Value |
 | --- | --- |
 | State | `IMPLEMENTING` |
-| Active tasks | `T01` |
+| Active tasks | `None` |
 | Next ready task | `None` |
-| Active blocker | `None` |
+| Active blocker | T02 closure transition requires prior owner authorization |
 | Implementation mode | Human review before merge |
 | Delivery branch / target | `codex/affected-validation-reruns` → `main` |
 | Owner | Repository owner |
 | Primary issue / need | [#142](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/142) |
 | Concluded whiteboard | [Solution whiteboard](solution-whiteboard.md), accepted design `8cd91fc688f81965d73f6517b6709a96fae3881a`, conclusion `0d4589cdb5254cb064b6bf361aab555014c9230d` |
 | Required reviewers | Two retained independent design reviewers A and B, through plan, task, final candidate, and merge |
-| Last verified | 2026-09-29: T01 implementation drafted; `node --test tests/document-model.test.mjs` 20/20, Mermaid syntax, and `npm run docs:sdd` passed; task review pending |
+| Last verified | 2026-09-29: T01 `60509b6643b2eecffbdc94d4073b6c66c2708f5f` approved by both retained reviewers; focused 20/20, Mermaid, SDD, and diff checks passed; T02 closure authorization pending |
 
 ## Governing inputs and boundaries
 
@@ -70,6 +70,16 @@ This file owns active delivery state. GitHub PR owns review, check, merge, and t
 | Final audit | After implementation tasks complete and any required target synchronization, author and both retained reviewers audit exact implementation content before any missing final tests or final-gate runs. Closing document changes then receive affected focused checks before both reviewers inspect the exact closing candidate; complete validation follows their approval. |
 | Closure authorization | The owner must explicitly authorize whiteboard reset and archive transition before T02 changes those tracked bytes. |
 
+### Pre-final implementation audit
+
+| Concern | Evidence / state |
+| --- | --- |
+| Target synchronization | On 2026-09-29, `origin/main` still resolves to branch point `b3f13badb6e8b828f4185e6116939d51b5d3faeb`; no synchronization is required for mergeability. |
+| Exact implementation content | `60509b6643b2eecffbdc94d4073b6c66c2708f5f` changes the quality policy, its three Guide consumers, README flowchart, and existing document-model test. The accepted manifest upgrade and frozen whiteboard are separate reviewed process state. |
+| Author self-review | Approved: each policy/test addition traces to D01–D04 or FC01; existing policy, skill, contributor text, diagram, and test framework are reused; no new classifier, redundant rule, project-specific repair, or unnecessary abstraction. |
+| Retained reviewer audit | Pending exact-content audit by both reviewers before T02 final-gate tests. |
+| Missing test inventory | T01 contract cases cover the accepted rule, failure and uncertainty boundary, pointers, and diagram; no known missing final-test addition. |
+
 ## Design-to-task mapping
 
 | Design point | Task and brief work | Validation | Consistency or gap |
@@ -84,7 +94,7 @@ This file owns active delivery state. GitHub PR owns review, check, merge, and t
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| T01 | `VERIFYING` | `None` | Implement D01–D04 and FC01 in canonical guidance and contract tests. | No project-specific MinIO repair or new classifier. | Focused docs contract tests and `docs:sdd`. | `codex/affected-validation-reruns`; single PR; `main` |
+| T01 | `DONE` | `None` | Implement D01–D04 and FC01 in canonical guidance and contract tests. | No project-specific MinIO repair or new classifier. | Focused docs contract tests and `docs:sdd`. | `codex/affected-validation-reruns`; single PR; `main` |
 | T02 | `PLANNED` | `T01` | Converge archive/plan/whiteboard candidate, exact-head review, and full applicable Guide validation. | Prior owner closure authorization; no merge without owner authority. | Exact implementation audit; affected focused checks and diff check before reviewers; `docs:all` after their approval. | `codex/affected-validation-reruns`; same PR; `main` |
 
 ## Task specifications
@@ -98,7 +108,7 @@ This file owns active delivery state. GitHub PR owns review, check, merge, and t
 | Consumed dependencies | Concluded D01–D04/FC01; current canonical authorities listed above. |
 | Critical obligations | Preserve exact-candidate review, all required gates, original failed evidence, project stricter policy. |
 | Required evidence | Focused tests before retained reviewer inspection; tracked wording and examples match issue. |
-| Actual result | Canonical policy, consumer pointers, README flowchart, and document-model contract implemented; focused task checks pass; retained task review pending. |
+| Actual result | `60509b6`: canonical policy, consumer pointers, README flowchart, and document-model contract implemented; focused checks passed and both retained reviewers approved. |
 
 ### T02 — final candidate and closure
 
