@@ -18,7 +18,7 @@
 | `DR02` | The parent human-gate response must list the same new validations after two-agent review. | accepted |
 | `DR03` | Judge proportionality by traceability, correct ownership/boundary, marginal value, risk-versus-cost, and the simplest sufficient mechanism. | accepted |
 | `DR04` | The simplest sufficient mechanism is decisive: reuse or a cheaper adequate option wins unless it is shown insufficient. | accepted |
-| `DR05` | Runtime/contract validators and new blocking delivery or release gates require disposition; ordinary tests stay in the plan unless they add a blocking gate. | accepted |
+| `DR05` | Every new runtime/contract rejection and new acceptance checkpoint or blocking gate requires disposition; ordinary tests stay in the plan unless they create a new gate. | accepted |
 | `DR06` | Existing unchanged validations are linked, not relisted. | accepted |
 | `DR07` | A validation that also creates fail-closed behavior cross-references its fail-close row instead of duplicating it. | accepted |
 | `DR08` | Use `None` when no new validation exists. | accepted |
@@ -27,8 +27,8 @@
 
 | Concern | Current understanding |
 | --- | --- |
-| Problem / observed need | A design can add rejection logic or blocking gates without showing their value, placement, failure effect, and cost. |
-| Required outcome | Before design acceptance, every new material validation is explicit and shown to be necessary and proportional. |
+| Problem / observed need | A design can add rejection logic or acceptance checkpoints without showing their value, placement, failure effect, and cost. |
+| Required outcome | Before design acceptance, every new runtime/contract rejection and every new acceptance checkpoint or blocking gate is explicit and shown to be necessary and proportional. |
 | Actors and critical journeys | Authors design validations, reviewers challenge necessity and placement, and the owner accepts, rejects, revises, or defers each row. |
 | In scope | Whiteboard inventory, parent response, five review criteria, fail-close cross-reference, portable guidance, README explanation, and regressions. |
 | Out of scope / deferred | Relisting unchanged validators, moving ordinary tests out of the plan, numerical quotas, or automating semantic proportionality judgment. |
@@ -73,11 +73,11 @@
 
 | ID | Need or requirement | Priority | Acceptance signal | Source |
 | --- | --- | --- | --- | --- |
-| `R01` | The Whiteboard lists every newly introduced material validation before conclusion. | Required | A dedicated table has no undisposed row at conclusion. | Owner |
-| `R02` | The parent response reproduces the complete table after both reviewers inspect it. | Required | Human brief contains every row and both reviewer dispositions, or `None`. | Owner |
+| `R01` | The Whiteboard lists every new runtime/contract rejection and every new acceptance checkpoint or blocking gate before conclusion. | Required | A dedicated table has no undisposed row at conclusion. | Owner |
+| `R02` | The parent response reproduces the complete table after both reviewers inspect it. | Required | Human brief appends both exact reviewer dispositions to every row, or reports `None`; PR owns detailed review history. | Owner |
 | `R03` | Each row is judged by all five proportionality criteria. | Required | Schema and guidance cover traceability, boundary, marginal value, cost, and simplest sufficient mechanism. | Owner |
 | `R04` | Simpler adequate reuse defeats a more complex new validation. | Required | A row cannot be approved without explaining why reuse or a cheaper option is insufficient. | Owner |
-| `R05` | Fail-close and test records remain canonical without duplication. | Required | Rows reference `FCxx` and plan test IDs where applicable. | Existing model |
+| `R05` | Fail-close and test records remain canonical without duplication. | Required | Rows reference `FCxx` and plan test IDs where applicable; a test added under an existing gate remains plan evidence even though failure blocks that gate. | Existing model |
 
 ## Options, experiments, and tradeoffs
 
@@ -102,7 +102,7 @@
 
 | ID | Scenario | Likelihood / impact | Prevention or detection | Recovery / owner | Residual risk |
 | --- | --- | --- | --- | --- | --- |
-| `K01` | The inventory becomes another exhaustive checklist. | Medium / medium | Limit it to new material validation; use `None`; link existing authority. | Reviewer rejects duplication. | Low |
+| `K01` | The inventory becomes another exhaustive checklist. | Medium / medium | Limit it to new runtime/contract rejections and new acceptance checkpoints or gates; use `None`; link existing authority. | Reviewer rejects duplication. | Low |
 | `K02` | Authors justify every validation with generic safety language. | Medium / high | Require a concrete protected outcome/risk and simpler-option comparison. | Revise or reject row. | Low |
 | `K03` | A duplicated validator creates latency or false rejection. | Medium / high | Require marginal-value and cost assessment, with simplest sufficient mechanism decisive. | Remove or reuse existing mechanism. | Low |
 | `K04` | A runtime rejection is listed but its fail-close effect is hidden. | Low / high | Require `FCxx` cross-reference when applicable. | Block conclusion until linked and approved. | Low |
@@ -111,21 +111,21 @@
 
 | ID | Decision | Material alternatives | Rationale / tradeoff | Owner / evidence |
 | --- | --- | --- | --- | --- |
-| `D01` | Add a dedicated inventory for new material validations. | Fail-close-only or plan-only inventory. | Human accepts restrictions before implementation. | Owner |
+| `D01` | Add a dedicated inventory for the categorically defined in-scope validations. | Fail-close-only or plan-only inventory. | Human accepts restrictions before implementation. | Owner |
 | `D02` | Use five criteria: traceability, boundary, marginal value, proportional cost, and simplest sufficient mechanism. | Numerical quota or reviewer preference. | Risk-based judgment remains portable. | Owner and industry guidance |
 | `D03` | Make simplest sufficient mechanism decisive. | Treat it as optional advice. | Directly prevents redundant validation and speculative complexity. | Owner |
-| `D04` | Parent response owns the table after review; reviewers verify rows and dispositions. | Separate reviewer tables. | Matches findings, fail-close, and assumptions ownership. | Existing response model |
+| `D04` | Parent response owns the table after review and appends both exact reviewer dispositions; the Whiteboard stores only owner disposition. | Separate reviewer tables or review history in the Whiteboard. | Matches findings, fail-close, and assumptions ownership while PR retains review history. | Existing response model |
 | `D05` | Reference overlapping fail-close and test records. | Duplicate full content. | Preserves canonical ownership. | Existing document model |
 
 ## Concluded design
 
 | Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
-| `WB144-01` | Every newly introduced material validation is visible before design acceptance. | Runtime/contract validators and new blocking delivery/release gates only; unchanged validations are linked. | Whiteboard schema and lifecycle regressions. |
-| `WB144-02` | Each row exposes boundary, protected outcome/risk, concrete invalid case, failure/recovery, cost, simpler option, and owner disposition. | Enough information for proportional judgment without enumerating implementations. | Cross-document review and structural tests. |
+| `WB144-01` | Every new runtime/contract rejection and every new acceptance checkpoint or blocking gate is visible before design acceptance. | An individual test or assertion added under an existing gate remains plan evidence; unchanged validations are linked. | Whiteboard schema and lifecycle regressions. |
+| `WB144-02` | Each row exposes owning authority and boundary, protected outcome/risk, marginal value beyond existing controls, concrete invalid case, failure effect, cost, simpler option and its coverage, why that option is insufficient, references, and owner disposition. | Every row directly answers all five proportionality criteria without numerical scoring. | Cross-document review and structural tests. |
 | `WB144-03` | All five criteria govern author and reviewer judgment. | Semantic judgment remains human/agent-owned; automation checks structure only. | Policy and skill review. |
 | `WB144-04` | A new validation is rejected, removed, reused, or simplified unless a suitable existing or cheaper mechanism is shown insufficient. | Simplest sufficient mechanism is the primary anti-over-engineering boundary. | Reviewer disposition and human table. |
-| `WB144-05` | Parent human-gate responses reproduce the complete reviewed table or `None`. | Reviewers provide dispositions; parent owns the combined response. | Workflow and response regressions. |
+| `WB144-05` | Parent human-gate responses reproduce the complete reviewed table or `None` and append both exact reviewer dispositions. | Whiteboard stores only owner disposition; PR owns detailed review history. | Workflow and response regressions. |
 | `WB144-06` | Overlapping fail-close and test evidence is cross-referenced, not duplicated. | Ordinary tests remain in the plan unless they create a new blocking gate. | Template and consistency review. |
 
 ## Draft-to-conclusion reconciliation
@@ -144,21 +144,25 @@
 ## Newly introduced validations
 
 > [!IMPORTANT]
-> **Hard rule.** Both reviewers MUST approve every row before the human gate.
-> The parent response MUST then reproduce every row for human disposition. A
-> concluded whiteboard MUST NOT contain a pending row. Use one all-`None` row
-> when none exists. Existing unchanged validations and ordinary nonblocking
-> test evidence MUST NOT be relisted.
+> **Hard rule.** List every new runtime/contract rejection and every new
+> acceptance checkpoint or blocking gate. Both reviewers MUST approve every row
+> before the human gate. The parent response MUST reproduce every row, append
+> `Reviewer 1 disposition` and `Reviewer 2 disposition`, and request human
+> disposition. The Whiteboard stores only owner disposition; detailed review
+> history remains in the PR. A concluded whiteboard MUST NOT contain a pending
+> row. Use one all-`None` row when none exists. Existing unchanged validations
+> and individual tests or assertions added under an existing gate MUST NOT be
+> relisted; they remain plan test evidence.
 
-| ID | Validation and execution boundary | Protected outcome / risk | Concrete invalid case | Failure effect / recovery | Cost / overhead | Reused or simpler option | Fail-close / test reference | Owner disposition |
+| ID | Validation, owning authority, and execution boundary | Protected outcome / risk and marginal value beyond existing controls | Concrete invalid case | Failure effect / recovery | Cost / overhead | Existing/reusable or cheaper mechanism, its coverage, and why insufficient | Fail-close / test reference | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `V01` | Before design conclusion, block acceptance when a new material validation is missing, undisposed, or lacks proportionality justification. | Prevent hidden or over-engineered rejection logic and blocking gates. | A design adds a deployment blocker that duplicates an existing contract check but never shows its latency, false-rejection risk, or simpler reusable option. | Keep the design open; author lists, removes, reuses, or simplifies the validation; reviewers recheck; owner disposes the row. | One concise row per new material validation; no unchanged-validator or ordinary-test inventory. | Reuse the existing Whiteboard and human gate; no new document or lifecycle gate. This is the smallest sufficient mechanism. | `FC01`; structural regression only. | `Pending` |
+| `V01` | Owner-approved design-acceptance boundary: before conclusion, require a complete and disposed inventory row for every new runtime/contract rejection and every new acceptance checkpoint or blocking gate. | Existing fail-close review exposes rejection recovery but does not expose every new validation's ownership, marginal protection, cost, or simpler alternative; this inventory closes that gap. | A design adds a deployment blocker that duplicates an existing contract check but never shows its latency, false-rejection risk, or simpler reusable option. | Design conclusion and dependent planning remain blocked; recovery is owned by `FC01`. | One concise row per in-scope validation and semantic review; no unchanged-validator or ordinary-test inventory. | Reuse the existing Whiteboard and human gate. The fail-close table alone does not cover non-fail-close checkpoints or proportionality, so one compact inventory row is the smallest sufficient addition. | `FC01`; structural regression only. | `Pending` |
 
 ## Newly introduced fail-closed behaviors
 
 | ID | Trigger | Required fail-closed response | Concrete example | Impact | Recovery / best next action | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- |
-| `FC01` | A new material validation is missing, lacks required proportionality information, or has no reviewer/owner disposition. | Do not conclude the design or start dependent planning. | A new API validator rejects an input already safely handled by an existing framework, but the design omits the duplicate check and its cost from review. | Design acceptance pauses; no runtime behavior is changed. | Author lists and justifies the validator or removes/reuses it; both reviewers approve the correction; owner accepts or rejects the row. | `Pending` |
+| `FC01` | An in-scope validation is missing, lacks required proportionality information, or has no reviewer/owner disposition. | Do not conclude the design or start dependent planning. | A new API validator rejects an input already safely handled by an existing framework, but the design omits the duplicate check and its cost from review. | Design acceptance pauses; no runtime behavior is changed. | Author lists and justifies the validator or removes/reuses it; both reviewers approve the correction; owner accepts or rejects the row. | `Pending` |
 
 ## Design amendments
 
@@ -170,10 +174,10 @@
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Decisions made | Add a reviewed/human-disposed inventory of every new material validation using five proportionality criteria. | `HUMAN_DECISION` |
+| Decisions made | Add a reviewed/human-disposed inventory of every new runtime/contract rejection and every new acceptance checkpoint or blocking gate, using five proportionality criteria. | `HUMAN_DECISION` |
 | Important boundaries | Simplest sufficient mechanism is decisive; unchanged validators and ordinary tests are not duplicated. | `DISCLOSE` |
 | Alternatives rejected | Fail-close-only, plan-only, or exhaustive inventories. | `DISCLOSE` |
 | Remaining gaps or risks | Reviewer confirmation of schema clarity, proportionality, and non-duplication. | `DISCLOSE` |
-| Newly introduced validations | `V01`, including boundary, risk, example, failure/recovery, cost, simpler option, references, and reviewer dispositions. | `HUMAN_DECISION` |
+| Newly introduced validations | `V01`, including authority/boundary, marginal value, example, failure effect, cost, simpler option and why insufficient, references, and both reviewer dispositions. | `HUMAN_DECISION` |
 | Newly introduced fail-closed behavior | `FC01`; owner disposition follows two-agent review. | `HUMAN_DECISION` |
 | Decision requested | After both reviewers approve, accept `WB144-01`–`WB144-06`, `V01`, and `FC01`, then authorize conclusion and planning. | `HUMAN_DECISION` |
