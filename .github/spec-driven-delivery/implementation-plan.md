@@ -11,7 +11,7 @@ This file owns active delivery state. GitHub PR owns review, check, merge, and t
 | State | `IMPLEMENTING` |
 | Active tasks | `None` |
 | Next ready task | `None` |
-| Active blocker | T02 closure transition requires prior owner authorization |
+| Active blocker | T02 closure transition requires prior owner authorization; GitHub CLI credentials currently return 401, so a PR number is not yet available for archive cross-links |
 | Implementation mode | Human review before merge |
 | Delivery branch / target | `codex/affected-validation-reruns` → `main` |
 | Owner | Repository owner |
@@ -77,8 +77,18 @@ This file owns active delivery state. GitHub PR owns review, check, merge, and t
 | Target synchronization | On 2026-09-29, `origin/main` still resolves to branch point `b3f13badb6e8b828f4185e6116939d51b5d3faeb`; no synchronization is required for mergeability. |
 | Exact implementation content | `60509b6643b2eecffbdc94d4073b6c66c2708f5f` changes the quality policy, its three Guide consumers, README flowchart, and existing document-model test. The accepted manifest upgrade and frozen whiteboard are separate reviewed process state. |
 | Author self-review | Approved: each policy/test addition traces to D01–D04 or FC01; existing policy, skill, contributor text, diagram, and test framework are reused; no new classifier, redundant rule, project-specific repair, or unnecessary abstraction. |
-| Retained reviewer audit | Pending exact-content audit by both reviewers before T02 final-gate tests. |
+| Retained reviewer audit | Both A and B approved exact implementation content `60509b6643b2eecffbdc94d4073b6c66c2708f5f` with no findings; plan-only audit record `c70cd4d2fb37c989041c4a2fb817289b7c9ae289` did not change those bytes. |
 | Missing test inventory | T01 contract cases cover the accepted rule, failure and uncertainty boundary, pointers, and diagram; no known missing final-test addition. |
+
+### Proposed closing transition for owner authorization
+
+| Tracked target | Intended change | Ownership / guard |
+| --- | --- | --- |
+| `.github/spec-driven-delivery/archive/issue-142-affected-validation-reruns-20260929.md` | Create one combined archive containing the complete concluded whiteboard and completed implementation plan, with #142 and the actual closing PR cross-linked. | New owned archive; retain all source sections and lifecycle markers. |
+| `.github/spec-driven-delivery/solution-whiteboard.md` | Reset to neutral `EMPTY` whiteboard after the complete archive exists. | Frozen design; requires prior explicit owner authorization for this exact reset. |
+| `.github/spec-driven-delivery/implementation-plan.md` | Remove live plan only after its complete state is embedded in the archive. | Owned live task state; history retained in archive and PR. |
+
+No branch merge or target verification is part of this authorization. GitHub credentials must be restored before the closing PR link can be written and the candidate can be reviewed.
 
 ## Design-to-task mapping
 
