@@ -4,20 +4,20 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [#142](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/142) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
-| Open owner decisions | Accept revised D01–D04 and FC01 after renewed independent review |
+| Concluded design revision | `8cd91fc688f81965d73f6517b6709a96fae3881a` |
+| Open owner decisions | `None` |
 
 ## Discussion draft
 
 | ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
-| DR01 | After any final-candidate correction, only a gate whose inputs changed loses its prior full-validation result. | Revised by owner after #142 rewrite; D01–D02 |
-| DR02 | Gate inputs include exercised product code, runner, dependencies, fixtures, configuration, and environment; uncertain overlap requires full validation. | Revised by owner after #142 rewrite; D01–D02 |
-| DR03 | A failed gate stays red until a reviewed candidate passes it; prior failure evidence stays visible. | Proposed; D03 |
-| DR04 | Define the rule once in the quality policy; other Guide surfaces point to it. Record reused evidence and reviewer agreement without adding a new classification tool. Project policy may be stricter. | Revised by owner after #142 rewrite; D03–D04 |
+| DR01 | After any final-candidate correction, only a gate whose inputs changed loses its prior full-validation result. | Changed |
+| DR02 | Gate inputs include exercised product code, runner, dependencies, fixtures, configuration, and environment; uncertain overlap requires full validation. | Changed |
+| DR03 | A failed gate stays red until a reviewed candidate passes it; prior failure evidence stays visible. | Accepted |
+| DR04 | Define the rule once in the quality policy; other Guide surfaces point to it. Record reused evidence and reviewer agreement without adding a new classification tool. Project policy may be stricter. | Changed |
 
 ## Current understanding
 
@@ -85,7 +85,7 @@
 
 | ID | Trigger | Required fail-closed response | Concrete example | Impact | Recovery / best next action | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- |
-| FC01 | Input overlap is uncertain after a final-candidate correction. | Do not reuse old passes; keep final readiness blocked until full validation runs. | A shared test container changes and its consumers are unclear, so an old E2E pass is not carried forward and the full validation runs. | Extra validation time, with no unproven pass claimed. | The author runs full applicable validation on the reviewed candidate and presents the results; if input ownership can be established before that run, both retained reviewers may confirm a narrower affected-gate mapping. | Pending owner design acceptance |
+| FC01 | Input overlap is uncertain after a final-candidate correction. | Do not reuse old passes; keep final readiness blocked until full validation runs. | A shared test container changes and its consumers are unclear, so an old E2E pass is not carried forward and the full validation runs. | Extra validation time, with no unproven pass claimed. | The author runs full applicable validation on the reviewed candidate and presents the results; if input ownership can be established before that run, both retained reviewers may confirm a narrower affected-gate mapping. | Approved |
 
 ## Human brief
 
