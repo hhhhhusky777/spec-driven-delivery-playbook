@@ -107,7 +107,7 @@ No branch merge or target verification is part of this authorization. GitHub cre
 | T01 | `DONE` | `None` | Implement D01–D04 and FC01 in canonical guidance and contract tests. | No project-specific MinIO repair or new classifier. | Focused docs contract tests and `docs:sdd`. | `codex/affected-validation-reruns`; single PR; `main` |
 | T02 | `PLANNED` | `T01` | Converge archive/plan/whiteboard candidate, exact-head review, and full applicable Guide validation. | Prior owner closure authorization; no merge without owner authority. | Exact implementation audit; affected focused checks and diff check before reviewers; `docs:all` after their approval. | `codex/affected-validation-reruns`; same PR; `main` |
 
-## Task specifications
+## Task specifications and context receipts
 
 ### T01 — policy and consumers
 
@@ -130,7 +130,7 @@ No branch merge or target verification is part of this authorization. GitHub cre
 | Required evidence | Affected focused command, SDD lifecycle, and diff check before both retained reviewers inspect the closing candidate; `npm run docs:all` after their approval. Disclose any failed or unrun check. |
 | Actual result | Pending. |
 
-## Plan validation and completion
+## Delivery Definition of Done
 
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
@@ -138,6 +138,22 @@ No branch merge or target verification is part of this authorization. GitHub cre
 | Applicable validation passed | Focused task checks then complete final source gate | Pending |
 | Canonical state converged | Archive, whiteboard reset, and plan removal after explicit owner authorization | Pending |
 | PR-owned delivery | Exact reviews, checks, human merge decision, target verification in PR | Pending |
+
+## Planned versus actual outcome
+
+| Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
+| --- | --- | --- | --- |
+| D01–D04, FC01 / T01 | Canonical per-gate rule, consistent pointers, and document-model proof. | `60509b6`; focused document-model 20/20, Mermaid, SDD checks passed; both reviewers approved T01 and exact-content audit. | None for T01. |
+| T02 | Complete combined archive and neutral live state, exact closing review and applicable validation. | Owner authorized closing transition; PR creation and closing candidate pending GitHub CLI authentication. | Author creates PR, archive, and closing candidate; both reviewers and final checks follow. |
+
+## Cleanup inventory
+
+| Item | Keep, archive, remove, or reset | Ownership and evidence | Result |
+| --- | --- | --- | --- |
+| `.github/spec-driven-delivery/archive/issue-142-affected-validation-reruns-20260929.md` | Create and keep | Owned combined archive of complete accepted whiteboard and final plan; #142 and closing PR cross-links. | Pending PR number. |
+| `.github/spec-driven-delivery/solution-whiteboard.md` | Reset to `EMPTY` | Owner explicitly authorized #142 closing transition on 2026-09-29. | Pending complete archive. |
+| `.github/spec-driven-delivery/implementation-plan.md` | Remove after archive | Owned live plan; archive retains all sections and task outcomes. | Pending complete archive. |
+| Delivery worktree and branch | Retire only after owner-authorized merge and exact target verification | Reversible/local ownership; preserve while PR is open. | Pending. |
 
 ## Human review brief
 
