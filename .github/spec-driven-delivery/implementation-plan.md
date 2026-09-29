@@ -57,7 +57,7 @@ This file owns active delivery state. GitHub PR owns review, check, merge, and t
 | T01 | D02; uncertain overlap | Counterexample for shared container/global setup/common fixture; full validation when consumers unclear | Add to policy and document-model contract | Focused task test |
 | T01 | D03; failure and reuse evidence | Assert failed gate remains red, reviewer confirmation and `reused from <sha>` guidance, hosted final-SHA requirement | Update existing | Focused task test |
 | T01 | D04; canonical ownership | Assert one normative rule in quality policy and noncontradictory pointers in workflow, Contributing, README | Update existing | Focused task test |
-| T02 | Complete candidate | `npm ci --ignore-scripts`; `npm run docs:all`; `npm run docs:focused -- BASE HEAD`; `git diff --check`; semantic review | Pending | Final gate after exact implementation audit and both final reviews |
+| T02 | Complete candidate | After exact implementation audit and authorized closure, run affected `npm run docs:focused -- BASE HEAD`, `npm run docs:sdd`, and `git diff --check` before both reviewers inspect the closing head. After their approval, run `npm ci --ignore-scripts` and `npm run docs:all`. | Pending | Focused checks before final review; full source gate after review |
 
 ## Delivery strategy and readiness
 
@@ -67,7 +67,7 @@ This file owns active delivery state. GitHub PR owns review, check, merge, and t
 | Increment boundary | T01 makes all policy consumers and tests consistent; T02 converges tracked delivery state and validates the final candidate. |
 | Parallel ownership | None; retained reviewers work read-only. |
 | Merge authority | Repository owner; no automatic merge. |
-| Final audit | After tasks complete and any required target synchronization, author and both retained reviewers audit exact implementation content before any missing final tests or final-gate runs. |
+| Final audit | After implementation tasks complete and any required target synchronization, author and both retained reviewers audit exact implementation content before any missing final tests or final-gate runs. Closing document changes then receive affected focused checks before both reviewers inspect the exact closing candidate; complete validation follows their approval. |
 | Closure authorization | The owner must explicitly authorize whiteboard reset and archive transition before T02 changes those tracked bytes. |
 
 ## Design-to-task mapping
@@ -85,7 +85,7 @@ This file owns active delivery state. GitHub PR owns review, check, merge, and t
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
 | T01 | `PLANNED` | `None` | Implement D01–D04 and FC01 in canonical guidance and contract tests. | No project-specific MinIO repair or new classifier. | Focused docs contract tests and `docs:sdd`. | `codex/affected-validation-reruns`; single PR; `main` |
-| T02 | `PLANNED` | `T01` | Converge archive/plan/whiteboard candidate, exact-head review, and full applicable Guide validation. | Prior owner closure authorization; no merge without owner authority. | Exact implementation audit, reviewers, `docs:all`, focused CI, diff check. | `codex/affected-validation-reruns`; same PR; `main` |
+| T02 | `PLANNED` | `T01` | Converge archive/plan/whiteboard candidate, exact-head review, and full applicable Guide validation. | Prior owner closure authorization; no merge without owner authority. | Exact implementation audit; affected focused checks and diff check before reviewers; `docs:all` after their approval. | `codex/affected-validation-reruns`; same PR; `main` |
 
 ## Task specifications
 
@@ -107,7 +107,7 @@ This file owns active delivery state. GitHub PR owns review, check, merge, and t
 | Outcome / non-scope | Merge-ready tracked state and complete exact-head evidence; merge remains an owner decision. |
 | Source boundary | Existing whiteboard/plan/archive lifecycle and PR evidence. |
 | Consumed dependencies | T01 DONE, owner closure authorization, exact implementation audit. |
-| Required evidence | Both retained reviewers, `npm run docs:all`, focused command, SDD lifecycle, diff check; disclose any failed or unrun check. |
+| Required evidence | Affected focused command, SDD lifecycle, and diff check before both retained reviewers inspect the closing candidate; `npm run docs:all` after their approval. Disclose any failed or unrun check. |
 | Actual result | Pending. |
 
 ## Plan validation and completion
