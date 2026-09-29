@@ -22,6 +22,7 @@
 | `DR06` | Existing unchanged validations are linked, not relisted. | accepted |
 | `DR07` | A validation that also creates fail-closed behavior cross-references its fail-close row instead of duplicating it. | accepted |
 | `DR08` | Use `None` when no new validation exists. | accepted |
+| `DR09` | Frame the inventory with Phil Crosby's conformance, prevention, and price-of-nonconformance principles without claiming a mechanical Crosby template. | accepted |
 
 ## Current understanding
 
@@ -45,6 +46,8 @@
 | [AWS risk guidance](https://docs.aws.amazon.com/wellarchitected/latest/userguide/identify-and-understand-risks.html) | Supports likelihood, impact, cost, and ownership assessment. | Primary guidance checked 2026-09-29 |
 | [AWS controls guidance](https://docs.aws.amazon.com/wellarchitected/latest/management-and-governance-guide/controls.html) | Warns that duplicate controls can add cost. | Primary guidance checked 2026-09-29 |
 | [Google review guidance](https://google.github.io/eng-practices/review/reviewer/looking-for.html) | Rejects speculative complexity and treats tests as maintained code. | Primary guidance checked 2026-09-29 |
+| [ASQ: Philip Crosby](https://asq.org/about-asq/honorary-members/crosby) | Supports conformance to requirements and zero-defect prevention. | Authority summary checked 2026-09-30 |
+| [ASQ: Cost of Quality](https://asq.org/quality-resources/cost-of-quality) | Distinguishes prevention/appraisal cost from internal and external failure cost. | Authority guidance checked 2026-09-30 |
 
 ## Facts, assumptions, and unknowns
 
@@ -75,9 +78,10 @@
 | --- | --- | --- | --- | --- |
 | `R01` | The Whiteboard lists every new runtime/contract rejection and every new acceptance checkpoint or blocking gate before conclusion. | Required | A dedicated table has no undisposed row at conclusion. | Owner |
 | `R02` | The parent response reproduces the complete table after both reviewers inspect it. | Required | Human brief appends both exact reviewer dispositions to every row, or reports `None`; PR owns detailed review history. | Owner |
-| `R03` | Each row is judged by all five proportionality criteria. | Required | Schema and guidance cover traceability, boundary, marginal value, cost, and simplest sufficient mechanism. | Owner |
+| `R03` | Each row is judged by all five proportionality criteria. | Required | Schema covers traceability, boundary, marginal value, price of conformance versus credible price of nonconformance avoided, and simplest sufficient mechanism. | Owner |
 | `R04` | Simpler adequate reuse defeats a more complex new validation. | Required | A row cannot be approved without explaining why reuse or a cheaper option is insufficient. | Owner |
 | `R05` | Fail-close and test records remain canonical without duplication. | Required | Rows reference `FCxx` and plan test IDs where applicable; a test added under an existing gate remains plan evidence even though failure blocks that gate. | Existing model |
+| `R06` | Crosby provides the quality/economic lens, not a fixed table or a mandate for unlimited validation. | Required | Guidance says Crosby-aligned, rejects mechanical scoring, and keeps the five accepted criteria. | Owner |
 
 ## Options, experiments, and tradeoffs
 
@@ -116,13 +120,14 @@
 | `D03` | Make simplest sufficient mechanism decisive. | Treat it as optional advice. | Directly prevents redundant validation and speculative complexity. | Owner |
 | `D04` | Parent response owns the table after review and appends both exact reviewer dispositions; the Whiteboard stores only owner disposition. | Separate reviewer tables or review history in the Whiteboard. | Matches findings, fail-close, and assumptions ownership while PR retains review history. | Existing response model |
 | `D05` | Reference overlapping fail-close and test records. | Duplicate full content. | Preserves canonical ownership. | Existing document model |
+| `D06` | Use a Crosby-aligned lens: conformance supplies traceability, prevention supplies correct placement and simplest mechanism, and price of conformance is compared with credible price of nonconformance avoided. | Claim the schema is Crosby's fixed format or treat zero defects as unlimited checking. | Makes validation economics visible without weakening proportionality or adding numerical scoring. | Owner and ASQ references |
 
 ## Concluded design
 
 | Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
 | `WB144-01` | Every new runtime/contract rejection and every new acceptance checkpoint or blocking gate is visible before design acceptance. | An individual test or assertion added under an existing gate remains plan evidence; unchanged validations are linked. | Whiteboard schema and lifecycle regressions. |
-| `WB144-02` | Each row exposes owning authority and boundary, protected outcome/risk, marginal value beyond existing controls, concrete invalid case, failure effect, cost, simpler option and its coverage, why that option is insufficient, references, and owner disposition. | Every row directly answers all five proportionality criteria without numerical scoring. | Cross-document review and structural tests. |
+| `WB144-02` | Each row exposes owning authority and boundary, protected outcome/risk, marginal value beyond existing controls, concrete invalid case, failure effect, price of conformance and credible price of nonconformance avoided, simpler option and its coverage, why that option is insufficient, references, and owner disposition. | Every row directly answers all five proportionality criteria without numerical scoring. | Cross-document review and structural tests. |
 | `WB144-03` | All five criteria govern author and reviewer judgment. | Semantic judgment remains human/agent-owned; automation checks structure only. | Policy and skill review. |
 | `WB144-04` | A new validation is rejected, removed, reused, or simplified unless a suitable existing or cheaper mechanism is shown insufficient. | Simplest sufficient mechanism is the primary anti-over-engineering boundary. | Reviewer disposition and human table. |
 | `WB144-05` | Parent human-gate responses reproduce the complete reviewed table or `None` and append both exact reviewer dispositions. | Whiteboard stores only owner disposition; PR owns detailed review history. | Workflow and response regressions. |
@@ -140,6 +145,7 @@
 | `DR06` | `WB144-01` | accepted | Prevents duplicated project authority. |
 | `DR07` | `WB144-06` | accepted | One fact keeps one canonical owner. |
 | `DR08` | `WB144-05` | accepted | Explicit absence without invented rows. |
+| `DR09` | `WB144-02`, `WB144-03`, `WB144-04` | accepted | Crosby's lens clarifies requirement conformance, prevention, and validation economics without creating another schema. |
 
 ## Newly introduced validations
 
@@ -154,9 +160,9 @@
 > and individual tests or assertions added under an existing gate MUST NOT be
 > relisted; they remain plan test evidence.
 
-| ID | Validation, owning authority, and execution boundary | Protected outcome / risk and marginal value beyond existing controls | Concrete invalid case | Failure effect / recovery | Cost / overhead | Existing/reusable or cheaper mechanism, its coverage, and why insufficient | Fail-close / test reference | Owner disposition |
+| ID | Validation, owning authority, and execution boundary | Protected outcome / risk and marginal value beyond existing controls | Concrete invalid case | Failure effect / recovery | Price of conformance / credible price of nonconformance avoided | Existing/reusable or cheaper mechanism, its coverage, and why insufficient | Fail-close / test reference | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `V01` | Owner-approved design-acceptance boundary: before conclusion, require a complete and disposed inventory row for every new runtime/contract rejection and every new acceptance checkpoint or blocking gate. | Existing fail-close review exposes rejection recovery but does not expose every new validation's ownership, marginal protection, cost, or simpler alternative; this inventory closes that gap. | A design adds a deployment blocker that duplicates an existing contract check but never shows its latency, false-rejection risk, or simpler reusable option. | Design conclusion and dependent planning remain blocked; recovery is owned by `FC01`. | One concise row per in-scope validation and semantic review; no unchanged-validator or ordinary-test inventory. | Reuse the existing Whiteboard and human gate. The fail-close table alone does not cover non-fail-close checkpoints or proportionality, so one compact inventory row is the smallest sufficient addition. | `FC01`; structural regression only. | `Pending` |
+| `V01` | Owner-approved design-acceptance boundary: before conclusion, require a complete and disposed inventory row for every new runtime/contract rejection and every new acceptance checkpoint or blocking gate. | Existing fail-close review exposes rejection recovery but not every new validation's ownership, marginal protection, economics, or simpler alternative; this inventory closes that gap. | A design adds a deployment blocker that duplicates an existing contract check but never shows its latency, false-rejection risk, or simpler reusable option. | Design conclusion and dependent planning remain blocked; recovery is owned by `FC01`. | Conformance: one concise row and semantic review per in-scope validation. Nonconformance avoided: hidden rejection, duplicated controls, false rejection, and their implementation/operating/rework cost. No unchanged-validator or ordinary-test inventory. | Reuse the existing Whiteboard and human gate. The fail-close table alone does not cover non-fail-close checkpoints or proportionality, so one compact inventory row is the smallest sufficient addition. | `FC01`; structural regression only. | `Pending` |
 
 ## Newly introduced fail-closed behaviors
 
@@ -175,7 +181,7 @@
 | Attention | Summary | Handling |
 | --- | --- | --- |
 | Decisions made | Add a reviewed/human-disposed inventory of every new runtime/contract rejection and every new acceptance checkpoint or blocking gate, using five proportionality criteria. | `HUMAN_DECISION` |
-| Important boundaries | Simplest sufficient mechanism is decisive; unchanged validators and ordinary tests are not duplicated. | `DISCLOSE` |
+| Important boundaries | The inventory is Crosby-aligned, not a mechanical Crosby template; simplest sufficient mechanism is decisive, and unchanged validators or ordinary tests are not duplicated. | `DISCLOSE` |
 | Alternatives rejected | Fail-close-only, plan-only, or exhaustive inventories. | `DISCLOSE` |
 | Remaining gaps or risks | Reviewer confirmation of schema clarity, proportionality, and non-duplication. | `DISCLOSE` |
 | Newly introduced validations | `V01`, including authority/boundary, marginal value, example, failure effect, cost, simpler option and why insufficient, references, and both reviewer dispositions. | `HUMAN_DECISION` |
