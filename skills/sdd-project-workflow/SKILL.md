@@ -235,6 +235,12 @@ Follow the manifest-linked human-brief policy.
 > Use `None` when there are no findings; do not invent an example. Link the PR
 > when it exists; keep full review history in the PR. This adds no review gate
 > or early-PR requirement.
+>
+> The parent response MUST also include a separate material-assumptions table:
+> `Assumption`, `Dangerous-assumption category`, `Evidence / validation state`,
+> `Impact if false`, and `Handling`. List every material assumption affecting
+> the candidate or human decision. Use one `None` row when none exist. Do not
+> manufacture entries from verified facts or immaterial details.
 Classify material items as `HUMAN_DECISION`, `AGENT_ACTION`, `DISCLOSE`, or
 `NONE` so the next agent knows whether to stop, act within authority, preserve
 material awareness-only information (including accepted limitations), or
