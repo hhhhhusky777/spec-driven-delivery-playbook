@@ -239,7 +239,7 @@ test("final-candidate gate evidence is invalidated by changed inputs", async () 
   assert.match(rule, /prior exact head.*inputs are unchanged.*both retained reviewers confirm/i);
   assert.match(rule, /input overlap is uncertain.*full applicable validation/i);
   assert.match(rule, /failed gate remains failed until its own rerun passes/i);
-  assert.match(rule, /`passed`, `failed`, `unrun`, and `reused from <sha>`/i);
+  assert.match(rule, /`passed`, `failed`, `unrun`, and reused from &lt;sha&gt;/i);
   assert.match(rule, /current hosted status for the final SHA/i);
   assert.match(rule, /test-only service image.*integration gate.*unit, lint, and E2E gates/i);
   assert.match(rule, /shared container.*global setup.*common fixture.*every consuming gate/i);

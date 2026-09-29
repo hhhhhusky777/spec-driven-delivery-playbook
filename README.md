@@ -591,7 +591,7 @@ Any candidate change returns to focused tests and both reviewers. The
 [quality policy](docs/documentation-quality-policy.md#review-and-human-brief)
 defines which final-validation results a correction invalidates, how an
 unaffected pass may be reused, and when full validation must rerun. The human
-brief identifies reused results as `reused from <sha>`. A project's stricter
+brief identifies reused results as reused from &lt;sha&gt;. A project's stricter
 validation policy takes precedence.
 
 Implementation should also remain inspectably proportional. If one task

@@ -209,7 +209,7 @@ the PR records the prior exact head and why its inputs are unchanged, and both
 retained reviewers confirm that mapping. If input overlap is uncertain, rerun
 full applicable validation. A failed gate remains failed until its own rerun
 passes; retain the original failure alongside the new result. In the human
-brief, distinguish `passed`, `failed`, `unrun`, and `reused from <sha>` so
+brief, distinguish `passed`, `failed`, `unrun`, and reused from &lt;sha&gt; so
 reused evidence never implies approval. Focused checks, exact-candidate
 review, required project gates, current hosted status for the final SHA, and
 human merge authority remain mandatory.
