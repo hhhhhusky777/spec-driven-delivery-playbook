@@ -195,14 +195,32 @@ remain missing. Correct an obsolete test obligation with evidence when
 accepted design is unchanged; a design change requires an authorized amendment.
 
 After both reviewers report no unresolved blocking findings on the final candidate that will merge
-back to the protected integration branch, run the full applicable validation
-on that exact head before human merge acceptance. A single-task PR targeting
-the protected branch is already final. Any candidate-changing correction
-repeats focused tests and both retained reviews; a final-candidate correction
-also invalidates prior full validation. An unchanged transient validation
-failure repeats only the affected validation. Project policy may require a
-more conservative sequence; this efficiency rule never waives a required
-check or exact-head evidence.
+back to the protected integration branch, establish full applicable validation
+evidence for that exact head before human merge acceptance. Run every applicable
+gate in full for the first final candidate. A single-task PR targeting the
+protected branch is already final. Any candidate-changing correction repeats
+focused tests and both retained reviews.
+
+A final-candidate correction invalidates each full-validation result whose
+inputs it changes. A gate's inputs include the product code it exercises and
+its runner, dependencies, fixtures, configuration, and environment. Rerun
+every affected gate in full. An unaffected passed gate stays valid only when
+the PR records the prior exact head and why its inputs are unchanged, and both
+retained reviewers confirm that mapping. If input overlap is uncertain, rerun
+full applicable validation. A failed gate remains failed until its own rerun
+passes; retain the original failure alongside the new result. In the human
+brief, distinguish `passed`, `failed`, `unrun`, and `reused from <sha>` so
+reused evidence never implies approval. Focused checks, exact-candidate
+review, required project gates, current hosted status for the final SHA, and
+human merge authority remain mandatory.
+
+For example, replacing a test-only service image used by one integration gate
+reruns that gate; unit, lint, and E2E gates that do not use it retain their
+passed results with the required evidence. Changing a shared container,
+global setup, or common fixture instead reruns every consuming gate, or full
+validation when its consumers are unclear. An unchanged transient validation
+failure repeats only the affected validation. A project's stricter validation
+policy takes precedence.
 
 90 minutes of active implementation on a single task is an owner-attention
 boundary, not a quality shortcut. If the task has not reached its planned

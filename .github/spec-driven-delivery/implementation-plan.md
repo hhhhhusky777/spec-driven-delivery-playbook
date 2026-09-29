@@ -8,8 +8,8 @@ This file owns active delivery state. GitHub PR owns review, check, merge, and t
 
 | Field | Value |
 | --- | --- |
-| State | `DRAFT` |
-| Active tasks | `None` |
+| State | `IMPLEMENTING` |
+| Active tasks | `T01` |
 | Next ready task | `None` |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge |
@@ -18,7 +18,7 @@ This file owns active delivery state. GitHub PR owns review, check, merge, and t
 | Primary issue / need | [#142](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/142) |
 | Concluded whiteboard | [Solution whiteboard](solution-whiteboard.md), accepted design `8cd91fc688f81965d73f6517b6709a96fae3881a`, conclusion `0d4589cdb5254cb064b6bf361aab555014c9230d` |
 | Required reviewers | Two retained independent design reviewers A and B, through plan, task, final candidate, and merge |
-| Last verified | 2026-09-29: owner accepted D01–D04 and FC01; both reviewers verified conclusion commit; `npm run docs:sdd` passed |
+| Last verified | 2026-09-29: T01 implementation drafted; `node --test tests/document-model.test.mjs` 20/20, Mermaid syntax, and `npm run docs:sdd` passed; task review pending |
 
 ## Governing inputs and boundaries
 
@@ -53,10 +53,10 @@ This file owns active delivery state. GitHub PR owns review, check, merge, and t
 
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
-| T01 | D01–D02; changed versus unchanged inputs | `tests/document-model.test.mjs` positive and negative policy contracts, including product code and validation-only changes | Update existing | Focused task test |
-| T01 | D02; uncertain overlap | Counterexample for shared container/global setup/common fixture; full validation when consumers unclear | Add to policy and document-model contract | Focused task test |
-| T01 | D03; failure and reuse evidence | Assert failed gate remains red, reviewer confirmation and `reused from <sha>` guidance, hosted final-SHA requirement | Update existing | Focused task test |
-| T01 | D04; canonical ownership | Assert one normative rule in quality policy and noncontradictory pointers in workflow, Contributing, README | Update existing | Focused task test |
+| T01 | D01–D02; changed versus unchanged inputs | `tests/document-model.test.mjs` positive and negative policy contracts, including product code and validation-only changes | Implemented | Focused task test |
+| T01 | D02; uncertain overlap | Counterexample for shared container/global setup/common fixture; full validation when consumers unclear | Implemented | Focused task test |
+| T01 | D03; failure and reuse evidence | Assert failed gate remains red, reviewer confirmation and `reused from <sha>` guidance, hosted final-SHA requirement | Implemented | Focused task test |
+| T01 | D04; canonical ownership | Assert one normative rule in quality policy and noncontradictory pointers in workflow, Contributing, README | Implemented | Focused task test |
 | T02 | Complete candidate | After exact implementation audit and authorized closure, run affected `npm run docs:focused -- BASE HEAD`, `npm run docs:sdd`, and `git diff --check` before both reviewers inspect the closing head. After their approval, run `npm ci --ignore-scripts` and `npm run docs:all`. | Pending | Focused checks before final review; full source gate after review |
 
 ## Delivery strategy and readiness
@@ -84,7 +84,7 @@ This file owns active delivery state. GitHub PR owns review, check, merge, and t
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| T01 | `PLANNED` | `None` | Implement D01–D04 and FC01 in canonical guidance and contract tests. | No project-specific MinIO repair or new classifier. | Focused docs contract tests and `docs:sdd`. | `codex/affected-validation-reruns`; single PR; `main` |
+| T01 | `VERIFYING` | `None` | Implement D01–D04 and FC01 in canonical guidance and contract tests. | No project-specific MinIO repair or new classifier. | Focused docs contract tests and `docs:sdd`. | `codex/affected-validation-reruns`; single PR; `main` |
 | T02 | `PLANNED` | `T01` | Converge archive/plan/whiteboard candidate, exact-head review, and full applicable Guide validation. | Prior owner closure authorization; no merge without owner authority. | Exact implementation audit; affected focused checks and diff check before reviewers; `docs:all` after their approval. | `codex/affected-validation-reruns`; same PR; `main` |
 
 ## Task specifications
@@ -98,7 +98,7 @@ This file owns active delivery state. GitHub PR owns review, check, merge, and t
 | Consumed dependencies | Concluded D01–D04/FC01; current canonical authorities listed above. |
 | Critical obligations | Preserve exact-candidate review, all required gates, original failed evidence, project stricter policy. |
 | Required evidence | Focused tests before retained reviewer inspection; tracked wording and examples match issue. |
-| Actual result | Pending. |
+| Actual result | Canonical policy, consumer pointers, README flowchart, and document-model contract implemented; focused task checks pass; retained task review pending. |
 
 ### T02 — final candidate and closure
 

@@ -299,12 +299,14 @@ claim merge readiness with required tests still missing.
 Candidate-changing corrections return to the same two reviewers. The installed
 sdd-feature-review skill owns reviewer context and finding behavior. After both
 reviewers approve the final candidate that will
-merge back to the protected integration branch, run the project's full
-applicable validation on that exact head before the human merge decision. A
+merge back to the protected integration branch, establish the project's full
+applicable validation evidence for that exact head before the human merge decision. A
 single-task PR to the protected branch
 is already final. Candidate-changing corrections repeat focused tests and the
-same task reviewers; a final-candidate correction also repeats full validation.
-Apply stricter project policy when it requires a more conservative sequence.
+same task reviewers. For final-candidate corrections, follow the gate-input
+and evidence-reuse rule in the installed playbook revision's
+`docs/documentation-quality-policy.md` (Review and human brief). Apply stricter
+project policy when it requires a more conservative sequence.
 
 Playbook source tests belong only to changes in the playbook repository. In an
 adopting project, use that project's tests and the installed runtime validation;

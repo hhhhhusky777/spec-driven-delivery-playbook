@@ -564,12 +564,12 @@ flowchart TD
     I -->|"no; test-only"| F
     J -->|"yes"| G{"Final candidate to protected target?"}
     G -->|"no"| B["Task PR human brief"]
-    G -->|"yes"| V["Full validation<br/>on exact head"]
+    G -->|"yes"| V["Required gates:<br/>run or reviewed reuse"]
     V -->|"failed"| D{"Candidate change required?"}
     D -->|"yes"| X
     D -->|"no; transient"| Q["Rerun affected validation"]
     Q --> V
-    V -->|"all green"| B["Concise human brief"]
+    V -->|"all satisfied"| B["Concise human brief"]
     B --> H["Human decision at the actual gate"]
 ```
 
@@ -587,10 +587,12 @@ and send the resulting candidate through focused checks and both retained
 reviewers before full validation. Any later
 implementation-content change, including a required later synchronization,
 repeats the audit; a test-only addition does not.
-Any candidate change returns to focused tests and both reviewers; a
-final-candidate change also invalidates full validation.
-An unchanged transient check failure repeats only the affected validation. A
-project's stricter validation policy takes precedence.
+Any candidate change returns to focused tests and both reviewers. The
+[quality policy](docs/documentation-quality-policy.md#review-and-human-brief)
+defines which final-validation results a correction invalidates, how an
+unaffected pass may be reused, and when full validation must rerun. The human
+brief identifies reused results as `reused from <sha>`. A project's stricter
+validation policy takes precedence.
 
 Implementation should also remain inspectably proportional. If one task
 accumulates 90 minutes of active implementation before its planned review

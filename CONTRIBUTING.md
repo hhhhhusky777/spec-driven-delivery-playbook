@@ -108,9 +108,10 @@ implementation. Any later implementation-content change repeats this audit;
 test-only additions do not.
 Defer full validation until the final candidate will merge back to
 `main`; a single-task PR targeting `main` is already final. Candidate-changing
-corrections return through focused tests and both retained reviewer seats;
-final-candidate corrections also invalidate full validation. GitHub is the
-durable record, and a stricter project policy still applies.
+corrections return through focused tests and both retained reviewer seats.
+For final-candidate corrections, apply the gate-input and evidence-reuse rule
+in the [quality policy](docs/documentation-quality-policy.md#review-and-human-brief).
+GitHub is the durable record, and a stricter project policy still applies.
 
 If active implementation of one task reaches 90 minutes without reaching its
 planned review boundary, stop for owner attention under the

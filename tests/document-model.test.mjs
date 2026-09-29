@@ -195,7 +195,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(readme, /P --> R2\["Retained feature reviewer 2"\]/);
   assert.match(readme, /J -->\|"yes"\| G\{"Final candidate to protected target\?"\}/);
   assert.match(readme, /G -->\|"no"\| B\["Task PR human brief"\]/);
-  assert.match(readme, /G -->\|"yes"\| V\["Full validation<br\/>on exact head"\]/);
+  assert.match(readme, /G -->\|"yes"\| V\["Required gates:<br\/>run or reviewed reuse"\]/);
   assert.match(readme, /D -->\|"yes"\| X/);
   assert.match(readme, /X --> I\{"Audited implementation<br\/>content changed\?"\}/);
   assert.match(readme, /I -->\|"yes"\| E/);
@@ -221,6 +221,36 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(workflow.replace(/\s+/g, " "), /expected work or unexpected cases.*over-engineering/i);
   assert.match(plan, /\| Owning task \| Contract, changed outcome, or risk \| Test or scenario \| Coverage \| Work boundary \|/);
   assert.match(plan.replace(/\s+/g, " "), /recorded gaps do not block task `DONE`.*including unrecorded gaps.*add required missing tests before final candidate review/i);
+});
+
+test("final-candidate gate evidence is invalidated by changed inputs", async () => {
+  const policy = await read("docs/documentation-quality-policy.md");
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const contributing = await read("CONTRIBUTING.md");
+  const readme = await read("README.md");
+  const rule = policy.replace(/\s+/g, " ");
+
+  assert.match(rule, /Run every applicable gate in full for the first final candidate/i);
+  assert.match(rule, /final-candidate correction invalidates each full-validation result whose inputs it changes/i);
+  for (const input of ["product code", "runner", "dependencies", "fixtures", "configuration", "environment"]) {
+    assert.match(rule, new RegExp(input));
+  }
+  assert.match(rule, /Rerun every affected gate in full/i);
+  assert.match(rule, /prior exact head.*inputs are unchanged.*both retained reviewers confirm/i);
+  assert.match(rule, /input overlap is uncertain.*full applicable validation/i);
+  assert.match(rule, /failed gate remains failed until its own rerun passes/i);
+  assert.match(rule, /`passed`, `failed`, `unrun`, and `reused from <sha>`/i);
+  assert.match(rule, /current hosted status for the final SHA/i);
+  assert.match(rule, /test-only service image.*integration gate.*unit, lint, and E2E gates/i);
+  assert.match(rule, /shared container.*global setup.*common fixture.*every consuming gate/i);
+  assert.match(rule, /stricter validation policy takes precedence/i);
+
+  for (const pointer of [workflow, contributing, readme]) {
+    assert.match(pointer, /gate-input.*evidence-reuse|quality policy.*invalidates/is);
+    assert.doesNotMatch(pointer, /final-candidate correction (?:also )?(?:repeats|invalidates) full validation/i);
+  }
+  assert.match(readme, /V\["Required gates:<br\/>run or reviewed reuse"\]/);
+  assert.match(readme, /V -->\|"all satisfied"\| B/);
 });
 
 test("evidence-bounded scope uses one dangerous-assumption vocabulary", async () => {
