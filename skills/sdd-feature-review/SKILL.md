@@ -187,6 +187,11 @@ and [handling-comments guidance](https://google.github.io/eng-practices/review/d
 balance progress with code health and resolve disagreement through facts and
 tradeoffs, not personal preference.
 
+When uncertain about design fit, unnecessary complexity, or test value, consult
+Google's [What to look for in a code review](https://google.github.io/eng-practices/review/reviewer/looking-for.html).
+It explains over-engineering and useful, maintainable tests. Use it as supporting
+guidance, not project authority or a new gate; do not browse it routinely.
+
 Approve only the exact candidate you inspected when no unresolved blocking
 finding remains. Optional suggestions and justified nonblocking deferrals do
 not prevent approval. A candidate-changing correction returns to both retained reviewers;
