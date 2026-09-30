@@ -192,7 +192,7 @@
 | Decisions made | Add a reviewed/human-disposed inventory of every new runtime/contract rejection and every new acceptance checkpoint or blocking gate, using five proportionality criteria. | `DISCLOSE` |
 | Important boundaries | The inventory follows the fail-close and assumptions disclosure pattern; simplest sufficient mechanism is decisive, and unchanged validators or ordinary tests are not duplicated. | `DISCLOSE` |
 | Alternatives rejected | Fail-close-only, plan-only, or exhaustive inventories. | `DISCLOSE` |
-| Remaining gaps or risks | None; both reviewers approved the exact design revision. | `NONE` |
+| Remaining gaps or risks | Original design approval is historical; the owner-authorized clarification is recorded above. Current exact-head review and validation are PR-owned gates. | `DISCLOSE` |
 | Newly introduced validations | Owner approved `V01`, including authority/boundary, marginal value, example, failure effect, cost, simpler option and why insufficient, references, and both reviewer dispositions. | `DISCLOSE` |
 | Newly introduced fail-closed behavior | Owner approved `FC01` after two-agent review. | `DISCLOSE` |
 | Decision requested | None; owner accepted `WB144-01`–`WB144-06`, `V01`, and `FC01`, so planning is authorized. | `NONE` |
