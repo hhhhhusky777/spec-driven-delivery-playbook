@@ -33,7 +33,7 @@
 | `DR06` | Existing unchanged validations are linked, not relisted. | accepted |
 | `DR07` | A validation that also creates fail-closed behavior cross-references its fail-close row instead of duplicating it. | accepted |
 | `DR08` | Use `None` when no new validation exists. | accepted |
-| `DR09` | Use the fail-close and assumptions disclosure pattern for validations. | corrected after owner clarified a voice-transcription error |
+| `DR09` | Use the fail-close and assumptions disclosure pattern for validations; owner corrected a voice-transcription error. | accepted |
 
 ### Current understanding
 
@@ -154,7 +154,7 @@
 | `DR06` | `WB144-01` | accepted | Prevents duplicated project authority. |
 | `DR07` | `WB144-06` | accepted | One fact keeps one canonical owner. |
 | `DR08` | `WB144-05` | accepted | Explicit absence without invented rows. |
-| `DR09` | `WB144-02`, `WB144-03`, `WB144-05` | corrected | Owner clarified the voice transcription: the intended reference was fail-close, not an external quality theory. |
+| `DR09` | `WB144-02`, `WB144-03`, `WB144-05` | accepted | Owner clarified the voice transcription: the intended reference was fail-close, not an external quality theory. |
 
 ### Newly introduced validations
 
