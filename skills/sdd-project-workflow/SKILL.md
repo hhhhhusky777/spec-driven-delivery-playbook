@@ -94,6 +94,21 @@ If only the parent brief omitted unchanged, already approved recovery
 information or reviewer dispositions, re-present them without another review.
 Repeat review when candidate bytes or meaning changed.
 
+Before the design human gate, use the Whiteboard's validation inventory to list
+every newly designed runtime/contract rejection and every new acceptance
+checkpoint or blocking gate. Do not relist unchanged validation or ordinary
+tests under an existing gate. For each row, establish traceability, correct
+ownership/boundary, marginal value, proportionate cost, and the simplest
+sufficient mechanism; reuse or a cheaper adequate option wins unless shown
+insufficient. Cross-reference overlapping fail-close and test evidence.
+
+After both retained reviewers inspect the exact design candidate, reproduce the
+complete validation table or `None` in the parent human-gate response, append
+both reviewers' exact dispositions, and request owner disposition. Missing,
+incomplete, or pending rows block conclusion and planning. Treat Crosby's
+conformance, prevention, and cost concepts as a qualitative lens, not a fixed
+schema, numerical score, or mandate for unlimited checks.
+
 - Keep canonical project authorities mutually consistent. Resolve conflicts
   from those authorities and explicit owner decisions; ask the owner when the
   conflict changes policy, safety, intended behavior, or authority.

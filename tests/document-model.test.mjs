@@ -601,6 +601,51 @@ test("human replies pair reviewer findings with solutions and dispositions", asy
   assert.doesNotMatch(reviewer, /table pairing each reviewer finding/);
 });
 
+test("new design validations are disclosed and reviewed proportionally", async () => {
+  const policy = await read("docs/documentation-quality-policy.md");
+  const whiteboard = await read("templates/discovery/solution-whiteboard.md");
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const reviewer = await read("skills/sdd-feature-review/SKILL.md");
+  const readme = await read("README.md");
+  const plan = await read("templates/delivery/implementation-plan.md");
+  const normalizedReviewer = reviewer.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+  const scope = /every new(?:ly designed)?\s+runtime\/contract rejection and every new acceptance\s+checkpoint or blocking gate/i;
+
+  for (const document of [policy, whiteboard, workflow, reviewer, readme]) {
+    assert.match(document.replace(/^>\s?/gm, "").replace(/\s+/g, " "), scope);
+  }
+
+  assert.match(policy, /### Proportional validation disclosure/);
+  for (const criterion of [
+    /traceability to an accepted outcome/,
+    /correct ownership and execution boundary/,
+    /marginal value beyond existing controls/,
+    /risk reduction proportionate to latency/,
+    /simplest sufficient mechanism/,
+  ]) {
+    assert.match(policy, criterion);
+  }
+  assert.match(policy, /The fifth criterion is decisive/);
+  assert.match(policy, /not a\s+fixed Crosby table, numerical scoring exercise, or justification for unlimited\s+checking/);
+  assert.match(policy, /https:\/\/asq\.org\/about-asq\/honorary-members\/crosby/);
+  assert.match(policy, /https:\/\/asq\.org\/quality-resources\/cost-of-quality/);
+
+  assert.match(whiteboard, /## Newly introduced validations/);
+  assert.match(whiteboard, /\| ID \| Validation, owning authority, and execution boundary \|/);
+  assert.match(whiteboard, /Price of conformance \/ credible price of nonconformance avoided/);
+  assert.match(whiteboard, /Existing\/reusable or cheaper mechanism, its coverage, and why insufficient/);
+  assert.match(whiteboard, /<V01 or None>/);
+  assert.match(whiteboard, /Newly introduced validations \| `<complete reviewed table/);
+
+  assert.match(workflow, /reproduce the\s+complete validation table or `None`/);
+  assert.match(workflow, /append\s+both reviewers' exact dispositions/);
+  assert.match(normalizedReviewer, /Report an exact disposition for every row/);
+  assert.match(normalizedReviewer, /Reuse or a cheaper adequate option MUST win unless/);
+  assert.match(readme, /simplest sufficient\s+mechanism—not whether more checking is theoretically possible/);
+  assert.match(readme, /proportional validation contract/);
+  assert.doesNotMatch(plan, /## Newly introduced validations/);
+});
+
 test("installed skills do not link outside their copied directories", async () => {
   for (const name of await readdir(path.join(root, "skills"))) {
     const skillDirectory = path.join(root, "skills", name);

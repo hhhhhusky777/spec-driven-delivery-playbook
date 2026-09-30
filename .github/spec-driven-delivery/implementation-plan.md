@@ -8,9 +8,9 @@ This is the only active-delivery state authority.
 
 | Field | Value |
 | --- | --- |
-| State | `READY` |
+| State | `VALIDATING` |
 | Active tasks | `None` |
-| Next ready task | `T01` |
+| Next ready task | `None` |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge |
 | Delivery branch / target | `codex/issue-144-validation-review` → `main` |
@@ -18,7 +18,7 @@ This is the only active-delivery state authority.
 | Primary issue / need | [#144](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/144) |
 | Concluded whiteboard | [Solution Whiteboard](solution-whiteboard.md), accepted design `225c862fbdff6f6c161ff35bf98bfe036a5b2f83`, concluded at `0fff8bf32c1f88468fa32a41f21443fcf134ea5c` |
 | Required reviewers | Retained reviewer seats 1 and 2 from design through merge |
-| Last verified | Both reviewers approved conclusion commit `0fff8bf32c1f88468fa32a41f21443fcf134ea5c`; focused validation and blocking documentation checks passed |
+| Last verified | `T01` focused regression 1/1, documentation checks, and diff checks passed on the implementation worktree; retained implementation review is pending |
 
 ## Governing inputs and delivery boundaries
 
@@ -59,12 +59,12 @@ logic as required by the canonical policy.
 
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
-| `T01` | `WB144-01`, `WB144-02`, `V01`: complete validation inventory and inspectable schema | Focused document-model assertions for the template, policy, and response contract | planned | focused task work |
-| `T01` | `WB144-03`, `WB144-04`: five criteria govern judgment and simplest sufficient mechanism defeats unnecessary validation | Focused policy/skill assertions plus retained semantic review | planned | focused task work |
-| `T01` | `WB144-05`: parent response reproduces the reviewed table with both reviewer dispositions or `None` | Focused workflow/reviewer cross-document assertions | planned | focused task work |
-| `T01` | `WB144-06`, `FC01`: fail-close and ordinary-test evidence are referenced without duplication; incomplete inventories block conclusion/planning | Focused template/policy/skill assertions and semantic review | planned | focused task work |
-| `T01` | Reader-facing description and Crosby framing remain accurate and non-mechanical | README/document review and documentation checks | planned | focused task work |
-| `T01` | All repository contracts remain coherent on the merge-ready candidate | Full documentation and test suite, including any missing coverage recorded after focused work | deferred until final gate | final-gate addition/run |
+| `T01` | `WB144-01`, `WB144-02`, `V01`: complete validation inventory and inspectable schema | Focused document-model assertions for the template, policy, and response contract | implemented; focused test passed | focused task work |
+| `T01` | `WB144-03`, `WB144-04`: five criteria govern judgment and simplest sufficient mechanism defeats unnecessary validation | Focused policy/skill assertions plus retained semantic review | implemented; focused test passed; semantic review pending | focused task work |
+| `T01` | `WB144-05`: parent response reproduces the reviewed table with both reviewer dispositions or `None` | Focused workflow/reviewer cross-document assertions | implemented; focused test passed | focused task work |
+| `T01` | `WB144-06`, `FC01`: fail-close and ordinary-test evidence are referenced without duplication; incomplete inventories block conclusion/planning | Focused template/policy/skill assertions and semantic review | implemented; focused test passed; semantic review pending | focused task work |
+| `T01` | Reader-facing description and Crosby framing remain accurate and non-mechanical | README/document review and documentation checks | implemented; documentation checks passed | focused task work |
+| `T01` | All repository contracts remain coherent on the merge-ready candidate | Full documentation and test suite; no missing non-focused test implementation identified after focused work | run deferred until final gate | final-gate run |
 
 ## Proposed design
 
@@ -128,7 +128,7 @@ targets `main`; no intermediate task PR or policy exception exists.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `READY` | `None` | Deliver proportional disclosure and disposition of every newly designed runtime/contract rejection and every new acceptance checkpoint or blocking gate across canonical policy, portable guidance, README, and regressions. | No Whiteboard amendment, exhaustive inventory, ordinary-test duplication, automatic semantic scoring, new artifact, historical rewrite, or duplicated full policy. | Focused changed-file/line tests; retained implementation audit; missing-test reconciliation; exact final-candidate review; full final-gate validation. | `codex/issue-144-validation-review`; [PR #145](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/145); target `main` |
+| `T01` | `DONE` | `None` | Deliver proportional disclosure and disposition of every newly designed runtime/contract rejection and every new acceptance checkpoint or blocking gate across canonical policy, portable guidance, README, and regressions. | No Whiteboard amendment, exhaustive inventory, ordinary-test duplication, automatic semantic scoring, new artifact, historical rewrite, or duplicated full policy. | Focused regression 1/1, documentation checks, and diff checks passed; retained implementation audit, exact final-candidate review, and full final-gate validation remain. | `codex/issue-144-validation-review`; [PR #145](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/145); target `main` |
 
 ## Task specifications and context receipts
 
@@ -142,7 +142,7 @@ targets `main`; no intermediate task PR or policy exception exists.
 | Critical obligations | Do not change any Whiteboard byte without prior owner-authorized amendment; keep one canonical rule; preserve all five criteria; simplest sufficient mechanism is decisive; reviewers and owner dispose every row; cross-reference rather than duplicate evidence. |
 | Required evidence | Focused contract regressions and documentation checks; author plus both retained reviewers approve exact implementation before final coverage work; missing tests reconciled; both reviewers approve exact final candidate; full validation passes; human merge authority. |
 | Context receipt | Manifest/runtime current at `b3f13badb6e8b828f4185e6116939d51b5d3faeb`; accepted design frozen at `225c862`; both retained reviewers approved conclusion commit `0fff8bf`; no open owner decision or planning gap. |
-| Actual result | Pending. |
+| Actual result | Added one canonical proportional-validation contract, one project-specific Whiteboard inventory, concise author/reviewer routing, a reader-facing explanation with ASQ references, and focused cross-document regression coverage. No Whiteboard byte, new artifact, semantic scoring, or runtime checker was added; no missing non-focused test implementation was identified. |
 
 ## Recovery, decisions, and change control
 
@@ -165,9 +165,9 @@ targets `main`; no intermediate task PR or policy exception exists.
 
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
-| Accepted design delivered | Every design point and `V01`/`FC01` maps to `T01`; no unexplained addition. | Pending implementation and exact-candidate review. |
-| Applicable validation passed | Focused changed-file/line tests; pre-final author-plus-reviewer audit; missing-test reconciliation; exact final-candidate review; full final validation. | Pending. |
-| Compatibility safe | Existing fail-close, test inventory, human gate, reviewer, and archive contracts remain coherent. | Pending cross-document review. |
+| Accepted design delivered | Every design point and `V01`/`FC01` maps to `T01`; no unexplained addition. | Implemented; retained implementation audit pending. |
+| Applicable validation passed | Focused changed-file/line tests; pre-final author-plus-reviewer audit; missing-test reconciliation; exact final-candidate review; full final validation. | Focused regression 1/1, documentation checks, and diff checks passed; later gates pending. |
+| Compatibility safe | Existing fail-close, test inventory, human gate, reviewer, and archive contracts remain coherent. | Author self-review passed; retained semantic review pending. |
 | Merge-ready canonical state | Affected policy, template, skills, README, tests, plan, and eventual archive/reset candidate agree before final review. | Pending. |
 | PR-owned review and delivery | PR #145 owns findings, checks, human authority, merge, and target verification. | [PR #145](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/145) |
 | Feature cleanup complete | Concluded Whiteboard and completed plan archived together; live Whiteboard reset and live plan removed in the closing candidate; owned worktree and branch cleaned after verified merge. | Pending. |
@@ -176,13 +176,13 @@ targets `main`; no intermediate task PR or policy exception exists.
 
 | Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
 | --- | --- | --- | --- |
-| `WB144-01`–`WB144-06`, `V01`, `FC01` / `T01` | One concise, proportional, cross-document validation-disclosure contract with focused regressions. | Pending. | Plan review and owner acceptance, implementation, final gates, merge, and cleanup. |
+| `WB144-01`–`WB144-06`, `V01`, `FC01` / `T01` | One concise, proportional, cross-document validation-disclosure contract with focused regressions. | Implemented without design amendment; focused checks passed and no missing test implementation was identified. | Retained implementation audit, exact final review, full validation, human merge, and cleanup. |
 
 ### Human review brief
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Tasks and outcomes | Owner approved one task updating canonical policy, the Whiteboard template, role-specific skills, README, and focused regressions as one coherent contract. | `DISCLOSE` |
+| Tasks and outcomes | `T01` implemented the approved policy, Whiteboard template, role-specific skills, README, and focused regressions as one coherent contract. | `DISCLOSE` |
 | Design consistency | Every `WB144` point and `V01`/`FC01` maps to `T01`; no amendment or unexplained addition exists. | `NONE` |
 | Important boundaries | Inventory every new runtime/contract rejection and every new acceptance checkpoint or blocking gate; ordinary tests and unchanged validation are not duplicated; simplest sufficient mechanism is decisive. | `DISCLOSE` |
 | Validation | Focused changed-file/line checks during `T01`; implementation audit and missing-test reconciliation before exact final review; full suite at final gate. | `DISCLOSE` |

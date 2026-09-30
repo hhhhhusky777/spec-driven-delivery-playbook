@@ -499,6 +499,24 @@ it manifests and why the stated priority is warranted. The example aids human
 judgment; it does not replace evidence, impact, proportionality, or blocking
 rationale.
 
+Before a design is accepted, the Whiteboard also makes every newly designed
+runtime/contract rejection and every new acceptance checkpoint or blocking gate
+visible. Reviewers and the owner can see what it protects, where it belongs,
+what it rejects, its incremental value and cost, and why reuse or a cheaper
+adequate mechanism is insufficient. Unchanged validation is linked rather than
+relisted, and ordinary tests remain in the implementation plan unless they
+create a new blocking gate. The parent human-gate response reproduces the
+reviewed inventory with both reviewer dispositions, so the decision does not
+require reading every document line by line.
+
+The decisive question is whether the proposal is the simplest sufficient
+mechanism—not whether more checking is theoretically possible. The canonical
+[proportional validation contract](docs/documentation-quality-policy.md#proportional-validation-disclosure)
+uses Crosby's conformance, prevention, and cost concepts as a qualitative lens,
+not a fixed template, score, or pursuit of perfect validation. Background:
+[ASQ on Philip Crosby](https://asq.org/about-asq/honorary-members/crosby) and
+[ASQ on cost of quality](https://asq.org/quality-resources/cost-of-quality).
+
 Humans receive a concise table with the information needed for judgment:
 
 | Human need | What the brief exposes | Handling |

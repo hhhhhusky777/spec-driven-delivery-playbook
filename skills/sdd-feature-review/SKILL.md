@@ -77,6 +77,18 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > freeze, any whiteboard byte change without prior human authorization for the exact
 > amendment MUST block approval.
 >
+> Review every newly designed runtime/contract rejection and every new
+> acceptance checkpoint or blocking gate in the Whiteboard's validation
+> inventory. Each row MUST establish traceability, correct ownership and
+> execution boundary, marginal value beyond existing controls, risk reduction
+> proportionate to its total cost, and the simplest sufficient mechanism.
+> Reuse or a cheaper adequate option MUST win unless the row shows why it is
+> insufficient. Do not demand relisting of unchanged validation or ordinary
+> tests under an existing gate. Require cross-references instead of duplicated
+> fail-close or test evidence. Missing, incomplete, pending, or
+> disproportionate rows MUST block design approval. Report an exact disposition
+> for every row so the parent can reproduce the table at the human gate.
+>
 > Verify every task's recorded branch and required PR target against the
 > canonical branch policy and the actual pull request. Under a feature
 > integration model, a task PR targeting the protected integration branch MUST

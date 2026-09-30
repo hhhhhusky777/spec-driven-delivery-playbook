@@ -108,12 +108,61 @@ not duplicate history or successful-tool transcripts.
 > Every plan and candidate addition MUST trace to the accepted design or an
 > authority it explicitly consumes. Unexplained scope MUST block approval.
 
-Automation MUST verify that the recovery column exists and that every material
-row has a nonblank, non-`None` value. It MUST NOT infer semantic quality from
-free-form prose. Authors and reviewers MUST judge whether the action, actor,
-safe retry/resume condition, and proportionality are adequate. Missing recovery
-or reviewer disposition in the candidate or human brief blocks the applicable
-gate.
+### Proportional validation disclosure
+
+> [!IMPORTANT]
+> **Hard rule.** Before design acceptance, list every newly designed
+> runtime/contract rejection and every new acceptance checkpoint or blocking
+> gate. Both retained reviewers and the owner MUST dispose every row. A missing,
+> incomplete, or pending row MUST block design conclusion and dependent
+> planning.
+
+Do not relist unchanged validation. An individual test or assertion added under
+an existing gate remains implementation-plan test evidence unless it creates a
+new blocking gate. When a listed validation also introduces fail-closed
+behavior, reference its fail-close row instead of copying recovery content.
+Use one all-`None` row when the design introduces no validation in scope.
+
+Each row identifies the validation and its owning authority/execution boundary;
+the protected outcome or risk and marginal value beyond existing controls; one
+concrete invalid case; failure effect and recovery; price of conformance and
+credible price of nonconformance avoided; the existing, reusable, or cheaper
+mechanism considered, its coverage, and why it is insufficient; applicable
+fail-close or test references; and owner disposition.
+
+Authors and reviewers judge every row by all five criteria:
+
+1. traceability to an accepted outcome, invariant, risk, or external
+   contract;
+2. correct ownership and execution boundary;
+3. marginal value beyond existing controls;
+4. risk reduction proportionate to latency, complexity, false rejection,
+   maintenance, and operating cost; and
+5. the simplest sufficient mechanism, with reuse or a cheaper adequate option
+   preferred unless shown insufficient.
+
+The fifth criterion is decisive: reject, remove, reuse, or simplify a proposed
+validation when an adequate lower-cost mechanism already exists. This is a
+Crosby-aligned quality lens—conformance to accepted requirements, prevention,
+and comparison of conformance cost with credible nonconformance cost—not a
+fixed Crosby table, numerical scoring exercise, or justification for unlimited
+checking. See ASQ's summaries of
+[Philip Crosby](https://asq.org/about-asq/honorary-members/crosby) and
+[cost of quality](https://asq.org/quality-resources/cost-of-quality).
+
+The Whiteboard owns the project-specific inventory and owner dispositions. The
+pull request owns detailed review history. After both reviewers inspect the
+exact candidate, the parent human-gate response reproduces the complete table
+or `None`, appends each reviewer's exact disposition, and requests owner
+disposition. Structural checks protect the maintained schema; semantic value
+and proportionality remain author, reviewer, and owner judgments.
+
+For newly introduced fail-closed behaviors, automation MUST verify that the
+recovery column exists and that every material row has a nonblank, non-`None`
+value. It MUST NOT infer semantic quality from free-form prose. Authors and
+reviewers MUST judge whether the action, actor, safe retry/resume condition, and
+proportionality are adequate. Missing recovery or reviewer disposition in the
+candidate or human brief blocks the applicable gate.
 
 ## Risk-focused test design
 
