@@ -474,8 +474,13 @@ test("error handling stays simple, fail closed, and retry safe", async () => {
   assert.match(normalizedErrors, /stable retryable outcome and let the client decide when to retry/);
   assert.match(normalizedErrors, /reconcile the authoritative state or rely on an established idempotency boundary before permitting retry/);
   assert.match(errors, /only by a required invariant or observed failure/);
-  assert.match(workflow, /preserve invariants, fail closed on uncertainty/);
-  assert.match(workflow, /client-controlled retry only when repeating the operation is safe/);
+  const normalizedWorkflow = workflow.replace(/\s+/g, " ");
+  assert.match(normalizedWorkflow, /correct recoverable agent errors and continue/);
+  assert.match(normalizedWorkflow, /fail closed when continuing could violate a required invariant or safety boundary/);
+  assert.match(normalizedWorkflow, /client-controlled retry only when repeating the operation is safe/);
+  assert.match(normalizedWorkflow, /reconcile ambiguous effects or use an established idempotency boundary before permitting retry/);
+  assert.match(normalizedWorkflow, /Track confirmed playbook or project gaps in their GitHub issue tracker/);
+  assert.doesNotMatch(workflow.slice(workflow.indexOf("## Error handling"), workflow.indexOf("## Completion")), /docs\/error-handling\.md/);
   assert.match(readme, /no design can\s+enumerate every race or edge case/);
   assert.match(readme, /reconcile ambiguous effects\s+before retrying/);
   assert.match(normalizedWhiteboard, /edge cases, concurrency, races, timing, or failures are material/);
@@ -646,9 +651,16 @@ test("new design validations are disclosed and reviewed proportionally", async (
   assert.match(workflow.replace(/\s+/g, " "),
     /Missing, incomplete, or pending rows block conclusion and planning/);
   assert.match(normalizedReviewer, /Report an exact disposition for every row/);
-  assert.match(normalizedReviewer, /Reuse or a cheaper adequate option MUST win unless/);
+  assert.match(normalizedReviewer, /Reuse or a cheaper adequate option MUST win unless/i);
   assert.match(normalizedReviewer,
     /Missing, incomplete, pending, or disproportionate rows MUST block design approval/);
+  for (const portableSkill of [workflow, reviewer]) {
+    const normalized = portableSkill.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+    assert.match(normalized, /latency, complexity, false rejection, maintenance, and operating cost/);
+    assert.match(normalized, /The fifth criterion is decisive/);
+  }
+  assert.match(workflow.replace(/\s+/g, " "), /The table MUST include: ID; validation, owning authority, and execution boundary/);
+  assert.match(workflow, /project's Whiteboard has no validation-inventory section/);
   assert.match(readme, /simplest sufficient\s+mechanism—not whether more checking is theoretically possible/);
   assert.match(readme, /proportional validation contract/);
   assert.doesNotMatch(plan, /## Newly introduced validations/);

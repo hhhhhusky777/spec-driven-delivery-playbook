@@ -81,8 +81,9 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > acceptance checkpoint or blocking gate in the Whiteboard's validation
 > inventory. Each row MUST establish traceability, correct ownership and
 > execution boundary, marginal value beyond existing controls, risk reduction
-> proportionate to its total cost, and the simplest sufficient mechanism.
-> Reuse or a cheaper adequate option MUST win unless the row shows why it is
+> proportionate to latency, complexity, false rejection, maintenance, and
+> operating cost, and the simplest sufficient mechanism. The fifth criterion
+> is decisive: reuse or a cheaper adequate option MUST win unless the row shows why it is
 > insufficient. Do not demand relisting of unchanged validation or ordinary
 > tests under an existing gate. Require cross-references instead of duplicated
 > fail-close or test evidence. Missing, incomplete, pending, or

@@ -98,9 +98,19 @@ Before the design human gate, use the Whiteboard's validation inventory to list
 every newly designed runtime/contract rejection and every new acceptance
 checkpoint or blocking gate. Do not relist unchanged validation or ordinary
 tests under an existing gate. For each row, establish traceability, correct
-ownership/boundary, marginal value, proportionate cost, and the simplest
-sufficient mechanism; reuse or a cheaper adequate option wins unless shown
-insufficient. Cross-reference overlapping fail-close and test evidence.
+ownership/boundary, marginal value, risk reduction proportionate to latency,
+complexity, false rejection, maintenance, and operating cost, and the simplest
+sufficient mechanism. The fifth criterion is decisive: reuse or a cheaper
+adequate option wins unless shown insufficient. Cross-reference overlapping
+fail-close and test evidence.
+
+The table MUST include: ID; validation, owning authority, and execution boundary;
+protected outcome/risk and marginal value; concrete invalid case; failure effect
+and recovery; conformance cost versus credible nonconformance cost avoided;
+existing/reusable or cheaper mechanism, its coverage, and why insufficient;
+fail-close/test reference; and owner disposition. Use these fields even when
+the project's Whiteboard has no validation-inventory section; no separate
+document is required.
 
 After both retained reviewers inspect the exact design candidate, reproduce the
 complete validation table or `None` in the parent human-gate response, append
@@ -349,11 +359,19 @@ interruptions, review time, or waits for people or external systems.
 
 ## Error handling
 
-Follow the canonical error-handling authority recorded in the adoption
-manifest; do not restate or fork it here. In this playbook repository,
-`docs/error-handling.md` owns triage, issue tracking, recovery, and escalation.
-Its core outcome is simple: preserve invariants, fail closed on uncertainty,
-and expose client-controlled retry only when repeating the operation is safe.
+Follow the project's manifest-linked error-handling authority when present.
+Do not duplicate or override it.
+
+Within approved scope and authority, correct recoverable agent errors and
+continue. Preserve system consistency; fail closed when continuing could
+violate a required invariant or safety boundary. Allow client-controlled retry
+only when repeating the operation is safe; reconcile ambiguous effects or use
+an established idempotency boundary before permitting retry. Prefer the
+smallest sufficient handling, not enumeration of every possible failure.
+
+Escalate unresolved scope, authority, or critical contract conflicts to the
+human. Track confirmed playbook or project gaps in their GitHub issue tracker;
+ordinary agent mistakes do not require a new issue.
 
 ## Completion
 
