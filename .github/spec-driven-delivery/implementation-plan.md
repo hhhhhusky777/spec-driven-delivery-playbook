@@ -18,7 +18,7 @@ This is the only active-delivery state authority.
 | Primary issue / need | [#144](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/144) |
 | Concluded whiteboard | [Solution Whiteboard](solution-whiteboard.md), accepted design `225c862fbdff6f6c161ff35bf98bfe036a5b2f83`, concluded at `0fff8bf32c1f88468fa32a41f21443fcf134ea5c` |
 | Required reviewers | Retained reviewer seats 1 and 2 from design through merge |
-| Last verified | `T01` focused regression 1/1, documentation checks, and diff checks passed on the implementation worktree; retained implementation review is pending |
+| Last verified | Corrected implementation passed the complete changed test file 20/20, focused PR validation, and diff checks; retained implementation re-review is pending |
 
 ## Governing inputs and delivery boundaries
 
@@ -128,7 +128,7 @@ targets `main`; no intermediate task PR or policy exception exists.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `DONE` | `None` | Deliver proportional disclosure and disposition of every newly designed runtime/contract rejection and every new acceptance checkpoint or blocking gate across canonical policy, portable guidance, README, and regressions. | No Whiteboard amendment, exhaustive inventory, ordinary-test duplication, automatic semantic scoring, new artifact, historical rewrite, or duplicated full policy. | Focused regression 1/1, documentation checks, and diff checks passed; retained implementation audit, exact final-candidate review, and full final-gate validation remain. | `codex/issue-144-validation-review`; [PR #145](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/145); target `main` |
+| `T01` | `DONE` | `None` | Deliver proportional disclosure and disposition of every newly designed runtime/contract rejection and every new acceptance checkpoint or blocking gate across canonical policy, portable guidance, README, and regressions. | No Whiteboard amendment, exhaustive inventory, ordinary-test duplication, automatic semantic scoring, new artifact, historical rewrite, or duplicated full policy. | Complete changed test file 20/20, focused PR validation, and diff checks passed; retained implementation re-audit, exact final-candidate review, and full final-gate validation remain. | `codex/issue-144-validation-review`; [PR #145](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/145); target `main` |
 
 ## Task specifications and context receipts
 
@@ -150,7 +150,8 @@ targets `main`; no intermediate task PR or policy exception exists.
 
 | ID | Task | Observed versus expected | Classification / evidence | Recovery or owner decision | State |
 | --- | --- | --- | --- | --- | --- |
-| `None` | `None` | No active execution failure. | `None` | `None` | resolved |
+| `E01` | `T01` | A new test passed alone, but the complete changed test file exposed one stale compatibility assertion. | Agent test-scope mistake; reviewer reproduced 19/20. | Restore the existing normative sentence, then run the complete changed test file and focused PR validation. | resolved; 20/20 and focused validation passed |
+| `E02` | `T01` | The initial regression checked schema and proportionality but not the approved blocking wording. | Focused coverage gap against `V01`/`FC01`. | Extend the same regression to protect policy, template, workflow, and reviewer blocking contracts. | resolved; assertions pass |
 
 ### Delivery decision and amendment log
 
@@ -166,7 +167,7 @@ targets `main`; no intermediate task PR or policy exception exists.
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
 | Accepted design delivered | Every design point and `V01`/`FC01` maps to `T01`; no unexplained addition. | Implemented; retained implementation audit pending. |
-| Applicable validation passed | Focused changed-file/line tests; pre-final author-plus-reviewer audit; missing-test reconciliation; exact final-candidate review; full final validation. | Focused regression 1/1, documentation checks, and diff checks passed; later gates pending. |
+| Applicable validation passed | Focused changed-file/line tests; pre-final author-plus-reviewer audit; missing-test reconciliation; exact final-candidate review; full final validation. | Complete changed test file 20/20, focused PR validation, and diff checks passed; later gates pending. |
 | Compatibility safe | Existing fail-close, test inventory, human gate, reviewer, and archive contracts remain coherent. | Author self-review passed; retained semantic review pending. |
 | Merge-ready canonical state | Affected policy, template, skills, README, tests, plan, and eventual archive/reset candidate agree before final review. | Pending. |
 | PR-owned review and delivery | PR #145 owns findings, checks, human authority, merge, and target verification. | [PR #145](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/145) |

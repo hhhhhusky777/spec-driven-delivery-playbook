@@ -157,12 +157,13 @@ or `None`, appends each reviewer's exact disposition, and requests owner
 disposition. Structural checks protect the maintained schema; semantic value
 and proportionality remain author, reviewer, and owner judgments.
 
-For newly introduced fail-closed behaviors, automation MUST verify that the
-recovery column exists and that every material row has a nonblank, non-`None`
-value. It MUST NOT infer semantic quality from free-form prose. Authors and
-reviewers MUST judge whether the action, actor, safe retry/resume condition, and
-proportionality are adequate. Missing recovery or reviewer disposition in the
-candidate or human brief blocks the applicable gate.
+The existing fail-closed behavior contract remains separate from the validation
+inventory. Automation MUST verify that the recovery column exists and that
+every material row has a nonblank, non-`None` value. It MUST NOT infer semantic
+quality from free-form prose. Authors and reviewers MUST judge whether the
+action, actor, safe retry/resume condition, and proportionality are adequate.
+Missing recovery or reviewer disposition in the candidate or human brief blocks
+the applicable gate.
 
 ## Risk-focused test design
 
