@@ -379,7 +379,7 @@ targets `main`; no intermediate task PR or policy exception exists.
 
 | Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
 | --- | --- | --- | --- |
-| `WB144-01`–`WB144-06`, `V01`, `FC01` / `T01` | One concise, proportional, cross-document validation-disclosure contract with focused regressions. | Implemented without design amendment; both reviewers approved exact implementation content; no missing test implementation remains. | Closing-candidate review, full validation, human merge, target verification, and worktree/branch cleanup. |
+| `WB144-01`–`WB144-06`, `V01`, `FC01` / `T01` | One concise, proportional, cross-document validation-disclosure contract with focused regressions. | Implemented with the owner-authorized no-new-scope clarification; no missing test implementation remains. Current exact-head approval is PR-owned. | Closing-candidate review, full validation, human merge, target verification, and worktree/branch cleanup. |
 
 #### Cleanup inventory
 
@@ -395,8 +395,8 @@ targets `main`; no intermediate task PR or policy exception exists.
 | Attention | Summary | Handling |
 | --- | --- | --- |
 | Tasks and outcomes | `T01` implemented the approved policy, Whiteboard template, role-specific skills, README, and focused regressions as one coherent contract. | `DISCLOSE` |
-| Design consistency | Every `WB144` point and `V01`/`FC01` maps to `T01`; no amendment or unexplained addition exists. | `NONE` |
+| Design consistency | Every `WB144` point and `V01`/`FC01` maps to `T01`; the owner-authorized clarification amendment is recorded; no unexplained addition exists. | `DISCLOSE` |
 | Important boundaries | Inventory every new runtime/contract rejection and every new acceptance checkpoint or blocking gate; ordinary tests and unchanged validation are not duplicated; simplest sufficient mechanism is decisive. | `DISCLOSE` |
-| Review findings | `E01` restored the existing fail-close assertion contract; `E02` added missing blocker coverage. Both reviewers approved the corrected implementation. | `DISCLOSE` |
+| Review findings | Historical corrections: `E01` restored the existing fail-close assertion contract; `E02` added missing blocker coverage. Current exact-head findings and reviewer dispositions are recorded in PR #145. | `DISCLOSE` |
 | Validation | Complete changed test file 20/20, focused PR validation, and diff checks passed; no missing tests remain; full suite is deferred until final-candidate approval. | `DISCLOSE` |
 | Decision requested | None until final candidate review and full validation complete; human merge authority remains pending. | `NONE` |
