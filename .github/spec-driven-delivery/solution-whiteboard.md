@@ -180,10 +180,10 @@
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Decisions made | Add a reviewed/human-disposed inventory of every new runtime/contract rejection and every new acceptance checkpoint or blocking gate, using five proportionality criteria. | `HUMAN_DECISION` |
+| Decisions made | Add a reviewed/human-disposed inventory of every new runtime/contract rejection and every new acceptance checkpoint or blocking gate, using five proportionality criteria. | `DISCLOSE` |
 | Important boundaries | The inventory is Crosby-aligned, not a mechanical Crosby template; simplest sufficient mechanism is decisive, and unchanged validators or ordinary tests are not duplicated. | `DISCLOSE` |
 | Alternatives rejected | Fail-close-only, plan-only, or exhaustive inventories. | `DISCLOSE` |
-| Remaining gaps or risks | None; both reviewers approved the exact design revision. | `DISCLOSE` |
-| Newly introduced validations | `V01`, including authority/boundary, marginal value, example, failure effect, cost, simpler option and why insufficient, references, and both reviewer dispositions. | `HUMAN_DECISION` |
-| Newly introduced fail-closed behavior | `FC01`; owner disposition follows two-agent review. | `HUMAN_DECISION` |
-| Decision requested | Owner accepted `WB144-01`–`WB144-06`, `V01`, and `FC01`; conclusion and planning are authorized. | `HUMAN_DECISION` |
+| Remaining gaps or risks | None; both reviewers approved the exact design revision. | `NONE` |
+| Newly introduced validations | Owner approved `V01`, including authority/boundary, marginal value, example, failure effect, cost, simpler option and why insufficient, references, and both reviewer dispositions. | `DISCLOSE` |
+| Newly introduced fail-closed behavior | Owner approved `FC01` after two-agent review. | `DISCLOSE` |
+| Decision requested | None; owner accepted `WB144-01`–`WB144-06`, `V01`, and `FC01`, so planning is authorized. | `NONE` |
