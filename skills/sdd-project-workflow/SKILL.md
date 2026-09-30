@@ -97,27 +97,32 @@ Repeat review when candidate bytes or meaning changed.
 Before the design human gate, use the Whiteboard's validation inventory to list
 every newly designed runtime/contract rejection and every new acceptance
 checkpoint or blocking gate. Do not relist unchanged validation or ordinary
-tests under an existing gate. For each row, establish traceability, correct
-ownership/boundary, marginal value, risk reduction proportionate to latency,
-complexity, false rejection, maintenance, and operating cost, and the simplest
-sufficient mechanism. The fifth criterion is decisive: reuse or a cheaper
-adequate option wins unless shown insufficient. Cross-reference overlapping
-fail-close and test evidence.
+tests under an existing gate. Authors and reviewers MUST assess each row against
+all five criteria:
 
-The table MUST include: ID; validation, owning authority, and execution boundary;
-protected outcome/risk and marginal value; concrete invalid case; failure effect
-and recovery; conformance cost versus credible nonconformance cost avoided;
-existing/reusable or cheaper mechanism, its coverage, and why insufficient;
-fail-close/test reference; and owner disposition. Use these fields even when
-the project's Whiteboard has no validation-inventory section; no separate
-document is required.
+1. Traceability to an accepted outcome, invariant, risk, or external contract.
+2. Correct ownership and execution boundary.
+3. Marginal value beyond existing controls.
+4. Risk reduction proportionate to latency, complexity, false rejection,
+   maintenance, and operating cost.
+5. The simplest sufficient mechanism. The fifth criterion is decisive: reuse
+   or a cheaper adequate option wins unless shown insufficient.
 
-After both retained reviewers inspect the exact design candidate, reproduce the
-complete validation table or `None` in the parent human-gate response, append
-both reviewers' exact dispositions, and request owner disposition. Missing,
-incomplete, or pending rows block conclusion and planning. Treat Crosby's
-conformance, prevention, and cost concepts as a qualitative lens, not a fixed
-schema, numerical score, or mandate for unlimited checks.
+Cross-reference overlapping fail-close and test evidence; do not duplicate it.
+
+> [!IMPORTANT]
+> After both retained reviewers approve the exact design candidate, the parent
+> response MUST reproduce the complete validation table or `None`, preserve
+> both reviewers' exact dispositions, and request owner disposition. Missing,
+> incomplete, or pending rows MUST block conclusion and planning.
+>
+> The table MUST include: `ID`, `Validation / authority / execution boundary`,
+> `Protected outcome / risk / marginal value`, `Concrete invalid case`,
+> `Failure effect / recovery`, `Cost / risk reduction`,
+> `Existing or cheaper mechanism / coverage / why insufficient`,
+> `Fail-close / test reference`, and `Owner disposition`.
+> Use these fields even when the project's Whiteboard has no validation-inventory
+> section. Do not create a separate document or invent rows to populate the table.
 
 - Keep canonical project authorities mutually consistent. Resolve conflicts
   from those authorities and explicit owner decisions; ask the owner when the

@@ -125,8 +125,8 @@ Use one all-`None` row when the design introduces no validation in scope.
 
 Each row identifies the validation and its owning authority/execution boundary;
 the protected outcome or risk and marginal value beyond existing controls; one
-concrete invalid case; failure effect and recovery; price of conformance and
-credible price of nonconformance avoided; the existing, reusable, or cheaper
+concrete invalid case; failure effect and recovery; cost and credible risk
+reduction; the existing, reusable, or cheaper
 mechanism considered, its coverage, and why it is insufficient; applicable
 fail-close or test references; and owner disposition.
 
@@ -142,13 +142,9 @@ Authors and reviewers judge every row by all five criteria:
    preferred unless shown insufficient.
 
 The fifth criterion is decisive: reject, remove, reuse, or simplify a proposed
-validation when an adequate lower-cost mechanism already exists. This is a
-Crosby-aligned quality lens—conformance to accepted requirements, prevention,
-and comparison of conformance cost with credible nonconformance cost—not a
-fixed Crosby table, numerical scoring exercise, or justification for unlimited
-checking. See ASQ's summaries of
-[Philip Crosby](https://asq.org/about-asq/honorary-members/crosby) and
-[cost of quality](https://asq.org/quality-resources/cost-of-quality).
+validation when an adequate lower-cost mechanism already exists. Use the same
+reviewed-table and human-disposition pattern as fail-close disclosure, not a
+numerical scoring exercise or justification for unlimited checking.
 
 The Whiteboard owns the project-specific inventory and owner dispositions. The
 pull request owns detailed review history. After both reviewers inspect the

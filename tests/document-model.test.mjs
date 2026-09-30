@@ -633,23 +633,24 @@ test("new design validations are disclosed and reviewed proportionally", async (
   assert.match(policy, /The fifth criterion is decisive/);
   assert.match(policy.replace(/^>\s?/gm, "").replace(/\s+/g, " "),
     /A missing, incomplete, or pending row MUST block design conclusion and dependent planning/);
-  assert.match(policy, /not a\s+fixed Crosby table, numerical scoring exercise, or justification for unlimited\s+checking/);
-  assert.match(policy, /https:\/\/asq\.org\/about-asq\/honorary-members\/crosby/);
-  assert.match(policy, /https:\/\/asq\.org\/quality-resources\/cost-of-quality/);
+  for (const document of [policy, workflow, reviewer, readme]) {
+    assert.doesNotMatch(document, /Crosby|asq\.org/i);
+  }
 
   assert.match(whiteboard, /## Newly introduced validations/);
   assert.match(whiteboard, /\| ID \| Validation, owning authority, and execution boundary \|/);
-  assert.match(whiteboard, /Price of conformance \/ credible price of nonconformance avoided/);
+  assert.match(whiteboard, /Cost \/ risk reduction/);
   assert.match(whiteboard, /Existing\/reusable or cheaper mechanism, its coverage, and why insufficient/);
   assert.match(whiteboard, /<V01 or None>/);
   assert.match(whiteboard, /Newly introduced validations \| `<complete reviewed table/);
   assert.match(whiteboard.replace(/^>\s?/gm, "").replace(/\s+/g, " "),
     /A concluded Whiteboard MUST NOT contain a pending row/);
 
-  assert.match(workflow, /reproduce the\s+complete validation table or `None`/);
-  assert.match(workflow, /append\s+both reviewers' exact dispositions/);
-  assert.match(workflow.replace(/\s+/g, " "),
-    /Missing, incomplete, or pending rows block conclusion and planning/);
+  const normalizedWorkflow = workflow.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+  assert.match(normalizedWorkflow, /reproduce the complete validation table or `None`/);
+  assert.match(normalizedWorkflow, /preserve both reviewers' exact dispositions/);
+  assert.match(normalizedWorkflow,
+    /Missing, incomplete, or pending rows MUST block conclusion and planning/);
   assert.match(normalizedReviewer, /Report an exact disposition for every row/);
   assert.match(normalizedReviewer, /Reuse or a cheaper adequate option MUST win unless/i);
   assert.match(normalizedReviewer,
@@ -659,8 +660,8 @@ test("new design validations are disclosed and reviewed proportionally", async (
     assert.match(normalized, /latency, complexity, false rejection, maintenance, and operating cost/);
     assert.match(normalized, /The fifth criterion is decisive/);
   }
-  assert.match(workflow.replace(/\s+/g, " "), /The table MUST include: ID; validation, owning authority, and execution boundary/);
-  assert.match(workflow, /project's Whiteboard has no validation-inventory section/);
+  assert.match(normalizedWorkflow, /The table MUST include: `ID`, `Validation \/ authority \/ execution boundary`/);
+  assert.match(normalizedWorkflow, /project's Whiteboard has no validation-inventory section/);
   assert.match(readme, /simplest sufficient\s+mechanism—not whether more checking is theoretically possible/);
   assert.match(readme, /proportional validation contract/);
   assert.doesNotMatch(plan, /## Newly introduced validations/);

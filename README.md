@@ -512,10 +512,8 @@ require reading every document line by line.
 The decisive question is whether the proposal is the simplest sufficient
 mechanism—not whether more checking is theoretically possible. The canonical
 [proportional validation contract](docs/documentation-quality-policy.md#proportional-validation-disclosure)
-uses Crosby's conformance, prevention, and cost concepts as a qualitative lens,
-not a fixed template, score, or pursuit of perfect validation. Background:
-[ASQ on Philip Crosby](https://asq.org/about-asq/honorary-members/crosby) and
-[ASQ on cost of quality](https://asq.org/quality-resources/cost-of-quality).
+uses the same reviewed-table and human-disposition pattern as fail-close
+disclosure, not a score or pursuit of perfect validation.
 
 Humans receive a concise table with the information needed for judgment:
 

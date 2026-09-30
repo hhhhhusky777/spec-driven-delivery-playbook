@@ -153,7 +153,7 @@ deferrals, and rejections instead of silently dropping them.
 > exists. Link unchanged validations and keep individual tests or assertions
 > under an existing gate in the implementation-plan test inventory.
 
-| ID | Validation, owning authority, and execution boundary | Protected outcome / risk and marginal value beyond existing controls | Concrete invalid case | Failure effect / recovery | Price of conformance / credible price of nonconformance avoided | Existing/reusable or cheaper mechanism, its coverage, and why insufficient | Fail-close / test reference | Owner disposition |
+| ID | Validation, owning authority, and execution boundary | Protected outcome / risk and marginal value beyond existing controls | Concrete invalid case | Failure effect / recovery | Cost / risk reduction | Existing/reusable or cheaper mechanism, its coverage, and why insufficient | Fail-close / test reference | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `<V01 or None>` | `<validation, owner, and boundary; or None>` | `<traceability and incremental protection; or None>` | `<realistic rejected case or stopped checkpoint; or None>` | `<effect and recovery; or None>` | `<proportionate cost comparison; or None>` | `<reuse or cheaper option, coverage, and insufficiency; or None>` | `<IDs or None>` | `<Pending, Approved, Rejected, or None>` |
 

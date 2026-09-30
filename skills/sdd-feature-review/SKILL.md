@@ -79,12 +79,17 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 >
 > Review every newly designed runtime/contract rejection and every new
 > acceptance checkpoint or blocking gate in the Whiteboard's validation
-> inventory. Each row MUST establish traceability, correct ownership and
-> execution boundary, marginal value beyond existing controls, risk reduction
-> proportionate to latency, complexity, false rejection, maintenance, and
-> operating cost, and the simplest sufficient mechanism. The fifth criterion
-> is decisive: reuse or a cheaper adequate option MUST win unless the row shows why it is
-> insufficient. Do not demand relisting of unchanged validation or ordinary
+> inventory. Each row MUST satisfy all five criteria:
+>
+> 1. Traceability to an accepted outcome, invariant, risk, or external contract.
+> 2. Correct ownership and execution boundary.
+> 3. Marginal value beyond existing controls.
+> 4. Risk reduction proportionate to latency, complexity, false rejection,
+>    maintenance, and operating cost.
+> 5. The simplest sufficient mechanism. The fifth criterion is decisive: reuse
+>    or a cheaper adequate option MUST win unless shown insufficient.
+>
+> Do not demand relisting of unchanged validation or ordinary
 > tests under an existing gate. Require cross-references instead of duplicated
 > fail-close or test evidence. Missing, incomplete, pending, or
 > disproportionate rows MUST block design approval. Report an exact disposition
