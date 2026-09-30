@@ -35,7 +35,7 @@ This is the only active-delivery state authority.
 
 | Concern | Accepted value |
 | --- | --- |
-| Problem | Designs can introduce runtime rejections or blocking gates without exposing ownership, marginal value, failure effect, cost, or a simpler adequate alternative before acceptance. |
+| Problem | Designs can introduce runtime/contract rejections and acceptance checkpoints or blocking gates without exposing ownership, marginal value, failure effect, cost, or a simpler adequate alternative before acceptance. |
 | Required outcome | Every newly designed runtime/contract rejection and acceptance checkpoint or blocking gate is explicitly reviewed and owner-disposed before design conclusion. |
 | In scope | One canonical policy contract, Whiteboard template inventory, role-specific workflow/reviewer guidance, concise README explanation and references, and focused structural regressions. |
 | Out of scope / deferred | Relisting unchanged validation, moving ordinary tests from the plan, numerical scoring, automatic semantic proportionality judgment, another state artifact, or historical archive rewrites. |
@@ -84,7 +84,7 @@ logic as required by the canonical policy.
 | ID | Decision | Alternatives | Rationale / tradeoff | Affected contracts |
 | --- | --- | --- | --- | --- |
 | `D01` | Keep the complete normative rule in documentation quality policy; consumers keep only role-specific instructions and links. | Repeat the full rule everywhere. | One canonical owner prevents drift and excess text. | `WB144-03`, `WB144-05`, `WB144-06` |
-| `D02` | Add one Whiteboard inventory covering only new runtime/contract rejection and new blocking checkpoints/gates. | Exhaustive validation or fail-close-only inventories. | Makes owner decisions complete without duplicating ordinary tests or unchanged controls. | `WB144-01`, `WB144-02`, `V01`, `FC01` |
+| `D02` | Add one Whiteboard inventory covering every new runtime/contract rejection and every new acceptance checkpoint or blocking gate. | Exhaustive validation or fail-close-only inventories. | Makes owner decisions complete without duplicating ordinary tests or unchanged controls. | `WB144-01`, `WB144-02`, `V01`, `FC01` |
 | `D03` | Use the five accepted criteria with simplest sufficient mechanism decisive. | Numerical scoring or reviewer preference. | Preserves proportional judgment and prevents redundant validation. | `WB144-03`, `WB144-04` |
 | `D04` | Use Crosby as a qualitative conformance, prevention, and cost lens only. | Attribute a fixed schema to Crosby or treat zero defects as unlimited checking. | Clarifies validation economics without creating ceremony. | `WB144-02`, `WB144-03`, `WB144-04` |
 | `D05` | Add focused structural regressions and retain semantic agent/human review. | Parse free text to automate value judgments. | Automation protects document contracts; people judge proportionality. | all design points |
@@ -128,7 +128,7 @@ targets `main`; no intermediate task PR or policy exception exists.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `PLANNED` | `None` | Deliver proportional disclosure and disposition of every newly designed runtime/contract rejection and blocking checkpoint/gate across canonical policy, portable guidance, README, and regressions. | No Whiteboard amendment, exhaustive inventory, ordinary-test duplication, automatic semantic scoring, new artifact, historical rewrite, or duplicated full policy. | Focused changed-file/line tests; retained implementation audit; missing-test reconciliation; exact final-candidate review; full final-gate validation. | `codex/issue-144-validation-review`; [PR #145](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/145); target `main` |
+| `T01` | `PLANNED` | `None` | Deliver proportional disclosure and disposition of every newly designed runtime/contract rejection and every new acceptance checkpoint or blocking gate across canonical policy, portable guidance, README, and regressions. | No Whiteboard amendment, exhaustive inventory, ordinary-test duplication, automatic semantic scoring, new artifact, historical rewrite, or duplicated full policy. | Focused changed-file/line tests; retained implementation audit; missing-test reconciliation; exact final-candidate review; full final-gate validation. | `codex/issue-144-validation-review`; [PR #145](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/145); target `main` |
 
 ## Task specifications and context receipts
 
@@ -136,7 +136,7 @@ targets `main`; no intermediate task PR or policy exception exists.
 
 | Concern | Value |
 | --- | --- |
-| Outcome / non-scope | Make new rejection and blocking validation decisions visible and proportional without cataloguing unchanged checks, duplicating ordinary tests, or prescribing numerical scoring. |
+| Outcome / non-scope | Make every new runtime/contract rejection and every new acceptance checkpoint or blocking gate visible and proportional without cataloguing unchanged checks, duplicating ordinary tests, or prescribing numerical scoring. |
 | Source boundary | `docs/documentation-quality-policy.md`, `templates/discovery/solution-whiteboard.md`, `skills/sdd-project-workflow/SKILL.md`, `skills/sdd-feature-review/SKILL.md`, `README.md`, and directly affected tests. |
 | Consumed dependencies | Frozen Whiteboard design `225c862`; approved `V01` and `FC01`; current documentation, error-handling, branch, review, and final-gate contracts; selected OWASP, AWS, Google, and ASQ references. |
 | Critical obligations | Do not change any Whiteboard byte without prior owner-authorized amendment; keep one canonical rule; preserve all five criteria; simplest sufficient mechanism is decisive; reviewers and owner dispose every row; cross-reference rather than duplicate evidence. |
@@ -183,6 +183,6 @@ targets `main`; no intermediate task PR or policy exception exists.
 | --- | --- | --- |
 | Tasks and outcomes | One task updates canonical policy, the Whiteboard template, role-specific skills, README, and focused regressions as one coherent contract. | `HUMAN_DECISION` |
 | Design consistency | Every `WB144` point and `V01`/`FC01` maps to `T01`; no amendment or unexplained addition exists. | `NONE` |
-| Important boundaries | Inventory only new runtime/contract rejection and new blocking checkpoints/gates; ordinary tests and unchanged validation are not duplicated; simplest sufficient mechanism is decisive. | `DISCLOSE` |
+| Important boundaries | Inventory every new runtime/contract rejection and every new acceptance checkpoint or blocking gate; ordinary tests and unchanged validation are not duplicated; simplest sufficient mechanism is decisive. | `DISCLOSE` |
 | Validation | Focused changed-file/line checks during `T01`; implementation audit and missing-test reconciliation before exact final review; full suite at final gate. | `DISCLOSE` |
 | Decision requested | Approve this one-task plan and release `T01` for implementation. | `HUMAN_DECISION` |
