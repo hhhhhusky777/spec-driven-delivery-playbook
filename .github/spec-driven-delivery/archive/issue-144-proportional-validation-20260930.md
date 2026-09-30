@@ -263,9 +263,9 @@ logic as required by the canonical policy.
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
 | `T01` | `WB144-01`, `WB144-02`, `V01`: complete validation inventory and inspectable schema | Focused document-model assertions for the template, policy, and response contract | implemented; focused test passed | focused task work |
-| `T01` | `WB144-03`, `WB144-04`: five criteria govern judgment and simplest sufficient mechanism defeats unnecessary validation | Focused policy/skill assertions plus retained semantic review | implemented; focused test passed; semantic review pending | focused task work |
+| `T01` | `WB144-03`, `WB144-04`: five criteria govern judgment and simplest sufficient mechanism defeats unnecessary validation | Focused policy/skill assertions plus retained semantic review | implemented; focused test and retained semantic review passed at `d962127` | focused task work |
 | `T01` | `WB144-05`: parent response reproduces the reviewed table with both reviewer dispositions or `None` | Focused workflow/reviewer cross-document assertions | implemented; focused test passed | focused task work |
-| `T01` | `WB144-06`, `FC01`: fail-close and ordinary-test evidence are referenced without duplication; incomplete inventories block conclusion/planning | Focused template/policy/skill assertions and semantic review | implemented; focused test passed; semantic review pending | focused task work |
+| `T01` | `WB144-06`, `FC01`: fail-close and ordinary-test evidence are referenced without duplication; incomplete inventories block conclusion/planning | Focused template/policy/skill assertions and semantic review | implemented; focused test and retained semantic review passed at `d962127` | focused task work |
 | `T01` | Reader-facing description and Crosby framing remain accurate and non-mechanical | README/document review and documentation checks | implemented; documentation checks passed | focused task work |
 | `T01` | All repository contracts remain coherent on the merge-ready candidate | Full documentation and test suite; no missing non-focused test implementation identified after focused work | run deferred until final gate | final-gate run |
 
@@ -331,7 +331,7 @@ targets `main`; no intermediate task PR or policy exception exists.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `DONE` | `None` | Deliver proportional disclosure and disposition of every newly designed runtime/contract rejection and every new acceptance checkpoint or blocking gate across canonical policy, portable guidance, README, and regressions. | No Whiteboard amendment, exhaustive inventory, ordinary-test duplication, automatic semantic scoring, new artifact, historical rewrite, or duplicated full policy. | Complete changed test file 20/20, focused PR validation, and diff checks passed; retained implementation re-audit, exact final-candidate review, and full final-gate validation remain. | `codex/issue-144-validation-review`; [PR #145](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/145); target `main` |
+| `T01` | `DONE` | `None` | Deliver proportional disclosure and disposition of every newly designed runtime/contract rejection and every new acceptance checkpoint or blocking gate across canonical policy, portable guidance, README, and regressions. | No Whiteboard amendment, exhaustive inventory, ordinary-test duplication, automatic semantic scoring, new artifact, historical rewrite, or duplicated full policy. | Complete changed test file 20/20, focused PR validation, and diff checks passed; both reviewers approved the implementation re-audit at `d962127`; exact final-candidate review and full final-gate validation remain. | `codex/issue-144-validation-review`; [PR #145](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/145); target `main` |
 
 ### Task specifications and context receipts
 
