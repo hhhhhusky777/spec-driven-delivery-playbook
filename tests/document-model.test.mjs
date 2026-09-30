@@ -223,6 +223,81 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(plan.replace(/\s+/g, " "), /recorded gaps do not block task `DONE`.*including unrecorded gaps.*add required missing tests before final candidate review/i);
 });
 
+test("evidence-bounded scope uses one dangerous-assumption vocabulary", async () => {
+  const policy = await read("docs/documentation-quality-policy.md");
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const reviewer = await read("skills/sdd-feature-review/SKILL.md");
+  const whiteboard = await read("templates/discovery/solution-whiteboard.md");
+  const readme = await read("README.md");
+  const normalize = value => value.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+
+  for (const document of [policy, workflow, reviewer, whiteboard, readme]) {
+    const normalized = normalize(document);
+    for (const category of [
+      /unsupported/i,
+      /foreign-owned/i,
+      /incidental-state/i,
+      /single-case(?:-| )generalization/i,
+      /hidden(?:-| )dependency/i,
+      /speculative(?:-| )assumption/i,
+    ]) assert.match(normalized, category);
+  }
+
+  const normalizedPolicy = normalize(policy);
+  assert.match(normalizedPolicy, /material design or implementation premise.*accepted outcome.*owned responsibility.*authoritative external contract/i);
+  assert.match(normalizedPolicy, /evidence.*valid for the declared supported domain/i);
+  assert.match(normalizedPolicy, /verify it from current authority.*public contract.*narrow and disclose the supported domain/i);
+  assert.match(normalizedPolicy, /authority remains unresolved.*ask the human to define or expand scope/i);
+  assert.match(normalizedPolicy, /MUST NOT demand universal proof or speculative generalization/i);
+  assert.match(policy, /\| Category \| Scope warning \|/);
+  for (const consumer of [workflow, reviewer, whiteboard, readme]) {
+    assert.doesNotMatch(consumer, /\| Category \| Scope warning \|/);
+  }
+
+  assert.match(readme, /https:\/\/learn\.microsoft\.com\/en-us\/dotnet\/architecture\/modern-web-apps-azure\/architectural-principles/);
+  assert.match(readme, /https:\/\/docs\.aws\.amazon\.com\/wellarchitected\/latest\/userguide\/workload-and-scope\.html/);
+  for (const skill of [workflow, reviewer]) {
+    assert.match(skill, /https:\/\/learn\.microsoft\.com\/en-us\/dotnet\/architecture\/modern-web-apps-azure\/architectural-principles/);
+    assert.match(skill, /https:\/\/docs\.aws\.amazon\.com\/wellarchitected\/latest\/userguide\/workload-and-scope\.html/);
+    assert.match(normalize(skill), /genuine uncertainty about ownership, dependency, or supported-domain interpretation/i);
+    assert.match(normalize(skill), /Do not browse them routinely or treat them as project authority/i);
+  }
+  assert.match(
+    normalize(workflow),
+    /Verify the premise from authority.*owning public contract.*narrow and disclose the supported domain.*material authority remains unresolved.*block only the affected work.*ask the human to define or expand scope/i,
+  );
+  assert.match(normalize(reviewer), /Block only when material authority remains unresolved.*do not demand universal proof/i);
+  assert.match(normalize(whiteboard), /unresolved material scope belongs to the owner.*Do not demand proof for unsupported or imagined cases/i);
+});
+
+test("agent responses expose material assumptions explicitly", async () => {
+  const policy = await read("docs/documentation-quality-policy.md");
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const reviewer = await read("skills/sdd-feature-review/SKILL.md");
+  const readme = await read("README.md");
+  const normalize = value => value.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+
+  for (const document of [policy, workflow]) {
+    const normalized = normalize(document);
+    assert.match(normalized, /parent response.*MUST.*assumptions table/i);
+    for (const field of [
+      /assumption/i,
+      /dangerous-assumption category/i,
+      /evidence \/ validation state/i,
+      /impact if false/i,
+      /handling/i,
+    ]) assert.match(normalized, field);
+    assert.match(normalized, /none.*row/i);
+    assert.match(normalized, /verified facts.*immaterial/i);
+  }
+
+  assert.doesNotMatch(normalize(reviewer), /every review response.*assumptions table/i);
+  assert.match(normalize(reviewer), /material premise.*scope finding/i);
+
+  assert.match(normalize(readme), /every human-gate response.*material assumptions.*own compact table/i);
+  assert.match(normalize(readme), /`none` row.*absence of material assumptions/i);
+});
+
 test("feature review cohorts retain context and produce useful change requests", async () => {
   const workflow = await read("skills/sdd-project-workflow/SKILL.md");
   const reviewer = await read("skills/sdd-feature-review/SKILL.md");
@@ -266,7 +341,7 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(readme, /feature review skill/);
   assert.match(policy, /\| Design conclusion \| Key design points/);
   assert.match(readme, /R --> A\["Two-agent design review"\]/);
-  assert.match(readme, /A --> B\["Human brief: design \+ all new fail-closed behavior"\]/);
+  assert.match(readme, /A --> B\["Human brief: design \+ fail-close example \+ recovery"\]/);
   assert.match(readme, /B --> H\["Human design acceptance"\]/);
   assert.match(readme, /H --> M\["Commit declared conclusion metadata"\]/);
   assert.match(readme, /M --> V\["Same reviewers verify no semantic change"\]/);
@@ -283,12 +358,23 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(normalizedReviewer, /never expand the accepted scope/);
   assert.match(normalizedPolicy, /every new fail-closed behavior with one concise concrete example/);
   assert.match(normalizedPolicy, /example is explanatory, not normative or exhaustive/);
+  assert.match(normalizedPolicy, /smallest safe action, responsible actor, and retry\/resume condition/);
+  assert.match(normalizedPolicy, /brief MUST preserve both reviewers' exact dispositions/);
+  assert.match(normalizedPolicy, /Automation MUST verify that the recovery column exists/);
+  assert.match(normalizedPolicy, /MUST NOT infer semantic quality from free-form prose/);
   assert.match(normalizedWorkflow, /list every new fail-closed behavior with one concise concrete example/);
+  assert.match(normalizedWorkflow, /Recovery \/ best next action/);
+  assert.match(normalizedWorkflow, /preserve both reviewers' exact dispositions/);
   assert.match(normalizedReviewer, /every new fail-closed behavior is listed for human disposition with one concise concrete example/);
-  assert.match(normalizedReviewer, /When no new behavior exists, require `None`; do not invent a behavior or example/);
+  assert.match(normalizedReviewer, /smallest safe action, responsible actor, and retry\/resume condition/);
+  assert.match(normalizedReviewer, /proportionate to the material risk/);
+  assert.match(normalizedReviewer, /When no new behavior exists, require `None`; do not invent a behavior, example, or recovery/);
   assert.match(normalizedWhiteboard, /Concrete example/);
+  assert.match(normalizedWhiteboard, /Recovery \/ best next action/);
+  assert.match(normalizedWhiteboard, /both reviewers' exact dispositions/);
   assert.match(normalizedWhiteboard, /example MUST only explain the behavior; it MUST NOT expand its scope/);
   assert.match(readme, /each new fail-closed behavior\s+one concise concrete example/);
+  assert.match(readme, /smallest safe recovery action, responsible\s+actor, and retry\/resume condition/);
   assert.match(policy, /> \[!IMPORTANT\]/);
   assert.match(normalizedPolicy, /After freeze, agents MUST NOT change any whiteboard byte without prior human authorization/);
   assert.match(normalizedWorkflow, /parent response MUST list every new fail-closed behavior/);

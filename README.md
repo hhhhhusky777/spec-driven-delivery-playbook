@@ -114,6 +114,27 @@ These goals are constraints on the result, not a script. Project policies and
 owner decisions remain authoritative, but routine engineering choices stay
 with the agent.
 
+### Keep scope evidence-bounded
+
+The playbook prevents a current observation or another component's internal
+state from silently becoming a permanent design rule. Material premises must
+support the accepted outcome, respect component ownership or public contracts,
+and have evidence valid for the declared supported domain. Agents check for
+unsupported, foreign-owned, incidental-state, single-case-generalization,
+hidden-dependency, and speculative assumptions, then verify, replace, or bound
+them. Only unresolved material authority returns to the human; the playbook does
+not demand proof for every imaginable future case.
+
+For example, a consumer should not assume the first item from an API is the
+newest merely because current responses happen to be sorted that way. It should
+use an ordering guarantee from the API contract, request an explicit sort, or
+bound and disclose that behavior as unsupported. The canonical rule is in the
+[documentation quality policy](docs/documentation-quality-policy.md#evidence-bounded-scope).
+Its industry foundations are Microsoft's
+[Architectural principles](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles)
+and AWS's
+[Workload and scope](https://docs.aws.amazon.com/wellarchitected/latest/userguide/workload-and-scope.html).
+
 ```mermaid
 flowchart LR
     B["Clear boundaries"] --> O["Stable outcome"]
@@ -258,7 +279,7 @@ flowchart LR
     Q -->|"no"| C["Conclusion candidate"]
     C --> R["Reconcile every material draft item"]
     R --> A["Two-agent design review"]
-    A --> B["Human brief: design + all new fail-closed behavior"]
+    A --> B["Human brief: design + fail-close example + recovery"]
     B --> H["Human design acceptance"]
     H --> M["Commit declared conclusion metadata"]
     M --> V["Same reviewers verify no semantic change"]
@@ -275,8 +296,10 @@ each exact candidate to those retained sessions.
 
 The concluded whiteboard states observable outcomes and important boundaries,
 not implementation trivia. The human brief gives each new fail-closed behavior
-one concise concrete example so the owner can judge it; the example explains
-the boundary without expanding it. Human acceptance authorizes the declared
+one concise concrete example plus the smallest safe recovery action, responsible
+actor, and retry/resume condition or required human decision. It also preserves
+both reviewers' dispositions. The example explains the boundary without
+expanding it. Human acceptance authorizes the declared
 conclusion metadata transition; the same reviewers verify its exact committed
 candidate before the bytes freeze. Any later change needs prior human authorization for the concrete amendment,
 then reconclusion, both retained reviewers, and human acceptance before
@@ -485,6 +508,11 @@ Humans receive a concise table with the information needed for judgment:
 | Attention | Risks, assumptions, compatibility effects, exceptions, and owners | Appropriate class |
 | Evidence | Passed, failed, and unrun checks plus residual limits | Appropriate class |
 | Response | The exact decision requested, or confirmation that none remains | `HUMAN_DECISION` or `NONE` |
+
+Every human-gate response also shows material assumptions in their own compact
+table: the assumption, its dangerous-assumption category, current evidence or
+validation state, impact if false, and handling. A `None` row makes the absence
+of material assumptions explicit without filling routine replies with noise.
 
 The classes tell agents what the emphasis means: `HUMAN_DECISION` stops at an
 existing owner boundary, `AGENT_ACTION` is corrected within agent authority,

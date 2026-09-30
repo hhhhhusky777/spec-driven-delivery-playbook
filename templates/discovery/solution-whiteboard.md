@@ -58,6 +58,12 @@ conversation verbatim.
 
 ### Assumptions
 
+For every material premise, check whether it is unsupported, foreign-owned,
+incidental-state, a single-case generalization, a hidden dependency, or
+a speculative assumption. Verify it, consume the owning public contract, or
+bound the supported domain; unresolved material scope belongs to the owner. Do
+not demand proof for unsupported or imagined cases.
+
 | ID | Assumption | Failure impact | Validation / state |
 | --- | --- | --- | --- |
 | `<A01>` | `<temporary belief>` | `<consequence if false>` | `<how and when resolved>` |
@@ -141,15 +147,17 @@ deferrals, and rejections instead of silently dropping them.
 > [!IMPORTANT]
 > **Hard rule.** Both reviewers MUST approve the candidate before the human
 > gate. The parent response MUST then list every new fail-closed behavior for
-> human disposition with one concise concrete example. The example MUST only
-> explain the behavior; it MUST NOT expand its scope or replace the trigger,
-> response, impact, or recovery boundary. A concluded whiteboard MUST NOT
-> contain a pending row. Use one all-`None` row when none exists; do not invent
-> a behavior or example.
+> human disposition with one concise concrete example and its `Recovery / best
+> next action`. Recovery MUST name the smallest safe action, responsible actor,
+> and retry/resume condition, or the required human decision. The example MUST
+> only explain the behavior; it MUST NOT expand its scope or replace the
+> trigger, response, impact, or recovery boundary. A concluded whiteboard MUST
+> NOT contain a pending row. Use one all-`None` row when none exists; do not
+> invent a behavior, example, or recovery.
 
-| ID | Trigger | Required fail-closed response | Concrete example | Impact | Owner disposition |
-| --- | --- | --- | --- | --- | --- |
-| `<FC01 or None>` | `<condition or None>` | `<behavior or None>` | `<realistic trigger, stopped action, visible or state effect, and recovery or retry when applicable; or None>` | `<effect or None>` | `<Pending, Approved, Rejected, or None>` |
+| ID | Trigger | Required fail-closed response | Concrete example | Impact | Recovery / best next action | Owner disposition |
+| --- | --- | --- | --- | --- | --- | --- |
+| `<FC01 or None>` | `<condition or None>` | `<behavior or None>` | `<realistic trigger, stopped action, and visible or state effect; or None>` | `<effect or None>` | `<smallest safe action, responsible actor, and retry/resume condition—or required human decision; or None>` | `<Pending, Approved, Rejected, or None>` |
 
 ## Design amendments
 
@@ -175,5 +183,5 @@ stay in the implementation plan.
 | Important boundaries | `<safety, compatibility, policy, or authority>` | `<class>` |
 | Alternatives rejected | `<only material alternatives>` | `<class>` |
 | Remaining gaps or risks | `<summary or None>` | `<class>` |
-| Newly introduced fail-closed behavior | `<complete list after two-agent design review, with effect, one concise explanatory example, and recommendation; or None>` | `<HUMAN_DECISION or NONE>` |
+| Newly introduced fail-closed behavior | `<complete list after two-agent design review, with effect, one concise explanatory example, Recovery / best next action, and both reviewers' exact dispositions; or None>` | `<HUMAN_DECISION or NONE>` |
 | Decision requested | `<exact request>` | `<class>` |

@@ -38,6 +38,34 @@ that satisfies those obligations. Hypothetical flexibility, speculative
 frameworks, duplicate records, and automation that costs more than the risk it
 controls are not required completeness.
 
+## Evidence-bounded scope
+
+> [!IMPORTANT]
+> **Hard rule.** Every material design or implementation premise MUST trace to
+> the accepted outcome and either the current component's owned responsibility
+> or an authoritative external contract. Its evidence MUST be valid for the
+> declared supported domain. An agent MUST NOT turn another component's
+> internals, incidental current state, or one observed case into a durable rule.
+
+Authors and reviewers use one dangerous-assumption vocabulary:
+
+| Category | Scope warning |
+| --- | --- |
+| Unsupported | No accepted authority or sufficient evidence supports the premise |
+| Foreign-owned | The premise depends on another component's internal decision instead of its public contract |
+| Incidental-state | A current observation is treated as a stable invariant |
+| Single-case generalization | One case is assumed to represent the declared supported domain |
+| Hidden dependency | Correctness relies on an undeclared coupling, order, environment, or actor |
+| Speculative assumption | Imagined future behavior expands the accepted outcome without authority |
+
+For a material dangerous assumption, verify it from current authority, replace
+it with the owning component's public contract, or narrow and disclose the
+supported domain. If the required authority remains unresolved, block only the
+affected work and ask the human to define or expand scope. Nonmaterial
+limitations and safely verifiable facts remain agent work. Evidence need not
+prove unsupported or imagined cases, and reviewers MUST NOT demand universal
+proof or speculative generalization.
+
 The [error-handling framework](error-handling.md) owns diagnosis, recovery, and
 escalation. Other documents link to it and state only local consequences.
 
@@ -62,10 +90,13 @@ not duplicate history or successful-tool transcripts.
 > [!IMPORTANT]
 > **Hard rule.** Both reviewers MUST approve the design before the human gate.
 > The human brief MUST list every new fail-closed behavior with one concise
-> concrete example. The example is explanatory, not normative or exhaustive;
-> it MUST NOT expand the behavior or substitute for its trigger, effect,
-> impact, or recovery boundary. The human MUST accept the design and every
-> disposition. The conclusion commit MUST change only state, revision, and
+> concrete example and its `Recovery / best next action`. Recovery MUST name
+> the smallest safe action, responsible actor, and retry/resume condition, or
+> the required human decision. The brief MUST preserve both reviewers' exact
+> dispositions. The example is explanatory, not normative or exhaustive; it
+> MUST NOT expand the behavior or substitute for its trigger, effect, impact,
+> or recovery boundary. The human MUST accept the design and every disposition.
+> The conclusion commit MUST change only state, revision, and
 > approved dispositions. Both reviewers MUST verify that exact commit before
 > the whiteboard freezes and planning starts.
 >
@@ -76,6 +107,13 @@ not duplicate history or successful-tool transcripts.
 >
 > Every plan and candidate addition MUST trace to the accepted design or an
 > authority it explicitly consumes. Unexplained scope MUST block approval.
+
+Automation MUST verify that the recovery column exists and that every material
+row has a nonblank, non-`None` value. It MUST NOT infer semantic quality from
+free-form prose. Authors and reviewers MUST judge whether the action, actor,
+safe retry/resume condition, and proportionality are adequate. Missing recovery
+or reviewer disposition in the candidate or human brief blocks the applicable
+gate.
 
 ## Risk-focused test design
 
@@ -186,6 +224,18 @@ to reread every document:
 | Attention | Risks, compatibility effects, assumptions, exceptions, deferred obligations, and owners | Appropriate class |
 | Evidence | Passed checks with scope, failed or unrun checks, uncertainty, and residual limits | Appropriate class |
 | Response | Exact decision requested, or explicit confirmation that none remains | `HUMAN_DECISION` or `NONE` |
+
+> [!IMPORTANT]
+> After required agent review, the parent response at every human gate MUST
+> include a distinct assumptions table. It MUST list every material assumption
+> that affects the candidate, decision, supported domain, or residual risk.
+
+| Assumption | Dangerous-assumption category | Evidence / validation state | Impact if false | Handling |
+| --- | --- | --- | --- | --- |
+| Material premise | One of the six categories above | Verified, bounded, or unresolved evidence | Credible consequence | Agent action, disclosure, or human decision |
+
+If none exist, include one `None` row. Do not turn verified facts or immaterial
+implementation details into assumptions merely to populate the table.
 
 Use `HUMAN_DECISION` when progress needs human judgment under an existing stop
 boundary, `AGENT_ACTION` for correction within agent authority, `DISCLOSE` for

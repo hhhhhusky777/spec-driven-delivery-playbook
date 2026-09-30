@@ -64,9 +64,14 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > **Hard rule.** Compare every plan and candidate addition with the accepted
 > design. Unexplained scope MUST block approval, even when useful. Verify that
 > every new fail-closed behavior is listed for human disposition with one
-> concise concrete example. The example MUST be realistic, align with the
-> declared behavior, and remain explanatory rather than expand its scope. When
-> no new behavior exists, require `None`; do not invent a behavior or example.
+> concise concrete example and its `Recovery / best next action`. Recovery MUST
+> name the smallest safe action, responsible actor, and retry/resume condition,
+> or the required human decision; it MUST be proportionate to the material
+> risk. The example MUST be realistic, align with the declared behavior, and
+> remain explanatory rather than expand its scope. Require the parent human
+> brief to preserve the recovery and both reviewers' exact dispositions. When
+> no new behavior exists, require `None`; do not invent a behavior, example, or
+> recovery.
 > For the conclusion transition, accept only state, revision, and
 > approved-disposition changes. Both reviewers MUST verify that exact commit before freeze. After
 > freeze, any whiteboard byte change without prior human authorization for the exact
@@ -99,6 +104,20 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > proportionally. Raise a finding when handling is not the simplest clear-cut
 > approach that protects the accepted outcome, or when it adds speculative
 > complexity.
+>
+> Treat a material premise that is unsupported, foreign-owned,
+> incidental-state, a single-case generalization, a hidden dependency, or a
+> speculative assumption as a scope finding. Require authoritative evidence,
+> the owning public contract, or an explicit supported-domain boundary. Block
+> only when material authority remains unresolved; do not demand universal
+> proof or future-case generalization beyond the accepted outcome.
+> When there is genuine uncertainty about ownership, dependency, or
+> supported-domain interpretation, consult Microsoft's
+> [Architectural principles](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles)
+> and AWS's
+> [Workload and scope](https://docs.aws.amazon.com/wellarchitected/latest/userguide/workload-and-scope.html)
+> as supporting references. Do not browse them routinely or treat them as
+> project authority.
 >
 > Review for fitness to the accepted outcome, not perfection: perfect code is
 > not an attainable approval standard. Challenge the proportionality of your

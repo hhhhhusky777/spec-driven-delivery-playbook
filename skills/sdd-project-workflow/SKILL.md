@@ -80,12 +80,19 @@ review the required whiteboard and plan before dependent work continues.
 >
 > **Hard rule.** Both reviewers MUST approve the design before the human gate.
 > The parent response MUST list every new fail-closed behavior with one concise
-> concrete example. The human MUST accept the design and every disposition.
+> concrete example and its `Recovery / best next action`, naming the smallest
+> safe action, responsible actor, and retry/resume condition or required human
+> decision. It MUST also preserve both reviewers' exact dispositions. The human
+> MUST accept the design and every disposition.
 > The conclusion commit MUST change only state, revision, and approved
 > dispositions. The same reviewers MUST verify that exact commit before
 > planning starts. After freeze, agents MUST NOT
 > change any whiteboard byte without prior human authorization. Every addition MUST trace
 > to the frozen design. Unexplained scope MUST block delivery.
+
+If only the parent brief omitted unchanged, already approved recovery
+information or reviewer dispositions, re-present them without another review.
+Repeat review when candidate bytes or meaning changed.
 
 - Keep canonical project authorities mutually consistent. Resolve conflicts
   from those authorities and explicit owner decisions; ask the owner when the
@@ -109,6 +116,20 @@ review the required whiteboard and plan before dependent work continues.
 - Follow the project's canonical accepted-design authority. An authorized
   amendment changes only its named scope and repeats conclusion review and
   human acceptance before dependent work resumes.
+- Keep material premises evidence-bounded. Check for unsupported,
+  foreign-owned, incidental-state, single-case-generalization, hidden-dependency,
+  and speculative assumptions. Verify the premise from authority, consume the
+  owning public contract, or narrow and disclose the supported domain. If
+  material authority remains unresolved, block only the affected work and ask
+  the human to define or expand scope. Do not demand universal proof for
+  unsupported or imagined cases.
+  When there is genuine uncertainty about ownership, dependency, or
+  supported-domain interpretation, consult Microsoft's
+  [Architectural principles](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles)
+  and AWS's
+  [Workload and scope](https://docs.aws.amazon.com/wellarchitected/latest/userguide/workload-and-scope.html)
+  as supporting references. Do not browse them routinely or treat them as
+  project authority.
 - For normal delivery, when the whiteboard conclusion candidate is ready,
   select two isolated reviewers for the feature and require each one to read
   the installed sdd-feature-review skill once. They review the exact design
@@ -214,6 +235,12 @@ Follow the manifest-linked human-brief policy.
 > Use `None` when there are no findings; do not invent an example. Link the PR
 > when it exists; keep full review history in the PR. This adds no review gate
 > or early-PR requirement.
+>
+> The parent response MUST also include a separate material-assumptions table:
+> `Assumption`, `Dangerous-assumption category`, `Evidence / validation state`,
+> `Impact if false`, and `Handling`. List every material assumption affecting
+> the candidate or human decision. Use one `None` row when none exist. Do not
+> manufacture entries from verified facts or immaterial details.
 Classify material items as `HUMAN_DECISION`, `AGENT_ACTION`, `DISCLOSE`, or
 `NONE` so the next agent knows whether to stop, act within authority, preserve
 material awareness-only information (including accepted limitations), or
