@@ -33,7 +33,7 @@
 | `DR06` | Existing unchanged validations are linked, not relisted. | accepted |
 | `DR07` | A validation that also creates fail-closed behavior cross-references its fail-close row instead of duplicating it. | accepted |
 | `DR08` | Use `None` when no new validation exists. | accepted |
-| `DR09` | Use the fail-close table and human-response pattern for validation disclosure. | corrected after owner clarified a voice-transcription error |
+| `DR09` | Use the fail-close and assumptions disclosure pattern for validations. | corrected after owner clarified a voice-transcription error |
 
 ### Current understanding
 
@@ -190,7 +190,7 @@
 | Attention | Summary | Handling |
 | --- | --- | --- |
 | Decisions made | Add a reviewed/human-disposed inventory of every new runtime/contract rejection and every new acceptance checkpoint or blocking gate, using five proportionality criteria. | `DISCLOSE` |
-| Important boundaries | The inventory follows the fail-close disclosure pattern; simplest sufficient mechanism is decisive, and unchanged validators or ordinary tests are not duplicated. | `DISCLOSE` |
+| Important boundaries | The inventory follows the fail-close and assumptions disclosure pattern; simplest sufficient mechanism is decisive, and unchanged validators or ordinary tests are not duplicated. | `DISCLOSE` |
 | Alternatives rejected | Fail-close-only, plan-only, or exhaustive inventories. | `DISCLOSE` |
 | Remaining gaps or risks | None; both reviewers approved the exact design revision. | `NONE` |
 | Newly introduced validations | Owner approved `V01`, including authority/boundary, marginal value, example, failure effect, cost, simpler option and why insufficient, references, and both reviewer dispositions. | `DISCLOSE` |
@@ -219,7 +219,7 @@ This is the only active-delivery state authority.
 | Primary issue / need | [#144](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/144) |
 | Concluded whiteboard | [Solution Whiteboard](#solution-whiteboard--proportional-validation-disclosure), accepted design `225c862fbdff6f6c161ff35bf98bfe036a5b2f83`, concluded at `0fff8bf32c1f88468fa32a41f21443fcf134ea5c` |
 | Required reviewers | Retained reviewer seats 1 and 2 from design through merge |
-| Last verified | Both retained reviewers approved exact implementation content `d962127aa00ce7958757526e717ad8635b7243e5`; complete changed test file 20/20, focused PR validation, and diff checks passed |
+| Last verified | Latest correction passes focused checks; current exact-head reviewer audit, full validation, and merge evidence are recorded in PR #145. Earlier `d962127` approval is superseded historical evidence. |
 
 ### Governing inputs and delivery boundaries
 
@@ -261,10 +261,10 @@ logic as required by the canonical policy.
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
 | `T01` | `WB144-01`, `WB144-02`, `V01`: complete validation inventory and inspectable schema | Focused document-model assertions for the template, policy, and response contract | implemented; focused test passed | focused task work |
-| `T01` | `WB144-03`, `WB144-04`: five criteria govern judgment and simplest sufficient mechanism defeats unnecessary validation | Focused policy/skill assertions plus retained semantic review | implemented; focused test and retained semantic review passed at `d962127` | focused task work |
+| `T01` | `WB144-03`, `WB144-04`: five criteria govern judgment and simplest sufficient mechanism defeats unnecessary validation | Focused policy/skill assertions plus retained semantic review | implemented; focused test passed; historical semantic review at `d962127` is superseded by current PR review | focused task work |
 | `T01` | `WB144-05`: parent response reproduces the reviewed table with both reviewer dispositions or `None` | Focused workflow/reviewer cross-document assertions | implemented; focused test passed | focused task work |
-| `T01` | `WB144-06`, `FC01`: fail-close and ordinary-test evidence are referenced without duplication; incomplete inventories block conclusion/planning | Focused template/policy/skill assertions and semantic review | implemented; focused test and retained semantic review passed at `d962127` | focused task work |
-| `T01` | Reader-facing description and fail-close-style disclosure remain accurate | README/document review and documentation checks | implemented; documentation checks passed | focused task work |
+| `T01` | `WB144-06`, `FC01`: fail-close and ordinary-test evidence are referenced without duplication; incomplete inventories block conclusion/planning | Focused template/policy/skill assertions and semantic review | implemented; focused test passed; historical semantic review at `d962127` is superseded by current PR review | focused task work |
+| `T01` | Reader-facing description and fail-close and assumptions disclosure remain accurate | README/document review and documentation checks | implemented; documentation checks passed | focused task work |
 | `T01` | All repository contracts remain coherent on the merge-ready candidate | Full documentation and test suite; no missing non-focused test implementation identified after focused work | run deferred until final gate | final-gate run |
 
 ### Proposed design
@@ -287,7 +287,7 @@ logic as required by the canonical policy.
 | `D01` | Keep the complete normative rule in documentation quality policy; consumers keep only role-specific instructions and links. | Repeat the full rule everywhere. | One canonical owner prevents drift and excess text. | `WB144-03`, `WB144-05`, `WB144-06` |
 | `D02` | Add one Whiteboard inventory covering every new runtime/contract rejection and every new acceptance checkpoint or blocking gate. | Exhaustive validation or fail-close-only inventories. | Makes owner decisions complete without duplicating ordinary tests or unchanged controls. | `WB144-01`, `WB144-02`, `V01`, `FC01` |
 | `D03` | Use the five accepted criteria with simplest sufficient mechanism decisive. | Numerical scoring or reviewer preference. | Preserves proportional judgment and prevents redundant validation. | `WB144-03`, `WB144-04` |
-| `D04` | Use the existing fail-close and assumptions presentation pattern. | Invent another theory or demand unlimited checking. | Keeps judgment criteria and human disclosure clear without creating ceremony. | `WB144-02`, `WB144-03`, `WB144-04` |
+| `D04` | Use the existing fail-close and assumptions presentation pattern. | Invent another theory or demand unlimited checking. | Keeps judgment criteria and human disclosure clear without creating ceremony. | `WB144-02`, `WB144-03`, `WB144-05` |
 | `D05` | Add focused structural regressions and retain semantic agent/human review. | Parse free text to automate value judgments. | Automation protects document contracts; people judge proportionality. | all design points |
 
 #### Risks and mitigations
@@ -329,7 +329,7 @@ targets `main`; no intermediate task PR or policy exception exists.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `DONE` | `None` | Deliver proportional disclosure and disposition of every newly designed runtime/contract rejection and every new acceptance checkpoint or blocking gate across canonical policy, portable guidance, README, and regressions. | No Whiteboard amendment, exhaustive inventory, ordinary-test duplication, automatic semantic scoring, new artifact, historical rewrite, or duplicated full policy. | Complete changed test file 20/20, focused PR validation, and diff checks passed; both reviewers approved the implementation re-audit at `d962127`; exact final-candidate review and full final-gate validation remain. | `codex/issue-144-validation-review`; [PR #145](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/145); target `main` |
+| `T01` | `DONE` | `None` | Deliver proportional disclosure and disposition of every newly designed runtime/contract rejection and every new acceptance checkpoint or blocking gate across canonical policy, portable guidance, README, and regressions. | Only the owner-authorized clarification amendment; no exhaustive inventory, ordinary-test duplication, automatic semantic scoring, new artifact, historical rewrite, or duplicated full policy. | Complete changed test file 20/20, focused PR validation, and diff checks passed; prior `d962127` audit is superseded; current exact-head audit, final review, and full validation are PR-owned gates. | `codex/issue-144-validation-review`; [PR #145](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/145); target `main` |
 
 ### Task specifications and context receipts
 
@@ -339,11 +339,11 @@ targets `main`; no intermediate task PR or policy exception exists.
 | --- | --- |
 | Outcome / non-scope | Make every new runtime/contract rejection and every new acceptance checkpoint or blocking gate visible and proportional without cataloguing unchanged checks, duplicating ordinary tests, or prescribing numerical scoring. |
 | Source boundary | `docs/documentation-quality-policy.md`, `templates/discovery/solution-whiteboard.md`, `skills/sdd-project-workflow/SKILL.md`, `skills/sdd-feature-review/SKILL.md`, `README.md`, and directly affected tests. |
-| Consumed dependencies | Frozen Whiteboard design `225c862`; approved `V01` and `FC01`; current documentation, error-handling, branch, review, and final-gate contracts; selected OWASP, AWS, Google, and ASQ references. |
+| Consumed dependencies | Frozen Whiteboard design `225c862`; approved `V01` and `FC01`; current documentation, error-handling, branch, review, and final-gate contracts; selected OWASP, AWS, and Google references; owner-authorized transcription and portability clarification. |
 | Critical obligations | Do not change any Whiteboard byte without prior owner-authorized amendment; keep one canonical rule; preserve all five criteria; simplest sufficient mechanism is decisive; reviewers and owner dispose every row; cross-reference rather than duplicate evidence. |
 | Required evidence | Focused contract regressions and documentation checks; author plus both retained reviewers approve exact implementation before final coverage work; missing tests reconciled; both reviewers approve exact final candidate; full validation passes; human merge authority. |
-| Context receipt | Manifest/runtime current at `b3f13badb6e8b828f4185e6116939d51b5d3faeb`; accepted design frozen at `225c862`; both retained reviewers approved conclusion commit `0fff8bf`; no open owner decision or planning gap. |
-| Actual result | Added one canonical proportional-validation contract, one project-specific Whiteboard inventory, concise author/reviewer routing, a reader-facing explanation with ASQ references, and focused cross-document regression coverage. No Whiteboard byte, new artifact, semantic scoring, or runtime checker was added; no missing non-focused test implementation was identified. |
+| Context receipt | Manifest/runtime current at `b3f13badb6e8b828f4185e6116939d51b5d3faeb`; accepted design frozen at `225c862`; both retained reviewers approved conclusion commit `0fff8bf`; owner subsequently authorized the transcription/portability correction recorded in Design amendments; no additional scope or gate. |
+| Actual result | Added one canonical proportional-validation contract, one project-specific Whiteboard inventory, concise author/reviewer routing, a reader-facing explanation of the fail-close and assumptions disclosure pattern, and focused cross-document regression coverage. The owner-authorized Whiteboard clarification is recorded above; no new artifact, semantic scoring, or runtime checker was added; no missing non-focused test implementation was identified. |
 
 ### Recovery, decisions, and change control
 
@@ -368,9 +368,9 @@ targets `main`; no intermediate task PR or policy exception exists.
 
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
-| Accepted design delivered | Every design point and `V01`/`FC01` maps to `T01`; no unexplained addition. | Both retained reviewers approved implementation content `d962127`. |
+| Accepted design delivered | Every design point and `V01`/`FC01` maps to `T01`; no unexplained addition. | Current exact-head implementation-content audit is required after the correction; PR #145 records both reviewer dispositions. |
 | Applicable validation passed | Focused changed-file/line tests; pre-final author-plus-reviewer audit; missing-test reconciliation; exact final-candidate review; full final validation. | Complete changed test file 20/20, focused PR validation, and diff checks passed; no missing test implementation remains; final candidate review and full validation pending. |
-| Compatibility safe | Existing fail-close, test inventory, human gate, reviewer, and archive contracts remain coherent. | Both retained reviewers approved; `E01` and `E02` are resolved. |
+| Compatibility safe | Existing fail-close, test inventory, human gate, reviewer, and archive contracts remain coherent. | `E01` and `E02` are resolved; current-candidate compatibility review and approval are recorded in PR #145. |
 | Merge-ready canonical state | Affected policy, template, skills, README, tests, plan, and archive/reset candidate agree before final review. | Closing candidate archives this complete state, resets the live Whiteboard, and removes the live plan. |
 | PR-owned review and delivery | PR #145 owns findings, checks, human authority, merge, and target verification. | [PR #145](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/145) |
 | Feature cleanup complete | Concluded Whiteboard and completed plan archived together; live Whiteboard reset and live plan removed in the closing candidate; owned worktree and branch cleaned after verified merge. | Archive/reset/removal authorized for this closing candidate; post-merge worktree and branch cleanup remains. |

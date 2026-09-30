@@ -512,7 +512,7 @@ require reading every document line by line.
 The decisive question is whether the proposal is the simplest sufficient
 mechanism—not whether more checking is theoretically possible. The canonical
 [proportional validation contract](docs/documentation-quality-policy.md#proportional-validation-disclosure)
-uses the same reviewed-table and human-disposition pattern as fail-close
+uses the same reviewed-table and human-disposition pattern as fail-close and assumptions
 disclosure, not a score or pursuit of perfect validation.
 
 Humans receive a concise table with the information needed for judgment:

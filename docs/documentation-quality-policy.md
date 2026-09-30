@@ -143,7 +143,8 @@ Authors and reviewers judge every row by all five criteria:
 
 The fifth criterion is decisive: reject, remove, reuse, or simplify a proposed
 validation when an adequate lower-cost mechanism already exists. Use the same
-reviewed-table and human-disposition pattern as fail-close disclosure, not a
+reviewed-table and human-disposition pattern as fail-close and assumptions
+disclosure, not a
 numerical scoring exercise or justification for unlimited checking.
 
 The Whiteboard owns the project-specific inventory and owner dispositions. The
