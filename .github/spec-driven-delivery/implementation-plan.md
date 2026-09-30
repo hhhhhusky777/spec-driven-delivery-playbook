@@ -8,10 +8,10 @@ This is the only active-delivery state authority.
 
 | Field | Value |
 | --- | --- |
-| State | `DRAFT` |
+| State | `READY` |
 | Active tasks | `None` |
-| Next ready task | `None` |
-| Active blocker | Plan review and owner acceptance |
+| Next ready task | `T01` |
+| Active blocker | `None` |
 | Implementation mode | Human review before merge |
 | Delivery branch / target | `codex/issue-144-validation-review` → `main` |
 | Owner | Repository owner |
@@ -128,7 +128,7 @@ targets `main`; no intermediate task PR or policy exception exists.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `PLANNED` | `None` | Deliver proportional disclosure and disposition of every newly designed runtime/contract rejection and every new acceptance checkpoint or blocking gate across canonical policy, portable guidance, README, and regressions. | No Whiteboard amendment, exhaustive inventory, ordinary-test duplication, automatic semantic scoring, new artifact, historical rewrite, or duplicated full policy. | Focused changed-file/line tests; retained implementation audit; missing-test reconciliation; exact final-candidate review; full final-gate validation. | `codex/issue-144-validation-review`; [PR #145](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/145); target `main` |
+| `T01` | `READY` | `None` | Deliver proportional disclosure and disposition of every newly designed runtime/contract rejection and every new acceptance checkpoint or blocking gate across canonical policy, portable guidance, README, and regressions. | No Whiteboard amendment, exhaustive inventory, ordinary-test duplication, automatic semantic scoring, new artifact, historical rewrite, or duplicated full policy. | Focused changed-file/line tests; retained implementation audit; missing-test reconciliation; exact final-candidate review; full final-gate validation. | `codex/issue-144-validation-review`; [PR #145](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/145); target `main` |
 
 ## Task specifications and context receipts
 
@@ -157,6 +157,7 @@ targets `main`; no intermediate task PR or policy exception exists.
 | ID / time | Decision or plan change | Reason / consequence | Affected design, contracts, or tasks | Authority |
 | --- | --- | --- | --- | --- |
 | `2026-09-30` | Use one task and the existing PR targeting `main`. | The changed surfaces express one indivisible contract; splitting adds coordination without independent value. | `WB144-01`–`WB144-06`, `V01`, `FC01`, `T01` | Repository branch policy and necessary-complexity goal |
+| `2026-09-30` | Accept plan `175619209d4f5004969622c578fc219b7197b11f` and release `T01`. | Both retained reviewers approved the corrected one-task plan with no remaining findings. | `T01` readiness | Repository owner |
 
 ## Plan validation and completion
 
@@ -181,8 +182,8 @@ targets `main`; no intermediate task PR or policy exception exists.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Tasks and outcomes | One task updates canonical policy, the Whiteboard template, role-specific skills, README, and focused regressions as one coherent contract. | `HUMAN_DECISION` |
+| Tasks and outcomes | Owner approved one task updating canonical policy, the Whiteboard template, role-specific skills, README, and focused regressions as one coherent contract. | `DISCLOSE` |
 | Design consistency | Every `WB144` point and `V01`/`FC01` maps to `T01`; no amendment or unexplained addition exists. | `NONE` |
 | Important boundaries | Inventory every new runtime/contract rejection and every new acceptance checkpoint or blocking gate; ordinary tests and unchanged validation are not duplicated; simplest sufficient mechanism is decisive. | `DISCLOSE` |
 | Validation | Focused changed-file/line checks during `T01`; implementation audit and missing-test reconciliation before exact final review; full suite at final gate. | `DISCLOSE` |
-| Decision requested | Approve this one-task plan and release `T01` for implementation. | `HUMAN_DECISION` |
+| Decision requested | None; owner approved the plan and released `T01`. | `NONE` |
