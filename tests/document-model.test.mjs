@@ -474,8 +474,13 @@ test("error handling stays simple, fail closed, and retry safe", async () => {
   assert.match(normalizedErrors, /stable retryable outcome and let the client decide when to retry/);
   assert.match(normalizedErrors, /reconcile the authoritative state or rely on an established idempotency boundary before permitting retry/);
   assert.match(errors, /only by a required invariant or observed failure/);
-  assert.match(workflow, /preserve invariants, fail closed on uncertainty/);
-  assert.match(workflow, /client-controlled retry only when repeating the operation is safe/);
+  const normalizedWorkflow = workflow.replace(/\s+/g, " ");
+  assert.match(normalizedWorkflow, /correct recoverable agent errors and continue/);
+  assert.match(normalizedWorkflow, /fail closed when continuing could violate a required invariant or safety boundary/);
+  assert.match(normalizedWorkflow, /client-controlled retry only when repeating the operation is safe/);
+  assert.match(normalizedWorkflow, /reconcile ambiguous effects or use an established idempotency boundary before permitting retry/);
+  assert.match(normalizedWorkflow, /Track confirmed playbook or project gaps in their GitHub issue tracker/);
+  assert.doesNotMatch(workflow.slice(workflow.indexOf("## Error handling"), workflow.indexOf("## Completion")), /docs\/error-handling\.md/);
   assert.match(readme, /no design can\s+enumerate every race or edge case/);
   assert.match(readme, /reconcile ambiguous effects\s+before retrying/);
   assert.match(normalizedWhiteboard, /edge cases, concurrency, races, timing, or failures are material/);
@@ -599,6 +604,67 @@ test("human replies pair reviewer findings with solutions and dispositions", asy
   assert.match(await read("README.md"), /Each actionable finding includes a concise exact-candidate example/);
   assert.doesNotMatch(policy, /table pairing each reviewer finding/);
   assert.doesNotMatch(reviewer, /table pairing each reviewer finding/);
+});
+
+test("new design validations are disclosed and reviewed proportionally", async () => {
+  const policy = await read("docs/documentation-quality-policy.md");
+  const whiteboard = await read("templates/discovery/solution-whiteboard.md");
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const reviewer = await read("skills/sdd-feature-review/SKILL.md");
+  const readme = await read("README.md");
+  const plan = await read("templates/delivery/implementation-plan.md");
+  const normalizedReviewer = reviewer.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+  const scope = /every new(?:ly designed)?\s+runtime\/contract rejection and every new acceptance\s+checkpoint or blocking gate/i;
+
+  for (const document of [policy, whiteboard, workflow, reviewer, readme]) {
+    assert.match(document.replace(/^>\s?/gm, "").replace(/\s+/g, " "), scope);
+  }
+
+  assert.match(policy, /### Proportional validation disclosure/);
+  for (const criterion of [
+    /traceability to an accepted outcome/,
+    /correct ownership and execution boundary/,
+    /marginal value beyond existing controls/,
+    /risk reduction proportionate to latency/,
+    /simplest sufficient mechanism/,
+  ]) {
+    assert.match(policy, criterion);
+  }
+  assert.match(policy, /The fifth criterion is decisive/);
+  assert.match(policy.replace(/^>\s?/gm, "").replace(/\s+/g, " "),
+    /A missing, incomplete, or pending row MUST block design conclusion and dependent planning/);
+  for (const document of [policy, workflow, reviewer, readme]) {
+    assert.doesNotMatch(document, /Crosby|asq\.org/i);
+  }
+
+  assert.match(whiteboard, /## Newly introduced validations/);
+  assert.match(whiteboard, /\| ID \| Validation, owning authority, and execution boundary \|/);
+  assert.match(whiteboard, /Cost \/ risk reduction/);
+  assert.match(whiteboard, /Existing\/reusable or cheaper mechanism, its coverage, and why insufficient/);
+  assert.match(whiteboard, /<V01 or None>/);
+  assert.match(whiteboard, /Newly introduced validations \| `<complete reviewed table/);
+  assert.match(whiteboard.replace(/^>\s?/gm, "").replace(/\s+/g, " "),
+    /A concluded Whiteboard MUST NOT contain a pending row/);
+
+  const normalizedWorkflow = workflow.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+  assert.match(normalizedWorkflow, /reproduce the complete validation table or `None`/);
+  assert.match(normalizedWorkflow, /preserve both reviewers' exact dispositions/);
+  assert.match(normalizedWorkflow,
+    /Missing, incomplete, or pending rows MUST block conclusion and planning/);
+  assert.match(normalizedReviewer, /Report an exact disposition for every row/);
+  assert.match(normalizedReviewer, /Reuse or a cheaper adequate option MUST win unless/i);
+  assert.match(normalizedReviewer,
+    /Missing, incomplete, pending, or disproportionate rows MUST block design approval/);
+  for (const portableSkill of [workflow, reviewer]) {
+    const normalized = portableSkill.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+    assert.match(normalized, /latency, complexity, false rejection, maintenance, and operating cost/);
+    assert.match(normalized, /The fifth criterion is decisive/);
+  }
+  assert.match(normalizedWorkflow, /The table MUST include: `ID`, `Validation \/ authority \/ execution boundary`/);
+  assert.match(normalizedWorkflow, /project's Whiteboard has no validation-inventory section/);
+  assert.match(readme, /simplest sufficient\s+mechanism—not whether more checking is theoretically possible/);
+  assert.match(readme, /proportional validation contract/);
+  assert.doesNotMatch(plan, /## Newly introduced validations/);
 });
 
 test("installed skills do not link outside their copied directories", async () => {

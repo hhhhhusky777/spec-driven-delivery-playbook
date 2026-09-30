@@ -94,6 +94,36 @@ If only the parent brief omitted unchanged, already approved recovery
 information or reviewer dispositions, re-present them without another review.
 Repeat review when candidate bytes or meaning changed.
 
+Before the design human gate, use the Whiteboard's validation inventory to list
+every newly designed runtime/contract rejection and every new acceptance
+checkpoint or blocking gate. Do not relist unchanged validation or ordinary
+tests under an existing gate. Authors and reviewers MUST assess each row against
+all five criteria:
+
+1. Traceability to an accepted outcome, invariant, risk, or external contract.
+2. Correct ownership and execution boundary.
+3. Marginal value beyond existing controls.
+4. Risk reduction proportionate to latency, complexity, false rejection,
+   maintenance, and operating cost.
+5. The simplest sufficient mechanism. The fifth criterion is decisive: reuse
+   or a cheaper adequate option wins unless shown insufficient.
+
+Cross-reference overlapping fail-close and test evidence; do not duplicate it.
+
+> [!IMPORTANT]
+> After both retained reviewers approve the exact design candidate, the parent
+> response MUST reproduce the complete validation table or `None`, preserve
+> both reviewers' exact dispositions, and request owner disposition. Missing,
+> incomplete, or pending rows MUST block conclusion and planning.
+>
+> The table MUST include: `ID`, `Validation / authority / execution boundary`,
+> `Protected outcome / risk / marginal value`, `Concrete invalid case`,
+> `Failure effect / recovery`, `Cost / risk reduction`,
+> `Existing or cheaper mechanism / coverage / why insufficient`,
+> `Fail-close / test reference`, and `Owner disposition`.
+> Use these fields even when the project's Whiteboard has no validation-inventory
+> section. Do not create a separate document or invent rows to populate the table.
+
 - Keep canonical project authorities mutually consistent. Resolve conflicts
   from those authorities and explicit owner decisions; ask the owner when the
   conflict changes policy, safety, intended behavior, or authority.
@@ -334,11 +364,19 @@ interruptions, review time, or waits for people or external systems.
 
 ## Error handling
 
-Follow the canonical error-handling authority recorded in the adoption
-manifest; do not restate or fork it here. In this playbook repository,
-`docs/error-handling.md` owns triage, issue tracking, recovery, and escalation.
-Its core outcome is simple: preserve invariants, fail closed on uncertainty,
-and expose client-controlled retry only when repeating the operation is safe.
+Follow the project's manifest-linked error-handling authority when present.
+Do not duplicate or override it.
+
+Within approved scope and authority, correct recoverable agent errors and
+continue. Preserve system consistency; fail closed when continuing could
+violate a required invariant or safety boundary. Allow client-controlled retry
+only when repeating the operation is safe; reconcile ambiguous effects or use
+an established idempotency boundary before permitting retry. Prefer the
+smallest sufficient handling, not enumeration of every possible failure.
+
+Escalate unresolved scope, authority, or critical contract conflicts to the
+human. Track confirmed playbook or project gaps in their GitHub issue tracker;
+ordinary agent mistakes do not require a new issue.
 
 ## Completion
 
