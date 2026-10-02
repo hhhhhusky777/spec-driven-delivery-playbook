@@ -142,6 +142,21 @@ deferrals, and rejections instead of silently dropping them.
 | --- | --- | --- | --- |
 | `<DR01>` | `<design point ID or None>` | `<accepted, changed, deferred, or rejected>` | `<why the conclusion preserves or intentionally changes the draft>` |
 
+## Newly introduced validations
+
+> [!IMPORTANT]
+> **Hard rule.** List every new runtime/contract rejection and every new
+> acceptance checkpoint or blocking gate. Both reviewers MUST approve every row
+> before the human gate. The parent response MUST reproduce every row, append
+> both reviewers' exact dispositions, and request owner disposition. A concluded
+> Whiteboard MUST NOT contain a pending row. Use one all-`None` row when none
+> exists. Link unchanged validations and keep individual tests or assertions
+> under an existing gate in the implementation-plan test inventory.
+
+| ID | Validation, owning authority, and execution boundary | Protected outcome / risk and marginal value beyond existing controls | Concrete invalid case | Failure effect / recovery | Cost / risk reduction | Existing/reusable or cheaper mechanism, its coverage, and why insufficient | Fail-close / test reference | Owner disposition |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `<V01 or None>` | `<validation, owner, and boundary; or None>` | `<traceability and incremental protection; or None>` | `<realistic rejected case or stopped checkpoint; or None>` | `<effect and recovery; or None>` | `<proportionate cost comparison; or None>` | `<reuse or cheaper option, coverage, and insufficiency; or None>` | `<IDs or None>` | `<Pending, Approved, Rejected, or None>` |
+
 ## Newly introduced fail-closed behaviors
 
 > [!IMPORTANT]
@@ -183,5 +198,6 @@ stay in the implementation plan.
 | Important boundaries | `<safety, compatibility, policy, or authority>` | `<class>` |
 | Alternatives rejected | `<only material alternatives>` | `<class>` |
 | Remaining gaps or risks | `<summary or None>` | `<class>` |
+| Newly introduced validations | `<complete reviewed table with both reviewers' exact dispositions in the parent response; or None>` | `<HUMAN_DECISION or NONE>` |
 | Newly introduced fail-closed behavior | `<complete list after two-agent design review, with effect, one concise explanatory example, Recovery / best next action, and both reviewers' exact dispositions; or None>` | `<HUMAN_DECISION or NONE>` |
 | Decision requested | `<exact request>` | `<class>` |

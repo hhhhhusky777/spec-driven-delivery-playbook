@@ -77,6 +77,24 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > freeze, any whiteboard byte change without prior human authorization for the exact
 > amendment MUST block approval.
 >
+> Review every newly designed runtime/contract rejection and every new
+> acceptance checkpoint or blocking gate in the Whiteboard's validation
+> inventory. Each row MUST satisfy all five criteria:
+>
+> 1. Traceability to an accepted outcome, invariant, risk, or external contract.
+> 2. Correct ownership and execution boundary.
+> 3. Marginal value beyond existing controls.
+> 4. Risk reduction proportionate to latency, complexity, false rejection,
+>    maintenance, and operating cost.
+> 5. The simplest sufficient mechanism. The fifth criterion is decisive: reuse
+>    or a cheaper adequate option MUST win unless shown insufficient.
+>
+> Do not demand relisting of unchanged validation or ordinary
+> tests under an existing gate. Require cross-references instead of duplicated
+> fail-close or test evidence. Missing, incomplete, pending, or
+> disproportionate rows MUST block design approval. Report an exact disposition
+> for every row so the parent can reproduce the table at the human gate.
+>
 > Verify every task's recorded branch and required PR target against the
 > canonical branch policy and the actual pull request. Under a feature
 > integration model, a task PR targeting the protected integration branch MUST
@@ -168,6 +186,11 @@ These judgments follow Google's
 and [handling-comments guidance](https://google.github.io/eng-practices/review/developer/handling-comments.html):
 balance progress with code health and resolve disagreement through facts and
 tradeoffs, not personal preference.
+
+When uncertain about design fit, unnecessary complexity, or test value, consult
+Google's [What to look for in a code review](https://google.github.io/eng-practices/review/reviewer/looking-for.html).
+It explains over-engineering and useful, maintainable tests. Use it as supporting
+guidance, not project authority or a new gate; do not browse it routinely.
 
 Approve only the exact candidate you inspected when no unresolved blocking
 finding remains. Optional suggestions and justified nonblocking deferrals do
