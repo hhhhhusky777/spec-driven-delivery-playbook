@@ -23,7 +23,8 @@ status-only change.
 | Active tasks | `None` |
 | Next ready task | `None` |
 | Active blocker | `None` |
-| Implementation mode | `<human-review-before-merge or explicitly authorized alternative>` |
+| Implementation mode | `<human-review-before-merge (default) or explicitly enabled Autopilot>` |
+| Authorized scope / feature branch / protected target | `<owner-selected values; None before opt-in>` |
 | Delivery branch / target | `<values>` |
 | Owner | `<owner>` |
 | Primary issue / need | `<link>` |
@@ -291,6 +292,10 @@ already been reviewed or merged.
 - The plan reports the actual final state and no unresolved critical mismatch.
 
 ## Human review brief
+
+In the parent response, request the owner's mode choice and batch foreseeable
+decisions under the [Autopilot contract](../../skills/sdd-project-workflow/SKILL.md#autopilot-mode).
+This template records authorization facts, not a second execution contract.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |

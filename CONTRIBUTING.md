@@ -84,6 +84,9 @@ For normal delivery, the implementation plan records any owner-selected merge
 mode and exact scope. A Fast Fix uses the governing Issue and PR instead.
 Human review before merge is the default. Scoped agent auto-merge never supplies
 design, policy, validation, cleanup, or out-of-scope authority.
+The workflow skill's [Autopilot contract](skills/sdd-project-workflow/SKILL.md#autopilot-mode)
+defines opt-in continuous execution and feature-task merge authority; human
+acceptance of the final `main` merge remains required.
 
 Open the PR when it best supports collaboration; a draft PR is not required
 before coding. "Focused tests" means only the tests that cover the changed files
