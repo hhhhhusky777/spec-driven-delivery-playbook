@@ -7,6 +7,30 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = relative => readFile(path.join(root, relative), "utf8");
 
+test("Autopilot consumers route to one portable authorization contract", async () => {
+  const owner = "skills/sdd-project-workflow/SKILL.md";
+  const workflow = await read(owner);
+  const section = workflow.split("## Autopilot mode\n")[1]?.split("\n## ")[0];
+  assert.ok(section, "installed workflow must expose the mode contract");
+  for (const consumer of [
+    "README.md",
+    "CONTRIBUTING.md",
+    "docs/documentation-quality-policy.md",
+    "templates/delivery/implementation-plan.md",
+  ]) {
+    const text = await read(consumer);
+    const links = [...text.matchAll(/\]\(([^)]+#autopilot-mode)\)/g)];
+    assert.ok(links.length > 0, `${consumer} must route to the canonical contract`);
+    for (const [, href] of links) {
+      assert.equal(path.posix.normalize(path.posix.join(path.posix.dirname(consumer), href.split("#")[0])), owner);
+    }
+  }
+  const plan = await read("templates/delivery/implementation-plan.md");
+  const fields = plan.split("\n").filter(line => line.startsWith("| ")).map(line => line.split("|")[1].trim());
+  assert.ok(fields.includes("Implementation mode"));
+  assert.ok(fields.includes("Authorized scope / feature branch / protected target"));
+});
+
 async function files(directory, prefix = "") {
   const result = [];
   for (const entry of await readdir(path.join(directory, prefix), { withFileTypes: true })) {

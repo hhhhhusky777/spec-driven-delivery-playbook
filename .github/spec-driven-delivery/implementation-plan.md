@@ -6,10 +6,10 @@
 
 | Field | Value |
 | --- | --- |
-| State | `DRAFT` |
+| State | `VALIDATING` |
 | Active tasks | `None` |
 | Next ready task | `None` |
-| Active blocker | Plan acceptance; explicit mode and closing-transition decisions |
+| Active blocker | `None` |
 | Implementation mode | Human-review-before-merge; Autopilot not enabled |
 | Delivery branch / target | `codex/autopilot-mode` / `main` |
 | Owner | Repository owner |
@@ -32,7 +32,7 @@ Scope is the portable Autopilot authorization contract and its consumers. No sch
 | Task branch / required target | `codex/autopilot-mode` / `main`; PR #149 |
 | Merge authority | Human main-merge acceptance remains required; no intermediate task PR exists |
 | Mode choice | At plan review ask whether to enable continuous Autopilot execution to final readiness; no authority to auto-merge this PR to main |
-| Foreseeable decisions | Plan acceptance, explicit Autopilot choice, and optional named archive/reset authorization |
+| Foreseeable decisions | Plan accepted; no explicit Autopilot opt-in; named archive/reset authorization remains required before closing-candidate construction |
 | Readiness evidence | Worktree operation and installer validation passed; runtime pin accepted; both reviewers verified conclusion; locked dependencies provisioned |
 | Parallel ownership | Reviewers read independently; parent owns edits and integration |
 
@@ -53,7 +53,7 @@ The implementation unit is atomic because the installed contract, template, revi
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| T01 | `PLANNED` | `None` | Autopilot is explicit, portable, authority-bounded and consistent across its consumers | AP01–AP06 only; preserve default and existing gates | Focused changed-source tests and semantic scenarios; full final gate | `codex/autopilot-mode`; #149; `main` |
+| T01 | `DONE` | `None` | Autopilot is explicit, portable, authority-bounded and consistent across its consumers | AP01–AP06 only; preserve default and existing gates | Focused changed-source tests pass; semantic review and full final gate pending in PR | `codex/autopilot-mode`; #149; `main` |
 
 ## Task specifications and context receipts
 
@@ -65,14 +65,14 @@ The implementation unit is atomic because the installed contract, template, revi
 | Consumed dependencies | Approved AP01–AP06; installed bd56ed39 runtime; existing fields, reviewer sessions, branch policy and final gates |
 | Critical obligations | No implicit opt-in, main auto-merge, weakened checks or whiteboard edits; do not duplicate algorithm across sources |
 | Context receipt | Canonical sources read; exact conclusion approved by both seats; no unresolved source conflict |
-| Actual result | Not implemented |
+| Actual result | Portable mode contract and consumers implemented; focused document-model 21/21 and document checks passed; PR owns pending review |
 
 ## Test and acceptance contracts
 
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
-| T01 | AP01–AP02 authorization | Source regressions plus independent review of explicit opt-in, default, wrong-target and stale-head cases | Planned | Focused task work |
-| T01 | AP03–AP05 progression and preserved stops | Retained semantic review of dependent-task, single-PR, revoked authority and unexpected decision scenarios | Planned | Focused task review |
+| T01 | AP01–AP02 authorization | Canonical-link/plan-field regression implemented; independent explicit opt-in, default, wrong-target and stale-head scenario review pending | Implemented / semantic review pending | Focused task work |
+| T01 | AP03–AP05 progression and preserved stops | Retained semantic review of dependent-task, single-PR, revoked authority and unexpected decision scenarios | Pending review | Focused task review |
 | T01 | AP06 consistency | Changed-document structure, lifecycle, links and relevant Mermaid checks | Existing tooling | Focused task work |
 | T01 | Entire final candidate | Reconcile missing test coverage after implementation audit; run repository docs:all on final reviewed head | Unrun | Final gate |
 
@@ -94,7 +94,7 @@ No new programmatic workflow engine or exact-prose assertion quota. PR holds act
 
 | Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
 | --- | --- | --- | --- |
-| AP01–AP06 / T01 | Bounded Autopilot guidance | Not implemented; no deviation | Parent implementation after plan acceptance |
+| AP01–AP06 / T01 | Bounded Autopilot guidance | Implemented; no design deviation | Retained review, final audit and validation; owner closing-transition and main-merge authority |
 
 ### Cleanup inventory
 
@@ -103,7 +103,7 @@ No new programmatic workflow engine or exact-prose assertion quota. PR holds act
 | Concluded whiteboard and final plan | Combined archive linked to #148 and closing PR #149 | Preserve complete sources; human named closing-transition authorization required | Pending |
 | Live whiteboard / live plan | Reset / remove in closing candidate | Only after authorized complete archive | Pending |
 | Manifest and reusable guidance | Keep | Stable project authorities | Preserved |
-| `/private/tmp/sdd-autopilot-mode` and `codex/autopilot-mode` | Remove owned worktree and retire merged branch after target verification | Do not touch other worktrees, changes or branches | Pending |
+| Delivery-owned worktree for `codex/autopilot-mode` and that branch | Remove owned worktree and retire merged branch after target verification | Resolve exact registered path from Git before removal; do not touch other worktrees, changes or branches | Pending |
 
 ## Human review brief
 

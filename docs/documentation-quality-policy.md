@@ -301,7 +301,7 @@ Phase-specific additions:
 | --- | --- |
 | Adoption | Discovered authorities and contracts, reused or changed policies, gaps, pin/runtime state, and activation boundary |
 | Design conclusion | Key design points, rationale, boundaries, risks, rejected alternatives, unresolved gaps, and the exact owner decision |
-| Planning | Whiteboard design points mapped to task outcomes, dependencies, validation, PR boundaries, and gaps |
+| Planning | Whiteboard design points mapped to task outcomes, dependencies, validation, PR boundaries, gaps, and the [Autopilot choice and foreseeable decisions](../skills/sdd-project-workflow/SKILL.md#autopilot-mode) |
 | Implementation PR | Delivered behavior, deviations, compatibility/operational effects, validation, and merge target |
 | Validation and cleanup | Planned versus actual outcomes, unresolved work, cleanup ownership, and target proof |
 | Upgrade | Old/new pins, reusable-document impact, migration, rollback, validation, and cutover authority |

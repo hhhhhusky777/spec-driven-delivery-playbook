@@ -102,6 +102,10 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > Reject any delivery-local exception, policy override, opportunistic retarget,
 > or direct task merge that bypasses the declared feature integration branch.
 >
+> For an Autopilot delivery, verify the plan's explicit owner authorization,
+> scope and targets against PR evidence and the installed workflow skill's
+> Autopilot mode contract. Reviewer approval does not supply merge authority.
+>
 > At the pre-final-test implementation audit, before any missing test is added
 > or any final-gate test is run, inspect the exact implementation content and
 > verify the author's self-review of that same content. The gate MUST remain
