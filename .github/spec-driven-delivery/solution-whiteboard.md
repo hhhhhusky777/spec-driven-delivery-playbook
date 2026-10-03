@@ -4,10 +4,10 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [Issue #148](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/148) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
+| Concluded design revision | `cfcd847b12fb6c18902d1d900fe3a1d835b0f1c2` |
 | Open owner decisions | `None` |
 
 ## Discussion draft
