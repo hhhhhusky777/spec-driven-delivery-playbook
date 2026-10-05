@@ -27,6 +27,7 @@ useful rather than adding process overhead.
 | Efficient implementation | Batch coherent work and avoid unnecessary stops while preserving real gates |
 | Efficiency and concurrency | Overlap independent execution and delegate worthwhile work while the main agent advances delivery |
 | Reliable review | Give two isolated reviewers and the owner one exact, reviewable candidate |
+| Optional Autopilot | Authorize continuous delivery to final merge-back readiness while retaining human control of the protected-target merge |
 | Simple fail-closed recovery | Preserve consistency, expose safe client retry, and avoid speculative error machinery |
 | Parallel delivery | Isolate worktrees and ownership while keeping integration boundaries explicit |
 | Clean completion | Keep reusable output and PR evidence, then remove feature-only working material |
@@ -327,6 +328,15 @@ The planning human brief shows design points beside task outcomes and
 validation. This makes omissions, unsupported tasks, and inconsistencies
 visible without requiring the owner to reread every document word by word.
 
+It also asks whether to enable **Autopilot** and collects foreseeable decisions
+together. Explicit opt-in lets approved task PRs merge into the named feature
+branch and the next ready task begin without routine human merge pauses. The
+agent continues through existing final-readiness checks, then stops for the
+human protected-target merge decision. Human-review-before-merge remains the
+default; single-PR delivery never gains automatic `main` merge permission.
+See the [Autopilot contract](skills/sdd-project-workflow/SKILL.md#autopilot-mode)
+for the canonical authorization and preserved stop boundaries.
+
 Before a pull request enters final review, its candidate updates every affected
 canonical document to the repository state that will result if it merges. A
 task can therefore be `DONE` in the candidate without claiming the PR has
@@ -385,6 +395,8 @@ flowchart LR
     PR --> A["Focused tests for changed files / lines<br/>+ exact-head review"]
     A --> G{"Final candidate to protected target?"}
     G -->|"no"| T["Required authority + merge task<br/>into feature branch"]
+    T --> N["Next ready task<br/>Autopilot: no routine human pause"]
+    N --> R
     G -->|"yes"| V["Full validation"]
     V --> H["Required owner / merge authority"]
     H --> M["Merge + target verification"]
