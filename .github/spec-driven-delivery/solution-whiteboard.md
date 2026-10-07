@@ -1,4 +1,4 @@
-# Solution whiteboard
+# Solution Whiteboard
 
 <!-- sdd: whiteboard -->
 
@@ -12,4 +12,4 @@
 
 ## Discussion draft
 
-`Empty until discussion starts.`
+Empty until the next delivery discussion starts.
