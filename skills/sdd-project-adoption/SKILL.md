@@ -37,6 +37,16 @@ related discovery and owner decisions. Review one coherent adoption result,
 and present the owner a compact table of installed revision, discovered
 authorities, material choices, validation, gaps, and requested acceptance.
 
+> [!IMPORTANT]
+> When discovery finishes, the agent response MUST include one simple table
+> covering existing policies, missing applicable policies, and discovered gaps.
+> Use columns `Category`, `Policy / gap`, `Canonical source / evidence`, and
+> `Impact / proposed handling / owner decision`. Use `None` for an empty category.
+> Link existing authority; do not copy policy text. Distinguish a missing source
+> from a material rule or authority gap, and disclose whether it blocks adoption.
+> This summarizes manifest discovery and gap records; it adds no document,
+> mandatory policy file, or review gate.
+
 Follow the project's canonical error-handling authority rather than defining a
 second recovery procedure here. Human acceptance is required before adoption
 becomes installed.
