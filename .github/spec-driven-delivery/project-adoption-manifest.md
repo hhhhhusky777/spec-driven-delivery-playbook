@@ -14,8 +14,8 @@ state.
 | State before block | `None` |
 | Playbook source repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook.git` |
 | Playbook revision | `bd56ed39a07b7cfae552e1345769160b8e355daa` |
-| Upgrade state | `COMPLETE` |
-| Upgrade candidate | `None` |
+| Upgrade state | `ASSESSING` |
+| Upgrade candidate | `d69a50b0da190226fc40584016bebed3c381c0c8` |
 | Playbook materialization mode | `pinned local checkout` |
 | Adoption owner | Playbook maintainers |
 | Accepted by | Repository owner through the adoption pull request |
