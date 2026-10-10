@@ -258,7 +258,7 @@ test("rejected triage upgrade restores an already-cleaned accepted runtime witho
   assert.equal(validation.status, 0, validation.stderr);
   assert.match(validation.stdout, /^CURRENT:/);
   assert.equal(await readFile(path.join(project, ".agents", "skills", "sdd-problem-triage", "SKILL.md"),
-    "utf8"), `${oldContent}\n`);
+    "utf8"), oldContent);
 });
 
 test("installer resolves latest main, installs adoption skill, and emits one guide prompt", async (t) => {

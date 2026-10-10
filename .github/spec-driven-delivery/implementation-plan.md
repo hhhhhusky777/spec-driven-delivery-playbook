@@ -20,7 +20,7 @@ This is the only active-delivery state authority. Detailed evidence stays in
 | Primary issue / need | [Issue #152](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/152) |
 | Concluded whiteboard | [Whiteboard](solution-whiteboard.md), approved candidate `a8f0f186f63130940f78c8909820fad3fecff5e2`; conclusion commit `5965046da53558638d91e10b7242a292549a9f2c` verified by both retained reviewers |
 | Required reviewers | Retained Reviewer One and Reviewer Two for this delivery |
-| Last verified | 2026-10-10; T01 implemented; 35 affected installer tests and changed-file documentation checks pass; original whiteboard schema correction needs exact owner authorization before final readiness |
+| Last verified | 2026-10-10; T01 implemented; 36 affected installer tests and changed-file documentation checks pass; original whiteboard schema correction needs exact owner authorization before final readiness |
 
 ## Governing inputs and boundaries
 
@@ -69,7 +69,7 @@ intermediate result. There is no task-to-feature-branch merge to automate.
 | Context receipt | Current manifest, frozen whiteboard, CONTRIBUTING, quality/error-handling/Experience/template guidance read; worktree-focused checks and runtime validation passed; no missing implementation prerequisite |
 | Exclusions | Issues #142/#147, dependency changes, new tools or investigation gates, operational mutations, changes to frozen design |
 | Implementation time | Existing 90-minute per-task active implementation boundary applies |
-| Actual result | Skill, routing, installer support and README candidate implemented; four focused compatibility, integrity and real installed-link regressions pass; skill metadata and installer syntax checks pass |
+| Actual result | Skill, routing, installer support and README candidate implemented; five focused regressions cover compatibility, integrity, installed links and offline rejected-upgrade recovery; all 36 affected installer tests and changed-file documentation checks pass; skill metadata and installer syntax checks pass |
 
 ## Test and acceptance inventory
 
