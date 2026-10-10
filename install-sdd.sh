@@ -502,7 +502,7 @@ cleanup_guide_checkout() {
 
   local checkout marker recorded_project recorded_revision recorded_common_directory
   local recorded_git_directory recorded_worktree_state cleanup_state marker_signature
-  local removal_target temp_root legacy_parent resolved_parent updated_guide restore_directory
+  local removal_target temp_root legacy_parent resolved_parent updated_guide restore_directory accepted_triage_entry
   cleanup_state=$(markdown_value "Cleanup state" "$guide")
   if [[ "$cleanup_state" == "COMPLETE" ]]; then
     printf 'Installer-owned checkout is already cleaned up for %s.\n' "$guide"
@@ -572,7 +572,8 @@ cleanup_guide_checkout() {
   if [[ "$guide" == "$UPGRADE_GUIDE_PATH" && -f "$GUIDE_PATH" &&
     "$(markdown_value "Resolved revision" "$GUIDE_PATH")" == "$PINNED_REVISION" ]]; then
     restore_directory=$(mktemp -d "$RUNTIME_DIRECTORY/checkouts/.restore.XXXXXX")
-    if git -C "$checkout" cat-file -e "$PINNED_REVISION:skills/$PROBLEM_TRIAGE_SKILL/SKILL.md" 2>/dev/null; then
+    accepted_triage_entry=$(git -C "$checkout" ls-tree "$PINNED_REVISION" -- "skills/$PROBLEM_TRIAGE_SKILL/SKILL.md")
+    if [[ -n "$accepted_triage_entry" ]]; then
       git -C "$checkout" archive "$PINNED_REVISION" "skills/$PROBLEM_TRIAGE_SKILL" |
         tar -x -C "$restore_directory"
     fi
@@ -792,6 +793,14 @@ prepare_upgrade() {
   mv "$staging_directory" "$final_directory"
   checkout="$final_directory/repository"
   FAILED_UPGRADE_TEMP_DIRECTORY=$final_directory
+
+  # A filtered clone may omit old blobs. Materialize the accepted skill while
+  # source access is available, before replacing any installed triage bytes.
+  local accepted_triage_entry
+  accepted_triage_entry=$(git -C "$checkout" ls-tree "$PINNED_REVISION" -- "skills/$PROBLEM_TRIAGE_SKILL/SKILL.md")
+  if [[ -n "$accepted_triage_entry" ]]; then
+    git -C "$checkout" archive "$PINNED_REVISION" "skills/$PROBLEM_TRIAGE_SKILL" >/dev/null
+  fi
 
   skill_source="$checkout/skills/sdd-playbook-upgrade"
   [[ -f "$skill_source/SKILL.md" ]] ||

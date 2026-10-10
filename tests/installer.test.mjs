@@ -235,9 +235,20 @@ test("installed triage routing resolves from real adoption workflow upgrade and 
 
 test("rejected triage upgrade restores an already-cleaned accepted runtime without fetching", async (t) => {
   const source = await createPlaybookFixture(t);
-  const project = await createInstalledProject(t, source);
+  const oldContent = run("git", ["show", `${source.firstRevision}:skills/sdd-problem-triage/SKILL.md`],
+    source.repository);
+  await writeFile(path.join(source.repository, "skills", "sdd-problem-triage", "SKILL.md"),
+    `${oldContent}\nChanged candidate triage.\n`, "utf8");
+  run("git", ["add", "."], source.repository);
+  run("git", ["commit", "-m", "distinct candidate triage"], source.repository);
+  run("git", ["config", "uploadpack.allowFilter", "true"], source.repository);
+  const filteredSource = { ...source, repository: `file://${source.repository}` };
+  const project = await createInstalledProject(t, filteredSource);
   assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
-  assert.equal(runInstaller(project, ["--repository", source.repository, "--upgrade"]).status, 0);
+  assert.equal(runInstaller(project, ["--repository", filteredSource.repository, "--upgrade"]).status, 0);
+  const upgradeGuide = await readFile(path.join(project, ".sdd-runtime", "playbook-upgrade-guide.md"), "utf8");
+  assert.equal(run("git", ["config", "remote.origin.partialclonefilter"],
+    guideValue(upgradeGuide, "Playbook checkout")).trim(), "blob:none");
   // The verified candidate already contains its accepted ancestor. Recovery
   // must not require the old checkout or another network/source fetch.
   await rm(source.repository, { recursive: true, force: true });
@@ -246,6 +257,8 @@ test("rejected triage upgrade restores an already-cleaned accepted runtime witho
   const validation = runInstaller(project, ["--validate"]);
   assert.equal(validation.status, 0, validation.stderr);
   assert.match(validation.stdout, /^CURRENT:/);
+  assert.equal(await readFile(path.join(project, ".agents", "skills", "sdd-problem-triage", "SKILL.md"),
+    "utf8"), `${oldContent}\n`);
 });
 
 test("installer resolves latest main, installs adoption skill, and emits one guide prompt", async (t) => {
