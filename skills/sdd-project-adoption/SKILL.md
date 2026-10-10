@@ -19,6 +19,10 @@ deliveries without repeating adoption.
 - The generated runtime and managed workflow skill match the manifest pin.
 - Existing project authority is preserved unless the owner explicitly changes
   it.
+- The manifest links Git-tracked project Experience or an existing equivalent.
+  Discover missing guidance as a gap; within authority, establish a concise
+  document explaining how to use and refine verified, actionable lessons.
+  Reuse an existing owner instead of creating a duplicate.
 
 Adoption is still one-time when project policy evolves. Future deliveries
 semantically reconcile current repository authority with the manifest before
@@ -39,7 +43,8 @@ authorities, material choices, validation, gaps, and requested acceptance.
 
 > [!IMPORTANT]
 > When discovery finishes, the agent response MUST include one simple table
-> covering existing policies, missing applicable policies, and discovered gaps.
+> covering existing policies and reusable guidance, missing applicable sources,
+> and discovered gaps.
 > Use columns `Category`, `Policy / gap`, `Canonical source / evidence`, and
 > `Impact / proposed handling / owner decision`. Use `None` for an empty category.
 > Link existing authority; do not copy policy text. Distinguish a missing source

@@ -200,6 +200,8 @@ Adoption reconciles the playbook with the repository that already exists. It
 discovers contribution rules, test expectations, security boundaries, and
 owner authority; records the accepted immutable playbook revision; prepares an
 empty whiteboard; and obtains review of one coherent installation package.
+The manifest also indexes durable project Experience or existing equivalent
+guidance, so a fresh agent can reuse verified lessons.
 
 Future features do not repeat adoption. Each delivery first creates its
 isolated worktree and owned delivery branch, checks for a newer playbook
@@ -208,6 +210,9 @@ manifest before whiteboard work. New, moved, removed, or changed canonical
 policies update stable manifest links and boundaries without repeating adoption
 or copying policy text. An upgrade stays in that delivery candidate and never
 rewrites its feature-specific whiteboard or plan.
+Upgrades perform incremental discovery against the incoming revision's
+requirements, reconcile reusable guidance, and report new gaps—not a new
+adoption or a mandatory suite of policy files.
 
 ```mermaid
 flowchart TD
@@ -221,7 +226,8 @@ flowchart TD
     U --> B["Create delivery worktree + branch"]
     B --> N["Check for an upgrade in place"]
     N -->|"current"| A["Reconcile current project authority"]
-    N -->|"newer revision"| C["Review and cut over reusable material"]
+    N -->|"newer revision"| D["Incremental discovery: requirements + gaps"]
+    D --> C["Review and cut over reusable material"]
     C --> A
     A --> W
 ```
@@ -855,6 +861,12 @@ This two-command form also works with installers from before automatic
 fresh-worktree bootstrap was available. A current installer can perform that
 bootstrap during `--upgrade` when the guide is absent. Neither path copies
 runtime from another worktree.
+
+Compare the incoming manifest template and applicable guidance with current
+project sources, including manifest-linked Experience or an existing equivalent.
+Refresh missing or stale links and report existing sources, missing applicable
+sources, and gaps in a concise response table. Resolve reusable guidance gaps
+within authority; material decisions use the project's error-handling policy.
 
 The old immutable pin remains authoritative until the candidate's reusable
 changes pass project validation, two-agent review, owner acceptance, and
