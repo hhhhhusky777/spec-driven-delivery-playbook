@@ -575,6 +575,13 @@ test("adoption remains reusable while project authority is refreshed", async () 
   assert.match(manifest, /reconcile this authority index with current repository evidence/);
   assert.match(manifest, /filenames are hints, not authority by themselves/i);
   assert.match(readme, /semantically reconciles current project authority with the\s+manifest/);
+  const upgrade = await read("skills/sdd-playbook-upgrade/SKILL.md");
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  assert.match(manifest, /\| Project Experience or existing equivalent \|/);
+  assert.match(upgrade, /Upgrade MUST perform incremental discovery/);
+  assert.match(upgrade, /Missing files alone do not require a new gate or automatic stop/);
+  assert.match(workflow, /manifest-linked project Experience/);
+  assert.doesNotMatch(workflow, /establish a Git-tracked `docs\/experience\.md`/);
 });
 
 test("human PR review briefs expose the exact candidate change shape", async () => {
@@ -738,7 +745,7 @@ test("final review requires merge-ready canonical state without predicting PR fa
 test("upgrade never rewrites feature content and keeps exact acceptance boundaries", async () => {
   const upgrade = await read("skills/sdd-playbook-upgrade/SKILL.md");
   const normalized = upgrade.replace(/\s+/g, " ");
-  assert.match(upgrade, /Never rewrite feature-specific whiteboard/);
+  assert.match(upgrade, /Never rewrite feature-specific\s+whiteboard/);
   assert.match(upgrade, /previous pin authoritative/);
   assert.match(normalized, /two independent reviews, and human acceptance/);
   assert.match(normalized, /pull request brief records old and new revisions/);

@@ -34,7 +34,7 @@ entries that are outdated, redundant, or no longer independently useful; Git
 preserves history. If a documented problem recurs, inspect discoverability,
 use, clarity, and changed assumptions before adding another entry.
 
-Keep this document discoverable from the project entry point or manifest so a
+Link this document or its existing equivalent from the project manifest so a
 fresh agent can find it without prior conversation. Merge parallel contributions
 by reconciling evidence and conditions, not accumulating conflicting advice.
 No entry count, new gate, or per-error recording ceremony is required.
