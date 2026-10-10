@@ -648,6 +648,7 @@ ensure_runtime_excludes() {
     "/.agents/skills/sdd-project-adoption/" \
     "/.agents/skills/sdd-project-workflow/" \
     "/.agents/skills/sdd-feature-review/" \
+    "/.agents/skills/sdd-problem-triage/" \
     "/.agents/skills/sdd-playbook-upgrade/"; do
     grep -Fqx "$pattern" "$git_exclude" || printf '%s\n' "$pattern" >>"$git_exclude"
   done
