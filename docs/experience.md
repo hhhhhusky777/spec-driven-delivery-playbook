@@ -13,7 +13,10 @@ private memory or a delivery status record. Project policies remain authoritativ
 > the problem, and understand applicability limits. Effort or recurrence evidence
 > may explain its value but never substitutes for actionable guidance.
 
-Before related work, consult the applicable entries and their canonical links.
+Unexpected situations or failures are the primary lookup trigger: search for
+similar situations and verified solutions instead of repeating trial and error.
+Known relevant lessons can also prevent a repeat before related work begins;
+not every operation needs a lookup. Consult applicable entries and canonical links.
 Use the verified approach while its assumptions remain valid; when relevant
 conditions change, revalidate and update the same entry. An entry supplies
 knowledge, not permission to bypass approval or safety boundaries.
