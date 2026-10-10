@@ -7,8 +7,8 @@
 | Issues | [#152](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/152) |
 | Closing pull request | [#153](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/153) |
 
-Complete accepted design and final plan follow. Headings and relative links
-are adjusted only for embedding. GitHub owns exact-head review, validation,
+Complete accepted design and final plan follow. Headings, relative links and
+machine-local path presentation are adapted for durable embedding. GitHub owns exact-head review, validation,
 merge authorization and target evidence. The owner authorized complete
 archive/reset at plan acceptance and the schema-only correction separately.
 
@@ -229,7 +229,7 @@ precedes full exact-head validation. No routine mid-task synchronization.
 | Final acceptance | TR01–TR06 delivered, compatibility and applicable checks passed, exact-head reviewer approvals and human merge authorization in PR | Closing candidate contains completed outcomes; exact review/check/merge facts remain in PR; main merge not yet authorized |
 | Combined archive | Preserve complete concluded whiteboard and final plan, link Issue #152 and closing PR #153 in both directions | Owner authorized at plan acceptance; complete sources embedded in this closing candidate |
 | Live documents | Remove live plan and reset whiteboard only after combined archive exists | Owner authorized at plan acceptance; reset after embedding complete sources |
-| Local worktree / branch | After authorized merge and target verification, remove owned `/private/tmp/sdd-problem-triage` and merged `codex/problem-triage`; preserve other work | Delivery-owned; cleanup remains pending |
+| Local worktree / branch | After authorized merge and target verification, remove this delivery's owned worktree and merged `codex/problem-triage`; preserve other work. Git worktree registration and PR evidence identify its machine-local location. | Delivery-owned; cleanup remains pending |
 | Reusable authority | Keep manifest, reusable project guidance and installed accepted runtime | Retain |
 
 ### Planned versus actual outcome

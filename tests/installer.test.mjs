@@ -16,7 +16,7 @@ import { spawnSync } from "node:child_process";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const INSTALLER = path.join(REPOSITORY_ROOT, "install-sdd.sh");
@@ -242,7 +242,7 @@ test("rejected triage upgrade restores an already-cleaned accepted runtime witho
   run("git", ["add", "."], source.repository);
   run("git", ["commit", "-m", "distinct candidate triage"], source.repository);
   run("git", ["config", "uploadpack.allowFilter", "true"], source.repository);
-  const filteredSource = { ...source, repository: `file://${source.repository}` };
+  const filteredSource = { ...source, repository: pathToFileURL(source.repository).href };
   const project = await createInstalledProject(t, filteredSource);
   assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
   assert.equal(runInstaller(project, ["--repository", filteredSource.repository, "--upgrade"]).status, 0);
