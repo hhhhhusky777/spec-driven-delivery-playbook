@@ -2,6 +2,10 @@
 
 Errors are triaged by their effect, not by a fixed procedural list.
 
+For evidence-driven diagnosis and reproduction, use the
+[problem triage skill](../skills/sdd-problem-triage/SKILL.md). This policy retains
+classification, recovery, issue-tracking and escalation authority.
+
 > [!IMPORTANT]
 > Keep error handling simple and invariant-based. It is impossible to enumerate
 > every edge case, race, timing, or failure interleaving; attempting to do so

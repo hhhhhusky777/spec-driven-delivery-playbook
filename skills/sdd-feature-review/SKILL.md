@@ -32,6 +32,10 @@ come from the current review packet and canonical delivery sources.
 Review independently. Do not consume the other reviewer's conclusion before
 returning your own.
 
+When undertaking causal investigation with the author, use the installed
+[problem triage skill](../sdd-problem-triage/SKILL.md). This is optional diagnosis,
+not a substitute for independent candidate review.
+
 If a Fast Fix exposes a material decision or ambiguity that disqualifies the
 route, keep the reviewer session. Review the resulting concluded whiteboard and
 plan before reviewing dependent implementation, using the same boundaries and

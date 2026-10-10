@@ -391,6 +391,11 @@ interruptions, review time, or waits for people or external systems.
 
 ## Error handling
 
+For unexplained or recurrent test/execution failures, unsuccessful repairs, or
+uncertain causes needing investigation, use the installed
+[problem triage skill](../sdd-problem-triage/SKILL.md). Known bounded mistakes
+can be corrected directly; triage adds no gate or test waiver.
+
 Follow the project's manifest-linked error-handling authority when present.
 Do not duplicate or override it.
 

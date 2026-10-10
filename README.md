@@ -29,6 +29,7 @@ useful rather than adding process overhead.
 | Reliable review | Give two isolated reviewers and the owner one exact, reviewable candidate |
 | Optional Autopilot | Authorize continuous delivery to final merge-back readiness while retaining human control of the protected-target merge |
 | Simple fail-closed recovery | Preserve consistency, expose safe client retry, and avoid speculative error machinery |
+| Evidence-driven problem triage | Reproduce unexplained failures, challenge causes with evidence, and avoid repeating blind fixes |
 | Parallel delivery | Isolate worktrees and ownership while keeping integration boundaries explicit |
 | Clean completion | Keep reusable output and PR evidence, then remove feature-only working material |
 | Safe upgrades | Synchronize reusable playbook guidance without rewriting active feature content |
@@ -79,6 +80,7 @@ accepted installation.
   - [Design tests around risk](#design-tests-around-risk)
   - [Review for humans and agents](#review-for-humans-and-agents)
   - [Recover without restarting everything](#recover-without-restarting-everything)
+    - [Investigate causes without adding ceremony](#investigate-causes-without-adding-ceremony)
   - [Finish, archive, and reset](#finish-archive-and-reset)
 - [How efficiency and reliability reinforce each other](#how-efficiency-and-reliability-reinforce-each-other)
   - [Use proportional effort](#use-proportional-effort)
@@ -661,6 +663,32 @@ The [error-handling framework](docs/error-handling.md) is the sole shared
 authority for recovery and escalation. Other guides link to it instead of
 restating increasingly specific error rules.
 
+#### Investigate causes without adding ceremony
+
+An unknown test failure or unsuccessful repair needs evidence, not another
+blind retry. The portable [problem triage skill](skills/sdd-problem-triage/SKILL.md)
+helps agents preserve a faithful reproducer, distinguish hypotheses with
+minimal observations, and state whether a cause is confirmed, suspected or
+unknown. It is installed for adoption, feature delivery and upgrade agents.
+Known bounded corrections can proceed directly; diagnosis adds no gate or
+operational permission.
+
+```mermaid
+flowchart LR
+    F["Unexplained or recurrent failure"] --> E["Evidence and faithful reproduction"]
+    E --> H["Discriminating hypothesis checks"]
+    H --> J["Cause judgment with explicit uncertainty"]
+    J --> N["Smallest safe remedy or next check"]
+    R["Optional retained-reviewer challenge"] -.-> H
+    N --> V["Verify original failure and affected invariants"]
+```
+
+The author integrates evidence; retained reviewers can challenge causal claims
+when useful. Joint investigation does not replace independent fix review.
+Results stay in existing Issues/PRs or the plan; verified reusable lessons can
+improve project Experience. Recovery and escalation still follow project
+authority, not a new troubleshooting procedure.
+
 ### Finish, archive, and reset
 
 Delivery finishes only after the accepted outcome is merged and verified on
@@ -851,7 +879,7 @@ Fast Fix instead uses its Issue and PR.
 | Path | Purpose |
 | --- | --- |
 | `install-sdd.sh` | Resolve immutable revisions and generate isolated runtime guidance |
-| `skills/` | Outcome and boundary guidance used by adoption, workflow, feature-review, and upgrade agents |
+| `skills/` | Outcome and boundary guidance for adoption, workflow, feature review, upgrades, and problem triage |
 | `templates/` | Reusable manifest, whiteboard, plan, and review structures |
 | `docs/` | Canonical quality, template-governance, error handling, and durable project Experience |
 | `scripts/` | Source repository documentation and lifecycle checks |

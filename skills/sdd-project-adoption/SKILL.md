@@ -50,3 +50,6 @@ authorities, material choices, validation, gaps, and requested acceptance.
 Follow the project's canonical error-handling authority rather than defining a
 second recovery procedure here. Human acceptance is required before adoption
 becomes installed.
+
+When an adoption failure needs causal investigation, use the installed
+[problem triage skill](../sdd-problem-triage/SKILL.md).

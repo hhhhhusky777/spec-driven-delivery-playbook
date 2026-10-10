@@ -15,6 +15,7 @@ GUIDE_SCHEMA_VERSION="3"
 UPGRADE_GUIDE_SCHEMA_VERSION="2"
 GENERATOR_VERSION="2.3.0"
 FEATURE_REVIEW_SKILL="sdd-feature-review"
+PROBLEM_TRIAGE_SKILL="sdd-problem-triage"
 LEGACY_ENTRY_README_PENDING=false
 LEGACY_ENTRY_README_PATH=""
 
@@ -218,6 +219,43 @@ refresh_guide_hash() {
   mv "$temporary" "$file"
 }
 
+install_triage_skill() {
+  local checkout=$1 revision=$2 source destination
+  source="$checkout/skills/$PROBLEM_TRIAGE_SKILL"
+  destination="$PROJECT_ROOT/.agents/skills/$PROBLEM_TRIAGE_SKILL"
+  TRIAGE_SKILL_AVAILABLE=false
+  TRIAGE_SKILL_HASH="None"
+  if [[ -f "$source/SKILL.md" ]]; then
+    if [[ -e "$destination" ]]; then
+      [[ -f "$destination/.sdd-playbook-managed" ]] ||
+        fail "refusing to overwrite unmanaged skill: $destination"
+      rm -rf "$destination"
+    fi
+    mkdir -p "$(dirname "$destination")"
+    cp -R "$source" "$destination"
+    printf '%s\n' "$revision" >"$destination/.sdd-playbook-managed"
+    TRIAGE_SKILL_AVAILABLE=true
+    TRIAGE_SKILL_HASH=$(git hash-object "$destination/SKILL.md")
+  elif [[ -f "$destination/.sdd-playbook-managed" ]]; then
+    rm -rf "$destination"
+  fi
+}
+
+validate_triage_skill() {
+  local guide=$1 revision=$2 failure_prefix=$3 destination
+  destination="$PROJECT_ROOT/.agents/skills/$PROBLEM_TRIAGE_SKILL"
+  # Older immutable revisions have no triage contract or metadata.
+  if [[ "$(markdown_value "Problem triage skill" "$guide")" == "available" ]]; then
+    [[ -f "$destination/.sdd-playbook-managed" &&
+      "$(head -n 1 "$destination/.sdd-playbook-managed")" == "$revision" &&
+      -f "$destination/SKILL.md" ]] ||
+      fail "$failure_prefix: installed triage skill differs from the guide revision"
+    [[ "$(git hash-object "$destination/SKILL.md")" == \
+      "$(markdown_value "Problem triage content hash" "$guide")" ]] ||
+      fail "$failure_prefix: installed triage skill content hash mismatch"
+  fi
+}
+
 validate_runtime_boundary() {
   local checkout_root="$RUNTIME_DIRECTORY/checkouts" resolved
   [[ ! -L "$RUNTIME_DIRECTORY" && ! -L "$checkout_root" ]] ||
@@ -329,6 +367,7 @@ validate_runtime() {
     [[ -f "$review_marker" && "$(head -n 1 "$review_marker")" == "$recorded_revision" ]] ||
       fail "INVALID_RUNTIME: installed feature review skill differs from the guide revision"
   fi
+  validate_triage_skill "$GUIDE_PATH" "$recorded_revision" "INVALID_RUNTIME"
   case "$cleanup_state" in
     PENDING)
       validate_checkout_boundary "$checkout" "$recorded_revision" "INVALID_RUNTIME"
@@ -441,6 +480,7 @@ validate_upgrade_runtime() {
   installed_marker="$PROJECT_ROOT/.agents/skills/sdd-playbook-upgrade/.sdd-playbook-managed"
   [[ -f "$installed_marker" && "$(head -n 1 "$installed_marker")" == "$recorded_revision" ]] ||
     fail "INVALID_UPGRADE_RUNTIME: installed upgrade skill differs from the candidate"
+  validate_triage_skill "$UPGRADE_GUIDE_PATH" "$recorded_revision" "INVALID_UPGRADE_RUNTIME"
 
   printf 'UPGRADE_CURRENT: candidate provenance, ancestry, guide, and skill match.\n'
 }
@@ -755,6 +795,7 @@ prepare_upgrade() {
   mkdir -p "$(dirname "$skill_destination")" "$RUNTIME_DIRECTORY"
   cp -R "$skill_source" "$skill_destination"
   printf '%s\n' "$resolved_revision" >"$skill_destination/.sdd-playbook-managed"
+  install_triage_skill "$checkout" "$resolved_revision"
 
   marker="$checkout/.sdd-owned-checkout"
   printf '%s\nproject-root=%s\ngit-common-directory=%s\ngit-directory=%s\ngit-worktree-state=%s\n' \
@@ -780,6 +821,8 @@ active project pin, approve compatibility, or authorize work in an active task.
 | Generator schema version | \`$UPGRADE_GUIDE_SCHEMA_VERSION\` |
 | Required skill | \`sdd-playbook-upgrade\` |
 | Installed skill | \`.agents/skills/sdd-playbook-upgrade/SKILL.md\` |
+| Problem triage skill | \`$([[ "$TRIAGE_SKILL_AVAILABLE" == true ]] && printf available || printf unavailable)\` |
+| Problem triage content hash | \`$TRIAGE_SKILL_HASH\` |
 | Review evidence destination | Pull request |
 | Content hash | \`<CONTENT_HASH>\` |
 
@@ -924,6 +967,7 @@ fi
 mkdir -p "$(dirname "$SKILL_DESTINATION")"
 cp -R "$SKILL_SOURCE" "$SKILL_DESTINATION"
 printf '%s\n' "$RESOLVED_REVISION" >"$SKILL_DESTINATION/.sdd-playbook-managed"
+install_triage_skill "$PLAYBOOK_CHECKOUT" "$RESOLVED_REVISION"
 
 REVIEW_SKILL_DESTINATION="$PROJECT_ROOT/.agents/skills/$FEATURE_REVIEW_SKILL"
 if [[ "$GUIDE_PROFILE" == "workflow" ]]; then
@@ -982,6 +1026,8 @@ is not a project system contract or a prescribed implementation path.
 | Required skill | \`$SKILL_NAME\` |
 | Installed skill | \`.agents/skills/$SKILL_NAME/SKILL.md\` |
 | Feature review skill | \`$([[ "$REVIEW_SKILL_AVAILABLE" == true ]] && printf available || printf unavailable)\` |
+| Problem triage skill | \`$([[ "$TRIAGE_SKILL_AVAILABLE" == true ]] && printf available || printf unavailable)\` |
+| Problem triage content hash | \`$TRIAGE_SKILL_HASH\` |
 | Content hash | \`<CONTENT_HASH>\` |
 
 ## Playbook runtime
