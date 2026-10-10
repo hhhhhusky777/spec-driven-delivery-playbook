@@ -4,11 +4,11 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [Issue #152](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/152) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
-| Open owner decisions | Exact design acceptance after two independent reviews |
+| Concluded design revision | `a8f0f186f63130940f78c8909820fad3fecff5e2` |
+| Open owner decisions | `None` |
 
 ## Discussion draft
 
@@ -40,9 +40,9 @@
 | [Google SRE troubleshooting](https://sre.google/sre-book/effective-troubleshooting/), [postmortem culture](https://sre.google/workbook/postmortem-culture/) | Supporting references for testable hypotheses, evidence, contributing causes, and actionable lessons. |
 | [Chromium bug reporting](https://www.chromium.org/for-testers/bug-reporting-guidelines/), [pytest flaky tests](https://docs.pytest.org/en/stable/explanation/flaky.html) | Supporting references for faithful reduced reproducers and uncontrolled state; not new project authority. |
 
-## Design conclusion candidate
+## Concluded design
 
-This is the OPEN candidate, not a frozen or accepted conclusion.
+Owner accepted the independently reviewed candidate `a8f0f186` on 2026-10-10.
 
 | ID | Outcome | Boundary / rationale | Acceptance signal |
 | --- | --- | --- | --- |
@@ -93,7 +93,7 @@ The skill provides diagnostic judgment, not a new reason to halt delivery.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Design | TR01–TR06; evidence-based triage, faithful reproduction, test-failure routing, optional reviewer collaboration, and portable installation. | HUMAN_ACCEPTANCE after review |
+| Design | TR01–TR06; evidence-based triage, faithful reproduction, test-failure routing, optional reviewer collaboration, and portable installation. | Owner accepted after both reviewers approved |
 | Important boundaries | No new authority, document, gate, or mechanical procedure; error handling remains canonical. | Preserved |
-| Upgrade | Prepare reusable-runtime upgrade from `d69a50b0da190226fc40584016bebed3c381c0c8` to `775f1479e8a1ce6277af7448d509cabe95374ad3`; prior pin remains authoritative pending review and owner acceptance. | HUMAN_ACCEPTANCE after review |
-| Remaining gaps | Exact candidate review is pending; no implementation has begun. | REVIEW |
+| Upgrade | Reusable-runtime upgrade from `d69a50b0da190226fc40584016bebed3c381c0c8` to `775f1479e8a1ce6277af7448d509cabe95374ad3`. | Owner accepted after both reviewers approved |
+| Remaining gaps | None at design acceptance; implementation has not begun. | NONE |
