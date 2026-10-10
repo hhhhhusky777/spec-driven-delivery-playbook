@@ -567,6 +567,12 @@ cleanup_guide_checkout() {
     *) fail "ownership marker signature is invalid" ;;
   esac
 
+  # Rejecting an upgrade keeps the accepted pin authoritative. Restore its
+  # optional skill from the verified old checkout before retiring that source.
+  if [[ "$guide" == "$GUIDE_PATH" && "$recorded_revision" == "$PINNED_REVISION" &&
+    -f "$UPGRADE_GUIDE_PATH" ]]; then
+    install_triage_skill "$checkout" "$recorded_revision"
+  fi
   rm -rf "$removal_target"
   updated_guide="$guide.tmp"
   awk '

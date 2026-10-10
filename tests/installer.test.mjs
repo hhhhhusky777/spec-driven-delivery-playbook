@@ -158,6 +158,13 @@ test("triage skill is installed and integrity-checked across project profiles", 
     assert.equal(runInstaller(project, ["--validate"]).status, 0);
     await rm(skill);
     assert.notEqual(runInstaller(project, ["--validate"]).status, 0);
+    if (profile === "upgrade") {
+      await writeFile(skill, original, "utf8");
+      assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
+      const restored = runInstaller(project, ["--validate"]);
+      assert.equal(restored.status, 0, restored.stderr);
+      assert.match(restored.stdout, /^CURRENT:/);
+    }
   }
 });
 
@@ -187,6 +194,9 @@ test("legacy pins without triage remain valid and gain it only in the newer cand
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
   assert.equal(runInstaller(project, ["--repository", source.repository, "--upgrade"]).status, 0);
   await access(skill);
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
+  assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
+  await assert.rejects(access(skill));
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
 });
 
