@@ -9,10 +9,10 @@ This is the only active-delivery state authority. Detailed evidence stays in
 
 | Field | Value |
 | --- | --- |
-| State | `BLOCKED` |
+| State | `VALIDATING` |
 | Active tasks | `None` |
 | Next ready task | `None` |
-| Active blocker | Exact owner authorization for frozen-whiteboard schema-only normalization |
+| Active blocker | `None` |
 | Implementation mode | `human-review-before-merge` |
 | Authorized scope / feature branch / protected target | No Autopilot authorization; single PR to `main` |
 | Delivery branch / target | `codex/problem-triage` / `main` |
@@ -20,7 +20,7 @@ This is the only active-delivery state authority. Detailed evidence stays in
 | Primary issue / need | [Issue #152](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/152) |
 | Concluded whiteboard | [Whiteboard](solution-whiteboard.md), approved candidate `a8f0f186f63130940f78c8909820fad3fecff5e2`; conclusion commit `5965046da53558638d91e10b7242a292549a9f2c` verified by both retained reviewers |
 | Required reviewers | Retained Reviewer One and Reviewer Two for this delivery |
-| Last verified | 2026-10-10; T01 implemented; 36 affected installer tests and changed-file documentation checks pass; original whiteboard schema correction needs exact owner authorization before final readiness |
+| Last verified | 2026-10-10; T01 implemented and audited by both retained reviewers; 36 affected installer tests and changed-file documentation checks pass; owner authorized schema-only normalization; final validation pending |
 
 ## Governing inputs and boundaries
 
@@ -56,6 +56,8 @@ Material assumptions and unresolved design gaps: `None`.
 One coherent implementation unit uses the canonical single-PR integration
 model. Separating skill routing from packaging would create an unusable
 intermediate result. There is no task-to-feature-branch merge to automate.
+
+## Task specifications and context receipts
 
 ### T01 — Definition of Done and readiness
 
@@ -95,12 +97,14 @@ tests must be present before final review; no coverage claim is implied now.
 
 | Error / class | Evidence and bounded recovery | State |
 | --- | --- | --- |
-| Original whiteboard schema / agent mistake | Existing checker requires canonical design/draft/reconciliation headers and accepted disposition tokens. Normalize only those headings/cells without changing TR01–TR06 substantive text, after exact owner authorization; no checker change or new issue is required. | Human authorization pending because the design is frozen |
+| Original whiteboard schema / agent mistake | Owner authorized canonical design/draft/reconciliation headers and accepted disposition tokens only; TR01–TR06 substantive text unchanged. No checker change or new issue. | Corrected within exact authorization; retained-reviewer verification pending |
 
 Follow canonical authority: required target synchronization and affected
 focused checks precede the author/two-reviewer implementation audit. Audit
 approval precedes missing final-gate test additions; final candidate review
 precedes full exact-head validation. No routine mid-task synchronization.
+
+## Cleanup inventory
 
 | Item | Obligation / ownership | Authority / state |
 | --- | --- | --- |
@@ -109,6 +113,21 @@ precedes full exact-head validation. No routine mid-task synchronization.
 | Live documents | Remove live plan and reset whiteboard only after combined archive exists | Owner authorized this transition at plan acceptance; frozen design remains unchanged until authorized closure |
 | Local worktree / branch | After authorized merge and target verification, remove owned `/private/tmp/sdd-problem-triage` and merged `codex/problem-triage`; preserve other work | Delivery-owned; cleanup remains pending |
 | Reusable authority | Keep manifest, reusable project guidance and installed accepted runtime | Retain |
+
+## Planned versus actual outcome
+
+| Plan | Actual outcome / deviation |
+| --- | --- |
+| TR01–TR06 in one T01 | Skill, routing, packaging, README and five regressions implemented; no design expansion |
+| Preserve accepted runtime on rejected upgrade | Recovery uses accepted ancestor content in the verified candidate; filtered-clone offline regression verifies exact restored bytes |
+| Preserve complete design and plan at closure | Owner authorized archive/reset; schema-only author drafting correction approved separately; complete sources will be embedded before live reset |
+
+## Delivery Definition of Done
+
+Accepted outcomes and all known tests are implemented. Author and both retained
+reviewers approved implementation content at `8cee259`; final candidate review,
+full exact-head source validation and human main-merge acceptance remain required.
+Detailed run, review and eventual target-verification evidence belongs in PR #153.
 
 ## Human review brief
 

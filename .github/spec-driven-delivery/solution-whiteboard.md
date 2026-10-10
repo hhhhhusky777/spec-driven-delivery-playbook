@@ -12,14 +12,14 @@
 
 ## Discussion draft
 
-| ID | Agreed discussion outcome | Resolution |
+| ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
-| DR01 | Add a portable triage skill for evidence-driven root-cause investigation. | TR01 |
-| DR02 | Include faithful reproduction, useful logs, and uncertain or flaky test failures. | TR02 |
-| DR03 | Activate on diagnostic need, including test execution failures; not every known typo or missing dependency. | TR03 |
-| DR04 | Author may collaborate with retained reviewers on useful independent hypotheses. | TR04 |
-| DR05 | Preserve canonical error handling, authority, existing trackers, and proportional effort. | TR05 |
-| DR06 | Install the skill into project profiles and explain it without duplicating its methods. | TR06 |
+| DR01 | Add a portable triage skill for evidence-driven root-cause investigation. | accepted |
+| DR02 | Include faithful reproduction, useful logs, and uncertain or flaky test failures. | accepted |
+| DR03 | Activate on diagnostic need, including test execution failures; not every known typo or missing dependency. | accepted |
+| DR04 | Author may collaborate with retained reviewers on useful independent hypotheses. | accepted |
+| DR05 | Preserve canonical error handling, authority, existing trackers, and proportional effort. | accepted |
+| DR06 | Install the skill into project profiles and explain it without duplicating its methods. | accepted |
 
 ## Current understanding
 
@@ -44,7 +44,7 @@
 
 Owner accepted the independently reviewed candidate `a8f0f186` on 2026-10-10.
 
-| ID | Outcome | Boundary / rationale | Acceptance signal |
+| Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
 | TR01 | Skill distinguishes facts and assumptions, compares expected/actual behavior, records relevant revision/environment and uses testable hypotheses with discriminating evidence. | Distinguish symptom, trigger, cause, and contributing factors. State confirmed, suspected, or unknown; a workaround or correlation is not proof. No rigid step sequence. | A review scenario cannot turn a successful retry into a confirmed root cause without evidence. |
 | TR02 | Faithful reproduction and minimal observability preserve the conditions that cause the original failure. | Preserve relevant inputs, state, ordering, configuration, concurrency and failure criterion; simplify only while the same failure remains. Sanitize secrets. Use controlled scheduling where useful and report failure/run counts for intermittent failures; one pass does not prove absence. Logs and tracing must be proportionate and account for observer effects. Unable to reproduce remains explicit uncertainty. | Guidance supports isolated flaky/race investigations without mocked-away triggers, sleep piles, endless retries, or invented causes. A verified fix may turn the faithful reproducer into a regression test. |
@@ -55,14 +55,14 @@ Owner accepted the independently reviewed candidate `a8f0f186` on 2026-10-10.
 
 ## Draft-to-conclusion reconciliation
 
-| Draft | Candidate | Disposition |
+| Draft item | Concluded design point | Disposition |
 | --- | --- | --- |
-| DR01 | TR01 | Preserved |
-| DR02 | TR02 | Preserved |
-| DR03 | TR03 | Preserved |
-| DR04 | TR04 | Preserved |
-| DR05 | TR05 | Preserved |
-| DR06 | TR06 | Preserved |
+| DR01 | TR01 | accepted |
+| DR02 | TR02 | accepted |
+| DR03 | TR03 | accepted |
+| DR04 | TR04 | accepted |
+| DR05 | TR05 | accepted |
+| DR06 | TR06 | accepted |
 
 ## Assumptions
 
