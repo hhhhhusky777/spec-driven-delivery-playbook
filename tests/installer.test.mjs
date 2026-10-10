@@ -233,6 +233,21 @@ test("installed triage routing resolves from real adoption workflow upgrade and 
   }
 });
 
+test("rejected triage upgrade restores an already-cleaned accepted runtime without fetching", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
+  assert.equal(runInstaller(project, ["--repository", source.repository, "--upgrade"]).status, 0);
+  // The verified candidate already contains its accepted ancestor. Recovery
+  // must not require the old checkout or another network/source fetch.
+  await rm(source.repository, { recursive: true, force: true });
+  const cleanup = runInstaller(project, ["--cleanup"]);
+  assert.equal(cleanup.status, 0, cleanup.stderr);
+  const validation = runInstaller(project, ["--validate"]);
+  assert.equal(validation.status, 0, validation.stderr);
+  assert.match(validation.stdout, /^CURRENT:/);
+});
+
 test("installer resolves latest main, installs adoption skill, and emits one guide prompt", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createTargetProject(t);

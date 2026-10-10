@@ -502,7 +502,7 @@ cleanup_guide_checkout() {
 
   local checkout marker recorded_project recorded_revision recorded_common_directory
   local recorded_git_directory recorded_worktree_state cleanup_state marker_signature
-  local removal_target temp_root legacy_parent resolved_parent updated_guide
+  local removal_target temp_root legacy_parent resolved_parent updated_guide restore_directory
   cleanup_state=$(markdown_value "Cleanup state" "$guide")
   if [[ "$cleanup_state" == "COMPLETE" ]]; then
     printf 'Installer-owned checkout is already cleaned up for %s.\n' "$guide"
@@ -567,11 +567,17 @@ cleanup_guide_checkout() {
     *) fail "ownership marker signature is invalid" ;;
   esac
 
-  # Rejecting an upgrade keeps the accepted pin authoritative. Restore its
-  # optional skill from the verified old checkout before retiring that source.
-  if [[ "$guide" == "$GUIDE_PATH" && "$recorded_revision" == "$PINNED_REVISION" &&
-    -f "$UPGRADE_GUIDE_PATH" ]]; then
-    install_triage_skill "$checkout" "$recorded_revision"
+  # The verified candidate contains the accepted ancestor, even if the old
+  # checkout was retired. Rejection restores that pin without another fetch.
+  if [[ "$guide" == "$UPGRADE_GUIDE_PATH" && -f "$GUIDE_PATH" &&
+    "$(markdown_value "Resolved revision" "$GUIDE_PATH")" == "$PINNED_REVISION" ]]; then
+    restore_directory=$(mktemp -d "$RUNTIME_DIRECTORY/checkouts/.restore.XXXXXX")
+    if git -C "$checkout" cat-file -e "$PINNED_REVISION:skills/$PROBLEM_TRIAGE_SKILL/SKILL.md" 2>/dev/null; then
+      git -C "$checkout" archive "$PINNED_REVISION" "skills/$PROBLEM_TRIAGE_SKILL" |
+        tar -x -C "$restore_directory"
+    fi
+    install_triage_skill "$restore_directory" "$PINNED_REVISION"
+    rm -rf "$restore_directory"
   fi
   rm -rf "$removal_target"
   updated_guide="$guide.tmp"
