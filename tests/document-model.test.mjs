@@ -580,7 +580,7 @@ test("adoption remains reusable while project authority is refreshed", async () 
   assert.match(manifest, /\| Project Experience or existing equivalent \|/);
   assert.match(upgrade, /Upgrade MUST perform incremental discovery/);
   assert.match(upgrade, /Missing files alone do not require a new gate or automatic stop/);
-  assert.match(workflow, /manifest-linked project Experience/);
+  assert.match(workflow, /manifest-linked project\s+Experience/);
   assert.doesNotMatch(workflow, /establish a Git-tracked `docs\/experience\.md`/);
 });
 
