@@ -9,10 +9,10 @@ This is the only active-delivery state authority. Detailed evidence stays in
 
 | Field | Value |
 | --- | --- |
-| State | `VALIDATING` |
+| State | `BLOCKED` |
 | Active tasks | `None` |
 | Next ready task | `None` |
-| Active blocker | `None` |
+| Active blocker | Exact owner authorization for frozen-whiteboard schema-only normalization |
 | Implementation mode | `human-review-before-merge` |
 | Authorized scope / feature branch / protected target | No Autopilot authorization; single PR to `main` |
 | Delivery branch / target | `codex/problem-triage` / `main` |
@@ -20,7 +20,7 @@ This is the only active-delivery state authority. Detailed evidence stays in
 | Primary issue / need | [Issue #152](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/152) |
 | Concluded whiteboard | [Whiteboard](solution-whiteboard.md), approved candidate `a8f0f186f63130940f78c8909820fad3fecff5e2`; conclusion commit `5965046da53558638d91e10b7242a292549a9f2c` verified by both retained reviewers |
 | Required reviewers | Retained Reviewer One and Reviewer Two for this delivery |
-| Last verified | 2026-10-10; owner accepted plan, default human-before-merge and scoped archive/reset; T01 implemented with focused triage regressions passing; final audit and full validation remain PR gates |
+| Last verified | 2026-10-10; T01 implemented; 35 affected installer tests and changed-file documentation checks pass; original whiteboard schema correction needs exact owner authorization before final readiness |
 
 ## Governing inputs and boundaries
 
@@ -92,6 +92,10 @@ is recorded here with T01 ownership and added at final readiness. Required
 tests must be present before final review; no coverage claim is implied now.
 
 ## Final readiness and cleanup
+
+| Error / class | Evidence and bounded recovery | State |
+| --- | --- | --- |
+| Original whiteboard schema / agent mistake | Existing checker requires canonical design/draft/reconciliation headers and accepted disposition tokens. Normalize only those headings/cells without changing TR01–TR06 substantive text, after exact owner authorization; no checker change or new issue is required. | Human authorization pending because the design is frozen |
 
 Follow canonical authority: required target synchronization and affected
 focused checks precede the author/two-reviewer implementation audit. Audit
