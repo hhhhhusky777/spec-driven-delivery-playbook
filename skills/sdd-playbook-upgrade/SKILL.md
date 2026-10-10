@@ -52,6 +52,8 @@ material inconsistencies, applicable checks, reviewer results, and the human
 decision. Detailed history stays in GitHub.
 
 The agent chooses a proportional comparison, edit order, and recovery method.
+For an unexplained upgrade failure needing investigation, use the installed
+[problem triage skill](../sdd-problem-triage/SKILL.md).
 Follow the project's canonical error-handling authority instead of restating a
 second recovery or escalation procedure here.
 

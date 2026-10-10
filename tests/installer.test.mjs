@@ -16,7 +16,7 @@ import { spawnSync } from "node:child_process";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const INSTALLER = path.join(REPOSITORY_ROOT, "install-sdd.sh");
@@ -52,10 +52,14 @@ async function temporaryDirectory(t, prefix) {
   return directory;
 }
 
-async function createPlaybookFixture(t, { featureReviewInFirstRevision = true } = {}) {
+async function createPlaybookFixture(t, {
+  featureReviewInFirstRevision = true,
+  problemTriageInFirstRevision = true,
+} = {}) {
   const repository = await temporaryDirectory(t, "sdd-installer-source-");
   const initialSkills = ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade"];
   if (featureReviewInFirstRevision) initialSkills.push("sdd-feature-review");
+  if (problemTriageInFirstRevision) initialSkills.push("sdd-problem-triage");
   for (const name of initialSkills) {
     const directory = path.join(repository, "skills", name);
     await mkdir(directory, { recursive: true });
@@ -79,6 +83,12 @@ async function createPlaybookFixture(t, { featureReviewInFirstRevision = true } 
       "---\nname: sdd-feature-review\ndescription: Fixture skill.\n---\n\n# Fixture\n",
       "utf8",
     );
+  }
+  if (!problemTriageInFirstRevision) {
+    const directory = path.join(repository, "skills", "sdd-problem-triage");
+    await mkdir(directory, { recursive: true });
+    await writeFile(path.join(directory, "SKILL.md"),
+      "---\nname: sdd-problem-triage\ndescription: Fixture triage.\n---\n\n# Triage\n", "utf8");
   }
   await writeFile(path.join(repository, "README.md"), "# Fixture update\n", "utf8");
   run("git", ["add", "."], repository);
@@ -124,6 +134,132 @@ function guideValue(guide, label) {
   assert.ok(match, `missing guide field: ${label}`);
   return match[1];
 }
+
+test("triage skill is installed and integrity-checked across project profiles", async (t) => {
+  const source = await createPlaybookFixture(t);
+  for (const profile of ["adoption", "workflow", "upgrade"]) {
+    const project = profile === "adoption"
+      ? await createTargetProject(t) : await createInstalledProject(t, source);
+    const result = runInstaller(project, profile === "adoption"
+      ? ["--repository", source.repository] : profile === "upgrade"
+        ? ["--repository", source.repository, "--upgrade"] : ["--validate"]);
+    assert.equal(result.status, 0, result.stderr);
+    const guide = await readFile(path.join(project, ".sdd-runtime",
+      profile === "upgrade" ? "playbook-upgrade-guide.md" : "agent-guide.md"), "utf8");
+    assert.equal(guideValue(guide, "Problem triage skill"), "available");
+    const skill = path.join(project, ".agents", "skills", "sdd-problem-triage", "SKILL.md");
+    const original = await readFile(skill, "utf8");
+    assert.equal(runInstaller(project, ["--validate"]).status, 0);
+    await writeFile(skill, `${original}\nChanged diagnosis.\n`, "utf8");
+    const invalid = runInstaller(project, ["--validate"]);
+    assert.notEqual(invalid.status, 0);
+    assert.match(invalid.stderr, /triage skill.*(hash|content)/);
+    await writeFile(skill, original, "utf8");
+    assert.equal(runInstaller(project, ["--validate"]).status, 0);
+    await rm(skill);
+    assert.notEqual(runInstaller(project, ["--validate"]).status, 0);
+    if (profile === "upgrade") {
+      await writeFile(skill, original, "utf8");
+      assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
+      const restored = runInstaller(project, ["--validate"]);
+      assert.equal(restored.status, 0, restored.stderr);
+      assert.match(restored.stdout, /^CURRENT:/);
+    }
+  }
+});
+
+test("triage packaging preserves unmanaged content in normal install and upgrade", async (t) => {
+  const source = await createPlaybookFixture(t, { problemTriageInFirstRevision: false });
+  for (const upgrade of [false, true]) {
+    const project = upgrade ? await createInstalledProject(t, source) : await createTargetProject(t);
+    const directory = path.join(project, ".agents", "skills", "sdd-problem-triage");
+    await mkdir(directory, { recursive: true });
+    const owned = path.join(directory, "SKILL.md");
+    await writeFile(owned, "Project-owned triage\n", "utf8");
+    const result = runInstaller(project, upgrade
+      ? ["--repository", source.repository, "--upgrade"] : ["--repository", source.repository]);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /refusing to overwrite unmanaged skill/);
+    assert.equal(await readFile(owned, "utf8"), "Project-owned triage\n");
+  }
+});
+
+test("legacy pins without triage remain valid and gain it only in the newer candidate", async (t) => {
+  const source = await createPlaybookFixture(t, { problemTriageInFirstRevision: false });
+  const project = await createInstalledProject(t, source);
+  const skill = path.join(project, ".agents", "skills", "sdd-problem-triage", "SKILL.md");
+  await assert.rejects(access(skill));
+  const guide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
+  assert.equal(guideValue(guide, "Problem triage skill"), "unavailable");
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
+  assert.equal(runInstaller(project, ["--repository", source.repository, "--upgrade"]).status, 0);
+  await access(skill);
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
+  assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
+  await assert.rejects(access(skill));
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
+});
+
+test("installed triage routing resolves from real adoption workflow upgrade and reviewer skills", async (t) => {
+  const source = await createPlaybookFixture(t);
+  for (const name of ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade",
+    "sdd-feature-review", "sdd-problem-triage"]) {
+    await cp(path.join(REPOSITORY_ROOT, "skills", name), path.join(source.repository, "skills", name),
+      { recursive: true });
+  }
+  run("git", ["add", "."], source.repository);
+  run("git", ["commit", "-m", "real portable skill routing"], source.repository);
+  const revision = run("git", ["rev-parse", "HEAD"], source.repository).trim();
+  for (const profile of ["adoption", "workflow", "upgrade"]) {
+    const project = profile === "adoption" ? await createTargetProject(t)
+      : await createInstalledProject(t, profile === "workflow" ? { ...source, firstRevision: revision } : source);
+    if (profile !== "workflow") {
+      const result = runInstaller(project, ["--repository", source.repository,
+        ...(profile === "upgrade" ? ["--upgrade"] : [])]);
+      assert.equal(result.status, 0, result.stderr);
+    }
+    for (const name of [profile === "adoption" ? "sdd-project-adoption"
+      : profile === "workflow" ? "sdd-project-workflow" : "sdd-playbook-upgrade",
+    ...(profile === "workflow" ? ["sdd-feature-review"] : [])]) {
+      const entry = path.join(project, ".agents", "skills", name, "SKILL.md");
+      const content = await readFile(entry, "utf8");
+      const routing = [...content.matchAll(/\]\(([^)]+sdd-problem-triage\/SKILL\.md)\)/g)];
+      assert.ok(routing.length, `${name} has no installed triage route`);
+      for (const [, relative] of routing) {
+        await access(path.resolve(path.dirname(entry), relative));
+      }
+    }
+    assert.equal(runInstaller(project, ["--validate"]).status, 0);
+  }
+});
+
+test("rejected triage upgrade restores an already-cleaned accepted runtime without fetching", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const oldContent = run("git", ["show", `${source.firstRevision}:skills/sdd-problem-triage/SKILL.md`],
+    source.repository);
+  await writeFile(path.join(source.repository, "skills", "sdd-problem-triage", "SKILL.md"),
+    `${oldContent}\nChanged candidate triage.\n`, "utf8");
+  run("git", ["add", "."], source.repository);
+  run("git", ["commit", "-m", "distinct candidate triage"], source.repository);
+  run("git", ["config", "uploadpack.allowFilter", "true"], source.repository);
+  const filteredSource = { ...source, repository: pathToFileURL(source.repository).href };
+  const project = await createInstalledProject(t, filteredSource);
+  assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
+  assert.equal(runInstaller(project, ["--repository", filteredSource.repository, "--upgrade"]).status, 0);
+  const upgradeGuide = await readFile(path.join(project, ".sdd-runtime", "playbook-upgrade-guide.md"), "utf8");
+  assert.equal(run("git", ["config", "remote.origin.partialclonefilter"],
+    guideValue(upgradeGuide, "Playbook checkout")).trim(), "blob:none");
+  // The verified candidate already contains its accepted ancestor. Recovery
+  // must not require the old checkout or another network/source fetch.
+  await rm(source.repository, { recursive: true, force: true });
+  const cleanup = runInstaller(project, ["--cleanup"]);
+  assert.equal(cleanup.status, 0, cleanup.stderr);
+  const validation = runInstaller(project, ["--validate"]);
+  assert.equal(validation.status, 0, validation.stderr);
+  assert.match(validation.stdout, /^CURRENT:/);
+  assert.equal(await readFile(path.join(project, ".agents", "skills", "sdd-problem-triage", "SKILL.md"),
+    "utf8"), oldContent);
+});
 
 test("installer resolves latest main, installs adoption skill, and emits one guide prompt", async (t) => {
   const source = await createPlaybookFixture(t);

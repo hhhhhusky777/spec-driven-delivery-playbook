@@ -691,14 +691,18 @@ test("new design validations are disclosed and reviewed proportionally", async (
   assert.doesNotMatch(plan, /## Newly introduced validations/);
 });
 
-test("installed skills do not link outside their copied directories", async () => {
+test("installed skills link only within their copied directories or installed triage sibling", async () => {
   for (const name of await readdir(path.join(root, "skills"))) {
     const skillDirectory = path.join(root, "skills", name);
     const skill = await readFile(path.join(skillDirectory, "SKILL.md"), "utf8");
     for (const [, target] of skill.matchAll(/\]\((\.\.?\/[^)#]+)(?:#[^)]*)?\)/g)) {
-      const relative = path.relative(skillDirectory, path.resolve(skillDirectory, target));
-      assert.ok(relative && relative !== ".." && !relative.startsWith(`..${path.sep}`),
-        `${name} links outside its installed skill directory: ${target}`);
+      const destination = path.resolve(skillDirectory, target);
+      const relative = path.relative(skillDirectory, destination);
+      // Every profile installs this sibling; installer tests verify real paths.
+      const installedTriage = path.join(root, "skills", "sdd-problem-triage", "SKILL.md");
+      assert.ok((relative && relative !== ".." && !relative.startsWith(`..${path.sep}`))
+        || destination === installedTriage,
+      `${name} links outside its installed skill set: ${target}`);
     }
   }
 });

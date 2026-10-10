@@ -10,6 +10,6 @@
 | Concluded design revision | `None` |
 | Open owner decisions | `None` |
 
-## Discussion draft
-
-Empty until the next delivery discussion starts.
+Ready for the next design discussion. Use the
+[whiteboard template](../../templates/discovery/solution-whiteboard.md)
+and the manifest-selected workflow guidance.
