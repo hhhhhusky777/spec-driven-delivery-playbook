@@ -4,10 +4,10 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [Issue #156](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/156) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
+| Concluded design revision | `1919f4e0168b881b1b7039684d52704ff2509c53` |
 | Open owner decisions | `None` |
 
 ## Discussion draft
@@ -103,14 +103,14 @@ acceptance under the existing accepted-design authority.
 
 | ID | Validation / authority / execution boundary | Protected outcome / risk / marginal value | Concrete invalid case | Failure effect / recovery | Cost / risk reduction | Existing or cheaper mechanism / coverage / why insufficient | Fail-close / test reference | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| V01 | Extend existing installer/runtime integrity and synchronization ownership/baseline checks to official KB content when the pinned revision ships it; installer and runtime-validation boundary | Prevent missing/mixed guidance and unintended loss of local or non-owned content | A required topic has a mismatched revision, or upgrade would overwrite a locally edited topic | FC01; FC02 | Bounded official-file/baseline checks, not project-code inspection or an additional validation stage | Reuse managed-skill provenance/ownership patterns; current checks do not cover shared KB content or local KB changes | FC01; FC02; T01 and T12 test inventory | Pending |
+| V01 | Extend existing installer/runtime integrity and synchronization ownership/baseline checks to official KB content when the pinned revision ships it; installer and runtime-validation boundary | Prevent missing/mixed guidance and unintended loss of local or non-owned content | A required topic has a mismatched revision, or upgrade would overwrite a locally edited topic | FC01; FC02 | Bounded official-file/baseline checks, not project-code inspection or an additional validation stage | Reuse managed-skill provenance/ownership patterns; current checks do not cover shared KB content or local KB changes | FC01; FC02; T01 and T12 test inventory | Approved |
 
 ## Newly introduced fail-closed behaviors
 
 | ID | Trigger | Required fail-closed response | Concrete example | Impact | Recovery / best next action | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- |
-| FC01 | A revision declares KB content but its required official package is missing or inconsistent with that revision | Do not claim valid installation/upgrade or proceed with dependent KB-guided work | Accepted skill requires code-simplicity guidance but that installed topic belongs to another revision | Only dependent activation/work waits; previous accepted state remains preserved | Agent restores/regenerates verified official content within authority and reruns affected validation; resume only when content and pin match. Legacy pins with no KB have no such requirement | Pending |
-| FC02 | KB synchronization would overwrite or remove content whose installer ownership or unchanged managed baseline cannot be established | Preserve that content; stop only its conflicting synchronization until disposition | A project edited an official KB topic locally; an upgrade must not erase the edit as though it were untouched vendor content | The affected upgrade cannot complete silently; no unrelated project cleanup | Agent compares local/official content and proposes preservation or reconciliation; owner authorizes any destructive or policy-affecting resolution before synchronization resumes | Pending |
+| FC01 | A revision declares KB content but its required official package is missing or inconsistent with that revision | Do not claim valid installation/upgrade or proceed with dependent KB-guided work | Accepted skill requires code-simplicity guidance but that installed topic belongs to another revision | Only dependent activation/work waits; previous accepted state remains preserved | Agent restores/regenerates verified official content within authority and reruns affected validation; resume only when content and pin match. Legacy pins with no KB have no such requirement | Approved |
+| FC02 | KB synchronization would overwrite or remove content whose installer ownership or unchanged managed baseline cannot be established | Preserve that content; stop only its conflicting synchronization until disposition | A project edited an official KB topic locally; an upgrade must not erase the edit as though it were untouched vendor content | The affected upgrade cannot complete silently; no unrelated project cleanup | Agent compares local/official content and proposes preservation or reconciliation; owner authorizes any destructive or policy-affecting resolution before synchronization resumes | Approved |
 
 ## Human brief
 
