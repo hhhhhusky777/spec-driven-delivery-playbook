@@ -9,9 +9,9 @@ and merge evidence; the frozen whiteboard owns design.
 
 | Field | Value |
 | --- | --- |
-| State | `DRAFT` |
+| State | `IMPLEMENTING` |
 | Active tasks | `None` |
-| Next ready task | `None` |
+| Next ready task | `T02` |
 | Active blocker | `None` |
 | Implementation mode | `human-review-before-merge`; Autopilot explicitly off |
 | Authorized scope / feature branch / protected target | D01–D06 / `codex/knowledge-base` / `main`; no automatic merge authority |
@@ -20,7 +20,7 @@ and merge evidence; the frozen whiteboard owns design.
 | Primary issue / need | [Issue #156](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/156) |
 | Concluded whiteboard | [Frozen design](solution-whiteboard.md); reviewed design `1919f4e0168b881b1b7039684d52704ff2509c53`; conclusion commit `97324698aee0a5da32d1cf1d71dfde7612280c64` |
 | Required reviewers | Retained independent `kb_review_r1` and `kb_review_r2` through final merge |
-| Last verified | 2026-10-12 Asia/Shanghai; conclusion verified by both reviewers; plan acceptance pending |
+| Last verified | 2026-10-12 Asia/Shanghai; owner accepted reviewed plan; T01 implementation and focused evidence complete; review and merge facts remain in its task PR |
 
 ## Governing inputs and delivery boundaries
 
@@ -78,8 +78,8 @@ implementation choices stay with the agent.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| T01 | PLANNED | None | Minimal KB installer and manifest support | D01, D05; preserve legacy pins and local content; no official topic writing | Focused installer/manifest cases | `codex/knowledge-base-t01`; PR not opened; target `codex/knowledge-base` |
-| T02 | PLANNED | T01 | `knowledge-base/README.md` human index and authority/application guide | D02–D04; not a mandatory routing hop | Focused document/link checks and wording review | `codex/knowledge-base-t02`; PR not opened; target `codex/knowledge-base` |
+| T01 | DONE | None | Minimal KB installer and manifest support | D01, D05; preserve legacy pins and local content; no official topic writing | Eight focused KB scenarios; document/skill checks | `codex/knowledge-base-t01`; [PR #158](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/158); target `codex/knowledge-base` |
+| T02 | READY | T01 | `knowledge-base/README.md` human index and authority/application guide | D02–D04; not a mandatory routing hop | Focused document/link checks and wording review | `codex/knowledge-base-t02`; PR not opened; target `codex/knowledge-base` |
 | T03 | PLANNED | T02 | `minimal-change-and-code-simplicity.md` | D02–D04; reuse and minimal increments, not personal style rules | Focused topic/trigger checks and wording review | `codex/knowledge-base-t03`; PR not opened; target `codex/knowledge-base` |
 | T04 | PLANNED | T03 | `architecture-scope-and-assumptions.md` | D02–D04; evidence-bounded ownership and supported domain | Focused topic/trigger checks and wording review | `codex/knowledge-base-t04`; PR not opened; target `codex/knowledge-base` |
 | T05 | PLANNED | T04 | `contracts-and-compatibility.md` | D02–D04; explicit contracts and safe compatible change | Focused topic/trigger checks and wording review | `codex/knowledge-base-t05`; PR not opened; target `codex/knowledge-base` |
@@ -95,7 +95,7 @@ implementation choices stay with the agent.
 
 | Task unit | Owned source boundary | Required outcome / evidence | Context receipt / actual result |
 | --- | --- | --- | --- |
-| T01 | Existing `install-sdd.sh`, manifest template and necessary adoption/upgrade/runtime guidance plus affected tests | Reuse managed-content provenance/ownership/rollback; synchronize official KB only for pins that ship it. Exercise an isolated KB fixture and legacy fixture without creating future official topics | Design and authorities read; task-specific implementation inspection pending; not implemented |
+| T01 | Existing `install-sdd.sh`, manifest template and necessary adoption/upgrade/runtime guidance plus affected tests | Reuse managed-content provenance/ownership/rollback; synchronize official KB only for pins that ship it. Exercise an isolated KB fixture and legacy fixture without creating future official topics | Sources and accepted runtime verified. Implemented complete-tree installation, immutable ownership baseline, safe synchronization, inventory/content validation and failure restoration; no official KB topic created |
 | T02 | `knowledge-base/README.md`, immediately affected installer/index checks | Explain topic use, project authority and original-reference escalation. Future filenames are not broken links. Install real first document | Design and authorities read; not implemented |
 | T03–T11 | Only the named topic, its index entry, relevant portable skill trigger, migrated detailed source guidance and affected tests | Read and verify primary references while authoring. Distill principles, application boundaries and concise useful examples. Require direct topic reading on relevant trigger; preserve concise skill principles and critical boundaries. Remove only migrated duplication, not independent policy or project lessons | Task-specific sources/references pending until that task; not implemented |
 | T12 | Installer integration tests, manifest/adoption/upgrade routing, affected skills and root README/diagrams | Reconcile the complete official tree and remaining duplicate owners. Prove installed links, preservation, safe managed removals and compatibility; update actual capabilities without claiming unaccepted runtime activation | All accepted topic outputs required; not implemented |
@@ -112,10 +112,11 @@ them; recording a final-gate gap does not claim that test exists or passed.
 
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
-| T01 | D01, D05; V01 and FC01 | `tests/installer.test.mjs`: old pin without KB, new pin with KB, missing/mixed official content | Planned additions to existing tests | Changed-line focused cases in T01 |
-| T01 | D05; V01 and FC02 | Existing managed ownership pattern: local edit or unknown ownership survives; safe official additions/updates/removals | Planned additions to existing tests | Changed-line focused cases in T01 |
+| T01 | D01, D05; V01 and FC01 | `tests/installer.test.mjs`, knowledge base cases: complete tree, old pin without KB, missing/mixed official content and changed candidate checkout | Implemented | Changed-line focused cases in T01; run evidence in task PR |
+| T01 | D05; V01 and FC02 | Knowledge base cases: local edits/unowned collisions/linked parents preserved; safe official additions/updates/removals; directory replacement failures restore accepted tree | Implemented | Changed-line focused cases in T01; run evidence in task PR |
 | T02–T11 | D02–D04 | Changed-document Markdown, links and examples; installed trigger resolves existing topic; primary-reference and project-application semantic review | Planned per-topic evidence | Focused checks and both reviewers before each owner stop |
 | T12 | D01–D06 | `tests/installer.test.mjs` and affected `tests/document-model.test.mjs`: complete real tree, adoption/upgrade routing, rollback/preservation and legacy compatibility | Planned integration coverage; exact cases finalized against implementation | Focused changed-line cases in T12; record missing non-focused cases for final gate |
+| T12 | D01, D02, D05 | Extend fixture-only T01 proof to the actual ten-document KB and real installed author/reviewer/triage references | Missing until official content exists; T12 owns the gap | Implement affected checks in T12 or record required remaining additions for final audit/coverage reconciliation; run full source gate only at final readiness |
 | T12 | D02, D04 | Root README/diagrams, remaining canonical links, no duplicated detailed owner or unavailable installed reference | Planned consistency proof | Focused integration review |
 | Final gate | All accepted outcomes and material risks | Audit implementation against frozen design/reuse, reconcile missing tests, final exact-candidate review, then `npm run docs:all` | Not run; test gaps not yet known | Existing final-readiness boundary, not each document task |
 
@@ -150,7 +151,8 @@ agent mistakes stay within existing authority. Track real gaps in GitHub.
 
 | Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
 | --- | --- | --- | --- |
-| D01–D06 / T01–T12 | Complete installed, project-aware KB with separate document acceptance | Not implemented; no implementation deviation | All tasks and final readiness / author, retained reviewers and owner |
+| D01, D05 / T01 | Installer/manifest support without new legacy obligations | Implemented and covered by focused KB tests; no scope deviation | Task review/owner merge acceptance in PR; actual topic integration remains T12 |
+| D01–D06 / T02–T12 | Complete installed, project-aware KB with separate document acceptance | Not implemented | Remaining documents, integration and final readiness / author, retained reviewers and owner |
 
 ### Cleanup inventory
 

@@ -37,6 +37,10 @@ revision while project authority and active feature content remain intact.
   boundary. It is not an upgrade output and its status is not copied elsewhere.
 - Keep the previous pin authoritative until applicable validation, two
   independent reviews, and human acceptance pass.
+- For a revision shipping KB, synchronize its complete official tree and
+  manifest KB-root link through that revision's installer after pin acceptance. Preparation
+  leaves the accepted KB unchanged; preserve local edits and non-owned files
+  rather than overwrite them. KB shares the playbook pin, not another tracker.
 - Do not install playbook source tests, lifecycle engines, evidence helpers,
   publication tools, or CI into an adopting project.
 - Preserve canonical project policies and explicit owner decisions.

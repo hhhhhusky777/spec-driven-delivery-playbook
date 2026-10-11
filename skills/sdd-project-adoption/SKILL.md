@@ -17,6 +17,9 @@ deliveries without repeating adoption.
 - A neutral whiteboard is ready for design work.
 - No feature implementation plan exists until a feature is planned.
 - The generated runtime and managed workflow skill match the manifest pin.
+- If that pin ships `knowledge-base/`, the installer-managed complete tree is
+  Git-tracked under the adoption root and indexed by the manifest. Pins without
+  KB have no new obligation. Keep project policies and Experience intact.
 - Existing project authority is preserved unless the owner explicitly changes
   it.
 - The manifest links Git-tracked project Experience or an existing equivalent.

@@ -21,6 +21,7 @@ keep feature progress in the implementation plan.
 | Upgrade candidate | `None` |
 | Adoption scope | `<repositories, components, or teams>` |
 | Project adoption root | `<project-relative path>` |
+| Knowledge Base root | `<project-relative installed KB path or None for a revision without KB>` |
 | Materialization mode | `<pinned checkout or other verified mode>` |
 | Target base revision | `<full commit SHA or Not applicable>` |
 | Adoption owner | `<owner>` |
@@ -72,6 +73,8 @@ During upgrade, incrementally reconcile the incoming revision's discovery
 requirements with current project sources, including reusable guidance.
 Record newly discovered gaps and their disposition; do not repeat adoption.
 Experience is project guidance, not policy or feature state.
+The installer-managed Knowledge Base uses the same `Playbook revision`, remains
+Git-tracked through cleanup, and does not replace project policies or Experience.
 
 After adoption, reconcile this authority index with current repository evidence
 before each feature's whiteboard work and whenever candidate work changes
