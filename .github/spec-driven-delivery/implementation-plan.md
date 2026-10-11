@@ -78,7 +78,7 @@ implementation choices stay with the agent.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| T01 | DONE | None | Minimal KB installer and manifest support | D01, D05; preserve legacy pins and local content; no official topic writing | Eight focused KB scenarios; document/skill checks | `codex/knowledge-base-t01`; task PR pending publication; target `codex/knowledge-base` |
+| T01 | DONE | None | Minimal KB installer and manifest support | D01, D05; preserve legacy pins and local content; no official topic writing | Eight focused KB scenarios; document/skill checks | `codex/knowledge-base-t01`; [PR #158](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/158); target `codex/knowledge-base` |
 | T02 | READY | T01 | `knowledge-base/README.md` human index and authority/application guide | D02–D04; not a mandatory routing hop | Focused document/link checks and wording review | `codex/knowledge-base-t02`; PR not opened; target `codex/knowledge-base` |
 | T03 | PLANNED | T02 | `minimal-change-and-code-simplicity.md` | D02–D04; reuse and minimal increments, not personal style rules | Focused topic/trigger checks and wording review | `codex/knowledge-base-t03`; PR not opened; target `codex/knowledge-base` |
 | T04 | PLANNED | T03 | `architecture-scope-and-assumptions.md` | D02–D04; evidence-bounded ownership and supported domain | Focused topic/trigger checks and wording review | `codex/knowledge-base-t04`; PR not opened; target `codex/knowledge-base` |
