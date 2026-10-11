@@ -39,10 +39,11 @@ function run(command, args, cwd) {
   return result.stdout;
 }
 
-function runInstaller(project, args = []) {
+function runInstaller(project, args = [], env = process.env) {
   return spawnSync("bash", ["install-sdd.sh", ...args], {
     cwd: project,
     encoding: "utf8",
+    env,
   });
 }
 
@@ -134,6 +135,202 @@ function guideValue(guide, label) {
   assert.ok(match, `missing guide field: ${label}`);
   return match[1];
 }
+
+async function commitKnowledgeBase(source, files, removed = []) {
+  const root = path.join(source.repository, "knowledge-base");
+  await mkdir(root, { recursive: true });
+  for (const relative of removed) await rm(path.join(root, relative));
+  for (const [relative, content] of Object.entries(files)) {
+    await mkdir(path.dirname(path.join(root, relative)), { recursive: true });
+    await writeFile(path.join(root, relative), content, "utf8");
+  }
+  run("git", ["add", "knowledge-base"], source.repository);
+  run("git", ["commit", "-m", "fixture knowledge base"], source.repository);
+  return run("git", ["rev-parse", "HEAD"], source.repository).trim();
+}
+
+async function acceptKnowledgeBaseRevision(project, revision, env = process.env) {
+  const manifest = path.join(project, ".github/spec-driven-delivery/project-adoption-manifest.md");
+  const content = await readFile(manifest, "utf8");
+  await writeFile(manifest, content.replace(/\| Playbook revision \| `[^`]+` \|/,
+    `| Playbook revision | \`${revision}\` |`));
+  return runInstaller(project, ["--repository", guideValue(content, "Playbook source repository")], env);
+}
+
+test("knowledge base installs the complete official tree and persists after runtime cleanup", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const revision = await commitKnowledgeBase(source, {
+    "README.md": "# Fixture knowledge\n",
+    "nested/practice.md": "# Fixture practice\n",
+  });
+  const project = await createInstalledProject(t, { ...source, firstRevision: revision });
+  const root = path.join(project, ".github/spec-driven-delivery/knowledge-base");
+  assert.equal(await readFile(path.join(root, "nested/practice.md"), "utf8"), "# Fixture practice\n");
+  const guide = await readFile(path.join(project, ".sdd-runtime/agent-guide.md"), "utf8");
+  assert.equal(guideValue(guide, "Knowledge Base root"), ".github/spec-driven-delivery/knowledge-base");
+  run("git", ["add", ".github/spec-driven-delivery/knowledge-base"], project);
+  assert.match(run("git", ["diff", "--cached", "--name-only"], project), /knowledge-base\/nested\/practice.md/);
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
+  assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
+  await access(path.join(root, "README.md"));
+});
+
+test("knowledge base candidate preparation does not activate obligations at legacy pins", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createInstalledProject(t, source);
+  const revision = await commitKnowledgeBase(source, { "README.md": "# New knowledge\n" });
+  const root = path.join(project, ".github/spec-driven-delivery/knowledge-base");
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
+  assert.equal(runInstaller(project, ["--repository", source.repository, "--upgrade"]).status, 0);
+  await assert.rejects(access(root));
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
+  const candidateGuide = await readFile(path.join(project, ".sdd-runtime/playbook-upgrade-guide.md"), "utf8");
+  const candidateFile = path.join(guideValue(candidateGuide, "Playbook checkout"), "knowledge-base/README.md");
+  await writeFile(candidateFile, "# Mismatched candidate\n");
+  const invalid = runInstaller(project, ["--validate"]);
+  assert.notEqual(invalid.status, 0);
+  assert.match(invalid.stderr, /knowledge base candidate content differs/);
+  await writeFile(candidateFile, "# New knowledge\n");
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
+  assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
+  await assert.rejects(access(root));
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
+  const accepted = await acceptKnowledgeBaseRevision(project, revision);
+  assert.equal(accepted.status, 0, accepted.stderr);
+  await access(path.join(root, "README.md"));
+});
+
+test("knowledge base legacy pins leave unrelated local KB-shaped guidance untouched", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createTargetProject(t);
+  const local = await temporaryDirectory(t, "sdd-kb-project-guidance-");
+  await writeFile(path.join(local, "README.md"), "Project-owned guidance\n");
+  await mkdir(path.join(project, ".github/spec-driven-delivery"), { recursive: true });
+  const root = path.join(project, ".github/spec-driven-delivery/knowledge-base");
+  await symlink(local, root);
+  const installed = runInstaller(project, ["--repository", source.repository, "--revision", source.firstRevision]);
+  assert.equal(installed.status, 0, installed.stderr);
+  assert.equal(await readlink(root), local);
+  assert.equal(await readFile(path.join(local, "README.md"), "utf8"), "Project-owned guidance\n");
+  assert.equal(runInstaller(project, ["--validate", "--revision", source.firstRevision]).status, 0);
+});
+
+test("knowledge base accepted synchronization updates adds and removes only unchanged official files", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const first = await commitKnowledgeBase(source, {
+    "README.md": "# Old knowledge\n", "obsolete.md": "# Obsolete\n",
+  });
+  const project = await createInstalledProject(t, { ...source, firstRevision: first });
+  const root = path.join(project, ".github/spec-driven-delivery/knowledge-base");
+  await writeFile(path.join(root, "project-note.md"), "Project lesson\n");
+  const revision = await commitKnowledgeBase(source, {
+    "README.md": "# Updated knowledge\n", "new.md": "# New topic\n",
+  }, ["obsolete.md"]);
+  assert.equal(runInstaller(project, ["--repository", source.repository, "--upgrade"]).status, 0);
+  assert.equal(await readFile(path.join(root, "README.md"), "utf8"), "# Old knowledge\n");
+  assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
+  assert.equal(await readFile(path.join(root, "README.md"), "utf8"), "# Old knowledge\n");
+  const accepted = await acceptKnowledgeBaseRevision(project, revision);
+  assert.equal(accepted.status, 0, accepted.stderr);
+  assert.equal(await readFile(path.join(root, "README.md"), "utf8"), "# Updated knowledge\n");
+  await access(path.join(root, "new.md"));
+  await assert.rejects(access(path.join(root, "obsolete.md")));
+  assert.equal(await readFile(path.join(root, "project-note.md"), "utf8"), "Project lesson\n");
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
+});
+
+test("knowledge base synchronization preserves local edits and unowned collisions", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const first = await commitKnowledgeBase(source, { "README.md": "# Original\n" });
+  for (const managed of [true, false]) {
+    const project = managed
+      ? await createInstalledProject(t, { ...source, firstRevision: first })
+      : await createTargetProject(t);
+    const root = path.join(project, ".github/spec-driven-delivery/knowledge-base");
+    await mkdir(root, { recursive: true });
+    await writeFile(path.join(root, "README.md"), "Local content\n");
+    if (managed) assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
+    const result = runInstaller(project, ["--repository", source.repository, "--revision", first]);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /knowledge base.*(local|ownership|unmanaged)/i);
+    assert.equal(await readFile(path.join(root, "README.md"), "utf8"), "Local content\n");
+  }
+});
+
+test("knowledge base runtime rejects missing modified or forged managed content", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const revision = await commitKnowledgeBase(source, { "README.md": "# Knowledge\n" });
+  const project = await createInstalledProject(t, { ...source, firstRevision: revision });
+  const root = path.join(project, ".github/spec-driven-delivery/knowledge-base");
+  const file = path.join(root, "README.md");
+  const original = await readFile(file, "utf8");
+  for (const mutation of ["modified", "missing", "marker"]) {
+    const marker = path.join(root, ".sdd-playbook-managed");
+    const baseline = await readFile(marker, "utf8");
+    if (mutation === "modified") await writeFile(file, "# Modified\n");
+    if (mutation === "missing") await rm(file);
+    if (mutation === "marker") await writeFile(marker, `${baseline}\nforged\n`);
+    const invalid = runInstaller(project, ["--validate"]);
+    assert.notEqual(invalid.status, 0);
+    assert.match(invalid.stderr, /knowledge base/i);
+    await writeFile(file, original);
+    await writeFile(marker, baseline);
+    assert.equal(runInstaller(project, ["--validate"]).status, 0);
+  }
+});
+
+test("knowledge base preserves linked local parents and rejects unsupported official links", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const revision = await commitKnowledgeBase(source, { "nested/practice.md": "# Practice\n" });
+  const project = await createTargetProject(t);
+  const outside = await temporaryDirectory(t, "sdd-kb-local-");
+  const root = path.join(project, ".github/spec-driven-delivery/knowledge-base");
+  await mkdir(root, { recursive: true });
+  await symlink(outside, path.join(root, "nested"));
+  const linked = runInstaller(project, ["--repository", source.repository, "--revision", revision]);
+  assert.notEqual(linked.status, 0);
+  assert.match(linked.stderr, /knowledge base.*linked parent/i);
+  assert.equal(await readlink(path.join(root, "nested")), outside);
+  await assert.rejects(access(path.join(outside, "practice.md")));
+
+  await symlink("../README.md", path.join(source.repository, "knowledge-base/linked.md"));
+  run("git", ["add", "knowledge-base"], source.repository);
+  run("git", ["commit", "-m", "unsupported fixture link"], source.repository);
+  const target = await createTargetProject(t);
+  const invalid = runInstaller(target, ["--repository", source.repository]);
+  assert.notEqual(invalid.status, 0);
+  assert.match(invalid.stderr, /knowledge base.*unsupported official entry/i);
+  await assert.rejects(access(path.join(target, ".github/spec-driven-delivery/knowledge-base")));
+});
+
+test("knowledge base failed directory replacement preserves the accepted tree", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const first = await commitKnowledgeBase(source, { "README.md": "# Accepted\n" });
+  const project = await createInstalledProject(t, { ...source, firstRevision: first });
+  const root = path.join(project, ".github/spec-driven-delivery/knowledge-base");
+  await writeFile(path.join(root, "local.md"), "Local lesson\n");
+  const marker = await readFile(path.join(root, ".sdd-playbook-managed"), "utf8");
+  assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
+  const revision = await commitKnowledgeBase(source, { "README.md": "# Candidate\n" });
+  const bin = await temporaryDirectory(t, "sdd-kb-failure-bin-");
+  await writeFile(path.join(bin, "mv"), `#!/usr/bin/env bash
+if [[ "$SDD_TEST_FAILURE_MODE" == backup && "$2" == */.knowledge-base-backup ]] ||
+   [[ "$SDD_TEST_FAILURE_MODE" == publish && "$1" == */.knowledge-base-stage ]]; then
+  exit 1
+fi
+exec /bin/mv "$@"
+`, { mode: 0o755 });
+  for (const mode of ["backup", "publish"]) {
+    const result = await acceptKnowledgeBaseRevision(project, revision, {
+      ...process.env, PATH: `${bin}:${process.env.PATH}`, SDD_TEST_FAILURE_MODE: mode,
+    });
+    assert.notEqual(result.status, 0);
+    assert.equal(await readFile(path.join(root, "README.md"), "utf8"), "# Accepted\n");
+    assert.equal(await readFile(path.join(root, "local.md"), "utf8"), "Local lesson\n");
+    assert.equal(await readFile(path.join(root, ".sdd-playbook-managed"), "utf8"), marker);
+  }
+});
 
 test("triage skill is installed and integrity-checked across project profiles", async (t) => {
   const source = await createPlaybookFixture(t);
