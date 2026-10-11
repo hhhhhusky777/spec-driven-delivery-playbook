@@ -157,6 +157,20 @@ async function acceptKnowledgeBaseRevision(project, revision, env = process.env)
   return runInstaller(project, ["--repository", guideValue(content, "Playbook source repository")], env);
 }
 
+test("knowledge base installs the actual README as the first official document", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const readme = await readFile(path.join(REPOSITORY_ROOT, "knowledge-base/README.md"), "utf8");
+  const revision = await commitKnowledgeBase(source, { "README.md": readme });
+  const project = await createInstalledProject(t, { ...source, firstRevision: revision });
+  const installed = path.join(project, ".github/spec-driven-delivery/knowledge-base/README.md");
+  assert.equal(await readFile(installed, "utf8"), readme);
+  const guide = await readFile(path.join(project, ".sdd-runtime/agent-guide.md"), "utf8");
+  assert.equal(guideValue(guide, "Resolved revision"), revision);
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
+  run("git", ["add", ".github/spec-driven-delivery/knowledge-base"], project);
+  assert.match(run("git", ["diff", "--cached", "--name-only"], project), /knowledge-base\/README\.md/);
+});
+
 test("knowledge base installs the complete official tree and persists after runtime cleanup", async (t) => {
   const source = await createPlaybookFixture(t);
   const revision = await commitKnowledgeBase(source, {
