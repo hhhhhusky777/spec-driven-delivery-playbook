@@ -46,7 +46,9 @@
 
 Material assumptions: None. Remaining owner decisions: None apparent for this scope.
 
-## Design candidate — not frozen
+## Concluded design
+
+The metadata state controls whether this reviewed design candidate is frozen.
 
 | Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
@@ -84,13 +86,14 @@ not a second copy of the documentation or a new validation controller.
 ## Draft-to-design reconciliation
 
 All DR01–DR08 items map to D01–D06 above with accepted intent. Formal conclusion
-and freeze remain pending two independent reviewers and owner acceptance.
+and freeze require two independent reviewers and owner acceptance under the
+existing accepted-design authority.
 
 ## Newly introduced validations
 
 | ID | Validation / authority / execution boundary | Protected outcome / risk / marginal value | Concrete invalid case | Failure effect / recovery | Cost / risk reduction | Existing or cheaper mechanism / coverage / why insufficient | Fail-close / test reference | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| V01 | Extend existing installer/runtime integrity checks to official KB content when the pinned revision ships it; installer and runtime-validation boundary | Prevent missing or mixed-revision guidance from driving author/reviewer decisions | A skill refers to the incoming KB but its installed topic is missing or differs from the accepted revision | FC01 | Bounded official-file checks, not project-code inspection or an additional validation stage | Reuse managed-skill provenance/ownership checks; current checks do not cover shared KB content | FC01; T01 and T12 test inventory | Pending |
+| V01 | Extend existing installer/runtime integrity and synchronization ownership/baseline checks to official KB content when the pinned revision ships it; installer and runtime-validation boundary | Prevent missing/mixed guidance and unintended loss of local or non-owned content | A required topic has a mismatched revision, or upgrade would overwrite a locally edited topic | FC01; FC02 | Bounded official-file/baseline checks, not project-code inspection or an additional validation stage | Reuse managed-skill provenance/ownership patterns; current checks do not cover shared KB content or local KB changes | FC01; FC02; T01 and T12 test inventory | Pending |
 
 ## Newly introduced fail-closed behaviors
 
@@ -106,4 +109,4 @@ and freeze remain pending two independent reviewers and owner acceptance.
 | Design | Installed shared KB plus concise, project-aware skill principles and topic-read triggers | HUMAN_DECISION after reviewer approval |
 | Delivery granularity | Twelve proposed tasks: ten separate documents and two supporting units; stop after every task, no Autopilot | DISCLOSE |
 | New controls | V01, FC01 and FC02 extend managed-content integrity/ownership to KB; no new project-code checker or policy suite | HUMAN_DECISION after reviewer approval |
-| State | Discussion draft/design candidate only; not concluded, frozen, planned, implemented or activated | DISCLOSE |
+| State | Metadata records design state; review/acceptance never claims implementation or installed KB activation | DISCLOSE |
