@@ -14,14 +14,14 @@
 
 | ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
-| DR01 | Package detailed engineering practices as an installed, versioned Knowledge Base rather than expanding skills indefinitely | Accepted; D01 |
-| DR02 | Skills retain concise principles and topic-specific read triggers; author and reviewers both use the KB | Accepted; D02 |
-| DR03 | Project boundaries and KB core principles constrain outcomes; agents choose the simplest sufficient project-specific implementation, not whether to ignore the principles | Accepted; D03 |
-| DR04 | Read the relevant distilled topic first; consult primary references only for unresolved questions. README is a human index, not a mandatory routing hop | Accepted; D02, D04 |
-| DR05 | Include nine topic documents and a lightweight README; examples explain decisions, not universal frameworks or mandatory recipes | Accepted; D04 |
-| DR06 | Install and upgrade all official KB documents with the pinned playbook; preserve project policies, Experience and non-owned content | Accepted; D01, D05 |
-| DR07 | Each document is a separate task; stop after every completed task for owner wording review rather than batch acceptance at the end | Accepted; D06; Autopilot off |
-| DR08 | Do not claim all methods are universal industry standards; distinguish mature principles from emerging multi-agent practice | Accepted; D03, D04 |
+| DR01 | Package detailed engineering practices as an installed, versioned Knowledge Base rather than expanding skills indefinitely | Accepted |
+| DR02 | Skills retain concise principles and topic-specific read triggers; author and reviewers both use the KB | Accepted |
+| DR03 | Project boundaries and KB core principles constrain outcomes; agents choose the simplest sufficient project-specific implementation, not whether to ignore the principles | Accepted |
+| DR04 | Read the relevant distilled topic first; consult primary references only for unresolved questions. README is a human index, not a mandatory routing hop | Accepted |
+| DR05 | Include nine topic documents and a lightweight README; examples explain decisions, not universal frameworks or mandatory recipes | Accepted |
+| DR06 | Install and upgrade all official KB documents with the pinned playbook; preserve project policies, Experience and non-owned content | Accepted |
+| DR07 | Each document is a separate task; stop after every completed task for owner wording review rather than batch acceptance at the end | Accepted |
+| DR08 | Do not claim all methods are universal industry standards; distinguish mature principles from emerging multi-agent practice | Accepted |
 
 ## Current understanding
 
@@ -85,9 +85,19 @@ not a second copy of the documentation or a new validation controller.
 
 ## Draft-to-design reconciliation
 
-All DR01–DR08 items map to D01–D06 above with accepted intent. Formal conclusion
-and freeze require two independent reviewers and owner acceptance under the
-existing accepted-design authority.
+| Draft item | Concluded design point | Disposition |
+| --- | --- | --- |
+| DR01 | D01 | Accepted |
+| DR02 | D02 | Accepted |
+| DR03 | D03 | Accepted |
+| DR04 | D02, D04 | Accepted |
+| DR05 | D04 | Accepted |
+| DR06 | D01, D05 | Accepted |
+| DR07 | D06 | Accepted |
+| DR08 | D03, D04 | Accepted |
+
+Formal conclusion and freeze require two independent reviewers and owner
+acceptance under the existing accepted-design authority.
 
 ## Newly introduced validations
 
