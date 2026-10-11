@@ -62,10 +62,16 @@ rows in proportion to the project.
 | Security, privacy, and compliance | `<link or None>` | `<owner>` | `<result>` |
 | Data, concurrency, and performance | `<link or None>` | `<owner>` | `<result>` |
 | Decisions and durable history | `<link or None>` | `<owner>` | `<result>` |
+| Project Experience or existing equivalent | `<Git-tracked guidance link or None>` | `<owner>` | `<result>` |
 
 Add rows only for authorities that materially govern delivery. Canonical
 sources and explicit owner decisions must agree before adoption or upgrade is
 accepted.
+
+During upgrade, incrementally reconcile the incoming revision's discovery
+requirements with current project sources, including reusable guidance.
+Record newly discovered gaps and their disposition; do not repeat adoption.
+Experience is project guidance, not policy or feature state.
 
 After adoption, reconcile this authority index with current repository evidence
 before each feature's whiteboard work and whenever candidate work changes

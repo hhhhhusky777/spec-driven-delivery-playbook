@@ -268,12 +268,17 @@ and [Anthropic's orchestrator-worker experience](https://www.anthropic.com/engin
 ### Execution judgment and evidence
 
 Reuse verified project experience rather than repeat avoidable trial and error.
-Before related work, consult the project's durable Experience document or
-existing equivalent, discoverable from its manifest or entry point. If useful
-lessons have no existing owner, establish a Git-tracked `docs/experience.md`
-and link it there. Follow that document's use and contribution guidance;
-this repository's `docs/experience.md` provides the reference model. Experience
-is reusable project guidance, not feature state: retain it through cleanup.
+When an unexpected situation or failure arises, consult manifest-linked project
+Experience or its existing equivalent for similar situations and verified
+solutions. Check applicability before reuse; experience is guidance, not proof
+of the current cause or permission to bypass project authority. Apply known
+relevant lessons proactively when useful, without a mandatory lookup for every
+operation. Prefer fixing the underlying problem or codifying a verified
+solution in its existing code, script, or guidance owner within approved scope;
+retain only useful residual knowledge rather than duplicate that owner.
+Follow the Experience document's contribution guidance to refine reusable
+lessons. Experience is reusable project guidance, not feature state: retain it
+through cleanup.
 
 Choose the working order, batching, tools, tests, and recovery method that best
 achieve the accepted outcome. Prefer coherent review units and one human brief

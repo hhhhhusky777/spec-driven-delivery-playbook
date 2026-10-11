@@ -20,8 +20,9 @@ revision while project authority and active feature content remain intact.
   newer candidate. Current installers can do this automatically during
   `--upgrade`; runtime from another worktree is never reused.
 - Upgrade only the manifest, neutral reusable whiteboard structure, managed
-  skills, and generated runtime. Never rewrite feature-specific whiteboard
-  content or implementation-plan content.
+  skills, generated runtime, and reusable project guidance needed to resolve
+  discovered gaps within existing authority. Never rewrite feature-specific
+  whiteboard content or implementation-plan content.
 - Remove the obsolete `.github/spec-driven-delivery/README.md` only when its
   bytes exactly match the known legacy playbook-generated entry point. A
   customized, linked, or ownership-uncertain file MUST remain untouched and
@@ -46,6 +47,22 @@ revision while project authority and active feature content remain intact.
 
 ## Synchronization result
 
+Upgrade MUST perform incremental discovery: compare the incoming revision's
+manifest template and applicable guidance with current project sources.
+Reconcile new requirements, missing or stale links, and newly discovered gaps
+in the manifest without repeating adoption or replacing project authority.
+Include Git-tracked project Experience or an existing equivalent; reuse and
+link it, or record its absence as a gap. Within authority, establish missing
+guidance with concise instructions for using and refining verified, actionable
+lessons. Missing files alone do not require a new gate or automatic stop;
+material decisions follow the project's canonical error-handling authority.
+
+The discovery response MUST include a simple table of existing policies and
+reusable guidance, missing applicable sources, and gaps, with source evidence,
+impact, proposed handling, and any owner decision. Use `None` for empty
+categories. This reports discovery; it does not prescribe a mandatory policy
+file suite.
+
 Resolve the source repository's latest `main` to a full SHA. The pull request
 brief records old and new revisions, reusable changes, preserved authority,
 material inconsistencies, applicable checks, reviewer results, and the human
@@ -60,7 +77,8 @@ second recovery or escalation procedure here.
 ## Completion
 
 The accepted full revision is in the manifest, managed skills and runtime match
-it, reusable documents are mutually consistent, the verified legacy entry
+it, incremental discovery and gap dispositions are reflected in the manifest,
+reusable documents are mutually consistent, the verified legacy entry
 point and obsolete installer-owned temporary content are removed, no tracked
 live entry point references the removed path, and validation reports current.
 A rejected or failed candidate leaves or restores the previous pin.
