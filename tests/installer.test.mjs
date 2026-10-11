@@ -188,10 +188,17 @@ test("knowledge base simplicity routing resolves for installed author and review
   });
   const project = await createInstalledProject(t, { ...source, firstRevision: revision });
   const guide = await readFile(path.join(project, ".sdd-runtime/agent-guide.md"), "utf8");
-  const kbRoot = guideValue(guide, "Knowledge Base root");
+  const manifestPath = path.join(project, ".github/spec-driven-delivery/project-adoption-manifest.md");
+  const manifest = await readFile(manifestPath, "utf8")
+    + "| Knowledge Base root | `.github/spec-driven-delivery/knowledge-base` |\n";
+  await writeFile(manifestPath, manifest);
+  const kbRoot = guideValue(manifest, "Knowledge Base root");
+  assert.equal(kbRoot, guideValue(guide, "Knowledge Base root"));
   for (const name of ["sdd-project-workflow", "sdd-feature-review"]) {
     const skill = await readFile(path.join(project, ".agents/skills", name, "SKILL.md"), "utf8");
     assert.ok(skill.includes(`\`${topic}\``), `${name} must route to the available topic`);
+    assert.match(skill.replace(/^>\s?/gm, "").replace(/\s+/g, " "),
+      /directly from the manifest-linked KB root/);
     assert.equal(await readFile(path.join(project, kbRoot, topic), "utf8"), content);
   }
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
