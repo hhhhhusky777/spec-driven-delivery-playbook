@@ -157,8 +157,10 @@ async function acceptKnowledgeBaseRevision(project, revision, env = process.env)
   return runInstaller(project, ["--repository", guideValue(content, "Playbook source repository")], env);
 }
 
-test("knowledge base installs the actual README as the first official document", async (t) => {
+test("knowledge base installs the actual index and available topics", async (t) => {
   const source = await createPlaybookFixture(t);
+  await cp(path.join(REPOSITORY_ROOT, "knowledge-base"),
+    path.join(source.repository, "knowledge-base"), { recursive: true });
   const readme = await readFile(path.join(REPOSITORY_ROOT, "knowledge-base/README.md"), "utf8");
   const revision = await commitKnowledgeBase(source, { "README.md": readme });
   const project = await createInstalledProject(t, { ...source, firstRevision: revision });
@@ -169,6 +171,30 @@ test("knowledge base installs the actual README as the first official document",
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
   run("git", ["add", ".github/spec-driven-delivery/knowledge-base"], project);
   assert.match(run("git", ["diff", "--cached", "--name-only"], project), /knowledge-base\/README\.md/);
+});
+
+test("knowledge base simplicity routing resolves for installed author and reviewer skills", async (t) => {
+  const source = await createPlaybookFixture(t);
+  for (const name of ["sdd-project-workflow", "sdd-feature-review"]) {
+    await cp(path.join(REPOSITORY_ROOT, "skills", name, "SKILL.md"),
+      path.join(source.repository, "skills", name, "SKILL.md"));
+  }
+  run("git", ["add", "skills"], source.repository);
+  const topic = "minimal-change-and-code-simplicity.md";
+  const content = await readFile(path.join(REPOSITORY_ROOT, "knowledge-base", topic), "utf8");
+  const revision = await commitKnowledgeBase(source, {
+    "README.md": await readFile(path.join(REPOSITORY_ROOT, "knowledge-base/README.md"), "utf8"),
+    [topic]: content,
+  });
+  const project = await createInstalledProject(t, { ...source, firstRevision: revision });
+  const guide = await readFile(path.join(project, ".sdd-runtime/agent-guide.md"), "utf8");
+  const kbRoot = guideValue(guide, "Knowledge Base root");
+  for (const name of ["sdd-project-workflow", "sdd-feature-review"]) {
+    const skill = await readFile(path.join(project, ".agents/skills", name, "SKILL.md"), "utf8");
+    assert.ok(skill.includes(`\`${topic}\``), `${name} must route to the available topic`);
+    assert.equal(await readFile(path.join(project, kbRoot, topic), "utf8"), content);
+  }
+  assert.equal(runInstaller(project, ["--validate"]).status, 0);
 });
 
 test("knowledge base installs the complete official tree and persists after runtime cleanup", async (t) => {

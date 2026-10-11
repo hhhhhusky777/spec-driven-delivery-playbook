@@ -28,13 +28,12 @@ methods; neither a reference nor an example becomes project authority.
 
 ## Topic index
 
-The documents below are planned, not yet available in this increment. Their
-filenames remain plain text until the corresponding document is delivered;
-no unavailable topic is required by this README.
+Linked topics are available. Plain filenames identify topics still planned;
+they become links when delivered. This README requires no unavailable topic.
 
 | Topic | When it helps | Document |
 | --- | --- | --- |
-| Minimal change and code simplicity | Reuse existing mechanisms; keep necessary changes clear and small | `minimal-change-and-code-simplicity.md` |
+| Minimal change and code simplicity | Reuse existing mechanisms; keep necessary changes clear and small | [Minimal change and code simplicity](minimal-change-and-code-simplicity.md) |
 | Architecture, scope, and assumptions | Establish ownership and evidence-bounded design premises | `architecture-scope-and-assumptions.md` |
 | Contracts and compatibility | Change interfaces without accidental contract breakage | `contracts-and-compatibility.md` |
 | Error handling and diagnosability | Preserve invariants with simple failures and useful diagnosis | `error-handling-and-diagnosability.md` |
