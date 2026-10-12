@@ -20,8 +20,7 @@ do not create another architecture inventory merely to apply this guidance.
 
 Separate responsibilities that change for different reasons. Prefer explicit
 dependencies and stable public contracts over hidden shared state or access to
-another component's internal representation. These principles do not require
-microservices, a fixed layering scheme, or an interface for every function.
+another component's internal representation.
 
 ## Material assumptions
 
@@ -46,14 +45,13 @@ work. Do not silently broaden the design or invent a new rejection mechanism.
 
 ## Concrete examples and limits
 
-The illustrations are adapted applications of the references, not reported
+These examples paraphrase Microsoft's own illustrations; they are not project
 incidents or compulsory architectures.
 
-| Situation | Boundary-respecting choice | Why it matters |
-| --- | --- | --- |
-| A deployment wrapper launches a migration tool that owns version transitions | Use its documented invocation and result contract; do not hardcode the wrapper's observed schema version as an independent migration rule | The migration owner can support later transitions without a contradictory second authority |
-| A caller sees results sorted in one response, but the API promises no ordering | Sort locally when ordering is an owned requirement, or obtain an explicit provider guarantee | One sample is not a stable contract; incidental ordering must not determine correctness |
-| Formatting logic reads storage-specific fields to decide a business rule | Obtain the decision through the owning business contract and format the result | Business semantics and persistence details can change independently |
+| Reference example | Boundary-respecting choice | Why it matters | Source |
+| --- | --- | --- | --- |
+| An application selects noteworthy items and formats them for display | Separate item selection from display formatting | Choosing content and presenting it are different responsibilities, even when used together | [Microsoft: Separation of concerns](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles#separation-of-concerns) |
+| An object has a parameterless constructor but requires global or infrastructure components at runtime | Declare required collaborators through its constructor or method parameters | Callers can see what the object needs instead of discovering hidden dependencies during execution | [Microsoft: Explicit dependencies](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles#explicit-dependencies) |
 
 For review, trace each material premise to evidence valid for the declared
 domain, inspect dependency ownership, and distinguish a genuine contract gap
