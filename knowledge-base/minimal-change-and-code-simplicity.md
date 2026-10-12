@@ -1,61 +1,55 @@
-# Minimal Change and Code Simplicity
+# Minimal Change Design
 
-Use this guidance when designing, implementing, or reviewing a change. The goal
-is the smallest understandable increment that satisfies the accepted outcome
-and project invariants—not the fewest lines at any cost.
+Use this guidance when designing or reviewing a solution: satisfy the current
+requirement by reusing existing capabilities and introducing the fewest new
+responsibilities and mechanisms necessary. This topic concerns design choices,
+not coding style or source-level refactoring.
 
 ## Core principles
 
 > [!IMPORTANT]
-> Reuse suitable existing project code, libraries, and framework mechanisms.
-> Add only the behavior and complexity needed for the accepted outcome. Keep
-> control flow and data flow easy to understand; do not build speculative
-> capabilities or a second implementation of an existing responsibility.
-
-Necessary validation, safety, compatibility, and useful tests are not optional
-because a shorter implementation exists. Apply the project's authorities and
-approved scope; this topic does not authorize unrelated cleanup or a redesign.
+> Reuse suitable existing capabilities and framework mechanisms before adding
+> new ones. Extend the existing owner of a responsibility instead of creating
+> a parallel owner. Design only for demonstrated current requirements, not
+> speculative features or extension points.
 
 ## Applying the principles
 
-Inspect the mechanism that already owns the relevant behavior. Extend or
-compose it when it fits the required contract; do not copy an unsuitable
-implementation merely to claim reuse. A new helper, abstraction, or dependency
-needs a concrete benefit for the current outcome, not hypothetical future use.
+Identify which existing component or mechanism owns the required behavior and
+compare its contract with the current requirement. Prefer configuration,
+composition, or a bounded extension when that meets the need without weakening
+existing guarantees. Reuse is unsuitable when it crosses ownership boundaries,
+changes an unrelated contract, or needs more adaptation than a small coherent
+new mechanism.
 
-Prefer explicit, cohesive logic with meaningful names. Consolidate repeated
-conditions or equivalent processing when doing so preserves evaluation order,
-side effects, failure behavior, and ownership. Remove pass-through variables
-that obscure data flow, but keep names that explain a domain concept, preserve
-a meaningful snapshot, or avoid repeated expensive or effectful computation.
+When proposing a new component, abstraction, dependency, or control, identify
+the current requirement that the existing mechanism cannot adequately satisfy.
+Weigh its benefit against added coupling, migration, operation, and maintenance
+cost. Choose the least costly sufficient alternative, not the smallest diff if
+that diff leaves duplicate ownership or fragile integration.
 
-Keep evolution inexpensive through clear responsibilities and existing
-extension mechanisms. Introduce an abstraction when current variation or
-duplication justifies it; do not force different responsibilities together just
-because they look similar. Simplicity is not code golf, a line-count quota, or
-a reason to leave genuinely confusing changed code untouched.
+Keep responsibilities clear and changes easy to evolve. Existing extension
+points can support change without inventing a generic framework. A new
+abstraction is justified by current variation or a concrete responsibility,
+not by imagined future formats or consumers. Necessary safety, compatibility,
+and verification are part of a sufficient design, not optional complexity.
 
 ## Concrete examples and limits
 
 | Situation | Smallest suitable change | Limit to check |
 | --- | --- | --- |
-| Two adjacent `if (eligible)` blocks perform related actions | One block containing both actions | Safe only if the first action cannot change the second condition's result; preserve order and error behavior |
-| A value is copied from `a` to `b` to `c` without transformation | Use one meaningful value directly | Keep an intermediate name when it explains a domain conversion or captures state intentionally |
-| A framework already provides the required retry or serialization mechanism | Configure or extend that mechanism instead of creating another wrapper system | Verify its actual contract fits the approved behavior; do not add retries or change semantics without authority |
-| One accepted format needs an adapter | Implement that adapter using existing extension points | Do not add a plugin registry for imaginary future formats; a genuine current extension need can justify one |
+| A framework provides the required scheduling mechanism | Configure or extend it instead of adding a second scheduler | Confirm its ordering and failure contract meets the current need |
+| One accepted format needs an adapter | Use the existing extension point for that format | Do not design a plugin registry for imaginary future formats |
+| An existing component serves a different contract | Add a small mechanism at the correct owner rather than forcing reuse | Explain the actual contract mismatch and why adaptation would be more costly or unsafe |
 
-For example, merging two conditionals is incorrect if the first action changes
-`eligible`: the original code would reevaluate it before the second action.
-Prefer the clearer equivalent implementation, not a visually shorter behavior
-change. Reviewers should identify a concrete avoidable cost or comprehension
-problem, rather than enforce personal style or require theoretical perfection.
+For design review, examine the existing option, the evidenced gap, the proposed
+increment, and its total cost. Challenge an addition with a concrete sufficient
+alternative; do not demand a universal framework or theoretical perfection.
 
 ## References
 
 These sources support the distilled principles. Read further when a material
 question remains; their examples are not additional project requirements.
 
-- [Google: What to look for in a code review](https://google.github.io/eng-practices/review/reviewer/looking-for.html) — complexity, unnecessary generality, clear names, and maintainable tests.
+- [Google: What to look for in a code review](https://google.github.io/eng-practices/review/reviewer/looking-for.html) — design fit, integration with existing components, and unnecessary generality.
 - [Martin Fowler: YAGNI](https://martinfowler.com/bliki/Yagni.html) — avoid speculative capabilities without neglecting code health or ease of change.
-- [Martin Fowler: Consolidate Conditional Expression](https://refactoring.com/catalog/consolidateConditionalExpression.html) — a focused refactoring example for equivalent conditional logic, not permission to alter evaluation semantics.
-- [Martin Fowler: Inline Variable](https://refactoring.com/catalog/inlineVariable.html) — remove an intermediary when the expression is clearer without it; retain explanatory names where useful.

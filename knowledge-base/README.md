@@ -33,7 +33,7 @@ they become links when delivered. This README requires no unavailable topic.
 
 | Topic | When it helps | Document |
 | --- | --- | --- |
-| Minimal change and code simplicity | Reuse existing mechanisms; keep necessary changes clear and small | [Minimal change and code simplicity](minimal-change-and-code-simplicity.md) |
+| Minimal change design | Reuse existing capabilities; minimize new responsibilities and mechanisms | [Minimal change design](minimal-change-and-code-simplicity.md) |
 | Architecture, scope, and assumptions | Establish ownership and evidence-bounded design premises | `architecture-scope-and-assumptions.md` |
 | Contracts and compatibility | Change interfaces without accidental contract breakage | `contracts-and-compatibility.md` |
 | Error handling and diagnosability | Preserve invariants with simple failures and useful diagnosis | `error-handling-and-diagnosability.md` |
