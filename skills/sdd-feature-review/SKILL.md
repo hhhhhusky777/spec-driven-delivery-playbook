@@ -130,6 +130,10 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > proportionally. Raise a finding when handling is not the simplest clear-cut
 > approach that protects the accepted outcome, or when it adds speculative
 > complexity.
+> Before judging design simplicity or reuse, read
+> `simple-design-and-reuse.md` directly from the manifest-linked KB
+> root when the accepted pin ships it. Apply it within the accepted project
+> boundary, not as a mandatory recipe or personal-style checklist.
 >
 > Treat a material premise that is unsupported, foreign-owned,
 > incidental-state, a single-case generalization, a hidden dependency, or a
@@ -195,7 +199,7 @@ and [handling-comments guidance](https://google.github.io/eng-practices/review/d
 balance progress with code health and resolve disagreement through facts and
 tradeoffs, not personal preference.
 
-When uncertain about design fit, unnecessary complexity, or test value, consult
+When uncertain about design fit or test value, consult
 Google's [What to look for in a code review](https://google.github.io/eng-practices/review/reviewer/looking-for.html).
 It explains over-engineering and useful, maintainable tests. Use it as supporting
 guidance, not project authority or a new gate; do not browse it routinely.

@@ -19,6 +19,11 @@ Repository policies and explicit owner decisions remain authoritative.
 > dependency that does not protect an accepted outcome or named invariant.
 > Prefer one canonical owner and the smallest sufficient solution.
 
+Before designing a solution, read
+`simple-design-and-reuse.md` directly from the manifest-linked KB
+root when the accepted pin ships it. Apply its principles within project
+authority and approved scope; choose the simplest sufficient design.
+
 ## Durable model
 
 - The adoption manifest owns the installed immutable playbook revision,
