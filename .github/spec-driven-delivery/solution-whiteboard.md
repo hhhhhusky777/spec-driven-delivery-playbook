@@ -4,15 +4,15 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [Issue #156](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/156) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
-| Open owner decisions | Amendment acceptance after retained-reviewer review |
+| Concluded design revision | `0683283fb93f3cf4a9e39bd77c39ec09b64e0807` |
+| Open owner decisions | `None` |
 
-Owner-authorized amendment candidate. Prior accepted design remains available at
-`1919f4e0168b881b1b7039684d52704ff2509c53`. Dependent work waits for review
-and owner acceptance; existing implementation and installation authority remain.
+Owner-accepted amendment. Prior accepted design remains available at
+`1919f4e0168b881b1b7039684d52704ff2509c53`. Both retained reviewers approved
+the amendment; owner accepted it. Existing installation authority remains.
 
 ## Discussion draft
 
@@ -26,8 +26,8 @@ and owner acceptance; existing implementation and installation authority remain.
 | DR06 | Install and upgrade all official KB documents with the pinned playbook; preserve project policies, Experience and non-owned content | Accepted |
 | DR07 | Each document is a separate task; stop after every completed task for owner wording review rather than batch acceptance at the end | Accepted |
 | DR08 | Do not claim all methods are universal industry standards; distinguish mature principles from emerging multi-agent practice | Accepted |
-| DR09 | Separate design-level reuse, code-level clarity, and Performance and Observability; include conditional shared-capability and gradual-replacement guidance | Owner requested; amendment review pending |
-| DR10 | Use verified professional examples; architecture fitness evidence belongs with observability and examples are not compulsory recipes | Owner requested; amendment review pending |
+| DR09 | Separate design-level reuse, code-level clarity, and Performance and Observability; include conditional shared-capability and gradual-replacement guidance | Accepted |
+| DR10 | Use verified professional examples; architecture fitness evidence belongs with observability and examples are not compulsory recipes | Accepted |
 
 ## Current understanding
 
@@ -50,7 +50,7 @@ and owner acceptance; existing implementation and installation authority remain.
 | [Skills](../../skills/sdd-project-workflow/SKILL.md) | Existing concise principles, scope references, concurrent-work guidance and project-context entry points |
 | [Project Experience](../../docs/experience.md) | Durable project-specific lessons; must remain separate from centrally maintained KB |
 
-Material assumptions: None. Remaining owner decision: accept this reviewed amendment.
+Material assumptions: None. Remaining owner decisions: None.
 
 ## Concluded design
 
@@ -124,8 +124,8 @@ Reference techniques serve project boundaries, not additional project authority.
 | DR06 | D01, D05 | Accepted |
 | DR07 | D06 | Accepted |
 | DR08 | D03, D04 | Accepted |
-| DR09 | D04, D06 | Amendment candidate |
-| DR10 | D04 | Amendment candidate |
+| DR09 | D04, D06 | Accepted |
+| DR10 | D04 | Accepted |
 
 Formal conclusion and freeze require two independent reviewers and owner
 acceptance under the existing accepted-design authority.
