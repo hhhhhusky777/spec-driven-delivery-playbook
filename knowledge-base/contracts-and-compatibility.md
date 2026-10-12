@@ -19,8 +19,7 @@ implementation details as promises.
 
 Compatibility has several dimensions: existing code may need to compile,
 messages must remain interpretable, and the resulting behavior must still meet
-the supported consumer's expectations. A schema comparison alone cannot prove
-that a change is compatible.
+the supported consumer's expectations.
 
 ## Applying a change
 
