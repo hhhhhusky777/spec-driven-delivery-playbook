@@ -10,17 +10,17 @@ and merge evidence; the frozen whiteboard owns design.
 | Field | Value |
 | --- | --- |
 | State | `IMPLEMENTING` |
-| Active tasks | `None` |
-| Next ready task | `T04` |
-| Active blocker | `None` |
+| Active tasks | `T03` |
+| Next ready task | `None` |
+| Active blocker | Authorized design amendment awaits retained review and owner acceptance |
 | Implementation mode | `human-review-before-merge`; Autopilot explicitly off |
 | Authorized scope / feature branch / protected target | D01–D06 / `codex/knowledge-base` / `main`; no automatic merge authority |
 | Delivery branch / target | `codex/knowledge-base` / `main` |
 | Owner | Repository owner |
 | Primary issue / need | [Issue #156](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/156) |
-| Concluded whiteboard | [Frozen design](solution-whiteboard.md); reviewed design `1919f4e0168b881b1b7039684d52704ff2509c53`; conclusion commit `97324698aee0a5da32d1cf1d71dfde7612280c64` |
+| Concluded whiteboard | [Authorized amendment candidate](solution-whiteboard.md); prior reviewed design `1919f4e0168b881b1b7039684d52704ff2509c53`; conclusion commit `97324698aee0a5da32d1cf1d71dfde7612280c64` |
 | Required reviewers | Retained independent `kb_review_r1` and `kb_review_r2` through final merge |
-| Last verified | 2026-10-12 Asia/Shanghai; T01–T02 merged into the feature branch; T03 topic and focused installed-routing evidence complete; review and merge facts remain in task PRs |
+| Last verified | 2026-10-12 Asia/Shanghai; T01–T02 merged into the feature branch; T03 existing candidate and focused installed-routing evidence complete; design-level rename/content reconciliation pending amendment acceptance; review and merge facts remain in task PRs |
 
 ## Governing inputs and delivery boundaries
 
@@ -36,7 +36,7 @@ Deliver a shared, revision-matched KB that authors and reviewers apply inside
 project boundaries. Scope is the frozen topic set, installer/manifest support,
 skill triggers, affected guidance and checks. No new framework, policy suite,
 code-style linter, copied manual, speculative topic, or project Experience
-migration. Material assumptions: None. No unresolved design decisions.
+migration. Material assumptions: None. Amendment review and owner acceptance remain pending.
 
 The accepted installed pin remains `775f1479e8a1ce6277af7448d509cabe95374ad3`.
 Preparing a newer runtime candidate is not acceptance or activation. Installer
@@ -47,12 +47,12 @@ existing project, including this repository, has accepted its new pin.
 
 | Design point | Task and brief work | Validation | Consistency or gap |
 | --- | --- | --- | --- |
-| D01 | T01 packaging and manifest index; T02–T11 official documents; T12 complete package | Actual installed tree, tracked persistence and revision agreement | Aligned |
-| D02 | T02 usage/index; T03–T11 immediate topic triggers; T12 routing reconciliation | Source and installed author/reviewer/triage resolution | Aligned |
-| D03 | T02–T11 project-aware principles and examples | Semantic review of minimal sufficient application and authority conflicts | Aligned |
-| D04 | T02–T11 distilled content and primary references | Claims, references, clarity and proportionality reviewed per document | Aligned |
-| D05 | T01 synchronization mechanism; T12 complete upgrade/rollback coverage | Legacy pins, additions/updates/removals, integrity and local preservation | Aligned |
-| D06 | T01–T12 explicit task targets and human stops | No next task before current task acceptance; no Autopilot | Aligned |
+| D01 | T01 packaging and manifest index; T02–T13 official documents; T14 complete package | Actual installed tree, tracked persistence and revision agreement | Aligned |
+| D02 | T02 usage/index; T03–T13 immediate topic triggers; T14 routing reconciliation | Source and installed author/reviewer/triage resolution | Aligned |
+| D03 | T02–T13 project-aware principles and examples | Semantic review of minimal sufficient application and authority conflicts | Aligned |
+| D04 | T02–T13 distilled content and primary references | Claims, references, clarity and proportionality reviewed per document | Aligned |
+| D05 | T01 synchronization mechanism; T14 complete upgrade/rollback coverage | Legacy pins, additions/updates/removals, integrity and local preservation | Aligned |
+| D06 | T01–T14 explicit task targets and human stops | No next task before current task acceptance; no Autopilot | Aligned |
 
 ## Delivery strategy and readiness
 
@@ -80,8 +80,8 @@ implementation choices stay with the agent.
 | --- | --- | --- | --- | --- | --- | --- |
 | T01 | DONE | None | Minimal KB installer and manifest support | D01, D05; preserve legacy pins and local content; no official topic writing | Eight focused KB scenarios; document/skill checks | `codex/knowledge-base-t01`; [PR #158](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/158); target `codex/knowledge-base` |
 | T02 | DONE | T01 | `knowledge-base/README.md` human index and authority/application guide | D02–D04; not a mandatory routing hop | Focused document/link checks and wording review | `codex/knowledge-base-t02`; [PR #159](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/159); target `codex/knowledge-base` |
-| T03 | DONE | T02 | `minimal-change-and-code-simplicity.md` | D02–D04; reuse and minimal increments, not personal style rules | Focused topic/trigger checks and wording review | `codex/knowledge-base-t03`; [PR #160](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/160); target `codex/knowledge-base` |
-| T04 | READY | T03 | `architecture-scope-and-assumptions.md` | D02–D04; evidence-bounded ownership and supported domain | Focused topic/trigger checks and wording review | `codex/knowledge-base-t04`; PR not opened; target `codex/knowledge-base` |
+| T03 | IN_PROGRESS | T02 | `simple-design-and-reuse.md` | D02–D04; design-level reuse, sufficient increments and conditional shared-capability/migration guidance; reconcile old filename and triggers after amendment acceptance | Focused topic/trigger checks and wording review | `codex/knowledge-base-t03`; [PR #160](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/160); target `codex/knowledge-base` |
+| T04 | PLANNED | T03 | `architecture-scope-and-assumptions.md` | D02–D04; evidence-bounded ownership and supported domain | Focused topic/trigger checks and wording review | `codex/knowledge-base-t04`; PR not opened; target `codex/knowledge-base` |
 | T05 | PLANNED | T04 | `contracts-and-compatibility.md` | D02–D04; explicit contracts and safe compatible change | Focused topic/trigger checks and wording review | `codex/knowledge-base-t05`; PR not opened; target `codex/knowledge-base` |
 | T06 | PLANNED | T05 | `error-handling-and-diagnosability.md` | D02–D04; simple invariant-preserving failures and useful diagnosis | Focused topic/trigger checks and wording review | `codex/knowledge-base-t06`; PR not opened; target `codex/knowledge-base` |
 | T07 | PLANNED | T06 | `testing-and-reproduction.md` | D02–D04; risk-driven proof and smallest useful reproducer | Focused topic/trigger checks and wording review | `codex/knowledge-base-t07`; PR not opened; target `codex/knowledge-base` |
@@ -89,7 +89,9 @@ implementation choices stay with the agent.
 | T09 | PLANNED | T08 | `proportional-review.md` | D02–D04; material findings and reasonable author disposition, not perfection | Focused topic/trigger checks and wording review | `codex/knowledge-base-t09`; PR not opened; target `codex/knowledge-base` |
 | T10 | PLANNED | T09 | `efficiency-and-concurrency.md` | D02–D04; independent safe work and coordination cost; evolving methods labeled | Focused topic/trigger checks and wording review | `codex/knowledge-base-t10`; PR not opened; target `codex/knowledge-base` |
 | T11 | PLANNED | T10 | `experience-and-learning.md` | D02–D04; actionable reuse/refinement; retain project-specific lessons | Focused topic/trigger checks and wording review | `codex/knowledge-base-t11`; PR not opened; target `codex/knowledge-base` |
-| T12 | PLANNED | T11 | Complete integration and guidance reconciliation | D01–D06; no second detailed owner or new topic/controller | Focused package, routing and consistency checks | `codex/knowledge-base-t12`; PR not opened; target `codex/knowledge-base` |
+| T12 | PLANNED | T11 | `code-simplicity-and-clarity.md` | D02–D04; professional clarity examples, no line-count or style mandate; preserve behavior | Focused topic/trigger checks and wording review | `codex/knowledge-base-t12`; PR not opened; target `codex/knowledge-base` |
+| T13 | PLANNED | T12 | `performance-and-observability.md` | D02–D04; measurable feedback, proportional performance evidence; fault diagnosis stays with T06 | Focused topic/trigger checks and wording review | `codex/knowledge-base-t13`; PR not opened; target `codex/knowledge-base` |
+| T14 | PLANNED | T13 | Complete integration and guidance reconciliation | D01–D06; no second detailed owner or new topic/controller | Focused package, routing and consistency checks | `codex/knowledge-base-t14`; PR not opened; target `codex/knowledge-base` |
 
 ## Task specifications and context receipts
 
@@ -98,10 +100,10 @@ implementation choices stay with the agent.
 | T01 | Existing `install-sdd.sh`, manifest template and necessary adoption/upgrade/runtime guidance plus affected tests | Reuse managed-content provenance/ownership/rollback; synchronize official KB only for pins that ship it. Exercise an isolated KB fixture and legacy fixture without creating future official topics | Sources and accepted runtime verified. Implemented complete-tree installation, immutable ownership baseline, safe synchronization, inventory/content validation and failure restoration; no official KB topic created |
 | T02 | `knowledge-base/README.md`, immediately affected installer/index checks | Explain topic use, project authority and original-reference escalation. Future filenames are not broken links. Install real first document | Actual README installs byte-for-byte at the fixture's accepted immutable pin, validates, and can be Git-tracked. No future topic or trigger authored; live project pin unchanged |
 | T03 | Simplicity topic, its index link, author/reviewer skill triggers and affected installer tests | Distill verified simplicity/reuse principles and useful examples; both installed readers can resolve the real topic without a README hop | Primary references verified; real installed author/reviewer routing covered. Existing hard scope, error-handling and review contracts preserved; live pin unchanged |
-| T04–T11 | Only the named topic, its index entry, relevant portable skill trigger, migrated detailed source guidance and affected tests | Read and verify primary references while authoring. Distill principles, application boundaries and concise useful examples. Require direct topic reading on relevant trigger; preserve concise skill principles and critical boundaries. Remove only migrated duplication, not independent policy or project lessons | Task-specific sources/references pending until that task; not implemented |
-| T12 | Installer integration tests, manifest/adoption/upgrade routing, affected skills and root README/diagrams | Reconcile the complete official tree and remaining duplicate owners. Prove installed links, preservation, safe managed removals and compatibility; update actual capabilities without claiming unaccepted runtime activation | All accepted topic outputs required; not implemented |
+| T04–T13 | Only the named topic, its index entry, relevant portable skill trigger, migrated detailed source guidance and affected tests | Read and verify primary references while authoring. Distill principles, application boundaries and concise useful examples. Require direct topic reading on relevant trigger; preserve concise skill principles and critical boundaries. Remove only migrated duplication, not independent policy or project lessons | Task-specific sources/references pending until that task; not implemented |
+| T14 | Installer integration tests, manifest/adoption/upgrade routing, affected skills and root README/diagrams | Reconcile the complete official tree and remaining duplicate owners. Prove installed links, preservation, safe managed removals and compatibility; update actual capabilities without claiming unaccepted runtime activation | All accepted topic outputs required; not implemented |
 
-Every task has its own owner stop. Shared specifications avoid ten copies of
+Every task has its own owner stop. Shared specifications avoid twelve copies of
 the same review contract; the ledger supplies each exact outcome and branch.
 No task may complete a later topic early.
 
@@ -115,10 +117,10 @@ them; recording a final-gate gap does not claim that test exists or passed.
 | --- | --- | --- | --- | --- |
 | T01 | D01, D05; V01 and FC01 | `tests/installer.test.mjs`, knowledge base cases: complete tree, old pin without KB, missing/mixed official content and changed candidate checkout | Implemented | Changed-line focused cases in T01; run evidence in task PR |
 | T01 | D05; V01 and FC02 | Knowledge base cases: local edits/unowned collisions/linked parents preserved; safe official additions/updates/removals; directory replacement failures restore accepted tree | Implemented | Changed-line focused cases in T01; run evidence in task PR |
-| T02–T11 | D02–D04 | Changed-document Markdown, links and examples; installed trigger resolves existing topic; primary-reference and project-application semantic review | Planned per-topic evidence | Focused checks and both reviewers before each owner stop |
-| T12 | D01–D06 | `tests/installer.test.mjs` and affected `tests/document-model.test.mjs`: complete real tree, adoption/upgrade routing, rollback/preservation and legacy compatibility | Planned integration coverage; exact cases finalized against implementation | Focused changed-line cases in T12; record missing non-focused cases for final gate |
-| T12 | D01, D02, D05 | Extend fixture-only T01 proof to the actual ten-document KB and real installed author/reviewer/triage references | Missing until official content exists; T12 owns the gap | Implement affected checks in T12 or record required remaining additions for final audit/coverage reconciliation; run full source gate only at final readiness |
-| T12 | D02, D04 | Root README/diagrams, remaining canonical links, no duplicated detailed owner or unavailable installed reference | Planned consistency proof | Focused integration review |
+| T02–T13 | D02–D04 | Changed-document Markdown, links and examples; installed trigger resolves existing topic; primary-reference and project-application semantic review | Planned per-topic evidence | Focused checks and both reviewers before each owner stop |
+| T14 | D01–D06 | `tests/installer.test.mjs` and affected `tests/document-model.test.mjs`: complete real tree, adoption/upgrade routing, rollback/preservation and legacy compatibility | Planned integration coverage; exact cases finalized against implementation | Focused changed-line cases in T14; record missing non-focused cases for final gate |
+| T14 | D01, D02, D05 | Extend fixture-only T01 proof to the actual twelve-document KB and real installed author/reviewer/triage references | Missing until official content exists; T14 owns the gap | Implement affected checks in T14 or record required remaining additions for final audit/coverage reconciliation; run full source gate only at final readiness |
+| T14 | D02, D04 | Root README/diagrams, remaining canonical links, no duplicated detailed owner or unavailable installed reference | Planned consistency proof | Focused integration review |
 | Final gate | All accepted outcomes and material risks | Audit implementation against frozen design/reuse, reconcile missing tests, final exact-candidate review, then `npm run docs:all` | Not run; test gaps not yet known | Existing final-readiness boundary, not each document task |
 
 Follow the canonical final gate: any necessary target sync and affected checks
@@ -131,7 +133,9 @@ repository's source suite does not become an adopting project's obligation.
 ## Recovery, decisions, and change control
 
 No active blocker or new recovery framework. Use the linked error-handling
-authority and approved FC01–FC02. The whiteboard remains byte-frozen; new scope
+authority and approved FC01–FC02. The prior conclusion is preserved in Git; this owner-authorized amendment must
+pass retained review and human acceptance before dependent work. After its
+conclusion the whiteboard is byte-frozen again; new scope
 or a design amendment needs prior human authorization. Ordinary recoverable
 agent mistakes stay within existing authority. Track real gaps in GitHub.
 
@@ -141,7 +145,7 @@ agent mistakes stay within existing authority. Track real gaps in GitHub.
 
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
-| Accepted design delivered | D01–D06 mapping, ten accepted documents and complete managed installation | Pending |
+| Accepted design delivered | D01–D06 mapping, twelve accepted documents and complete managed installation | Pending |
 | Applicable validation passed | Focused evidence per task; final audit, coverage reconciliation and exact-head full source gate | Pending |
 | Compatibility and preservation | Old pins remain valid; correct new package and owned synchronization; project content preserved | Pending |
 | Merge-ready canonical state | Root README/diagrams, routing and tracked delivery state agree with actual candidate | Pending |
@@ -152,10 +156,10 @@ agent mistakes stay within existing authority. Track real gaps in GitHub.
 
 | Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
 | --- | --- | --- | --- |
-| D01, D05 / T01 | Installer/manifest support without new legacy obligations | Implemented and covered by focused KB tests; no scope deviation | Task review/owner merge acceptance in PR; actual topic integration remains T12 |
+| D01, D05 / T01 | Installer/manifest support without new legacy obligations | Implemented and covered by focused KB tests; no scope deviation | Task review/owner merge acceptance in PR; actual topic integration remains T14 |
 | D02–D04 / T02 | Human index and project-aware application boundary | Actual README and focused installation regression complete; future topics explicitly unavailable | Per-document wording and feature-merge acceptance / owner |
-| D02–D04 / T03 | Project-aware simplicity/reuse topic and direct installed routing | Topic, index, two skill triggers and focused installation regression complete; no later topic authored | Per-document wording and feature-merge acceptance / owner |
-| D01–D06 / T04–T12 | Complete installed, project-aware KB with separate document acceptance | Not implemented | Remaining topics, integration and final readiness / author, retained reviewers and owner |
+| D02–D04 / T03 | Project-aware simplicity/reuse topic and direct installed routing | Topic, index, two skill triggers and focused installation regression complete; no later topic authored | Authorized topic rename/content reconciliation, then wording and feature-merge acceptance / owner |
+| D01–D06 / T04–T14 | Complete installed, project-aware KB with separate document acceptance | Not implemented | Remaining topics, integration and final readiness / author, retained reviewers and owner |
 
 ### Cleanup inventory
 
@@ -171,8 +175,8 @@ agent mistakes stay within existing authority. Track real gaps in GitHub.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Tasks | Twelve tasks: installer support, ten separate documents, final integration | HUMAN_DECISION: accept this plan |
-| Design consistency | Every D01–D06 maps to tasks; no added topic, validation or fail-closed behavior | DISCLOSE |
+| Tasks | Fourteen tasks: installer support, twelve separate documents, final integration | HUMAN_DECISION: accept this plan |
+| Design consistency | Every D01–D06 maps to tasks; two owner-requested topics added; no new validation or fail-closed behavior | DISCLOSE |
 | Execution mode | Autopilot off; stop after every task for owner review and merge decision | Existing owner decision retained |
 | Validation | Planning focused/structure/lifecycle results remain in PR; implementation and full suite not run | DISCLOSE |
 | Foreseeable decisions | Per-document wording acceptance; any real authority conflict; eventual explicit reset and final merge acceptance | HUMAN_DECISION at applicable boundary, not blanket permission |
