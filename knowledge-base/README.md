@@ -35,7 +35,7 @@ they become links when delivered. This README requires no unavailable topic.
 | --- | --- | --- |
 | Simple design and reuse | Reuse existing capabilities; minimize new responsibilities and mechanisms | [Simple design and reuse](simple-design-and-reuse.md) |
 | Architecture, scope, and assumptions | Establish ownership and evidence-bounded design premises | [Architecture, scope, and assumptions](architecture-scope-and-assumptions.md) |
-| Contracts and compatibility | Change interfaces without accidental contract breakage | `contracts-and-compatibility.md` |
+| Contracts and compatibility | Change interfaces without accidental contract breakage | [Contracts and compatibility](contracts-and-compatibility.md) |
 | Error handling and diagnosability | Preserve invariants with simple failures and useful diagnosis | `error-handling-and-diagnosability.md` |
 | Testing and reproduction | Prove changed behavior and reproduce material failure risks | `testing-and-reproduction.md` |
 | Security basics | Protect actual trust boundaries proportionately | `security-basics.md` |
