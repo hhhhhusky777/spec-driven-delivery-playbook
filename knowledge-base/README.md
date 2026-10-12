@@ -33,7 +33,7 @@ they become links when delivered. This README requires no unavailable topic.
 
 | Topic | When it helps | Document |
 | --- | --- | --- |
-| Minimal change design | Reuse existing capabilities; minimize new responsibilities and mechanisms | [Minimal change design](minimal-change-and-code-simplicity.md) |
+| Simple design and reuse | Reuse existing capabilities; minimize new responsibilities and mechanisms | [Simple design and reuse](simple-design-and-reuse.md) |
 | Architecture, scope, and assumptions | Establish ownership and evidence-bounded design premises | `architecture-scope-and-assumptions.md` |
 | Contracts and compatibility | Change interfaces without accidental contract breakage | `contracts-and-compatibility.md` |
 | Error handling and diagnosability | Preserve invariants with simple failures and useful diagnosis | `error-handling-and-diagnosability.md` |
@@ -42,6 +42,8 @@ they become links when delivered. This README requires no unavailable topic.
 | Proportional review | Assess material problems, correction value, and reasonable dispositions | `proportional-review.md` |
 | Efficiency and concurrency | Overlap independent work without unnecessary coordination | `efficiency-and-concurrency.md` |
 | Experience and learning | Turn verified lessons into actionable reuse and refinement | `experience-and-learning.md` |
+| Code simplicity and clarity | Make implementation intent and behavior easy to understand without sacrificing correctness | `code-simplicity-and-clarity.md` |
+| Performance and observability | Use meaningful feedback to evaluate performance and important system or design goals | `performance-and-observability.md` |
 
 ## Installation and ownership
 

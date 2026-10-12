@@ -10,17 +10,17 @@ and merge evidence; the frozen whiteboard owns design.
 | Field | Value |
 | --- | --- |
 | State | `IMPLEMENTING` |
-| Active tasks | `T03` |
-| Next ready task | `None` |
-| Active blocker | Authorized design amendment awaits retained review and owner acceptance |
+| Active tasks | `None` |
+| Next ready task | `T04` |
+| Active blocker | `None` |
 | Implementation mode | `human-review-before-merge`; Autopilot explicitly off |
 | Authorized scope / feature branch / protected target | D01–D06 / `codex/knowledge-base` / `main`; no automatic merge authority |
 | Delivery branch / target | `codex/knowledge-base` / `main` |
 | Owner | Repository owner |
 | Primary issue / need | [Issue #156](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/156) |
-| Concluded whiteboard | [Authorized amendment candidate](solution-whiteboard.md); prior reviewed design `1919f4e0168b881b1b7039684d52704ff2509c53`; conclusion commit `97324698aee0a5da32d1cf1d71dfde7612280c64` |
+| Concluded whiteboard | [Frozen amended design](solution-whiteboard.md); reviewed amendment `0683283fb93f3cf4a9e39bd77c39ec09b64e0807`; conclusion commit `8766337fc079f306e55bbba3c139333bc07a1742` |
 | Required reviewers | Retained independent `kb_review_r1` and `kb_review_r2` through final merge |
-| Last verified | 2026-10-12 Asia/Shanghai; T01–T02 merged into the feature branch; T03 existing candidate and focused installed-routing evidence complete; design-level rename/content reconciliation pending amendment acceptance; review and merge facts remain in task PRs |
+| Last verified | 2026-10-12 Asia/Shanghai; T01–T02 merged into the feature branch; Amendment accepted and conclusion verified by both retained reviewers; T03 design-only topic, rename and routing reconciled; review and merge facts remain in task PRs |
 
 ## Governing inputs and delivery boundaries
 
@@ -36,7 +36,7 @@ Deliver a shared, revision-matched KB that authors and reviewers apply inside
 project boundaries. Scope is the frozen topic set, installer/manifest support,
 skill triggers, affected guidance and checks. No new framework, policy suite,
 code-style linter, copied manual, speculative topic, or project Experience
-migration. Material assumptions: None. Amendment review and owner acceptance remain pending.
+migration. Material assumptions: None. Amendment accepted; no unresolved design decisions.
 
 The accepted installed pin remains `775f1479e8a1ce6277af7448d509cabe95374ad3`.
 Preparing a newer runtime candidate is not acceptance or activation. Installer
@@ -80,8 +80,8 @@ implementation choices stay with the agent.
 | --- | --- | --- | --- | --- | --- | --- |
 | T01 | DONE | None | Minimal KB installer and manifest support | D01, D05; preserve legacy pins and local content; no official topic writing | Eight focused KB scenarios; document/skill checks | `codex/knowledge-base-t01`; [PR #158](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/158); target `codex/knowledge-base` |
 | T02 | DONE | T01 | `knowledge-base/README.md` human index and authority/application guide | D02–D04; not a mandatory routing hop | Focused document/link checks and wording review | `codex/knowledge-base-t02`; [PR #159](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/159); target `codex/knowledge-base` |
-| T03 | IN_PROGRESS | T02 | `simple-design-and-reuse.md` | D02–D04; design-level reuse, sufficient increments and conditional shared-capability/migration guidance; reconcile old filename and triggers after amendment acceptance | Focused topic/trigger checks and wording review | `codex/knowledge-base-t03`; [PR #160](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/160); target `codex/knowledge-base` |
-| T04 | PLANNED | T03 | `architecture-scope-and-assumptions.md` | D02–D04; evidence-bounded ownership and supported domain | Focused topic/trigger checks and wording review | `codex/knowledge-base-t04`; PR not opened; target `codex/knowledge-base` |
+| T03 | DONE | T02 | `simple-design-and-reuse.md` | D02–D04; design-level reuse, sufficient increments and conditional shared-capability/migration guidance; old filename and triggers reconciled | Focused topic/trigger checks and wording review | `codex/knowledge-base-t03`; [PR #160](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/160); target `codex/knowledge-base` |
+| T04 | READY | T03 | `architecture-scope-and-assumptions.md` | D02–D04; evidence-bounded ownership and supported domain | Focused topic/trigger checks and wording review | `codex/knowledge-base-t04`; PR not opened; target `codex/knowledge-base` |
 | T05 | PLANNED | T04 | `contracts-and-compatibility.md` | D02–D04; explicit contracts and safe compatible change | Focused topic/trigger checks and wording review | `codex/knowledge-base-t05`; PR not opened; target `codex/knowledge-base` |
 | T06 | PLANNED | T05 | `error-handling-and-diagnosability.md` | D02–D04; simple invariant-preserving failures and useful diagnosis | Focused topic/trigger checks and wording review | `codex/knowledge-base-t06`; PR not opened; target `codex/knowledge-base` |
 | T07 | PLANNED | T06 | `testing-and-reproduction.md` | D02–D04; risk-driven proof and smallest useful reproducer | Focused topic/trigger checks and wording review | `codex/knowledge-base-t07`; PR not opened; target `codex/knowledge-base` |
@@ -133,9 +133,7 @@ repository's source suite does not become an adopting project's obligation.
 ## Recovery, decisions, and change control
 
 No active blocker or new recovery framework. Use the linked error-handling
-authority and approved FC01–FC02. The prior conclusion is preserved in Git; this owner-authorized amendment must
-pass retained review and human acceptance before dependent work. After its
-conclusion the whiteboard is byte-frozen again; new scope
+authority and approved FC01–FC02. The accepted amended conclusion is byte-frozen; new scope
 or a design amendment needs prior human authorization. Ordinary recoverable
 agent mistakes stay within existing authority. Track real gaps in GitHub.
 
@@ -158,7 +156,7 @@ agent mistakes stay within existing authority. Track real gaps in GitHub.
 | --- | --- | --- | --- |
 | D01, D05 / T01 | Installer/manifest support without new legacy obligations | Implemented and covered by focused KB tests; no scope deviation | Task review/owner merge acceptance in PR; actual topic integration remains T14 |
 | D02–D04 / T02 | Human index and project-aware application boundary | Actual README and focused installation regression complete; future topics explicitly unavailable | Per-document wording and feature-merge acceptance / owner |
-| D02–D04 / T03 | Project-aware simplicity/reuse topic and direct installed routing | Topic, index, two skill triggers and focused installation regression complete; no later topic authored | Authorized topic rename/content reconciliation, then wording and feature-merge acceptance / owner |
+| D02–D04 / T03 | Project-aware simplicity/reuse topic and direct installed routing | Design-only topic renamed; verified reference-backed examples and conditional shared-capability/gradual-replacement guidance added; index and two skill triggers reconciled; no later topic authored | Per-document wording and feature-merge acceptance / owner |
 | D01–D06 / T04–T14 | Complete installed, project-aware KB with separate document acceptance | Not implemented | Remaining topics, integration and final readiness / author, retained reviewers and owner |
 
 ### Cleanup inventory

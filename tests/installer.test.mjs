@@ -180,7 +180,7 @@ test("knowledge base simplicity routing resolves for installed author and review
       path.join(source.repository, "skills", name, "SKILL.md"));
   }
   run("git", ["add", "skills"], source.repository);
-  const topic = "minimal-change-and-code-simplicity.md";
+  const topic = "simple-design-and-reuse.md";
   const content = await readFile(path.join(REPOSITORY_ROOT, "knowledge-base", topic), "utf8");
   const revision = await commitKnowledgeBase(source, {
     "README.md": await readFile(path.join(REPOSITORY_ROOT, "knowledge-base/README.md"), "utf8"),

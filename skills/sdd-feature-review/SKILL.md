@@ -131,7 +131,7 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > approach that protects the accepted outcome, or when it adds speculative
 > complexity.
 > Before judging design simplicity or reuse, read
-> `minimal-change-and-code-simplicity.md` directly from the manifest-linked KB
+> `simple-design-and-reuse.md` directly from the manifest-linked KB
 > root when the accepted pin ships it. Apply it within the accepted project
 > boundary, not as a mandatory recipe or personal-style checklist.
 >
