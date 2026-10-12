@@ -36,11 +36,16 @@ and verification are part of a sufficient design, not optional complexity.
 
 ## Concrete examples and limits
 
-| Situation | Smallest suitable change | Limit to check |
-| --- | --- | --- |
-| Current pricing requirements cover one risk; another risk is only a forecast | Deliver the current pricing capability without speculative future behavior | Fowler's YAGNI example distinguishes postponed speculative capability from maintaining ease of change |
-| Two settings have the same value but represent different concepts | Keep their ownership separate instead of treating equal values as a shared design responsibility | Microsoft's DRY guidance warns against coupling coincidentally similar concepts |
-| Multiple teams maintain overlapping solutions to a demonstrated operational problem | Consider a shared capability with a small contract when reuse benefits exceed extraction and coordination costs | Meta's Shard Manager illustrates justified common infrastructure at actual scale, not early platform building for one hypothetical consumer |
+Everyday illustrations below are adapted from the referenced principles, not
+reported incidents or quotations. Illustrations of the same principle share a
+row rather than introduce another rule.
+
+| Situation | Smallest suitable change | Limit to check | Everyday illustration (adapted) |
+| --- | --- | --- | --- |
+| Current pricing requirements cover one risk; another risk is only a forecast | Deliver the current pricing capability without speculative future behavior | Fowler's YAGNI example distinguishes postponed speculative capability from maintaining ease of change | Only CSV export is required: support CSV, not a plugin framework for ten hypothetical formats. Unused formats already incur development and maintenance cost |
+| Two settings have the same value but represent different concepts | Keep their ownership separate instead of treating equal values as a shared design responsibility | Microsoft's DRY guidance warns against coupling coincidentally similar concepts | Upload size and cache capacity are both 10 MB: keep separate settings so changing the upload limit cannot accidentally change cache capacity |
+| Multiple teams maintain overlapping solutions to a demonstrated operational problem | Consider a shared capability with a small contract when reuse benefits exceed extraction and coordination costs | Meta's Shard Manager illustrates justified common infrastructure at actual scale, not early platform building for one hypothetical consumer | — |
+| An existing project mechanism already satisfies the required contract | Integrate with that owner rather than create a second implementation | Verify suitability first; reuse must preserve required guarantees | A new API uses the project's suitable authentication middleware instead of reimplementing token validation; one security responsibility avoids divergent implementations |
 
 ## Conditional design techniques
 
