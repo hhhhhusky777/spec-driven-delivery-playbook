@@ -158,13 +158,11 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   material authority remains unresolved, block only the affected work and ask
   the human to define or expand scope. Do not demand universal proof for
   unsupported or imagined cases.
-  When there is genuine uncertainty about ownership, dependency, or
-  supported-domain interpretation, consult Microsoft's
-  [Architectural principles](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles)
-  and AWS's
-  [Workload and scope](https://docs.aws.amazon.com/wellarchitected/latest/userguide/workload-and-scope.html)
-  as supporting references. Do not browse them routinely or treat them as
-  project authority.
+  Before defining material responsibilities, dependencies, or assumptions, read
+  `architecture-scope-and-assumptions.md` directly from the manifest-linked KB
+  root when the accepted pin ships it. Apply the guidance within project
+  authority and the approved supported domain; use its primary references
+  only for unresolved questions.
 - For normal delivery, when the whiteboard conclusion candidate is ready,
   select two isolated reviewers for the feature and require each one to read
   the installed sdd-feature-review skill once. They review the exact design

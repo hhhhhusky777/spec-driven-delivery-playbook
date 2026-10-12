@@ -173,18 +173,18 @@ test("knowledge base installs the actual index and available topics", async (t) 
   assert.match(run("git", ["diff", "--cached", "--name-only"], project), /knowledge-base\/README\.md/);
 });
 
-test("knowledge base simplicity routing resolves for installed author and reviewer skills", async (t) => {
+test("knowledge base topic routing resolves for installed author and reviewer skills", async (t) => {
   const source = await createPlaybookFixture(t);
   for (const name of ["sdd-project-workflow", "sdd-feature-review"]) {
     await cp(path.join(REPOSITORY_ROOT, "skills", name, "SKILL.md"),
       path.join(source.repository, "skills", name, "SKILL.md"));
   }
   run("git", ["add", "skills"], source.repository);
-  const topic = "simple-design-and-reuse.md";
-  const content = await readFile(path.join(REPOSITORY_ROOT, "knowledge-base", topic), "utf8");
+  const topics = ["simple-design-and-reuse.md", "architecture-scope-and-assumptions.md"];
+  await cp(path.join(REPOSITORY_ROOT, "knowledge-base"),
+    path.join(source.repository, "knowledge-base"), { recursive: true });
   const revision = await commitKnowledgeBase(source, {
     "README.md": await readFile(path.join(REPOSITORY_ROOT, "knowledge-base/README.md"), "utf8"),
-    [topic]: content,
   });
   const project = await createInstalledProject(t, { ...source, firstRevision: revision });
   const guide = await readFile(path.join(project, ".sdd-runtime/agent-guide.md"), "utf8");
@@ -196,10 +196,13 @@ test("knowledge base simplicity routing resolves for installed author and review
   assert.equal(kbRoot, guideValue(guide, "Knowledge Base root"));
   for (const name of ["sdd-project-workflow", "sdd-feature-review"]) {
     const skill = await readFile(path.join(project, ".agents/skills", name, "SKILL.md"), "utf8");
-    assert.ok(skill.includes(`\`${topic}\``), `${name} must route to the available topic`);
+    for (const topic of topics) {
+      assert.ok(skill.includes(`\`${topic}\``), `${name} must route to ${topic}`);
+      assert.equal(await readFile(path.join(project, kbRoot, topic), "utf8"),
+        await readFile(path.join(REPOSITORY_ROOT, "knowledge-base", topic), "utf8"));
+    }
     assert.match(skill.replace(/^>\s?/gm, "").replace(/\s+/g, " "),
       /directly from the manifest-linked KB root/);
-    assert.equal(await readFile(path.join(project, kbRoot, topic), "utf8"), content);
   }
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
 });
