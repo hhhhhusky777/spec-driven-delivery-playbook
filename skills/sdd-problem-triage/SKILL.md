@@ -12,6 +12,12 @@ or discriminating next check. Use the project's manifest-linked error-handling
 authority for classification, recovery, issue tracking and escalation. This
 skill supplies diagnosis methods, not operational permission or a new gate.
 
+Before assessing a failure's reporting or recovery behavior, read
+`error-handling-and-diagnosability.md` directly from the manifest-linked KB root
+when the accepted pin ships it. Use its guidance within the project's existing
+error contract and authority; consult primary references only for unresolved
+questions.
+
 Default to read-only investigation. Changes, restarts, rollback, destructive
 actions and scope expansion remain subject to existing authority. Authorized
 urgent mitigation need not wait for root-cause proof; preserve evidence and

@@ -173,9 +173,9 @@ test("knowledge base installs the actual index and available topics", async (t) 
   assert.match(run("git", ["diff", "--cached", "--name-only"], project), /knowledge-base\/README\.md/);
 });
 
-test("knowledge base topic routing resolves for installed author and reviewer skills", async (t) => {
+test("knowledge base topic routing resolves for installed author, reviewer and triage skills", async (t) => {
   const source = await createPlaybookFixture(t);
-  for (const name of ["sdd-project-workflow", "sdd-feature-review"]) {
+  for (const name of ["sdd-project-workflow", "sdd-feature-review", "sdd-problem-triage"]) {
     await cp(path.join(REPOSITORY_ROOT, "skills", name, "SKILL.md"),
       path.join(source.repository, "skills", name, "SKILL.md"));
   }
@@ -184,6 +184,7 @@ test("knowledge base topic routing resolves for installed author and reviewer sk
     "simple-design-and-reuse.md",
     "architecture-scope-and-assumptions.md",
     "contracts-and-compatibility.md",
+    "error-handling-and-diagnosability.md",
   ];
   await cp(path.join(REPOSITORY_ROOT, "knowledge-base"),
     path.join(source.repository, "knowledge-base"), { recursive: true });
@@ -198,9 +199,11 @@ test("knowledge base topic routing resolves for installed author and reviewer sk
   await writeFile(manifestPath, manifest);
   const kbRoot = guideValue(manifest, "Knowledge Base root");
   assert.equal(kbRoot, guideValue(guide, "Knowledge Base root"));
-  for (const name of ["sdd-project-workflow", "sdd-feature-review"]) {
+  for (const name of ["sdd-project-workflow", "sdd-feature-review", "sdd-problem-triage"]) {
     const skill = await readFile(path.join(project, ".agents/skills", name, "SKILL.md"), "utf8");
-    for (const topic of topics) {
+    const routedTopics = name === "sdd-problem-triage"
+      ? ["error-handling-and-diagnosability.md"] : topics;
+    for (const topic of routedTopics) {
       assert.ok(skill.includes(`\`${topic}\``), `${name} must route to ${topic}`);
       assert.equal(await readFile(path.join(project, kbRoot, topic), "utf8"),
         await readFile(path.join(REPOSITORY_ROOT, "knowledge-base", topic), "utf8"));

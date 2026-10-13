@@ -412,6 +412,12 @@ can be corrected directly; triage adds no gate or test waiver.
 Follow the project's manifest-linked error-handling authority when present.
 Do not duplicate or override it.
 
+Before designing failure handling, retry behavior or failure diagnostics, read
+`error-handling-and-diagnosability.md` directly from the manifest-linked KB root
+when the accepted pin ships it. Apply simple, consistency-preserving handling
+and useful failure evidence within project authority; consult its primary
+references only for unresolved questions.
+
 Within approved scope and authority, correct recoverable agent errors and
 continue. Preserve system consistency; fail closed when continuing could
 violate a required invariant or safety boundary. Allow client-controlled retry
