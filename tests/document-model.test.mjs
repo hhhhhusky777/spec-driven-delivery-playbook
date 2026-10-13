@@ -285,7 +285,12 @@ test("evidence-bounded scope uses one dangerous-assumption vocabulary", async ()
   assert.match(topic, /https:\/\/docs\.aws\.amazon\.com\/wellarchitected\/latest\/userguide\/workload-and-scope\.html/);
   for (const skill of [workflow, reviewer]) {
     assert.match(normalize(skill), /`architecture-scope-and-assumptions\.md` directly from the manifest-linked KB root when the accepted pin ships it/i);
-    assert.match(normalize(skill), /primary references only for unresolved questions/i);
+  }
+  for (const skill of [workflow, reviewer, await read("skills/sdd-problem-triage/SKILL.md")]) {
+    const normalized = normalize(skill);
+    assert.match(normalized, /method or its applicability is uncertain.*claim lacks support.*MUST read the relevant primary references before deciding/i);
+    assert.match(normalized, /Guesses, unsupported assumptions.*MUST NOT substitute for evidence/i);
+    assert.match(normalized, /Verify project-specific premises against canonical project sources or direct evidence; external guidance cannot establish them/i);
   }
   assert.match(
     normalize(workflow),
