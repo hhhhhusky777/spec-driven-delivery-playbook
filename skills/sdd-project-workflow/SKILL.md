@@ -277,17 +277,14 @@ Independent reviewer creation still follows the Boundaries contract above.
 ### Execution judgment and evidence
 
 Reuse verified project experience rather than repeat avoidable trial and error.
-When an unexpected situation or failure arises, consult manifest-linked project
-Experience or its existing equivalent for similar situations and verified
-solutions. Check applicability before reuse; experience is guidance, not proof
-of the current cause or permission to bypass project authority. Apply known
-relevant lessons proactively when useful, without a mandatory lookup for every
-operation. Prefer fixing the underlying problem or codifying a verified
-solution in its existing code, script, or guidance owner within approved scope;
-retain only useful residual knowledge rather than duplicate that owner.
-Follow the Experience document's contribution guidance to refine reusable
-lessons. Experience is reusable project guidance, not feature state: retain it
-through cleanup.
+When an unexpected situation or failure arises, or before maintaining project
+lessons, read `experience-and-learning.md` directly from the manifest-linked KB
+root when the accepted pin ships it. Consult manifest-linked project
+Experience or its existing equivalent for applicable verified solutions; past
+experience does not prove the current cause or grant authority. Apply known
+relevant lessons proactively when useful. Prefer fixing or codifying the solution
+in its existing owner; follow project contribution guidance to retain and refine
+only useful residual lessons. Preserve project Experience through cleanup.
 
 Choose the working order, batching, tools, tests, and recovery method that best
 achieve the accepted outcome. Prefer coherent review units and one human brief

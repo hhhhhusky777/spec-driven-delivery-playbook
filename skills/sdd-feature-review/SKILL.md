@@ -77,6 +77,12 @@ mismatch prevents a sound disposition.
 Judge correctness, design and policy consistency, compatibility, safety,
 validation sufficiency, proportionality, and merge-ready canonical state.
 
+Before judging use or maintenance of project lessons, read
+`experience-and-learning.md` directly from the manifest-linked KB root when
+the accepted pin ships it. Check verified applicability, actionable value and
+canonical ownership; past experience does not establish the current cause or
+override project authority.
+
 Before judging overlapping execution or delegation, read
 `efficiency-and-concurrency.md` directly from the manifest-linked KB root when
 the accepted pin ships it. Assess independence, resource ownership, coordination

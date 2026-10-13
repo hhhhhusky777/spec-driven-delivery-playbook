@@ -77,8 +77,11 @@ Joint triage is not review approval; fixes still need the existing independent
 exact-candidate review.
 
 Use the owning Issue/PR or implementation plan, not a new triage document.
-Consume and refine verified project Experience where applicable; record only
-actionable reusable lessons under its existing contribution guidance.
+Before using or refining project Experience, read `experience-and-learning.md`
+directly from the manifest-linked KB root when the accepted pin ships it.
+Consult the manifest-linked project lessons for applicable verified approaches;
+check them against current evidence and retain only actionable reusable learning
+under project contribution guidance.
 
 Summarize material results concisely, linking evidence instead of copying logs:
 
