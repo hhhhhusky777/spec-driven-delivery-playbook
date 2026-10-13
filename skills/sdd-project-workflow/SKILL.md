@@ -18,6 +18,10 @@ Repository policies and explicit owner decisions remain authoritative.
 > every artifact, rule, duplicate statement, automation, abstraction, or
 > dependency that does not protect an accepted outcome or named invariant.
 > Prefer one canonical owner and the smallest sufficient solution.
+>
+> When a KB topic-read trigger applies and the accepted pin ships the topic,
+> you MUST read it before applying its guidance. A skill summary or prior
+> knowledge MUST NOT substitute for reading the topic.
 
 Before designing a solution, read
 `simple-design-and-reuse.md` directly from the manifest-linked KB
@@ -414,9 +418,8 @@ Do not duplicate or override it.
 
 Before designing failure handling, retry behavior or failure diagnostics, read
 `error-handling-and-diagnosability.md` directly from the manifest-linked KB root
-when the accepted pin ships it. Apply simple, consistency-preserving handling
-and useful failure evidence within project authority; consult its primary
-references only for unresolved questions.
+when the accepted pin ships it. Apply it within project authority;
+consult its primary references only for unresolved questions.
 
 Within approved scope and authority, correct recoverable agent errors and
 continue. Preserve system consistency; fail closed when continuing could

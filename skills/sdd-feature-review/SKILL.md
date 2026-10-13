@@ -11,6 +11,11 @@ Protect the accepted feature outcome and project boundaries through independent,
 exact-candidate review. Preserve useful context across the feature without
 turning prior conclusions into assumptions.
 
+> [!IMPORTANT]
+> When a KB topic-read trigger applies and the accepted pin ships the topic,
+> you MUST read it before applying its guidance. A skill summary or prior
+> knowledge MUST NOT substitute for reading the topic.
+
 ## Reviewer session
 
 Load this skill when the parent agent creates the feature's two reviewer
