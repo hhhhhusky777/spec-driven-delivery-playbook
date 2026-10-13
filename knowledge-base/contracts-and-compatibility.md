@@ -62,7 +62,9 @@ error-handling boundary; this topic introduces no new rejection mechanism.
 
 ## References
 
-Read further when the distilled guidance leaves a material question unresolved.
+If the method or applicability is uncertain, confidence is low, or a material
+engineering claim lacks support, you MUST read the relevant sources below.
+Guesses and unsupported assumptions do not resolve that uncertainty.
 These sources inform application; project authority owns the supported domain
 and acceptance.
 

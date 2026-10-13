@@ -72,7 +72,9 @@ These paraphrase Google's published review guidance, not project incidents.
 
 ## References
 
-Read further when the distilled guidance leaves a material question unresolved.
+If the method or applicability is uncertain, confidence is low, or a material
+engineering claim lacks support, you MUST read the relevant sources below.
+Guesses and unsupported assumptions do not resolve that uncertainty.
 Google's organization-specific processes do not replace project authority.
 
 - [Google: Review standard](https://google.github.io/eng-practices/review/reviewer/standard.html) — balance progress with code health; technical evidence outranks preference, and perfection is not required.

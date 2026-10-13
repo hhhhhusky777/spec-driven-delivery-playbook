@@ -71,7 +71,9 @@ These paraphrase the named references, not project incidents or mandatory design
 
 ## References
 
-Read further when the distilled guidance leaves a material question unresolved.
+If the method or applicability is uncertain, confidence is low, or a material
+engineering claim lacks support, you MUST read the relevant sources below.
+Guesses and unsupported assumptions do not resolve that uncertainty.
 Use these sources within project authority, not as permission for new controls.
 
 - [AWS: Making retries safe with idempotent APIs](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/) — ambiguous effects, caller intent and established idempotency contracts; its service implementation is not a compulsory recipe.

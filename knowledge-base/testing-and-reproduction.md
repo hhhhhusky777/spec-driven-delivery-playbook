@@ -77,7 +77,9 @@ These paraphrase source examples and observations, not project incidents.
 
 ## References
 
-Read further when the distilled guidance leaves a material question unresolved.
+If the method or applicability is uncertain, confidence is low, or a material
+engineering claim lacks support, you MUST read the relevant sources below.
+Guesses and unsupported assumptions do not resolve that uncertainty.
 Reference techniques serve project requirements, not extra approval gates.
 
 - [Google: Testing overview](https://abseil.io/resources/swe-book/html/ch11.html) — behavioral confidence, useful test sizes, failure testing and coverage limitations. Google's scale and test-distribution choices are contextual, not universal targets.

@@ -15,6 +15,14 @@ turning prior conclusions into assumptions.
 > When a KB topic-read trigger applies and the accepted pin ships the topic,
 > you MUST read it before applying its guidance. A skill summary or prior
 > knowledge MUST NOT substitute for reading the topic.
+>
+> If an engineering method or its applicability is uncertain, confidence is
+> low, or a material engineering claim lacks support, you MUST read the relevant
+> primary references before deciding. Guesses, unsupported assumptions and
+> subjective confidence MUST NOT substitute for evidence. Verify project-specific
+> premises against canonical project sources or direct evidence; external guidance
+> cannot establish them. If sources are unavailable or material uncertainty
+> remains, disclose the limitation and follow existing project error handling.
 
 ## Reviewer session
 
@@ -69,21 +77,25 @@ mismatch prevents a sound disposition.
 Judge correctness, design and policy consistency, compatibility, safety,
 validation sufficiency, proportionality, and merge-ready canonical state.
 
+Before judging overlapping execution or delegation, read
+`efficiency-and-concurrency.md` directly from the manifest-linked KB root when
+the accepted pin ships it. Assess independence, resource ownership, coordination
+cost and integrated evidence within project authority.
+
 Before judging an interface contract or its compatibility, read
 `contracts-and-compatibility.md` directly from the manifest-linked KB root
 when the accepted pin ships it. Assess promised behavior for supported
-consumers within the project's contract and migration authority; consult
-primary references only for unresolved questions.
+consumers within the project's contract and migration authority.
 
 Before judging test sufficiency or reproduction evidence, read
 `testing-and-reproduction.md` directly from the manifest-linked KB root when the
 accepted pin ships it. Judge behavior and material-risk coverage within project
-testing authority; consult its primary references only for unresolved questions.
+testing authority.
 
 Before judging a change to trust, access, sensitive data or exposure, read
 `security-basics.md` directly from the manifest-linked KB root when the accepted
 pin ships it. Assess actual security boundaries and proportionate controls
-within project authority; consult its primary references only for unresolved questions.
+within project authority.
 
 > [!IMPORTANT]
 > **Hard rule.** Compare every plan and candidate addition with the accepted
@@ -153,8 +165,7 @@ within project authority; consult its primary references only for unresolved que
 > complexity.
 > Before judging failure handling, retry safety or failure diagnostics, read
 > `error-handling-and-diagnosability.md` directly from the manifest-linked KB
-> root when the accepted pin ships it. Apply it within project authority;
-> consult its primary references only for unresolved questions.
+> root when the accepted pin ships it. Apply it within project authority.
 > Before judging design simplicity or reuse, read
 > `simple-design-and-reuse.md` directly from the manifest-linked KB
 > root when the accepted pin ships it. Apply it within the accepted project
@@ -169,7 +180,7 @@ within project authority; consult its primary references only for unresolved que
 > Before judging responsibilities, dependencies, or material assumptions, read
 > `architecture-scope-and-assumptions.md` directly from the manifest-linked KB
 > root when the accepted pin ships it. Apply it within the accepted project
-> boundary; consult its primary references only for unresolved questions.
+> boundary.
 >
 > Review for fitness to the accepted outcome, not perfection: perfect code is
 > not an attainable approval standard. Challenge the proportionality of your
@@ -213,8 +224,7 @@ read `proportional-review.md` directly from the manifest-linked KB root when the
 accepted pin ships it. Resolve disagreement through evidence and tradeoffs;
 accept justified dispositions without reopening settled findings absent new
 evidence or changed content. Escalate critical unresolved disputes through
-project authority. Consult the topic's primary references only for unresolved
-questions; they add no authority or gate.
+project authority.
 
 Approve only the exact candidate you inspected when no unresolved blocking
 finding remains. Optional suggestions and justified nonblocking deferrals do

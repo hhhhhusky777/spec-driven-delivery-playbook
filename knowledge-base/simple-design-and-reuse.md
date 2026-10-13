@@ -75,8 +75,10 @@ alternative; do not demand a universal framework or theoretical perfection.
 
 ## References
 
-These sources support the distilled principles. Read further when a material
-question remains; their examples are not additional project requirements.
+If the method or applicability is uncertain, confidence is low, or a material
+engineering claim lacks support, you MUST read the relevant sources below.
+Guesses and unsupported assumptions do not resolve that uncertainty.
+Their examples are not additional project requirements.
 
 - [Google: What to look for in a code review](https://google.github.io/eng-practices/review/reviewer/looking-for.html) — design fit, integration with existing components, and unnecessary generality.
 - [Martin Fowler: YAGNI](https://martinfowler.com/bliki/Yagni.html) — avoid speculative capabilities without neglecting code health or ease of change.
