@@ -396,6 +396,11 @@ interruptions, review time, or waits for people or external systems.
 
 ## Author disposition of review
 
+Before deciding whether to fix, reject or defer a finding, read
+`proportional-review.md` directly from the manifest-linked KB root when the
+accepted pin ships it. Apply it within accepted project authority; consult its
+primary references only for unresolved questions.
+
 > [!IMPORTANT]
 > Independently assess each finding; do not implement reviewer requests by default.
 > Accept a necessary correction, reject an unsupported or disproportionate request

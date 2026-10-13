@@ -187,6 +187,7 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
     "error-handling-and-diagnosability.md",
     "testing-and-reproduction.md",
     "security-basics.md",
+    "proportional-review.md",
   ];
   await cp(path.join(REPOSITORY_ROOT, "knowledge-base"),
     path.join(source.repository, "knowledge-base"), { recursive: true });
