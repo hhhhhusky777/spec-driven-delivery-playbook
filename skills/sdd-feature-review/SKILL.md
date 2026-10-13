@@ -75,6 +75,11 @@ when the accepted pin ships it. Assess promised behavior for supported
 consumers within the project's contract and migration authority; consult
 primary references only for unresolved questions.
 
+Before judging test sufficiency or reproduction evidence, read
+`testing-and-reproduction.md` directly from the manifest-linked KB root when the
+accepted pin ships it. Judge behavior and material-risk coverage within project
+testing authority; consult its primary references only for unresolved questions.
+
 > [!IMPORTANT]
 > **Hard rule.** Compare every plan and candidate addition with the accepted
 > design. Unexplained scope MUST block approval, even when useful. Verify that

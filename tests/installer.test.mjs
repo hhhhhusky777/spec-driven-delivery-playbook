@@ -185,6 +185,7 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
     "architecture-scope-and-assumptions.md",
     "contracts-and-compatibility.md",
     "error-handling-and-diagnosability.md",
+    "testing-and-reproduction.md",
   ];
   await cp(path.join(REPOSITORY_ROOT, "knowledge-base"),
     path.join(source.repository, "knowledge-base"), { recursive: true });
@@ -202,7 +203,7 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
   for (const name of ["sdd-project-workflow", "sdd-feature-review", "sdd-problem-triage"]) {
     const skill = await readFile(path.join(project, ".agents/skills", name, "SKILL.md"), "utf8");
     const routedTopics = name === "sdd-problem-triage"
-      ? ["error-handling-and-diagnosability.md"] : topics;
+      ? ["error-handling-and-diagnosability.md", "testing-and-reproduction.md"] : topics;
     for (const topic of routedTopics) {
       assert.ok(skill.includes(`\`${topic}\``), `${name} must route to ${topic}`);
       assert.equal(await readFile(path.join(project, kbRoot, topic), "utf8"),
