@@ -50,8 +50,9 @@ or regression introduced by this change.
 For disagreement, compare the protected outcome and competing approaches,
 rather than repeatedly changing code to satisfy preferences. Reviewers should
 withdraw a request when the author's evidence shows it is mistaken, or explain
-the remaining material concern. Clarify genuinely confusing code where useful;
-a PR explanation alone does not help future readers understand the code.
+the remaining material concern. Clarify confusing code itself first. When
+further clarification is impractical, add a useful comment explaining why the
+logic exists. Use a PR-only explanation when a code comment would add no value.
 
 Record the disposition and rationale in the PR. Reopen a settled finding only
 when new evidence or changed content invalidates its basis. Escalate unresolved
