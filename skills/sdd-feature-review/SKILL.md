@@ -69,6 +69,12 @@ mismatch prevents a sound disposition.
 Judge correctness, design and policy consistency, compatibility, safety,
 validation sufficiency, proportionality, and merge-ready canonical state.
 
+Before judging overlapping execution or delegation, read
+`efficiency-and-concurrency.md` directly from the manifest-linked KB root when
+the accepted pin ships it. Assess independence, resource ownership, coordination
+cost and integrated evidence within project authority; consult its primary
+references only for unresolved questions.
+
 Before judging an interface contract or its compatibility, read
 `contracts-and-compatibility.md` directly from the manifest-linked KB root
 when the accepted pin ships it. Assess promised behavior for supported

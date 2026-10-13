@@ -262,25 +262,11 @@ authority, not a new controller, tracker, gate, or promise of uninterrupted work
 > delivery time or judgment beyond its communication and integration cost.
 > Concurrency never expands authority or bypasses dependencies and quality gates.
 
-For your own execution, keep long-running commands in resumable background
-sessions when supported and advance other independent work while they run.
-Collect their exit status and evidence before consuming their results. Wait
-when dependencies or resource contention require it, or when no useful safe
-work remains; do not manufacture busywork or another agent for a simple command.
-
-For multi-agent collaboration, delegate work that can be clearly scoped,
-completed independently, and verified on return. Give workers sufficient context:
-canonical source entry points, relevant design or task outcomes, exact candidate
-or inputs, ownership and authority boundaries, and expected evidence. Keep
-global requirements, cross-task tradeoffs, coordination, integration, and final
-verification with the parent agent. Continue the mainline while workers run;
-avoid duplicate effort and overlapping writes. Tightly coupled work or work
-whose briefing and integration cost exceeds its benefit stays with the parent.
+Before overlapping execution or delegating independent work, read
+`efficiency-and-concurrency.md` directly from the manifest-linked KB root when
+the accepted pin ships it. Apply it within project dependencies, ownership and
+authority; the parent owns integration and verification of the actual results.
 Independent reviewer creation still follows the Boundaries contract above.
-
-These are judgment criteria, not a prescribed task graph or concurrency quota.
-They draw on [OpenAI's subagent guidance](https://learn.chatgpt.com/docs/agent-configuration/subagents)
-and [Anthropic's orchestrator-worker experience](https://www.anthropic.com/engineering/multi-agent-research-system).
 
 ### Execution judgment and evidence
 
