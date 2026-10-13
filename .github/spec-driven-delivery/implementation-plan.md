@@ -11,7 +11,7 @@ and merge evidence; the frozen whiteboard owns design.
 | --- | --- |
 | State | `IMPLEMENTING` |
 | Active tasks | `None` |
-| Next ready task | `T08` |
+| Next ready task | `T09` |
 | Active blocker | `None` |
 | Implementation mode | `human-review-before-merge`; Autopilot explicitly off |
 | Authorized scope / feature branch / protected target | D01–D06 / `codex/knowledge-base` / `main`; no automatic merge authority |
@@ -20,7 +20,7 @@ and merge evidence; the frozen whiteboard owns design.
 | Primary issue / need | [Issue #156](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/156) |
 | Concluded whiteboard | [Frozen amended design](solution-whiteboard.md); reviewed amendment `0683283fb93f3cf4a9e39bd77c39ec09b64e0807`; conclusion commit `8766337fc079f306e55bbba3c139333bc07a1742` |
 | Required reviewers | Retained independent `kb_review_r1` and `kb_review_r2` through final merge |
-| Last verified | 2026-10-13 Asia/Shanghai; T01–T06 merged into the feature branch; T07 topic, immediate routing and installed regression complete; review and merge evidence remain in task PRs |
+| Last verified | 2026-10-13 Asia/Shanghai; T01–T07 merged into the feature branch; T08 topic, immediate routing and installed regression complete; review and merge evidence remain in task PRs |
 
 ## Governing inputs and delivery boundaries
 
@@ -85,8 +85,8 @@ implementation choices stay with the agent.
 | T05 | DONE | T04 | `contracts-and-compatibility.md` | D02–D04; explicit contracts and safe compatible change | Focused topic/trigger checks and wording review | `codex/knowledge-base-t05`; [PR #162](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/162); target `codex/knowledge-base` |
 | T06 | DONE | T05 | `error-handling-and-diagnosability.md` | D02–D04; simple invariant-preserving failures and useful diagnosis | Focused topic/trigger checks and wording review | `codex/knowledge-base-t06`; [PR #163](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/163); target `codex/knowledge-base` |
 | T07 | DONE | T06 | `testing-and-reproduction.md` | D02–D04; risk-driven proof and smallest useful reproducer | Focused topic/trigger checks and wording review | `codex/knowledge-base-t07`; [PR #164](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/164); target `codex/knowledge-base` |
-| T08 | READY | T07 | `security-basics.md` | D02–D04; proportionate protection of real trust boundaries | Focused topic/trigger checks and wording review | `codex/knowledge-base-t08`; PR not opened; target `codex/knowledge-base` |
-| T09 | PLANNED | T08 | `proportional-review.md` | D02–D04; material findings and reasonable author disposition, not perfection | Focused topic/trigger checks and wording review | `codex/knowledge-base-t09`; PR not opened; target `codex/knowledge-base` |
+| T08 | DONE | T07 | `security-basics.md` | D02–D04; proportionate protection of real trust boundaries | Focused topic/trigger checks and wording review | `codex/knowledge-base-t08`; PR not opened; target `codex/knowledge-base` |
+| T09 | READY | T08 | `proportional-review.md` | D02–D04; material findings and reasonable author disposition, not perfection | Focused topic/trigger checks and wording review | `codex/knowledge-base-t09`; PR not opened; target `codex/knowledge-base` |
 | T10 | PLANNED | T09 | `efficiency-and-concurrency.md` | D02–D04; independent safe work and coordination cost; evolving methods labeled | Focused topic/trigger checks and wording review | `codex/knowledge-base-t10`; PR not opened; target `codex/knowledge-base` |
 | T11 | PLANNED | T10 | `experience-and-learning.md` | D02–D04; actionable reuse/refinement; retain project-specific lessons | Focused topic/trigger checks and wording review | `codex/knowledge-base-t11`; PR not opened; target `codex/knowledge-base` |
 | T12 | PLANNED | T11 | `code-simplicity-and-clarity.md` | D02–D04; professional clarity examples, no line-count or style mandate; preserve behavior | Focused topic/trigger checks and wording review | `codex/knowledge-base-t12`; PR not opened; target `codex/knowledge-base` |
@@ -104,7 +104,8 @@ implementation choices stay with the agent.
 | T05 | Contracts topic, index link, author/reviewer triggers and installed routing check | Distill explicit contracts, supported consumer compatibility and proportionate transition evidence; verify professional source examples | T04 accepted and merged to feature; Google AIP-180 and Microsoft API-design references verified. Actual installed topic/routing covered; live pin unchanged |
 | T06 | Failure-handling topic, index link, author/reviewer/triage triggers and installed routing check | Distill simple invariant-preserving failures, safe retry and actionable diagnostics; retain project recovery/escalation authority | T05 accepted and merged; AWS, RFC 9457 and OpenTelemetry sources verified, including development status. Actual installed topic and three reader routes covered; live pin unchanged |
 | T07 | Testing/reproduction topic, index, author/reviewer/triage triggers and installed routing check | Distill risk-driven behavioral evidence and faithful minimal reproduction; migrate detailed reproduction guidance without changing validation timing | T06 merged and accepted runtime verified; Google, Microsoft, Chromium and pytest primary references verified; installed topic and three reader routes covered; live pin unchanged |
-| T08–T13 | Only the named topic, its index entry, relevant portable skill trigger, migrated detailed source guidance and affected tests | Read and verify primary references while authoring. Distill principles, application boundaries and concise useful examples. Require direct topic reading on relevant trigger; preserve concise skill principles and critical boundaries. Remove only migrated duplication, not independent policy or project lessons | Task-specific sources/references pending until that task; not implemented |
+| T08 | Security topic, index, author/reviewer triggers and installed routing check | Distill actual trust boundaries, least privilege, safe input and secret handling with professional examples; no security policy suite | T07 merged and accepted runtime verified in owned worktree; Microsoft and OWASP primary references verified; real installed topic and both reader routes covered; live pin unchanged |
+| T09–T13 | Only the named topic, its index entry, relevant portable skill trigger, migrated detailed source guidance and affected tests | Read and verify primary references while authoring. Distill principles, application boundaries and concise useful examples. Require direct topic reading on relevant trigger; preserve concise skill principles and critical boundaries. Remove only migrated duplication, not independent policy or project lessons | Task-specific sources/references pending until that task; not implemented |
 | T14 | Installer integration tests, manifest/adoption/upgrade routing, affected skills and root README/diagrams | Reconcile the complete official tree and remaining duplicate owners. Prove installed links, preservation, safe managed removals and compatibility; update actual capabilities without claiming unaccepted runtime activation | All accepted topic outputs required; not implemented |
 
 Every task has its own owner stop. Shared specifications avoid twelve copies of
@@ -165,7 +166,8 @@ agent mistakes stay within existing authority. Track real gaps in GitHub.
 | D02–D04 / T05 | Project-aware contract and compatibility topic with direct installed routing | Supported consumer domain, behavior/default compatibility and source-native examples delivered; existing authority retained | Per-document wording and feature-merge acceptance / owner |
 | D02–D04 / T06 | Project-aware failure handling and diagnosability with direct installed routing | Simple recovery, effect-aware retry and actionable failure evidence delivered with source examples; no project policy or later topic changed | Per-document wording and feature-merge acceptance / owner |
 | D02–D04 / T07 | Risk-driven tests and faithful reproduction with direct installed routing | Topic, source-backed examples and three reader routes delivered; detailed reproduction guidance migrated without changing testing gates | Per-document wording and feature-merge acceptance / owner |
-| D01–D06 / T08–T14 | Complete installed, project-aware KB with separate document acceptance | Not implemented | Remaining topics, integration and final readiness / author, retained reviewers and owner |
+| D02–D04 / T08 | Proportionate security guidance and direct installed routing | Trust/access, safe input, secrets and source-backed examples delivered; no new policy, controller or validation stage | Per-document wording and feature-merge acceptance / owner |
+| D01–D06 / T09–T14 | Complete installed, project-aware KB with separate document acceptance | Not implemented | Remaining topics, integration and final readiness / author, retained reviewers and owner |
 
 ### Cleanup inventory
 
