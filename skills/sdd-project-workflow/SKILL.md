@@ -141,6 +141,11 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   routine progress or agent-correctable mistakes.
 - Preserve existing work and secrets. Validate in proportion to risk and never
   claim an unrun or failed gate passed.
+- Before designing a change to trust, access, sensitive data or exposure, read
+  `security-basics.md` directly from the manifest-linked KB root when the
+  accepted pin ships it. Protect actual boundaries with the smallest sufficient
+  controls within project security authority; consult its primary references
+  only for unresolved questions.
 - When creating a worktree, provision the required machine-local untracked
   inputs there, including files such as `.env` when the task depends on them.
   Copy or recreate only what is needed, preserve appropriate permissions, keep
