@@ -148,6 +148,11 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   affected check until the worktree is operational or error handling requires
   escalation. Never make the worktree depend on mutable files or runtime owned
   by another checkout; shared support must have stable project-level ownership.
+- Before defining, consuming, or changing an interface contract, read
+  `contracts-and-compatibility.md` directly from the manifest-linked KB root
+  when the accepted pin ships it. Preserve promised behavior for supported
+  consumers; apply the guidance within the project's contract and migration
+  authority, consulting primary references only for unresolved questions.
 - Follow the project's canonical accepted-design authority. An authorized
   amendment changes only its named scope and repeats conclusion review and
   human acceptance before dependent work resumes.

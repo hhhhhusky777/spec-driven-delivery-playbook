@@ -180,7 +180,11 @@ test("knowledge base topic routing resolves for installed author and reviewer sk
       path.join(source.repository, "skills", name, "SKILL.md"));
   }
   run("git", ["add", "skills"], source.repository);
-  const topics = ["simple-design-and-reuse.md", "architecture-scope-and-assumptions.md"];
+  const topics = [
+    "simple-design-and-reuse.md",
+    "architecture-scope-and-assumptions.md",
+    "contracts-and-compatibility.md",
+  ];
   await cp(path.join(REPOSITORY_ROOT, "knowledge-base"),
     path.join(source.repository, "knowledge-base"), { recursive: true });
   const revision = await commitKnowledgeBase(source, {

@@ -64,6 +64,12 @@ mismatch prevents a sound disposition.
 Judge correctness, design and policy consistency, compatibility, safety,
 validation sufficiency, proportionality, and merge-ready canonical state.
 
+Before judging an interface contract or its compatibility, read
+`contracts-and-compatibility.md` directly from the manifest-linked KB root
+when the accepted pin ships it. Assess promised behavior for supported
+consumers within the project's contract and migration authority; consult
+primary references only for unresolved questions.
+
 > [!IMPORTANT]
 > **Hard rule.** Compare every plan and candidate addition with the accepted
 > design. Unexplained scope MUST block approval, even when useful. Verify that
