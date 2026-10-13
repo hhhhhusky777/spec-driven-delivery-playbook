@@ -30,12 +30,10 @@ unguessable object identifiers do not replace that decision. Deny protected
 access without a valid grant, and preserve that boundary when checks fail.
 Use the project's existing authorization mechanism before creating another.
 
-Keep untrusted data separate from executable instructions. For SQL values,
-prefer parameter binding through the existing database interface; input
-validation alone is not a substitute. Bind parameters do not normally cover
-identifiers such as column names: map such choices to supported values or
-redesign the query. Other interpreters need their own supported safe APIs and
-context-appropriate handling, not a universal escaping helper.
+Keep untrusted data separate from executable instructions. Use the execution
+environment's supported safe APIs and context-appropriate handling; input
+validation alone does not establish that separation. Reuse existing safe
+interfaces rather than inventing a universal escaping helper.
 
 ## Sensitive data and operational exposure
 
