@@ -208,23 +208,13 @@ it does not replace evidence, impact, priority, or blocking rationale. Do not
 use a speculative or extremely unlikely example to promote low-value polish
 into a finding or blocker.
 
-Discuss an author's reasoned rejection or deferral using technical evidence and
-tradeoffs before demanding another code change. Accept justified dispositions
-within project authority; do not reopen a settled finding without new evidence
-or a changed candidate that invalidates its rationale. If a critical dispute
-cannot be resolved, use the existing authority and escalation boundary, not an
-indefinite review-change loop.
-
-These judgments follow Google's
-[review standard](https://google.github.io/eng-practices/review/reviewer/standard.html)
-and [handling-comments guidance](https://google.github.io/eng-practices/review/developer/handling-comments.html):
-balance progress with code health and resolve disagreement through facts and
-tradeoffs, not personal preference.
-
-When uncertain about design fit or test value, consult
-Google's [What to look for in a code review](https://google.github.io/eng-practices/review/reviewer/looking-for.html).
-It explains over-engineering and useful, maintainable tests. Use it as supporting
-guidance, not project authority or a new gate; do not browse it routinely.
+Before assessing finding priority, correction value or an author's disposition,
+read `proportional-review.md` directly from the manifest-linked KB root when the
+accepted pin ships it. Resolve disagreement through evidence and tradeoffs;
+accept justified dispositions without reopening settled findings absent new
+evidence or changed content. Escalate critical unresolved disputes through
+project authority. Consult the topic's primary references only for unresolved
+questions; they add no authority or gate.
 
 Approve only the exact candidate you inspected when no unresolved blocking
 finding remains. Optional suggestions and justified nonblocking deferrals do
