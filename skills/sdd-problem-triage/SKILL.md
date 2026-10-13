@@ -43,20 +43,15 @@ is insufficient or pursue endless investigation without information gain.
 
 ## Reproduction and observation
 
-Preserve the original failure criterion and cause-bearing conditions: relevant
-inputs, state, versions, configuration, permissions, scale, ordering and
-concurrency. Sanitize secrets. Establish faithful reproduction before reducing
-it; simplify only while the same failure remains. Make setup/reset explicit
-enough to isolate state and repeat the experiment without corrupting real data.
-Do not mock away the suspected cause.
+Before designing a reproducer or assessing test failure evidence, read
+`testing-and-reproduction.md` directly from the manifest-linked KB root when the
+accepted pin ships it. Preserve the original failure and its cause-bearing
+conditions; simplify without removing the suspected cause. Use its primary
+references only for unresolved questions.
 
-For intermittent failures, record runs and failures and material conditions;
-one passing run does not prove absence. Examine shared state, test order,
-resource isolation and teardown. Use controlled events, barriers or scheduling
-when useful for races, not piles of sleeps. Add only logs or tracing that can
-distinguish hypotheses, with appropriate authorization and redaction; account
-for instrumentation changing timing or behavior. An unreproduced problem
-remains uncertain, not dismissed.
+Add only authorized, redacted observation that distinguishes hypotheses;
+account for instrumentation changing timing or behavior. An unreproduced
+problem remains uncertain, not dismissed.
 
 Verify a remedy against the original failure and affected invariants. Prefer
 the smallest regression at the lowest useful layer when practical. Preserve
@@ -91,5 +86,3 @@ project authority:
 
 - [Google SRE troubleshooting](https://sre.google/sre-book/effective-troubleshooting/): testable hypotheses, causal evidence and proportional mitigation.
 - [Google SRE postmortem culture](https://sre.google/workbook/postmortem-culture/): contributing causes and actionable learning.
-- [Chromium bug reporting](https://www.chromium.org/for-testers/bug-reporting-guidelines/): faithful simplified reproducers and sufficient evidence.
-- [pytest flaky tests](https://docs.pytest.org/en/stable/explanation/flaky.html): uncontrolled state, isolation and ordering.

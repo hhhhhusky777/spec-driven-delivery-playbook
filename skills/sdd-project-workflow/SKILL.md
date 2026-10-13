@@ -327,14 +327,11 @@ project authority. Contract-equivalent methods remain discretionary. Stop
 affected work when new scope appears; remove it or obtain prior human authority
 for a design amendment instead of implementing it opportunistically.
 
-Design test evidence from accepted outcomes and material failure risks. Keep
-essential critical-path proof, then emphasize applicable boundaries,
-error/recovery, concurrency/interleavings, timing/order, and interface
-contracts. Use end-to-end smoke and production-like concurrent system or load
-evidence when those risks warrant it. If broad or nondeterministic testing
-exposes a defect, preserve the reproducing evidence and add the smallest
-deterministic regression at the lowest useful layer when practical. Follow the
-canonical project testing authority; do not impose universal suites or quotas.
+Design test evidence from accepted outcomes and material failure risks, not
+coverage numbers or happy-path volume. Before choosing evidence or reproducing
+a failure, read `testing-and-reproduction.md` directly from the manifest-linked
+KB root when the accepted pin ships it. Apply it within canonical project
+testing authority; use its primary references only for unresolved questions.
 
 When an exact pull-request candidate is waiting for human review, include the
 canonical four-category changed-line summary for product code, documentation,
