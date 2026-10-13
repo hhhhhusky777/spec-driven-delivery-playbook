@@ -543,9 +543,11 @@ test("testing guidance is risk focused, proportional, and canonically owned", as
   assert.match(policy, /it must not be represented as production\s+proof/);
 
   assert.match(workflow, /material failure risks/);
-  assert.match(workflow, /essential critical-path proof/);
-  assert.match(workflow, /production-like concurrent system or load\s+evidence when those risks warrant it/);
-  assert.match(workflow, /do not impose universal suites or quotas/);
+  assert.match(workflow, /Before choosing evidence or reproducing\s+a failure, read `testing-and-reproduction\.md` directly from the manifest-linked\s+KB root/);
+  const testing = await read("knowledge-base/testing-and-reproduction.md");
+  assert.match(testing, /essential\s+critical-path proof/);
+  assert.match(testing, /production-like concurrent system or load\s+tests matter when the actual business, scale or shared-state risk warrants them/);
+  assert.match(testing, /this topic adds no suite or quota/);
 
   for (const edge of [
     'O --> K{"Which material risks apply?"}',
