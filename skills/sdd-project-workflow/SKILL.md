@@ -22,6 +22,14 @@ Repository policies and explicit owner decisions remain authoritative.
 > When a KB topic-read trigger applies and the accepted pin ships the topic,
 > you MUST read it before applying its guidance. A skill summary or prior
 > knowledge MUST NOT substitute for reading the topic.
+>
+> If an engineering method or its applicability is uncertain, confidence is
+> low, or a material engineering claim lacks support, you MUST read the relevant
+> primary references before deciding. Guesses, unsupported assumptions and
+> subjective confidence MUST NOT substitute for evidence. Verify project-specific
+> premises against canonical project sources or direct evidence; external guidance
+> cannot establish them. If sources are unavailable or material uncertainty
+> remains, disclose the limitation and follow existing project error handling.
 
 Before designing a solution, read
 `simple-design-and-reuse.md` directly from the manifest-linked KB
@@ -144,8 +152,7 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
 - Before designing a change to trust, access, sensitive data or exposure, read
   `security-basics.md` directly from the manifest-linked KB root when the
   accepted pin ships it. Protect actual boundaries with the smallest sufficient
-  controls within project security authority; consult its primary references
-  only for unresolved questions.
+  controls within project security authority.
 - When creating a worktree, provision the required machine-local untracked
   inputs there, including files such as `.env` when the task depends on them.
   Copy or recreate only what is needed, preserve appropriate permissions, keep
@@ -161,7 +168,7 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   `contracts-and-compatibility.md` directly from the manifest-linked KB root
   when the accepted pin ships it. Preserve promised behavior for supported
   consumers; apply the guidance within the project's contract and migration
-  authority, consulting primary references only for unresolved questions.
+  authority.
 - Follow the project's canonical accepted-design authority. An authorized
   amendment changes only its named scope and repeats conclusion review and
   human acceptance before dependent work resumes.
@@ -175,8 +182,7 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   Before defining material responsibilities, dependencies, or assumptions, read
   `architecture-scope-and-assumptions.md` directly from the manifest-linked KB
   root when the accepted pin ships it. Apply the guidance within project
-  authority and the approved supported domain; use its primary references
-  only for unresolved questions.
+  authority and the approved supported domain.
 - For normal delivery, when the whiteboard conclusion candidate is ready,
   select two isolated reviewers for the feature and require each one to read
   the installed sdd-feature-review skill once. They review the exact design
@@ -322,7 +328,7 @@ Design test evidence from accepted outcomes and material failure risks, not
 coverage numbers or happy-path volume. Before choosing evidence or reproducing
 a failure, read `testing-and-reproduction.md` directly from the manifest-linked
 KB root when the accepted pin ships it. Apply it within canonical project
-testing authority; use its primary references only for unresolved questions.
+testing authority.
 
 When an exact pull-request candidate is waiting for human review, include the
 canonical four-category changed-line summary for product code, documentation,
@@ -384,8 +390,7 @@ interruptions, review time, or waits for people or external systems.
 
 Before deciding whether to fix, reject or defer a finding, read
 `proportional-review.md` directly from the manifest-linked KB root when the
-accepted pin ships it. Apply it within accepted project authority; consult its
-primary references only for unresolved questions.
+accepted pin ships it. Apply it within accepted project authority.
 
 > [!IMPORTANT]
 > Independently assess each finding; do not implement reviewer requests by default.
@@ -411,8 +416,7 @@ Do not duplicate or override it.
 
 Before designing failure handling, retry behavior or failure diagnostics, read
 `error-handling-and-diagnosability.md` directly from the manifest-linked KB root
-when the accepted pin ships it. Apply it within project authority;
-consult its primary references only for unresolved questions.
+when the accepted pin ships it. Apply it within project authority.
 
 Within approved scope and authority, correct recoverable agent errors and
 continue. Preserve system consistency; fail closed when continuing could

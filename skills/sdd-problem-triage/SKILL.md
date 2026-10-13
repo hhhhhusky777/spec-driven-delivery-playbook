@@ -16,11 +16,19 @@ skill supplies diagnosis methods, not operational permission or a new gate.
 > When a KB topic-read trigger applies and the accepted pin ships the topic,
 > you MUST read it before applying its guidance. A skill summary or prior
 > knowledge MUST NOT substitute for reading the topic.
+>
+> If an engineering method or its applicability is uncertain, confidence is
+> low, or a material engineering claim lacks support, you MUST read the relevant
+> primary references before deciding. Guesses, unsupported assumptions and
+> subjective confidence MUST NOT substitute for evidence. Verify project-specific
+> premises against canonical project sources or direct evidence; external guidance
+> cannot establish them. If sources are unavailable or material uncertainty
+> remains, disclose the limitation and follow existing project error handling.
 
 When investigation requires assessing failure diagnostics or retry safety, read
 `error-handling-and-diagnosability.md` directly from the manifest-linked KB root
 when the accepted pin ships it. Apply it within the project's error contract and
-authority; consult primary references only for unresolved questions.
+authority.
 
 Default to read-only investigation. Changes, restarts, rollback, destructive
 actions and scope expansion remain subject to existing authority. Authorized
@@ -46,8 +54,7 @@ is insufficient or pursue endless investigation without information gain.
 Before designing a reproducer or assessing test failure evidence, read
 `testing-and-reproduction.md` directly from the manifest-linked KB root when the
 accepted pin ships it. Preserve the original failure and its cause-bearing
-conditions; simplify without removing the suspected cause. Use its primary
-references only for unresolved questions.
+conditions; simplify without removing the suspected cause.
 
 Add only authorized, redacted observation that distinguishes hypotheses;
 account for instrumentation changing timing or behavior. An unreproduced
@@ -81,8 +88,8 @@ Summarize material results concisely, linking evidence instead of copying logs:
 
 ## Supporting references
 
-Consult when the diagnostic method is uncertain, not routinely or as new
-project authority:
+Apply the reference-reading requirement above to these diagnostic sources;
+they do not grant project authority:
 
 - [Google SRE troubleshooting](https://sre.google/sre-book/effective-troubleshooting/): testable hypotheses, causal evidence and proportional mitigation.
 - [Google SRE postmortem culture](https://sre.google/workbook/postmortem-culture/): contributing causes and actionable learning.

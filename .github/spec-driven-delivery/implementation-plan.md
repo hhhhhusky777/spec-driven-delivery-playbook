@@ -114,6 +114,12 @@ Every task has its own owner stop. Shared specifications avoid twelve copies of
 the same review contract; the ledger supplies each exact outcome and branch.
 No task may complete a later topic early.
 
+Owner-requested T10 correction also reconciles reference-reading wording across
+completed topics and author/reviewer/triage skills: unsupported guesses cannot
+resolve a knowledge gap; relevant primary references inform engineering methods,
+while canonical project sources or direct evidence establish project facts.
+This clarifies D02–D04 and existing error handling; it creates no new review gate.
+
 ## Test and acceptance inventory
 
 This is coverage intent, not a run log. Actual results belong to the task PR.

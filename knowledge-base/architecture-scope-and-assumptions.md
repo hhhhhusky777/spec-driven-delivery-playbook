@@ -60,7 +60,9 @@ uncertainty does not justify a speculative architecture or universal proof.
 
 ## References
 
-Read further when the distilled guidance leaves a material question unresolved.
+If the method or applicability is uncertain, confidence is low, or a material
+engineering claim lacks support, you MUST read the relevant sources below.
+Guesses and unsupported assumptions do not resolve that uncertainty.
 The sources inform decisions; project authority still owns scope and acceptance.
 
 - [Microsoft: Architectural principles](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles) — separation of concerns, encapsulation, explicit dependencies, and public contracts. Its concrete .NET architecture is contextual, not a universal requirement.

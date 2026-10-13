@@ -68,7 +68,11 @@ boundaries, not a mandatory agent configuration.
 Dependency-aware execution and explicit ownership are established engineering
 principles. Multi-agent orchestration is evolving practice: published research
 results do not establish universal coding speedups or justify a fixed agent
-quota. Read further when a material question remains unresolved.
+quota.
+
+If the method or applicability is uncertain, confidence is low, or a material
+engineering claim lacks support, you MUST read the relevant sources below.
+Guesses and unsupported assumptions do not resolve that uncertainty.
 
 - [OpenAI: Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) — bounded parallel work, summarized results, token cost and caution with simultaneous edits.
 - [Anthropic: Building effective agents](https://www.anthropic.com/engineering/building-effective-agents) — independent parallel work and dynamic orchestrator-worker decomposition; choose the simplest sufficient approach.

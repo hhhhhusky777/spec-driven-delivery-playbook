@@ -70,7 +70,9 @@ These paraphrase source examples, not project incidents or mandatory frameworks.
 
 ## References
 
-Read further when the distilled guidance leaves a material question unresolved.
+If the method or applicability is uncertain, confidence is low, or a material
+engineering claim lacks support, you MUST read the relevant sources below.
+Guesses and unsupported assumptions do not resolve that uncertainty.
 Technology-specific techniques serve project requirements, not extra gates.
 
 - [Microsoft: Security design principles](https://learn.microsoft.com/en-us/azure/well-architected/security/principles) — explicit trust, least privilege, blast-radius containment and business-aware protection. Azure services and enterprise processes are contextual, not universal project requirements.

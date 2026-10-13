@@ -21,8 +21,17 @@ If these boundaries genuinely conflict, use the project's canonical
 error-handling and decision authority. The KB grants no permission to change
 scope, weaken a policy, or add a new blocking control.
 
-Each topic will retain primary reference links. Consult them when the distilled
-guidance leaves a material question unresolved, not as a routine extra gate.
+Each topic retains primary reference links. When an engineering method or its
+applicability is uncertain, confidence is low, or a material engineering claim
+lacks support, agents MUST read the relevant primary references before deciding.
+Guesses, unsupported assumptions and subjective confidence cannot replace
+evidence. Project-specific premises require canonical project sources or direct
+evidence; external guidance cannot establish them. If sources are unavailable or
+material uncertainty remains, disclose the limitation and follow existing project
+error handling. Read what resolves the question; routine rereading of unchanged
+sources already read in context is unnecessary unless freshness or applicability
+is in doubt.
+
 Distinguish established engineering principles from evolving multi-agent
 methods; neither a reference nor an example becomes project authority.
 
