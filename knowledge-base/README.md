@@ -51,7 +51,7 @@ they become links when delivered. This README requires no unavailable topic.
 | Proportional review | Assess material problems, correction value, and reasonable dispositions | [Proportional review](proportional-review.md) |
 | Efficiency and concurrency | Overlap independent work without unnecessary coordination | [Efficiency and concurrency](efficiency-and-concurrency.md) |
 | Experience and learning | Turn verified lessons into actionable reuse and refinement | [Experience and learning](experience-and-learning.md) |
-| Code simplicity and clarity | Make implementation intent and behavior easy to understand without sacrificing correctness | `code-simplicity-and-clarity.md` |
+| Code simplicity and clarity | Make implementation intent and behavior easy to understand without sacrificing correctness | [Code simplicity and clarity](code-simplicity-and-clarity.md) |
 | Performance and observability | Use meaningful feedback to evaluate performance and important system or design goals | `performance-and-observability.md` |
 
 ## Installation and ownership
