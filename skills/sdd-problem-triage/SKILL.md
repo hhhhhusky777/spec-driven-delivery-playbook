@@ -12,6 +12,16 @@ or discriminating next check. Use the project's manifest-linked error-handling
 authority for classification, recovery, issue tracking and escalation. This
 skill supplies diagnosis methods, not operational permission or a new gate.
 
+> [!IMPORTANT]
+> When a KB topic-read trigger applies and the accepted pin ships the topic,
+> you MUST read it before applying its guidance. A skill summary or prior
+> knowledge MUST NOT substitute for reading the topic.
+
+When investigation requires assessing failure diagnostics or retry safety, read
+`error-handling-and-diagnosability.md` directly from the manifest-linked KB root
+when the accepted pin ships it. Apply it within the project's error contract and
+authority; consult primary references only for unresolved questions.
+
 Default to read-only investigation. Changes, restarts, rollback, destructive
 actions and scope expansion remain subject to existing authority. Authorized
 urgent mitigation need not wait for root-cause proof; preserve evidence and

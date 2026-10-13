@@ -11,6 +11,11 @@ Protect the accepted feature outcome and project boundaries through independent,
 exact-candidate review. Preserve useful context across the feature without
 turning prior conclusions into assumptions.
 
+> [!IMPORTANT]
+> When a KB topic-read trigger applies and the accepted pin ships the topic,
+> you MUST read it before applying its guidance. A skill summary or prior
+> knowledge MUST NOT substitute for reading the topic.
+
 ## Reviewer session
 
 Load this skill when the parent agent creates the feature's two reviewer
@@ -136,6 +141,10 @@ primary references only for unresolved questions.
 > proportionally. Raise a finding when handling is not the simplest clear-cut
 > approach that protects the accepted outcome, or when it adds speculative
 > complexity.
+> Before judging failure handling, retry safety or failure diagnostics, read
+> `error-handling-and-diagnosability.md` directly from the manifest-linked KB
+> root when the accepted pin ships it. Apply it within project authority;
+> consult its primary references only for unresolved questions.
 > Before judging design simplicity or reuse, read
 > `simple-design-and-reuse.md` directly from the manifest-linked KB
 > root when the accepted pin ships it. Apply it within the accepted project
