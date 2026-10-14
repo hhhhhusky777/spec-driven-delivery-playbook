@@ -1,15 +1,16 @@
 # Code Simplicity and Clarity
 
 Use this guidance when writing, refactoring or reviewing implementation code.
-Make intent and behavior easy to understand and change safely. This topic
-concerns source-level clarity; selecting capabilities and responsibility owners
-belongs to [Simple Design and Reuse](simple-design-and-reuse.md).
+Make intent and behavior easy to understand and change safely. This topic covers
+code-level simplicity and clarity; design-level decisions belong to
+[Simple Design and Reuse](simple-design-and-reuse.md).
 
 ## Core principles
 
 > [!IMPORTANT]
 > Prefer explicit intent, straightforward control and data flow, and the
-> smallest useful abstraction. Simplification MUST preserve required behavior,
+> smallest useful abstraction. Refactoring and code refinement MUST preserve
+> existing behavior and business semantics,
 > including evaluation order, side effects, errors and concurrency semantics.
 > Fewer lines, variables or functions are not evidence of a better solution.
 
@@ -54,9 +55,8 @@ mutable state, exceptions, cleanup and synchronization where relevant. For
 example, replacing a saved value with a repeated query is not equivalent if
 the underlying state can change between reads.
 
-Use the project's focused checks to demonstrate the changed behavior and
-inspect semantics those checks do not cover. Follow existing
-[testing guidance](testing-and-reproduction.md); this topic adds no test gate.
+Add focused regression tests where existing coverage is insufficient to detect
+unintended behavior changes from refactoring.
 Keep the change within accepted scope rather than bundle unrelated style
 cleanup. Review for a concrete improvement in comprehension or maintenance,
 not personal preference or the shortest possible expression.
