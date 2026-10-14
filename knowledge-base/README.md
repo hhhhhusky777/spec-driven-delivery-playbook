@@ -37,8 +37,8 @@ methods; neither a reference nor an example becomes project authority.
 
 ## Topic index
 
-Linked topics are available. Plain filenames identify topics still planned;
-they become links when delivered. This README requires no unavailable topic.
+All topics below are available. Read the topic relevant to the work; this index
+does not require reading the entire Knowledge Base.
 
 | Topic | When it helps | Document |
 | --- | --- | --- |
@@ -52,7 +52,7 @@ they become links when delivered. This README requires no unavailable topic.
 | Efficiency and concurrency | Overlap independent work without unnecessary coordination | [Efficiency and concurrency](efficiency-and-concurrency.md) |
 | Experience and learning | Turn verified lessons into actionable reuse and refinement | [Experience and learning](experience-and-learning.md) |
 | Code simplicity and clarity | Make implementation intent and behavior easy to understand without sacrificing correctness | [Code simplicity and clarity](code-simplicity-and-clarity.md) |
-| Performance and observability | Use meaningful feedback to evaluate performance and important system or design goals | `performance-and-observability.md` |
+| Performance and observability | Use meaningful feedback to evaluate performance and important system or design goals | [Performance and observability](performance-and-observability.md) |
 
 ## Installation and ownership
 
