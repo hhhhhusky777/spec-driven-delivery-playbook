@@ -77,6 +77,11 @@ mismatch prevents a sound disposition.
 Judge correctness, design and policy consistency, compatibility, safety,
 validation sufficiency, proportionality, and merge-ready canonical state.
 
+Before judging implementation clarity or a refactoring, read
+`code-simplicity-and-clarity.md` directly from the manifest-linked KB root when
+the accepted pin ships it. Assess understandable intent, control/data flow and
+behavior preservation within project authority, not line count or personal style.
+
 Before judging use or maintenance of project lessons, read
 `experience-and-learning.md` directly from the manifest-linked KB root when
 the accepted pin ships it. Check verified applicability, actionable value and

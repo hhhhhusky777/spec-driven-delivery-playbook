@@ -276,6 +276,12 @@ Independent reviewer creation still follows the Boundaries contract above.
 
 ### Execution judgment and evidence
 
+Before writing or refactoring implementation code, read
+`code-simplicity-and-clarity.md` directly from the manifest-linked KB root when
+the accepted pin ships it. Make intent and control/data flow clear within
+project conventions and scope; simplification must preserve required behavior,
+not optimize line count.
+
 Reuse verified project experience rather than repeat avoidable trial and error.
 When an unexpected situation or failure arises, or before maintaining project
 lessons, read `experience-and-learning.md` directly from the manifest-linked KB
