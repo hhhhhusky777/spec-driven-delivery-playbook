@@ -16,6 +16,9 @@ content `0683283fb93f3cf4a9e39bd77c39ec09b64e0807`. The owner authorized this
 amendment on 2026-10-15 after agreeing the design/code-level split and cost-based
 classification. Dependent implementation waits for retained review and owner
 acceptance; existing work and installation authority remain preserved.
+The owner also requested a D04 clarification: put shared content-selection
+criteria in the KB README and assess completed topics without duplicating those
+criteria in each document.
 
 ## Discussion draft
 
@@ -34,6 +37,7 @@ acceptance; existing work and installation authority remain preserved.
 | DR11 | Make performance and observability explicit during solution/system design: measurable, interpretable evidence supports improvement; consolidate five performance boundaries in the existing topic | Pending amendment acceptance |
 | DR12 | Add Code-Level Performance Engineering as one separate document task. Organize by how costs arise, not an exhaustive technique list or mandatory hardware checklist | Pending amendment acceptance |
 | DR13 | Select guidance by causal explanation, reusable applicability, actionable method/reference routing and preserved semantics. Techniques illustrate choices; necessary overhead is not automatically waste | Pending amendment acceptance |
+| DR14 | Apply the four content-selection criteria across the KB, including coding and completed topics. README owns the shared guidance; retain adequate topic content and correct only real gaps | Owner-requested D04 clarification |
 
 ## Current understanding
 
@@ -69,7 +73,7 @@ The metadata state controls whether this reviewed design candidate is frozen.
 | D01 | Source `knowledge-base/` contains twelve topics and README. Projects receive its official documents at `.github/spec-driven-delivery/knowledge-base/`, Git-tracked and retained through cleanup | Manifest indexes the installed KB root/revision relationship; runtime uses the same accepted immutable playbook pin, not another version history or feature-state record | Actual installation contains every official document; links and pin agree |
 | D02 | Skills keep short outcome principles and explicit task-relevant instructions to read the matching KB topic before applying it. Both author and reviewers use the same installed KB | Resolve topics from the manifest-linked KB root, not source-repository-relative paths that break on installation. Do not add a compulsory README hop, routinely reload unchanged topics, or duplicate full guidance | Real installed author/reviewer/triage contexts can locate and use their topic; source and installed routing both work |
 | D03 | Agents choose a project-specific implementation satisfying both project authority and agreed core principles, with reuse and minimal sufficient change | Examples and reference implementation techniques are not mandatory. True conflicts follow existing error handling; an agent cannot silently ignore a principle or modify project authority. No speculative abstractions, policy additions, universal recipes, or personal-style blockers | Author/reviewer scenarios distinguish a simpler suitable implementation from mechanical framework adoption or principle avoidance |
-| D04 | Each topic distills verified primary practice into concise principles, application boundaries and useful examples, retaining original reference links | Knowledge is not a copied manual or exhaustive checklist. References support deeper questions, not new authority. Multi-agent techniques are identified as evolving rather than universal standards | Per-document semantic review verifies claims, applicability, reference provenance and lack of duplicate detailed owners |
+| D04 | Each topic distills verified primary practice into concise principles, application boundaries and useful examples, retaining original reference links | The KB README owns shared content-selection criteria; topics apply them without repeating the table. Knowledge is not a copied manual or exhaustive checklist. References support deeper questions, not new authority. Multi-agent techniques are identified as evolving rather than universal standards | Per-document semantic review verifies claims, applicability, reference provenance and lack of duplicate detailed owners |
 | D05 | Adoption and upgrade install/synchronize the complete official tree: additions, modifications, and removals of obsolete managed documents | Preserve project policies, Experience and unrelated/local content. Reuse existing installer ownership/provenance/rollback patterns. Legacy revisions without KB remain valid; new obligations apply only when the revision ships KB. An unaccepted candidate cannot silently activate newer obligations | Focused install/upgrade/rejection tests prove full-tree copying, safe removals, local-content preservation, old-pin compatibility and accepted runtime consistency |
 | D06 | Each of thirteen KB documents is one task, with its own wording review and human stop. Supporting installation and final integration are separate tasks | Normal feature integration model: task PRs target `codex/knowledge-base`, never `main`; final PR alone targets `main`. Autopilot is off. No next task starts before owner acceptance of the current task | Implementation plan records per-task owner gate, design mapping, dependencies, branch and PR target; PR evidence retains each review |
 | D07 | Separate design-level Performance and Observability from Code-Level Performance Engineering using the performance boundaries below. Both author and reviewer routing explicitly cover the appropriate design or implementation context | Shared principles have one detailed owner; the code topic links to them and explains cost mechanisms, applicability and representative techniques rather than prescribing a universal optimization list | Semantic review and focused installed-routing evidence cover the two distinct topics and their project-aware application |
@@ -150,9 +154,8 @@ categories, not a claimed industry-standard taxonomy or per-project checklist.
 | Scheduling, synchronization and coordination | Excessively fine work, redundant handoffs, blocking and shared-state contention. Examples include task granularity, local aggregation and runtime-appropriate asynchronous I/O |
 | I/O and access amplification | Requests, blocks, bytes and rewrites induced by one logical operation. Examples include appropriate batching, selective access, fewer round trips and storage-specific read/write amplification analysis |
 
-Include guidance that explains a reusable cost mechanism, links a concrete
-implementation choice to that cost, helps the agent locate applicable methods
-and authoritative references, and states the semantics that must be preserved.
+Apply the KB-wide [content-selection criteria](../../knowledge-base/README.md#content-selection-and-refinement)
+to these cost mechanisms; the same criteria apply to coding and other topics.
 Read the topic before applying it; when method or applicability remains uncertain,
 use relevant primary references under D02–D04. Do not select a technique merely
 because its keyword appears. A technique may affect several categories; do not
@@ -198,6 +201,7 @@ these links do not require every topic to reproduce every source or example.
 | DR11 | D07 | Pending amendment acceptance |
 | DR12 | D01, D06, D07 | Pending amendment acceptance |
 | DR13 | D03, D04, D07 | Pending amendment acceptance |
+| DR14 | D04 | Owner-requested clarification; shared README wording and completed-topic assessment reviewed in this candidate |
 
 Formal conclusion and freeze require two independent reviewers and owner
 acceptance under the existing accepted-design authority.

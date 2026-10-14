@@ -128,6 +128,12 @@ resolve a knowledge gap; relevant primary references inform engineering methods,
 while canonical project sources or direct evidence establish project facts.
 This clarifies D02–D04 and existing error handling; it creates no new review gate.
 
+The owner-requested D04 clarification in PR #170 makes content-selection criteria
+explicit in the KB README and assesses completed topics, including code clarity.
+Keep adequate topic content unchanged; do not duplicate the criteria or add
+mechanical checklist sections. This does not complete the pending T13/T14
+performance work or authorize dependent implementation before amendment acceptance.
+
 ## Test and acceptance inventory
 
 This is coverage intent, not a run log. Actual results belong to the task PR.
