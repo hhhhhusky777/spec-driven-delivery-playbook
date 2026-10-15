@@ -9,18 +9,18 @@ and merge evidence; the frozen whiteboard owns design.
 
 | Field | Value |
 | --- | --- |
-| State | `BLOCKED` |
+| State | `IMPLEMENTING` |
 | Active tasks | `None` |
-| Next ready task | `None` |
-| Active blocker | Owner-authorized D08 research amendment awaits retained review and human acceptance; preserve prior implementation |
+| Next ready task | `T15` |
+| Active blocker | `None` |
 | Implementation mode | `human-review-before-merge`; Autopilot explicitly off |
-| Authorized scope / feature branch / protected target | Accepted D01–D07 / `codex/knowledge-base` / `main`; no automatic merge authority |
+| Authorized scope / feature branch / protected target | Accepted D01–D08 / `codex/knowledge-base` / `main`; no automatic merge authority |
 | Delivery branch / target | `codex/knowledge-base` / `main` |
 | Owner | Repository owner |
 | Primary issue / need | [Issue #156](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/156) |
-| Concluded whiteboard | [Open research amendment](solution-whiteboard.md); prior accepted content `58ad81d65aa043b17496f21a05aa637eb0aa14c4` and conclusion `fc115f49a5789032033e9b0746f341ab14f2af1d` preserved in Git |
+| Concluded whiteboard | [Accepted research amendment](solution-whiteboard.md); reviewed content `2c50cdb711f9cdceaf57e39dfb7fd72623d82245`, verified conclusion `c8b3cd345106fceb8da6c5875ad8d1ca059bf539` |
 | Required reviewers | Retained independent `kb_review_r1` and `kb_review_r2` through final merge |
-| Last verified | 2026-10-15 Asia/Shanghai; T01–T13 merged. T14 candidate `66f136e36716c993e4838c35ca0029afe0aababa` is preserved; owner then authorized global solution-research design work in PR #171. No dependent skill/topic implementation, merge, runtime activation or cleanup follows until the amendment's required acceptance |
+| Last verified | 2026-10-15 Asia/Shanghai; T01–T13 merged. Owner accepted D08 at `2c50cdb711f9cdceaf57e39dfb7fd72623d82245`; both retained reviewers verified conclusion `c8b3cd345106fceb8da6c5875ad8d1ca059bf539`. T14 candidate contains its resulting DONE state; actual review/check/merge evidence belongs to PR #171. Merge, T15 execution, runtime activation and cleanup still require their applicable authority |
 
 ## Governing inputs and delivery boundaries
 
@@ -28,7 +28,7 @@ and merge evidence; the frozen whiteboard owns design.
 | --- | --- |
 | [Contributing](../../CONTRIBUTING.md) | Branches, focused/full validation, review, human merge authority and cleanup |
 | [Manifest](project-adoption-manifest.md) | Accepted runtime pin and project authorities; no feature state |
-| [Whiteboard](solution-whiteboard.md) | D01–D07, approved V01 and FC01–FC02, document set and per-task owner pauses |
+| [Whiteboard](solution-whiteboard.md) | D01–D08, approved V01 and FC01–FC02, document set and per-task owner pauses |
 | [Quality policy](../../docs/documentation-quality-policy.md) | Proportional effort, design freeze, human brief, final audit and 90-minute boundary |
 | [Error handling](../../docs/error-handling.md) | Recovery and escalation; no separate recovery framework |
 
@@ -36,12 +36,10 @@ Deliver a shared, revision-matched KB that authors and reviewers apply inside
 project boundaries. Scope is the frozen topic set, installer/manifest support,
 skill triggers, affected guidance and checks. No new framework, policy suite,
 code-style linter, copied manual, speculative topic, or project Experience
-migration. Material assumptions: None. The accepted performance design remains
-the baseline; the owner-authorized D08 global research amendment is OPEN for
-review and acceptance. Preserve completed topic work and the existing fifteen
-task boundaries. Do not implement the proposed research changes before that
-acceptance; then reconcile T14's existing skill/index/check ownership without
-adding another topic or completing T15 early.
+migration. Material assumptions: None. The accepted D08 amendment adds global
+solution research to T14's existing skill/index/check ownership. Preserve completed
+topic work and the existing fifteen task boundaries; do not add another topic
+or complete T15 early.
 
 The accepted installed pin remains `775f1479e8a1ce6277af7448d509cabe95374ad3`.
 Preparing a newer runtime candidate is not acceptance or activation. Installer
@@ -59,6 +57,7 @@ existing project, including this repository, has accepted its new pin.
 | D05 | T01 synchronization mechanism; T15 complete upgrade/rollback coverage | Legacy pins, additions/updates/removals, integrity and local preservation | Aligned |
 | D06 | T01–T15 explicit task targets and human stops | No next task before current task acceptance; no Autopilot | Aligned |
 | D07 | T13 design-level boundaries and explicit design-stage routing; T14 code-level cost mechanisms and implementation routing; T15 final reconciliation | Distinct detailed owners, source-backed scope and real installed topic routes | Aligned |
+| D08 | T14 global solution-research rule, concise reviewer/triage routes and KB index reconciliation; T15 final consistency | Same-revision installed/source routes, applicable research reuse and project-aware choices without extra authority | Aligned |
 
 ## Delivery strategy and readiness
 
@@ -97,8 +96,8 @@ implementation choices stay with the agent.
 | T11 | DONE | T10 | `experience-and-learning.md` | D02–D04; actionable reuse/refinement; retain project-specific lessons | Focused topic/trigger checks and wording review | `codex/knowledge-base-t11`; [PR #168](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/168); target `codex/knowledge-base` |
 | T12 | DONE | T11 | `code-simplicity-and-clarity.md` | D02–D04; professional clarity examples, no line-count or style mandate; preserve behavior | Focused topic/trigger checks and wording review | `codex/knowledge-base-t12`; [PR #169](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/169); target `codex/knowledge-base` |
 | T13 | DONE | T12 | Revise `performance-and-observability.md` | D02–D04, D07; design-stage measurability, interpretation and five performance boundaries; fault diagnosis stays with T06 | Focused topic/trigger checks and wording review | `codex/knowledge-base-t13`; [PR #170](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/170); target `codex/knowledge-base` |
-| T14 | BLOCKED | T13 | `code-level-performance-engineering.md` | D02–D04, D07; prior implementation preserved; proposed D08 research changes await design acceptance | Focused topic/trigger checks and wording review | `codex/knowledge-base-t14`; [PR #171](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/171); target `codex/knowledge-base` |
-| T15 | PLANNED | T14 | Complete integration and guidance reconciliation | D01–D07; no second detailed owner or new topic/controller | Focused package, routing and consistency checks | `codex/knowledge-base-t15`; PR not opened; target `codex/knowledge-base` |
+| T14 | DONE | T13 | `code-level-performance-engineering.md` and accepted global research clarification | D02–D04, D07, D08; one detailed research owner, version-matched routes, no new installer mechanism | Focused topic/trigger/routing checks and wording review | `codex/knowledge-base-t14`; [PR #171](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/171); target `codex/knowledge-base` |
+| T15 | READY | T14 | Complete integration and guidance reconciliation | D01–D08; no second detailed owner or new topic/controller | Focused package, routing and consistency checks | `codex/knowledge-base-t15`; PR not opened; target `codex/knowledge-base` |
 
 ## Task specifications and context receipts
 
@@ -117,7 +116,7 @@ implementation choices stay with the agent.
 | T11 | Experience topic, index, author/reviewer/triage triggers and installed routing check | Distill actionable reuse, verified applicability and refinement; preserve project-specific lessons and ownership | T10 merged and accepted runtime verified in owned worktree; KCS and Google SRE primary sources verified; real installed topic and three reader routes covered; project Experience and live pin unchanged |
 | T12 | Code clarity topic, index, author/reviewer triggers and installed routing check | Distill intent, names, control/data flow, useful intermediate state, proportionate abstraction, comments and behavior-preserving simplification | T11 merged and accepted runtime verified in owned worktree; Google and Fowler primary sources/examples verified; actual installed topic and both reader routes covered; frozen design and live pin unchanged |
 | T13 | Performance topic, index, author/reviewer triggers and installed routing check | Consolidate D07's five boundaries into existing guidance; explicitly consider performance and measurable/interpretable feedback during solution/system design; retain proportionate fitness evidence and T06's diagnosis ownership | Accepted amendment and verified conclusion consumed; design-stage wording, five boundaries, source-backed examples and installed reader routes delivered. Relevant Google, Microsoft and OpenTelemetry sources verified; live pin unchanged |
-| T14 | Code-level performance topic, index, author/reviewer triggers and installed routing check | Apply D07's five cost mechanisms and selection criteria; explain causal mechanisms, useful bounded examples, applicability and reference search directions. Link design-level principles rather than duplicate them; preserve behavior and distinguish necessary overhead from avoidable work | T13 merged and accepted-pin runtime verified in the owned worktree. Google, Microsoft, LLVM, Linux, Kafka and RocksDB primary sources verified; five mechanism sections, bounded published examples and real installed author/reviewer routes delivered; frozen design and live pin unchanged |
+| T14 | Code-level performance topic, index, workflow/reviewer/triage skills and affected routing checks | Apply D07's five cost mechanisms and D08's global solution research; keep one detailed rule with language/runtime inputs, current applicable research reuse and same-revision routes. Preserve behavior and distinguish necessary overhead from avoidable work | T13 and accepted-pin runtime verified. Prior primary sources and performance topic preserved; owner-accepted D08 conclusion verified. Full rule in workflow, concise reviewer/triage routes, KB explanations and actual installed/source routing regressions implemented. No installer mechanism or installed-pin change |
 | T15 | Installer integration tests, manifest/adoption/upgrade routing, affected skills and root README/diagrams | Reconcile the complete official tree and remaining duplicate owners. Prove installed links, preservation, safe managed removals and compatibility; update actual capabilities without claiming unaccepted runtime activation | All accepted topic outputs required; not implemented |
 
 Every task has its own owner stop. Shared specifications avoid thirteen copies of
@@ -148,8 +147,8 @@ them; recording a final-gate gap does not claim that test exists or passed.
 | T01 | D05; V01 and FC02 | Knowledge base cases: local edits/unowned collisions/linked parents preserved; safe official additions/updates/removals; directory replacement failures restore accepted tree | Implemented | Changed-line focused cases in T01; run evidence in task PR |
 | T02–T14 | D02–D04 | Changed-document Markdown, links and examples; installed trigger resolves existing topic; primary-reference and project-application semantic review | Planned per-topic evidence | Focused checks and both reviewers before each owner stop |
 | T13 | D02–D04, D07 | Existing actual-index and installed author/reviewer/triage routing regressions; affected workflow/reviewer contract checks; design-stage trigger and five-boundary semantic review | Existing focused tests cover the changed artifact and its installation; no additional missing T13 test identified | Focused run evidence in PR #170; complete-package lifecycle proof remains T15 and full source validation remains final-gate work |
-| T14 | D02–D04, D07 | Actual-index installation and installed topic-routing regressions, extended to require the new topic in both reader skills; affected workflow/reviewer contracts and source-fidelity review | Changed artifact and both installed reader routes covered; no additional missing T14 test identified | Focused run evidence belongs in PR #171; complete-package lifecycle proof remains T15 and full source validation remains final-gate work |
-| T15 | D01–D07 | `tests/installer.test.mjs` and affected `tests/document-model.test.mjs`: complete real tree, adoption/upgrade routing, rollback/preservation and legacy compatibility | Planned integration coverage; exact cases finalized against implementation | Focused changed-line cases in T15; record missing non-focused cases for final gate |
+| T14 | D02–D04, D07, D08 | Actual-index/topic routing; reviewer-to-workflow anchor; triage owning-guide resolution across workflow, adoption, candidate upgrade and cleaned-checkout recovery; semantic review of research applicability and authority | Focused regressions implemented; no additional missing T14 test identified | Focused run evidence belongs in PR #171; complete-package lifecycle proof remains T15 and full source validation remains final-gate work |
+| T15 | D01–D08 | `tests/installer.test.mjs` and affected `tests/document-model.test.mjs`: complete real tree, adoption/upgrade routing, rollback/preservation and legacy compatibility | Planned integration coverage; exact cases finalized against implementation | Focused changed-line cases in T15; record missing non-focused cases for final gate |
 | T15 | D01, D02, D05 | Extend fixture-only T01 proof to complete-package upgrade/rollback with the actual thirteen-document KB and real installed author/reviewer/triage references | Per-topic install/routing covered; complete-package lifecycle integration remains T15-owned | Implement affected checks in T15 or record required remaining additions for final audit/coverage reconciliation; run full source gate only at final readiness |
 | T15 | D02, D04 | Root README/diagrams, remaining canonical links, no duplicated detailed owner or unavailable installed reference | Planned consistency proof | Focused integration review |
 | Final gate | All accepted outcomes and material risks | Audit implementation against frozen design/reuse, reconcile missing tests, final exact-candidate review, then `npm run docs:all` | Not run; test gaps not yet known | Existing final-readiness boundary, not each document task |
@@ -163,10 +162,10 @@ repository's source suite does not become an adopting project's obligation.
 
 ## Recovery, decisions, and change control
 
-The owner accepted the performance amendment and later authorized the D08
-research amendment in PR #171. The whiteboard is OPEN for that named change
-only. Preserve valid prior implementation and the unchanged approved FC01–FC02;
-repeat retained design review and human acceptance before dependent work.
+The owner accepted the performance and D08 research amendments in PR #171;
+the exact conclusion was verified by both retained reviewers. Preserve the frozen
+whiteboard, valid prior implementation and unchanged approved FC01–FC02. Further
+design amendments require prior owner authority and renewed review/acceptance.
 Ordinary recoverable agent mistakes stay within authority.
 
 ## Plan validation and completion
@@ -175,7 +174,7 @@ Ordinary recoverable agent mistakes stay within authority.
 
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
-| Accepted design delivered | D01–D07 mapping, thirteen accepted documents and complete managed installation | Pending |
+| Accepted design delivered | D01–D08 mapping, thirteen accepted documents and complete managed installation | Pending |
 | Applicable validation passed | Focused evidence per task; final audit, coverage reconciliation and exact-head full source gate | Pending |
 | Compatibility and preservation | Old pins remain valid; correct new package and owned synchronization; project content preserved | Pending |
 | Merge-ready canonical state | Root README/diagrams, routing and tracked delivery state agree with actual candidate | Pending |
@@ -199,8 +198,8 @@ Ordinary recoverable agent mistakes stay within authority.
 | D02–D04 / T11 | Actionable project learning and direct installed routing | Verified reuse/refinement, source-backed examples and three reader routes delivered; project-specific Experience retained; no new recording quota or gate | Per-document wording and feature-merge acceptance / owner |
 | D02–D04 / T12 | Code-level simplicity/clarity and direct installed routing | Verified professional examples, behavior-preservation limits and two reader routes delivered; no line-count/style mandate or later topic authored | Per-document wording and feature-merge acceptance / owner |
 | D02–D04, D07 / T13 | Design-stage performance and observability with direct installed routing | Design-stage measurement/interpretation, five boundaries, useful-work example and author/reviewer triggers delivered; actual installed topic/routing covered. Shared README criteria retained without topic duplication | Per-document wording and feature-task merge acceptance / owner |
-| D02–D04, D07 / T14 | Code-level performance guidance organized by cost mechanisms with direct installed routing | Five cost mechanisms, bounded source-backed examples and author/reviewer routes delivered; actual installed content/routing covered. No new optimization mandate, gate or runtime activation | Per-document wording and feature-task merge acceptance / owner |
-| D01–D07 / T15 | Complete installed, project-aware KB integration | Not implemented | Remaining integration and final readiness / author, retained reviewers and owner |
+| D02–D04, D07, D08 / T14 | Code-level performance guidance and global evidence-grounded solution research | Five cost mechanisms and source-backed examples retained; workflow owns the research rule, reviewer/triage reference it, KB explanations align. Actual installed/source routing and pinned recovery covered. No duplicate system prompt, new installer mechanism, gate or runtime activation | Per-document wording and feature-task merge acceptance / owner; complete-package integration / T15 |
+| D01–D08 / T15 | Complete installed, project-aware KB integration | Not implemented | Remaining integration and final readiness / author, retained reviewers and owner |
 
 ### Cleanup inventory
 
@@ -217,7 +216,7 @@ Ordinary recoverable agent mistakes stay within authority.
 | Attention | Summary | Handling |
 | --- | --- | --- |
 | Tasks | Fifteen accepted tasks: installer support, thirteen separate documents, final integration; T13 revised, new T14, former integration becomes T15 | DISCLOSE |
-| Design consistency | Prior D07 work preserved; OPEN D08 proposes global research inputs and single-owner routing. No new validation or fail-closed behavior | HUMAN_DECISION after retained design review |
+| Design consistency | D07 preserved; D08 accepted and concluded, with global research inputs and single-owner routing. No new validation or fail-closed behavior | DISCLOSE; implementation wording and task merge remain human decisions |
 | Execution mode | Autopilot off; stop after every task for owner review and merge decision | Existing owner decision retained |
 | Validation | Per-topic focused checks and exact-candidate review belong in their PRs. T15 integration, final implementation audit and full validation remain outstanding | DISCLOSE |
 | Foreseeable decisions | Per-document wording acceptance; any real authority conflict; eventual explicit reset and final merge acceptance | HUMAN_DECISION at applicable boundary, not blanket permission |

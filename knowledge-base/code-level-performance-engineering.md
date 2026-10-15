@@ -128,13 +128,12 @@ interpretation, not mandatory replacements or promised speedups.
 
 ## References
 
-If the method or applicability is uncertain, confidence is low, or a material
-engineering claim lacks support, you MUST read the relevant primary sources
-linked above before deciding. Guesses and unsupported assumptions do not
-resolve uncertainty. Follow the source matching the cost, then the official
-language, compiler, runtime, library or storage documentation for the project's
-actual version. Project workloads, semantics and bottlenecks require canonical
-contracts, code or direct evidence; external examples cannot establish them.
+For solution research under the workflow skill, start from the cost mechanism
+and project constraints, not a technique name. The sources above illustrate
+comparable problems; follow relevant official language, compiler, runtime,
+library or storage documentation for the project's actual version. For example,
+unnecessary data movement motivates investigating ownership and copy costs;
+zero-copy is only one candidate, not a conclusion implied by this topic.
 
 These sources expose particular implementations. Their APIs, counters and
 tuning settings are not portable defaults. Use the shared design-level
