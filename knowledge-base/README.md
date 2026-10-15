@@ -21,16 +21,13 @@ If these boundaries genuinely conflict, use the project's canonical
 error-handling and decision authority. The KB grants no permission to change
 scope, weaken a policy, or add a new blocking control.
 
-Each topic retains primary reference links. When an engineering method or its
-applicability is uncertain, confidence is low, or a material engineering claim
-lacks support, agents MUST read the relevant primary references before deciding.
-Guesses, unsupported assumptions and subjective confidence cannot replace
-evidence. Project-specific premises require canonical project sources or direct
-evidence; external guidance cannot establish them. If sources are unavailable or
-material uncertainty remains, disclose the limitation and follow existing project
-error handling. Read what resolves the question; routine rereading of unchanged
-sources already read in context is unnecessary unless freshness or applicability
-is in doubt.
+The workflow skill's `Solution research` rule governs design-level and
+implementation-level solution choices. Research comparable problems and primary
+guidance using project needs, boundaries and relevant language/runtime constraints,
+then assess the fit rather than copy a technique or rely on a familiar guess.
+Each topic supplies useful starting references, not an exhaustive source list.
+Current applicable research can be reused; unresolved method questions require
+reading relevant sources. Project facts still require canonical project evidence.
 
 Distinguish established engineering principles from evolving multi-agent
 methods; neither a reference nor an example becomes project authority.
@@ -70,6 +67,7 @@ does not require reading the entire Knowledge Base.
 | Experience and learning | Turn verified lessons into actionable reuse and refinement | [Experience and learning](experience-and-learning.md) |
 | Code simplicity and clarity | Make implementation intent and behavior easy to understand without sacrificing correctness | [Code simplicity and clarity](code-simplicity-and-clarity.md) |
 | Performance and observability | Design measurable, interpretable feedback and improve useful outcomes within whole-system trade-offs | [Performance and observability](performance-and-observability.md) |
+| Code-level performance engineering | Locate avoidable implementation costs and choose bounded, source-backed improvements | [Code-level performance engineering](code-level-performance-engineering.md) |
 
 ## Installation and ownership
 

@@ -286,14 +286,18 @@ test("evidence-bounded scope uses one dangerous-assumption vocabulary", async ()
   for (const skill of [workflow, reviewer]) {
     assert.match(normalize(skill), /`architecture-scope-and-assumptions\.md` directly from the manifest-linked KB root when the accepted pin ships it/i);
   }
-  for (const skill of [workflow, reviewer, await read("skills/sdd-problem-triage/SKILL.md")]) {
-    const normalized = normalize(skill);
-    assert.match(normalized, /method or its applicability is uncertain.*claim lacks support.*MUST read the relevant primary references before deciding/i);
-    assert.match(normalized, /Guesses, unsupported assumptions.*MUST NOT substitute for evidence/i);
-    assert.match(normalized, /Verify project-specific premises against canonical project sources or direct evidence; external guidance cannot establish them/i);
+  const normalizedWorkflow = normalize(workflow);
+  assert.match(normalizedWorkflow, /unresolved engineering-method or applicability questions, low confidence or unsupported material claims, read the relevant primary references before deciding/i);
+  assert.match(normalizedWorkflow, /guesses, unsupported assumptions and subjective confidence MUST NOT substitute for research/i);
+  assert.match(normalizedWorkflow, /External practice cannot establish project facts.*verify those premises against canonical contracts, code or direct evidence/i);
+  assert.ok(reviewer.includes("(../sdd-project-workflow/SKILL.md#solution-research)"));
+  const triage = await read("skills/sdd-problem-triage/SKILL.md");
+  for (const route of ["skills/sdd-project-workflow/SKILL.md#solution-research",
+    ".sdd-runtime/agent-guide.md", ".sdd-runtime/playbook-upgrade-guide.md"]) {
+    assert.ok(triage.includes(`\`${route}\``), `triage must retain its verified research route: ${route}`);
   }
   assert.match(
-    normalize(workflow),
+    normalizedWorkflow,
     /Verify the premise from authority.*owning public contract.*narrow and disclose the supported domain.*material authority remains unresolved.*block only the affected work.*ask the human to define or expand scope/i,
   );
   assert.match(normalize(reviewer), /Block only when material authority remains unresolved.*do not demand universal proof/i);
@@ -706,18 +710,24 @@ test("new design validations are disclosed and reviewed proportionally", async (
   assert.doesNotMatch(plan, /## Newly introduced validations/);
 });
 
-test("installed skills link only within their copied directories or installed triage sibling", async () => {
+test("installed skills link only within their copied directories or available sibling guidance", async () => {
   for (const name of await readdir(path.join(root, "skills"))) {
     const skillDirectory = path.join(root, "skills", name);
     const skill = await readFile(path.join(skillDirectory, "SKILL.md"), "utf8");
-    for (const [, target] of skill.matchAll(/\]\((\.\.?\/[^)#]+)(?:#[^)]*)?\)/g)) {
+    for (const [, target, fragment = ""] of skill.matchAll(/\]\((\.\.?\/[^)#]+)(#[^)]*)?\)/g)) {
       const destination = path.resolve(skillDirectory, target);
       const relative = path.relative(skillDirectory, destination);
       // Every profile installs this sibling; installer tests verify real paths.
       const installedTriage = path.join(root, "skills", "sdd-problem-triage", "SKILL.md");
+      const reviewerResearch = name === "sdd-feature-review"
+        && target === "../sdd-project-workflow/SKILL.md" && fragment === "#solution-research";
       assert.ok((relative && relative !== ".." && !relative.startsWith(`..${path.sep}`))
-        || destination === installedTriage,
-      `${name} links outside its installed skill set: ${target}`);
+        || destination === installedTriage || reviewerResearch,
+      `${name} links outside its installed skill set: ${target}${fragment}`);
+      if (reviewerResearch) {
+        assert.match(await readFile(destination, "utf8"), /^### Solution research$/m,
+          "reviewer research link must resolve to the workflow heading");
+      }
     }
   }
 });

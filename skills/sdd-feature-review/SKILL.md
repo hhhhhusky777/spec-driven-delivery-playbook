@@ -16,13 +16,10 @@ turning prior conclusions into assumptions.
 > you MUST read it before applying its guidance. A skill summary or prior
 > knowledge MUST NOT substitute for reading the topic.
 >
-> If an engineering method or its applicability is uncertain, confidence is
-> low, or a material engineering claim lacks support, you MUST read the relevant
-> primary references before deciding. Guesses, unsupported assumptions and
-> subjective confidence MUST NOT substitute for evidence. Verify project-specific
-> premises against canonical project sources or direct evidence; external guidance
-> cannot establish them. If sources are unavailable or material uncertainty
-> remains, disclose the limitation and follow existing project error handling.
+> Read and apply the workflow skill's
+> [Solution research](../sdd-project-workflow/SKILL.md#solution-research) rule.
+> Check the candidate's research basis and project applicability; alternatives
+> you propose MUST meet the same requirement.
 
 ## Reviewer session
 
@@ -81,6 +78,11 @@ When reviewing solution or system design, performance decisions or feedback,
 read `performance-and-observability.md` directly from the manifest-linked KB
 root when the accepted pin ships it. Assess measurable, interpretable feedback
 and proportionate improvements within project authority.
+
+Before judging performance-sensitive code or a code-level optimization, read
+`code-level-performance-engineering.md` directly from the manifest-linked KB
+root when the accepted pin ships it. Assess the actual cost mechanism, bounded
+benefit and preservation of project behavior and ownership.
 
 Before judging implementation clarity or a refactoring, read
 `code-simplicity-and-clarity.md` directly from the manifest-linked KB root when

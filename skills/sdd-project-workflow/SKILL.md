@@ -22,19 +22,37 @@ Repository policies and explicit owner decisions remain authoritative.
 > When a KB topic-read trigger applies and the accepted pin ships the topic,
 > you MUST read it before applying its guidance. A skill summary or prior
 > knowledge MUST NOT substitute for reading the topic.
->
-> If an engineering method or its applicability is uncertain, confidence is
-> low, or a material engineering claim lacks support, you MUST read the relevant
-> primary references before deciding. Guesses, unsupported assumptions and
-> subjective confidence MUST NOT substitute for evidence. Verify project-specific
-> premises against canonical project sources or direct evidence; external guidance
-> cannot establish them. If sources are unavailable or material uncertainty
-> remains, disclose the limitation and follow existing project error handling.
 
 Before designing a solution, read
 `simple-design-and-reuse.md` directly from the manifest-linked KB
 root when the accepted pin ships it. Apply its principles within project
 authority and approved scope; choose the simplest sufficient design.
+
+### Solution research
+
+> [!IMPORTANT]
+> Before selecting any engineering solution, at design or implementation level,
+> you MUST search the web for comparable problems and authoritative guidance using the
+> problem, requirements, project boundaries and applicable KB principles.
+> Include relevant language/version, runtime, libraries and deployment constraints.
+> Use non-sensitive descriptions, not private project data, in external searches.
+> Read the primary sources and assess applicability and trade-offs against
+> project evidence and suitable existing mechanisms. Choose the simplest
+> sufficient solution; familiarity, guesses, unsupported assumptions and
+> subjective confidence MUST NOT substitute for research.
+
+Treat language as an established constraint or an explicitly authorized choice;
+research never grants authority to introduce a language or change project policy.
+External practice cannot establish project facts or prove a bottleneck: verify
+those premises against canonical contracts, code or direct evidence.
+
+Reuse already-read research while it remains current and applicable; do not
+repeat browsing for each coding action. For unresolved engineering-method or
+applicability questions, low confidence or unsupported material claims, read
+the relevant primary references before deciding. If sources are unavailable or
+material uncertainty remains, disclose it and follow existing error handling.
+No new research document, fixed source count, prescribed technique or separate
+gate is required.
 
 ## Durable model
 
@@ -280,6 +298,11 @@ During solution and system design, and before making performance or feedback
 decisions, read `performance-and-observability.md` directly from the
 manifest-linked KB root when the accepted pin ships it. Design measurable,
 interpretable feedback and proportionate improvements within project boundaries.
+
+Before writing performance-sensitive code or choosing a code-level optimization,
+read `code-level-performance-engineering.md` directly from the manifest-linked
+KB root when the accepted pin ships it. Reduce avoidable costs using suitable
+existing mechanisms while preserving project behavior and ownership.
 
 Before writing or refactoring implementation code, read
 `code-simplicity-and-clarity.md` directly from the manifest-linked KB root when
