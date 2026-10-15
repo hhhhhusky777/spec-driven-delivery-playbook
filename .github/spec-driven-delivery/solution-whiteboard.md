@@ -4,18 +4,18 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [Issue #156](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/156) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
-| Open owner decisions | Performance amendment acceptance after retained-reviewer review |
+| Concluded design revision | `58ad81d65aa043b17496f21a05aa637eb0aa14c4` |
+| Open owner decisions | `None` |
 
-Owner-authorized performance amendment candidate. The prior accepted design
+Owner-accepted performance amendment. The prior accepted design
 remains available at `8766337fc079f306e55bbba3c139333bc07a1742`, with reviewed
 content `0683283fb93f3cf4a9e39bd77c39ec09b64e0807`. The owner authorized this
 amendment on 2026-10-15 after agreeing the design/code-level split and cost-based
-classification. Dependent implementation waits for retained review and owner
-acceptance; existing work and installation authority remain preserved.
+classification. The owner accepted the reviewed amendment and dispositions on
+2026-10-15; existing work and installation authority remain preserved.
 The owner also requested a D04 clarification: put shared content-selection
 criteria in the KB README and assess completed topics without duplicating those
 criteria in each document.
@@ -34,10 +34,10 @@ criteria in each document.
 | DR08 | Do not claim all methods are universal industry standards; distinguish mature principles from emerging multi-agent practice | Accepted |
 | DR09 | Separate design-level reuse, code-level clarity, and Performance and Observability; include conditional shared-capability and gradual-replacement guidance | Accepted |
 | DR10 | Use verified professional examples; architecture fitness evidence belongs with observability and examples are not compulsory recipes | Accepted |
-| DR11 | Make performance and observability explicit during solution/system design: measurable, interpretable evidence supports improvement; consolidate five performance boundaries in the existing topic | Pending amendment acceptance |
-| DR12 | Add Code-Level Performance Engineering as one separate document task. Organize by how costs arise, not an exhaustive technique list or mandatory hardware checklist | Pending amendment acceptance |
-| DR13 | Select guidance by causal explanation, reusable applicability, actionable method/reference routing and preserved semantics. Techniques illustrate choices; necessary overhead is not automatically waste | Pending amendment acceptance |
-| DR14 | Apply the four content-selection criteria across the KB, including coding and completed topics. README owns the shared guidance; retain adequate topic content and correct only real gaps | Owner-requested D04 clarification |
+| DR11 | Make performance and observability explicit during solution/system design: measurable, interpretable evidence supports improvement; consolidate five performance boundaries in the existing topic | Accepted |
+| DR12 | Add Code-Level Performance Engineering as one separate document task. Organize by how costs arise, not an exhaustive technique list or mandatory hardware checklist | Accepted |
+| DR13 | Select guidance by causal explanation, reusable applicability, actionable method/reference routing and preserved semantics. Techniques illustrate choices; necessary overhead is not automatically waste | Accepted |
+| DR14 | Apply the four content-selection criteria across the KB, including coding and completed topics. README owns the shared guidance; retain adequate topic content and correct only real gaps | Accepted |
 
 ## Current understanding
 
@@ -60,8 +60,8 @@ criteria in each document.
 | [Skills](../../skills/sdd-project-workflow/SKILL.md) | Existing concise principles, scope references, concurrent-work guidance and project-context entry points |
 | [Project Experience](../../docs/experience.md) | Durable project-specific lessons; must remain separate from centrally maintained KB |
 
-Material assumptions: None. Remaining owner decision: accept this reviewed
-performance amendment. V01 and FC01–FC02 remain unchanged and approved; this
+Material assumptions: None. Remaining owner decisions: None.
+V01 and FC01–FC02 remain unchanged and approved; this
 amendment introduces no new validation or fail-closed behavior.
 
 ## Concluded design
@@ -198,10 +198,10 @@ these links do not require every topic to reproduce every source or example.
 | DR08 | D03, D04 | Accepted |
 | DR09 | D04, D06 | Accepted |
 | DR10 | D04 | Accepted |
-| DR11 | D07 | Pending amendment acceptance |
-| DR12 | D01, D06, D07 | Pending amendment acceptance |
-| DR13 | D03, D04, D07 | Pending amendment acceptance |
-| DR14 | D04 | Owner-requested clarification; shared README wording and completed-topic assessment reviewed in this candidate |
+| DR11 | D07 | Accepted |
+| DR12 | D01, D06, D07 | Accepted |
+| DR13 | D03, D04, D07 | Accepted |
+| DR14 | D04 | Accepted |
 
 Formal conclusion and freeze require two independent reviewers and owner
 acceptance under the existing accepted-design authority.
@@ -227,7 +227,7 @@ Performance amendment delta: None. The existing accepted inventory is retained.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Design | D07 separates design-stage measurable feedback and five performance boundaries from code-level cost mechanisms and bounded technical guidance | HUMAN_DECISION after reviewer approval |
-| Delivery granularity | Fifteen proposed tasks: thirteen separate documents and two supporting units; T13 revised, T14 new code-level topic, integration moves to T15; stop after every task, no Autopilot | DISCLOSE |
+| Design | D07 separates design-stage measurable feedback and five performance boundaries from code-level cost mechanisms and bounded technical guidance | Accepted |
+| Delivery granularity | Fifteen accepted tasks: thirteen separate documents and two supporting units; T13 revised, T14 new code-level topic, integration moves to T15; stop after every task, no Autopilot | DISCLOSE |
 | New controls | None in this amendment. Approved V01, FC01 and FC02 remain unchanged | DISCLOSE |
 | State | Metadata records design state; review/acceptance never claims implementation or installed KB activation | DISCLOSE |
