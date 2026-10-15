@@ -4,11 +4,11 @@
 
 | Field | Value |
 | --- | --- |
-| State | `CONCLUDED` |
+| State | `OPEN` |
 | Need / issue | [Issue #156](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/156) |
 | Owner | Repository owner |
 | Concluded design revision | `2c50cdb711f9cdceaf57e39dfb7fd72623d82245` |
-| Open owner decisions | None |
+| Open owner decisions | Accept the reviewed standalone Solution Research ownership and routing amendment |
 
 Owner-accepted performance amendment. The prior accepted design
 remains available at `8766337fc079f306e55bbba3c139333bc07a1742`, with reviewed
@@ -28,6 +28,14 @@ routes. The last accepted conclusion is preserved at
 `2c50cdb711f9cdceaf57e39dfb7fd72623d82245`; the owner accepted that research
 amendment and its dispositions on 2026-10-15. Existing topic work, merge
 authority and installed pin are preserved.
+
+The owner has now authorized extracting the unchanged research requirement
+into `knowledge-base/solution-research.md`, with mandatory short read triggers
+at the existing skill positions. The prior accepted conclusion remains at
+`c8b3cd345106fceb8da6c5875ad8d1ca059bf539`. This OPEN amendment changes content
+ownership, version-aware routing and the corresponding document/task count,
+not the research requirement, project authority or validation gates. Dependent
+extraction waits for retained review and human acceptance of this candidate.
 
 ## Discussion draft
 
@@ -49,7 +57,8 @@ authority and installed pin are preserved.
 | DR14 | Apply the four content-selection criteria across the KB, including coding and completed topics. README owns the shared guidance; retain adequate topic content and correct only real gaps | Accepted |
 | DR15 | All engineering solution choices, at design and implementation levels, require research of comparable problems and authoritative guidance using project needs, constraints and applicable KB principles; familiarity alone is not evidence | Accepted |
 | DR16 | Language, version, runtime, dependencies and deployment constraints inform research. Language is either a fixed project constraint or a choice within authorized scope; external examples do not prove project fitness | Accepted |
-| DR17 | Workflow skill owns the global rule; reviewer and triage skills reference it, KB README summarizes it. Do not copy it into every topic or project system prompt; retain the existing verified skill-loading entry | Accepted |
+| DR17 | The former workflow-owned rule is superseded by DR18. Do not copy it into every topic or project system prompt; retain the existing verified skill-loading entry | Changed |
+| DR18 | A standalone Solution Research KB document owns the unchanged full rule; workflow, reviewer and triage keep mandatory short read triggers at their current positions. Reuse KB installation and preserve accepted/candidate version separation | Accepted |
 
 ## Current understanding
 
@@ -72,11 +81,11 @@ authority and installed pin are preserved.
 | [Skills](../../skills/sdd-project-workflow/SKILL.md) | Existing concise principles, scope references, concurrent-work guidance and project-context entry points |
 | [Project Experience](../../docs/experience.md) | Durable project-specific lessons; must remain separate from centrally maintained KB |
 
-Material assumptions: None. The owner accepted this reviewed research
-amendment. V01 and FC01–FC02 remain unchanged and approved. D08 changes
-the required basis for solution choices within existing review and error-handling
-boundaries; it adds no independent checkpoint, runtime rejection or fail-closed
-behavior.
+Material assumptions: None. The owner authorized the standalone-document
+amendment; exact-candidate acceptance remains outstanding. V01 and FC01–FC02
+remain unchanged and approved. Research semantics stay within existing review
+and error-handling boundaries; no independent checkpoint, runtime rejection or
+fail-closed behavior is added.
 
 ## Concluded design
 
@@ -84,14 +93,14 @@ The metadata state controls whether this reviewed design candidate is frozen.
 
 | Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
-| D01 | Source `knowledge-base/` contains twelve topics and README. Projects receive its official documents at `.github/spec-driven-delivery/knowledge-base/`, Git-tracked and retained through cleanup | Manifest indexes the installed KB root/revision relationship; runtime uses the same accepted immutable playbook pin, not another version history or feature-state record | Actual installation contains every official document; links and pin agree |
+| D01 | Source `knowledge-base/` contains thirteen topics and README, including the extracted Solution Research guidance. Projects receive its official documents at `.github/spec-driven-delivery/knowledge-base/`, Git-tracked and retained through cleanup | Manifest indexes the installed KB root/revision relationship; runtime uses the same accepted immutable playbook pin, not another version history or feature-state record | Actual installation contains every official document; links and pin agree |
 | D02 | Skills keep short outcome principles and explicit task-relevant instructions to read the matching KB topic before applying it. Both author and reviewers use the same installed KB | Resolve topics from the manifest-linked KB root, not source-repository-relative paths that break on installation. Do not add a compulsory README hop, routinely reload unchanged topics, or duplicate full guidance | Real installed author/reviewer/triage contexts can locate and use their topic; source and installed routing both work |
 | D03 | Agents choose a project-specific implementation satisfying both project authority and agreed core principles, with reuse and minimal sufficient change | Examples and reference implementation techniques are not mandatory. True conflicts follow existing error handling; an agent cannot silently ignore a principle or modify project authority. No speculative abstractions, policy additions, universal recipes, or personal-style blockers | Author/reviewer scenarios distinguish a simpler suitable implementation from mechanical framework adoption or principle avoidance |
 | D04 | Each topic distills verified primary practice into concise principles, application boundaries and useful examples, retaining original reference links | The KB README owns shared content-selection criteria; topics apply them without repeating the table. Knowledge is not a copied manual or exhaustive checklist. References support solution research under D08 and deeper questions, not new authority. Multi-agent techniques are identified as evolving rather than universal standards | Per-document semantic review verifies claims, applicability, reference provenance and lack of duplicate detailed owners |
 | D05 | Adoption and upgrade install/synchronize the complete official tree: additions, modifications, and removals of obsolete managed documents | Preserve project policies, Experience and unrelated/local content. Reuse existing installer ownership/provenance/rollback patterns. Legacy revisions without KB remain valid; new obligations apply only when the revision ships KB. An unaccepted candidate cannot silently activate newer obligations | Focused install/upgrade/rejection tests prove full-tree copying, safe removals, local-content preservation, old-pin compatibility and accepted runtime consistency |
-| D06 | Each of thirteen KB documents is one task, with its own wording review and human stop. Supporting installation and final integration are separate tasks | Normal feature integration model: task PRs target `codex/knowledge-base`, never `main`; final PR alone targets `main`. Autopilot is off. No next task starts before owner acceptance of the current task | Implementation plan records per-task owner gate, design mapping, dependencies, branch and PR target; PR evidence retains each review |
+| D06 | Each of fourteen KB documents is one task, with its own wording review and human stop. Supporting installation and final integration are separate tasks | Normal feature integration model: task PRs target `codex/knowledge-base`, never `main`; final PR alone targets `main`. Autopilot is off. No next task starts before owner acceptance of the current task | Implementation plan records per-task owner gate, design mapping, dependencies, branch and PR target; PR evidence retains each review |
 | D07 | Separate design-level Performance and Observability from Code-Level Performance Engineering using the performance boundaries below. Both author and reviewer routing explicitly cover the appropriate design or implementation context | Shared principles have one detailed owner; the code topic links to them and explains cost mechanisms, applicability and representative techniques rather than prescribing a universal optimization list | Semantic review and focused installed-routing evidence cover the two distinct topics and their project-aware application |
-| D08 | Require evidence-grounded research for all engineering solution choices at design and implementation levels, using the project problem, requirements, boundaries and relevant technical context | Workflow skill owns the full rule below; reviewer/triage skills use short role-specific references, and KB README keeps a human-facing summary. Existing applicable research can be reused; no per-line browsing, new document, search quota or extra approval gate | Installed references resolve; author/reviewer scenarios distinguish researched applicable choices from familiar guesses, blind copying or unauthorized technology changes |
+| D08 | Require evidence-grounded research for all engineering solution choices at design and implementation levels, using the project problem, requirements, boundaries and relevant technical context | `knowledge-base/solution-research.md` owns the unchanged full rule below. Workflow/reviewer/triage skills keep mandatory short read triggers at their current positions; KB README indexes it. Existing applicable research can be reused; no per-line browsing, per-delivery research record, search quota or extra approval gate | Installed and candidate-version references resolve; author/reviewer scenarios distinguish researched applicable choices from familiar guesses, blind copying or unauthorized technology changes |
 
 ## Proposed task mapping
 
@@ -113,17 +122,18 @@ These are planning inputs, not an implementation plan or permission to bypass de
 | T12 | `code-simplicity-and-clarity.md` | D02, D03, D04 | Document wording review; stop |
 | T13 | `performance-and-observability.md`: design-stage measurement and five performance boundaries | D02, D03, D04, D07 | Document wording review; stop |
 | T14 | `code-level-performance-engineering.md`: cost mechanisms and bounded implementation techniques; owner-requested global research clarification in existing skills/index and affected checks after amendment acceptance | D02, D03, D04, D07, D08 | Document wording review; stop |
-| T15 | Final integration: remove migrated detailed duplication, reconcile routing/adoption/upgrade/README diagrams, verify complete installed package | D01–D08 | Integration review; stop, then final readiness under existing gates |
+| T15 | `solution-research.md`: extract the existing D08 rule; replace workflow-owned details and cross-skill routes with mandatory direct KB reading; update index and affected installed/candidate routing checks | D01, D02, D03, D08 | Document wording review; stop |
+| T16 | Final integration: remove migrated detailed duplication, reconcile routing/adoption/upgrade/README diagrams, verify complete installed package | D01–D08 | Integration review; stop, then final readiness under existing gates |
 
 Each topic task includes its immediate skill trigger, index and affected checks;
 links must resolve within the task candidate. Supporting edits do not create
-another topic or permit completing later documents early. The former, unstarted
-T14 integration task becomes T15; no completed task is renumbered. T15 is reconciliation,
+another topic or permit completing later documents early. The unstarted final
+integration task becomes T16; no completed task is renumbered. T16 is reconciliation,
 not a second copy of the documentation or a new validation controller.
 
 ### Global solution research
 
-The workflow skill's Outcome section owns this requirement, under
+The shared `knowledge-base/solution-research.md` owns this requirement, under
 `[!IMPORTANT]`. Before selecting an engineering solution, at design or
 implementation level, agents MUST search for comparable problems and relevant
 authoritative engineering guidance using the problem, requirements, project
@@ -141,20 +151,28 @@ introduce a new language or change project authority.
 
 Reuse already-read research when its evidence remains current and applicable;
 do not repeat browsing for each coding action. Unavailable sources or unresolved
-material uncertainty follow existing error handling. No new research document,
+material uncertainty follow existing error handling. No per-delivery research record,
 fixed source count, prescribed technique or standalone gate is required.
 
-Reviewer skill checks the choice's research basis and applicability; reviewer
-alternatives and triage remedies follow the same rule. Those skills reference
-the installed workflow rule rather than copy it. KB README supplies a short
-reader-facing explanation; topics retain their specific practice and sources.
-Where a same-revision workflow skill is not installed, resolve its source
-through the verified runtime guide that owns the consuming skill. In adoption
-this is the normal guide; candidate-upgrade triage uses the upgrade guide's
-candidate checkout, not an older installed workflow. Reading that source does
-not activate its workflow or candidate revision. If the owned checkout was
-cleaned up, use existing runtime recovery within authority instead of a broken
-link, stale rule or duplicate copy. No installer mechanism is added.
+Workflow, reviewer and triage skills MUST require reading the shared document
+at their current research-trigger positions, under `[!IMPORTANT]`. A summary
+or prior familiarity cannot replace reading it; unchanged content already read
+in context need not be reread routinely. Workflow applies it to solution choices;
+reviewer checks the research basis and applicability, including its own proposed
+alternatives; triage applies it to investigation methods and remedies, not proof
+of a project-specific cause. Remove the former workflow-owned full rule and
+cross-skill research references instead of maintaining a second copy. KB README
+keeps an index link and short purpose; topics retain their specific practice and sources.
+
+Normal workflow/reviewer/triage use the manifest-linked installed KB. Before a
+manifest exists, adoption uses `Knowledge Base root` in its verified normal
+runtime guide; the installed document persists after temporary checkout cleanup.
+Candidate-upgrade triage instead reads `knowledge-base/solution-research.md`
+from the verified upgrade guide's candidate checkout at its `Resolved revision`,
+not the older installed KB. Reading candidate guidance does not activate that
+revision or grant project authority. Reuse existing KB synchronization,
+provenance, validation and recovery; add no installer mechanism. Legacy pins
+that do not ship the document gain no retrospective requirement.
 Project system prompts retain their verified manifest/runtime/skill entry,
 not a duplicate research rule. Reconcile conflicting wording only, and verify
 links in the actual installed context.
@@ -257,7 +275,8 @@ these links do not require every topic to reproduce every source or example.
 | DR14 | D04 | Accepted |
 | DR15 | D08 | Accepted |
 | DR16 | D03, D08 | Accepted |
-| DR17 | D02, D08 | Accepted |
+| DR17 | D02, D08 | Changed |
+| DR18 | D01, D02, D06, D08 | Accepted |
 
 Formal conclusion and freeze require two independent reviewers and owner
 acceptance under the existing accepted-design authority.
@@ -270,7 +289,7 @@ checkpoint or runtime validation.
 
 | ID | Validation / authority / execution boundary | Protected outcome / risk / marginal value | Concrete invalid case | Failure effect / recovery | Cost / risk reduction | Existing or cheaper mechanism / coverage / why insufficient | Fail-close / test reference | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| V01 | Extend existing installer/runtime integrity and synchronization ownership/baseline checks to official KB content when the pinned revision ships it; installer and runtime-validation boundary | Prevent missing/mixed guidance and unintended loss of local or non-owned content | A required topic has a mismatched revision, or upgrade would overwrite a locally edited topic | FC01; FC02 | Bounded official-file/baseline checks, not project-code inspection or an additional validation stage | Reuse managed-skill provenance/ownership patterns; current checks do not cover shared KB content or local KB changes | FC01; FC02; T01 and T15 test inventory | Approved |
+| V01 | Extend existing installer/runtime integrity and synchronization ownership/baseline checks to official KB content when the pinned revision ships it; installer and runtime-validation boundary | Prevent missing/mixed guidance and unintended loss of local or non-owned content | A required topic has a mismatched revision, or upgrade would overwrite a locally edited topic | FC01; FC02 | Bounded official-file/baseline checks, not project-code inspection or an additional validation stage | Reuse managed-skill provenance/ownership patterns; current checks do not cover shared KB content or local KB changes | FC01; FC02; T01 and T16 test inventory | Approved |
 
 ## Newly introduced fail-closed behaviors
 
@@ -287,7 +306,7 @@ the accepted inventory is retained.
 | Attention | Summary | Handling |
 | --- | --- | --- |
 | Design | D08 replaces uncertainty-only reference use with research-grounded solution selection across design and implementation; language/runtime are research inputs, not implicit technology-change authority | Approved |
-| Ownership | Workflow skill owns the full rule; review/triage reference it, KB README summarizes it; no topic-wide duplication or project system-prompt copy | Approved |
-| Delivery granularity | Fifteen accepted tasks: thirteen separate documents and two supporting units; T13 revised, T14 new code-level topic, integration moves to T15; stop after every task, no Autopilot | DISCLOSE |
+| Ownership | Solution Research becomes one shared KB document; all three skills keep mandatory short reads at their current positions. Accepted installed KB and upgrade-candidate KB remain separate | HUMAN_DECISION |
+| Delivery granularity | Preserve one document per task: T15 extracts Solution Research; unstarted final integration moves to T16. Fourteen documents plus two supporting units; stop after every task, no Autopilot | HUMAN_DECISION |
 | New controls | None in this amendment. Approved V01, FC01 and FC02 remain unchanged | DISCLOSE |
 | State | Metadata records design state; review/acceptance never claims implementation or installed KB activation | DISCLOSE |
