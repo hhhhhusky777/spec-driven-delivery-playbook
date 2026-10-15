@@ -22,15 +22,11 @@ skill supplies diagnosis methods, not operational permission or a new gate.
 > that revision ships it. Research supports method selection, not proof of a
 > project-specific cause.
 
-Normal runtime uses the manifest-linked installed KB. Before a manifest exists,
-use `Knowledge Base root` from the verified `.sdd-runtime/agent-guide.md`; the
-installed topic survives temporary checkout cleanup. Candidate-upgrade triage
-instead reads `knowledge-base/solution-research.md` in `Playbook checkout` at
-`Resolved revision` from the verified `.sdd-runtime/playbook-upgrade-guide.md`.
-Do not substitute the older installed KB for candidate guidance. Missing content
-uses existing authorized runtime recovery, not a guessed path or different
-revision. Reading candidate guidance does not activate that revision or grant
-project authority.
+Resolve `solution-research.md` from:
+
+- Normal runtime: the manifest-linked KB.
+- Before a manifest exists: `Knowledge Base root` in the verified `.sdd-runtime/agent-guide.md`.
+- Candidate upgrade: `knowledge-base/solution-research.md` under `Playbook checkout` at `Resolved revision` in the verified `.sdd-runtime/playbook-upgrade-guide.md`.
 
 When investigation requires assessing failure diagnostics or retry safety, read
 `error-handling-and-diagnosability.md` directly from the manifest-linked KB root
