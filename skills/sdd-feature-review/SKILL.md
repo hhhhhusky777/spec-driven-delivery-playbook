@@ -16,8 +16,8 @@ turning prior conclusions into assumptions.
 > you MUST read it before applying its guidance. A skill summary or prior
 > knowledge MUST NOT substitute for reading the topic.
 >
-> Read and apply the workflow skill's
-> [Solution research](../sdd-project-workflow/SKILL.md#solution-research) rule.
+> You MUST read and apply `solution-research.md` directly from the manifest-linked
+> KB root when the accepted pin ships it.
 > Check the candidate's research basis and project applicability; alternatives
 > you propose MUST meet the same requirement.
 

@@ -128,7 +128,7 @@ interpretation, not mandatory replacements or promised speedups.
 
 ## References
 
-For solution research under the workflow skill, start from the cost mechanism
+For [Solution Research](solution-research.md), start from the cost mechanism
 and project constraints, not a technique name. The sources above illustrate
 comparable problems; follow relevant official language, compiler, runtime,
 library or storage documentation for the project's actual version. For example,
