@@ -163,7 +163,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
     assert.match(normalized, /exact[- ]head|exact candidate/i);
     assert.match(normalized, /stricter .*policy|Project policy may require/i);
     assert.match(normalized, /90 minutes of active implementation|one task reaches 90 minutes/i);
-    assert.doesNotMatch(normalized, /one hour of active implementation|one task reaches one hour|Implement each task's required tests|Each task still implements the tests/i);
+    assert.doesNotMatch(normalized, /one hour of active implementation|one task reaches one hour|Implement each task's required tests|(?:Each|Every) task still implements the tests/i);
   }
   for (const document of [workflow, policy]) {
     const normalized = document.replace(/\s+/g, " ");
@@ -296,9 +296,9 @@ test("evidence-bounded scope uses one dangerous-assumption vocabulary", async ()
     assert.ok(skill.includes("`solution-research.md`"));
     assert.ok(!skill.includes("sdd-project-workflow/SKILL.md#solution-research"));
   }
-  for (const route of ["knowledge-base/solution-research.md",
+  for (const route of ["knowledge-base/",
     ".sdd-runtime/agent-guide.md", ".sdd-runtime/playbook-upgrade-guide.md"]) {
-    assert.ok(triage.includes(`\`${route}\``), `triage must retain its verified research route: ${route}`);
+    assert.ok(triage.includes(`\`${route}\``), `triage must retain its verified KB route: ${route}`);
   }
   assert.match(
     normalizedWorkflow,

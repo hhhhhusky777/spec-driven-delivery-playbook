@@ -157,15 +157,37 @@ async function acceptKnowledgeBaseRevision(project, revision, env = process.env)
   return runInstaller(project, ["--repository", guideValue(content, "Playbook source repository")], env);
 }
 
-test("knowledge base installs the actual index and available topics", async (t) => {
+async function createActualKnowledgeBaseFixture(t) {
   const source = await createPlaybookFixture(t);
   await cp(path.join(REPOSITORY_ROOT, "knowledge-base"),
     path.join(source.repository, "knowledge-base"), { recursive: true });
-  const readme = await readFile(path.join(REPOSITORY_ROOT, "knowledge-base/README.md"), "utf8");
-  const revision = await commitKnowledgeBase(source, { "README.md": readme });
+  for (const name of ["sdd-project-workflow", "sdd-feature-review", "sdd-problem-triage"]) {
+    await cp(path.join(REPOSITORY_ROOT, "skills", name),
+      path.join(source.repository, "skills", name), { recursive: true });
+  }
+  run("git", ["add", "skills"], source.repository);
+  const firstRevision = await commitKnowledgeBase(source, {});
+  return { ...source, firstRevision };
+}
+
+async function assertKnowledgeBaseRevision(root, source, revision, overrides = {}) {
+  const files = run("git", ["ls-tree", "-r", "--name-only", revision, "knowledge-base"],
+    source.repository).trim().split("\n");
+  for (const file of files) {
+    const relative = file.slice("knowledge-base/".length);
+    const expected = overrides[relative] ?? run("git", ["show", `${revision}:${file}`], source.repository);
+    assert.equal(await readFile(path.join(root, relative), "utf8"), expected, relative);
+  }
+  assert.equal((await readFile(path.join(root, ".sdd-playbook-managed"), "utf8")).split("\n")[0], revision);
+  return files.length;
+}
+
+test("knowledge base installs the actual index and available topics", async (t) => {
+  const source = await createActualKnowledgeBaseFixture(t);
+  const revision = source.firstRevision;
   const project = await createInstalledProject(t, { ...source, firstRevision: revision });
-  const installed = path.join(project, ".github/spec-driven-delivery/knowledge-base/README.md");
-  assert.equal(await readFile(installed, "utf8"), readme);
+  const root = path.join(project, ".github/spec-driven-delivery/knowledge-base");
+  assert.equal(await assertKnowledgeBaseRevision(root, source, revision), 14);
   const guide = await readFile(path.join(project, ".sdd-runtime/agent-guide.md"), "utf8");
   assert.equal(guideValue(guide, "Resolved revision"), revision);
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
@@ -174,12 +196,7 @@ test("knowledge base installs the actual index and available topics", async (t) 
 });
 
 test("knowledge base topic routing resolves for installed author, reviewer and triage skills", async (t) => {
-  const source = await createPlaybookFixture(t);
-  for (const name of ["sdd-project-workflow", "sdd-feature-review", "sdd-problem-triage"]) {
-    await cp(path.join(REPOSITORY_ROOT, "skills", name, "SKILL.md"),
-      path.join(source.repository, "skills", name, "SKILL.md"));
-  }
-  run("git", ["add", "skills"], source.repository);
+  const source = await createActualKnowledgeBaseFixture(t);
   const topics = [
     "simple-design-and-reuse.md",
     "architecture-scope-and-assumptions.md",
@@ -195,11 +212,7 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
     "code-level-performance-engineering.md",
     "solution-research.md",
   ];
-  await cp(path.join(REPOSITORY_ROOT, "knowledge-base"),
-    path.join(source.repository, "knowledge-base"), { recursive: true });
-  const revision = await commitKnowledgeBase(source, {
-    "README.md": await readFile(path.join(REPOSITORY_ROOT, "knowledge-base/README.md"), "utf8"),
-  });
+  const revision = source.firstRevision;
   const project = await createInstalledProject(t, { ...source, firstRevision: revision });
   const guide = await readFile(path.join(project, ".sdd-runtime/agent-guide.md"), "utf8");
   const manifestPath = path.join(project, ".github/spec-driven-delivery/project-adoption-manifest.md");
@@ -219,7 +232,7 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
         await readFile(path.join(REPOSITORY_ROOT, "knowledge-base", topic), "utf8"));
     }
     assert.match(skill.replace(/^>\s?/gm, "").replace(/\s+/g, " "),
-      /directly from the manifest-linked KB root/);
+      name === "sdd-problem-triage" ? /resolved KB root/ : /directly from the manifest-linked KB root/);
   }
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
 });
@@ -284,32 +297,45 @@ test("knowledge base legacy pins leave unrelated local KB-shaped guidance untouc
 });
 
 test("knowledge base accepted synchronization updates adds and removes only unchanged official files", async (t) => {
-  const source = await createPlaybookFixture(t);
+  const source = await createActualKnowledgeBaseFixture(t);
+  const readme = await readFile(path.join(REPOSITORY_ROOT, "knowledge-base/README.md"), "utf8");
   const first = await commitKnowledgeBase(source, {
-    "README.md": "# Old knowledge\n", "obsolete.md": "# Obsolete\n",
-  });
+    "README.md": `${readme}\nPrevious revision.\n`, "obsolete.md": "# Obsolete\n",
+  }, ["solution-research.md"]);
   const project = await createInstalledProject(t, { ...source, firstRevision: first });
   const root = path.join(project, ".github/spec-driven-delivery/knowledge-base");
   await writeFile(path.join(root, "project-note.md"), "Project lesson\n");
+  await mkdir(path.join(project, "docs"));
+  await writeFile(path.join(project, "docs/experience.md"), "# Project Experience\nKeep this lesson.\n");
+  await writeFile(path.join(project, "docs/policy.md"), "# Project policy\nKeep this authority.\n");
   const revision = await commitKnowledgeBase(source, {
-    "README.md": "# Updated knowledge\n", "new.md": "# New topic\n",
+    "README.md": readme,
+    "solution-research.md": await readFile(path.join(REPOSITORY_ROOT, "knowledge-base/solution-research.md"), "utf8"),
   }, ["obsolete.md"]);
   assert.equal(runInstaller(project, ["--repository", source.repository, "--upgrade"]).status, 0);
-  assert.equal(await readFile(path.join(root, "README.md"), "utf8"), "# Old knowledge\n");
+  await assertKnowledgeBaseRevision(root, source, first);
+  await assert.rejects(access(path.join(root, "solution-research.md")));
   assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
-  assert.equal(await readFile(path.join(root, "README.md"), "utf8"), "# Old knowledge\n");
+  await assertKnowledgeBaseRevision(root, source, first);
   const accepted = await acceptKnowledgeBaseRevision(project, revision);
   assert.equal(accepted.status, 0, accepted.stderr);
-  assert.equal(await readFile(path.join(root, "README.md"), "utf8"), "# Updated knowledge\n");
-  await access(path.join(root, "new.md"));
+  assert.equal(await assertKnowledgeBaseRevision(root, source, revision), 14);
   await assert.rejects(access(path.join(root, "obsolete.md")));
   assert.equal(await readFile(path.join(root, "project-note.md"), "utf8"), "Project lesson\n");
+  assert.equal(await readFile(path.join(project, "docs/experience.md"), "utf8"), "# Project Experience\nKeep this lesson.\n");
+  assert.equal(await readFile(path.join(project, "docs/policy.md"), "utf8"), "# Project policy\nKeep this authority.\n");
+  for (const name of ["sdd-project-workflow", "sdd-feature-review", "sdd-problem-triage"]) {
+    const directory = path.join(project, ".agents/skills", name);
+    assert.equal(await readFile(path.join(directory, "SKILL.md"), "utf8"),
+      run("git", ["show", `${revision}:skills/${name}/SKILL.md`], source.repository));
+    assert.equal((await readFile(path.join(directory, ".sdd-playbook-managed"), "utf8")).trim(), revision);
+  }
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
 });
 
 test("knowledge base synchronization preserves local edits and unowned collisions", async (t) => {
-  const source = await createPlaybookFixture(t);
-  const first = await commitKnowledgeBase(source, { "README.md": "# Original\n" });
+  const source = await createActualKnowledgeBaseFixture(t);
+  const first = source.firstRevision;
   for (const managed of [true, false]) {
     const project = managed
       ? await createInstalledProject(t, { ...source, firstRevision: first })
@@ -322,6 +348,8 @@ test("knowledge base synchronization preserves local edits and unowned collision
     assert.notEqual(result.status, 0);
     assert.match(result.stderr, /knowledge base.*(local|ownership|unmanaged)/i);
     assert.equal(await readFile(path.join(root, "README.md"), "utf8"), "Local content\n");
+    if (managed) await assertKnowledgeBaseRevision(root, source, first, { "README.md": "Local content\n" });
+    else await assert.rejects(access(path.join(root, ".sdd-playbook-managed")));
   }
 });
 
@@ -372,8 +400,8 @@ test("knowledge base preserves linked local parents and rejects unsupported offi
 });
 
 test("knowledge base failed directory replacement preserves the accepted tree", async (t) => {
-  const source = await createPlaybookFixture(t);
-  const first = await commitKnowledgeBase(source, { "README.md": "# Accepted\n" });
+  const source = await createActualKnowledgeBaseFixture(t);
+  const first = source.firstRevision;
   const project = await createInstalledProject(t, { ...source, firstRevision: first });
   const root = path.join(project, ".github/spec-driven-delivery/knowledge-base");
   await writeFile(path.join(root, "local.md"), "Local lesson\n");
@@ -384,6 +412,7 @@ test("knowledge base failed directory replacement preserves the accepted tree", 
   await writeFile(path.join(bin, "mv"), `#!/usr/bin/env bash
 if [[ "$SDD_TEST_FAILURE_MODE" == backup && "$2" == */.knowledge-base-backup ]] ||
    [[ "$SDD_TEST_FAILURE_MODE" == publish && "$1" == */.knowledge-base-stage ]]; then
+  printf 'Injected knowledge base %s failure\n' "$SDD_TEST_FAILURE_MODE" >&2
   exit 1
 fi
 exec /bin/mv "$@"
@@ -393,7 +422,8 @@ exec /bin/mv "$@"
       ...process.env, PATH: `${bin}:${process.env.PATH}`, SDD_TEST_FAILURE_MODE: mode,
     });
     assert.notEqual(result.status, 0);
-    assert.equal(await readFile(path.join(root, "README.md"), "utf8"), "# Accepted\n");
+    assert.match(result.stderr, new RegExp(`Injected knowledge base ${mode} failure`));
+    assert.equal(await assertKnowledgeBaseRevision(root, source, first), 14);
     assert.equal(await readFile(path.join(root, "local.md"), "utf8"), "Local lesson\n");
     assert.equal(await readFile(path.join(root, ".sdd-playbook-managed"), "utf8"), marker);
   }
@@ -464,11 +494,13 @@ test("legacy pins without triage remain valid and gain it only in the newer cand
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
 });
 
-test("installed skill routing resolves same-revision research across profiles and cleanup", async (t) => {
+test("installed triage routing resolves same-revision KB topics across profiles and cleanup", async (t) => {
   const source = await createPlaybookFixture(t);
   const legacyRevision = await commitKnowledgeBase(source, { "README.md": "# Accepted knowledge\n" });
-  const acceptedResearch = "# Solution Research\n\nAccepted research guidance.\n";
-  const acceptedRevision = await commitKnowledgeBase(source, { "solution-research.md": acceptedResearch });
+  const topics = ["solution-research.md", "error-handling-and-diagnosability.md",
+    "testing-and-reproduction.md", "experience-and-learning.md"];
+  const acceptedTopics = Object.fromEntries(topics.map(topic => [topic, `# Previous ${topic}\nAccepted guidance.\n`]));
+  const acceptedRevision = await commitKnowledgeBase(source, acceptedTopics);
   for (const name of ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade",
     "sdd-feature-review", "sdd-problem-triage"]) {
     await cp(path.join(REPOSITORY_ROOT, "skills", name), path.join(source.repository, "skills", name),
@@ -477,15 +509,16 @@ test("installed skill routing resolves same-revision research across profiles an
   run("git", ["add", "skills"], source.repository);
   await cp(path.join(REPOSITORY_ROOT, "knowledge-base"), path.join(source.repository, "knowledge-base"),
     { recursive: true });
-  const expectedResearch = await readFile(path.join(REPOSITORY_ROOT, "knowledge-base/solution-research.md"), "utf8");
-  const revision = await commitKnowledgeBase(source, { "solution-research.md": expectedResearch });
+  const revision = await commitKnowledgeBase(source, {});
   const expectedTriage = await readFile(path.join(source.repository, "skills/sdd-problem-triage/SKILL.md"), "utf8");
 
-  async function researchTopic(project, profile) {
+  async function triageTopics(project, profile) {
     const upgrade = profile.endsWith("upgrade");
     const triageDirectory = path.join(project, ".agents", "skills", "sdd-problem-triage");
     const triage = await readFile(path.join(triageDirectory, "SKILL.md"), "utf8");
-    assert.ok(triage.includes("`solution-research.md`"), "triage must identify the shared research topic");
+    for (const topic of topics) {
+      assert.ok(triage.includes(`\`${topic}\``), `triage must identify ${topic}`);
+    }
     const guideName = upgrade ? "playbook-upgrade-guide.md" : "agent-guide.md";
     const guideRoute = [...triage.matchAll(/`(\.sdd-runtime\/[^`]+-guide\.md)`/g)]
       .map(([, relative]) => relative).find(relative => path.basename(relative) === guideName);
@@ -497,23 +530,25 @@ test("installed skill routing resolves same-revision research across profiles an
     assert.equal((await readFile(path.join(triageDirectory, ".sdd-playbook-managed"), "utf8")).trim(), revision);
     assert.equal(triage, expectedTriage);
     const checkout = guideValue(guide, "Playbook checkout");
-    let topicPath;
+    let kbRoot;
     if (upgrade) {
-      const routes = [...triage.matchAll(/`(knowledge-base\/solution-research\.md)`/g)];
-      assert.equal(routes.length, 1, "candidate triage must identify its source topic");
+      const routes = [...triage.matchAll(/`(knowledge-base\/)`/g)];
+      assert.equal(routes.length, 1, "candidate triage must identify its source KB root");
       assert.equal(run("git", ["rev-parse", "HEAD"], checkout).trim(), revision);
-      topicPath = path.join(checkout, routes[0][1]);
-      assert.equal(await readFile(topicPath, "utf8"), run("git", ["show", `${revision}:${routes[0][1]}`], checkout));
+      kbRoot = path.join(checkout, routes[0][1]);
     } else {
       const root = profile === "adoption" ? guideValue(guide, "Knowledge Base root")
         : guideValue(await readFile(path.join(project, ".github/spec-driven-delivery/project-adoption-manifest.md"), "utf8"), "Knowledge Base root");
       assert.equal(root, guideValue(guide, "Knowledge Base root"));
       const inventory = await readFile(path.join(project, root, ".sdd-playbook-managed"), "utf8");
       assert.equal(inventory.split("\n")[0], revision);
-      topicPath = path.join(project, root, "solution-research.md");
+      kbRoot = path.join(project, root);
     }
-    assert.equal(await readFile(topicPath, "utf8"), expectedResearch);
-    return { guide, checkout, topicPath };
+    for (const topic of topics) {
+      assert.equal(await readFile(path.join(kbRoot, topic), "utf8"),
+        run("git", ["show", `${revision}:knowledge-base/${topic}`], source.repository), `${profile}: ${topic}`);
+    }
+    return { guide, checkout, kbRoot };
   }
 
   for (const profile of ["adoption", "workflow", "upgrade", "legacy-upgrade"]) {
@@ -528,9 +563,9 @@ test("installed skill routing resolves same-revision research across profiles an
       await writeFile(manifestPath, await readFile(manifestPath, "utf8")
         + `| Knowledge Base root | \`${guideValue(guide, "Knowledge Base root")}\` |\n`);
     }
-    const installedTopic = path.join(project, ".github/spec-driven-delivery/knowledge-base/solution-research.md");
+    const installedRoot = path.join(project, ".github/spec-driven-delivery/knowledge-base");
     if (profile === "legacy-upgrade") {
-      await assert.rejects(access(installedTopic));
+      for (const topic of topics) await assert.rejects(access(path.join(installedRoot, topic)));
       assert.equal(runInstaller(project, ["--validate"]).status, 0);
     }
     if (profile !== "workflow") {
@@ -550,7 +585,7 @@ test("installed skill routing resolves same-revision research across profiles an
         await access(path.resolve(path.dirname(entry), relative));
       }
     }
-    const resolved = await researchTopic(project, profile);
+    const resolved = await triageTopics(project, profile);
     const workflowDirectory = path.join(project, ".agents", "skills", "sdd-project-workflow");
     if (profile === "adoption") {
       await assert.rejects(access(manifestPath));
@@ -570,20 +605,24 @@ test("installed skill routing resolves same-revision research across profiles an
       assert.equal((await readFile(path.join(workflowDirectory, ".sdd-playbook-managed"), "utf8")).trim(), installedRevision);
       const acceptedWorkflow = await readFile(path.join(workflowDirectory, "SKILL.md"), "utf8");
       assert.equal(acceptedWorkflow, run("git", ["show", `${installedRevision}:skills/sdd-project-workflow/SKILL.md`], source.repository));
-      assert.notEqual(resolved.topicPath, installedTopic);
+      assert.notEqual(resolved.kbRoot, installedRoot);
     }
 
     if (!upgrade) {
       assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
       await assert.rejects(access(resolved.checkout));
-      assert.equal((await researchTopic(project, profile)).topicPath, resolved.topicPath);
+      assert.equal((await triageTopics(project, profile)).kbRoot, resolved.kbRoot);
     } else {
-      if (profile === "legacy-upgrade") await assert.rejects(access(installedTopic));
-      else assert.equal(await readFile(installedTopic, "utf8"), acceptedResearch);
+      for (const topic of topics) {
+        if (profile === "legacy-upgrade") await assert.rejects(access(path.join(installedRoot, topic)));
+        else assert.equal(await readFile(path.join(installedRoot, topic), "utf8"), acceptedTopics[topic]);
+      }
       assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
       assert.equal(runInstaller(project, ["--validate"]).status, 0);
-      if (profile === "legacy-upgrade") await assert.rejects(access(installedTopic));
-      else assert.equal(await readFile(installedTopic, "utf8"), acceptedResearch);
+      for (const topic of topics) {
+        if (profile === "legacy-upgrade") await assert.rejects(access(path.join(installedRoot, topic)));
+        else assert.equal(await readFile(path.join(installedRoot, topic), "utf8"), acceptedTopics[topic]);
+      }
     }
   }
 });

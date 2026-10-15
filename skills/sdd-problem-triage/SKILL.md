@@ -13,8 +13,8 @@ authority for classification, recovery, issue tracking and escalation. This
 skill supplies diagnosis methods, not operational permission or a new gate.
 
 > [!IMPORTANT]
-> When a KB topic-read trigger applies and the accepted pin ships the topic,
-> you MUST read it before applying its guidance. A skill summary or prior
+> When a KB topic-read trigger applies and this skill's revision ships the topic,
+> you MUST read the matching version before applying it. A skill summary or prior
 > knowledge MUST NOT substitute for reading the topic.
 >
 > Before selecting investigation methods or remedies, you MUST read and apply
@@ -22,15 +22,15 @@ skill supplies diagnosis methods, not operational permission or a new gate.
 > that revision ships it. Research supports method selection, not proof of a
 > project-specific cause.
 
-Resolve `solution-research.md` from:
+Resolve KB topic filenames from:
 
 - Normal runtime: the manifest-linked KB.
 - Before a manifest exists: `Knowledge Base root` in the verified `.sdd-runtime/agent-guide.md`.
-- Candidate upgrade: `knowledge-base/solution-research.md` under `Playbook checkout` at `Resolved revision` in the verified `.sdd-runtime/playbook-upgrade-guide.md`.
+- Candidate upgrade: `knowledge-base/` under `Playbook checkout` at `Resolved revision` in the verified `.sdd-runtime/playbook-upgrade-guide.md`.
 
 When investigation requires assessing failure diagnostics or retry safety, read
-`error-handling-and-diagnosability.md` directly from the manifest-linked KB root
-when the accepted pin ships it. Apply it within the project's error contract and
+`error-handling-and-diagnosability.md` directly from the resolved KB root
+when this skill's revision ships it. Apply it within the project's error contract and
 authority.
 
 Default to read-only investigation. Changes, restarts, rollback, destructive
@@ -55,8 +55,8 @@ is insufficient or pursue endless investigation without information gain.
 ## Reproduction and observation
 
 Before designing a reproducer or assessing test failure evidence, read
-`testing-and-reproduction.md` directly from the manifest-linked KB root when the
-accepted pin ships it. Preserve the original failure and its cause-bearing
+`testing-and-reproduction.md` directly from the resolved KB root when this
+skill's revision ships it. Preserve the original failure and its cause-bearing
 conditions; simplify without removing the suspected cause.
 
 Add only authorized, redacted observation that distinguishes hypotheses;
@@ -81,7 +81,7 @@ exact-candidate review.
 
 Use the owning Issue/PR or implementation plan, not a new triage document.
 Before using or refining project Experience, read `experience-and-learning.md`
-directly from the manifest-linked KB root when the accepted pin ships it.
+directly from the resolved KB root when this skill's revision ships it.
 Consult the manifest-linked project lessons for applicable verified approaches;
 check them against current evidence and retain only actionable reusable learning
 under project contribution guidance.
