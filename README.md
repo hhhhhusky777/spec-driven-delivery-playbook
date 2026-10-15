@@ -24,6 +24,7 @@ useful rather than adding process overhead.
 | Solution whiteboarding | Turn an uncertain need into an accepted design before dependent implementation |
 | Outcome-based planning | Map design points to tasks, dependencies, validation, and Definition of Done |
 | Context-native handoff | Let a fresh agent resume from repository state without inheriting another agent's chat history |
+| Project-aware engineering Knowledge Base | Apply researched engineering principles within the project's real requirements, using the same versioned guidance for authors and reviewers |
 | Efficient implementation | Batch coherent work and avoid unnecessary stops while preserving real gates |
 | Efficiency and concurrency | Overlap independent execution and delegate worthwhile work while the main agent advances delivery |
 | Reliable review | Give two isolated reviewers and the owner one exact, reviewable candidate |
@@ -67,10 +68,12 @@ accepted installation.
   - [Try it in a project](#try-it-in-a-project)
 - [Understand the model](#understand-the-model)
   - [Six core goals](#six-core-goals)
+  - [Keep scope evidence-bounded](#keep-scope-evidence-bounded)
   - [Three durable documents](#three-durable-documents)
   - [Where evidence lives](#where-evidence-lives)
 - [Explore the features](#explore-the-features)
   - [Adopt once and upgrade safely](#adopt-once-and-upgrade-safely)
+  - [Apply project-aware engineering knowledge](#apply-project-aware-engineering-knowledge)
   - [Use an Issue-only Fast Fix when the boundary is already clear](#use-an-issue-only-fast-fix-when-the-boundary-is-already-clear)
   - [Discuss and conclude a design](#discuss-and-conclude-a-design)
   - [Plan and track delivery](#plan-and-track-delivery)
@@ -162,9 +165,10 @@ durable document has one responsibility:
 Project policies stay in their existing canonical files. The workflow skill
 guides the agent but owns no feature state.
 
-Three documents is a storage model, not a reduced-information model. Each
-template provides a comprehensive menu for its responsibility: project
-authority in the manifest; discovery and design in the whiteboard; and
+Three documents is a delivery-state model, not a limit on reusable guidance or
+a reduced-information model. Each template provides a comprehensive menu for
+its responsibility: project authority in the manifest; discovery and design in
+the whiteboard; and
 contracts, architecture, tasks, validation, recovery, and completion in the
 plan. Agents keep the applicable information and omit irrelevant ceremony.
 
@@ -191,6 +195,8 @@ that history into extra ledgers or status documents.
 | Fast Fix outcome and bounded scope | Issue |
 | Review findings, checks, acceptance, and merge | Pull request |
 | Reusable policy | The owning project policy document |
+| Shared engineering practice | Installed Knowledge Base, indexed by the manifest |
+| Verified project-specific lessons | Manifest-linked project Experience or existing equivalent |
 
 ## Explore the features
 
@@ -201,7 +207,9 @@ discovers contribution rules, test expectations, security boundaries, and
 owner authority; records the accepted immutable playbook revision; prepares an
 empty whiteboard; and obtains review of one coherent installation package.
 The manifest also indexes durable project Experience or existing equivalent
-guidance, so a fresh agent can reuse verified lessons.
+guidance, so a fresh agent can reuse verified lessons. For revisions shipping a
+Knowledge Base, it also identifies the installer-managed KB root; the official
+documents share the accepted playbook pin and persist across features.
 
 Future features do not repeat adoption. Each delivery first creates its
 isolated worktree and owned delivery branch, checks for a newer playbook
@@ -219,6 +227,9 @@ flowchart TD
     S["Verified immutable playbook revision"] --> R["Reconcile project authority"]
     R --> M["Manifest: pin + canonical sources"]
     R --> W["Whiteboard: EMPTY"]
+    S --> K["Install official KB when shipped"]
+    K --> M
+    K --> V
     M --> V["Project validation + two-agent review"]
     W --> V
     V --> H["Owner acceptance"]
@@ -235,6 +246,53 @@ flowchart TD
 See the [adoption skill](skills/sdd-project-adoption/SKILL.md) and
 [upgrade skill](skills/sdd-playbook-upgrade/SKILL.md) for their canonical
 outcomes and boundaries.
+
+### Apply project-aware engineering knowledge
+
+The [Engineering Knowledge Base](knowledge-base/README.md) distills primary
+industry guidance into practical principles, applicability boundaries and
+concrete examples. It covers research, design and reuse, contracts, coding
+clarity, performance, diagnostics, testing, security, review, concurrency and
+learning. Authors and reviewers use the same revision-matched guidance rather
+than reconstructing practices from scattered references.
+
+Skills keep concise principles and mandatory topic-read triggers. When a
+trigger applies, the agent reads the topic directly from the manifest-linked
+KB; a summary or prior familiarity does not replace that reading. The KB README
+is a human index, not a required intermediate hop.
+
+The agent finds a solution within both the project's accepted boundaries and
+the KB's engineering principles. It researches comparable problems using the
+actual requirements, language, runtime and deployment constraints, then checks
+applicability against project evidence. Examples are possible techniques, not
+recipes to copy. [Solution Research](knowledge-base/solution-research.md) owns
+the research requirement, evidence reuse and proportionate PoC guidance.
+
+```mermaid
+flowchart TD
+    S["Author / reviewer / triage skill trigger"] --> K["Read the relevant installed KB topic"]
+    K --> R["Research comparable problems and primary sources"]
+    P["Project requirements, authority and technical constraints"] --> R
+    R --> A["Choose the simplest sufficient project-specific solution"]
+    P --> A
+    A --> E["Verify against project evidence and existing gates"]
+```
+
+| Source | Responsibility |
+| --- | --- |
+| Project policies and accepted design | Authorize scope, behavior and protected boundaries |
+| Installed KB | Supply shared engineering principles and references; no authority to expand scope |
+| Project Experience | Preserve verified local lessons and how to avoid repeated trial and error |
+
+The installer copies the complete official `knowledge-base/` tree to
+`.github/spec-driven-delivery/knowledge-base/` by default, or under an explicitly
+configured adoption root. Commit these reusable documents with the adoption or
+accepted upgrade. Candidate-upgrade triage reads the verified candidate checkout
+instead of mixing its guidance with the older accepted KB. Accepted upgrades
+synchronize official additions, updates and removals while preserving project
+Experience and non-owned content; local edits require reconciliation. Older pins
+without KB remain valid. This is shared guidance, not another feature-state
+document or mandatory policy suite.
 
 ### Use an Issue-only Fast Fix when the boundary is already clear
 
@@ -366,6 +424,7 @@ canonical sources:
 | Implementation plan, when present | Current state, task boundaries, dependencies, Definition of Done, and next eligible work |
 | Pull requests, when present | Exact changes, review findings, checks, acceptance, and merged evidence |
 | [Project Experience](docs/experience.md) or existing equivalent | Discoverable, verified lessons that help fresh agents avoid repeated trial and error |
+| Manifest-linked Knowledge Base | Version-matched engineering guidance; skills select the topics relevant to the work |
 
 ```mermaid
 flowchart LR
@@ -453,7 +512,9 @@ existing solution owners rather than duplicating their guidance.
 
 This is an execution strategy for the existing core goals, not another goal or
 gate. The [workflow skill](skills/sdd-project-workflow/SKILL.md#efficiency-and-concurrency)
-owns the judgment framework; the agent chooses a proportional way to apply it.
+sets the execution boundary and routes agents to
+[Efficiency and Concurrency](knowledge-base/efficiency-and-concurrency.md) for
+the detailed guidance; the agent chooses a proportional way to apply it.
 
 ### Design tests around risk
 
@@ -496,11 +557,13 @@ defect easier to diagnose and prevents its return. The canonical
 defines the required outcome; implementation plans record only the applicable
 project-specific test and acceptance contracts.
 
-Every task still implements the tests its outcome and risks require. "Focused
-tests" means only the tests that cover the changed files and lines. Run them at
-the task gate; defer full validation until the reviewed final candidate will
-merge back to the protected target. This reduces repeated cost without
-deferring test implementation.
+"Focused tests" means only the tests that cover the changed files and lines.
+Run them at the task gate.
+A task may record missing non-focused tests in the plan, with an owner and
+final-gate obligation. After the pre-final implementation audit, reconcile and
+add the required missing tests, then review the final candidate and run full
+validation before merge back to the protected target. A recorded gap is not
+passing test evidence.
 
 ### Review for humans and agents
 
@@ -892,6 +955,7 @@ Fast Fix instead uses its Issue and PR.
 | --- | --- |
 | `install-sdd.sh` | Resolve immutable revisions and generate isolated runtime guidance |
 | `skills/` | Outcome and boundary guidance for adoption, workflow, feature review, upgrades, and problem triage |
+| `knowledge-base/` | Complete versioned engineering guidance installed into adopting projects; [topic index](knowledge-base/README.md) |
 | `templates/` | Reusable manifest, whiteboard, plan, and review structures |
 | `docs/` | Canonical quality, template-governance, error handling, and durable project Experience |
 | `scripts/` | Source repository documentation and lifecycle checks |
@@ -921,6 +985,7 @@ not a replacement for semantic review.
 
 ## References
 
+- [Engineering Knowledge Base and topic references](knowledge-base/README.md)
 - [Documentation Quality and Testing Policy](docs/documentation-quality-policy.md)
 - [Template Governance](docs/template-governance.md)
 - [Error handling](docs/error-handling.md)
