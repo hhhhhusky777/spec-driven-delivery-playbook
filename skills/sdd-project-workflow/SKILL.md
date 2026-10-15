@@ -276,6 +276,11 @@ Independent reviewer creation still follows the Boundaries contract above.
 
 ### Execution judgment and evidence
 
+During solution and system design, and before making performance or feedback
+decisions, read `performance-and-observability.md` directly from the
+manifest-linked KB root when the accepted pin ships it. Design measurable,
+interpretable feedback and proportionate improvements within project boundaries.
+
 Before writing or refactoring implementation code, read
 `code-simplicity-and-clarity.md` directly from the manifest-linked KB root when
 the accepted pin ships it. Make intent and control/data flow clear within

@@ -35,10 +35,27 @@ is in doubt.
 Distinguish established engineering principles from evolving multi-agent
 methods; neither a reference nor an example becomes project authority.
 
+## Content selection and refinement
+
+Select and refine topic guidance using all four criteria:
+
+| Criterion | What the content must provide |
+| --- | --- |
+| Explain a problem class | Address a reusable engineering problem, not just an isolated trick. Reducing unnecessary data movement is a topic; zero-copy is one possible technique |
+| Explain the causal chain | Show which design or code choice creates a cost or risk, and why an alternative may reduce it under stated conditions. Costs include execution, comprehension, change and maintenance—not only runtime overhead |
+| Enable action | Help agents recognize the situation, locate the relevant code or design decision, identify applicability conditions, and choose a useful next action. Point to authoritative references for unresolved method questions |
+| Preserve necessary boundaries | Retain ownership, lifetime, consistency, correctness, safety, compatibility and accepted project behavior. A simpler or faster alternative is not sufficient if it breaks these guarantees |
+
+These criteria apply across the KB, including design, coding, testing and review.
+Evaluate the topic as a whole; do not require every example to repeat its
+surrounding explanation or every topic to use identical sections. Keep this
+shared selection guidance here and topic-specific application in each document.
+This is not another project gate or a mandatory technique checklist.
+
 ## Topic index
 
-Linked topics are available. Plain filenames identify topics still planned;
-they become links when delivered. This README requires no unavailable topic.
+All topics below are available. Read the topic relevant to the work; this index
+does not require reading the entire Knowledge Base.
 
 | Topic | When it helps | Document |
 | --- | --- | --- |
@@ -52,7 +69,7 @@ they become links when delivered. This README requires no unavailable topic.
 | Efficiency and concurrency | Overlap independent work without unnecessary coordination | [Efficiency and concurrency](efficiency-and-concurrency.md) |
 | Experience and learning | Turn verified lessons into actionable reuse and refinement | [Experience and learning](experience-and-learning.md) |
 | Code simplicity and clarity | Make implementation intent and behavior easy to understand without sacrificing correctness | [Code simplicity and clarity](code-simplicity-and-clarity.md) |
-| Performance and observability | Use meaningful feedback to evaluate performance and important system or design goals | `performance-and-observability.md` |
+| Performance and observability | Design measurable, interpretable feedback and improve useful outcomes within whole-system trade-offs | [Performance and observability](performance-and-observability.md) |
 
 ## Installation and ownership
 
