@@ -4,11 +4,11 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [Issue #156](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/156) |
 | Owner | Repository owner |
-| Concluded design revision | `58ad81d65aa043b17496f21a05aa637eb0aa14c4` |
-| Open owner decisions | Accept the reviewed global solution-research amendment before dependent implementation |
+| Concluded design revision | `2c50cdb711f9cdceaf57e39dfb7fd72623d82245` |
+| Open owner decisions | None |
 
 Owner-accepted performance amendment. The prior accepted design
 remains available at `8766337fc079f306e55bbba3c139333bc07a1742`, with reviewed
@@ -24,9 +24,10 @@ The owner authorized a further amendment in PR #171: make research a global
 requirement for design-level and implementation-level solution choices, with
 language and runtime as inputs, one workflow-skill owner and concise reader
 routes. The last accepted conclusion is preserved at
-`fc115f49a5789032033e9b0746f341ab14f2af1d`. This OPEN candidate changes only that
-research boundary; retained-reviewer and subsequent human acceptance remain
-required. Existing topic work, merge authority and installed pin are preserved.
+`fc115f49a5789032033e9b0746f341ab14f2af1d`. Both retained reviewers approved
+`2c50cdb711f9cdceaf57e39dfb7fd72623d82245`; the owner accepted that research
+amendment and its dispositions on 2026-10-15. Existing topic work, merge
+authority and installed pin are preserved.
 
 ## Discussion draft
 
@@ -71,8 +72,8 @@ required. Existing topic work, merge authority and installed pin are preserved.
 | [Skills](../../skills/sdd-project-workflow/SKILL.md) | Existing concise principles, scope references, concurrent-work guidance and project-context entry points |
 | [Project Experience](../../docs/experience.md) | Durable project-specific lessons; must remain separate from centrally maintained KB |
 
-Material assumptions: None. Remaining owner decision: accept this reviewed
-research amendment. V01 and FC01–FC02 remain unchanged and approved. D08 changes
+Material assumptions: None. The owner accepted this reviewed research
+amendment. V01 and FC01–FC02 remain unchanged and approved. D08 changes
 the required basis for solution choices within existing review and error-handling
 boundaries; it adds no independent checkpoint, runtime rejection or fail-closed
 behavior.
@@ -285,8 +286,8 @@ the accepted inventory is retained.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Design | D08 replaces uncertainty-only reference use with research-grounded solution selection across design and implementation; language/runtime are research inputs, not implicit technology-change authority | HUMAN_DECISION |
-| Ownership | Workflow skill owns the full rule; review/triage reference it, KB README summarizes it; no topic-wide duplication or project system-prompt copy | HUMAN_DECISION |
+| Design | D08 replaces uncertainty-only reference use with research-grounded solution selection across design and implementation; language/runtime are research inputs, not implicit technology-change authority | Approved |
+| Ownership | Workflow skill owns the full rule; review/triage reference it, KB README summarizes it; no topic-wide duplication or project system-prompt copy | Approved |
 | Delivery granularity | Fifteen accepted tasks: thirteen separate documents and two supporting units; T13 revised, T14 new code-level topic, integration moves to T15; stop after every task, no Autopilot | DISCLOSE |
 | New controls | None in this amendment. Approved V01, FC01 and FC02 remain unchanged | DISCLOSE |
 | State | Metadata records design state; review/acceptance never claims implementation or installed KB activation | DISCLOSE |
