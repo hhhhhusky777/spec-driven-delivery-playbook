@@ -70,6 +70,7 @@ does not require reading the entire Knowledge Base.
 | Experience and learning | Turn verified lessons into actionable reuse and refinement | [Experience and learning](experience-and-learning.md) |
 | Code simplicity and clarity | Make implementation intent and behavior easy to understand without sacrificing correctness | [Code simplicity and clarity](code-simplicity-and-clarity.md) |
 | Performance and observability | Design measurable, interpretable feedback and improve useful outcomes within whole-system trade-offs | [Performance and observability](performance-and-observability.md) |
+| Code-level performance engineering | Locate avoidable implementation costs and choose bounded, source-backed improvements | [Code-level performance engineering](code-level-performance-engineering.md) |
 
 ## Installation and ownership
 

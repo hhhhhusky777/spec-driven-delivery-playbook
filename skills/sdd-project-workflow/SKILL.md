@@ -281,6 +281,11 @@ decisions, read `performance-and-observability.md` directly from the
 manifest-linked KB root when the accepted pin ships it. Design measurable,
 interpretable feedback and proportionate improvements within project boundaries.
 
+Before writing performance-sensitive code or choosing a code-level optimization,
+read `code-level-performance-engineering.md` directly from the manifest-linked
+KB root when the accepted pin ships it. Reduce avoidable costs using suitable
+existing mechanisms while preserving project behavior and ownership.
+
 Before writing or refactoring implementation code, read
 `code-simplicity-and-clarity.md` directly from the manifest-linked KB root when
 the accepted pin ships it. Make intent and control/data flow clear within

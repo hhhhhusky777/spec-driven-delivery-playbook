@@ -192,6 +192,7 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
     "experience-and-learning.md",
     "code-simplicity-and-clarity.md",
     "performance-and-observability.md",
+    "code-level-performance-engineering.md",
   ];
   await cp(path.join(REPOSITORY_ROOT, "knowledge-base"),
     path.join(source.repository, "knowledge-base"), { recursive: true });
