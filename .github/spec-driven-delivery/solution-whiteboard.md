@@ -4,11 +4,11 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [Issue #156](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/156) |
 | Owner | Repository owner |
-| Concluded design revision | `2c50cdb711f9cdceaf57e39dfb7fd72623d82245` |
-| Open owner decisions | Accept the reviewed standalone Solution Research ownership and routing amendment |
+| Concluded design revision | `fad850710ac9383ed0c8ee53c0507be894e5db8b` |
+| Open owner decisions | `None` |
 
 Owner-accepted performance amendment. The prior accepted design
 remains available at `8766337fc079f306e55bbba3c139333bc07a1742`, with reviewed
@@ -32,10 +32,12 @@ authority and installed pin are preserved.
 The owner has now authorized extracting the unchanged research requirement
 into `knowledge-base/solution-research.md`, with mandatory short read triggers
 at the existing skill positions. The prior accepted conclusion remains at
-`c8b3cd345106fceb8da6c5875ad8d1ca059bf539`. This OPEN amendment changes content
+`c8b3cd345106fceb8da6c5875ad8d1ca059bf539`. This accepted amendment changes content
 ownership, version-aware routing and the corresponding document/task count,
-not the research requirement, project authority or validation gates. Dependent
-extraction waits for retained review and human acceptance of this candidate.
+not the research requirement, project authority or validation gates. Both
+retained reviewers approved `fad850710ac9383ed0c8ee53c0507be894e5db8b`; the owner
+accepted that candidate and its dispositions on 2026-10-15. Existing task,
+merge and installation authority remain unchanged.
 
 ## Discussion draft
 
@@ -81,8 +83,8 @@ extraction waits for retained review and human acceptance of this candidate.
 | [Skills](../../skills/sdd-project-workflow/SKILL.md) | Existing concise principles, scope references, concurrent-work guidance and project-context entry points |
 | [Project Experience](../../docs/experience.md) | Durable project-specific lessons; must remain separate from centrally maintained KB |
 
-Material assumptions: None. The owner authorized the standalone-document
-amendment; exact-candidate acceptance remains outstanding. V01 and FC01–FC02
+Material assumptions: None. The owner accepted the reviewed standalone-document
+amendment and both reviewers' dispositions. V01 and FC01–FC02
 remain unchanged and approved. Research semantics stay within existing review
 and error-handling boundaries; no independent checkpoint, runtime rejection or
 fail-closed behavior is added.
@@ -306,7 +308,7 @@ the accepted inventory is retained.
 | Attention | Summary | Handling |
 | --- | --- | --- |
 | Design | D08 replaces uncertainty-only reference use with research-grounded solution selection across design and implementation; language/runtime are research inputs, not implicit technology-change authority | Approved |
-| Ownership | Solution Research becomes one shared KB document; all three skills keep mandatory short reads at their current positions. Accepted installed KB and upgrade-candidate KB remain separate | HUMAN_DECISION |
-| Delivery granularity | Preserve one document per task: T15 extracts Solution Research; unstarted final integration moves to T16. Fourteen documents plus two supporting units; stop after every task, no Autopilot | HUMAN_DECISION |
+| Ownership | Solution Research becomes one shared KB document; all three skills keep mandatory short reads at their current positions. Accepted installed KB and upgrade-candidate KB remain separate | Approved |
+| Delivery granularity | Preserve one document per task: T15 extracts Solution Research; unstarted final integration moves to T16. Fourteen documents plus two supporting units; stop after every task, no Autopilot | Approved |
 | New controls | None in this amendment. Approved V01, FC01 and FC02 remain unchanged | DISCLOSE |
 | State | Metadata records design state; review/acceptance never claims implementation or installed KB activation | DISCLOSE |
