@@ -69,7 +69,7 @@ does not require reading the entire Knowledge Base.
 | Efficiency and concurrency | Overlap independent work without unnecessary coordination | [Efficiency and concurrency](efficiency-and-concurrency.md) |
 | Experience and learning | Turn verified lessons into actionable reuse and refinement | [Experience and learning](experience-and-learning.md) |
 | Code simplicity and clarity | Make implementation intent and behavior easy to understand without sacrificing correctness | [Code simplicity and clarity](code-simplicity-and-clarity.md) |
-| Performance and observability | Use meaningful feedback to evaluate performance and important system or design goals | [Performance and observability](performance-and-observability.md) |
+| Performance and observability | Design measurable, interpretable feedback and improve useful outcomes within whole-system trade-offs | [Performance and observability](performance-and-observability.md) |
 
 ## Installation and ownership
 
