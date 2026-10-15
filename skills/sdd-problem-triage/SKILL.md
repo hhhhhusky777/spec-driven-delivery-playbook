@@ -17,18 +17,20 @@ skill supplies diagnosis methods, not operational permission or a new gate.
 > you MUST read it before applying its guidance. A skill summary or prior
 > knowledge MUST NOT substitute for reading the topic.
 >
-> Read and apply the same-revision workflow skill's `Solution research` rule
-> when selecting investigation methods or remedies. Research supports method
-> selection, not proof of a project-specific cause.
+> Before selecting investigation methods or remedies, you MUST read and apply
+> `solution-research.md` from the KB matching this triage skill's revision when
+> that revision ships it. Research supports method selection, not proof of a
+> project-specific cause.
 
-Resolve `skills/sdd-project-workflow/SKILL.md#solution-research` in the
-`Playbook checkout` at the `Resolved revision` recorded by the verified guide
-that owns this triage skill: `.sdd-runtime/agent-guide.md` for normal/adoption
-runtime, or `.sdd-runtime/playbook-upgrade-guide.md` for candidate-upgrade triage.
-Do not substitute the older installed workflow for an upgrade candidate's rule.
-If that checkout was cleaned up, use existing authorized runtime recovery to
-restore and verify its recorded revision before reading; do not guess a path or use another
-revision. Reading this rule does not activate the workflow lifecycle or candidate.
+Normal runtime uses the manifest-linked installed KB. Before a manifest exists,
+use `Knowledge Base root` from the verified `.sdd-runtime/agent-guide.md`; the
+installed topic survives temporary checkout cleanup. Candidate-upgrade triage
+instead reads `knowledge-base/solution-research.md` in `Playbook checkout` at
+`Resolved revision` from the verified `.sdd-runtime/playbook-upgrade-guide.md`.
+Do not substitute the older installed KB for candidate guidance. Missing content
+uses existing authorized runtime recovery, not a guessed path or different
+revision. Reading candidate guidance does not activate that revision or grant
+project authority.
 
 When investigation requires assessing failure diagnostics or retry safety, read
 `error-handling-and-diagnosability.md` directly from the manifest-linked KB root
@@ -96,7 +98,7 @@ Summarize material results concisely, linking evidence instead of copying logs:
 
 ## Supporting references
 
-Apply the referenced Solution research rule to these diagnostic sources;
+Apply Solution Research to these diagnostic sources;
 they do not grant project authority:
 
 - [Google SRE troubleshooting](https://sre.google/sre-book/effective-troubleshooting/): testable hypotheses, causal evidence and proportional mitigation.

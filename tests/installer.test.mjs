@@ -193,6 +193,7 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
     "code-simplicity-and-clarity.md",
     "performance-and-observability.md",
     "code-level-performance-engineering.md",
+    "solution-research.md",
   ];
   await cp(path.join(REPOSITORY_ROOT, "knowledge-base"),
     path.join(source.repository, "knowledge-base"), { recursive: true });
@@ -210,7 +211,8 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
   for (const name of ["sdd-project-workflow", "sdd-feature-review", "sdd-problem-triage"]) {
     const skill = await readFile(path.join(project, ".agents/skills", name, "SKILL.md"), "utf8");
     const routedTopics = name === "sdd-problem-triage"
-      ? ["error-handling-and-diagnosability.md", "testing-and-reproduction.md", "experience-and-learning.md"] : topics;
+      ? ["error-handling-and-diagnosability.md", "testing-and-reproduction.md", "experience-and-learning.md",
+        "solution-research.md"] : topics;
     for (const topic of routedTopics) {
       assert.ok(skill.includes(`\`${topic}\``), `${name} must route to ${topic}`);
       assert.equal(await readFile(path.join(project, kbRoot, topic), "utf8"),
@@ -462,24 +464,29 @@ test("legacy pins without triage remain valid and gain it only in the newer cand
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
 });
 
-test("installed skill routing resolves same-revision research across profiles and recovery", async (t) => {
+test("installed skill routing resolves same-revision research across profiles and cleanup", async (t) => {
   const source = await createPlaybookFixture(t);
+  const legacyRevision = await commitKnowledgeBase(source, { "README.md": "# Accepted knowledge\n" });
+  const acceptedResearch = "# Solution Research\n\nAccepted research guidance.\n";
+  const acceptedRevision = await commitKnowledgeBase(source, { "solution-research.md": acceptedResearch });
   for (const name of ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade",
     "sdd-feature-review", "sdd-problem-triage"]) {
     await cp(path.join(REPOSITORY_ROOT, "skills", name), path.join(source.repository, "skills", name),
       { recursive: true });
   }
-  run("git", ["add", "."], source.repository);
-  run("git", ["commit", "-m", "real portable skill routing"], source.repository);
-  const revision = run("git", ["rev-parse", "HEAD"], source.repository).trim();
-  let adoption;
+  run("git", ["add", "skills"], source.repository);
+  await cp(path.join(REPOSITORY_ROOT, "knowledge-base"), path.join(source.repository, "knowledge-base"),
+    { recursive: true });
+  const expectedResearch = await readFile(path.join(REPOSITORY_ROOT, "knowledge-base/solution-research.md"), "utf8");
+  const revision = await commitKnowledgeBase(source, { "solution-research.md": expectedResearch });
+  const expectedTriage = await readFile(path.join(source.repository, "skills/sdd-problem-triage/SKILL.md"), "utf8");
 
-  async function researchSource(project, profile) {
+  async function researchTopic(project, profile) {
+    const upgrade = profile.endsWith("upgrade");
     const triageDirectory = path.join(project, ".agents", "skills", "sdd-problem-triage");
     const triage = await readFile(path.join(triageDirectory, "SKILL.md"), "utf8");
-    const routes = [...triage.matchAll(/`(skills\/sdd-project-workflow\/SKILL\.md)#(solution-research)`/g)];
-    assert.equal(routes.length, 1, "triage must identify its canonical source and section");
-    const guideName = profile === "upgrade" ? "playbook-upgrade-guide.md" : "agent-guide.md";
+    assert.ok(triage.includes("`solution-research.md`"), "triage must identify the shared research topic");
+    const guideName = upgrade ? "playbook-upgrade-guide.md" : "agent-guide.md";
     const guideRoute = [...triage.matchAll(/`(\.sdd-runtime\/[^`]+-guide\.md)`/g)]
       .map(([, relative]) => relative).find(relative => path.basename(relative) === guideName);
     assert.ok(guideRoute, `triage must identify its owning ${guideName}`);
@@ -488,21 +495,47 @@ test("installed skill routing resolves same-revision research across profiles an
     assert.equal(validation.status, 0, validation.stderr);
     assert.equal(guideValue(guide, "Resolved revision"), revision);
     assert.equal((await readFile(path.join(triageDirectory, ".sdd-playbook-managed"), "utf8")).trim(), revision);
+    assert.equal(triage, expectedTriage);
     const checkout = guideValue(guide, "Playbook checkout");
-    assert.equal(run("git", ["rev-parse", "HEAD"], checkout).trim(), revision);
-    assert.equal(triage, run("git", ["show", `${revision}:skills/sdd-problem-triage/SKILL.md`], checkout));
-    const workflow = await readFile(path.join(checkout, routes[0][1]), "utf8");
-    assert.equal(workflow, run("git", ["show", `${revision}:${routes[0][1]}`], checkout));
-    assert.match(workflow, /^### Solution research$/m);
-    return { guide, checkout, workflow, triage };
+    let topicPath;
+    if (upgrade) {
+      const routes = [...triage.matchAll(/`(knowledge-base\/solution-research\.md)`/g)];
+      assert.equal(routes.length, 1, "candidate triage must identify its source topic");
+      assert.equal(run("git", ["rev-parse", "HEAD"], checkout).trim(), revision);
+      topicPath = path.join(checkout, routes[0][1]);
+      assert.equal(await readFile(topicPath, "utf8"), run("git", ["show", `${revision}:${routes[0][1]}`], checkout));
+    } else {
+      const root = profile === "adoption" ? guideValue(guide, "Knowledge Base root")
+        : guideValue(await readFile(path.join(project, ".github/spec-driven-delivery/project-adoption-manifest.md"), "utf8"), "Knowledge Base root");
+      assert.equal(root, guideValue(guide, "Knowledge Base root"));
+      const inventory = await readFile(path.join(project, root, ".sdd-playbook-managed"), "utf8");
+      assert.equal(inventory.split("\n")[0], revision);
+      topicPath = path.join(project, root, "solution-research.md");
+    }
+    assert.equal(await readFile(topicPath, "utf8"), expectedResearch);
+    return { guide, checkout, topicPath };
   }
 
-  for (const profile of ["adoption", "workflow", "upgrade"]) {
+  for (const profile of ["adoption", "workflow", "upgrade", "legacy-upgrade"]) {
+    const upgrade = profile.endsWith("upgrade");
+    const installedRevision = profile === "workflow" ? revision
+      : profile === "legacy-upgrade" ? legacyRevision : acceptedRevision;
     const project = profile === "adoption" ? await createTargetProject(t)
-      : await createInstalledProject(t, profile === "workflow" ? { ...source, firstRevision: revision } : source);
+      : await createInstalledProject(t, { ...source, firstRevision: installedRevision });
+    const manifestPath = path.join(project, ".github/spec-driven-delivery/project-adoption-manifest.md");
+    if (profile !== "adoption") {
+      const guide = await readFile(path.join(project, ".sdd-runtime/agent-guide.md"), "utf8");
+      await writeFile(manifestPath, await readFile(manifestPath, "utf8")
+        + `| Knowledge Base root | \`${guideValue(guide, "Knowledge Base root")}\` |\n`);
+    }
+    const installedTopic = path.join(project, ".github/spec-driven-delivery/knowledge-base/solution-research.md");
+    if (profile === "legacy-upgrade") {
+      await assert.rejects(access(installedTopic));
+      assert.equal(runInstaller(project, ["--validate"]).status, 0);
+    }
     if (profile !== "workflow") {
       const result = runInstaller(project, ["--repository", source.repository,
-        ...(profile === "upgrade" ? ["--upgrade"] : [])]);
+        ...(upgrade ? ["--upgrade"] : [])]);
       assert.equal(result.status, 0, result.stderr);
     }
     for (const name of [profile === "adoption" ? "sdd-project-adoption"
@@ -517,50 +550,42 @@ test("installed skill routing resolves same-revision research across profiles an
         await access(path.resolve(path.dirname(entry), relative));
       }
     }
-    const resolved = await researchSource(project, profile);
+    const resolved = await researchTopic(project, profile);
     const workflowDirectory = path.join(project, ".agents", "skills", "sdd-project-workflow");
     if (profile === "adoption") {
+      await assert.rejects(access(manifestPath));
       await assert.rejects(access(workflowDirectory));
-      adoption = { project, ...resolved };
     } else if (profile === "workflow") {
-      const reviewer = path.join(project, ".agents", "skills", "sdd-feature-review", "SKILL.md");
-      const content = await readFile(reviewer, "utf8");
-      const routes = [...content.matchAll(/\]\(([^)]+#solution-research)\)/g)];
-      assert.equal(routes.length, 1, "reviewer must route to the installed research section");
-      assert.equal(routes[0][1], "../sdd-project-workflow/SKILL.md#solution-research");
-      const target = path.resolve(path.dirname(reviewer), routes[0][1].split("#")[0]);
-      assert.equal(await readFile(target, "utf8"), resolved.workflow);
+      for (const name of ["sdd-project-workflow", "sdd-feature-review"]) {
+        const content = await readFile(path.join(project, ".agents/skills", name, "SKILL.md"), "utf8");
+        assert.ok(content.includes("`solution-research.md`"), `${name} must route to the shared topic`);
+      }
       assert.equal((await readFile(path.join(workflowDirectory, ".sdd-playbook-managed"), "utf8")).trim(), revision);
     } else {
-      // Candidate triage cannot use the older installed workflow, which has no research section.
+      // Reading candidate guidance does not replace or activate the accepted KB or workflow.
       const acceptedGuide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
-      assert.equal(guideValue(acceptedGuide, "Resolved revision"), source.firstRevision);
-      assert.equal(guideValue(resolved.guide, "Current revision"), source.firstRevision);
-      assert.equal((await readFile(path.join(workflowDirectory, ".sdd-playbook-managed"), "utf8")).trim(), source.firstRevision);
+      assert.equal(guideValue(acceptedGuide, "Resolved revision"), installedRevision);
+      assert.equal(guideValue(resolved.guide, "Current revision"), installedRevision);
+      assert.equal(guideValue(await readFile(manifestPath, "utf8"), "Playbook revision"), installedRevision);
+      assert.equal((await readFile(path.join(workflowDirectory, ".sdd-playbook-managed"), "utf8")).trim(), installedRevision);
       const acceptedWorkflow = await readFile(path.join(workflowDirectory, "SKILL.md"), "utf8");
-      assert.equal(acceptedWorkflow, run("git", ["show", `${source.firstRevision}:skills/sdd-project-workflow/SKILL.md`], source.repository));
-      assert.doesNotMatch(acceptedWorkflow, /^### Solution research$/m);
+      assert.equal(acceptedWorkflow, run("git", ["show", `${installedRevision}:skills/sdd-project-workflow/SKILL.md`], source.repository));
+      assert.notEqual(resolved.topicPath, installedTopic);
+    }
+
+    if (!upgrade) {
+      assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
+      await assert.rejects(access(resolved.checkout));
+      assert.equal((await researchTopic(project, profile)).topicPath, resolved.topicPath);
+    } else {
+      if (profile === "legacy-upgrade") await assert.rejects(access(installedTopic));
+      else assert.equal(await readFile(installedTopic, "utf8"), acceptedResearch);
+      assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
+      assert.equal(runInstaller(project, ["--validate"]).status, 0);
+      if (profile === "legacy-upgrade") await assert.rejects(access(installedTopic));
+      else assert.equal(await readFile(installedTopic, "utf8"), acceptedResearch);
     }
   }
-
-  // A cleaned adoption runtime remains valid, but its canonical source must be restored.
-  assert.equal(runInstaller(adoption.project, ["--cleanup"]).status, 0);
-  assert.equal(runInstaller(adoption.project, ["--validate"]).status, 0);
-  await assert.rejects(access(adoption.checkout));
-  await writeFile(path.join(source.repository, "README.md"), "# Later source revision\n", "utf8");
-  run("git", ["add", "README.md"], source.repository);
-  run("git", ["commit", "-m", "advance source after adoption"], source.repository);
-  assert.notEqual(run("git", ["rev-parse", "HEAD"], source.repository).trim(), revision);
-  const recovery = runInstaller(adoption.project, [
-    "--repository", guideValue(adoption.guide, "Source repository"),
-    "--revision", guideValue(adoption.guide, "Resolved revision"),
-  ]);
-  assert.equal(recovery.status, 0, recovery.stderr);
-  const recovered = await researchSource(adoption.project, "adoption");
-  assert.equal(guideValue(recovered.guide, "Guide profile"), "adoption");
-  assert.equal(recovered.workflow, adoption.workflow);
-  assert.equal(recovered.triage, adoption.triage);
-  await assert.rejects(access(path.join(adoption.project, ".agents", "skills", "sdd-project-workflow")));
 });
 
 test("rejected triage upgrade restores an already-cleaned accepted runtime without fetching", async (t) => {

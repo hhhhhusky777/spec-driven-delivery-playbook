@@ -32,27 +32,9 @@ authority and approved scope; choose the simplest sufficient design.
 
 > [!IMPORTANT]
 > Before selecting any engineering solution, at design or implementation level,
-> you MUST search the web for comparable problems and authoritative guidance using the
-> problem, requirements, project boundaries and applicable KB principles.
-> Include relevant language/version, runtime, libraries and deployment constraints.
-> Use non-sensitive descriptions, not private project data, in external searches.
-> Read the primary sources and assess applicability and trade-offs against
-> project evidence and suitable existing mechanisms. Choose the simplest
-> sufficient solution; familiarity, guesses, unsupported assumptions and
-> subjective confidence MUST NOT substitute for research.
-
-Treat language as an established constraint or an explicitly authorized choice;
-research never grants authority to introduce a language or change project policy.
-External practice cannot establish project facts or prove a bottleneck: verify
-those premises against canonical contracts, code or direct evidence.
-
-Reuse already-read research while it remains current and applicable; do not
-repeat browsing for each coding action. For unresolved engineering-method or
-applicability questions, low confidence or unsupported material claims, read
-the relevant primary references before deciding. If sources are unavailable or
-material uncertainty remains, disclose it and follow existing error handling.
-No new research document, fixed source count, prescribed technique or separate
-gate is required.
+> you MUST read and apply `solution-research.md` directly from the manifest-linked
+> KB root when the accepted pin ships it. It owns the research requirement;
+> apply it using the project's problem, requirements and boundaries.
 
 ## Durable model
 
