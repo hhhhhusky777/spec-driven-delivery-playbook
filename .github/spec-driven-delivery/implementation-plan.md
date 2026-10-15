@@ -9,18 +9,18 @@ and merge evidence; the frozen whiteboard owns design.
 
 | Field | Value |
 | --- | --- |
-| State | `IMPLEMENTING` |
+| State | `BLOCKED` |
 | Active tasks | `None` |
-| Next ready task | `T15` |
-| Active blocker | `None` |
+| Next ready task | `None` |
+| Active blocker | Owner-authorized D08 research amendment awaits retained review and human acceptance; preserve prior implementation |
 | Implementation mode | `human-review-before-merge`; Autopilot explicitly off |
 | Authorized scope / feature branch / protected target | Accepted D01–D07 / `codex/knowledge-base` / `main`; no automatic merge authority |
 | Delivery branch / target | `codex/knowledge-base` / `main` |
 | Owner | Repository owner |
 | Primary issue / need | [Issue #156](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/156) |
-| Concluded whiteboard | [Accepted performance amendment](solution-whiteboard.md), reviewed content `58ad81d65aa043b17496f21a05aa637eb0aa14c4`, verified conclusion `fc115f49a5789032033e9b0746f341ab14f2af1d` |
+| Concluded whiteboard | [Open research amendment](solution-whiteboard.md); prior accepted content `58ad81d65aa043b17496f21a05aa637eb0aa14c4` and conclusion `fc115f49a5789032033e9b0746f341ab14f2af1d` preserved in Git |
 | Required reviewers | Retained independent `kb_review_r1` and `kb_review_r2` through final merge |
-| Last verified | 2026-10-15 Asia/Shanghai; T01–T13 merged to the feature branch. T14 delivers the accepted code-level performance topic and installed author/reviewer routes from verified T13 merge `5cee6b41ba7eb224af4ca523814191894e85cfb4`. The ledger describes merge-resulting state; review and merge evidence remain in PRs. T15 starts only after T14 owner acceptance and merge |
+| Last verified | 2026-10-15 Asia/Shanghai; T01–T13 merged. T14 candidate `66f136e36716c993e4838c35ca0029afe0aababa` is preserved; owner then authorized global solution-research design work in PR #171. No dependent skill/topic implementation, merge, runtime activation or cleanup follows until the amendment's required acceptance |
 
 ## Governing inputs and delivery boundaries
 
@@ -36,10 +36,12 @@ Deliver a shared, revision-matched KB that authors and reviewers apply inside
 project boundaries. Scope is the frozen topic set, installer/manifest support,
 skill triggers, affected guidance and checks. No new framework, policy suite,
 code-style linter, copied manual, speculative topic, or project Experience
-migration. Material assumptions: None. The performance amendment is accepted
-and frozen. T13 revises the existing design-level topic; T14 adds the code-level
-topic and the unstarted integration task moves to T15. Each task retains its
-owner wording and merge boundary.
+migration. Material assumptions: None. The accepted performance design remains
+the baseline; the owner-authorized D08 global research amendment is OPEN for
+review and acceptance. Preserve completed topic work and the existing fifteen
+task boundaries. Do not implement the proposed research changes before that
+acceptance; then reconcile T14's existing skill/index/check ownership without
+adding another topic or completing T15 early.
 
 The accepted installed pin remains `775f1479e8a1ce6277af7448d509cabe95374ad3`.
 Preparing a newer runtime candidate is not acceptance or activation. Installer
@@ -95,8 +97,8 @@ implementation choices stay with the agent.
 | T11 | DONE | T10 | `experience-and-learning.md` | D02–D04; actionable reuse/refinement; retain project-specific lessons | Focused topic/trigger checks and wording review | `codex/knowledge-base-t11`; [PR #168](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/168); target `codex/knowledge-base` |
 | T12 | DONE | T11 | `code-simplicity-and-clarity.md` | D02–D04; professional clarity examples, no line-count or style mandate; preserve behavior | Focused topic/trigger checks and wording review | `codex/knowledge-base-t12`; [PR #169](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/169); target `codex/knowledge-base` |
 | T13 | DONE | T12 | Revise `performance-and-observability.md` | D02–D04, D07; design-stage measurability, interpretation and five performance boundaries; fault diagnosis stays with T06 | Focused topic/trigger checks and wording review | `codex/knowledge-base-t13`; [PR #170](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/170); target `codex/knowledge-base` |
-| T14 | DONE | T13 | `code-level-performance-engineering.md` | D02–D04, D07; cost mechanisms, bounded methods/examples and source routing; no exhaustive checklist | Focused topic/trigger checks and wording review | `codex/knowledge-base-t14`; [PR #171](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/171); target `codex/knowledge-base` |
-| T15 | READY | T14 | Complete integration and guidance reconciliation | D01–D07; no second detailed owner or new topic/controller | Focused package, routing and consistency checks | `codex/knowledge-base-t15`; PR not opened; target `codex/knowledge-base` |
+| T14 | BLOCKED | T13 | `code-level-performance-engineering.md` | D02–D04, D07; prior implementation preserved; proposed D08 research changes await design acceptance | Focused topic/trigger checks and wording review | `codex/knowledge-base-t14`; [PR #171](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/171); target `codex/knowledge-base` |
+| T15 | PLANNED | T14 | Complete integration and guidance reconciliation | D01–D07; no second detailed owner or new topic/controller | Focused package, routing and consistency checks | `codex/knowledge-base-t15`; PR not opened; target `codex/knowledge-base` |
 
 ## Task specifications and context receipts
 
@@ -161,11 +163,11 @@ repository's source suite does not become an adopting project's obligation.
 
 ## Recovery, decisions, and change control
 
-The owner accepted the reviewed performance amendment and both retained
-reviewers verified its conclusion. Preserve valid T01–T12 work and use the
-linked error-handling authority and unchanged approved FC01–FC02. The whiteboard
-is frozen again; further amendments need prior human authorization. Ordinary
-recoverable agent mistakes stay within authority.
+The owner accepted the performance amendment and later authorized the D08
+research amendment in PR #171. The whiteboard is OPEN for that named change
+only. Preserve valid prior implementation and the unchanged approved FC01–FC02;
+repeat retained design review and human acceptance before dependent work.
+Ordinary recoverable agent mistakes stay within authority.
 
 ## Plan validation and completion
 
@@ -215,7 +217,7 @@ recoverable agent mistakes stay within authority.
 | Attention | Summary | Handling |
 | --- | --- | --- |
 | Tasks | Fifteen accepted tasks: installer support, thirteen separate documents, final integration; T13 revised, new T14, former integration becomes T15 | DISCLOSE |
-| Design consistency | Frozen D07 maps design-level boundaries to T13 and code-level cost mechanisms to T14; T01–T12 preserved. No new validation or fail-closed behavior in this amendment | DISCLOSE |
+| Design consistency | Prior D07 work preserved; OPEN D08 proposes global research inputs and single-owner routing. No new validation or fail-closed behavior | HUMAN_DECISION after retained design review |
 | Execution mode | Autopilot off; stop after every task for owner review and merge decision | Existing owner decision retained |
 | Validation | Per-topic focused checks and exact-candidate review belong in their PRs. T15 integration, final implementation audit and full validation remain outstanding | DISCLOSE |
 | Foreseeable decisions | Per-document wording acceptance; any real authority conflict; eventual explicit reset and final merge acceptance | HUMAN_DECISION at applicable boundary, not blanket permission |
