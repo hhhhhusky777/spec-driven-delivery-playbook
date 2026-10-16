@@ -74,6 +74,30 @@ test("focused validation rejects invalid changed Markdown", async (t) => {
   assert.match(`${result.stdout}\n${result.stderr}`, /MD018|space after hash/i);
 });
 
+test("focused validation preserves inline configuration rule options", async (t) => {
+  for (const [format, configure] of [
+    ["JSON", (limit) => JSON.stringify({ MD013: { line_length: limit } })],
+    ["TOML", (limit) => `MD013 = { line_length = ${limit} }`],
+    ["YAML", (limit) => `MD013: { line_length: ${limit} }`],
+  ]) {
+    await t.test(format, async (t) => {
+      const { base, root } = await fixture(t);
+      for (const limit of [40, 80]) {
+        await commit(root, {
+          "changed.md": `# Changed\n\n<!-- markdownlint-configure-file ${configure(limit)} -->\n\n${"word ".repeat(12).trim()}\n`,
+        }, `${format} line length ${limit}`);
+        const result = runValidator(root, base);
+        if (limit === 40) {
+          assert.notEqual(result.status, 0, result.stdout);
+          assert.match(`${result.stdout}\n${result.stderr}`, /changed\.md:5[^\n]*MD013/);
+        } else {
+          assert.equal(result.status, 0, result.stderr);
+        }
+      }
+    });
+  }
+});
+
 test("focused validation rejects changed-line whitespace errors", async (t) => {
   const { base, root } = await fixture(t);
   await commit(root, { "changed.md": "# Changed \n" }, "invalid whitespace");
