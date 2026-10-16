@@ -11,6 +11,16 @@ Protect the accepted feature outcome and project boundaries through independent,
 exact-candidate review. Preserve useful context across the feature without
 turning prior conclusions into assumptions.
 
+> [!IMPORTANT]
+> When a KB topic-read trigger applies and the accepted pin ships the topic,
+> you MUST read it before applying its guidance. A skill summary or prior
+> knowledge MUST NOT substitute for reading the topic.
+>
+> You MUST read and apply `solution-research.md` directly from the manifest-linked
+> KB root when the accepted pin ships it.
+> Check the candidate's research basis and project applicability; alternatives
+> you propose MUST meet the same requirement.
+
 ## Reviewer session
 
 Load this skill when the parent agent creates the feature's two reviewer
@@ -63,6 +73,47 @@ mismatch prevents a sound disposition.
 
 Judge correctness, design and policy consistency, compatibility, safety,
 validation sufficiency, proportionality, and merge-ready canonical state.
+
+When reviewing solution or system design, performance decisions or feedback,
+read `performance-and-observability.md` directly from the manifest-linked KB
+root when the accepted pin ships it. Assess measurable, interpretable feedback
+and proportionate improvements within project authority.
+
+Before judging performance-sensitive code or a code-level optimization, read
+`code-level-performance-engineering.md` directly from the manifest-linked KB
+root when the accepted pin ships it. Assess the actual cost mechanism, bounded
+benefit and preservation of project behavior and ownership.
+
+Before judging implementation clarity or a refactoring, read
+`code-simplicity-and-clarity.md` directly from the manifest-linked KB root when
+the accepted pin ships it. Assess understandable intent, control/data flow and
+behavior preservation within project authority, not line count or personal style.
+
+Before judging use or maintenance of project lessons, read
+`experience-and-learning.md` directly from the manifest-linked KB root when
+the accepted pin ships it. Check verified applicability, actionable value and
+canonical ownership; past experience does not establish the current cause or
+override project authority.
+
+Before judging overlapping execution or delegation, read
+`efficiency-and-concurrency.md` directly from the manifest-linked KB root when
+the accepted pin ships it. Assess independence, resource ownership, coordination
+cost and integrated evidence within project authority.
+
+Before judging an interface contract or its compatibility, read
+`contracts-and-compatibility.md` directly from the manifest-linked KB root
+when the accepted pin ships it. Assess promised behavior for supported
+consumers within the project's contract and migration authority.
+
+Before judging test sufficiency or reproduction evidence, read
+`testing-and-reproduction.md` directly from the manifest-linked KB root when the
+accepted pin ships it. Judge behavior and material-risk coverage within project
+testing authority.
+
+Before judging a change to trust, access, sensitive data or exposure, read
+`security-basics.md` directly from the manifest-linked KB root when the accepted
+pin ships it. Assess actual security boundaries and proportionate controls
+within project authority.
 
 > [!IMPORTANT]
 > **Hard rule.** Compare every plan and candidate addition with the accepted
@@ -130,6 +181,13 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > proportionally. Raise a finding when handling is not the simplest clear-cut
 > approach that protects the accepted outcome, or when it adds speculative
 > complexity.
+> Before judging failure handling, retry safety or failure diagnostics, read
+> `error-handling-and-diagnosability.md` directly from the manifest-linked KB
+> root when the accepted pin ships it. Apply it within project authority.
+> Before judging design simplicity or reuse, read
+> `simple-design-and-reuse.md` directly from the manifest-linked KB
+> root when the accepted pin ships it. Apply it within the accepted project
+> boundary, not as a mandatory recipe or personal-style checklist.
 >
 > Treat a material premise that is unsupported, foreign-owned,
 > incidental-state, a single-case generalization, a hidden dependency, or a
@@ -137,13 +195,10 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 > the owning public contract, or an explicit supported-domain boundary. Block
 > only when material authority remains unresolved; do not demand universal
 > proof or future-case generalization beyond the accepted outcome.
-> When there is genuine uncertainty about ownership, dependency, or
-> supported-domain interpretation, consult Microsoft's
-> [Architectural principles](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles)
-> and AWS's
-> [Workload and scope](https://docs.aws.amazon.com/wellarchitected/latest/userguide/workload-and-scope.html)
-> as supporting references. Do not browse them routinely or treat them as
-> project authority.
+> Before judging responsibilities, dependencies, or material assumptions, read
+> `architecture-scope-and-assumptions.md` directly from the manifest-linked KB
+> root when the accepted pin ships it. Apply it within the accepted project
+> boundary.
 >
 > Review for fitness to the accepted outcome, not perfection: perfect code is
 > not an attainable approval standard. Challenge the proportionality of your
@@ -182,23 +237,12 @@ it does not replace evidence, impact, priority, or blocking rationale. Do not
 use a speculative or extremely unlikely example to promote low-value polish
 into a finding or blocker.
 
-Discuss an author's reasoned rejection or deferral using technical evidence and
-tradeoffs before demanding another code change. Accept justified dispositions
-within project authority; do not reopen a settled finding without new evidence
-or a changed candidate that invalidates its rationale. If a critical dispute
-cannot be resolved, use the existing authority and escalation boundary, not an
-indefinite review-change loop.
-
-These judgments follow Google's
-[review standard](https://google.github.io/eng-practices/review/reviewer/standard.html)
-and [handling-comments guidance](https://google.github.io/eng-practices/review/developer/handling-comments.html):
-balance progress with code health and resolve disagreement through facts and
-tradeoffs, not personal preference.
-
-When uncertain about design fit, unnecessary complexity, or test value, consult
-Google's [What to look for in a code review](https://google.github.io/eng-practices/review/reviewer/looking-for.html).
-It explains over-engineering and useful, maintainable tests. Use it as supporting
-guidance, not project authority or a new gate; do not browse it routinely.
+Before assessing finding priority, correction value or an author's disposition,
+read `proportional-review.md` directly from the manifest-linked KB root when the
+accepted pin ships it. Resolve disagreement through evidence and tradeoffs;
+accept justified dispositions without reopening settled findings absent new
+evidence or changed content. Escalate critical unresolved disputes through
+project authority.
 
 Approve only the exact candidate you inspected when no unresolved blocking
 finding remains. Optional suggestions and justified nonblocking deferrals do

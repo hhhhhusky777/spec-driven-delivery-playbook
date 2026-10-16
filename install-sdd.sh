@@ -133,6 +133,7 @@ RUNTIME_DIRECTORY="$PROJECT_ROOT/$RUNTIME_ROOT"
 GUIDE_PATH="$RUNTIME_DIRECTORY/agent-guide.md"
 UPGRADE_GUIDE_PATH="$RUNTIME_DIRECTORY/playbook-upgrade-guide.md"
 MANIFEST_PATH="$PROJECT_ROOT/$MANIFEST_RELATIVE_PATH"
+KNOWLEDGE_BASE_DIRECTORY="$PROJECT_ROOT/$ADOPTION_ROOT/knowledge-base"
 MANIFEST_STATE="ABSENT"
 MANIFEST_STATE_BEFORE_BLOCK="NONE"
 PINNED_REVISION=""
@@ -256,6 +257,128 @@ validate_triage_skill() {
   fi
 }
 
+knowledge_base_inventory() {
+  local checkout=$1 revision=$2
+  printf '%s\n' "$revision"
+  git -C "$checkout" ls-tree -r "$revision" -- knowledge-base
+}
+
+validate_knowledge_base_files() {
+  local inventory=$1 allow_missing=$2 metadata source_path file hash
+  while IFS=$'\t' read -r metadata source_path; do
+    [[ -n "$metadata" ]] || continue
+    [[ "$metadata" == "100644 blob "* || "$metadata" == "100755 blob "* ]] &&
+      [[ "$source_path" == knowledge-base/* &&
+        "$source_path" != knowledge-base/.sdd-playbook-managed ]] ||
+      fail "INVALID_RUNTIME: knowledge base contains an unsupported official entry"
+    file="$KNOWLEDGE_BASE_DIRECTORY/${source_path#knowledge-base/}"
+    if [[ ! -e "$file" && ! -L "$file" && "$allow_missing" == true ]]; then
+      continue
+    fi
+    [[ -f "$file" && ! -L "$file" &&
+      "$(cd "$(dirname "$file")" && pwd -P)" == "$(dirname "$file")" ]] ||
+      fail "INVALID_RUNTIME: knowledge base file is missing or linked: $source_path"
+    hash=${metadata##* }
+    [[ "$(git hash-object "$file")" == "$hash" ]] ||
+      fail "INVALID_RUNTIME: knowledge base has local or mismatched content: $source_path"
+  done < <(tail -n +2 "$inventory")
+}
+
+validate_knowledge_base() {
+  local guide=$1 root inventory
+  root=$(markdown_value "Knowledge Base root" "$guide")
+  # Immutable legacy guides/pins carry no KB obligation.
+  [[ -n "$root" && "$root" != None ]] || return 0
+  [[ "$root" == "$ADOPTION_ROOT/knowledge-base" &&
+    -d "$KNOWLEDGE_BASE_DIRECTORY" && ! -L "$KNOWLEDGE_BASE_DIRECTORY" &&
+    "$(cd "$KNOWLEDGE_BASE_DIRECTORY" && pwd -P)" == "$KNOWLEDGE_BASE_DIRECTORY" ]] ||
+    fail "INVALID_RUNTIME: knowledge base root is missing or linked"
+  inventory="$KNOWLEDGE_BASE_DIRECTORY/.sdd-playbook-managed"
+  [[ -f "$inventory" && ! -L "$inventory" &&
+    "$(head -n 1 "$inventory")" == "$(markdown_value "Resolved revision" "$guide")" &&
+    "$(git hash-object "$inventory")" == "$(markdown_value "Knowledge Base content hash" "$guide")" ]] ||
+    fail "INVALID_RUNTIME: knowledge base ownership/inventory differs from the guide revision"
+  validate_knowledge_base_files "$inventory" false
+}
+
+prepare_knowledge_base() {
+  local checkout=$1 revision=$2 marker previous metadata source_path file parent
+  KNOWLEDGE_BASE_ROOT=None
+  KNOWLEDGE_BASE_HASH=None
+  KNOWLEDGE_BASE_INVENTORY="$TEMP_DIRECTORY/.knowledge-base-inventory"
+  knowledge_base_inventory "$checkout" "$revision" >"$KNOWLEDGE_BASE_INVENTORY"
+  marker="$KNOWLEDGE_BASE_DIRECTORY/.sdd-playbook-managed"
+  if [[ "$(wc -l <"$KNOWLEDGE_BASE_INVENTORY")" -eq 1 &&
+    ! -e "$marker" && ! -L "$marker" ]]; then
+    return 0
+  fi
+  [[ ! -e "$PROJECT_ROOT/$ADOPTION_ROOT" ||
+    "$(cd "$PROJECT_ROOT/$ADOPTION_ROOT" && pwd -P)" == "$PROJECT_ROOT/$ADOPTION_ROOT" ]] ||
+    fail "knowledge base adoption root has uncertain linked ownership"
+  [[ ! -e "$KNOWLEDGE_BASE_DIRECTORY" && ! -L "$KNOWLEDGE_BASE_DIRECTORY" ||
+    -d "$KNOWLEDGE_BASE_DIRECTORY" && ! -L "$KNOWLEDGE_BASE_DIRECTORY" ]] ||
+    fail "knowledge base root has uncertain ownership or file type"
+  if [[ -e "$marker" || -L "$marker" ]]; then
+    [[ -f "$marker" && ! -L "$marker" ]] || fail "knowledge base ownership is uncertain"
+    previous=$(head -n 1 "$marker")
+    [[ "$previous" =~ ^[0-9a-fA-F]{40}$ ]] || fail "knowledge base ownership is uncertain"
+    knowledge_base_inventory "$checkout" "$previous" >"$TEMP_DIRECTORY/.knowledge-base-baseline" ||
+      fail "knowledge base ownership baseline cannot be established"
+    cmp -s "$marker" "$TEMP_DIRECTORY/.knowledge-base-baseline" ||
+      fail "knowledge base ownership inventory differs from its immutable baseline"
+    validate_knowledge_base_files "$marker" true
+  fi
+  while IFS=$'\t' read -r metadata source_path; do
+    [[ -n "$metadata" ]] || continue
+    [[ "$metadata" == "100644 blob "* || "$metadata" == "100755 blob "* ]] &&
+      [[ "$source_path" == knowledge-base/* &&
+        "$source_path" != knowledge-base/.sdd-playbook-managed ]] ||
+      fail "knowledge base contains an unsupported official entry"
+    file="$KNOWLEDGE_BASE_DIRECTORY/${source_path#knowledge-base/}"
+    parent=$(dirname "$file")
+    while [[ "$parent" != "$KNOWLEDGE_BASE_DIRECTORY" ]]; do
+      [[ ! -L "$parent" && ( ! -e "$parent" || -d "$parent" ) ]] ||
+        fail "knowledge base would overwrite unmanaged or linked parent: $source_path"
+      parent=$(dirname "$parent")
+    done
+    if [[ -e "$file" || -L "$file" ]]; then
+      [[ -f "$marker" ]] && cut -f 2 "$marker" | grep -Fxq "$source_path" ||
+        fail "knowledge base would overwrite unmanaged content: $source_path"
+    fi
+  done < <(tail -n +2 "$KNOWLEDGE_BASE_INVENTORY")
+  if [[ "$(wc -l <"$KNOWLEDGE_BASE_INVENTORY")" -gt 1 ]]; then
+    KNOWLEDGE_BASE_ROOT="$ADOPTION_ROOT/knowledge-base"
+    KNOWLEDGE_BASE_HASH=$(git hash-object "$KNOWLEDGE_BASE_INVENTORY")
+  fi
+}
+
+install_knowledge_base() {
+  local checkout=$1 revision=$2 stage metadata source_path file marker
+  marker="$KNOWLEDGE_BASE_DIRECTORY/.sdd-playbook-managed"
+  [[ "$KNOWLEDGE_BASE_ROOT" != None || -f "$marker" ]] || return 0
+  stage="$TEMP_DIRECTORY/.knowledge-base-stage"
+  mkdir -p "$stage" "$PROJECT_ROOT/$ADOPTION_ROOT"
+  [[ ! -d "$KNOWLEDGE_BASE_DIRECTORY" ]] || cp -R "$KNOWLEDGE_BASE_DIRECTORY/." "$stage/"
+  if [[ -f "$marker" ]]; then
+    while IFS=$'\t' read -r metadata source_path; do
+      [[ -n "$metadata" ]] || continue
+      file="$stage/${source_path#knowledge-base/}"
+      [[ ! -f "$file" ]] || rm "$file"
+    done < <(tail -n +2 "$marker")
+    rm "$stage/.sdd-playbook-managed"
+  fi
+  if [[ "$KNOWLEDGE_BASE_ROOT" != None ]]; then
+    git -C "$checkout" archive "$revision" knowledge-base |
+      tar -x -C "$TEMP_DIRECTORY"
+    cp -R "$TEMP_DIRECTORY/knowledge-base/." "$stage/"
+    cp "$KNOWLEDGE_BASE_INVENTORY" "$stage/.sdd-playbook-managed"
+  fi
+  KNOWLEDGE_BASE_BACKUP="$TEMP_DIRECTORY/.knowledge-base-backup"
+  [[ ! -d "$KNOWLEDGE_BASE_DIRECTORY" ]] || mv "$KNOWLEDGE_BASE_DIRECTORY" "$KNOWLEDGE_BASE_BACKUP"
+  KNOWLEDGE_BASE_CHANGED=true
+  mv "$stage" "$KNOWLEDGE_BASE_DIRECTORY"
+}
+
 validate_runtime_boundary() {
   local checkout_root="$RUNTIME_DIRECTORY/checkouts" resolved
   [[ ! -L "$RUNTIME_DIRECTORY" && ! -L "$checkout_root" ]] ||
@@ -368,6 +491,7 @@ validate_runtime() {
       fail "INVALID_RUNTIME: installed feature review skill differs from the guide revision"
   fi
   validate_triage_skill "$GUIDE_PATH" "$recorded_revision" "INVALID_RUNTIME"
+  validate_knowledge_base "$GUIDE_PATH"
   case "$cleanup_state" in
     PENDING)
       validate_checkout_boundary "$checkout" "$recorded_revision" "INVALID_RUNTIME"
@@ -481,6 +605,9 @@ validate_upgrade_runtime() {
   [[ -f "$installed_marker" && "$(head -n 1 "$installed_marker")" == "$recorded_revision" ]] ||
     fail "INVALID_UPGRADE_RUNTIME: installed upgrade skill differs from the candidate"
   validate_triage_skill "$UPGRADE_GUIDE_PATH" "$recorded_revision" "INVALID_UPGRADE_RUNTIME"
+  validate_knowledge_base "$GUIDE_PATH"
+  git -C "$checkout" diff --quiet "$recorded_revision" -- knowledge-base ||
+    fail "INVALID_UPGRADE_RUNTIME: knowledge base candidate content differs from its revision"
 
   printf 'UPGRADE_CURRENT: candidate provenance, ancestry, guide, and skill match.\n'
 }
@@ -877,6 +1004,7 @@ active project pin, approve compatibility, or authorize work in an active task.
 | Legacy entry migration | If the verified legacy SDD README is removed, inspect tracked live agent and contributor entry points, including applicable AGENTS.md files, and update references to its path in the same candidate. A dangling reference blocks completion. |
 | Project responsibility | No playbook lifecycle validators, evidence helpers, publication tooling, CI workflows, or playbook tests are added to the project. |
 | Pre-work runtime | Before candidate content is consumed or project files change, this runtime validates as \`UPGRADE_CURRENT\`; provenance, hash, marker, pin, or installed-skill mismatch blocks work. |
+| Knowledge Base | Candidate KB remains in this verified checkout; the project KB remains at the accepted pin until acceptance and normal runtime regeneration synchronize its official tree. |
 | Consistency | Canonical terminology, links, states, authority, and continuation rules agree; unresolved canonical conflict or failed applicable validation blocks acceptance. |
 | Recovery | A failed candidate leaves or restores the last accepted pin and runtime without discarding valid project work or failure evidence. |
 | Completion | The accepted pin is recorded, normal runtime is regenerated and validates, and any superseded installer-owned checkout is cleaned up. |
@@ -947,6 +1075,10 @@ PLAYBOOK_CHECKOUT="$TEMP_DIRECTORY/repository"
 
 cleanup_failed_install() {
   local status=$?
+  if ((status != 0)) && [[ "${KNOWLEDGE_BASE_CHANGED:-false}" == true ]]; then
+    [[ ! -d "$KNOWLEDGE_BASE_DIRECTORY" ]] || rm -rf "$KNOWLEDGE_BASE_DIRECTORY"
+    [[ ! -d "$KNOWLEDGE_BASE_BACKUP" ]] || mv "$KNOWLEDGE_BASE_BACKUP" "$KNOWLEDGE_BASE_DIRECTORY"
+  fi
   if ((status != 0)) && [[ -d "$TEMP_DIRECTORY" ]]; then
     rm -rf "$TEMP_DIRECTORY"
   fi
@@ -980,6 +1112,7 @@ SKILL_SOURCE="$PLAYBOOK_CHECKOUT/skills/$SKILL_NAME"
 SKILL_DESTINATION="$PROJECT_ROOT/.agents/skills/$SKILL_NAME"
 [[ -f "$SKILL_SOURCE/SKILL.md" ]] ||
   fail "resolved playbook does not contain skill: $SKILL_NAME"
+prepare_knowledge_base "$PLAYBOOK_CHECKOUT" "$RESOLVED_REVISION"
 
 if [[ -e "$SKILL_DESTINATION" ]]; then
   [[ -f "$SKILL_DESTINATION/.sdd-playbook-managed" ]] ||
@@ -1023,6 +1156,7 @@ UPGRADE_SKILL_DESTINATION="$PROJECT_ROOT/.agents/skills/sdd-playbook-upgrade"
 if [[ -f "$UPGRADE_SKILL_DESTINATION/.sdd-playbook-managed" ]]; then
   rm -rf "$UPGRADE_SKILL_DESTINATION"
 fi
+install_knowledge_base "$PLAYBOOK_CHECKOUT" "$RESOLVED_REVISION"
 
 mkdir -p "$RUNTIME_DIRECTORY"
 cat >"$GUIDE_PATH" <<EOF
@@ -1050,6 +1184,8 @@ is not a project system contract or a prescribed implementation path.
 | Feature review skill | \`$([[ "$REVIEW_SKILL_AVAILABLE" == true ]] && printf available || printf unavailable)\` |
 | Problem triage skill | \`$([[ "$TRIAGE_SKILL_AVAILABLE" == true ]] && printf available || printf unavailable)\` |
 | Problem triage content hash | \`$TRIAGE_SKILL_HASH\` |
+| Knowledge Base root | \`$KNOWLEDGE_BASE_ROOT\` |
+| Knowledge Base content hash | \`$KNOWLEDGE_BASE_HASH\` |
 | Content hash | \`<CONTENT_HASH>\` |
 
 ## Playbook runtime
@@ -1081,7 +1217,8 @@ if [[ "$GUIDE_PROFILE" == "adoption" ]]; then
   ownership marker, and guide hash before using the checkout.
 - Read and follow the installed required skill. Preserve project authority,
   unrelated changes, allowed write scope, and required review.
-- Create only the manifest and neutral whiteboard. Record durable repository
+- Create the manifest and neutral whiteboard; retain the installer-managed KB
+  when this revision ships it. Record durable repository
   and revision values in the manifest; never copy machine-local paths or infer
   a feature need.
 - Stop for required reviewer or owner acceptance, missing authority, or a
@@ -1139,6 +1276,10 @@ revision.
 EOF
 
 refresh_guide_hash "$GUIDE_PATH"
+if [[ -n "${KNOWLEDGE_BASE_BACKUP:-}" ]]; then
+  rm -rf "$KNOWLEDGE_BASE_BACKUP" "$TEMP_DIRECTORY/.knowledge-base-stage" \
+    "$TEMP_DIRECTORY/knowledge-base"
+fi
 
 trap - EXIT
 

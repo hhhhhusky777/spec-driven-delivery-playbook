@@ -18,6 +18,23 @@ Repository policies and explicit owner decisions remain authoritative.
 > every artifact, rule, duplicate statement, automation, abstraction, or
 > dependency that does not protect an accepted outcome or named invariant.
 > Prefer one canonical owner and the smallest sufficient solution.
+>
+> When a KB topic-read trigger applies and the accepted pin ships the topic,
+> you MUST read it before applying its guidance. A skill summary or prior
+> knowledge MUST NOT substitute for reading the topic.
+
+Before designing a solution, read
+`simple-design-and-reuse.md` directly from the manifest-linked KB
+root when the accepted pin ships it. Apply its principles within project
+authority and approved scope; choose the simplest sufficient design.
+
+### Solution research
+
+> [!IMPORTANT]
+> Before selecting any engineering solution, at design or implementation level,
+> you MUST read and apply `solution-research.md` directly from the manifest-linked
+> KB root when the accepted pin ships it. It owns the research requirement;
+> apply it using the project's problem, requirements and boundaries.
 
 ## Durable model
 
@@ -132,6 +149,10 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   routine progress or agent-correctable mistakes.
 - Preserve existing work and secrets. Validate in proportion to risk and never
   claim an unrun or failed gate passed.
+- Before designing a change to trust, access, sensitive data or exposure, read
+  `security-basics.md` directly from the manifest-linked KB root when the
+  accepted pin ships it. Protect actual boundaries with the smallest sufficient
+  controls within project security authority.
 - When creating a worktree, provision the required machine-local untracked
   inputs there, including files such as `.env` when the task depends on them.
   Copy or recreate only what is needed, preserve appropriate permissions, keep
@@ -143,6 +164,11 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   affected check until the worktree is operational or error handling requires
   escalation. Never make the worktree depend on mutable files or runtime owned
   by another checkout; shared support must have stable project-level ownership.
+- Before defining, consuming, or changing an interface contract, read
+  `contracts-and-compatibility.md` directly from the manifest-linked KB root
+  when the accepted pin ships it. Preserve promised behavior for supported
+  consumers; apply the guidance within the project's contract and migration
+  authority.
 - Follow the project's canonical accepted-design authority. An authorized
   amendment changes only its named scope and repeats conclusion review and
   human acceptance before dependent work resumes.
@@ -153,13 +179,10 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   material authority remains unresolved, block only the affected work and ask
   the human to define or expand scope. Do not demand universal proof for
   unsupported or imagined cases.
-  When there is genuine uncertainty about ownership, dependency, or
-  supported-domain interpretation, consult Microsoft's
-  [Architectural principles](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/architectural-principles)
-  and AWS's
-  [Workload and scope](https://docs.aws.amazon.com/wellarchitected/latest/userguide/workload-and-scope.html)
-  as supporting references. Do not browse them routinely or treat them as
-  project authority.
+  Before defining material responsibilities, dependencies, or assumptions, read
+  `architecture-scope-and-assumptions.md` directly from the manifest-linked KB
+  root when the accepted pin ships it. Apply the guidance within project
+  authority and the approved supported domain.
 - For normal delivery, when the whiteboard conclusion candidate is ready,
   select two isolated reviewers for the feature and require each one to read
   the installed sdd-feature-review skill once. They review the exact design
@@ -245,40 +268,39 @@ authority, not a new controller, tracker, gate, or promise of uninterrupted work
 > delivery time or judgment beyond its communication and integration cost.
 > Concurrency never expands authority or bypasses dependencies and quality gates.
 
-For your own execution, keep long-running commands in resumable background
-sessions when supported and advance other independent work while they run.
-Collect their exit status and evidence before consuming their results. Wait
-when dependencies or resource contention require it, or when no useful safe
-work remains; do not manufacture busywork or another agent for a simple command.
-
-For multi-agent collaboration, delegate work that can be clearly scoped,
-completed independently, and verified on return. Give workers sufficient context:
-canonical source entry points, relevant design or task outcomes, exact candidate
-or inputs, ownership and authority boundaries, and expected evidence. Keep
-global requirements, cross-task tradeoffs, coordination, integration, and final
-verification with the parent agent. Continue the mainline while workers run;
-avoid duplicate effort and overlapping writes. Tightly coupled work or work
-whose briefing and integration cost exceeds its benefit stays with the parent.
+Before overlapping execution or delegating independent work, read
+`efficiency-and-concurrency.md` directly from the manifest-linked KB root when
+the accepted pin ships it. Apply it within project dependencies, ownership and
+authority; the parent owns integration and verification of the actual results.
 Independent reviewer creation still follows the Boundaries contract above.
-
-These are judgment criteria, not a prescribed task graph or concurrency quota.
-They draw on [OpenAI's subagent guidance](https://learn.chatgpt.com/docs/agent-configuration/subagents)
-and [Anthropic's orchestrator-worker experience](https://www.anthropic.com/engineering/multi-agent-research-system).
 
 ### Execution judgment and evidence
 
+During solution and system design, and before making performance or feedback
+decisions, read `performance-and-observability.md` directly from the
+manifest-linked KB root when the accepted pin ships it. Design measurable,
+interpretable feedback and proportionate improvements within project boundaries.
+
+Before writing performance-sensitive code or choosing a code-level optimization,
+read `code-level-performance-engineering.md` directly from the manifest-linked
+KB root when the accepted pin ships it. Reduce avoidable costs using suitable
+existing mechanisms while preserving project behavior and ownership.
+
+Before writing or refactoring implementation code, read
+`code-simplicity-and-clarity.md` directly from the manifest-linked KB root when
+the accepted pin ships it. Make intent and control/data flow clear within
+project conventions and scope; simplification must preserve required behavior,
+not optimize line count.
+
 Reuse verified project experience rather than repeat avoidable trial and error.
-When an unexpected situation or failure arises, consult manifest-linked project
-Experience or its existing equivalent for similar situations and verified
-solutions. Check applicability before reuse; experience is guidance, not proof
-of the current cause or permission to bypass project authority. Apply known
-relevant lessons proactively when useful, without a mandatory lookup for every
-operation. Prefer fixing the underlying problem or codifying a verified
-solution in its existing code, script, or guidance owner within approved scope;
-retain only useful residual knowledge rather than duplicate that owner.
-Follow the Experience document's contribution guidance to refine reusable
-lessons. Experience is reusable project guidance, not feature state: retain it
-through cleanup.
+When an unexpected situation or failure arises, or before maintaining project
+lessons, read `experience-and-learning.md` directly from the manifest-linked KB
+root when the accepted pin ships it. Consult manifest-linked project
+Experience or its existing equivalent for applicable verified solutions; past
+experience does not prove the current cause or grant authority. Apply known
+relevant lessons proactively when useful. Prefer fixing or codifying the solution
+in its existing owner; follow project contribution guidance to retain and refine
+only useful residual lessons. Preserve project Experience through cleanup.
 
 Choose the working order, batching, tools, tests, and recovery method that best
 achieve the accepted outcome. Prefer coherent review units and one human brief
@@ -315,14 +337,11 @@ project authority. Contract-equivalent methods remain discretionary. Stop
 affected work when new scope appears; remove it or obtain prior human authority
 for a design amendment instead of implementing it opportunistically.
 
-Design test evidence from accepted outcomes and material failure risks. Keep
-essential critical-path proof, then emphasize applicable boundaries,
-error/recovery, concurrency/interleavings, timing/order, and interface
-contracts. Use end-to-end smoke and production-like concurrent system or load
-evidence when those risks warrant it. If broad or nondeterministic testing
-exposes a defect, preserve the reproducing evidence and add the smallest
-deterministic regression at the lowest useful layer when practical. Follow the
-canonical project testing authority; do not impose universal suites or quotas.
+Design test evidence from accepted outcomes and material failure risks, not
+coverage numbers or happy-path volume. Before choosing evidence or reproducing
+a failure, read `testing-and-reproduction.md` directly from the manifest-linked
+KB root when the accepted pin ships it. Apply it within canonical project
+testing authority.
 
 When an exact pull-request candidate is waiting for human review, include the
 canonical four-category changed-line summary for product code, documentation,
@@ -382,6 +401,10 @@ interruptions, review time, or waits for people or external systems.
 
 ## Author disposition of review
 
+Before deciding whether to fix, reject or defer a finding, read
+`proportional-review.md` directly from the manifest-linked KB root when the
+accepted pin ships it. Apply it within accepted project authority.
+
 > [!IMPORTANT]
 > Independently assess each finding; do not implement reviewer requests by default.
 > Accept a necessary correction, reject an unsupported or disproportionate request
@@ -403,6 +426,10 @@ can be corrected directly; triage adds no gate or test waiver.
 
 Follow the project's manifest-linked error-handling authority when present.
 Do not duplicate or override it.
+
+Before designing failure handling, retry behavior or failure diagnostics, read
+`error-handling-and-diagnosability.md` directly from the manifest-linked KB root
+when the accepted pin ships it. Apply it within project authority.
 
 Within approved scope and authority, correct recoverable agent errors and
 continue. Preserve system consistency; fail closed when continuing could

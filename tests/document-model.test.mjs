@@ -163,7 +163,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
     assert.match(normalized, /exact[- ]head|exact candidate/i);
     assert.match(normalized, /stricter .*policy|Project policy may require/i);
     assert.match(normalized, /90 minutes of active implementation|one task reaches 90 minutes/i);
-    assert.doesNotMatch(normalized, /one hour of active implementation|one task reaches one hour|Implement each task's required tests|Each task still implements the tests/i);
+    assert.doesNotMatch(normalized, /one hour of active implementation|one task reaches one hour|Implement each task's required tests|(?:Each|Every) task still implements the tests/i);
   }
   for (const document of [workflow, policy]) {
     const normalized = document.replace(/\s+/g, " ");
@@ -249,13 +249,14 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
 
 test("evidence-bounded scope uses one dangerous-assumption vocabulary", async () => {
   const policy = await read("docs/documentation-quality-policy.md");
+  const topic = await read("knowledge-base/architecture-scope-and-assumptions.md");
   const workflow = await read("skills/sdd-project-workflow/SKILL.md");
   const reviewer = await read("skills/sdd-feature-review/SKILL.md");
   const whiteboard = await read("templates/discovery/solution-whiteboard.md");
   const readme = await read("README.md");
   const normalize = value => value.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
 
-  for (const document of [policy, workflow, reviewer, whiteboard, readme]) {
+  for (const document of [policy, workflow, reviewer, whiteboard, readme, topic]) {
     const normalized = normalize(document);
     for (const category of [
       /unsupported/i,
@@ -280,14 +281,27 @@ test("evidence-bounded scope uses one dangerous-assumption vocabulary", async ()
 
   assert.match(readme, /https:\/\/learn\.microsoft\.com\/en-us\/dotnet\/architecture\/modern-web-apps-azure\/architectural-principles/);
   assert.match(readme, /https:\/\/docs\.aws\.amazon\.com\/wellarchitected\/latest\/userguide\/workload-and-scope\.html/);
+  assert.match(topic, /https:\/\/learn\.microsoft\.com\/en-us\/dotnet\/architecture\/modern-web-apps-azure\/architectural-principles/);
+  assert.match(topic, /https:\/\/docs\.aws\.amazon\.com\/wellarchitected\/latest\/userguide\/workload-and-scope\.html/);
   for (const skill of [workflow, reviewer]) {
-    assert.match(skill, /https:\/\/learn\.microsoft\.com\/en-us\/dotnet\/architecture\/modern-web-apps-azure\/architectural-principles/);
-    assert.match(skill, /https:\/\/docs\.aws\.amazon\.com\/wellarchitected\/latest\/userguide\/workload-and-scope\.html/);
-    assert.match(normalize(skill), /genuine uncertainty about ownership, dependency, or supported-domain interpretation/i);
-    assert.match(normalize(skill), /Do not browse them routinely or treat them as project authority/i);
+    assert.match(normalize(skill), /`architecture-scope-and-assumptions\.md` directly from the manifest-linked KB root when the accepted pin ships it/i);
+  }
+  const normalizedWorkflow = normalize(workflow);
+  const normalizedResearch = normalize(await read("knowledge-base/solution-research.md"));
+  assert.match(normalizedResearch, /unresolved engineering-method or applicability questions, low confidence or unsupported material claims, read the relevant primary references before deciding/i);
+  assert.match(normalizedResearch, /guesses, unsupported assumptions and subjective confidence MUST NOT substitute for research/i);
+  assert.match(normalizedResearch, /External practice cannot establish project facts.*verify those premises against canonical contracts, code or direct evidence/i);
+  const triage = await read("skills/sdd-problem-triage/SKILL.md");
+  for (const skill of [workflow, reviewer, triage]) {
+    assert.ok(skill.includes("`solution-research.md`"));
+    assert.ok(!skill.includes("sdd-project-workflow/SKILL.md#solution-research"));
+  }
+  for (const route of ["knowledge-base/",
+    ".sdd-runtime/agent-guide.md", ".sdd-runtime/playbook-upgrade-guide.md"]) {
+    assert.ok(triage.includes(`\`${route}\``), `triage must retain its verified KB route: ${route}`);
   }
   assert.match(
-    normalize(workflow),
+    normalizedWorkflow,
     /Verify the premise from authority.*owning public contract.*narrow and disclose the supported domain.*material authority remains unresolved.*block only the affected work.*ask the human to define or expand scope/i,
   );
   assert.match(normalize(reviewer), /Block only when material authority remains unresolved.*do not demand universal proof/i);
@@ -542,9 +556,11 @@ test("testing guidance is risk focused, proportional, and canonically owned", as
   assert.match(policy, /it must not be represented as production\s+proof/);
 
   assert.match(workflow, /material failure risks/);
-  assert.match(workflow, /essential critical-path proof/);
-  assert.match(workflow, /production-like concurrent system or load\s+evidence when those risks warrant it/);
-  assert.match(workflow, /do not impose universal suites or quotas/);
+  assert.match(workflow, /Before choosing evidence or reproducing\s+a failure, read `testing-and-reproduction\.md` directly from the manifest-linked\s+KB root/);
+  const testing = await read("knowledge-base/testing-and-reproduction.md");
+  assert.match(testing, /essential\s+critical-path proof/);
+  assert.match(testing, /production-like concurrent system or load\s+tests matter when the actual business, scale or shared-state risk warrants them/);
+  assert.match(testing, /this topic adds no suite or quota/);
 
   for (const edge of [
     'O --> K{"Which material risks apply?"}',

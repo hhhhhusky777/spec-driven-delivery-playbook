@@ -12,6 +12,27 @@ or discriminating next check. Use the project's manifest-linked error-handling
 authority for classification, recovery, issue tracking and escalation. This
 skill supplies diagnosis methods, not operational permission or a new gate.
 
+> [!IMPORTANT]
+> When a KB topic-read trigger applies and this skill's revision ships the topic,
+> you MUST read the matching version before applying it. A skill summary or prior
+> knowledge MUST NOT substitute for reading the topic.
+>
+> Before selecting investigation methods or remedies, you MUST read and apply
+> `solution-research.md` from the KB matching this triage skill's revision when
+> that revision ships it. Research supports method selection, not proof of a
+> project-specific cause.
+
+Resolve KB topic filenames from:
+
+- Normal runtime: the manifest-linked KB.
+- Before a manifest exists: `Knowledge Base root` in the verified `.sdd-runtime/agent-guide.md`.
+- Candidate upgrade: `knowledge-base/` under `Playbook checkout` at `Resolved revision` in the verified `.sdd-runtime/playbook-upgrade-guide.md`.
+
+When investigation requires assessing failure diagnostics or retry safety, read
+`error-handling-and-diagnosability.md` directly from the resolved KB root
+when this skill's revision ships it. Apply it within the project's error contract and
+authority.
+
 Default to read-only investigation. Changes, restarts, rollback, destructive
 actions and scope expansion remain subject to existing authority. Authorized
 urgent mitigation need not wait for root-cause proof; preserve evidence and
@@ -33,20 +54,14 @@ is insufficient or pursue endless investigation without information gain.
 
 ## Reproduction and observation
 
-Preserve the original failure criterion and cause-bearing conditions: relevant
-inputs, state, versions, configuration, permissions, scale, ordering and
-concurrency. Sanitize secrets. Establish faithful reproduction before reducing
-it; simplify only while the same failure remains. Make setup/reset explicit
-enough to isolate state and repeat the experiment without corrupting real data.
-Do not mock away the suspected cause.
+Before designing a reproducer or assessing test failure evidence, read
+`testing-and-reproduction.md` directly from the resolved KB root when this
+skill's revision ships it. Preserve the original failure and its cause-bearing
+conditions; simplify without removing the suspected cause.
 
-For intermittent failures, record runs and failures and material conditions;
-one passing run does not prove absence. Examine shared state, test order,
-resource isolation and teardown. Use controlled events, barriers or scheduling
-when useful for races, not piles of sleeps. Add only logs or tracing that can
-distinguish hypotheses, with appropriate authorization and redaction; account
-for instrumentation changing timing or behavior. An unreproduced problem
-remains uncertain, not dismissed.
+Add only authorized, redacted observation that distinguishes hypotheses;
+account for instrumentation changing timing or behavior. An unreproduced
+problem remains uncertain, not dismissed.
 
 Verify a remedy against the original failure and affected invariants. Prefer
 the smallest regression at the lowest useful layer when practical. Preserve
@@ -65,8 +80,11 @@ Joint triage is not review approval; fixes still need the existing independent
 exact-candidate review.
 
 Use the owning Issue/PR or implementation plan, not a new triage document.
-Consume and refine verified project Experience where applicable; record only
-actionable reusable lessons under its existing contribution guidance.
+Before using or refining project Experience, read `experience-and-learning.md`
+directly from the resolved KB root when this skill's revision ships it.
+Consult the manifest-linked project lessons for applicable verified approaches;
+check them against current evidence and retain only actionable reusable learning
+under project contribution guidance.
 
 Summarize material results concisely, linking evidence instead of copying logs:
 
@@ -76,10 +94,8 @@ Summarize material results concisely, linking evidence instead of copying logs:
 
 ## Supporting references
 
-Consult when the diagnostic method is uncertain, not routinely or as new
-project authority:
+Apply Solution Research to these diagnostic sources;
+they do not grant project authority:
 
 - [Google SRE troubleshooting](https://sre.google/sre-book/effective-troubleshooting/): testable hypotheses, causal evidence and proportional mitigation.
 - [Google SRE postmortem culture](https://sre.google/workbook/postmortem-culture/): contributing causes and actionable learning.
-- [Chromium bug reporting](https://www.chromium.org/for-testers/bug-reporting-guidelines/): faithful simplified reproducers and sufficient evidence.
-- [pytest flaky tests](https://docs.pytest.org/en/stable/explanation/flaky.html): uncontrolled state, isolation and ordering.
