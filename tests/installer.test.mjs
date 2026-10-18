@@ -494,11 +494,12 @@ test("legacy pins without triage remain valid and gain it only in the newer cand
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
 });
 
-test("installed triage routing resolves same-revision KB topics across profiles and cleanup", async (t) => {
+test("installed skill routing resolves same-revision KB topics across profiles and cleanup", async (t) => {
   const source = await createPlaybookFixture(t);
   const legacyRevision = await commitKnowledgeBase(source, { "README.md": "# Accepted knowledge\n" });
+  const concurrencyTopic = "efficiency-and-concurrency.md";
   const topics = ["solution-research.md", "error-handling-and-diagnosability.md",
-    "testing-and-reproduction.md", "experience-and-learning.md"];
+    "testing-and-reproduction.md", "experience-and-learning.md", concurrencyTopic];
   const acceptedTopics = Object.fromEntries(topics.map(topic => [topic, `# Previous ${topic}\nAccepted guidance.\n`]));
   const acceptedRevision = await commitKnowledgeBase(source, acceptedTopics);
   for (const name of ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade",
@@ -573,19 +574,36 @@ test("installed triage routing resolves same-revision KB topics across profiles 
         ...(upgrade ? ["--upgrade"] : [])]);
       assert.equal(result.status, 0, result.stderr);
     }
+    const resolved = await triageTopics(project, profile);
     for (const name of [profile === "adoption" ? "sdd-project-adoption"
       : profile === "workflow" ? "sdd-project-workflow" : "sdd-playbook-upgrade",
     ...(profile === "workflow" ? ["sdd-feature-review"] : [])]) {
       const entry = path.join(project, ".agents", "skills", name, "SKILL.md");
       const content = await readFile(entry, "utf8");
       assert.equal(content, run("git", ["show", `${revision}:skills/${name}/SKILL.md`], source.repository));
+      assert.ok(content.includes(`\`${concurrencyTopic}\``), `${name} must route to ${concurrencyTopic}`);
+      if (profile === "adoption" || upgrade) {
+        const guideName = upgrade ? "playbook-upgrade-guide.md" : "agent-guide.md";
+        const guideRoute = [...content.matchAll(/`(\.sdd-runtime\/[^`]+-guide\.md)`/g)]
+          .map(([, relative]) => relative).find(relative => path.basename(relative) === guideName);
+        assert.ok(guideRoute, `${name} must identify its owning ${guideName}`);
+        const guide = await readFile(path.join(project, guideRoute), "utf8");
+        assert.equal(guideValue(guide, "Resolved revision"), revision);
+        for (const field of upgrade ? ["Playbook checkout", "Resolved revision"] : ["Knowledge Base root"]) {
+          assert.ok(content.includes(`\`${field}\``), `${name} must identify ${field}`);
+        }
+        const kbRoute = upgrade ? [...content.matchAll(/`(knowledge-base\/)`/g)][0]?.[1]
+          : guideValue(guide, "Knowledge Base root");
+        assert.ok(kbRoute, `${name} must identify its KB root`);
+        const kbRoot = path.join(upgrade ? guideValue(guide, "Playbook checkout") : project, kbRoute);
+        assert.equal(kbRoot, resolved.kbRoot);
+      }
       const routing = [...content.matchAll(/\]\(([^)]+sdd-problem-triage\/SKILL\.md)\)/g)];
       assert.ok(routing.length, `${name} has no installed triage route`);
       for (const [, relative] of routing) {
         await access(path.resolve(path.dirname(entry), relative));
       }
     }
-    const resolved = await triageTopics(project, profile);
     const workflowDirectory = path.join(project, ".agents", "skills", "sdd-project-workflow");
     if (profile === "adoption") {
       await assert.rejects(access(manifestPath));

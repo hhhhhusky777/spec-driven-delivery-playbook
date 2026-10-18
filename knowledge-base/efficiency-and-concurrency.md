@@ -1,6 +1,8 @@
 # Efficiency and Concurrency
 
-Use this guidance when overlapping execution or delegating independent work.
+Use this guidance when organizing work in any lifecycle phase: discovery and
+adoption, whiteboard research and PoCs, planning, implementation, review,
+validation, upgrade, recovery and cleanup—not only coding.
 Reduce avoidable waiting without increasing coordination, conflicting changes,
 or unverified results. Project authority owns scope, permissions, dependencies
 and quality gates; parallel execution does not change them.
@@ -8,6 +10,8 @@ and quality gates; parallel execution does not change them.
 ## Core principles
 
 > [!IMPORTANT]
+> Proactively assess concurrency before choosing how to organize the work;
+> do not wait until implementation or a decision to delegate has been made.
 > Overlap useful independent work when its inputs are ready and its resources
 > do not interfere. Delegate bounded work only when the expected benefit
 > exceeds briefing, coordination and integration cost. More agents are not
@@ -16,6 +20,12 @@ and quality gates; parallel execution does not change them.
 Distinguish two opportunities: an agent can overlap its own commands and work,
 or delegate independent reasoning or implementation. A simple command does
 not need another agent. Tightly coupled work can be faster and safer locally.
+
+During whiteboard work, for example, independent source investigations or PoC
+alternatives can run in parallel under common questions and comparison criteria.
+The parent defines those criteria and synthesizes the evidence; isolate or
+sequence resource-contending measurements so concurrency does not distort the
+comparison. Assessing concurrency adds no agent quota, report or approval gate.
 
 ## Overlapping execution
 

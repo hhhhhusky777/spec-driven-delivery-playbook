@@ -261,17 +261,12 @@ authority, not a new controller, tracker, gate, or promise of uninterrupted work
 ### Efficiency and Concurrency
 
 > [!IMPORTANT]
-> Actively overlap worthwhile independent work instead of waiting unnecessarily.
-> Use asynchronous commands and parallel tasks when their inputs are ready and
-> their files, data, environments, and resources do not interfere. Delegate
-> bounded independent reasoning or implementation when it materially improves
-> delivery time or judgment beyond its communication and integration cost.
-> Concurrency never expands authority or bypasses dependencies and quality gates.
+> Before organizing work in any lifecycle phase, you MUST read
+> `efficiency-and-concurrency.md` directly from the manifest-linked KB root when
+> the accepted pin ships it. Proactively assess useful overlap and delegation,
+> including whiteboard research and PoCs; apply its boundaries within project
+> authority. Do not wait until coding or until delegation is already selected.
 
-Before overlapping execution or delegating independent work, read
-`efficiency-and-concurrency.md` directly from the manifest-linked KB root when
-the accepted pin ships it. Apply it within project dependencies, ownership and
-authority; the parent owns integration and verification of the actual results.
 Independent reviewer creation still follows the Boundaries contract above.
 
 ### Execution judgment and evidence

@@ -28,6 +28,10 @@ Resolve KB topic filenames from:
 - Before a manifest exists: `Knowledge Base root` in the verified `.sdd-runtime/agent-guide.md`.
 - Candidate upgrade: `knowledge-base/` under `Playbook checkout` at `Resolved revision` in the verified `.sdd-runtime/playbook-upgrade-guide.md`.
 
+Before organizing an investigation, you MUST read
+`efficiency-and-concurrency.md` from the resolved KB root when this skill's
+revision ships it. Apply its lifecycle-wide guidance within project authority.
+
 When investigation requires assessing failure diagnostics or retry safety, read
 `error-handling-and-diagnosability.md` directly from the resolved KB root
 when this skill's revision ships it. Apply it within the project's error contract and
