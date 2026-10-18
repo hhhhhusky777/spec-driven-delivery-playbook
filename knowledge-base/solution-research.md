@@ -32,8 +32,7 @@ experiments test their project fitness. Neither replaces the other, and a PoC
 is not mandatory for every solution.
 
 When organizing research or PoCs, read and apply
-[Efficiency and Concurrency](efficiency-and-concurrency.md); its lifecycle-wide
-guidance applies before implementation begins, not only during coding.
+[Efficiency and Concurrency](efficiency-and-concurrency.md).
 
 | Focus | Application |
 | --- | --- |

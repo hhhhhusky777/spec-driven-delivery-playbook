@@ -482,11 +482,6 @@ agent decisions unless project policy says otherwise.
 
 ### Efficiency and Concurrency
 
-Concurrency applies throughout the lifecycle, including discovery, whiteboard
-research and PoCs, planning, implementation, review, validation, upgrade,
-recovery and cleanup. Agents assess useful parallel work when organizing each
-phase—not only after choosing to delegate.
-
 Long-running work does not have to stall the whole delivery. The agent can
 overlap independent commands and tests, continue useful work while background
 operations run, and delegate bounded investigation or implementation when the
@@ -501,7 +496,7 @@ inputs, ownership, environments, and resources—not just task names.
 
 ```mermaid
 flowchart TD
-    P["Any phase: identify ready independent work"] --> M["Advance mainline"]
+    P["Parent: identify ready independent work"] --> M["Advance mainline"]
     P --> B["Background commands and tests"]
     P --> W["Workers: bounded independent work"]
     M --> I["Integrate outcomes and collect evidence"]
@@ -516,9 +511,10 @@ rediscovering the same problems. It survives feature cleanup and links to
 existing solution owners rather than duplicating their guidance.
 
 This is an execution strategy for the existing core goals, not another goal or
-gate. [Efficiency and Concurrency](knowledge-base/efficiency-and-concurrency.md)
-owns the shared guidance; the workflow, adoption, upgrade, review and triage
-skills route agents to it. The agent chooses a proportional way to apply it.
+gate. The [workflow skill](skills/sdd-project-workflow/SKILL.md#efficiency-and-concurrency)
+sets the execution boundary and routes agents to
+[Efficiency and Concurrency](knowledge-base/efficiency-and-concurrency.md) for
+the detailed guidance; the agent chooses a proportional way to apply it.
 
 ### Design tests around risk
 
