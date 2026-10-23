@@ -494,11 +494,12 @@ test("legacy pins without triage remain valid and gain it only in the newer cand
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
 });
 
-test("installed triage routing resolves same-revision KB topics across profiles and cleanup", async (t) => {
+test("installed skill routing resolves same-revision KB topics across profiles and cleanup", async (t) => {
   const source = await createPlaybookFixture(t);
   const legacyRevision = await commitKnowledgeBase(source, { "README.md": "# Accepted knowledge\n" });
+  const concurrencyTopic = "efficiency-and-concurrency.md";
   const topics = ["solution-research.md", "error-handling-and-diagnosability.md",
-    "testing-and-reproduction.md", "experience-and-learning.md"];
+    "testing-and-reproduction.md", "experience-and-learning.md", concurrencyTopic];
   const acceptedTopics = Object.fromEntries(topics.map(topic => [topic, `# Previous ${topic}\nAccepted guidance.\n`]));
   const acceptedRevision = await commitKnowledgeBase(source, acceptedTopics);
   for (const name of ["sdd-project-adoption", "sdd-project-workflow", "sdd-playbook-upgrade",
@@ -594,6 +595,7 @@ test("installed triage routing resolves same-revision KB topics across profiles 
       for (const name of ["sdd-project-workflow", "sdd-feature-review"]) {
         const content = await readFile(path.join(project, ".agents/skills", name, "SKILL.md"), "utf8");
         assert.ok(content.includes("`solution-research.md`"), `${name} must route to the shared topic`);
+        assert.ok(content.includes(`\`${concurrencyTopic}\``), `${name} must route to ${concurrencyTopic}`);
       }
       assert.equal((await readFile(path.join(workflowDirectory, ".sdd-playbook-managed"), "utf8")).trim(), revision);
     } else {
