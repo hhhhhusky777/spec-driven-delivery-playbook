@@ -326,8 +326,7 @@ Follow the manifest-linked human-brief policy.
 > `Impact if false`, and `Handling`. List every material assumption affecting
 > the candidate or human decision. Use one `None` row when none exist. Do not
 > manufacture entries from verified facts or immaterial details.
-
-> [!IMPORTANT]
+>
 > At human review gates after implementation work, the parent MUST include a
 > compact table: `Unexpected situation`, `Cause / impact`, `Solution`, and
 > `Current result`. Include situations that affected implementation, consumed
