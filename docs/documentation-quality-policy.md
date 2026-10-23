@@ -276,6 +276,7 @@ to reread every document:
 | Decisions | Important choices, consequences, unsettled alternatives, and recommendation | Appropriate class |
 | Attention | Risks, compatibility effects, assumptions, exceptions, deferred obligations, and owners | Appropriate class |
 | Evidence | Passed checks with scope, failed or unrun checks, uncertainty, and residual limits | Appropriate class |
+| Implementation surprises | Workflow's [unexpected-situation table](../skills/sdd-project-workflow/SKILL.md#execution-judgment-and-evidence) after implementation work | Appropriate class |
 | Response | Exact decision requested, or explicit confirmation that none remains | `HUMAN_DECISION` or `NONE` |
 
 > [!IMPORTANT]
