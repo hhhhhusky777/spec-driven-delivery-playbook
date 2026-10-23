@@ -261,11 +261,12 @@ authority, not a new controller, tracker, gate, or promise of uninterrupted work
 ### Efficiency and Concurrency
 
 > [!IMPORTANT]
-> Before organizing work in any lifecycle phase, you MUST read
-> `efficiency-and-concurrency.md` directly from the manifest-linked KB root when
-> the accepted pin ships it. Proactively assess useful overlap and delegation,
-> including whiteboard research and PoCs; apply its boundaries within project
-> authority. Do not wait until coding or until delegation is already selected.
+> Run useful independent work in parallel wherever dependencies, ownership,
+> authority and resources permit.
+
+For guidance on overlapping execution or subagent delegation, you can refer to
+`efficiency-and-concurrency.md` from the manifest-linked KB root when the
+accepted pin ships it.
 
 Independent reviewer creation still follows the Boundaries contract above.
 

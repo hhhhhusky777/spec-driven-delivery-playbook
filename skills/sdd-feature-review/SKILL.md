@@ -95,10 +95,12 @@ the accepted pin ships it. Check verified applicability, actionable value and
 canonical ownership; past experience does not establish the current cause or
 override project authority.
 
-Before organizing review work or judging overlapping execution or delegation, read
-`efficiency-and-concurrency.md` directly from the manifest-linked KB root when
-the accepted pin ships it. Apply it at every review phase while preserving
-independent reviewer judgment and project authority.
+Run useful independent work in parallel wherever dependencies, ownership,
+authority and resources permit.
+
+For guidance on overlapping execution or subagent delegation, you can refer to
+`efficiency-and-concurrency.md` from the manifest-linked KB root when the
+accepted pin ships it.
 
 Before judging an interface contract or its compatibility, read
 `contracts-and-compatibility.md` directly from the manifest-linked KB root

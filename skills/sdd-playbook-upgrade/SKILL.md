@@ -10,12 +10,6 @@ description: Synchronize an adopted project with the latest immutable SDD playbo
 The manifest and reusable SDD workspace use the latest immutable playbook
 revision while project authority and active feature content remain intact.
 
-Before organizing upgrade work, you MUST read `efficiency-and-concurrency.md`
-from `knowledge-base/` under `Playbook checkout` at `Resolved revision` in the
-verified `.sdd-runtime/playbook-upgrade-guide.md` when that revision ships it.
-Apply its lifecycle-wide guidance within project authority; reading candidate
-guidance does not activate the candidate pin or replace the accepted KB.
-
 ## Boundaries
 
 - Run the upgrade in the current delivery's isolated worktree and owned

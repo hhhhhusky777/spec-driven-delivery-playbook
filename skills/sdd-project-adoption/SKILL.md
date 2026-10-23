@@ -10,12 +10,6 @@ description: Adopt the SDD playbook once by recording project authority and prep
 Install one immutable playbook revision and leave the project ready for future
 deliveries without repeating adoption.
 
-Before organizing discovery or adoption work, you MUST read
-`efficiency-and-concurrency.md` from `Knowledge Base root` in the verified
-`.sdd-runtime/agent-guide.md` when its resolved revision ships the topic.
-Apply its lifecycle-wide guidance within project authority, even before a
-manifest exists.
-
 ## Required result
 
 - A manifest records the source repository, full revision, adoption state,

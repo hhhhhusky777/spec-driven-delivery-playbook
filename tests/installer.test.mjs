@@ -574,36 +574,19 @@ test("installed skill routing resolves same-revision KB topics across profiles a
         ...(upgrade ? ["--upgrade"] : [])]);
       assert.equal(result.status, 0, result.stderr);
     }
-    const resolved = await triageTopics(project, profile);
     for (const name of [profile === "adoption" ? "sdd-project-adoption"
       : profile === "workflow" ? "sdd-project-workflow" : "sdd-playbook-upgrade",
     ...(profile === "workflow" ? ["sdd-feature-review"] : [])]) {
       const entry = path.join(project, ".agents", "skills", name, "SKILL.md");
       const content = await readFile(entry, "utf8");
       assert.equal(content, run("git", ["show", `${revision}:skills/${name}/SKILL.md`], source.repository));
-      assert.ok(content.includes(`\`${concurrencyTopic}\``), `${name} must route to ${concurrencyTopic}`);
-      if (profile === "adoption" || upgrade) {
-        const guideName = upgrade ? "playbook-upgrade-guide.md" : "agent-guide.md";
-        const guideRoute = [...content.matchAll(/`(\.sdd-runtime\/[^`]+-guide\.md)`/g)]
-          .map(([, relative]) => relative).find(relative => path.basename(relative) === guideName);
-        assert.ok(guideRoute, `${name} must identify its owning ${guideName}`);
-        const guide = await readFile(path.join(project, guideRoute), "utf8");
-        assert.equal(guideValue(guide, "Resolved revision"), revision);
-        for (const field of upgrade ? ["Playbook checkout", "Resolved revision"] : ["Knowledge Base root"]) {
-          assert.ok(content.includes(`\`${field}\``), `${name} must identify ${field}`);
-        }
-        const kbRoute = upgrade ? [...content.matchAll(/`(knowledge-base\/)`/g)][0]?.[1]
-          : guideValue(guide, "Knowledge Base root");
-        assert.ok(kbRoute, `${name} must identify its KB root`);
-        const kbRoot = path.join(upgrade ? guideValue(guide, "Playbook checkout") : project, kbRoute);
-        assert.equal(kbRoot, resolved.kbRoot);
-      }
       const routing = [...content.matchAll(/\]\(([^)]+sdd-problem-triage\/SKILL\.md)\)/g)];
       assert.ok(routing.length, `${name} has no installed triage route`);
       for (const [, relative] of routing) {
         await access(path.resolve(path.dirname(entry), relative));
       }
     }
+    const resolved = await triageTopics(project, profile);
     const workflowDirectory = path.join(project, ".agents", "skills", "sdd-project-workflow");
     if (profile === "adoption") {
       await assert.rejects(access(manifestPath));
@@ -612,6 +595,7 @@ test("installed skill routing resolves same-revision KB topics across profiles a
       for (const name of ["sdd-project-workflow", "sdd-feature-review"]) {
         const content = await readFile(path.join(project, ".agents/skills", name, "SKILL.md"), "utf8");
         assert.ok(content.includes("`solution-research.md`"), `${name} must route to the shared topic`);
+        assert.ok(content.includes(`\`${concurrencyTopic}\``), `${name} must route to ${concurrencyTopic}`);
       }
       assert.equal((await readFile(path.join(workflowDirectory, ".sdd-playbook-managed"), "utf8")).trim(), revision);
     } else {

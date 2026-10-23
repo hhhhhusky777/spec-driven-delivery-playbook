@@ -31,9 +31,6 @@ experiment can resolve at proportionate cost. Research identifies candidates;
 experiments test their project fitness. Neither replaces the other, and a PoC
 is not mandatory for every solution.
 
-When organizing research or PoCs, read and apply
-[Efficiency and Concurrency](efficiency-and-concurrency.md).
-
 | Focus | Application |
 | --- | --- |
 | Decision | Define the question, success criteria and how the result will affect the choice before building. |
