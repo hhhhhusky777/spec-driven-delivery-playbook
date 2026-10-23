@@ -233,6 +233,12 @@ implementation content; any later change to that content, including a required
 resynchronization, invalidates approval and repeats the audit. A subsequent
 test-only addition does not by itself invalidate this audit.
 
+The workflow skill's
+[human implementation review](../skills/sdd-project-workflow/SKILL.md#human-implementation-review)
+owns the portable code-grounded brief and explicit human acceptance before
+final-test work, including Autopilot. This repository requires that acceptance
+after the audit and before the work below; task-focused checks are unchanged.
+
 Only after this audit passes, reconcile every accepted changed outcome and
 material risk against the plan's test inventory, including gaps not previously
 recorded. Add required missing tests before final candidate review, run
@@ -303,6 +309,7 @@ Phase-specific additions:
 | Design conclusion | Key design points, rationale, boundaries, risks, rejected alternatives, unresolved gaps, and the exact owner decision |
 | Planning | Whiteboard design points mapped to task outcomes, dependencies, validation, PR boundaries, gaps, and the [Autopilot choice and foreseeable decisions](../skills/sdd-project-workflow/SKILL.md#autopilot-mode) |
 | Implementation PR | Delivered behavior, deviations, compatibility/operational effects, validation, and merge target |
+| Pre-final-test implementation | Code-grounded decision table and flows under the [human implementation review contract](../skills/sdd-project-workflow/SKILL.md#human-implementation-review); decide changes versus starting final tests, not merge |
 | Validation and cleanup | Planned versus actual outcomes, unresolved work, cleanup ownership, and target proof |
 | Upgrade | Old/new pins, reusable-document impact, migration, rollback, validation, and cutover authority |
 

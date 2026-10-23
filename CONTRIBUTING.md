@@ -109,6 +109,10 @@ concluded whiteboard, fails to reuse a suitable existing project mechanism, or
 adds unauthorized or redundant behavior, code, logic, abstraction, or parallel
 implementation. Any later implementation-content change repeats this audit;
 test-only additions do not.
+Then obtain explicit human acceptance under the workflow skill's
+[human implementation review](skills/sdd-project-workflow/SKILL.md#human-implementation-review)
+before final-test work, even with Autopilot. Its code-grounded brief supports
+the decision to change implementation or begin final tests, not final merge.
 Defer full validation until the final candidate will merge back to
 `main`; a single-task PR targeting `main` is already final. Candidate-changing
 corrections return through focused tests and both retained reviewer seats;

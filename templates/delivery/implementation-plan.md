@@ -105,7 +105,11 @@ suitable reuse of existing code and project frameworks, and the absence of
 unauthorized or redundant implementation. Any later implementation-content
 change, including a required
 resynchronization, invalidates approval and repeats the audit; a test-only
-addition does not. Only after approval,
+addition does not. After the audit, obtain human acceptance under the workflow
+skill's [human implementation review](../../skills/sdd-project-workflow/SKILL.md#human-implementation-review),
+including Autopilot, before adding missing tests or running final-gate tests.
+Keep its code-grounded decision brief in the parent reply and PR evidence, not
+another plan table. This acceptance does not authorize merge. Only after approval,
 reconcile all accepted outcomes and material risks, including unrecorded gaps,
 and add required missing tests before final candidate review. The PR owns actual
 run results.

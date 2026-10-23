@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = relative => readFile(path.join(root, relative), "utf8");
 
-test("Autopilot consumers route to one portable authorization contract", async () => {
+test("human-gate and Autopilot consumers route to portable workflow contracts", async () => {
   const owner = "skills/sdd-project-workflow/SKILL.md";
   const workflow = await read(owner);
   const section = workflow.split("## Autopilot mode\n")[1]?.split("\n## ")[0];
@@ -19,10 +19,12 @@ test("Autopilot consumers route to one portable authorization contract", async (
     "templates/delivery/implementation-plan.md",
   ]) {
     const text = await read(consumer);
-    const links = [...text.matchAll(/\]\(([^)]+#autopilot-mode)\)/g)];
-    assert.ok(links.length > 0, `${consumer} must route to the canonical contract`);
-    for (const [, href] of links) {
-      assert.equal(path.posix.normalize(path.posix.join(path.posix.dirname(consumer), href.split("#")[0])), owner);
+    for (const anchor of ["autopilot-mode", "human-implementation-review"]) {
+      const links = [...text.matchAll(new RegExp(`\\]\\(([^)]+#${anchor})\\)`, "g"))];
+      assert.ok(links.length > 0, `${consumer} must route to ${anchor}`);
+      for (const [, href] of links) {
+        assert.equal(path.posix.normalize(path.posix.join(path.posix.dirname(consumer), href.split("#")[0])), owner);
+      }
     }
   }
   const plan = await read("templates/delivery/implementation-plan.md");
@@ -213,7 +215,12 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(readme, /Y --> S\["Author \+ retained reviewers:<br\/>scope and reuse audit"\]/);
   assert.match(readme, /S --> U\{"Audit approved on exact<br\/>implementation content\?"\}/);
   assert.match(readme, /U -->\|"no"\| X/);
-  assert.match(readme, /U -->\|"yes"\| A\["Reconcile coverage;<br\/>add missing required tests"\]/);
+  assert.match(readme, /U -->\|"yes"\| HB/);
+  assert.match(readme, /HB --> HA/);
+  assert.match(readme, /HA -->\|"changes requested"\| X/);
+  assert.match(readme, /HA -->\|"pending"\| HW/);
+  assert.match(readme, /HA -->\|"accepted"\| A/);
+  assert.doesNotMatch(readme, /U -->\|"yes"\| A/);
   assert.match(readme, /A --> F/);
   assert.match(readme, /P --> R1\["Retained feature reviewer 1"\]/);
   assert.match(readme, /P --> R2\["Retained feature reviewer 2"\]/);

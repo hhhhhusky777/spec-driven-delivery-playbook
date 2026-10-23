@@ -9,10 +9,10 @@ and run evidence; task states describe the candidate's resulting repository stat
 
 | Field | Value |
 | --- | --- |
-| State | `DRAFT` |
+| State | `VALIDATING` |
 | Active tasks | `None` |
 | Next ready task | `None` |
-| Active blocker | Owner acceptance of the reviewed implementation plan |
+| Active blocker | Human implementation acceptance before final-test work |
 | Implementation mode | Human-review-before-merge; Autopilot not enabled |
 | Authorized scope / feature branch / protected target | No automatic merge authority; single-unit delivery; main |
 | Delivery branch / target | codex/pre-validation-human-review / main |
@@ -20,7 +20,7 @@ and run evidence; task states describe the candidate's resulting repository stat
 | Primary issue / need | [#179](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/179) |
 | Concluded whiteboard | [Accepted design](solution-whiteboard.md), conclusion commit 3fae987091f0f4781c0193cc56cf5ea87a68f043 |
 | Required reviewers | The same two isolated issue179 reviewer sessions |
-| Last verified | 2026-10-23: both reviewers verified the exact conclusion transition; plan candidate prepared for review |
+| Last verified | 2026-10-23: T01 implementation and focused checks complete; pre-final implementation audit requested; full validation remains unrun and Autopilot remains disabled |
 
 ## Governing inputs and delivery boundaries
 
@@ -45,13 +45,13 @@ Material assumptions and unresolved scope gaps: `None`.
 | D03 / D04 | T01: require a concise decision table and three actual code-level flow views in the reply | Review complete briefs, code references, notation and justified N/A | Aligned; no separate diagram document |
 | D05 | T01: preserve acceptance only while the audited implementation content is unchanged | Walk implementation-change and test-only cases | Aligned; existing invalidation boundary reused |
 | D06 | T01: keep the detailed contract in workflow skill; reconcile reviewer guidance, policy, CONTRIBUTING, plan and README diagrams | Semantic cross-document review, links, focused checks and Mermaid | Aligned; no duplicate contract owner |
-| D07 | T01: complete the accepted in-place upgrade to 814cdf768d72d57d962c51d9e5ad1cae8aa0246f using the installer | Accepted runtime CURRENT and managed skill/KB parity | Prepared candidate validates UPGRADE_CURRENT; cutover pending |
+| D07 | T01: complete the accepted in-place upgrade to 814cdf768d72d57d962c51d9e5ad1cae8aa0246f using the installer | Accepted runtime CURRENT and managed skill/KB parity | Cutover complete; accepted runtime validates CURRENT |
 
 ## Tasks
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| T01 | PLANNED | None | Portable, concise human implementation-review contract with consistent consumers and installed runtime | D01–D07; human decisions and main merge remain separate | Focused changed-file checks, applicable existing installer regression, two-reviewer audit, human implementation acceptance, then full applicable source validation | codex/pre-validation-human-review; [PR #180](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/180); main |
+| T01 | DONE | None | Portable, concise human implementation-review contract with consistent consumers and installed runtime | D01–D07; human decisions and main merge remain separate | Focused changed-file checks and existing installer regression; pre-final review, human implementation acceptance and full source validation remain delivery gates | codex/pre-validation-human-review; [PR #180](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/180); main |
 
 ## Task specifications and context receipts
 
@@ -59,12 +59,12 @@ Material assumptions and unresolved scope gaps: `None`.
 
 | Concern | Value |
 | --- | --- |
-| Source boundary | skills/sdd-project-workflow/SKILL.md; skills/sdd-feature-review/SKILL.md; docs/documentation-quality-policy.md; CONTRIBUTING.md; templates/delivery/implementation-plan.md; README.md; installer-managed accepted runtime material and manifest |
+| Source boundary | skills/sdd-project-workflow/SKILL.md; skills/sdd-feature-review/SKILL.md; docs/documentation-quality-policy.md; CONTRIBUTING.md; templates/delivery/implementation-plan.md; README.md; affected existing tests/document-model.test.mjs diagram assertion; installer-managed accepted runtime material and manifest |
 | Consumed dependencies | Accepted D01–D07; project authorities; immutable upgrade candidate 814cdf768d72d57d962c51d9e5ad1cae8aa0246f |
 | Critical obligations | Keep focused checks, retained review independence, design scope, final human merge authority and content-bound acceptance intact |
 | Context receipt | Authorities, skills, template and README audit/Autopilot paths inspected; existing audit is the sufficient shared boundary; no future implementation output is a readiness prerequisite |
 | Required evidence | Focused Markdown/link/lifecycle/Mermaid checks; skill frontmatter validation; applicable existing installed-profile regression; independent semantic walkthroughs; full applicable source checks only at the final gate |
-| Actual result | Not implemented |
+| Actual result | Portable human implementation-review section, existing consumer links and README flow diagrams implemented; affected existing contract-routing/topology assertions updated; accepted runtime cutover complete |
 
 The workflow skill owns the response requirements. Keep its wording short and
 normative. Require a concise parent-response table containing these fields:
@@ -108,10 +108,10 @@ behavior beyond them. Detailed findings and dispositions remain in PR #180.
 
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
-| Accepted design delivered | Complete D01–D07 mapping and no unexplained additions | Pending T01 |
+| Accepted design delivered | Complete D01–D07 mapping and no unexplained additions | T01 implementation complete; exact-candidate review evidence belongs in PR #180 |
 | Implementation reviewed | Author and both retained reviewers approve the same content; human accepts the code-grounded brief before final-test work | Pending |
 | Applicable validation passed | Focused evidence, complete required test coverage and full applicable final source gate | Pending; no unrun gate is claimed passed |
-| Current reusable installation | Accepted immutable pin, runtime CURRENT and complete installed KB/skill parity | Pending accepted cutover |
+| Current reusable installation | Accepted immutable pin, runtime CURRENT and complete installed KB/skill parity | Complete at 814cdf768d72d57d962c51d9e5ad1cae8aa0246f; new source guidance is a separate unmerged candidate |
 | PR-owned delivery | Exact-head review, owner merge authority and target verification | [PR #180](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/180) owns live evidence |
 | Merge-ready state and cleanup | Converged tracked state, complete combined archive, live plan removal and whiteboard reset only after named owner authorization | Not yet authorized or performed |
 
@@ -119,7 +119,7 @@ behavior beyond them. Detailed findings and dispositions remain in PR #180.
 
 | Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
 | --- | --- | --- | --- |
-| D01–D07 / T01 | One coherent portable gate and consistent consumers | Design concluded; implementation not started | Plan acceptance, implementation, review, human implementation acceptance, final validation and merge |
+| D01–D07 / T01 | One coherent portable gate and consistent consumers | Implemented with focused evidence; no design deviation | Exact-candidate audit, human implementation acceptance, final validation, authorized tracked closure and merge |
 
 ### Cleanup inventory
 
@@ -128,7 +128,7 @@ behavior beyond them. Detailed findings and dispositions remain in PR #180.
 | Manifest, reusable guidance and project Experience | Keep | Canonical reusable project sources | Preserved |
 | Complete whiteboard and final plan | Combined archive; then remove live plan and reset whiteboard | Normal-delivery completion contract; requires named prior owner authorization | Pending; no reset authorization assumed |
 | Delivery worktree and merged branch | Remove only after authorized merge and exact-target verification | Owned worktree recorded in PR #180 and codex/pre-validation-human-review | Pending |
-| Installer-owned temporary runtime | Retire superseded checkout through installer ownership checks | Generated ownership markers | Pending |
+| Installer-owned temporary runtime | Retire superseded checkout through installer ownership checks | Generated ownership markers | Superseded owned checkouts retired during accepted cutover; current runtime remains until worktree cleanup |
 
 ## Human review brief
 

@@ -28,7 +28,7 @@ useful rather than adding process overhead.
 | Efficient implementation | Batch coherent work and avoid unnecessary stops while preserving real gates |
 | Efficiency and concurrency | Overlap independent execution and delegate worthwhile work while the main agent advances delivery |
 | Reliable review | Give two isolated reviewers and the owner one exact, reviewable candidate |
-| Optional Autopilot | Authorize continuous delivery to final merge-back readiness while retaining human control of the protected-target merge |
+| Optional Autopilot | Automate feature-task merges while retaining human implementation acceptance before final tests and control of the protected-target merge |
 | Simple fail-closed recovery | Preserve consistency, expose safe client retry, and avoid speculative error machinery |
 | Evidence-driven problem triage | Reproduce unexplained failures, challenge causes with evidence, and avoid repeating blind fixes |
 | Parallel delivery | Isolate worktrees and ownership while keeping integration boundaries explicit |
@@ -314,7 +314,11 @@ flowchart TD
     Q -->|"no"| R["Focused tests + retained review"]
     Q -->|"yes"| W
     W --> R
-    R --> V["Full applicable validation on final head"]
+    R --> B["Code-level flows + decision table"]
+    B --> A{"Human accepts implementation?"}
+    A -->|"changes requested"| E
+    A -->|"pending"| W1["Wait; no final-test work"]
+    A -->|"accepted"| V["Complete final-test work;<br/>review final head + full validation"]
     V --> H["Human merge decision"]
 ```
 
@@ -397,8 +401,9 @@ visible without requiring the owner to reread every document word by word.
 It also asks whether to enable **Autopilot** and collects foreseeable decisions
 together. Explicit opt-in lets approved task PRs merge into the named feature
 branch and the next ready task begin without routine human merge pauses. The
-agent continues through existing final-readiness checks, then stops for the
-human protected-target merge decision. Human-review-before-merge remains the
+agent still pauses for human implementation acceptance before final-test work,
+then resumes authorized final readiness and stops for the human protected-target
+merge decision. Human-review-before-merge remains the
 default; single-PR delivery never gains automatic `main` merge permission.
 See the [Autopilot contract](skills/sdd-project-workflow/SKILL.md#autopilot-mode)
 for the canonical authorization and preserved stop boundaries.
@@ -560,7 +565,8 @@ project-specific test and acceptance contracts.
 "Focused tests" means only the tests that cover the changed files and lines.
 Run them at the task gate.
 A task may record missing non-focused tests in the plan, with an owner and
-final-gate obligation. After the pre-final implementation audit, reconcile and
+final-gate obligation. After the pre-final implementation audit and human
+implementation acceptance, reconcile and
 add the required missing tests, then review the final candidate and run full
 validation before merge back to the protected target. A recorded gap is not
 passing test evidence.
@@ -649,7 +655,11 @@ flowchart TD
     Y --> S["Author + retained reviewers:<br/>scope and reuse audit"]
     S --> U{"Audit approved on exact<br/>implementation content?"}
     U -->|"no"| X
-    U -->|"yes"| A["Reconcile coverage;<br/>add missing required tests"]
+    U -->|"yes"| HB["Code-level flows + decision table"]
+    HB --> HA{"Human accepts implementation?"}
+    HA -->|"changes requested"| X
+    HA -->|"pending"| HW["Wait, including Autopilot"]
+    HA -->|"accepted"| A["Reconcile coverage;<br/>add missing required tests"]
     E -->|"no"| F["Focused tests covering<br/>changed files and lines"]
     A --> F
     F --> P["Open or update PR"]
@@ -681,7 +691,8 @@ any missing test or running any final-gate test, the author and both retained
 reviewers audit the exact
 implementation content against the concluded whiteboard, suitable existing
 project mechanisms, and unauthorized or redundant implementation. Only after
-all three approve may the final gate reconcile coverage, add required tests,
+all three approve and the human accepts the implementation may the final gate
+reconcile coverage, add required tests,
 and send the resulting candidate through focused checks and both retained
 reviewers before full validation. Any later
 implementation-content change, including a required later synchronization,
@@ -690,6 +701,15 @@ Any candidate change returns to focused tests and both reviewers; a
 final-candidate change also invalidates full validation.
 An unchanged transient check failure repeats only the affected validation. A
 project's stricter validation policy takes precedence.
+
+Before final-test work, the human receives actual code-level business,
+error-handling and data-flow diagrams plus a concise decision table: design
+conformance, findings and dispositions, risks, validation status, and the author
+recommendation with both reviewer conclusions. This is a decision to change
+implementation or begin final tests—not acceptance of unrun tests or permission
+to merge. The workflow skill's
+[human implementation review](skills/sdd-project-workflow/SKILL.md#human-implementation-review)
+owns the brief, proportional diagram scope and acceptance-invalidation rules.
 
 Implementation should also remain inspectably proportional. If one task
 accumulates 90 minutes of active implementation before its planned review
@@ -862,7 +882,8 @@ flowchart TD
     S -->|"no"| A["Pre-final implementation audit"]
     S -->|"yes"| C["Sync target; resolve conflicts<br/>+ affected focused checks"]
     C --> A
-    A --> FP["Final feature PR"]
+    A --> H["Code-level brief + human implementation acceptance"]
+    H --> FP["Final feature PR and validation"]
     FP --> M
 ```
 
