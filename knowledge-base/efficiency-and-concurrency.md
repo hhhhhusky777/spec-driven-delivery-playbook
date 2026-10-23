@@ -1,7 +1,8 @@
 # Efficiency and Concurrency
 
-Use this guidance when organizing work in any lifecycle phase, including but
-not limited to whiteboard research and PoCs.
+Use this guidance when deciding whether and how to use concurrency throughout
+the delivery lifecycle, including but not limited to whiteboard research and
+PoCs.
 Reduce avoidable waiting without increasing coordination, conflicting changes,
 or unverified results. Project authority owns scope, permissions, dependencies
 and quality gates; parallel execution does not change them.
