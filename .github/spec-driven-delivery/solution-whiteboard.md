@@ -17,13 +17,13 @@ implementation await the existing reviewer and human acceptance boundaries.
 
 | ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
-| DR01 | The owner requires a human pause after all development is complete and before validation, including Autopilot deliveries | Accepted requirement; D01 / D02 |
-| DR02 | The parent response must show code-level business and error-handling flows | Accepted requirement; D03 |
-| DR03 | The owner asked whether a data flow diagram exists | DFD proposed as the third view; D03 |
-| DR04 | Existing policy already places author and two-reviewer implementation audit before missing final tests and final-test runs | Reuse that boundary; D01 |
-| DR05 | Diagrams must help inspect the actual change without becoming a second design or documentation system | Proposed scope and applicability; D04 |
-| DR06 | Approval must remain tied to the implementation that was inspected | Reuse existing invalidation rules; D05 |
-| DR07 | New deliveries check playbook currentness before work | Candidate upgrade prepared in this delivery; D07 |
+| DR01 | The owner requires a human pause after all development is complete and before validation, including Autopilot deliveries | accepted |
+| DR02 | The parent response must show code-level business and error-handling flows | accepted |
+| DR03 | The owner asked whether a data flow diagram exists | accepted |
+| DR04 | Existing policy already places author and two-reviewer implementation audit before missing final tests and final-test runs | accepted |
+| DR05 | Diagrams must help inspect the actual change without becoming a second design or documentation system | accepted |
+| DR06 | Approval must remain tied to the implementation that was inspected | accepted |
+| DR07 | New deliveries check playbook currentness before work | accepted |
 
 ## Current understanding and scope
 
@@ -89,11 +89,11 @@ flowchart TD
 
 | Draft item | Concluded design point | Disposition | Rationale / evidence |
 | --- | --- | --- | --- |
-| DR01 | D01 / D02 | accepted | Explicit human stop precedes final-test work in either execution mode |
+| DR01 | D01, D02 | accepted | Explicit human stop precedes final-test work in either execution mode |
 | DR02 | D03 | accepted | Both requested code-level flow views appear in the parent response |
 | DR03 | D03 | accepted | DFD supplies the distinct data-movement view; owner disposition pending |
 | DR04 | D01 | accepted | Extends the existing audit rather than create another phase tracker |
-| DR05 | D04 / D06 | accepted | Scope, applicability and canonical ownership keep the presentation useful |
+| DR05 | D04, D06 | accepted | Scope, applicability and canonical ownership keep the presentation useful |
 | DR06 | D05 | accepted | Reuses implementation-content invalidation and preserves test-only distinction |
 | DR07 | D07 | accepted | Currentness work is prepared in the delivery worktree with the old pin authoritative |
 
