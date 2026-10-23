@@ -14,15 +14,15 @@ state.
 | State before block | `None` |
 | Playbook source repository | `https://github.com/hhhhhusky777/spec-driven-delivery-playbook.git` |
 | Playbook revision | `e7934be75e0834961a3083f18b6aa2bfd35a4a66` |
-| Upgrade state | `COMPLETE` |
-| Upgrade candidate | `None` |
+| Upgrade state | `ASSESSING` |
+| Upgrade candidate | `814cdf768d72d57d962c51d9e5ad1cae8aa0246f` |
 | Playbook materialization mode | `pinned local checkout` |
 | Adoption owner | Playbook maintainers |
 | Accepted by | Repository owner through the adoption pull request |
 | Accepted at | `2026-09-07 Asia/Shanghai` |
 | Project adoption root | `.github/spec-driven-delivery` |
 | Knowledge Base root | `.github/spec-driven-delivery/knowledge-base` |
-| Last verified | 2026-10-16 Asia/Shanghai: incremental discovery preserved canonical authority and Experience links; exact-pin installation and complete KB/managed-skill parity verified in an isolated upgrade rehearsal; acceptance evidence belongs to the upgrade pull request |
+| Last verified | 2026-10-23 Asia/Shanghai: incremental discovery compared the incoming manifest template and current canonical sources; authority and Experience links remain current; candidate preparation validates and acceptance evidence belongs to the pull request |
 
 ## Canonical project authorities
 
