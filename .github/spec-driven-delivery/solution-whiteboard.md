@@ -4,11 +4,11 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [#179](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/179) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
-| Open owner decisions | Accept the reviewed design candidate, V01 / FC01, diagram applicability and the prepared playbook upgrade |
+| Concluded design revision | `55f8968cb2e8ee795a38d92f5bd0e00e6be6a4ce` |
+| Open owner decisions | `None` |
 
 This is the conclusion candidate for owner review. Design freeze and dependent
 implementation await the existing reviewer and human acceptance boundaries.
@@ -101,7 +101,7 @@ flowchart TD
 
 | ID | Validation, owning authority, and execution boundary | Protected outcome / risk and marginal value beyond existing controls | Concrete invalid case | Failure effect / recovery | Cost / risk reduction | Existing/reusable or cheaper mechanism, its coverage, and why insufficient | Fail-close / test reference | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| V01 | Explicit human implementation acceptance, owned by workflow skill at the existing pre-final-test transition after author/two-reviewer audit | Gives the owner a code-grounded view and decision before final-test effort; current agent review alone supplies no human acceptance | All tasks and agent reviews pass under Autopilot, but the parent starts full validation without presenting flows or receiving acceptance | Pause final-test work; parent presents the current implementation/views and owner accepts or requests correction; repeat the affected audit after code changes | One intentional wait plus proportionate diagram preparation; no additional document, runtime checker or new review cohort | Reuse the existing implementation audit and PR evidence. Agent approval or final merge review alone occurs without the requested human decision before validation | FC01; walkthroughs for Autopilot, ordinary mode, code-change invalidation, test-only continuation and N/A views | Pending |
+| V01 | Explicit human implementation acceptance, owned by workflow skill at the existing pre-final-test transition after author/two-reviewer audit | Gives the owner a code-grounded view and decision before final-test effort; current agent review alone supplies no human acceptance | All tasks and agent reviews pass under Autopilot, but the parent starts full validation without presenting flows or receiving acceptance | Pause final-test work; parent presents the current implementation/views and owner accepts or requests correction; repeat the affected audit after code changes | One intentional wait plus proportionate diagram preparation; no additional document, runtime checker or new review cohort | Reuse the existing implementation audit and PR evidence. Agent approval or final merge review alone occurs without the requested human decision before validation | FC01; walkthroughs for Autopilot, ordinary mode, code-change invalidation, test-only continuation and N/A views | Approved by owner in conversation, 2026-10-23 |
 
 All five existing validation criteria apply to V01: traceability to the owner's
 requested outcome, correct workflow/human boundary, marginal value beyond agent
@@ -112,7 +112,7 @@ existing audit mechanism.
 
 | ID | Trigger | Required fail-closed response | Concrete example | Impact | Recovery / best next action | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- |
-| FC01 | Implementation is complete but explicit human acceptance of the current audited implementation is absent or was invalidated by a code change | Stop before adding missing final tests or running final-gate tests, including when Autopilot is enabled | Two task PRs have merged into the feature branch and both reviewers approve, but the owner has not reviewed the three implementation-flow views; the author waits instead of starting the final system tests | Final-validation progress waits for the owner; completed implementation and prior valid evidence are preserved | Parent presents or refreshes the code-grounded brief and resolves findings within authority; owner explicitly accepts that implementation; resume final-test work only after acceptance and required agent audit are current | Pending |
+| FC01 | Implementation is complete but explicit human acceptance of the current audited implementation is absent or was invalidated by a code change | Stop before adding missing final tests or running final-gate tests, including when Autopilot is enabled | Two task PRs have merged into the feature branch and both reviewers approve, but the owner has not reviewed the three implementation-flow views; the author waits instead of starting the final system tests | Final-validation progress waits for the owner; completed implementation and prior valid evidence are preserved | Parent presents or refreshes the code-grounded brief and resolves findings within authority; owner explicitly accepts that implementation; resume final-test work only after acceptance and required agent audit are current | Approved by owner in conversation, 2026-10-23 |
 
 ## Implementation and verification outline
 
