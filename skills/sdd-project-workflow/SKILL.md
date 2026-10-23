@@ -261,9 +261,11 @@ authority, not a new controller, tracker, gate, or promise of uninterrupted work
 ### Efficiency and Concurrency
 
 > [!IMPORTANT]
-> Use concurrency as much as possible. Before organizing work, you MUST read
-> and apply `efficiency-and-concurrency.md` from the manifest-linked KB root
-> when the accepted pin ships it.
+> Before organizing work, you MUST read and apply
+> `efficiency-and-concurrency.md` from the manifest-linked KB root when the
+> accepted pin ships it. Proactively identify and use concurrency opportunities
+> that are expected to improve overall delivery efficiency, following the
+> KB's guidance.
 
 Independent reviewer creation still follows the Boundaries contract above.
 

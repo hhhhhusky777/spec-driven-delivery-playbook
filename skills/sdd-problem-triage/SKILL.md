@@ -28,9 +28,11 @@ Resolve KB topic filenames from:
 - Before a manifest exists: `Knowledge Base root` in the verified `.sdd-runtime/agent-guide.md`.
 - Candidate upgrade: `knowledge-base/` under `Playbook checkout` at `Resolved revision` in the verified `.sdd-runtime/playbook-upgrade-guide.md`.
 
-Use concurrency as much as possible. Before organizing work, you MUST read
-and apply `efficiency-and-concurrency.md` from the resolved KB root when this
-skill's revision ships it.
+Before organizing work, you MUST read and apply
+`efficiency-and-concurrency.md` from the resolved KB root when this skill's
+revision ships it. Proactively identify and use concurrency opportunities
+that are expected to improve overall delivery efficiency, following the
+KB's guidance.
 
 When investigation requires assessing failure diagnostics or retry safety, read
 `error-handling-and-diagnosability.md` directly from the resolved KB root
