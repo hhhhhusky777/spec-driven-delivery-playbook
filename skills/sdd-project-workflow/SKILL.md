@@ -261,12 +261,9 @@ authority, not a new controller, tracker, gate, or promise of uninterrupted work
 ### Efficiency and Concurrency
 
 > [!IMPORTANT]
-> Run useful independent work in parallel wherever dependencies, ownership,
-> authority and resources permit.
-
-For guidance on overlapping execution or subagent delegation, you can refer to
-`efficiency-and-concurrency.md` from the manifest-linked KB root when the
-accepted pin ships it.
+> Use concurrency as much as possible. Before organizing work, you MUST read
+> and apply `efficiency-and-concurrency.md` from the manifest-linked KB root
+> when the accepted pin ships it.
 
 Independent reviewer creation still follows the Boundaries contract above.
 

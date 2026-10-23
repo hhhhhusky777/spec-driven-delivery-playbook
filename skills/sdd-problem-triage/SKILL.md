@@ -28,12 +28,9 @@ Resolve KB topic filenames from:
 - Before a manifest exists: `Knowledge Base root` in the verified `.sdd-runtime/agent-guide.md`.
 - Candidate upgrade: `knowledge-base/` under `Playbook checkout` at `Resolved revision` in the verified `.sdd-runtime/playbook-upgrade-guide.md`.
 
-Run useful independent work in parallel wherever dependencies, ownership,
-authority and resources permit.
-
-For guidance on overlapping execution or subagent delegation, you can refer to
-`efficiency-and-concurrency.md` from the resolved KB root when this skill's
-revision ships it.
+Use concurrency as much as possible. Before organizing work, you MUST read
+and apply `efficiency-and-concurrency.md` from the resolved KB root when this
+skill's revision ships it.
 
 When investigation requires assessing failure diagnostics or retry safety, read
 `error-handling-and-diagnosability.md` directly from the resolved KB root
