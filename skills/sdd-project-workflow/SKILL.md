@@ -53,6 +53,9 @@ Do not create additional documents that duplicate these responsibilities. Put
 unique design information in the whiteboard, unique execution information in
 the plan, and review evidence in the pull request.
 
+Ensure links in template-derived project documents resolve to the correct
+installed files and sections.
+
 ## Delivery routes
 
 Use normal delivery when design or execution needs durable clarification: the
@@ -244,8 +247,11 @@ alternatives in the plan; do not guess answers or request blanket future authori
 > With opt-in, merge task PRs ONLY into that named feature branch after both
 > retained reviewers approve the exact head and focused/applicable required
 > checks pass, including any required external approvals. Then start the next
-> dependency-ready task and continue through existing final-readiness work.
-> Stop at final merge-back ready with the normal human brief and wait for human
+> dependency-ready task. Pause at the
+> [human implementation review](#human-implementation-review) before final-test
+> work; Autopilot does not supply that acceptance. After acceptance, resume
+> authorized final-readiness work. Stop at final merge-back ready with the
+> normal human brief and wait for human
 > protected-target merge acceptance. A single-PR delivery has no intermediate
 > task merge to authorize; Autopilot NEVER grants automatic protected-target merge.
 
@@ -367,10 +373,44 @@ obligation; keep actual run evidence in the PR.
 > resynchronization, invalidates approval and repeats the audit. A subsequent
 > test-only addition does not by itself invalidate this audit.
 
+### Human implementation review
+
+> [!IMPORTANT]
+> After the author and both retained reviewers approve the implementation audit,
+> the parent MUST pause for explicit human acceptance before adding missing
+> tests or running final-gate tests, including under Autopilot. Task-focused
+> checks remain unchanged. This applies to normal and Fast Fix deliveries.
+>
+> The parent MUST reply with this concise decision table and the actual
+> code-level flow diagrams, not design-only diagrams:
+
+| Information | Required content |
+| --- | --- |
+| Implementation / design | Delivered changes, conformance to the accepted design or Fast Fix scope, and deviations |
+| Code-level flows | Business, error-handling and data flows, with actual code references |
+| Review findings | Findings, concrete examples, solutions and author dispositions, or None |
+| Risks / limits / unknowns | Material tradeoffs, limitations and unresolved items, or None |
+| Validation | Focused results and remaining tests to add/run; full validation is not yet established |
+| Recommendation / decision | Author recommendation, both reviewers' conclusions, and the exact human decision |
+
+Render the three views in the reply using suitable established notation, such
+as UML sequence/activity diagrams and DFDs. Keep them proportional to the
+affected implementation; reuse accurate diagrams and explain a genuinely
+inapplicable view as `N/A`. Preserve the brief in PR evidence. Reuse the existing
+findings table and separate assumptions table rather than duplicate them.
+
+Ask the human to request implementation changes or accept the implementation
+and begin final-test work. This acceptance is neither full-validation evidence
+nor final merge authority. Any implementation-content change MUST repeat the
+audit, refresh affected brief/diagrams and obtain human acceptance again;
+test-only additions that preserve implementation do not by themselves repeat
+this acceptance.
+
 Only after this audit passes, reconcile all accepted changed outcomes and
 material risks against the test inventory, including unrecorded gaps. Add
 required missing tests before final candidate review, then run affected focused
-checks and return the changed candidate to both retained reviewers. Do not
+checks and return the changed candidate to both retained reviewers. The human
+acceptance above MUST precede this final-test work. Do not
 claim merge readiness with required tests still missing.
 Candidate-changing corrections return to the same two reviewers. The installed
 sdd-feature-review skill owns reviewer context and finding behavior. After both

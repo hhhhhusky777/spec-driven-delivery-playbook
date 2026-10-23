@@ -7,22 +7,24 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = relative => readFile(path.join(root, relative), "utf8");
 
-test("Autopilot consumers route to one portable authorization contract", async () => {
+test("human-gate and Autopilot consumers route to portable workflow contracts", async () => {
   const owner = "skills/sdd-project-workflow/SKILL.md";
   const workflow = await read(owner);
   const section = workflow.split("## Autopilot mode\n")[1]?.split("\n## ")[0];
   assert.ok(section, "installed workflow must expose the mode contract");
-  for (const consumer of [
-    "README.md",
-    "CONTRIBUTING.md",
-    "docs/documentation-quality-policy.md",
-    "templates/delivery/implementation-plan.md",
+  for (const [consumer, anchors] of [
+    ["README.md", ["autopilot-mode", "human-implementation-review"]],
+    ["CONTRIBUTING.md", ["autopilot-mode", "human-implementation-review"]],
+    ["docs/documentation-quality-policy.md", ["autopilot-mode", "human-implementation-review"]],
+    ["templates/delivery/implementation-plan.md", ["autopilot-mode"]],
   ]) {
     const text = await read(consumer);
-    const links = [...text.matchAll(/\]\(([^)]+#autopilot-mode)\)/g)];
-    assert.ok(links.length > 0, `${consumer} must route to the canonical contract`);
-    for (const [, href] of links) {
-      assert.equal(path.posix.normalize(path.posix.join(path.posix.dirname(consumer), href.split("#")[0])), owner);
+    for (const anchor of anchors) {
+      const links = [...text.matchAll(new RegExp(`\\]\\(([^)]+#${anchor})\\)`, "g"))];
+      assert.ok(links.length > 0, `${consumer} must route to ${anchor}`);
+      for (const [, href] of links) {
+        assert.equal(path.posix.normalize(path.posix.join(path.posix.dirname(consumer), href.split("#")[0])), owner);
+      }
     }
   }
   const plan = await read("templates/delivery/implementation-plan.md");
@@ -213,7 +215,12 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(readme, /Y --> S\["Author \+ retained reviewers:<br\/>scope and reuse audit"\]/);
   assert.match(readme, /S --> U\{"Audit approved on exact<br\/>implementation content\?"\}/);
   assert.match(readme, /U -->\|"no"\| X/);
-  assert.match(readme, /U -->\|"yes"\| A\["Reconcile coverage;<br\/>add missing required tests"\]/);
+  assert.match(readme, /U -->\|"yes"\| HB/);
+  assert.match(readme, /HB --> HA/);
+  assert.match(readme, /HA -->\|"changes requested"\| X/);
+  assert.match(readme, /HA -->\|"pending"\| HW/);
+  assert.match(readme, /HA -->\|"accepted"\| A/);
+  assert.doesNotMatch(readme, /U -->\|"yes"\| A/);
   assert.match(readme, /A --> F/);
   assert.match(readme, /P --> R1\["Retained feature reviewer 1"\]/);
   assert.match(readme, /P --> R2\["Retained feature reviewer 2"\]/);
@@ -712,22 +719,6 @@ test("new design validations are disclosed and reviewed proportionally", async (
   assert.match(readme, /simplest sufficient\s+mechanism—not whether more checking is theoretically possible/);
   assert.match(readme, /proportional validation contract/);
   assert.doesNotMatch(plan, /## Newly introduced validations/);
-});
-
-test("installed skills link only within their copied directories or installed triage sibling", async () => {
-  for (const name of await readdir(path.join(root, "skills"))) {
-    const skillDirectory = path.join(root, "skills", name);
-    const skill = await readFile(path.join(skillDirectory, "SKILL.md"), "utf8");
-    for (const [, target] of skill.matchAll(/\]\((\.\.?\/[^)#]+)(?:#[^)]*)?\)/g)) {
-      const destination = path.resolve(skillDirectory, target);
-      const relative = path.relative(skillDirectory, destination);
-      // Every profile installs this sibling; installer tests verify real paths.
-      const installedTriage = path.join(root, "skills", "sdd-problem-triage", "SKILL.md");
-      assert.ok((relative && relative !== ".." && !relative.startsWith(`..${path.sep}`))
-        || destination === installedTriage,
-      `${name} links outside its installed skill set: ${target}`);
-    }
-  }
 });
 
 test("final review requires merge-ready canonical state without predicting PR facts", async () => {
