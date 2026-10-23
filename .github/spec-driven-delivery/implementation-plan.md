@@ -127,7 +127,7 @@ behavior beyond them. Detailed findings and dispositions remain in PR #180.
 | --- | --- | --- | --- |
 | Manifest, reusable guidance and project Experience | Keep | Canonical reusable project sources | Preserved |
 | Complete whiteboard and final plan | Combined archive; then remove live plan and reset whiteboard | Normal-delivery completion contract; requires named prior owner authorization | Pending; no reset authorization assumed |
-| Delivery worktree and merged branch | Remove only after authorized merge and exact-target verification | Owned /private/tmp/sdd-pre-validation-human-review and codex/pre-validation-human-review | Pending |
+| Delivery worktree and merged branch | Remove only after authorized merge and exact-target verification | Owned worktree recorded in PR #180 and codex/pre-validation-human-review | Pending |
 | Installer-owned temporary runtime | Retire superseded checkout through installer ownership checks | Generated ownership markers | Pending |
 
 ## Human review brief
