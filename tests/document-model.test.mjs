@@ -12,14 +12,14 @@ test("human-gate and Autopilot consumers route to portable workflow contracts", 
   const workflow = await read(owner);
   const section = workflow.split("## Autopilot mode\n")[1]?.split("\n## ")[0];
   assert.ok(section, "installed workflow must expose the mode contract");
-  for (const consumer of [
-    "README.md",
-    "CONTRIBUTING.md",
-    "docs/documentation-quality-policy.md",
-    "templates/delivery/implementation-plan.md",
+  for (const [consumer, anchors] of [
+    ["README.md", ["autopilot-mode", "human-implementation-review"]],
+    ["CONTRIBUTING.md", ["autopilot-mode", "human-implementation-review"]],
+    ["docs/documentation-quality-policy.md", ["autopilot-mode", "human-implementation-review"]],
+    ["templates/delivery/implementation-plan.md", ["autopilot-mode"]],
   ]) {
     const text = await read(consumer);
-    for (const anchor of ["autopilot-mode", "human-implementation-review"]) {
+    for (const anchor of anchors) {
       const links = [...text.matchAll(new RegExp(`\\]\\(([^)]+#${anchor})\\)`, "g"))];
       assert.ok(links.length > 0, `${consumer} must route to ${anchor}`);
       for (const [, href] of links) {

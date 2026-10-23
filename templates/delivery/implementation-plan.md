@@ -9,9 +9,6 @@ The template is a completeness menu, not a requirement to fill every row. Link
 canonical contracts instead of copying them, and keep PR review evidence in the
 pull request.
 
-Skill links below target the playbook source. Apply the workflow skill's
-plan-link guidance when creating the project plan; do not copy those paths as-is.
-
 Within a pull-request candidate, tracked states describe the repository state
 that will result if the candidate merges. Before final review, update every
 affected canonical document accordingly. Review, merge, and target verification
@@ -108,11 +105,7 @@ suitable reuse of existing code and project frameworks, and the absence of
 unauthorized or redundant implementation. Any later implementation-content
 change, including a required
 resynchronization, invalidates approval and repeats the audit; a test-only
-addition does not. After the audit, obtain human acceptance under the workflow
-skill's [human implementation review](../../skills/sdd-project-workflow/SKILL.md#human-implementation-review),
-including Autopilot, before adding missing tests or running final-gate tests.
-Keep its code-grounded decision brief in the parent reply and PR evidence, not
-another plan table. This acceptance does not authorize merge. Only after approval,
+addition does not. Only after approval,
 reconcile all accepted outcomes and material risks, including unrecorded gaps,
 and add required missing tests before final candidate review. The PR owns actual
 run results.
