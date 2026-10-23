@@ -53,10 +53,8 @@ Do not create additional documents that duplicate these responsibilities. Put
 unique design information in the whiteboard, unique execution information in
 the plan, and review evidence in the pull request.
 
-When creating a project plan from the template, rebase links to this workflow
-skill from the plan's actual location using `Installed skill` in the verified
-runtime guide. Verify target files and headings exist; source-template paths
-are not installed-project paths.
+Ensure links in template-derived project documents resolve to the correct
+installed files and sections.
 
 ## Delivery routes
 
