@@ -176,8 +176,8 @@ within project authority.
 > repeat the audit; a subsequent test-only addition does not by itself
 > invalidate it.
 >
-> Check the code-grounded decision table and flow views required by the workflow
-> skill's [human implementation review](../sdd-project-workflow/SKILL.md#human-implementation-review).
+> Check the code-grounded decision table and flow views required by the installed
+> sdd-project-workflow skill's `Human implementation review` contract.
 > Verify agreement with the exact implementation and any N/A explanation.
 > Reviewer approval MUST NOT substitute for the subsequent human acceptance
 > before final-test work, including under Autopilot.
