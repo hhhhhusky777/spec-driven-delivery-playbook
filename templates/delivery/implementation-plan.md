@@ -9,6 +9,9 @@ The template is a completeness menu, not a requirement to fill every row. Link
 canonical contracts instead of copying them, and keep PR review evidence in the
 pull request.
 
+Skill links below target the playbook source. Apply the workflow skill's
+plan-link guidance when creating the project plan; do not copy those paths as-is.
+
 Within a pull-request candidate, tracked states describe the repository state
 that will result if the candidate merges. Before final review, update every
 affected canonical document accordingly. Review, merge, and target verification

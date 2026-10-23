@@ -17,6 +17,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { checkLocalLinks, extractMarkdownLinks } from "../scripts/documentation-quality.mjs";
 
 const REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const INSTALLER = path.join(REPOSITORY_ROOT, "install-sdd.sh");
@@ -574,10 +575,12 @@ test("installed skill routing resolves same-revision KB topics across profiles a
         ...(upgrade ? ["--upgrade"] : [])]);
       assert.equal(result.status, 0, result.stderr);
     }
+    const installedEntries = [];
     for (const name of [profile === "adoption" ? "sdd-project-adoption"
       : profile === "workflow" ? "sdd-project-workflow" : "sdd-playbook-upgrade",
     ...(profile === "workflow" ? ["sdd-feature-review"] : [])]) {
       const entry = path.join(project, ".agents", "skills", name, "SKILL.md");
+      installedEntries.push(entry);
       const content = await readFile(entry, "utf8");
       assert.equal(content, run("git", ["show", `${revision}:skills/${name}/SKILL.md`], source.repository));
       const routing = [...content.matchAll(/\]\(([^)]+sdd-problem-triage\/SKILL\.md)\)/g)];
@@ -586,6 +589,9 @@ test("installed skill routing resolves same-revision KB topics across profiles a
         await access(path.resolve(path.dirname(entry), relative));
       }
     }
+    installedEntries.push(path.join(project, ".agents/skills/sdd-problem-triage/SKILL.md"));
+    assert.deepEqual(await checkLocalLinks(installedEntries, project), [],
+      `${profile}: installed skill files and section links must resolve`);
     const resolved = await triageTopics(project, profile);
     const workflowDirectory = path.join(project, ".agents", "skills", "sdd-project-workflow");
     if (profile === "adoption") {
@@ -598,6 +604,35 @@ test("installed skill routing resolves same-revision KB topics across profiles a
         assert.ok(content.includes(`\`${concurrencyTopic}\``), `${name} must route to ${concurrencyTopic}`);
       }
       assert.equal((await readFile(path.join(workflowDirectory, ".sdd-playbook-managed"), "utf8")).trim(), revision);
+      const templatePath = path.join(REPOSITORY_ROOT, "templates/delivery/implementation-plan.md");
+      const template = await readFile(templatePath, "utf8");
+      const owner = path.join(REPOSITORY_ROOT, "skills/sdd-project-workflow/SKILL.md");
+      const skillLinks = extractMarkdownLinks(template).filter(({ target }) =>
+        path.resolve(path.dirname(templatePath), target.split("#")[0]) === owner);
+      assert.ok(skillLinks.length > 0, "plan must link its workflow contracts");
+      const installedSkill = path.join(project, guideValue(resolved.guide, "Installed skill"));
+      const reviewPath = path.join(project, ".agents/skills/sdd-feature-review/SKILL.md");
+      const reviewerLinks = extractMarkdownLinks(await readFile(reviewPath, "utf8"));
+      assert.ok(reviewerLinks.some(({ target }) =>
+        target.endsWith("#human-implementation-review") &&
+        path.resolve(path.dirname(reviewPath), target.split("#")[0]) === installedSkill),
+      "reviewer must link directly to the installed human-review contract");
+      for (const directory of [".github/spec-driven-delivery", "project-guidance/delivery/sdd"]) {
+        const planPath = path.join(project, directory, "implementation-plan.md");
+        await mkdir(path.dirname(planPath), { recursive: true });
+        await writeFile(planPath, template);
+        assert.ok((await checkLocalLinks([planPath], project)).length > 0,
+          "source links must not be treated as installed-project links");
+        const relative = path.relative(path.dirname(planPath), installedSkill).split(path.sep).join("/");
+        let materialized = template;
+        for (const { target } of skillLinks) {
+          const fragment = target.includes("#") ? target.slice(target.indexOf("#")) : "";
+          materialized = materialized.replaceAll(`](${target})`, `](${relative}${fragment})`);
+        }
+        await writeFile(planPath, materialized);
+        assert.deepEqual(await checkLocalLinks([planPath], project), [],
+          `${directory}: plan links must resolve actual installed files and headings`);
+      }
     } else {
       // Reading candidate guidance does not replace or activate the accepted KB or workflow.
       const acceptedGuide = await readFile(path.join(project, ".sdd-runtime", "agent-guide.md"), "utf8");
@@ -613,6 +648,8 @@ test("installed skill routing resolves same-revision KB topics across profiles a
     if (!upgrade) {
       assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
       await assert.rejects(access(resolved.checkout));
+      assert.deepEqual(await checkLocalLinks(installedEntries, project), [],
+        `${profile}: installed links must survive checkout cleanup`);
       assert.equal((await triageTopics(project, profile)).kbRoot, resolved.kbRoot);
     } else {
       for (const topic of topics) {
