@@ -257,15 +257,15 @@ failure repeats only the affected validation. Project policy may require a
 more conservative sequence; this efficiency rule never waives a required
 check or exact-head evidence.
 
-90 minutes of active implementation on a single task is an owner-attention
-boundary, not a quality shortcut. If the task has not reached its planned
-review boundary, stop and explain where the time went: expected work versus
-unexpected work or cases. Assess whether the extra work protects the accepted
-outcome or is over-engineering. Report progress, remaining work, simpler or
-deferrable options, and a recommendation; continue only after owner
-justification or authorization. Exclude network and environment interruptions,
-review time, and waits for people or external systems from active
-implementation time.
+The 90-minute limit applies separately to each implementation task. Start
+counting only when implementation of that task begins. Count only active
+implementation work; exclude network or environment interruptions, review time,
+and waits for people or external systems.
+
+If the task reaches 90 minutes of active implementation before its planned
+review boundary, STOP. Explain where the time went, whether the work is necessary
+or over-engineered, what remains, and any simpler or deferrable alternative.
+Wait for explicit human authorization before continuing.
 
 At each human gate, present a concise table because the human is not expected
 to reread every document:

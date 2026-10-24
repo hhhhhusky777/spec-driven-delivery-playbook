@@ -171,7 +171,9 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
     const normalized = document.replace(/\s+/g, " ");
     assert.match(normalized, /network (?:or|and) environment interruptions/i);
     assert.match(normalized, /review time|code review/i);
-    assert.match(normalized, /owner justification or authorization/i);
+    assert.match(normalized, /90-minute limit applies separately to each implementation task/);
+    assert.match(normalized, /Start counting only when implementation of that task begins/);
+    assert.match(normalized, /Wait for explicit human authorization before continuing/);
   }
   for (const document of [readme, contributing]) {
     assert.match(document, /\[quality policy\]\(docs\/documentation-quality-policy\.md#review-and-human-brief\)/);
@@ -188,7 +190,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.doesNotMatch(normalizedPolicy, /one hour of active implementation|Each task still implements the tests/i);
   assert.match(normalizedPolicy, /final readiness.*including gaps not previously recorded.*Add required missing tests before final candidate review/i);
   assert.match(normalizedPolicy, /Do not present the candidate as merge-ready while required tests remain missing/i);
-  assert.match(normalizedPolicy, /expected work versus unexpected work or cases.*over-engineering/i);
+  assert.match(normalizedPolicy, /STOP.*necessary or over-engineered.*simpler or deferrable alternative/);
   assert.match(normalizedPolicy, /Focused tests.*only the tests that cover the changed files and lines/);
   assert.match(normalizedPolicy, /final candidate that will merge back to the protected integration branch.*full applicable validation/);
   for (const document of [policy, workflow, reviewer, plan, readme, contributing]) {
@@ -249,7 +251,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(policy, /responsibility of an\s+agent changing this repository, not a project agent/);
   assert.match(workflow, /do not run the playbook repository's source suite/);
   assert.match(workflow.replace(/\s+/g, " "), /Only after this audit passes, reconcile all accepted changed outcomes and material risks.*including unrecorded gaps.*Add required missing tests before final candidate review/i);
-  assert.match(workflow.replace(/\s+/g, " "), /expected work or unexpected cases.*over-engineering/i);
+  assert.match(workflow.replace(/\s+/g, " "), /STOP.*necessary or over-engineered.*simpler or deferrable alternative/);
   assert.match(plan, /\| Owning task \| Contract, changed outcome, or risk \| Test or scenario \| Coverage \| Work boundary \|/);
   assert.match(plan.replace(/\s+/g, " "), /recorded gaps do not block task `DONE`.*including unrecorded gaps.*add required missing tests before final candidate review/i);
 });
