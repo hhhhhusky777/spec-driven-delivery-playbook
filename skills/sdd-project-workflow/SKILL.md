@@ -434,13 +434,15 @@ Playbook source tests belong only to changes in the playbook repository. In an
 adopting project, use that project's tests and the installed runtime validation;
 do not run the playbook repository's source suite.
 
-Track active implementation time proportionally. If one task reaches 90 minutes
-of active implementation before its planned review boundary, stop. Explain
-whether the time reflects expected work or unexpected cases, whether extra work
-protects the accepted outcome or is over-engineering, and what remains. Offer
-a simpler or deferrable path when appropriate; wait for owner justification or
-authorization before continuing. Do not count network or environment
-interruptions, review time, or waits for people or external systems.
+The 90-minute limit applies separately to each implementation task. Start
+counting only when implementation of that task begins. Count only active
+implementation work; exclude network or environment interruptions, review time,
+and waits for people or external systems.
+
+If the task reaches 90 minutes of active implementation before its planned
+review boundary, STOP. Explain where the time went, whether the work is necessary
+or over-engineered, what remains, and any simpler or deferrable alternative.
+Wait for explicit human authorization before continuing.
 
 ## Author disposition of review
 
