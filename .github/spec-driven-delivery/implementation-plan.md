@@ -74,7 +74,7 @@ error-handling authority own environment readiness and recovery.
 | --- | --- | --- | --- |
 | D01 | T01: common dual-boundary application owner and mandatory consumers | Existing topic routes and common contract remain reachable without a competing normative index copy | Aligned |
 | D02 | T03: whiteboard owns solution architecture/behavior; plan consumes it | Before/after ownership review plus representative design/plan inspection | Aligned |
-| D03 | T03: precise architectural text with relevant matching diagrams | Template prompts and applicable diagram parsing/semantic review; genuine N/A remains possible | Aligned |
+| D03 | T03: precise architectural text with relevant matching diagrams, displayed in the whiteboard human-review response | Template prompts, response requirements and applicable diagram parsing/semantic review; genuine N/A remains possible | Aligned |
 | D04 | T03: plan owns engineering obligations and removes duplicate architecture authority | Necessary information is preserved or linked; plan cannot authorize new feature behavior | Aligned |
 | D05 | T02: task-planning KB, index and required author/reviewer routes | New topic content, route and complete-tree installation regression | Aligned |
 | D06 | T03: existing task fields express complete outcomes, actual dependencies and acceptance evidence | Representative decomposition and dependency/readiness regressions | Aligned |
@@ -121,6 +121,9 @@ whiteboard template; use precise text and appropriate matching views. Make the
 plan template consume accepted contracts rather than own a second proposed
 design. Refine existing task fields and mapping, remove duplicate generic
 execution prose and retain applicable detail and the single coverage inventory.
+The whiteboard human-review response MUST display the relevant design diagrams
+with concise, unambiguous explanatory text; file links alone are insufficient.
+Reuse the whiteboard's accurate views without adding a diagram-count quota.
 At the existing human implementation brief, compare actual code-level views
 with accepted design semantics. Reconcile affected README/diagram descriptions
 and regressions. Do not rewrite historical archives or this frozen design.
@@ -138,7 +141,7 @@ prerequisite for starting or completing its producing implementation task.
 | T01 | Common application owner and all existing required-read routes | Source KB/index/skill checks and affected cases in `tests/document-model.test.mjs` | Existing model coverage; update relevant assertions for approved contract | Focused task work |
 | T02 | Coherent task method with applicability limits and mandatory consumers | New topic and workflow/reviewer route checks in `tests/document-model.test.mjs` | New meaningful cases planned | Focused task work |
 | T02 | Adopters receive new topic and valid installed routes | Extend existing complete-tree KB case in `tests/installer.test.mjs` only where needed | Existing distribution mechanism; assess new-topic assertion need against current coverage | Focused applicable case when changed; complete suite at final gate |
-| T03 | Required template information retained under correct owner | Update affected document-model cases; inspect one representative dependency-driven plan against text/diagrams | Existing cases to reconcile, representative semantic evidence planned | Focused task work |
+| T03 | Required template information retained under correct owner; design diagrams visible in the whiteboard human-review response | Update affected document-model cases; inspect a representative design response and dependency-driven plan against text/diagrams | Existing cases to reconcile, representative semantic evidence planned | Focused task work |
 | T03 | Readiness does not require future outputs; mapping and controls remain valid | Relevant existing cases in `tests/sdd-three-doc.test.mjs`, plus changed model assertions as needed | Existing lifecycle cases; add only genuine uncovered risk coverage | Focused affected cases; unchanged suite at final gate |
 | T01–T03 | Changed Markdown, references, diagrams and whitespace | `npm run docs:focused -- TASK_BASE HEAD` and relevant structural/skill checks | Existing tools | Focused task work |
 | T01–T03 | Complete source compatibility and installed-tree agreement | `npm run docs:all`, plus required shell/skill validation on the final candidate | Existing full source gate; reconcile any coverage gaps after implementation acceptance | Final gate |
