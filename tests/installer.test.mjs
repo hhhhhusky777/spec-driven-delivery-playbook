@@ -321,7 +321,7 @@ test("knowledge base accepted synchronization updates adds and removes only unch
   await assertKnowledgeBaseRevision(root, source, first);
   const accepted = await acceptKnowledgeBaseRevision(project, revision);
   assert.equal(accepted.status, 0, accepted.stderr);
-  assert.equal(await assertKnowledgeBaseRevision(root, source, revision), 14);
+  assert.equal(await assertKnowledgeBaseRevision(root, source, revision), 15);
   await assert.rejects(access(path.join(root, "obsolete.md")));
   assert.equal(await readFile(path.join(root, "project-note.md"), "utf8"), "Project lesson\n");
   assert.equal(await readFile(path.join(project, "docs/experience.md"), "utf8"), "# Project Experience\nKeep this lesson.\n");
@@ -425,7 +425,7 @@ exec /bin/mv "$@"
     });
     assert.notEqual(result.status, 0);
     assert.match(result.stderr, new RegExp(`Injected knowledge base ${mode} failure`));
-    assert.equal(await assertKnowledgeBaseRevision(root, source, first), 14);
+    assert.equal(await assertKnowledgeBaseRevision(root, source, first), 15);
     assert.equal(await readFile(path.join(root, "local.md"), "utf8"), "Local lesson\n");
     assert.equal(await readFile(path.join(root, ".sdd-playbook-managed"), "utf8"), marker);
   }
