@@ -4,10 +4,10 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [#187](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/187) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
+| Concluded design revision | `4406e417cf7b96ed977a33ff04d4f1ed539c4335` |
 | Open owner decisions | `None` |
 
 This whiteboard records the solution for the owner-accepted G1–G9 change scope.
