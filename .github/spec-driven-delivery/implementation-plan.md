@@ -11,18 +11,18 @@ owns reviews, validation results, acceptance and merge evidence.
 
 | Field | Value |
 | --- | --- |
-| State | `DRAFT` |
+| State | `READY` |
 | Active tasks | `None` |
-| Next ready task | `None` |
+| Next ready task | `T01` |
 | Active blocker | `None` |
 | Implementation mode | `human-review-before-merge` |
-| Authorized scope / feature branch / protected target | `None` for Autopilot; proposed task scope T01–T03, feature `codex/design-planning`, protected target `main` |
+| Authorized scope / feature branch / protected target | Accepted task scope T01–T03; feature `codex/design-planning`; protected target `main`; Autopilot `None` |
 | Delivery branch / target | `codex/design-planning` / `main` |
 | Owner | Repository owner |
 | Primary issue / need | [#187](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/187) |
 | Concluded whiteboard | [Frozen file at 25cc9c6](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/blob/25cc9c6ab2402de2970807cd616d3b4d667d8b01/.github/spec-driven-delivery/solution-whiteboard.md); accepted semantic revision `4406e417cf7b96ed977a33ff04d4f1ed539c4335` |
 | Required reviewers | Same two retained independent feature reviewer sessions |
-| Last verified | 2026-10-25 Asia/Shanghai; planning inputs read at `25cc9c6`; no implementation started |
+| Last verified | 2026-10-25 Asia/Shanghai; accepted plan `e79eafe`, canonical sources and task prerequisites checked; implementation not yet started |
 
 ## Governing inputs and delivery boundaries
 
@@ -86,7 +86,7 @@ error-handling authority own environment readiness and recovery.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| T01 | `PLANNED` | `None` | One reachable mandatory KB application contract binds solutions to KB principles and approved project boundaries together | Shared contract in Solution Research; concise source skill routes and index linkage, no duplicate policy owner | Focused changed-content checks and affected application/routing regressions | `codex/design-planning-t01`; PR `None`; target `codex/design-planning` |
+| T01 | `READY` | `None` | One reachable mandatory KB application contract binds solutions to KB principles and approved project boundaries together | Shared contract in Solution Research; concise source skill routes and index linkage, no duplicate policy owner | Focused changed-content checks and affected application/routing regressions | `codex/design-planning-t01`; PR `None`; target `codex/design-planning` |
 | T02 | `PLANNED` | `T01` | One evidence-based planning KB and its consumers support coherent dependency-driven task decomposition in adopting projects | New `task-planning-and-decomposition.md`, index and planning/replanning/review routes; reuse existing installer | Focused topic/routing checks; meaningful complete-tree distribution coverage | `codex/design-planning-t02`; PR `None`; target `codex/design-planning` |
 | T03 | `PLANNED` | `T01, T02` | Whiteboard, plan and review consumers consistently separate architecture from engineering delivery and expose comparable design/code evidence | Existing templates, affected routes and README/diagrams; retain necessary fields, controls and coverage inventory without new process artifacts | Focused template/model/diagram checks and bounded representative semantic review | `codex/design-planning-t03`; PR `None`; target `codex/design-planning` |
 
