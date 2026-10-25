@@ -11,10 +11,9 @@ root. Skills retain concise principles and tell agents which topic to read
 when relevant. Read that topic directly; this README is a human-facing index,
 not a mandatory intermediate step.
 
-[Solution Research](solution-research.md#applying-kb-guidance) owns the shared
-KB application contract and evidence-grounded solution selection at design
-and implementation levels. Topic references are starting points; that guide
-explains research, applicability and evidence reuse.
+[Solution Research](solution-research.md) guides evidence-grounded solution
+selection at design and implementation levels. Topic references are starting
+points; that guide explains research, applicability and evidence reuse.
 
 Distinguish established engineering principles from evolving multi-agent
 methods; neither a reference nor an example becomes project authority.

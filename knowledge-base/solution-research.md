@@ -4,19 +4,6 @@ Choose engineering solutions from relevant evidence and project constraints,
 not a familiar technique or unsupported guess. This guidance applies to design
 and implementation, including reviewer alternatives and triage methods/remedies.
 
-## Applying KB guidance
-
-> [!IMPORTANT]
-> Solutions MUST satisfy applicable KB core principles and the project's
-> approved scope, requirements, contracts and policies together. Apply the
-> principles to actual project conditions using suitable existing mechanisms;
-> choose the simplest sufficient solution within both boundaries. Examples
-> and techniques illustrate choices, not universal implementation recipes.
->
-> If these boundaries genuinely conflict, follow the project's canonical
-> error-handling and decision authority. Do not silently disregard a principle,
-> expand scope, weaken policy or introduce a new blocking control.
-
 ## Research requirement
 
 > [!IMPORTANT]
