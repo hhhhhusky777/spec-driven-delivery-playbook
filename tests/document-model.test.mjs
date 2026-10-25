@@ -41,6 +41,24 @@ test("each skill owns its global KB application boundary and preserves topic rou
   }
 });
 
+test("planning and plan review require the shipped task-planning topic", async () => {
+  const topic = "task-planning-and-decomposition.md";
+  for (const [skill, context] of [
+    ["sdd-project-workflow", /creating or revising an implementation plan/],
+    ["sdd-feature-review", /assessing an implementation plan or task decomposition/],
+  ]) {
+    const text = await read(`skills/${skill}/SKILL.md`);
+    const route = text.split(/\n(?=- |\s*\n)/).find(part => part.includes(`\`${topic}\``));
+    assert.ok(route, `${skill} must expose its planning route`);
+    const normalized = route.replace(/\s+/g, " ");
+    assert.match(normalized, context);
+    assert.match(normalized, /MUST read and apply/);
+    assert.match(normalized, /manifest-linked KB root when the accepted pin ships it/);
+  }
+  assert.ok((await read("knowledge-base/README.md")).includes(`(${topic})`));
+  await read(`knowledge-base/${topic}`);
+});
+
 test("human-gate and Autopilot consumers route to portable workflow contracts", async () => {
   const owner = "skills/sdd-project-workflow/SKILL.md";
   const workflow = await read(owner);
