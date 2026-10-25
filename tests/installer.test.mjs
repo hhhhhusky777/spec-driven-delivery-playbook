@@ -188,7 +188,7 @@ test("knowledge base installs the actual index and available topics", async (t) 
   const revision = source.firstRevision;
   const project = await createInstalledProject(t, { ...source, firstRevision: revision });
   const root = path.join(project, ".github/spec-driven-delivery/knowledge-base");
-  assert.equal(await assertKnowledgeBaseRevision(root, source, revision), 14);
+  assert.equal(await assertKnowledgeBaseRevision(root, source, revision), 15);
   const guide = await readFile(path.join(project, ".sdd-runtime/agent-guide.md"), "utf8");
   assert.equal(guideValue(guide, "Resolved revision"), revision);
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
@@ -199,6 +199,7 @@ test("knowledge base installs the actual index and available topics", async (t) 
 test("knowledge base topic routing resolves for installed author, reviewer and triage skills", async (t) => {
   const source = await createActualKnowledgeBaseFixture(t);
   const topics = [
+    "task-planning-and-decomposition.md",
     "simple-design-and-reuse.md",
     "architecture-scope-and-assumptions.md",
     "contracts-and-compatibility.md",

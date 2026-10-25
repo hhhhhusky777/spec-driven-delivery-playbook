@@ -13,7 +13,7 @@ owns reviews, validation results, acceptance and merge evidence.
 | --- | --- |
 | State | `IMPLEMENTING` |
 | Active tasks | `None` |
-| Next ready task | `T02` |
+| Next ready task | `T03` |
 | Active blocker | `None` |
 | Implementation mode | `human-review-before-merge` |
 | Authorized scope / feature branch / protected target | Accepted task scope T01–T03; feature `codex/design-planning`; protected target `main`; Autopilot `None` |
@@ -22,7 +22,7 @@ owns reviews, validation results, acceptance and merge evidence.
 | Primary issue / need | [#187](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/187) |
 | Concluded whiteboard | [Frozen file at d99a83e](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/blob/d99a83e17a29a60109ccd3bd276a739ec02c6bb2/.github/spec-driven-delivery/solution-whiteboard.md); accepted D01 amendment revision `c9855a403c4d04cc1acc08cdbf8953c9205f4395` |
 | Required reviewers | Same two retained independent feature reviewer sessions |
-| Last verified | 2026-10-25 Asia/Shanghai; accepted D01 amendment reconcluded and verified by both retained reviewers; T01 source and focused application regression corrected; task worktree runtime CURRENT; PR #189 owns review and merge evidence |
+| Last verified | 2026-10-25 Asia/Shanghai; T01 merged through PR #189 into the feature branch; T02 planning KB, mandatory routes and installation coverage implemented in its isolated worktree; focused model and actual installation checks pass; runtime CURRENT; PRs own review and merge evidence |
 
 ## Governing inputs and delivery boundaries
 
@@ -76,7 +76,7 @@ error-handling authority own environment readiness and recovery.
 | D02 | T03: whiteboard owns solution architecture/behavior; plan consumes it | Before/after ownership review plus representative design/plan inspection | Aligned |
 | D03 | T03: precise architectural text with relevant matching diagrams, displayed in the whiteboard human-review response | Template prompts, response requirements and applicable diagram parsing/semantic review; genuine N/A remains possible | Aligned |
 | D04 | T03: plan owns engineering obligations and removes duplicate architecture authority | Necessary information is preserved or linked; plan cannot authorize new feature behavior | Aligned |
-| D05 | T02: task-planning KB, index and required author/reviewer routes | New topic content, route and complete-tree installation regression | Aligned |
+| D05 | T02: task-planning KB, index and required author/reviewer routes | New topic content, route and complete-tree installation regression | Implemented |
 | D06 | T03: existing task fields express complete outcomes, actual dependencies and acceptance evidence | Representative decomposition and dependency/readiness regressions | Aligned |
 | D07 | T03: existing mapping and implementation brief compare code-grounded views to accepted design | All relevant text/diagram semantics trace through existing mapping and gate, without a new tracker | Aligned |
 | D08 | T03: remove generic duplicate plan workflow; retain required controls | Compare preserved controls with canonical owners and affected regressions | Aligned |
@@ -87,8 +87,8 @@ error-handling authority own environment readiness and recovery.
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
 | T01 | `DONE` | `None` | Each independently loaded skill requires relevant KB application within approved project boundaries | Brief global IMPORTANT boundaries; Solution Research stays within research scope; no new policy document | Focused changed-content checks and affected application/routing regressions | `codex/design-planning-t01`; [PR #189](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/189); target `codex/design-planning` |
-| T02 | `READY` | `T01` | One evidence-based planning KB and its consumers support coherent dependency-driven task decomposition in adopting projects | New `task-planning-and-decomposition.md`, index and planning/replanning/review routes; reuse existing installer | Focused topic/routing checks; meaningful complete-tree distribution coverage | `codex/design-planning-t02`; PR `None`; target `codex/design-planning` |
-| T03 | `PLANNED` | `T01, T02` | Whiteboard, plan and review consumers consistently separate architecture from engineering delivery and expose comparable design/code evidence | Existing templates, affected routes and README/diagrams; retain necessary fields, controls and coverage inventory without new process artifacts | Focused template/model/diagram checks and bounded representative semantic review | `codex/design-planning-t03`; PR `None`; target `codex/design-planning` |
+| T02 | `DONE` | `T01` | One evidence-based planning KB and its consumers support coherent dependency-driven task decomposition in adopting projects | New `task-planning-and-decomposition.md`, index and planning/replanning/review routes; reuse existing installer | Focused topic/routing checks; meaningful complete-tree distribution coverage | `codex/design-planning-t02`; PR `None`; target `codex/design-planning` |
+| T03 | `READY` | `T01, T02` | Whiteboard, plan and review consumers consistently separate architecture from engineering delivery and expose comparable design/code evidence | Existing templates, affected routes and README/diagrams; retain necessary fields, controls and coverage inventory without new process artifacts | Focused template/model/diagram checks and bounded representative semantic review | `codex/design-planning-t03`; PR `None`; target `codex/design-planning` |
 
 ## Task specifications and context receipts
 
@@ -121,6 +121,14 @@ planning/replanning and plan assessment. Update the index and meaningful
 installation/route coverage; the existing installer distributes the complete
 tree. No new installer engine, mandatory worksheet or fixed task quota.
 
+Actual result: the new KB distills Google, DORA and Microsoft guidance with
+project-policy limits and concrete examples. Workflow planning/replanning and
+reviewer plan assessment require the shipped topic. Existing installer cases
+verify the complete 15-document KB tree and the new installed routes; a model
+case verifies the context-specific mandatory triggers. The worktree was
+provisioned with its own accepted-pin runtime and dependencies and exercised
+with those checks. Templates and final README/diagram reconciliation remain T03.
+
 ### T03 — Design/plan ownership and traceability
 
 Consume T01 and T02. Rehome or link necessary architecture information in the
@@ -146,8 +154,8 @@ prerequisite for starting or completing its producing implementation task.
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
 | T01 | Skill-wide KB/project boundaries and all existing required-read routes | Inspect each global skill block, retained version conditions, topic routes and research-only ownership | Implemented in `tests/document-model.test.mjs`; structural coverage plus semantic review, not proof of future agent judgment | Focused task work; unchanged installer/full source suite deferred to final gate |
-| T02 | Coherent task method with applicability limits and mandatory consumers | New topic and workflow/reviewer route checks in `tests/document-model.test.mjs` | New meaningful cases planned | Focused task work |
-| T02 | Adopters receive new topic and valid installed routes | Extend existing complete-tree KB case in `tests/installer.test.mjs` only where needed | Existing distribution mechanism; assess new-topic assertion need against current coverage | Focused applicable case when changed; complete suite at final gate |
+| T02 | Coherent task method with applicability limits and mandatory consumers | Planning/replanning and reviewer route case in `tests/document-model.test.mjs`; semantic assessment of outcome/dependency examples | Implemented; automated routing evidence does not prove planning judgment | Focused task work |
+| T02 | Adopters receive new topic and valid installed routes | Existing actual-index and installed-topic cases in `tests/installer.test.mjs` include the new topic | Implemented; complete actual tree and installed content match source, existing installer unchanged | Focused applicable cases; complete source suite at final gate |
 | T03 | Required template information retained under correct owner; design diagrams visible in the whiteboard human-review response | Update affected document-model cases; inspect a representative design response and dependency-driven plan against text/diagrams | Existing cases to reconcile, representative semantic evidence planned | Focused task work |
 | T03 | Readiness does not require future outputs; mapping and controls remain valid | Relevant existing cases in `tests/sdd-three-doc.test.mjs`, plus changed model assertions as needed | Existing lifecycle cases; add only genuine uncovered risk coverage | Focused affected cases; unchanged suite at final gate |
 | T01–T03 | Changed Markdown, references, diagrams and whitespace | `npm run docs:focused -- TASK_BASE HEAD` and relevant structural/skill checks | Existing tools | Focused task work |

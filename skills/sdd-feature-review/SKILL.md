@@ -77,6 +77,11 @@ mismatch prevents a sound disposition.
 Judge correctness, design and policy consistency, compatibility, safety,
 validation sufficiency, proportionality, and merge-ready canonical state.
 
+Before assessing an implementation plan or task decomposition, you MUST read
+and apply `task-planning-and-decomposition.md` directly from the manifest-linked
+KB root when the accepted pin ships it. Judge outcome completeness, actual
+dependencies and acceptance evidence against the approved design.
+
 When reviewing solution or system design, performance decisions or feedback,
 read `performance-and-observability.md` directly from the manifest-linked KB
 root when the accepted pin ships it. Assess measurable, interpretable feedback

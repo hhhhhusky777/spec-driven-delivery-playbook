@@ -210,6 +210,10 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   check for and synchronize a newer playbook revision before whiteboard or
   implementation work. A maintenance-only upgrade is still a delivery; do not
   merge a separate target-branch upgrade solely to prepare another delivery.
+- Before planning or replanning implementation tasks, you MUST read and apply
+  `task-planning-and-decomposition.md` directly from the manifest-linked KB root
+  when the accepted pin ships it. Translate the approved design into coherent
+  outcomes, actual dependencies and acceptance evidence within project authority.
 - The implementation plan MUST select an integration model allowed by the
   canonical project branch policy and record every task's exact branch and
   required pull-request target. Under a feature integration model, every task
