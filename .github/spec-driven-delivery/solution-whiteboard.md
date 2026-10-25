@@ -10,9 +10,9 @@
 | Concluded design revision | `None` |
 | Open owner decisions | `None` |
 
-This is the exact design candidate for review, not a frozen conclusion or an
-implementation plan. The owner accepted the discussion's G1–G9 change scope;
-reviewed-candidate acceptance and the metadata-only conclusion remain pending.
+This whiteboard records the solution for the owner-accepted G1–G9 change scope.
+The fields above identify its conclusion state and revision; the PR owns review
+and owner-acceptance evidence. It is not an implementation plan.
 
 ## Discussion draft
 
@@ -30,7 +30,7 @@ reviewed-candidate acceptance and the metadata-only conclusion remain pending.
 | Source | Authority or relevant content | Freshness / verification |
 | --- | --- | --- |
 | [Issue #187](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/187) | Accepted need and G1–G9 scope from owner discussion | Recorded 2026-10-25 Asia/Shanghai |
-| [Manifest](project-adoption-manifest.md) | Accepted pin and canonical project authorities | Accepted `1fff88498361cb1d18f62bcaab4b2f6893574bc9`; candidate `c2f83cb8868477a11415a83ea991459546a9f4c3` prepared, not activated |
+| [Manifest](project-adoption-manifest.md) | Accepted pin and canonical project authorities | Design-review snapshot: accepted `1fff88498361cb1d18f62bcaab4b2f6893574bc9`; candidate `c2f83cb8868477a11415a83ea991459546a9f4c3` prepared. The manifest owns the current pin |
 | [Contributing](../../CONTRIBUTING.md), [quality policy](../../docs/documentation-quality-policy.md), [template governance](../../docs/template-governance.md) | Branch/review authority, six goals, one responsibility per document | Source baseline `c2f83cb`; unchanged by this design candidate |
 | [Error handling](../../docs/error-handling.md), [Experience](../../docs/experience.md) | Recovery, scope escalation and verified lessons | Preserve existing owners and controls |
 
@@ -47,7 +47,7 @@ that all current delivery is invalid.
 
 ## Concluded design
 
-The text below defines the candidate's semantics. Diagrams expose structure and
+The text below defines the design's semantics. Diagrams expose structure and
 flows; they MUST NOT substitute for precise conditions or invite agents to
 infer missing behavior. Implementation wording may be refined without changing
 these semantics. Once concluded, existing amendment authority applies.
@@ -151,8 +151,8 @@ project's synthesis, not a vendor-mandated document taxonomy or universal size.
 
 ## Human brief
 
-After both fresh reviewers approve the exact candidate, ask the owner to accept
-D01–D09 and the prepared upgrade from `1fff884` to `c2f83cb`. Acceptance permits
-the metadata-only conclusion transition, reviewer verification and subsequent
-implementation planning. It does not approve a later plan, enable Autopilot,
-authorize template/skill implementation before readiness, or permit merge.
+Acceptance of D01–D09 and the prepared upgrade from `1fff884` to `c2f83cb`
+permits the metadata-only conclusion transition, reviewer verification and
+subsequent implementation planning. It does not approve a later plan, enable
+Autopilot, authorize template/skill implementation before readiness, or permit
+merge. Review and acceptance evidence belongs in the PR.
