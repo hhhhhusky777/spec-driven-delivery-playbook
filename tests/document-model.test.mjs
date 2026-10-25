@@ -7,6 +7,38 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = relative => readFile(path.join(root, relative), "utf8");
 
+test("KB application has one shared owner and mandatory version-aware skill routes", async () => {
+  const normalize = text => text.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+  const research = await read("knowledge-base/solution-research.md");
+  const application = research.split("## Applying KB guidance\n")[1]?.split("\n## ")[0];
+  assert.ok(application, "the required research topic must expose the shared application contract");
+  const contract = normalize(application);
+  assert.match(contract, /MUST satisfy.*KB core principles.*approved scope.*requirements.*contracts.*policies/i);
+  assert.match(contract, /both boundaries/i);
+  assert.match(contract, /conflict.*canonical.*error-handling.*decision authority/i);
+
+  const index = await read("knowledge-base/README.md");
+  assert.ok(index.includes("(solution-research.md#applying-kb-guidance)"));
+  assert.doesNotMatch(index, /Solutions MUST satisfy/, "the index routes to, rather than repeats, the normative contract");
+
+  for (const skill of ["sdd-project-workflow", "sdd-feature-review", "sdd-problem-triage"]) {
+    const text = await read(`skills/${skill}/SKILL.md`);
+    const trigger = text.match(/> When a KB topic-read trigger applies[\s\S]*?(?=\n>\n|\n\n)/)?.[0];
+    assert.ok(trigger, `${skill} must expose the topic-read trigger`);
+    assert.match(normalize(trigger), /revision ships the topic|accepted pin ships the topic/);
+    assert.match(normalize(trigger), /MUST read and apply/);
+    const researchRoute = text.split(/\n\s*\n/).find(paragraph => paragraph.includes("`solution-research.md`"));
+    assert.ok(researchRoute, `${skill} must route directly to the common owner`);
+    assert.match(normalize(researchRoute), /MUST read and apply/);
+    assert.match(normalize(researchRoute), /shared KB application contract/);
+  }
+
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  for (const topic of (await readdir(path.join(root, "knowledge-base"))).filter(name => name.endsWith(".md") && name !== "README.md")) {
+    assert.ok(workflow.includes(`\`${topic}\``), `workflow must retain the topic route: ${topic}`);
+  }
+});
+
 test("human-gate and Autopilot consumers route to portable workflow contracts", async () => {
   const owner = "skills/sdd-project-workflow/SKILL.md";
   const workflow = await read(owner);

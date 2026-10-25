@@ -14,12 +14,13 @@ skill supplies diagnosis methods, not operational permission or a new gate.
 
 > [!IMPORTANT]
 > When a KB topic-read trigger applies and this skill's revision ships the topic,
-> you MUST read the matching version before applying it. A skill summary or prior
+> you MUST read and apply the matching version. A skill summary or prior
 > knowledge MUST NOT substitute for reading the topic.
 >
 > Before selecting investigation methods or remedies, you MUST read and apply
 > `solution-research.md` from the KB matching this triage skill's revision when
-> that revision ships it. Research supports method selection, not proof of a
+> that revision ships it. It owns research and the shared KB application contract.
+> Research supports method selection, not proof of a
 > project-specific cause.
 
 Resolve KB topic filenames from:

@@ -20,7 +20,7 @@ Repository policies and explicit owner decisions remain authoritative.
 > Prefer one canonical owner and the smallest sufficient solution.
 >
 > When a KB topic-read trigger applies and the accepted pin ships the topic,
-> you MUST read it before applying its guidance. A skill summary or prior
+> you MUST read and apply it. A skill summary or prior
 > knowledge MUST NOT substitute for reading the topic.
 
 Before designing a solution, read
@@ -33,8 +33,8 @@ authority and approved scope; choose the simplest sufficient design.
 > [!IMPORTANT]
 > Before selecting any engineering solution, at design or implementation level,
 > you MUST read and apply `solution-research.md` directly from the manifest-linked
-> KB root when the accepted pin ships it. It owns the research requirement;
-> apply it using the project's problem, requirements and boundaries.
+> KB root when the accepted pin ships it. It owns research and the shared KB
+> application contract.
 
 ## Durable model
 

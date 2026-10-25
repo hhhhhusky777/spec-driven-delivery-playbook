@@ -11,9 +11,9 @@ owns reviews, validation results, acceptance and merge evidence.
 
 | Field | Value |
 | --- | --- |
-| State | `READY` |
+| State | `IMPLEMENTING` |
 | Active tasks | `None` |
-| Next ready task | `T01` |
+| Next ready task | `T02` |
 | Active blocker | `None` |
 | Implementation mode | `human-review-before-merge` |
 | Authorized scope / feature branch / protected target | Accepted task scope T01–T03; feature `codex/design-planning`; protected target `main`; Autopilot `None` |
@@ -22,7 +22,7 @@ owns reviews, validation results, acceptance and merge evidence.
 | Primary issue / need | [#187](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/187) |
 | Concluded whiteboard | [Frozen file at 25cc9c6](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/blob/25cc9c6ab2402de2970807cd616d3b4d667d8b01/.github/spec-driven-delivery/solution-whiteboard.md); accepted semantic revision `4406e417cf7b96ed977a33ff04d4f1ed539c4335` |
 | Required reviewers | Same two retained independent feature reviewer sessions |
-| Last verified | 2026-10-25 Asia/Shanghai; accepted plan `e79eafe`, canonical sources and task prerequisites checked; implementation not yet started |
+| Last verified | 2026-10-25 Asia/Shanghai; T01 outcome and focused coverage complete in this candidate; T02 consumes that result after task merge; task worktree runtime CURRENT |
 
 ## Governing inputs and delivery boundaries
 
@@ -86,8 +86,8 @@ error-handling authority own environment readiness and recovery.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| T01 | `READY` | `None` | One reachable mandatory KB application contract binds solutions to KB principles and approved project boundaries together | Shared contract in Solution Research; concise source skill routes and index linkage, no duplicate policy owner | Focused changed-content checks and affected application/routing regressions | `codex/design-planning-t01`; PR `None`; target `codex/design-planning` |
-| T02 | `PLANNED` | `T01` | One evidence-based planning KB and its consumers support coherent dependency-driven task decomposition in adopting projects | New `task-planning-and-decomposition.md`, index and planning/replanning/review routes; reuse existing installer | Focused topic/routing checks; meaningful complete-tree distribution coverage | `codex/design-planning-t02`; PR `None`; target `codex/design-planning` |
+| T01 | `DONE` | `None` | One reachable mandatory KB application contract binds solutions to KB principles and approved project boundaries together | Shared contract in Solution Research; concise source skill routes and index linkage, no duplicate policy owner | Focused changed-content checks and affected application/routing regressions | `codex/design-planning-t01`; PR `None`; target `codex/design-planning` |
+| T02 | `READY` | `T01` | One evidence-based planning KB and its consumers support coherent dependency-driven task decomposition in adopting projects | New `task-planning-and-decomposition.md`, index and planning/replanning/review routes; reuse existing installer | Focused topic/routing checks; meaningful complete-tree distribution coverage | `codex/design-planning-t02`; PR `None`; target `codex/design-planning` |
 | T03 | `PLANNED` | `T01, T02` | Whiteboard, plan and review consumers consistently separate architecture from engineering delivery and expose comparable design/code evidence | Existing templates, affected routes and README/diagrams; retain necessary fields, controls and coverage inventory without new process artifacts | Focused template/model/diagram checks and bounded representative semantic review | `codex/design-planning-t03`; PR `None`; target `codex/design-planning` |
 
 ## Task specifications and context receipts
@@ -102,6 +102,11 @@ reading/application from a summary-only route and preserve unavailable-topic
 compatibility. Source ownership: `knowledge-base/solution-research.md`, affected
 skill routes, KB index and directly affected regression tests. No template
 architecture changes or additional project controls belong in this task.
+
+Actual result: the shared contract is owned by Solution Research; all three
+skills route to it and require reading/application of triggered topics. The KB
+index links to the owner instead of repeating the contract. The new regression
+covers that ownership, version conditions and all current workflow topic routes.
 
 ### T02 — Task-planning method and distribution
 
@@ -138,7 +143,7 @@ prerequisite for starting or completing its producing implementation task.
 
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
-| T01 | Common application owner and all existing required-read routes | Source KB/index/skill checks and affected cases in `tests/document-model.test.mjs` | Existing model coverage; update relevant assertions for approved contract | Focused task work |
+| T01 | Common application owner and all existing required-read routes | Shared-owner/version-aware routing case and affected cases in `tests/document-model.test.mjs` | Implemented; current workflow topics covered; no known missing non-focused T01 test addition | Focused task work; unchanged installer/full source suite deferred to final gate |
 | T02 | Coherent task method with applicability limits and mandatory consumers | New topic and workflow/reviewer route checks in `tests/document-model.test.mjs` | New meaningful cases planned | Focused task work |
 | T02 | Adopters receive new topic and valid installed routes | Extend existing complete-tree KB case in `tests/installer.test.mjs` only where needed | Existing distribution mechanism; assess new-topic assertion need against current coverage | Focused applicable case when changed; complete suite at final gate |
 | T03 | Required template information retained under correct owner; design diagrams visible in the whiteboard human-review response | Update affected document-model cases; inspect a representative design response and dependency-driven plan against text/diagrams | Existing cases to reconcile, representative semantic evidence planned | Focused task work |

@@ -13,11 +13,12 @@ turning prior conclusions into assumptions.
 
 > [!IMPORTANT]
 > When a KB topic-read trigger applies and the accepted pin ships the topic,
-> you MUST read it before applying its guidance. A skill summary or prior
+> you MUST read and apply it. A skill summary or prior
 > knowledge MUST NOT substitute for reading the topic.
 >
 > You MUST read and apply `solution-research.md` directly from the manifest-linked
-> KB root when the accepted pin ships it.
+> KB root when the accepted pin ships it. It owns research and the shared KB
+> application contract.
 > Check the candidate's research basis and project applicability; alternatives
 > you propose MUST meet the same requirement.
 
