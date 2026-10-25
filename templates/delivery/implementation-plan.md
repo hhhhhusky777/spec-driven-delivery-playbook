@@ -59,91 +59,55 @@ status-only change.
 | --- | --- | --- | --- | --- |
 | `<G01>` | `<item>` | `<impact>` | `<decision or issue>` | `<open or resolved>` |
 
-## System contracts
+## Consumed design and contracts
 
-Record only contract classes that apply. Link stable project contracts and add
-feature-specific behavior here.
+The concluded whiteboard and its canonical sources own architecture, behavior
+and design decisions. Reference their accepted IDs, text and relevant diagrams;
+record the resulting engineering obligations here without proposing new
+feature behavior or duplicating the design. Equivalent implementation choices
+remain within those boundaries.
 
-### Functional and state contracts
+Keep source links and revisions in Governing inputs, task-specific obligations
+in Task specifications, and their coverage in Design-to-task mapping below.
 
-| ID | Trigger / precondition | Required behavior | Result / postcondition | Failure behavior |
-| --- | --- | --- | --- | --- |
-| `<FC01>` | `<condition>` | `<observable behavior>` | `<result>` | `<safe failure>` |
-
-| Entity | From | Event / guard | To | Atomic effects | Duplicate behavior |
-| --- | --- | --- | --- | --- | --- |
-| `<entity>` | `<state>` | `<event>` | `<state>` | `<effects>` | `<idempotent result>` |
-
-### Interface, data, and concurrency contracts
-
-| ID / concern | Inputs and outputs | Compatibility / invariants | Transaction, ordering, or idempotency | Failure / recovery |
-| --- | --- | --- | --- | --- |
-| `<IC01>` | `<API, event, schema, file, or UI>` | `<contract>` | `<ownership and race boundary>` | `<response>` |
-
-### Quality and operational contracts
-
-| Concern | Required outcome | Evidence / threshold | Owner or canonical source |
-| --- | --- | --- | --- |
-| Security, privacy, and abuse | `<invariants>` | `<tests or review>` | `<owner/link>` |
-| Performance and capacity | `<boundary>` | `<measurement>` | `<owner/link>` |
-| Observability and operations | `<signals, rollout, rollback>` | `<proof>` | `<owner/link>` |
-| Accessibility / usability | `<boundary>` | `<proof>` | `<owner/link>` |
-
-### Test and acceptance contracts
+## Test and acceptance contracts
 
 Keep this as the single coverage inventory, not a test-run log. After each
 task's focused tests, map changed outcomes and material risks to tests, naming
 the owning task and any missing non-focused tests to add at the final gate.
 Those recorded gaps do not block task `DONE`.
 
-At final readiness, first perform any required target synchronization, resolve
-conflicts, and run affected focused checks. Before adding any missing test or
-running any final-gate test, record the author and both retained reviewers'
-approval of the exact implementation content. They MUST verify strict
-conformance to the concluded whiteboard and its explicitly consumed authorities,
-suitable reuse of existing code and project frameworks, and the absence of
-unauthorized or redundant implementation. Any later implementation-content
-change, including a required
-resynchronization, invalidates approval and repeats the audit; a test-only
-addition does not. Only after approval,
-reconcile all accepted outcomes and material risks, including unrecorded gaps,
-and add required missing tests before final candidate review. The PR owns actual
-run results.
+The workflow skill owns synchronization, implementation audit, human
+acceptance, missing-test completion and final-validation timing; follow its
+[human implementation review](../../skills/sdd-project-workflow/SKILL.md#human-implementation-review)
+contract and surrounding validation rules. The PR owns approvals and run
+results. This inventory records task-specific coverage obligations only.
 
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
 | `<task ID>` | `<IDs or material risk>` | `<test path/case or planned test>` | `<existing, implemented, or missing>` | `<focused task work or final-gate addition/run>` |
 
-## Proposed design
+## Delivery strategy and readiness
 
-### Components and responsibility boundaries
+### Compatibility, migration, and rollout obligations
 
-Include a diagram when relationships or sequencing are easier to understand
-visually.
-
-| Component | Owns | Must not own | Interfaces / dependencies |
-| --- | --- | --- | --- |
-| `<component>` | `<responsibility>` | `<boundary>` | `<contracts>` |
-
-### Key decisions
-
-| ID | Decision | Alternatives | Rationale / tradeoff | Affected contracts |
-| --- | --- | --- | --- | --- |
-| `<D01>` | `<choice>` | `<material alternatives>` | `<why>` | `<IDs>` |
-
-### Compatibility, migration, and rollout
+Translate accepted compatibility and operational boundaries into concrete
+engineering work; link the owning design instead of choosing a second approach.
 
 | Concern | Before / after compatibility | Migration or rollout | Rollback / recovery | Validation |
 | --- | --- | --- | --- | --- |
 | `<API, data, configuration, workflow, or user>` | `<boundary>` | `<approach>` | `<safe return>` | `<proof>` |
 
-### Risks and mitigations
+### Delivery risks and mitigations
+
+Record execution risks and responses within accepted authority. Reference
+design risks already owned by the whiteboard rather than copy them.
 
 | ID | Scenario | Likelihood / impact | Prevention / detection | Owner | State |
 | --- | --- | --- | --- | --- | --- |
 | `<K01>` | `<worst case>` | `<assessment>` | `<control>` | `<owner>` | `<open or accepted>` |
 
-## Delivery strategy and readiness
+### Integration and readiness
 
 | Concern | This delivery |
 | --- | --- |
@@ -154,25 +118,15 @@ visually.
 | Merge authority | `<human review or explicitly authorized alternative>` |
 
 > [!IMPORTANT]
-> **Hard rule.** Select an integration model allowed by the project's canonical
-> branch policy and record every task's exact branch and required PR target.
-> Under a feature integration model, every task PR MUST target the declared
-> feature integration branch; only the final reviewed feature PR may target the
-> protected integration branch. This plan and its agents MUST NOT add an
-> exception, override the canonical policy, or retarget a task directly to the
-> protected branch. A mismatch MUST block readiness, review, and merge.
+> **Hard rule.** Record every task's exact branch and required PR target under
+> an integration model permitted by the canonical project branch policy.
+> Every task MUST comply with that policy; this plan cannot grant exceptions.
 
 A task is ready when its accepted outcome, scope, dependencies, applicable
 contracts, risks, validation, and merge boundary are sufficient to proceed
 without inventing product behavior. Required machine-local inputs and access
 must be available. Future implementation outputs are never prerequisites for
 starting the task that produces them.
-
-The delivery worktree's branch point is the ordinary implementation baseline.
-Do not require continuous target synchronization. The final-readiness test and
-acceptance contract above owns synchronization, conflict-resolution, and
-affected-check timing. Exceptional recovery follows the project's canonical
-error-handling authority.
 
 Readiness is behavioral, not measured by document or code detail. A short task
 with bounded observable behavior can be ready; a long task naming files,
@@ -183,9 +137,9 @@ explicit while leaving contract-equivalent implementation choices to the agent.
 
 ## Design-to-task mapping
 
-| Design point | Task and brief work | Validation | Consistency or gap |
+| Design point / view | Task and brief work | Validation / implementation evidence | Consistency or gap |
 | --- | --- | --- | --- |
-| `<whiteboard ID>` | `<task ID and outcome>` | `<proof>` | `<aligned, gap, or non-code obligation>` |
+| `<whiteboard ID and applicable text/diagram>` | `<task ID and outcome>` | `<acceptance signal; actual code/flow references when available>` | `<aligned, gap, or non-code obligation>` |
 
 > [!IMPORTANT]
 > **Hard rule.** Every design point MUST map to a task or non-code obligation.
@@ -197,7 +151,10 @@ explicit while leaving contract-equivalent implementation choices to the agent.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `PLANNED` | `None` | `<observable result>` | `<scope and compatibility>` | `<checks>` | `<owned branch; PR or None; exact target>` |
+| `T01` | `PLANNED` | `None` | `<one complete observable result>` | `<scope and compatibility>` | `<acceptance condition and evidence>` | `<owned branch; PR or None; exact target>` |
+
+`Depends on` names actual producing tasks and consumed prerequisites, not an
+ordering inferred from task numbers. Use `None` for genuinely independent work.
 
 ## Task specifications and context receipts
 
@@ -210,9 +167,9 @@ insufficient.
 | --- | --- |
 | Outcome / non-scope | `<observable result and exclusions>` |
 | Source boundary | `<owned paths, components, or systems>` |
-| Consumed dependencies | `<task IDs, contracts, and exact revisions>` |
+| Consumed dependencies | `<producing task IDs, required inputs, contracts and exact revisions>` |
 | Critical obligations | `<safety, compatibility, data, or policy boundaries>` |
-| Required evidence | `<tests, review, deployment, or manual proof>` |
+| Required evidence | `<acceptance condition plus tests, review, deployment or manual proof>` |
 | Context receipt | `<current sources read, conflicts or gaps, and disposition>` |
 | Actual result | `<summary when implemented>` |
 
@@ -268,10 +225,9 @@ not become another progress ledger.
 | --- | --- | --- | --- |
 | `<path, branch, worktree, runtime item, or issue>` | `<action>` | `<proof and authority>` | `<pending or result>` |
 
-Tracked cleanup belongs in the merge candidate. After target verification,
-remove owned delivery/task worktrees and merged branches, then return the
-coordinating checkout to the accepted target branch when safe. Keep any unsafe
-or externally owned cleanup pending rather than discarding or disrupting work.
+Record this delivery's exact owned cleanup scope and remaining obligations.
+The workflow skill's [closing contract](../../skills/sdd-project-workflow/SKILL.md#completion)
+owns archive, reset, merge-candidate timing and post-merge cleanup authority.
 
 Use only the task detail needed to implement and judge the result. In a final
 PR candidate, a task is `DONE` when its accepted outcome, applicable validation,
@@ -293,14 +249,14 @@ already been reviewed or merged.
 
 ## Human review brief
 
-In the parent response, request the owner's mode choice and batch foreseeable
-decisions under the [Autopilot contract](../../skills/sdd-project-workflow/SKILL.md#autopilot-mode).
-This template records authorization facts, not a second execution contract.
+Record the owner's mode choice above; the
+[Autopilot contract](../../skills/sdd-project-workflow/SKILL.md#autopilot-mode)
+owns the response and authorization requirements.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
 | Tasks and outcomes | `<short task list>` | `<class>` |
-| Design consistency | `<mapping result and gaps>` | `<class>` |
+| Design consistency | `<accepted design key points and design-to-task mapping, including relevant views and gaps>` | `<class>` |
 | Important changes | `<contracts, architecture, policies, compatibility, migrations, or operations>` | `<class>` |
 | Validation | `<passed, failed, and unrun>` | `<class>` |
 | Risks or open decisions | `<summary or None>` | `<class>` |

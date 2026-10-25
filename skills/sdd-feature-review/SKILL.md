@@ -77,6 +77,10 @@ mismatch prevents a sound disposition.
 Judge correctness, design and policy consistency, compatibility, safety,
 validation sufficiency, proportionality, and merge-ready canonical state.
 
+When reviewing a whiteboard, check that the selected architecture and behavior
+are explicit in precise text and relevant diagrams, with consistent contracts
+and responsibilities. Diagrams do not substitute for missing decisions.
+
 Before assessing an implementation plan or task decomposition, you MUST read
 and apply `task-planning-and-decomposition.md` directly from the manifest-linked
 KB root when the accepted pin ships it. Judge outcome completeness, actual
@@ -187,7 +191,9 @@ within project authority.
 > Check the code-grounded decision table and flow views required by the workflow
 > skill's [human implementation review](../sdd-project-workflow/SKILL.md#human-implementation-review).
 > Read that contract if it is not already in context or has changed.
-> Verify agreement with the exact implementation and any N/A explanation.
+> Verify agreement with the exact implementation, applicable accepted design
+> text and diagrams, and any N/A explanation. Compare behavior, ownership, data
+> effects and failure meaning, not identical graph shapes.
 > Reviewer approval MUST NOT substitute for the subsequent human acceptance
 > before final-test work, including under Autopilot.
 >

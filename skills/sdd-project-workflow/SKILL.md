@@ -320,6 +320,13 @@ at each real decision boundary. Human briefs use a compact table covering the
 decision, important changes, risks or gaps, validation, and recommended action.
 Follow the manifest-linked human-brief policy.
 
+At whiteboard human review, the parent MUST render the whiteboard's relevant
+design diagrams in the response with concise, unambiguous explanatory text and
+design IDs; file links alone are insufficient. Reuse accurate views and explain
+genuinely inapplicable views rather than impose a diagram count. At plan human
+review, show the accepted design key points beside the design-to-task mapping,
+task outcomes and acceptance evidence so the owner can compare them.
+
 > [!IMPORTANT]
 > After agent review, the parent MUST reply with a compact table pairing each
 > reviewer finding with its proposed solution and the author's disposition
@@ -405,7 +412,7 @@ obligation; keep actual run evidence in the PR.
 
 | Information | Required content |
 | --- | --- |
-| Implementation / design | Delivered changes, conformance to the accepted design or Fast Fix scope, and deviations |
+| Implementation / design | Delivered changes, comparison with accepted design text and relevant diagrams or Fast Fix scope, and deviations |
 | Code-level flows | Business, error-handling and data flows, with actual code references |
 | Review findings | Findings, concrete examples, solutions and author dispositions, or None |
 | Risks / limits / unknowns | Material tradeoffs, limitations and unresolved items, or None |
@@ -415,7 +422,10 @@ obligation; keep actual run evidence in the PR.
 Render the three views in the reply using suitable established notation, such
 as UML sequence/activity diagrams and DFDs. Keep them proportional to the
 affected implementation; reuse accurate diagrams and explain a genuinely
-inapplicable view as `N/A`. Preserve the brief in PR evidence. Reuse the existing
+inapplicable view as `N/A`. Connect code views to the applicable design IDs and
+compare behavior, ownership, data effects and failure meaning; different levels
+of detail or graph shapes do not themselves indicate a mismatch.
+Preserve the brief in PR evidence. Reuse the existing
 findings table and separate assumptions table rather than duplicate them.
 
 Ask the human to request implementation changes or accept the implementation
