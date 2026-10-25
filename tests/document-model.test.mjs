@@ -44,7 +44,7 @@ test("each skill owns its global KB application boundary and preserves topic rou
 test("planning and plan review require the shipped task-planning topic", async () => {
   const topic = "task-planning-and-decomposition.md";
   for (const [skill, context] of [
-    ["sdd-project-workflow", /planning or replanning implementation tasks/],
+    ["sdd-project-workflow", /creating or revising an implementation plan/],
     ["sdd-feature-review", /assessing an implementation plan or task decomposition/],
   ]) {
     const text = await read(`skills/${skill}/SKILL.md`);

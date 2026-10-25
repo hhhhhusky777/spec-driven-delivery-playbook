@@ -55,6 +55,12 @@ Do not create additional documents that duplicate these responsibilities. Put
 unique design information in the whiteboard, unique execution information in
 the plan, and review evidence in the pull request.
 
+Before creating a whiteboard or implementation plan, you MUST read and use the
+corresponding template from the verified playbook checkout at the accepted
+revision. When updating an existing document, preserve project-specific
+information and accepted decisions, and use the template to check completeness.
+Templates do not authorize changing an accepted design.
+
 Ensure links in template-derived project documents resolve to the correct
 installed files and sections.
 
@@ -210,10 +216,11 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   check for and synchronize a newer playbook revision before whiteboard or
   implementation work. A maintenance-only upgrade is still a delivery; do not
   merge a separate target-branch upgrade solely to prepare another delivery.
-- Before planning or replanning implementation tasks, you MUST read and apply
-  `task-planning-and-decomposition.md` directly from the manifest-linked KB root
-  when the accepted pin ships it. Translate the approved design into coherent
-  outcomes, actual dependencies and acceptance evidence within project authority.
+- Before creating or revising an implementation plan, you MUST read and apply
+  `task-planning-and-decomposition.md` from the manifest-linked KB root when the
+  accepted pin ships it. Use its principles to define the plan's task outcomes,
+  dependencies and acceptance evidence within the approved design and project
+  boundaries.
 - The implementation plan MUST select an integration model allowed by the
   canonical project branch policy and record every task's exact branch and
   required pull-request target. Under a feature integration model, every task
