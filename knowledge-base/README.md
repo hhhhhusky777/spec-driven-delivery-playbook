@@ -21,10 +21,6 @@ If these boundaries genuinely conflict, use the project's canonical
 error-handling and decision authority. The KB grants no permission to change
 scope, weaken a policy, or add a new blocking control.
 
-[Solution Research](solution-research.md) owns evidence-grounded solution
-selection at design and implementation levels. Topic references are starting
-points; the shared guide explains research, applicability and evidence reuse.
-
 Distinguish established engineering principles from evolving multi-agent
 methods; neither a reference nor an example becomes project authority.
 
