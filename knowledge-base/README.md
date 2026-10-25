@@ -11,9 +11,15 @@ root. Skills retain concise principles and tell agents which topic to read
 when relevant. Read that topic directly; this README is a human-facing index,
 not a mandatory intermediate step.
 
-[Solution Research](solution-research.md) guides evidence-grounded solution
-selection at design and implementation levels. Topic references are starting
-points; that guide explains research, applicability and evidence reuse.
+Apply the topic's core principles within the project's approved scope,
+contracts, policies, and existing mechanisms. Choose the simplest sufficient
+solution that satisfies both boundaries. Examples and techniques illustrate
+choices; they are not universal implementation recipes. Neither mechanical
+adoption nor silently ignoring a principle is an adequate application.
+
+If these boundaries genuinely conflict, use the project's canonical
+error-handling and decision authority. The KB grants no permission to change
+scope, weaken a policy, or add a new blocking control.
 
 Distinguish established engineering principles from evolving multi-agent
 methods; neither a reference nor an example becomes project authority.
