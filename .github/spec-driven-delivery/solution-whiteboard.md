@@ -4,10 +4,10 @@
 
 | Field | Value |
 | --- | --- |
-| State | `CONCLUDED` |
+| State | `OPEN` |
 | Need / issue | [#187](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/187) |
 | Owner | Repository owner |
-| Concluded design revision | `4406e417cf7b96ed977a33ff04d4f1ed539c4335` |
+| Concluded design revision | `None` |
 | Open owner decisions | `None` |
 
 This whiteboard records the solution for the owner-accepted G1–G9 change scope.
@@ -24,6 +24,7 @@ and owner-acceptance evidence. It is not an implementation plan.
 | DR04 | Accurate unambiguous text and corresponding diagrams are both needed; compare design with actual business, data and error-handling flows | accepted |
 | DR05 | Keep necessary information, conditional detail, existing task fields and coverage inventory; consolidate generic execution prose | accepted |
 | DR06 | No new gate, tracker, fixed task size, diagram quota or permission to change accepted scope; preserve current authority and delivery controls | accepted |
+| DR07 | Owner correction: put the brief common KB application boundary in each independently loaded skill's existing global IMPORTANT; Solution Research remains a topic, not the owner of all KB application rules | authorized D01 amendment candidate |
 
 ## Authority and context
 
@@ -54,7 +55,7 @@ these semantics. Once concluded, existing amendment authority applies.
 
 | Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
-| D01 | One common KB application contract in Solution Research requires solutions to satisfy applicable KB core principles and approved project scope, requirements, contracts and policies together | Existing topic-read triggers MUST require direct reading and application when the accepted pin ships the topic. Summaries or prior knowledge cannot replace reading. Genuine conflicts follow existing canonical decision/error authority, not silent relaxation | All existing topic routes remain; shared contract is reachable through workflow, review and triage; no competing normative copy in the KB index |
+| D01 | Each independently loaded workflow, review and triage skill states a brief mandatory KB application boundary in its existing global IMPORTANT: read and apply relevant KB core principles while satisfying approved project scope, requirements, contracts and policies | Retain accepted-pin or matching-revision conditions and all existing topic triggers; summaries or prior knowledge cannot replace reading. Use existing canonical decision/error authority for genuine conflicts. Solution Research owns research, evidence, PoCs and solution selection, not all KB application rules; no new common document or detailed duplicate policy | All three skill-wide blocks express both boundaries; topic routes remain; Solution Research contains no cross-KB application section and the KB index remains an index |
 | D02 | Whiteboard owns the accepted solution: behavior, architecture, contracts, boundaries and material tradeoffs | It describes the chosen approach, responsibilities and relevant interactions, not just desired results; task execution/status and contract-equivalent engineering choices remain with the plan/agent | An engineer can implement without inventing architecture or externally visible behavior; plan references the same accepted IDs |
 | D03 | Relevant architectural behavior has accurate, unambiguous text plus corresponding diagrams | State material inputs/preconditions, responsibilities, effects/postconditions, invariants, failure meaning and applicable quality/measurement requirements; link contracts already owned elsewhere rather than copy them. Use suitable UML/DFD-style views, combine views when clear, and explain genuine N/A. No universal diagram count or exhaustive case list | Text and diagram semantics agree; neither guesses nor an attractive diagram fill an unresolved contract |
 | D04 | Plan translates the approved design into engineering implementation obligations, dependencies, evidence and delivery state | Move architecture ownership out of `Proposed design`/`Key decisions`; preserve useful content in its proper owner or link. Replace permission-like `add feature-specific behavior` with consumed approved contracts. Implementation choices may vary only within accepted boundaries | No duplicate architecture authority, lost necessary information or new business behavior; existing template completeness remains proportional |
@@ -111,12 +112,13 @@ existing authority; neither representation licenses ignoring the other.
 
 | Draft item | Concluded design point | Disposition | Rationale / evidence |
 | --- | --- | --- | --- |
-| DR01 | D01 | accepted | One common application owner and retained conditional read triggers |
+| DR01 | D01 | accepted | Brief skill-wide application boundaries and retained conditional read triggers |
 | DR02 | D02, D04 | accepted | Architecture and engineering delivery have distinct authority |
 | DR03 | D05, D06 | accepted | Reusable method is separate from concrete task facts |
 | DR04 | D03, D07 | accepted | Accurate text, corresponding figures and code-grounded comparison |
 | DR05 | D04, D08, D09 | accepted | Rehome necessary content and remove duplicate execution prose |
 | DR06 | D01, D05, D08, D09 | accepted | Existing controls remain; methods and detail stay proportionate |
+| DR07 | D01 | amendment candidate | Owner authorized replacing the misplaced Solution Research ownership with brief global skill boundaries; reviewer and human acceptance precede dependent correction |
 
 ## Newly introduced validations
 
@@ -156,3 +158,9 @@ permits the metadata-only conclusion transition, reviewer verification and
 subsequent implementation planning. It does not approve a later plan, enable
 Autopilot, authorize template/skill implementation before readiness, or permit
 merge. Review and acceptance evidence belongs in the PR.
+
+The owner has authorized the D01 placement correction recorded in DR07. The
+previous accepted design remains available in Git; this OPEN candidate changes
+only that named scope and its reconciliation. Repeat design review and human
+acceptance before the dependent T01 source correction resumes. D02–D09 and both
+all-None inventories retain their accepted meaning.

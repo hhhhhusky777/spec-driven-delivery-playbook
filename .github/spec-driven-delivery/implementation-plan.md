@@ -12,8 +12,8 @@ owns reviews, validation results, acceptance and merge evidence.
 | Field | Value |
 | --- | --- |
 | State | `IMPLEMENTING` |
-| Active tasks | `None` |
-| Next ready task | `T02` |
+| Active tasks | `T01` |
+| Next ready task | `None` |
 | Active blocker | `None` |
 | Implementation mode | `human-review-before-merge` |
 | Authorized scope / feature branch / protected target | Accepted task scope T01–T03; feature `codex/design-planning`; protected target `main`; Autopilot `None` |
@@ -22,7 +22,7 @@ owns reviews, validation results, acceptance and merge evidence.
 | Primary issue / need | [#187](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/187) |
 | Concluded whiteboard | [Frozen file at 25cc9c6](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/blob/25cc9c6ab2402de2970807cd616d3b4d667d8b01/.github/spec-driven-delivery/solution-whiteboard.md); accepted semantic revision `4406e417cf7b96ed977a33ff04d4f1ed539c4335` |
 | Required reviewers | Same two retained independent feature reviewer sessions |
-| Last verified | 2026-10-25 Asia/Shanghai; T01 outcome and focused coverage complete in this candidate; T02 consumes that result after task merge; task worktree runtime CURRENT |
+| Last verified | 2026-10-25 Asia/Shanghai; owner-authorized D01 placement amendment is in review; prior T01 source awaits the amended design's acceptance; task worktree runtime CURRENT |
 
 ## Governing inputs and delivery boundaries
 
@@ -37,7 +37,7 @@ owns reviews, validation results, acceptance and merge evidence.
 
 | Concern | Accepted boundary |
 | --- | --- |
-| Required outcome | A mandatory common KB application contract, one task-planning KB, and aligned design/engineering templates and consumers implementing D01–D09 |
+| Required outcome | Brief mandatory skill-wide KB application boundaries, one task-planning KB, and aligned design/engineering templates and consumers implementing D01–D09 |
 | Scope | Source KB, affected skill routes, whiteboard and plan templates, affected README/index/diagram descriptions, and meaningful source regression/packaging checks |
 | Non-scope | New gates, trackers, document quotas, runtime rejection mechanisms, broad checker rewrites, historical archive rewrites, unrelated #147/#142 work, and installing source tests into adopting projects |
 | Assumptions | None requiring owner resolution; topic availability is checked against the accepted pin, not assumed |
@@ -53,7 +53,7 @@ edit this delivery's frozen whiteboard to demonstrate a template change.
 | --- | --- |
 | Integration model | Feature integration branch `codex/design-planning`; only final PR #188 targets `main` |
 | Baseline | Feature branch created from `c2f83cb8868477a11415a83ea991459546a9f4c3`; accepted preparation/conclusion ends at `25cc9c6` |
-| Dependency rationale | T01 establishes common application ownership; T02 consumes it for the planning method and routes; T03 applies that method and ownership model to template consumers |
+| Dependency rationale | T01 establishes skill-wide KB application boundaries; T02 consumes them for the planning method and routes; T03 applies that method and ownership model to template consumers |
 | Parallel ownership | No concurrent overlapping implementation tasks; independent research, review and checks may run concurrently under the existing concurrency KB |
 | Merge authority | Human review before each task merge by default; Autopilot requires explicit opt-in naming this feature branch and task scope |
 | Readiness | Approved plan, consumed prerequisite results and sufficient current context; task-produced KB, templates and test outputs are not prerequisites for starting their producing task |
@@ -72,7 +72,7 @@ error-handling authority own environment readiness and recovery.
 
 | Design point | Task and brief work | Validation | Consistency or gap |
 | --- | --- | --- | --- |
-| D01 | T01: common dual-boundary application owner and mandatory consumers | Existing topic routes and common contract remain reachable without a competing normative index copy | Aligned |
+| D01 | T01: brief dual-boundary requirements in each skill's existing global IMPORTANT; Solution Research returns to its own topic scope | All topic routes and version conditions retained; no cross-KB application section or extra policy document | Authorized amendment candidate |
 | D02 | T03: whiteboard owns solution architecture/behavior; plan consumes it | Before/after ownership review plus representative design/plan inspection | Aligned |
 | D03 | T03: precise architectural text with relevant matching diagrams, displayed in the whiteboard human-review response | Template prompts, response requirements and applicable diagram parsing/semantic review; genuine N/A remains possible | Aligned |
 | D04 | T03: plan owns engineering obligations and removes duplicate architecture authority | Necessary information is preserved or linked; plan cannot authorize new feature behavior | Aligned |
@@ -86,31 +86,32 @@ error-handling authority own environment readiness and recovery.
 
 | ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- |
-| T01 | `DONE` | `None` | One reachable mandatory KB application contract binds solutions to KB principles and approved project boundaries together | Shared contract in Solution Research; concise source skill routes and index linkage, no duplicate policy owner | Focused changed-content checks and affected application/routing regressions | `codex/design-planning-t01`; [PR #189](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/189); target `codex/design-planning` |
-| T02 | `READY` | `T01` | One evidence-based planning KB and its consumers support coherent dependency-driven task decomposition in adopting projects | New `task-planning-and-decomposition.md`, index and planning/replanning/review routes; reuse existing installer | Focused topic/routing checks; meaningful complete-tree distribution coverage | `codex/design-planning-t02`; PR `None`; target `codex/design-planning` |
+| T01 | `VERIFYING` | `None` | Each independently loaded skill requires relevant KB application within approved project boundaries | Brief global IMPORTANT boundaries; Solution Research stays within research scope; no new policy document | Focused changed-content checks and affected application/routing regressions after amendment acceptance | `codex/design-planning-t01`; [PR #189](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/189); target `codex/design-planning` |
+| T02 | `PLANNED` | `T01` | One evidence-based planning KB and its consumers support coherent dependency-driven task decomposition in adopting projects | New `task-planning-and-decomposition.md`, index and planning/replanning/review routes; reuse existing installer | Focused topic/routing checks; meaningful complete-tree distribution coverage | `codex/design-planning-t02`; PR `None`; target `codex/design-planning` |
 | T03 | `PLANNED` | `T01, T02` | Whiteboard, plan and review consumers consistently separate architecture from engineering delivery and expose comparable design/code evidence | Existing templates, affected routes and README/diagrams; retain necessary fields, controls and coverage inventory without new process artifacts | Focused template/model/diagram checks and bounded representative semantic review | `codex/design-planning-t03`; PR `None`; target `codex/design-planning` |
 
 ## Task specifications and context receipts
 
 ### T01 — Common KB application contract
 
-Read the current Solution Research contract, KB index and corresponding workflow,
-review and triage routes. Make Solution Research the common application owner;
-keep summaries/routes concise and retain each existing topic trigger. Avoid a
-second normative copy in README. Focused evidence must distinguish direct
-reading/application from a summary-only route and preserve unavailable-topic
-compatibility. Source ownership: `knowledge-base/solution-research.md`, affected
-skill routes, KB index and directly affected regression tests. No template
-architecture changes or additional project controls belong in this task.
+After the authorized D01 amendment is accepted, put the brief KB application
+boundary in the workflow, review and triage skills' existing global IMPORTANT
+blocks. Retain topic triggers and version-aware reading; require solutions to
+satisfy both KB principles and approved project scope, requirements, contracts
+and policies. Remove the misplaced cross-KB application section and ownership
+claims from Solution Research and the KB index. Reuse canonical conflict
+authority; add no common document, detailed duplicate policy or new gate.
+Source ownership remains the same skills, research topic, index and directly
+affected model regression. No template architecture changes belong in T01.
 
-Actual result: the shared contract is owned by Solution Research; all three
-skills route to it and require reading/application of triggered topics. The KB
-index links to the owner instead of repeating the contract. The new regression
-covers that ownership, version conditions and all current workflow topic routes.
+Actual result before amendment: the prior candidate put the common contract in
+Solution Research and passed its focused checks. That placement is superseded
+by the owner's correction; the source and regression still require the scoped
+follow-up after design acceptance. Prior approval is not current merge evidence.
 
 ### T02 — Task-planning method and distribution
 
-Consume T01's common application contract. Distill the whiteboard's already-read
+Consume T01's skill-wide application boundaries. Distill the whiteboard's already-read
 primary sources into the new KB: coherent complete outcomes, appropriate size,
 actual acyclic dependencies, readiness inputs, safe useful parallelism and
 acceptance evidence. Record applicability limits instead of copying vendor
@@ -143,7 +144,7 @@ prerequisite for starting or completing its producing implementation task.
 
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
-| T01 | Common application owner and all existing required-read routes | Shared-owner/version-aware routing case and affected cases in `tests/document-model.test.mjs` | Implemented; current workflow topics covered; no known missing non-focused T01 test addition | Focused task work; unchanged installer/full source suite deferred to final gate |
+| T01 | Skill-wide KB/project boundaries and all existing required-read routes | Update the prior shared-owner case to inspect each global skill block, retained version conditions, topic routes and research-only ownership | Correction required after amended design acceptance; prior assertions target the superseded placement | Focused task work; unchanged installer/full source suite deferred to final gate |
 | T02 | Coherent task method with applicability limits and mandatory consumers | New topic and workflow/reviewer route checks in `tests/document-model.test.mjs` | New meaningful cases planned | Focused task work |
 | T02 | Adopters receive new topic and valid installed routes | Extend existing complete-tree KB case in `tests/installer.test.mjs` only where needed | Existing distribution mechanism; assess new-topic assertion need against current coverage | Focused applicable case when changed; complete suite at final gate |
 | T03 | Required template information retained under correct owner; design diagrams visible in the whiteboard human-review response | Update affected document-model cases; inspect a representative design response and dependency-driven plan against text/diagrams | Existing cases to reconcile, representative semantic evidence planned | Focused task work |
