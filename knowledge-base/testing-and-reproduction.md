@@ -20,13 +20,40 @@ imagined interleaving or duplicate happy-path cases without additional value.
 For a reproducible defect, a failing regression before a behavior change helps
 establish that the later fix addresses the original problem, when practical.
 
-## Useful and proportionate tests
+## Test design and validity
 
-Assert observable results at the owning contract. Keep setup, the operation,
-and expected outcome easy to distinguish; use minimal inputs and independently
-known expectations rather than reproducing production logic in the test.
-Do not couple tests to private helpers or incidental structure unless that
-structure is itself an accepted contract.
+> [!IMPORTANT]
+> Tests are evidence, not authority to expand requirements. Authors and reviewers
+> MUST assess the basis of test scenarios and expected results. Do not add
+> production behavior or error handling merely to satisfy unsupported test
+> assumptions; correct or reject those expectations instead.
+
+Apply the project's scope and evidence boundaries to test setup, mocks, inputs,
+schedules and expected results, not only production code. Judge tests by the
+following considerations, not a per-test worksheet or numerical score:
+
+| Consideration | What makes the test useful |
+| --- | --- |
+| Grounded scenario | An accepted requirement, authoritative contract, supported execution path or justified fault model supports the case. Being able to mock a state does not establish its relevance. |
+| Sound expectation | An independent requirement, specification, known result or justified invariant supports the expected outcome. Do not copy production calculations into the test oracle or treat current implementation behavior as its own proof. |
+| Defect sensitivity | The assertion detects the relevant wrong behavior without failing on harmless behavior-preserving changes. Assert observable results at the owning contract, not private helpers or incidental structure unless that structure is itself an accepted contract. |
+| Faithful setup | Minimal fixtures and mocks preserve the dependency behavior, ordering and failure mechanism that matter. A mock's invented behavior is not evidence of a dependency contract. |
+| Reliable evidence | Setup, operation and expectation are clear; relevant conditions are controllable and failures diagnosable. Unrelated order, shared state or wall-clock time must not determine the result. |
+| Proportionate value | The test adds necessary evidence at a suitable layer using existing coverage and harnesses where adequate. Its defect-detection value justifies execution and maintenance cost. |
+
+A prior production incident is not required: supported boundary inputs,
+property-based or fuzz inputs within a justified domain, credible concurrency
+failures and controlled fault injection can reveal defects before users do.
+Do not dismiss a required invariant or credible critical risk solely because
+the event is rare or unobserved; do not demand exhaustive imagined cases either.
+
+When a test fails, assess the scenario, expectation, setup and implementation
+before choosing the correction. Distinguish a product defect from an invalid
+test premise or harness defect. A valid test exposing an unresolved requirement
+follows existing project decision authority; it does not authorize a silent
+scope expansion. Keep material rationale in the existing design, issue or PR.
+
+## Proportionate evidence
 
 Use lower-level deterministic checks where they prove the behavior, and real
 integration or end-to-end evidence where interactions cannot be shown locally.
@@ -74,6 +101,8 @@ These paraphrase source examples and observations, not project incidents.
 | A parser calls a private trimming helper | A helper returning the right value does not prove the caller uses it correctly | Verify the trimmed result through the parser's public operation | [Microsoft: Validate private methods with public methods](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices#validate-private-methods-with-public-methods) |
 | A discount depends on whether the real calendar says Tuesday | Tests can pass or fail solely because the execution day changed | Use an existing controllable time seam to exercise both supported outcomes deterministically | [Microsoft: Handle stub static references with seams](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices#handle-stub-static-references-with-seams) |
 | Tests pass sequentially but fail when run in parallel | A test may rely on another test's data or cleanup order | Identify and isolate the relevant shared state; repair fixtures rather than rerun until green | [pytest: System state](https://docs.pytest.org/en/stable/explanation/flaky.html#system-state) |
+| A URL test computes its expected value using string-building logic | The test can reproduce the same mistake as production code | Use a simple independently known expected URL so the assertion can expose the mistake | [Google: Don't put logic in tests](https://abseil.io/resources/swe-book/html/ch12.html) |
+| An experiment injects network latency and measures sign-in failures | A controlled fault can test a justified resilience hypothesis before a production incident occurs | Ground the fault and expected limit in the actual system and accepted requirements; injection alone does not establish a new recovery requirement | [AWS: Planning fault-injection experiments](https://docs.aws.amazon.com/fis/latest/userguide/getting-started-planning.html) |
 
 ## References
 
@@ -83,6 +112,9 @@ Guesses and unsupported assumptions do not resolve that uncertainty.
 Reference techniques serve project requirements, not extra approval gates.
 
 - [Google: Testing overview](https://abseil.io/resources/swe-book/html/ch11.html) — behavioral confidence, useful test sizes, failure testing and coverage limitations. Google's scale and test-distribution choices are contextual, not universal targets.
+- [Google: Unit testing](https://abseil.io/resources/swe-book/html/ch12.html) — independent, clear expectations and tests that survive behavior-preserving changes; its test-mix proportions are contextual, not project targets.
+- [Google: Reviewing tests](https://google.github.io/eng-practices/review/reviewer/looking-for.html#tests) — assess test validity, defect detection, false positives and maintenance cost rather than assume tests are correct.
 - [Microsoft: Unit-testing best practices](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices) — clear behavior, minimal setup, observable assertions and controllable dependencies. Its .NET syntax and naming conventions are examples, not cross-project mandates.
+- [AWS: Planning fault-injection experiments](https://docs.aws.amazon.com/fis/latest/userguide/getting-started-planning.html) — architecture-grounded hypotheses, measurable outcomes and controlled faults. Its AWS resource procedures are contextual; this guidance does not require FIS or authorize operational experiments.
 - [Chromium: Bug-reporting guidelines](https://www.chromium.org/for-testers/bug-reporting-guidelines/) — expected behavior, sufficient reproduction details and simplified test cases. Its browser-specific reporting process is not a project requirement.
 - [pytest: Flaky tests](https://docs.pytest.org/en/stable/explanation/flaky.html) — uncontrolled state, ordering, teardown and timing. Framework-specific helpers and optional mitigation techniques do not waive the project's acceptance rules.
