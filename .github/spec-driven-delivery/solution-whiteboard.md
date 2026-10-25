@@ -4,10 +4,10 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [#187](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/187) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
+| Concluded design revision | `c9855a403c4d04cc1acc08cdbf8953c9205f4395` |
 | Open owner decisions | `None` |
 
 This whiteboard records the solution for the owner-accepted G1–G9 change scope.
@@ -24,7 +24,7 @@ and owner-acceptance evidence. It is not an implementation plan.
 | DR04 | Accurate unambiguous text and corresponding diagrams are both needed; compare design with actual business, data and error-handling flows | accepted |
 | DR05 | Keep necessary information, conditional detail, existing task fields and coverage inventory; consolidate generic execution prose | accepted |
 | DR06 | No new gate, tracker, fixed task size, diagram quota or permission to change accepted scope; preserve current authority and delivery controls | accepted |
-| DR07 | Owner correction: put the brief common KB application boundary in each independently loaded skill's existing global IMPORTANT; Solution Research remains a topic, not the owner of all KB application rules | authorized D01 amendment candidate |
+| DR07 | Owner correction: put the brief common KB application boundary in each independently loaded skill's existing global IMPORTANT; Solution Research remains a topic, not the owner of all KB application rules | accepted |
 
 ## Authority and context
 
@@ -118,7 +118,7 @@ existing authority; neither representation licenses ignoring the other.
 | DR04 | D03, D07 | accepted | Accurate text, corresponding figures and code-grounded comparison |
 | DR05 | D04, D08, D09 | accepted | Rehome necessary content and remove duplicate execution prose |
 | DR06 | D01, D05, D08, D09 | accepted | Existing controls remain; methods and detail stay proportionate |
-| DR07 | D01 | amendment candidate | Owner authorized replacing the misplaced Solution Research ownership with brief global skill boundaries; reviewer and human acceptance precede dependent correction |
+| DR07 | D01 | accepted | Owner authorized replacing the misplaced Solution Research ownership with brief global skill boundaries; reviewer and human acceptance precede dependent correction |
 
 ## Newly introduced validations
 
@@ -159,8 +159,7 @@ subsequent implementation planning. It does not approve a later plan, enable
 Autopilot, authorize template/skill implementation before readiness, or permit
 merge. Review and acceptance evidence belongs in the PR.
 
-The owner has authorized the D01 placement correction recorded in DR07. The
-previous accepted design remains available in Git; this OPEN candidate changes
-only that named scope and its reconciliation. Repeat design review and human
-acceptance before the dependent T01 source correction resumes. D02–D09 and both
+The D01 placement correction recorded in DR07 changes only that named scope
+and its reconciliation; the previous accepted design remains available in Git.
+Review and owner-acceptance evidence belongs in the PR. D02–D09 and both
 all-None inventories retain their accepted meaning.
