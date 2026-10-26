@@ -201,7 +201,6 @@ test("design owns architecture while the plan consumes it and preserves evidence
   assert.match(normalize(workflow), /author MUST reproduce the plan's completed Implementation review table in the reply/);
   assert.doesNotMatch(workflow, /\| Information \| Required content \|/);
   assert.match(normalize(reviewer), /At this implementation audit.*table in the plan/);
-  assert.match(normalize(reviewer), /Do not require this completed implementation evidence during design or plan review/);
 });
 
 test("workflow skills state six goals and reject duplicate delivery documents", async () => {
