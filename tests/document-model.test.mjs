@@ -68,7 +68,6 @@ test("human-gate and Autopilot consumers route to portable workflow contracts", 
     ["README.md", ["autopilot-mode", "human-implementation-review"]],
     ["CONTRIBUTING.md", ["autopilot-mode", "human-implementation-review"]],
     ["docs/documentation-quality-policy.md", ["autopilot-mode", "human-implementation-review"]],
-    ["templates/delivery/implementation-plan.md", ["autopilot-mode"]],
   ]) {
     const text = await read(consumer);
     for (const anchor of anchors) {

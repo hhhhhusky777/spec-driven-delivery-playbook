@@ -267,10 +267,6 @@ already been reviewed or merged.
 
 ## Human review brief
 
-Record the owner's mode choice above; the
-[Autopilot contract](../../skills/sdd-project-workflow/SKILL.md#autopilot-mode)
-owns the response and authorization requirements.
-
 | Attention | Summary | Handling |
 | --- | --- | --- |
 | Tasks and outcomes | `<short task list>` | `<class>` |
