@@ -188,7 +188,10 @@ within project authority.
 > repeat the audit; a subsequent test-only addition does not by itself
 > invalidate it.
 >
-> Review the parent's code-grounded decision table and flow views.
+> At this implementation audit, review the author's completed Implementation
+> review table in the plan and its referenced code-level flow diagrams. For an
+> Issue-only Fast Fix, review the equivalent brief in the PR. Do not require
+> this completed implementation evidence during design or plan review.
 > Verify agreement with the exact implementation, applicable accepted design
 > text and diagrams, and any N/A explanation. Compare behavior, ownership, data
 > effects and failure meaning, not identical graph shapes.

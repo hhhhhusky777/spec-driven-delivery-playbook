@@ -194,6 +194,22 @@ reusable facts here; detailed review discussion remains in the PR.
 
 ## Plan validation and completion
 
+### Implementation review
+
+Complete this table after all implementation work is finished, before the
+implementation audit. Describe the actual result, not the planned design.
+Link code, flow diagrams and PR evidence; keep detailed review history and
+live approval status in the PR. Do not claim pending checks or approvals passed.
+
+| Information | Implementation summary / evidence |
+| --- | --- |
+| Implementation / design | `<delivered changes, comparison with accepted design text/views or Fast Fix scope, and deviations>` |
+| Code-level flows | `<business, error-handling and data-flow diagrams with actual code references; links or explained N/A>` |
+| Review findings | `<concise findings, concrete examples, solutions and dispositions, or None; PR evidence>` |
+| Risks / limits / unknowns | `<material tradeoffs, limitations and unresolved items, or None>` |
+| Validation | `<focused evidence and remaining tests to add/run; explicitly identify unrun full validation>` |
+| Recommendation / decision | `<author recommendation, PR references for reviewer conclusions, and the exact human decision needed>` |
+
 ### Delivery Definition of Done
 
 | Outcome | Required evidence | Result / link |

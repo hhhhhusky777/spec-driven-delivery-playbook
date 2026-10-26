@@ -725,10 +725,14 @@ recommendation with both reviewer conclusions. This is a decision to change
 implementation after comparing the actual code views with the accepted design's
 text and diagrams, or to begin final tests. Compare semantics—behavior,
 ownership, data effects and failure meaning—not identical graph shapes.
+After development, the author fills the plan's Implementation review table and
+prepares its referenced actual flow diagrams for the implementation audit.
+The human reply reproduces that table and displays the diagrams. An Issue-only
+Fast Fix keeps the equivalent brief in its PR without creating a plan.
 This is not acceptance of unrun tests or permission
 to merge. The workflow skill's
 [human implementation review](skills/sdd-project-workflow/SKILL.md#human-implementation-review)
-owns the brief, proportional diagram scope and acceptance-invalidation rules.
+owns presentation, proportional diagram scope and acceptance-invalidation rules.
 
 Implementation should also remain inspectably proportional. If one task
 accumulates 90 minutes of active implementation before its planned review

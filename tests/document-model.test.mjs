@@ -191,6 +191,17 @@ test("design owns architecture while the plan consumes it and preserves evidence
   assert.match(normalize(reviewer), /accepted design text and diagrams.*behavior, ownership, data effects and failure meaning/);
   assert.doesNotMatch(plan, /human-implementation-review/);
   assert.match(plan, /\(\.\.\/\.\.\/skills\/sdd-project-workflow\/SKILL\.md#completion\)/);
+  const implementationReview = plan.split("### Implementation review\n")[1]?.split("\n### ")[0];
+  assert.ok(implementationReview, "plan must hold the completed implementation review table");
+  for (const field of ["Implementation / design", "Code-level flows", "Review findings", "Risks / limits / unknowns", "Validation", "Recommendation / decision"]) {
+    assert.ok(implementationReview.includes(`| ${field} |`), `implementation review must expose ${field}`);
+  }
+  assert.match(normalize(workflow), /author MUST complete the plan's Implementation review table.*before any missing test/);
+  assert.match(normalize(workflow), /Issue-only Fast Fix.*same table and views in the PR.*do not create a plan/);
+  assert.match(normalize(workflow), /author MUST reproduce the plan's completed Implementation review table in the reply/);
+  assert.doesNotMatch(workflow, /\| Information \| Required content \|/);
+  assert.match(normalize(reviewer), /At this implementation audit.*table in the plan/);
+  assert.match(normalize(reviewer), /Do not require this completed implementation evidence during design or plan review/);
 });
 
 test("workflow skills state six goals and reject duplicate delivery documents", async () => {

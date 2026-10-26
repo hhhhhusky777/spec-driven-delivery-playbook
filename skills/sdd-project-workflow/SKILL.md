@@ -388,7 +388,12 @@ obligation; keep actual run evidence in the PR.
 > When all implementation tasks are `DONE` and final readiness begins, first
 > perform any required target synchronization, resolve conflicts, and run
 > affected focused checks. Do not resynchronize merely because the target
-> advanced. The author and both retained reviewers MUST then audit the exact
+> advanced. For normal delivery, the author MUST complete the plan's
+> Implementation review table and prepare its referenced actual code-level flow
+> diagrams. For an Issue-only Fast Fix, prepare the same table and views in the
+> PR, using the implementation-plan template from the verified manifest-pinned
+> playbook checkout; do not create a plan. The author and both retained
+> reviewers MUST then audit the exact
 > implementation content before any missing test is added or any final-gate
 > test is run. They
 > MUST verify that every addition strictly follows the concluded whiteboard and
@@ -409,17 +414,10 @@ obligation; keep actual run evidence in the PR.
 > tests or running final-gate tests, including under Autopilot. Task-focused
 > checks remain unchanged. This applies to normal and Fast Fix deliveries.
 >
-> The parent MUST reply with this concise decision table and the actual
-> code-level flow diagrams, not design-only diagrams:
-
-| Information | Required content |
-| --- | --- |
-| Implementation / design | Delivered changes, comparison with accepted design text and relevant diagrams or Fast Fix scope, and deviations |
-| Code-level flows | Business, error-handling and data flows, with actual code references |
-| Review findings | Findings, concrete examples, solutions and author dispositions, or None |
-| Risks / limits / unknowns | Material tradeoffs, limitations and unresolved items, or None |
-| Validation | Focused results and remaining tests to add/run; full validation is not yet established |
-| Recommendation / decision | Author recommendation, both reviewers' conclusions, and the exact human decision |
+> The author MUST reproduce the plan's completed Implementation review table
+> in the reply, or the PR-held equivalent for an Issue-only Fast Fix, together
+> with the actual code-level flow diagrams. Include both reviewers' current
+> conclusions from PR evidence; do not substitute links for the human brief.
 
 Render the three views in the reply using suitable established notation, such
 as UML sequence/activity diagrams and DFDs. Keep them proportional to the
