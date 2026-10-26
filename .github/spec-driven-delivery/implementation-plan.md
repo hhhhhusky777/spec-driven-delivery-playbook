@@ -124,18 +124,90 @@ judgment; semantic author/reviewer assessment remains necessary.
 
 ### Implementation review
 
-Current implementation summary for the T03 candidate. Final feature-audit
-preparation and human acceptance remain pending after task integration; this
-table does not claim that task reviews are the final implementation audit.
+All three tasks are integrated through PRs #189–#191. This table describes the
+implemented result; current reviewer decisions and human acceptance belong in
+[PR #188](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/188).
 
 | Information | Implementation summary / evidence |
 | --- | --- |
-| Implementation / design | D01: joint KB/project boundaries in the three skills; D05: planning KB and installed routes; D02–D04/D06–D09: whiteboard architecture ownership, engineering task mapping, human design views and implementation comparison. No known design deviation; source changes and task results are linked through PRs #189–#191 |
-| Code-level flows | Final audit must include the actual instruction flow across [workflow](../../skills/sdd-project-workflow/SKILL.md), [reviewer](../../skills/sdd-feature-review/SKILL.md) and plan, plus archive acceptance-column behavior in [lifecycle checker](../../scripts/sdd-lifecycle-three-doc.mjs). Final code-grounded business/data/error diagrams remain to be prepared; design-only views do not substitute |
-| Review findings | Earlier dependency-format finding fixed: use task IDs only; required-input descriptions belong in engineering columns. Subsequent dispositions and current reviewer conclusions remain in [PR #191](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/191); final feature audit is pending |
-| Risks / limits / unknowns | Structural checks establish content/routing compatibility, not future agent judgment. The accepted installed pin remains unchanged; these source changes are not yet an installed upgrade |
-| Validation | Task-focused model/lifecycle checks and affected installation routing have passed for their recorded candidates; exact runs are PR evidence. Full validation is UNRUN. Reconcile the existing coverage inventory after implementation acceptance before final tests |
-| Recommendation / decision | Complete T03 task review and integration, then prepare final flow views and audit this table against the integrated implementation. The later human decision is whether to change implementation or start final-test work; final main merge is not authorized |
+| Implementation / design | D01: mandatory joint KB/project boundaries in all three skills. D05: task-planning KB and required-read routes. D02–D04/D06–D09: whiteboard owns architecture; plan task columns consume design, error handling, validations and assumptions, separately from acceptance evidence. Workflow owns human gates; reviewer skill owns semantic comparison. No known design deviation |
+| Code-level flows | The three views below follow actual skill instructions, template ownership and the changed archive checker. This delivery mainly changes agent instructions; these are instruction/data flows, not a new executable orchestrator |
+| Review findings | Earlier dependency-format finding fixed: use task IDs only, with input descriptions in engineering columns. Latest task review: both retained reviewers approved with no findings; integrated implementation audit conclusions remain in PR #188 |
+| Risks / limits / unknowns | Structural checks do not guarantee future agent judgment. Accepted installed runtime remains pinned; source changes are not yet an installed upgrade. Archive checker accepts both new Acceptance evidence and legacy Validation labels |
+| Validation | Task-focused model/lifecycle and affected installed-routing checks passed at their recorded candidates. Full validation is UNRUN. Existing coverage inventory owns final test reconciliation and complete source validation |
+| Recommendation / decision | Author finds implementation within D01–D09 and recommends starting final-test work after both retained reviewers approve this integrated audit and the human accepts. Final main merge and whiteboard reset are not authorized |
+
+#### Actual business flow
+
+Sources: [workflow](../../skills/sdd-project-workflow/SKILL.md),
+[reviewer](../../skills/sdd-feature-review/SKILL.md), and the
+[plan template](../../templates/delivery/implementation-plan.md).
+D02–D08: design ownership feeds engineering planning; completed implementation
+returns through the existing audit and human decision before final tests.
+
+```mermaid
+sequenceDiagram
+  participant H as Human
+  participant A as Author
+  participant W as Whiteboard
+  participant P as Plan
+  participant R as Retained reviewers
+  A->>W: Record design text and relevant diagrams
+  R->>W: Review design semantics
+  A->>H: Copy reviewed design views and brief
+  H->>A: Accept design
+  A->>P: Map design to tasks, dependencies and evidence
+  R->>P: Review engineering plan
+  H->>A: Accept plan and choose merge mode
+  A->>A: Implement tasks and run focused checks
+  R->>A: Review exact task candidates
+  A->>P: Complete implementation table and actual flow views
+  R->>A: Audit all implementation against accepted design
+  A->>H: Copy reviewed table, views and conclusions
+  H->>A: Request changes or accept final-test work
+```
+
+#### Actual data flow
+
+Sources: [whiteboard template](../../templates/discovery/solution-whiteboard.md),
+[plan template](../../templates/delivery/implementation-plan.md), and
+[workflow](../../skills/sdd-project-workflow/SKILL.md).
+D01/D03/D04/D06/D07: each artifact retains its facts; the reply exposes reviewed
+content without creating a second source of authority.
+
+```mermaid
+flowchart LR
+  K["Project authorities + applicable KB"] --> W["Whiteboard: accepted text, diagrams, IDs"]
+  W --> P["Plan task table: consumed design and engineering obligations"]
+  P --> I["Actual implementation + focused evidence"]
+  I --> T["Plan implementation-review table + actual flow views"]
+  W --> R["Semantic comparison by author and reviewers"]
+  T --> R
+  R --> G["PR: findings, dispositions and approvals"]
+  T --> H["Human reply: copied table and flow views"]
+  G --> H
+```
+
+#### Actual error handling
+
+Source: `deliveryArchiveErrors` in
+[lifecycle checker](../../scripts/sdd-lifecycle-three-doc.mjs).
+D09 compatibility: the changed check accepts either evidence column label;
+`Consumed validations` alone is not test/acceptance evidence. Other archive
+checks still apply; this diagram isolates the changed predicate.
+
+```mermaid
+flowchart TD
+  A["Read archived plan task table"] --> B{"Outcome AND (Acceptance evidence OR legacy Validation)?"}
+  B -->|Both requirements satisfied| C["Continue remaining archive checks"]
+  B -->|Either requirement missing| D["Append archive task-summary diagnostic"]
+  D --> E["Validation reports failure; author corrects archive evidence"]
+  E --> A
+```
+
+The decision means `Outcome AND (Acceptance evidence OR Validation)`.
+It preserves the existing rejection of missing acceptance evidence; it does not
+introduce a new runtime failure policy or treat design validations as tests.
 
 ### Completion obligations
 
