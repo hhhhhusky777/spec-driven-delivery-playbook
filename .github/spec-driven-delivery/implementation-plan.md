@@ -226,9 +226,7 @@ design amendments require the existing prior human authority.
 
 ## Human review brief
 
-The parent response presents the design-to-task mapping and tasks, review
-findings/dispositions, assumptions, relevant risks and validation status. Ask
-for plan acceptance and the explicit Autopilot choice under the installed
-workflow contract. Default remains human review before merge; no plan approval
-alone enables Autopilot. Final human implementation acceptance and final `main`
-merge acceptance remain separate.
+The current decision is whether to accept the implementation and begin final-test
+work, using the [Implementation review](#implementation-review) table and views
+above. The selected delivery mode remains human review before merge; final
+`main` merge acceptance is separate.

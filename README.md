@@ -391,8 +391,8 @@ It consumes the whiteboard's design rather than proposing another architecture.
 Its task table is also the design-to-task mapping: each row shows consumed
 design, engineering work, outcome, dependencies, boundaries, consumed error
 handling, validations and assumptions, and separate acceptance evidence.
-The planning brief presents this table alongside
-the accepted design key points.
+The planning brief presents this table alongside the accepted design key points,
+making omissions and unsupported tasks visible without rereading every document.
 [Task Planning and Decomposition](knowledge-base/task-planning-and-decomposition.md)
 guides complete outcomes, actual prerequisites, readiness and acceptance
 evidence; the template records the resulting project-specific plan.
@@ -410,11 +410,7 @@ flowchart TD
     E --> C
 ```
 
-The planning human brief shows design points beside task outcomes and
-validation. This makes omissions, unsupported tasks, and inconsistencies
-visible without requiring the owner to reread every document word by word.
-
-It also asks whether to enable **Autopilot** and collects foreseeable decisions
+The planning brief also asks whether to enable **Autopilot** and collects foreseeable decisions
 together. Explicit opt-in lets approved task PRs merge into the named feature
 branch and the next ready task begin without routine human merge pauses. The
 agent still pauses for human implementation acceptance before final-test work,
@@ -485,7 +481,8 @@ flowchart LR
     G -->|"no"| T["Required authority + merge task<br/>into feature branch"]
     T --> N["Next ready task<br/>Autopilot: no routine human pause"]
     N --> R
-    G -->|"yes"| V["Full validation"]
+    G -->|"yes"| F["Final readiness: implementation audit<br/>+ human acceptance before final-test work"]
+    F --> V["Complete final-test work;<br/>review final head + full validation"]
     V --> H["Required owner / merge authority"]
     H --> M["Merge + target verification"]
 ```

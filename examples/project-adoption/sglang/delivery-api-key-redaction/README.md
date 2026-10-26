@@ -1,6 +1,6 @@
 # SGLang API-Key Redaction Delivery Example
 
-This non-authoritative example applies the current playbook to public
+This non-authoritative teaching snapshot applies an earlier playbook model to public
 [SGLang issue #37457](https://github.com/sgl-project/sglang/issues/37457).
 The issue reports that resolved server arguments expose API credentials through
 startup logs and server-information responses at SGLang commit
@@ -12,6 +12,10 @@ The example retains only the feature design and plan:
 - [implementation plan](04-implementation-plan.md).
 
 The pull request would own review and delivery evidence.
+
+The retained plan predates the current design/plan ownership split and contains
+an obsolete `S01` reference. Use the [current templates](../../../../templates/README.md)
+for new deliveries; this snapshot is not current workflow guidance.
 
 No SGLang file was changed, no test result is claimed, and no SGLang reviewer
 approved this design. Repository owners must resolve its recorded unknowns
