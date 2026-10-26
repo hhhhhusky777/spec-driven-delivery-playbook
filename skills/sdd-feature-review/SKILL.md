@@ -188,10 +188,7 @@ within project authority.
 > repeat the audit; a subsequent test-only addition does not by itself
 > invalidate it.
 >
-> Check the code-grounded decision table and flow views required by the workflow
-> skill's [human implementation review](../sdd-project-workflow/SKILL.md#human-implementation-review).
-> Read its decision-table and flow-view requirements if they are not already
-> in context or have changed.
+> Review the parent's code-grounded decision table and flow views.
 > Verify agreement with the exact implementation, applicable accepted design
 > text and diagrams, and any N/A explanation. Compare behavior, ownership, data
 > effects and failure meaning, not identical graph shapes.
