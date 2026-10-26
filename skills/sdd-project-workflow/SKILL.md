@@ -319,10 +319,9 @@ at each real decision boundary. Human briefs use a compact table covering the
 decision, important changes, risks or gaps, validation, and recommended action.
 Follow the manifest-linked human-brief policy.
 
-At whiteboard human review, the parent MUST render the whiteboard's relevant
-design diagrams in the response with concise, unambiguous explanatory text and
-design IDs; file links alone are insufficient. Reuse accurate views and explain
-genuinely inapplicable views rather than impose a diagram count. At plan human
+At whiteboard human review, the author MUST copy the reviewed design diagrams
+and their explanatory text and design IDs from the whiteboard into the reply;
+file links alone are insufficient. At plan human
 review, show the accepted design key points beside the task table, which owns
 the design-to-task mapping. Include each task's consumed design, implementation
 work, outcome, boundaries, consumed error handling, validations and assumptions,
@@ -414,17 +413,15 @@ obligation; keep actual run evidence in the PR.
 > tests or running final-gate tests, including under Autopilot. Task-focused
 > checks remain unchanged. This applies to normal and Fast Fix deliveries.
 >
-> The author MUST reproduce the plan's completed Implementation review table
-> in the reply, or the PR-held equivalent for an Issue-only Fast Fix, together
-> with the actual code-level flow diagrams. Include both reviewers' current
-> conclusions from PR evidence; do not substitute links for the human brief.
+> The author MUST copy the reviewed Implementation review table from the plan,
+> or the PR-held equivalent for an Issue-only Fast Fix, and actual code-level
+> flow diagrams into the reply. Include both reviewers' current conclusions
+> from PR evidence; do not substitute links for the human brief.
 
 Render the three views in the reply using suitable established notation, such
 as UML sequence/activity diagrams and DFDs. Keep them proportional to the
 affected implementation; reuse accurate diagrams and explain a genuinely
-inapplicable view as `N/A`. Connect code views to the applicable design IDs and
-compare behavior, ownership, data effects and failure meaning; different levels
-of detail or graph shapes do not themselves indicate a mismatch.
+inapplicable view as `N/A`.
 Preserve the brief in PR evidence. Reuse the existing
 findings table and separate assumptions table rather than duplicate them.
 

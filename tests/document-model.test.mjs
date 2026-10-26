@@ -185,9 +185,8 @@ test("design owns architecture while the plan consumes it and preserves evidence
   assert.match(plan, /`Depends on` contains only producing task IDs/);
   assert.match(normalize(plan), /Describe required inputs in Implementation work or Consumed design/);
   assert.match(plan, /Future implementation outputs are never prerequisites/);
-  assert.match(normalize(workflow), /At whiteboard human review.*MUST render.*design diagrams in the response/);
+  assert.match(normalize(workflow), /At whiteboard human review, the author MUST copy the reviewed design diagrams.*from the whiteboard into the reply/);
   assert.match(normalize(workflow), /At plan human review.*design key points beside the task table.*design-to-task mapping/);
-  assert.match(normalize(workflow), /Connect code views.*design IDs.*behavior, ownership, data effects and failure meaning/);
   assert.match(normalize(reviewer), /accepted design text and diagrams.*behavior, ownership, data effects and failure meaning/);
   assert.doesNotMatch(plan, /human-implementation-review/);
   assert.match(plan, /\(\.\.\/\.\.\/skills\/sdd-project-workflow\/SKILL\.md#completion\)/);
@@ -198,7 +197,7 @@ test("design owns architecture while the plan consumes it and preserves evidence
   }
   assert.match(normalize(workflow), /author MUST complete the plan's Implementation review table.*before any missing test/);
   assert.match(normalize(workflow), /Issue-only Fast Fix.*same table and views in the PR.*do not create a plan/);
-  assert.match(normalize(workflow), /author MUST reproduce the plan's completed Implementation review table in the reply/);
+  assert.match(normalize(workflow), /author MUST copy the reviewed Implementation review table from the plan.*actual code-level flow diagrams into the reply/);
   assert.doesNotMatch(workflow, /\| Information \| Required content \|/);
   assert.match(normalize(reviewer), /At this implementation audit.*table in the plan/);
 });
