@@ -21,10 +21,6 @@ If these boundaries genuinely conflict, use the project's canonical
 error-handling and decision authority. The KB grants no permission to change
 scope, weaken a policy, or add a new blocking control.
 
-[Solution Research](solution-research.md) owns evidence-grounded solution
-selection at design and implementation levels. Topic references are starting
-points; the shared guide explains research, applicability and evidence reuse.
-
 Distinguish established engineering principles from evolving multi-agent
 methods; neither a reference nor an example becomes project authority.
 
@@ -53,6 +49,7 @@ does not require reading the entire Knowledge Base.
 | Topic | When it helps | Document |
 | --- | --- | --- |
 | Solution research | Select applicable solutions using project constraints and authoritative evidence | [Solution Research](solution-research.md) |
+| Task planning and decomposition | Turn approved design into coherent outcomes, real dependencies and acceptance evidence | [Task Planning and Decomposition](task-planning-and-decomposition.md) |
 | Simple design and reuse | Reuse existing capabilities; minimize new responsibilities and mechanisms | [Simple design and reuse](simple-design-and-reuse.md) |
 | Architecture, scope, and assumptions | Establish ownership and evidence-bounded design premises | [Architecture, scope, and assumptions](architecture-scope-and-assumptions.md) |
 | Contracts and compatibility | Change interfaces without accidental contract breakage | [Contracts and compatibility](contracts-and-compatibility.md) |

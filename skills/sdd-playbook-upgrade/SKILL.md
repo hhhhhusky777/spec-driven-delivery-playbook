@@ -44,10 +44,12 @@ revision while project authority and active feature content remain intact.
 - Do not install playbook source tests, lifecycle engines, evidence helpers,
   publication tools, or CI into an adopting project.
 - Preserve canonical project policies and explicit owner decisions.
-- Keep the branch point as the ordinary working baseline; synchronize the
-  completed candidate with its target and run affected checks on the resulting
-  candidate before final review. Route exceptional recovery through the
-  project's canonical error-handling authority.
+- Keep the branch point as the ordinary working baseline. At final readiness,
+  synchronize only when required for a mergeable candidate; resolve conflicts
+  and run affected focused checks before the implementation audit. Later
+  synchronization that changes implementation content repeats the audit and
+  affected downstream gates. Route exceptional recovery through the project's
+  canonical error-handling authority.
 
 ## Synchronization result
 

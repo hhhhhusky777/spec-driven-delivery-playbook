@@ -20,8 +20,11 @@ Repository policies and explicit owner decisions remain authoritative.
 > Prefer one canonical owner and the smallest sufficient solution.
 >
 > When a KB topic-read trigger applies and the accepted pin ships the topic,
-> you MUST read it before applying its guidance. A skill summary or prior
-> knowledge MUST NOT substitute for reading the topic.
+> you MUST read it and apply its core principles. Solutions MUST satisfy both
+> those principles and the project's approved scope, requirements, contracts
+> and policies. A skill summary or prior knowledge MUST NOT substitute for
+> reading. Resolve genuine conflicts through the project's canonical decision
+> and error-handling authority.
 
 Before designing a solution, read
 `simple-design-and-reuse.md` directly from the manifest-linked KB
@@ -33,8 +36,7 @@ authority and approved scope; choose the simplest sufficient design.
 > [!IMPORTANT]
 > Before selecting any engineering solution, at design or implementation level,
 > you MUST read and apply `solution-research.md` directly from the manifest-linked
-> KB root when the accepted pin ships it. It owns the research requirement;
-> apply it using the project's problem, requirements and boundaries.
+> KB root when the accepted pin ships it.
 
 ## Durable model
 
@@ -52,6 +54,11 @@ authority and approved scope; choose the simplest sufficient design.
 Do not create additional documents that duplicate these responsibilities. Put
 unique design information in the whiteboard, unique execution information in
 the plan, and review evidence in the pull request.
+
+Before creating a whiteboard or implementation plan, you MUST read and use the
+corresponding template from the verified playbook checkout at the accepted
+revision. When updating an existing document, preserve project-specific
+information and accepted decisions, and use the template to check completeness.
 
 Ensure links in template-derived project documents resolve to the correct
 installed files and sections.
@@ -208,6 +215,10 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   check for and synchronize a newer playbook revision before whiteboard or
   implementation work. A maintenance-only upgrade is still a delivery; do not
   merge a separate target-branch upgrade solely to prepare another delivery.
+- Before creating or revising an implementation plan, you MUST read and apply
+  `task-planning-and-decomposition.md` from the manifest-linked KB root when the
+  accepted pin ships it. Use its principles to define the plan's task outcomes,
+  dependencies and acceptance evidence.
 - The implementation plan MUST select an integration model allowed by the
   canonical project branch policy and record every task's exact branch and
   required pull-request target. Under a feature integration model, every task
@@ -247,9 +258,8 @@ alternatives in the plan; do not guess answers or request blanket future authori
 > With opt-in, merge task PRs ONLY into that named feature branch after both
 > retained reviewers approve the exact head and focused/applicable required
 > checks pass, including any required external approvals. Then start the next
-> dependency-ready task. Pause at the
-> [human implementation review](#human-implementation-review) before final-test
-> work; Autopilot does not supply that acceptance. After acceptance, resume
+> dependency-ready task. Pause for explicit human implementation acceptance
+> before final-test work; Autopilot does not supply that acceptance. After acceptance, resume
 > authorized final-readiness work. Stop at final merge-back ready with the
 > normal human brief and wait for human
 > protected-target merge acceptance. A single-PR delivery has no intermediate
@@ -308,6 +318,15 @@ achieve the accepted outcome. Prefer coherent review units and one human brief
 at each real decision boundary. Human briefs use a compact table covering the
 decision, important changes, risks or gaps, validation, and recommended action.
 Follow the manifest-linked human-brief policy.
+
+At whiteboard human review, the author MUST copy the reviewed design diagrams
+and their explanatory text and design IDs from the whiteboard into the reply;
+file links alone are insufficient. At plan human
+review, show the accepted design key points beside the task table, which owns
+the design-to-task mapping. Include each task's consumed design, implementation
+work, outcome, boundaries, consumed error handling, validations and assumptions,
+and separate acceptance evidence
+so the owner can judge how engineering work realizes the design.
 
 > [!IMPORTANT]
 > After agent review, the parent MUST reply with a compact table pairing each
@@ -368,7 +387,12 @@ obligation; keep actual run evidence in the PR.
 > When all implementation tasks are `DONE` and final readiness begins, first
 > perform any required target synchronization, resolve conflicts, and run
 > affected focused checks. Do not resynchronize merely because the target
-> advanced. The author and both retained reviewers MUST then audit the exact
+> advanced. For normal delivery, the author MUST complete the plan's
+> Implementation review table and prepare its referenced actual code-level flow
+> diagrams. For an Issue-only Fast Fix, prepare the same table and views in the
+> PR, using the implementation-plan template from the verified manifest-pinned
+> playbook checkout; do not create a plan. The author and both retained
+> reviewers MUST then audit the exact
 > implementation content before any missing test is added or any final-gate
 > test is run. They
 > MUST verify that every addition strictly follows the concluded whiteboard and
@@ -389,22 +413,16 @@ obligation; keep actual run evidence in the PR.
 > tests or running final-gate tests, including under Autopilot. Task-focused
 > checks remain unchanged. This applies to normal and Fast Fix deliveries.
 >
-> The parent MUST reply with this concise decision table and the actual
-> code-level flow diagrams, not design-only diagrams:
-
-| Information | Required content |
-| --- | --- |
-| Implementation / design | Delivered changes, conformance to the accepted design or Fast Fix scope, and deviations |
-| Code-level flows | Business, error-handling and data flows, with actual code references |
-| Review findings | Findings, concrete examples, solutions and author dispositions, or None |
-| Risks / limits / unknowns | Material tradeoffs, limitations and unresolved items, or None |
-| Validation | Focused results and remaining tests to add/run; full validation is not yet established |
-| Recommendation / decision | Author recommendation, both reviewers' conclusions, and the exact human decision |
+> The author MUST copy the reviewed Implementation review table from the plan,
+> or the PR-held equivalent for an Issue-only Fast Fix, and actual code-level
+> flow diagrams into the reply. Include both reviewers' current conclusions
+> from PR evidence; do not substitute links for the human brief.
 
 Render the three views in the reply using suitable established notation, such
 as UML sequence/activity diagrams and DFDs. Keep them proportional to the
 affected implementation; reuse accurate diagrams and explain a genuinely
-inapplicable view as `N/A`. Preserve the brief in PR evidence. Reuse the existing
+inapplicable view as `N/A`.
+Preserve the brief in PR evidence. Reuse the existing
 findings table and separate assumptions table rather than duplicate them.
 
 Ask the human to request implementation changes or accept the implementation
