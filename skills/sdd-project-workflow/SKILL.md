@@ -324,8 +324,10 @@ At whiteboard human review, the parent MUST render the whiteboard's relevant
 design diagrams in the response with concise, unambiguous explanatory text and
 design IDs; file links alone are insufficient. Reuse accurate views and explain
 genuinely inapplicable views rather than impose a diagram count. At plan human
-review, show the accepted design key points beside the design-to-task mapping,
-task outcomes and acceptance evidence so the owner can compare them.
+review, show the accepted design key points beside the task table, which owns
+the design-to-task mapping. Include each task's consumed design, implementation
+work, outcome, boundaries, error handling, validation and material assumptions
+so the owner can judge how engineering work realizes the design.
 
 > [!IMPORTANT]
 > After agent review, the parent MUST reply with a compact table pairing each

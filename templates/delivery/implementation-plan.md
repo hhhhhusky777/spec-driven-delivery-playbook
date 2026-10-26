@@ -67,8 +67,8 @@ record the resulting engineering obligations here without proposing new
 feature behavior or duplicating the design. Equivalent implementation choices
 remain within those boundaries.
 
-Keep source links and revisions in Governing inputs, task-specific obligations
-in Task specifications, and their coverage in Design-to-task mapping below.
+Keep source links and revisions in Governing inputs. The Tasks table below
+maps accepted design to engineering work, boundaries and acceptance evidence.
 
 ## Test and acceptance contracts
 
@@ -137,9 +137,11 @@ explicit while leaving contract-equivalent implementation choices to the agent.
 
 ## Design-to-task mapping
 
-| Design point / view | Task and brief work | Validation / implementation evidence | Consistency or gap |
-| --- | --- | --- | --- |
-| `<whiteboard ID and applicable text/diagram>` | `<task ID and outcome>` | `<acceptance signal; actual code/flow references when available>` | `<aligned, gap, or non-code obligation>` |
+The Tasks table is the design-to-task mapping; do not maintain a second task
+mapping. Reference accepted design IDs and relevant text/views, then explain
+what each task implements and how its result will be judged. Record accepted
+non-code obligations in Delivery Definition of Done with their design source,
+owner and evidence. Keep unresolved gaps in Clarifications and gaps.
 
 > [!IMPORTANT]
 > **Hard rule.** Every design point MUST map to a task or non-code obligation.
@@ -149,27 +151,27 @@ explicit while leaving contract-equivalent implementation choices to the agent.
 
 ## Tasks
 
-| ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
-| --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `PLANNED` | `None` | `<one complete observable result>` | `<scope and compatibility>` | `<acceptance condition and evidence>` | `<owned branch; PR or None; exact target>` |
+| ID | State | Depends on | Consumed design | Implementation work | Outcome | Boundaries | Error handling | Validation | Assumptions | Branch / PR / required target |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `T01` | `PLANNED` | `None` | `<design IDs and relevant text/diagram links>` | `<concrete engineering changes and existing mechanisms to reuse>` | `<one complete observable result>` | `<owned scope, exclusions and compatibility obligations>` | `<applicable accepted failure/recovery contract and how this task implements it, or None>` | `<acceptance condition; test/coverage links; actual code/flow evidence when available>` | `<material premise, evidence and handling, or None>` | `<owned branch; PR or None; exact target>` |
 
-`Depends on` names actual producing tasks and consumed prerequisites, not an
-ordering inferred from task numbers. Use `None` for genuinely independent work.
+`Depends on` names producing task IDs and required inputs, not an ordering
+inferred from task numbers. Use `None` for genuinely independent work. Keep
+cells concise but specific enough for engineering review; link accepted
+contracts and detailed evidence instead of copying them. Error handling and
+assumptions must not introduce unapproved behavior or speculative cases.
 
 ## Task specifications and context receipts
 
-Repeat this compact section for each task when the ledger row alone is
-insufficient.
+Use this optional section only for engineering detail that does not fit clearly
+in the task row, current context evidence and actual results. Do not repeat the
+row or maintain another design mapping.
 
 ### `<task ID>` — `<task name>`
 
 | Concern | Value |
 | --- | --- |
-| Outcome / non-scope | `<observable result and exclusions>` |
-| Source boundary | `<owned paths, components, or systems>` |
-| Consumed dependencies | `<producing task IDs, required inputs, contracts and exact revisions>` |
-| Critical obligations | `<safety, compatibility, data, or policy boundaries>` |
-| Required evidence | `<acceptance condition plus tests, review, deployment or manual proof>` |
+| Additional engineering detail | `<necessary detail beyond the task row, or omit>` |
 | Context receipt | `<current sources read, conflicts or gaps, and disposition>` |
 | Actual result | `<summary when implemented>` |
 
@@ -256,7 +258,7 @@ owns the response and authorization requirements.
 | Attention | Summary | Handling |
 | --- | --- | --- |
 | Tasks and outcomes | `<short task list>` | `<class>` |
-| Design consistency | `<accepted design key points and design-to-task mapping, including relevant views and gaps>` | `<class>` |
+| Design consistency | `<accepted design key points beside the task table's design consumption, engineering work, error handling, validation and assumptions; any gaps>` | `<class>` |
 | Important changes | `<contracts, architecture, policies, compatibility, migrations, or operations>` | `<class>` |
 | Validation | `<passed, failed, and unrun>` | `<class>` |
 | Risks or open decisions | `<summary or None>` | `<class>` |

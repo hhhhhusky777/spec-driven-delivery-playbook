@@ -22,7 +22,7 @@ owns reviews, validation results, acceptance and merge evidence.
 | Primary issue / need | [#187](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/187) |
 | Concluded whiteboard | [Frozen file at d99a83e](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/blob/d99a83e17a29a60109ccd3bd276a739ec02c6bb2/.github/spec-driven-delivery/solution-whiteboard.md); accepted D01 amendment revision `c9855a403c4d04cc1acc08cdbf8953c9205f4395` |
 | Required reviewers | Same two retained independent feature reviewer sessions |
-| Last verified | 2026-10-25 Asia/Shanghai; T01 and T02 merged through PRs #189 and #190 into the feature branch; T03 templates, human-response contracts and README views implemented; focused model/lifecycle checks pass in its own CURRENT runtime; task merge and final implementation acceptance remain PR facts |
+| Last verified | 2026-10-26 Asia/Shanghai; T01 and T02 merged through PRs #189 and #190 into the feature branch; T03 includes the owner-requested engineering task table and aligned human-response/README contracts; focused model/lifecycle checks pass in its own CURRENT runtime; task review, merge and final implementation acceptance remain PR facts |
 
 ## Governing inputs and delivery boundaries
 
@@ -70,90 +70,32 @@ error-handling authority own environment readiness and recovery.
 
 ## Design-to-task mapping
 
-| Design point | Task and brief work | Validation | Consistency or gap |
-| --- | --- | --- | --- |
-| D01 | T01: brief dual-boundary requirements in each skill's existing global IMPORTANT; Solution Research returns to its own topic scope | All topic routes and version conditions retained; no cross-KB application section or extra policy document | Implemented |
-| D02 | T03: whiteboard owns solution architecture/behavior; plan consumes it | Before/after ownership review plus representative design/plan inspection | Implemented |
-| D03 | T03: precise architectural text with relevant matching diagrams, displayed in the whiteboard human-review response | Template prompts, response requirements and applicable diagram parsing/semantic review; genuine N/A remains possible | Implemented |
-| D04 | T03: plan owns engineering obligations and removes duplicate architecture authority | Necessary information is preserved or linked; plan cannot authorize new feature behavior | Implemented |
-| D05 | T02: task-planning KB, index and required author/reviewer routes | New topic content, route and complete-tree installation regression | Implemented |
-| D06 | T03: existing task fields express complete outcomes, actual dependencies and acceptance evidence | Representative decomposition and dependency/readiness regressions | Implemented |
-| D07 | T03: existing mapping and implementation brief compare code-grounded views to accepted design | All relevant text/diagram semantics trace through existing mapping and gate, without a new tracker | Implemented |
-| D08 | T03: remove generic duplicate plan workflow; retain required controls | Compare preserved controls with canonical owners and affected regressions | Implemented |
-| D09 | T01–T03: keep each changed consumer/index/test consistent; T03 reconciles final README/diagram model | Focused checks per task, existing distribution checks and final source gate | Implementation complete; final validation remains |
+The Tasks table is the single mapping from accepted D01–D09 to engineering
+work. All nine points are covered; no unmapped design obligation is known.
+Final audit, human acceptance and full validation remain in Plan validation
+and completion; task completion does not claim those gates passed.
 
 ## Tasks
 
-| ID | State | Depends on | Outcome | Boundaries | Validation | Branch / PR / required target |
-| --- | --- | --- | --- | --- | --- | --- |
-| T01 | `DONE` | `None` | Each independently loaded skill requires relevant KB application within approved project boundaries | Brief global IMPORTANT boundaries; Solution Research stays within research scope; no new policy document | Focused changed-content checks and affected application/routing regressions | `codex/design-planning-t01`; [PR #189](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/189); target `codex/design-planning` |
-| T02 | `DONE` | `T01` | One evidence-based planning KB and its consumers support coherent dependency-driven task decomposition in adopting projects | New `task-planning-and-decomposition.md`, index and planning/replanning/review routes; reuse existing installer | Focused topic/routing checks; meaningful complete-tree distribution coverage | `codex/design-planning-t02`; [PR #190](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/190); target `codex/design-planning` |
-| T03 | `DONE` | `T01, T02` | Whiteboard, plan and review consumers consistently separate architecture from engineering delivery and expose comparable design/code evidence | Existing templates, affected routes and README/diagrams; retain necessary fields, controls and coverage inventory without new process artifacts | Focused template/model/diagram checks and bounded representative semantic review | `codex/design-planning-t03`; [PR #191](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/191); target `codex/design-planning` |
+Design references below resolve to the [concluded design](solution-whiteboard.md#concluded-design).
+The shared preservation boundaries above apply to every row.
+
+| ID | State | Depends on | Consumed design | Implementation work | Outcome | Boundaries | Error handling | Validation | Assumptions | Branch / PR / required target |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| T01 | `DONE` | `None` | D01: joint KB/project boundary; D09: consistent consumers | Put the brief boundary in all three skills' existing IMPORTANT blocks; retain version-aware topic triggers; remove cross-KB ownership from Solution Research and its index description | Independently loaded skills require reading and applying relevant KB principles within approved project authority | Existing skills, research topic, index and model regression; no new policy document or template architecture change | Preserve canonical conflict/error authority; no new rejection or recovery behavior | All three global blocks and topic routes remain consistent; T01 coverage rows below | None | `codex/design-planning-t01`; [PR #189](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/189); target `codex/design-planning` |
+| T02 | `DONE` | `T01` | D05: coherent task method; D09: distribution and routes | Consume T01's global boundary; distill the recorded primary sources into the planning KB; add index and mandatory planning/replanning/review routes; reuse complete-tree installer and existing tests | Adopters receive one evidence-based method for complete outcomes, actual acyclic dependencies, readiness, useful parallelism and acceptance evidence | New topic and affected consumers/tests only; no new installer, worksheet, quota or imported vendor branch policy | Missing material design inputs use existing owner authority; task-produced outputs are not starting prerequisites | Topic/route checks and complete 15-document installed-tree agreement; T02 coverage rows below | None | `codex/design-planning-t02`; [PR #190](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/190); target `codex/design-planning` |
+| T03 | `DONE` | `T01, T02` | D02–D04: architecture/design ownership and text/views; D06: complete tasks; D07: semantic traceability; D08: canonical workflow; D09: aligned consumers | Consume T01's boundaries and T02's method; move architecture/contract fields to whiteboard; consolidate design consumption and engineering obligations in task rows; route generic execution prose to workflow; align human/reviewer briefs, README diagrams and regressions | Human review can trace accepted design through concrete task work and compare relevant design text/views with actual implementation evidence | Existing templates/consumers only; preserve necessary information, single coverage inventory, genuine diagram N/A and all mandatory controls; no frozen-whiteboard or historical-archive edits | Preserve accepted failure contracts and canonical error handling; rows reference their task-specific application without inventing fail-closed behavior | Preserved fields/controls, task-column and lifecycle checks, diagram parsing and representative semantic comparison; T03 coverage rows below | None | `codex/design-planning-t03`; [PR #191](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/191); target `codex/design-planning` |
 
 ## Task specifications and context receipts
 
-### T01 — Common KB application contract
+Task scope and obligations live in the rows above; this table records their
+execution context and results without repeating the design mapping.
 
-Put the brief KB application boundary in the workflow, review and triage
-skills' existing global IMPORTANT
-blocks. Retain topic triggers and version-aware reading; require solutions to
-satisfy both KB principles and approved project scope, requirements, contracts
-and policies. Remove the misplaced cross-KB application section and ownership
-claims from Solution Research and the KB index. Reuse canonical conflict
-authority; add no common document, detailed duplicate policy or new gate.
-Source ownership remains the same skills, research topic, index and directly
-affected model regression. No template architecture changes belong in T01.
-
-Actual result: the three skills state the joint KB/project boundary with
-mandatory version-aware reading. Solution Research has no cross-KB application
-section; the index links its research scope without claiming a common owner.
-The focused regression checks all three global blocks and retained topic routes.
-Review and merge remain PR facts; this completed task state lands with PR #189.
-
-### T02 — Task-planning method and distribution
-
-Consume T01's skill-wide application boundaries. Distill the whiteboard's already-read
-primary sources into the new KB: coherent complete outcomes, appropriate size,
-actual acyclic dependencies, readiness inputs, safe useful parallelism and
-acceptance evidence. Record applicability limits instead of copying vendor
-quotas or branching policies. Add mandatory direct-read/application routes for
-planning/replanning and plan assessment. Update the index and meaningful
-installation/route coverage; the existing installer distributes the complete
-tree. No new installer engine, mandatory worksheet or fixed task quota.
-
-Actual result: the new KB distills Google, DORA and Microsoft guidance with
-project-policy limits and concrete examples. Workflow planning/replanning and
-reviewer plan assessment require the shipped topic. Existing installer cases
-verify the complete 15-document KB tree and the new installed routes; a model
-case verifies the context-specific mandatory triggers. The worktree was
-provisioned with its own accepted-pin runtime and dependencies and exercised
-with those checks. Templates and final README/diagram reconciliation remain T03.
-
-### T03 — Design/plan ownership and traceability
-
-Consume T01 and T02. Rehome or link necessary architecture information in the
-whiteboard template; use precise text and appropriate matching views. Make the
-plan template consume accepted contracts rather than own a second proposed
-design. Refine existing task fields and mapping, remove duplicate generic
-execution prose and retain applicable detail and the single coverage inventory.
-The whiteboard human-review response MUST display the relevant design diagrams
-with concise, unambiguous explanatory text; file links alone are insufficient.
-Reuse the whiteboard's accurate views without adding a diagram-count quota.
-At the existing human implementation brief, compare actual code-level views
-with accepted design semantics. Reconcile affected README/diagram descriptions
-and regressions. Do not rewrite historical archives or this frozen design.
-
-Actual result: design responsibility, behavior/state, interface and quality
-fields now live in the whiteboard template with precise text and relevant
-diagram prompts. The plan consumes accepted sources through its existing
-inputs, task specifications and mapping; it no longer proposes architecture or
-permits new feature behavior. Generic execution prose routes to the workflow,
-while task-specific obligations, coverage and branch compliance remain. The
-workflow requires design views in the whiteboard response and semantic
-comparison with actual code views at the existing implementation gate. Reviewer
-guidance, README diagrams and focused regressions agree. This delivery's frozen
-whiteboard remains unchanged; final audit, human acceptance and full validation
-are not claimed by task completion.
+| Task | Context receipt | Actual result |
+| --- | --- | --- |
+| T01 | Accepted D01 amendment, manifest authorities and version-aware KB routes | Global boundaries and research-only ownership implemented; affected regression passes. Review and merge evidence: PR #189 |
+| T02 | Merged T01; recorded Google, DORA and Microsoft research; own accepted-pin runtime and dependencies | KB and required routes implemented with project-policy applicability limits and examples; existing installer cases verify the complete tree. Review and merge evidence: PR #190 |
+| T03 | Merged T01/T02; accepted D02–D09, existing templates/controls and owner-requested task-table presentation | Useful architecture, behavior/state, interface and quality fields retained in whiteboard; task table consumes the design without proposing new behavior. Workflow, reviewer, README and regressions aligned. Frozen design unchanged; final audit/acceptance/full validation remain pending |
 
 ## Test and acceptance contracts
 

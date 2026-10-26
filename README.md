@@ -388,14 +388,17 @@ The implementation plan turns accepted design points into coherent tasks. It
 is both the execution contract and the single state machine for the active
 delivery, so the agent does not maintain the same status in several files.
 It consumes the whiteboard's design rather than proposing another architecture.
+Its task table is also the design-to-task mapping: each row shows consumed
+design, engineering work, outcome, dependencies, boundaries, error handling,
+validation and assumptions. The planning brief presents this table alongside
+the accepted design key points.
 [Task Planning and Decomposition](knowledge-base/task-planning-and-decomposition.md)
 guides complete outcomes, actual prerequisites, readiness and acceptance
 evidence; the template records the resulting project-specific plan.
 
 ```mermaid
 flowchart TD
-    D["Accepted design text + diagrams"] --> M["Design-to-task mapping"]
-    M --> T["Complete task outcomes + actual dependencies"]
+    D["Accepted design text + diagrams"] --> T["Task table: design consumption + engineering work<br/>outcomes + actual dependencies + boundaries"]
     T --> V["Validation + Definition of Done"]
     V --> S["One live delivery state"]
     S --> R{"Next dependency-ready unit"}

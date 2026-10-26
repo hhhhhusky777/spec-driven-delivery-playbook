@@ -175,12 +175,17 @@ test("design owns architecture while the plan consumes it and preserves evidence
   assert.match(normalize(whiteboard), /precise text and corresponding diagrams/);
   assert.match(normalize(whiteboard), /no fixed diagram count/i);
   assert.doesNotMatch(plan, /## Proposed design|### Key decisions|add\s+feature-specific behavior here/);
-  assert.match(normalize(plan), /source links and revisions in Governing inputs.*Task specifications.*Design-to-task mapping/);
-  assert.match(plan, /Design point \/ view/);
-  assert.match(plan, /producing task IDs, required inputs/);
+  assert.match(normalize(plan), /source links and revisions in Governing inputs.*Tasks table.*maps accepted design to engineering work/);
+  assert.match(plan, /The Tasks table is the design-to-task mapping/);
+  assert.doesNotMatch(plan, /\| Design point \/ view \|/);
+  const taskHeader = plan.split("\n").find(line => line.startsWith("| ID | State | Depends on |"));
+  for (const column of ["Consumed design", "Implementation work", "Outcome", "Boundaries", "Error handling", "Validation", "Assumptions", "Branch / PR / required target"]) {
+    assert.ok(taskHeader?.includes(`| ${column} |`), `task table must expose ${column}`);
+  }
+  assert.match(plan, /producing task IDs and required inputs/);
   assert.match(plan, /Future implementation outputs are never prerequisites/);
   assert.match(normalize(workflow), /At whiteboard human review.*MUST render.*design diagrams in the response/);
-  assert.match(normalize(workflow), /At plan human review.*design key points beside the design-to-task mapping/);
+  assert.match(normalize(workflow), /At plan human review.*design key points beside the task table.*design-to-task mapping/);
   assert.match(normalize(workflow), /Connect code views.*design IDs.*behavior, ownership, data effects and failure meaning/);
   assert.match(normalize(reviewer), /accepted design text and diagrams.*behavior, ownership, data effects and failure meaning/);
   assert.match(plan, /\(\.\.\/\.\.\/skills\/sdd-project-workflow\/SKILL\.md#human-implementation-review\)/);
