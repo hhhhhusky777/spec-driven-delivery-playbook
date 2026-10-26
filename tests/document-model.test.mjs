@@ -179,7 +179,7 @@ test("design owns architecture while the plan consumes it and preserves evidence
   assert.match(plan, /The Tasks table is the design-to-task mapping/);
   assert.doesNotMatch(plan, /\| Design point \/ view \|/);
   const taskHeader = plan.split("\n").find(line => line.startsWith("| ID | State | Depends on |"));
-  for (const column of ["Consumed design", "Implementation work", "Outcome", "Boundaries", "Error handling", "Validation", "Assumptions", "Branch / PR / required target"]) {
+  for (const column of ["Consumed design", "Implementation work", "Outcome", "Boundaries", "Consumed error handling", "Consumed validations", "Acceptance evidence", "Consumed assumptions", "Branch / PR / required target"]) {
     assert.ok(taskHeader?.includes(`| ${column} |`), `task table must expose ${column}`);
   }
   assert.match(plan, /`Depends on` contains only producing task IDs/);

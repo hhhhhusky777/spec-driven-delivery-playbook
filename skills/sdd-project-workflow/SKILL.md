@@ -326,7 +326,8 @@ design IDs; file links alone are insufficient. Reuse accurate views and explain
 genuinely inapplicable views rather than impose a diagram count. At plan human
 review, show the accepted design key points beside the task table, which owns
 the design-to-task mapping. Include each task's consumed design, implementation
-work, outcome, boundaries, error handling, validation and material assumptions
+work, outcome, boundaries, consumed error handling, validations and assumptions,
+and separate acceptance evidence
 so the owner can judge how engineering work realizes the design.
 
 > [!IMPORTANT]

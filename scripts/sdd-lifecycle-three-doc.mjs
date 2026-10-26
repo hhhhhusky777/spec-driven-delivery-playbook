@@ -300,8 +300,9 @@ function deliveryArchiveErrors(text) {
   const archivedTasks = tables(plan).find(table =>
     table[0].includes("ID") && table[0].includes("State") && table[0].includes("Depends on")
   );
-  if (!archivedTasks?.[0].includes("Outcome") || !archivedTasks?.[0].includes("Validation")) {
-    errors.push("archived plan task summary requires Outcome and Validation columns");
+  if (!archivedTasks?.[0].includes("Outcome") ||
+      !archivedTasks?.[0].some(column => column === "Acceptance evidence" || column === "Validation")) {
+    errors.push("archived plan task summary requires Outcome and Acceptance evidence (legacy Validation) columns");
   }
   if ((fieldMap(whiteboard).get("State") || "") !== "CONCLUDED") {
     errors.push("archived whiteboard must be CONCLUDED");

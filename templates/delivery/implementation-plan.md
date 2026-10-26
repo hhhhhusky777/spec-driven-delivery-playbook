@@ -151,16 +151,20 @@ owner and evidence. Keep unresolved gaps in Clarifications and gaps.
 
 ## Tasks
 
-| ID | State | Depends on | Consumed design | Implementation work | Outcome | Boundaries | Error handling | Validation | Assumptions | Branch / PR / required target |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `T01` | `PLANNED` | `None` | `<design IDs and relevant text/diagram links>` | `<concrete engineering changes and existing mechanisms to reuse>` | `<one complete observable result>` | `<owned scope, exclusions and compatibility obligations>` | `<applicable accepted failure/recovery contract and how this task implements it, or None>` | `<acceptance condition; test/coverage links; actual code/flow evidence when available>` | `<material premise, evidence and handling, or None>` | `<owned branch; PR or None; exact target>` |
+| ID | State | Depends on | Consumed design | Implementation work | Outcome | Boundaries | Consumed error handling | Consumed validations | Acceptance evidence | Consumed assumptions | Branch / PR / required target |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `T01` | `PLANNED` | `None` | `<design IDs and relevant text/diagram links>` | `<concrete engineering changes and existing mechanisms to reuse>` | `<one complete observable result>` | `<owned scope, exclusions and compatibility obligations>` | <accepted failure/recovery IDs or contract links and task-specific implementation, or None> | <approved design validation IDs and task-specific implementation, or None> | `<acceptance condition; test/coverage links; actual code/flow evidence when available>` | <accepted assumption IDs or contract links, applicability/evidence and handling, or None> | `<owned branch; PR or None; exact target>` |
 
 `Depends on` contains only producing task IDs, or `None` for independent work.
 Describe required inputs in Implementation work or Consumed design; do not
 infer dependencies from task numbering. Keep cells concise but specific enough
 for engineering review; link accepted
-contracts and detailed evidence instead of copying them. Error handling and
-assumptions must not introduce unapproved behavior or speculative cases.
+contracts and detailed evidence instead of copying them. Consumed columns map
+approved design or its referenced contracts to this task; use `None` where
+inapplicable. Newly discovered assumptions or behavior changes require the
+existing gap/amendment process, not silent inclusion as accepted inputs.
+Acceptance evidence explains how to prove the task outcome and consumed
+obligations, including tests; it does not define new validation behavior.
 
 ## Task specifications and context receipts
 
@@ -259,7 +263,7 @@ owns the response and authorization requirements.
 | Attention | Summary | Handling |
 | --- | --- | --- |
 | Tasks and outcomes | `<short task list>` | `<class>` |
-| Design consistency | `<accepted design key points beside the task table's design consumption, engineering work, error handling, validation and assumptions; any gaps>` | `<class>` |
+| Design consistency | `<accepted design key points beside the task table's consumed design, error handling, validations and assumptions; engineering work, acceptance evidence and any gaps>` | `<class>` |
 | Important changes | `<contracts, architecture, policies, compatibility, migrations, or operations>` | `<class>` |
 | Validation | `<passed, failed, and unrun>` | `<class>` |
 | Risks or open decisions | `<summary or None>` | `<class>` |

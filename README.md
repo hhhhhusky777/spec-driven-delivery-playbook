@@ -389,8 +389,9 @@ is both the execution contract and the single state machine for the active
 delivery, so the agent does not maintain the same status in several files.
 It consumes the whiteboard's design rather than proposing another architecture.
 Its task table is also the design-to-task mapping: each row shows consumed
-design, engineering work, outcome, dependencies, boundaries, error handling,
-validation and assumptions. The planning brief presents this table alongside
+design, engineering work, outcome, dependencies, boundaries, consumed error
+handling, validations and assumptions, and separate acceptance evidence.
+The planning brief presents this table alongside
 the accepted design key points.
 [Task Planning and Decomposition](knowledge-base/task-planning-and-decomposition.md)
 guides complete outcomes, actual prerequisites, readiness and acceptance
