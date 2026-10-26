@@ -68,7 +68,6 @@ test("human-gate and Autopilot consumers route to portable workflow contracts", 
     ["README.md", ["autopilot-mode", "human-implementation-review"]],
     ["CONTRIBUTING.md", ["autopilot-mode", "human-implementation-review"]],
     ["docs/documentation-quality-policy.md", ["autopilot-mode", "human-implementation-review"]],
-    ["templates/delivery/implementation-plan.md", ["autopilot-mode"]],
   ]) {
     const text = await read(consumer);
     for (const anchor of anchors) {
@@ -149,8 +148,9 @@ test("the three templates preserve complete proportional delivery information", 
   const plan = await read("templates/delivery/implementation-plan.md");
   for (const heading of [
     "Governing inputs and delivery boundaries",
-    "System contracts",
-    "Proposed design",
+    "Consumed design and contracts",
+    "Test and acceptance contracts",
+    "Compatibility, migration, and rollout obligations",
     "Delivery strategy and readiness",
     "Design-to-task mapping",
     "Task specifications and context receipts",
@@ -158,6 +158,47 @@ test("the three templates preserve complete proportional delivery information", 
     "Plan validation and completion",
     "Human review brief",
   ]) assert.match(plan, new RegExp(heading));
+});
+
+test("design owns architecture while the plan consumes it and preserves evidence", async () => {
+  const whiteboard = await read("templates/discovery/solution-whiteboard.md");
+  const plan = await read("templates/delivery/implementation-plan.md");
+  const workflow = await read("skills/sdd-project-workflow/SKILL.md");
+  const reviewer = await read("skills/sdd-feature-review/SKILL.md");
+  const normalize = value => value.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
+  for (const field of ["Component | Owns | Must not own", "Trigger / precondition",
+    "Result / postcondition", "Atomic effects", "Duplicate behavior",
+    "Inputs and outputs", "Compatibility / invariants", "Evidence / threshold"]) {
+    assert.ok(whiteboard.includes(field), `whiteboard must retain design information: ${field}`);
+  }
+  assert.match(normalize(whiteboard), /precise text and corresponding diagrams/);
+  assert.match(normalize(whiteboard), /no fixed diagram count/i);
+  assert.doesNotMatch(plan, /## Proposed design|### Key decisions|add\s+feature-specific behavior here/);
+  assert.match(normalize(plan), /source links and revisions in Governing inputs.*Tasks table.*maps accepted design to engineering work/);
+  assert.match(plan, /The Tasks table is the design-to-task mapping/);
+  assert.doesNotMatch(plan, /\| Design point \/ view \|/);
+  const taskHeader = plan.split("\n").find(line => line.startsWith("| ID | State | Depends on |"));
+  for (const column of ["Consumed design", "Implementation work", "Outcome", "Boundaries", "Consumed error handling", "Consumed validations", "Acceptance evidence", "Consumed assumptions", "Branch / PR / required target"]) {
+    assert.ok(taskHeader?.includes(`| ${column} |`), `task table must expose ${column}`);
+  }
+  assert.match(plan, /`Depends on` contains only producing task IDs/);
+  assert.match(normalize(plan), /Describe required inputs in Implementation work or Consumed design/);
+  assert.match(plan, /Future implementation outputs are never prerequisites/);
+  assert.match(normalize(workflow), /At whiteboard human review, the author MUST copy the reviewed design diagrams.*from the whiteboard into the reply/);
+  assert.match(normalize(workflow), /At plan human review.*design key points beside the task table.*design-to-task mapping/);
+  assert.match(normalize(reviewer), /accepted design text and diagrams.*behavior, ownership, data effects and failure meaning/);
+  assert.doesNotMatch(plan, /human-implementation-review/);
+  assert.match(plan, /\(\.\.\/\.\.\/skills\/sdd-project-workflow\/SKILL\.md#completion\)/);
+  const implementationReview = plan.split("### Implementation review\n")[1]?.split("\n### ")[0];
+  assert.ok(implementationReview, "plan must hold the completed implementation review table");
+  for (const field of ["Implementation / design", "Code-level flows", "Review findings", "Risks / limits / unknowns", "Validation", "Recommendation / decision"]) {
+    assert.ok(implementationReview.includes(`| ${field} |`), `implementation review must expose ${field}`);
+  }
+  assert.match(normalize(workflow), /author MUST complete the plan's Implementation review table.*before any missing test/);
+  assert.match(normalize(workflow), /Issue-only Fast Fix.*same table and views in the PR.*do not create a plan/);
+  assert.match(normalize(workflow), /author MUST copy the reviewed Implementation review table from the plan.*actual code-level flow diagrams into the reply/);
+  assert.doesNotMatch(workflow, /\| Information \| Required content \|/);
+  assert.match(normalize(reviewer), /At this implementation audit.*table in the plan/);
 });
 
 test("workflow skills state six goals and reject duplicate delivery documents", async () => {
@@ -245,7 +286,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(normalizedPolicy, /STOP.*necessary or over-engineered.*simpler or deferrable alternative/);
   assert.match(normalizedPolicy, /Focused tests.*only the tests that cover the changed files and lines/);
   assert.match(normalizedPolicy, /final candidate that will merge back to the protected integration branch.*full applicable validation/);
-  for (const document of [policy, workflow, reviewer, plan, readme, contributing]) {
+  for (const document of [policy, workflow, reviewer, readme, contributing]) {
     const normalized = document.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
     assert.match(normalized, /author and both retained reviewers/i);
     assert.match(normalized, /before (?:adding )?(?:any )?missing test.*(?:final-gate|final gate) test/i);
@@ -255,7 +296,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
     assert.match(normalized, /implementation content.*invalidates approval|implementation-content change.*repeats (?:this|the) audit/i);
     assert.match(normalized, /test-only additions?.*do(?:es)? not/i);
   }
-  for (const document of [policy, workflow, plan, readme, contributing]) {
+  for (const document of [policy, workflow, readme, contributing]) {
     const normalized = document.replace(/^>\s?/gm, "").replace(/\s+/g, " ");
     assert.match(normalized, /(?:target synchronization|synchronization required|synchronize the completed candidate).*?(?:author and both retained reviewers|pre-final-test implementation audit)/i);
     assert.match(normalized, /required (?:later )?(?:target )?(?:synchronization|resynchronization).*?(?:invalidates|repeats).*?audit/i);
@@ -305,7 +346,7 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(workflow.replace(/\s+/g, " "), /Only after this audit passes, reconcile all accepted changed outcomes and material risks.*including unrecorded gaps.*Add required missing tests before final candidate review/i);
   assert.match(workflow.replace(/\s+/g, " "), /STOP.*necessary or over-engineered.*simpler or deferrable alternative/);
   assert.match(plan, /\| Owning task \| Contract, changed outcome, or risk \| Test or scenario \| Coverage \| Work boundary \|/);
-  assert.match(plan.replace(/\s+/g, " "), /recorded gaps do not block task `DONE`.*including unrecorded gaps.*add required missing tests before final candidate review/i);
+  assert.match(plan.replace(/\s+/g, " "), /recorded gaps do not block task `DONE`/i);
 });
 
 test("evidence-bounded scope uses one dangerous-assumption vocabulary", async () => {
@@ -440,7 +481,7 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(readme, /feature review skill/);
   assert.match(policy, /\| Design conclusion \| Key design points/);
   assert.match(readme, /R --> A\["Two-agent design review"\]/);
-  assert.match(readme, /A --> B\["Human brief: design \+ fail-close example \+ recovery"\]/);
+  assert.match(readme, /A --> B\["Human brief: design text \+ diagrams<br\/>fail-close example \+ recovery"\]/);
   assert.match(readme, /B --> H\["Human design acceptance"\]/);
   assert.match(readme, /H --> M\["Commit declared conclusion metadata"\]/);
   assert.match(readme, /M --> V\["Same reviewers verify no semantic change"\]/);
@@ -504,8 +545,8 @@ test("implementation tasks obey the canonical branch and PR target model", async
   assert.match(normalize(contributing), /MUST NOT invent an exception.*retarget a task PR to `main`.*merge a task directly to `main`/);
   assert.match(normalize(contributing), /mismatch MUST block task readiness, review, and merge/);
   assert.match(plan, /Branch \/ PR \/ required target/);
-  assert.match(normalize(plan), /record every task's exact branch and required PR target/);
-  assert.match(normalize(plan), /plan and its agents MUST NOT add an exception/);
+  assert.match(normalize(plan), /record every task's exact branch and required PR target/i);
+  assert.match(normalize(plan), /Every task MUST comply with that policy; this plan cannot grant exceptions/);
   assert.match(normalize(workflow), /record every task's exact branch and required pull-request target/);
   assert.match(normalize(workflow), /Any mismatch MUST block readiness, review, and merge/);
   assert.match(normalize(reviewer), /actual pull request/);

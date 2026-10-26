@@ -235,7 +235,7 @@ test-only addition does not by itself invalidate this audit.
 
 The workflow skill's
 [human implementation review](../skills/sdd-project-workflow/SKILL.md#human-implementation-review)
-owns the portable code-grounded brief and explicit human acceptance before
+owns presentation of implementation-review evidence and explicit human acceptance before
 final-test work, including Autopilot. This repository requires that acceptance
 after the audit and before the work below; task-focused checks are unchanged.
 

@@ -167,15 +167,15 @@ guides the agent but owns no feature state.
 
 Three documents is a delivery-state model, not a limit on reusable guidance or
 a reduced-information model. Each template provides a comprehensive menu for
-its responsibility: project authority in the manifest; discovery and design in
-the whiteboard; and
-contracts, architecture, tasks, validation, recovery, and completion in the
-plan. Agents keep the applicable information and omit irrelevant ceremony.
+its responsibility: project authority in the manifest; discovery, architecture,
+behavior and design contracts in the whiteboard; consumed design obligations,
+tasks, validation, recovery and completion in the plan. Agents keep the applicable
+information and omit irrelevant ceremony.
 
 ```mermaid
 flowchart LR
-    M["Manifest<br/>installation + authority"] --> W["Whiteboard<br/>design"]
-    W -->|"concluded"| P["Implementation plan<br/>tasks + live state"]
+    M["Manifest<br/>installation + authority"] --> W["Whiteboard<br/>architecture + behavior + contracts"]
+    W -->|"accepted design"| P["Implementation plan<br/>engineering tasks + live state"]
     P --> C["Closing candidate<br/>combined archive + reset"]
     C --> PR["Pull request<br/>review + evidence"]
     PR -->|"merged and verified"| W
@@ -350,7 +350,7 @@ flowchart LR
     Q -->|"no"| C["Conclusion candidate"]
     C --> R["Reconcile every material draft item"]
     R --> A["Two-agent design review"]
-    A --> B["Human brief: design + fail-close example + recovery"]
+    A --> B["Human brief: design text + diagrams<br/>fail-close example + recovery"]
     B --> H["Human design acceptance"]
     H --> M["Commit declared conclusion metadata"]
     M --> V["Same reviewers verify no semantic change"]
@@ -365,8 +365,13 @@ their sessions stay with the feature through merge. The installed
 independent review behavior, and findings; the project workflow only routes
 each exact candidate to those retained sessions.
 
-The concluded whiteboard states observable outcomes and important boundaries,
-not implementation trivia. The human brief gives each new fail-closed behavior
+The concluded whiteboard explains the chosen architecture, responsibilities,
+behavior, contracts and material tradeoffs through precise text and relevant
+diagrams. Conditions, effects, invariants and failure meaning must be clear;
+a diagram cannot resolve a missing decision. Existing canonical contracts can
+be linked instead of copied. The human response displays the design views with
+concise explanations, not links alone; no fixed diagram count is required.
+The human brief gives each new fail-closed behavior
 one concise concrete example plus the smallest safe recovery action, responsible
 actor, and retry/resume condition or required human decision. It also preserves
 both reviewers' dispositions. The example explains the boundary without
@@ -382,16 +387,27 @@ frozen design; useful but unauthorized scope remains out of scope.
 The implementation plan turns accepted design points into coherent tasks. It
 is both the execution contract and the single state machine for the active
 delivery, so the agent does not maintain the same status in several files.
+It consumes the whiteboard's design rather than proposing another architecture.
+Its task table is also the design-to-task mapping: each row shows consumed
+design, engineering work, outcome, dependencies, boundaries, consumed error
+handling, validations and assumptions, and separate acceptance evidence.
+The planning brief presents this table alongside
+the accepted design key points.
+[Task Planning and Decomposition](knowledge-base/task-planning-and-decomposition.md)
+guides complete outcomes, actual prerequisites, readiness and acceptance
+evidence; the template records the resulting project-specific plan.
 
 ```mermaid
 flowchart TD
-    D["Concluded design points"] --> M["Design-to-task mapping"]
-    M --> T["Tasks + dependencies + boundaries"]
+    D["Accepted design text + diagrams"] --> T["Task table: design consumption + engineering work<br/>outcomes + actual dependencies + boundaries"]
     T --> V["Validation + Definition of Done"]
     V --> S["One live delivery state"]
     S --> R{"Next dependency-ready unit"}
     R --> I["Implement"]
     I --> S
+    I --> E["Actual code-level flows + evidence"]
+    D --> C["Existing implementation review:<br/>compare behavior and boundaries"]
+    E --> C
 ```
 
 The planning human brief shows design points beside task outcomes and
@@ -706,10 +722,17 @@ Before final-test work, the human receives actual code-level business,
 error-handling and data-flow diagrams plus a concise decision table: design
 conformance, findings and dispositions, risks, validation status, and the author
 recommendation with both reviewer conclusions. This is a decision to change
-implementation or begin final tests—not acceptance of unrun tests or permission
+implementation after comparing the actual code views with the accepted design's
+text and diagrams, or to begin final tests. Compare semantics—behavior,
+ownership, data effects and failure meaning—not identical graph shapes.
+After development, the author fills the plan's Implementation review table and
+prepares its referenced actual flow diagrams for the implementation audit.
+The human reply reproduces that table and displays the diagrams. An Issue-only
+Fast Fix keeps the equivalent brief in its PR without creating a plan.
+This is not acceptance of unrun tests or permission
 to merge. The workflow skill's
 [human implementation review](skills/sdd-project-workflow/SKILL.md#human-implementation-review)
-owns the brief, proportional diagram scope and acceptance-invalidation rules.
+owns presentation, proportional diagram scope and acceptance-invalidation rules.
 
 Implementation should also remain inspectably proportional. If one task
 accumulates 90 minutes of active implementation before its planned review

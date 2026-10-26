@@ -218,6 +218,12 @@ ${whiteboard}
 
 ${plan}`;
   assert.deepEqual(checkDocument("delivery-archive.md", source), []);
+  assert.deepEqual(checkDocument("delivery-archive.md", source.replace(
+    "| Outcome | Validation |", "| Outcome | Acceptance evidence |"
+  )), []);
+  assert.ok(checkDocument("delivery-archive.md", source.replace(
+    "| Outcome | Validation |", "| Outcome | Consumed validations |"
+  )).some(error => error.includes("Acceptance evidence")));
   for (const missing of [
     "### Authority and context",
     "### Design-to-task mapping",
@@ -236,7 +242,7 @@ ${plan}`;
   assert.ok(checkDocument("delivery-archive.md", source.replace("State | COMPLETE", "State | IMPLEMENTING"))
     .some(error => error.includes("must be COMPLETE")));
   assert.ok(checkDocument("delivery-archive.md", source.replace(" | Outcome | Validation |", " | Result | Evidence |"))
-    .some(error => error.includes("Outcome and Validation")));
+    .some(error => error.includes("Outcome and Acceptance evidence")));
   assert.ok(checkDocument("delivery-archive.md", source.replace("### Discussion draft", "## Discussion draft"))
     .some(error => error.includes("nested sections")));
   const embeddedOnly = source.replace(

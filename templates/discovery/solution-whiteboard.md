@@ -126,11 +126,55 @@ design. Git and the pull request preserve detailed discussion history.
 ## Concluded design
 
 When the design is ready, retain the concise discussion draft and add the
-authoritative conclusion:
+authoritative conclusion. State the chosen approach, responsibilities and
+material tradeoffs, not only the desired result. Reference existing canonical
+contracts rather than redefine them. Task sequencing and delivery state belong
+in the implementation plan.
 
 | Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
 | `<ID>` | `<observable outcome>` | `<important constraint>` | `<how the outcome can be judged>` |
+
+### Architecture and responsibility boundaries
+
+Describe the selected structure and interactions with precise text and
+corresponding diagrams. Identify the design points each view explains. Use
+appropriate established notation, such as UML component/sequence/activity
+diagrams or data-flow diagrams. Show relevant business, data and failure
+behavior; combine views where clear and explain genuinely inapplicable views.
+There is no fixed diagram count. Diagrams must agree with the text; neither
+may fill a missing decision through inference.
+
+| Component | Owns | Must not own | Interfaces / dependencies |
+| --- | --- | --- | --- |
+| `<component>` | `<responsibility>` | `<boundary>` | `<contract references>` |
+
+### Behavior and state contracts
+
+| Design / contract ID | Trigger / precondition | Required behavior | Result / postcondition | Failure behavior |
+| --- | --- | --- | --- | --- |
+| `<ID>` | `<inputs and condition>` | `<observable behavior and responsible component>` | `<effects and invariants>` | `<failure meaning and recovery boundary>` |
+
+| Entity | From | Event / guard | To | Atomic effects | Duplicate behavior |
+| --- | --- | --- | --- | --- | --- |
+| `<entity>` | `<state>` | `<event>` | `<state>` | `<effects>` | `<idempotent result>` |
+
+### Interface, data and quality contracts
+
+| Design / contract ID | Inputs and outputs | Compatibility / invariants | Transaction, ordering or idempotency | Failure / recovery |
+| --- | --- | --- | --- | --- |
+| `<ID>` | `<API, event, schema, file or UI>` | `<supported contract>` | `<ownership and race boundary>` | `<response>` |
+
+| Concern | Required outcome | Evidence / threshold | Owner or canonical source |
+| --- | --- | --- | --- |
+| Security, privacy and abuse | `<invariants>` | `<acceptance signal>` | `<owner/link>` |
+| Performance and capacity | `<boundary>` | `<measurement>` | `<owner/link>` |
+| Observability and operations | `<signals, rollout and recovery boundaries>` | `<measurable feedback>` | `<owner/link>` |
+| Accessibility / usability | `<boundary>` | `<acceptance signal>` | `<owner/link>` |
+
+Use these fields only for applicable design decisions not already defined in
+linked contracts. Keep alternatives and rationale in the decision log above;
+the plan records how tasks deliver these accepted obligations.
 
 ## Draft-to-conclusion reconciliation
 
@@ -195,6 +239,7 @@ stay in the implementation plan.
 | Attention | Summary | Handling |
 | --- | --- | --- |
 | Decisions made | `<key decisions>` | `<class>` |
+| Design views | `<relevant architecture and behavior diagrams with precise explanatory text and design IDs>` | `<class>` |
 | Important boundaries | `<safety, compatibility, policy, or authority>` | `<class>` |
 | Alternatives rejected | `<only material alternatives>` | `<class>` |
 | Remaining gaps or risks | `<summary or None>` | `<class>` |

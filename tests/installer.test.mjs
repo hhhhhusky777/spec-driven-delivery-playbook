@@ -612,12 +612,6 @@ test("installed skill routing resolves same-revision KB topics across profiles a
         path.resolve(path.dirname(templatePath), target.split("#")[0]) === owner);
       assert.ok(skillLinks.length > 0, "plan must link its workflow contracts");
       const installedSkill = path.join(project, guideValue(resolved.guide, "Installed skill"));
-      const reviewPath = path.join(project, ".agents/skills/sdd-feature-review/SKILL.md");
-      const reviewerLinks = extractMarkdownLinks(await readFile(reviewPath, "utf8"));
-      assert.ok(reviewerLinks.some(({ target }) =>
-        target.endsWith("#human-implementation-review") &&
-        path.resolve(path.dirname(reviewPath), target.split("#")[0]) === installedSkill),
-      "reviewer must link directly to the installed human-review contract");
       for (const directory of [".github/spec-driven-delivery", "project-guidance/delivery/sdd"]) {
         const planPath = path.join(project, directory, "implementation-plan.md");
         await mkdir(path.dirname(planPath), { recursive: true });
