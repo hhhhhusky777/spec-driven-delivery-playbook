@@ -190,7 +190,8 @@ within project authority.
 >
 > Check the code-grounded decision table and flow views required by the workflow
 > skill's [human implementation review](../sdd-project-workflow/SKILL.md#human-implementation-review).
-> Read that contract if it is not already in context or has changed.
+> Read its decision-table and flow-view requirements if they are not already
+> in context or have changed.
 > Verify agreement with the exact implementation, applicable accepted design
 > text and diagrams, and any N/A explanation. Compare behavior, ownership, data
 > effects and failure meaning, not identical graph shapes.

@@ -75,13 +75,8 @@ maps accepted design to engineering work, boundaries and acceptance evidence.
 Keep this as the single coverage inventory, not a test-run log. After each
 task's focused tests, map changed outcomes and material risks to tests, naming
 the owning task and any missing non-focused tests to add at the final gate.
-Those recorded gaps do not block task `DONE`.
-
-The workflow skill owns synchronization, implementation audit, human
-acceptance, missing-test completion and final-validation timing; follow its
-[human implementation review](../../skills/sdd-project-workflow/SKILL.md#human-implementation-review)
-contract and surrounding validation rules. The PR owns approvals and run
-results. This inventory records task-specific coverage obligations only.
+Those recorded gaps do not block task `DONE`. The PR owns approvals and run
+results.
 
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |

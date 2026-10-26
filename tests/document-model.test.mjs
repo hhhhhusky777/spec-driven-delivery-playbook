@@ -189,7 +189,7 @@ test("design owns architecture while the plan consumes it and preserves evidence
   assert.match(normalize(workflow), /At plan human review.*design key points beside the task table.*design-to-task mapping/);
   assert.match(normalize(workflow), /Connect code views.*design IDs.*behavior, ownership, data effects and failure meaning/);
   assert.match(normalize(reviewer), /accepted design text and diagrams.*behavior, ownership, data effects and failure meaning/);
-  assert.match(plan, /\(\.\.\/\.\.\/skills\/sdd-project-workflow\/SKILL\.md#human-implementation-review\)/);
+  assert.doesNotMatch(plan, /human-implementation-review/);
   assert.match(plan, /\(\.\.\/\.\.\/skills\/sdd-project-workflow\/SKILL\.md#completion\)/);
 });
 
@@ -339,7 +339,6 @@ test("worktree readiness and focused-to-full validation are outcome based", asyn
   assert.match(workflow.replace(/\s+/g, " "), /STOP.*necessary or over-engineered.*simpler or deferrable alternative/);
   assert.match(plan, /\| Owning task \| Contract, changed outcome, or risk \| Test or scenario \| Coverage \| Work boundary \|/);
   assert.match(plan.replace(/\s+/g, " "), /recorded gaps do not block task `DONE`/i);
-  assert.match(plan, /\[human implementation review\]\(\.\.\/\.\.\/skills\/sdd-project-workflow\/SKILL\.md#human-implementation-review\)/);
 });
 
 test("evidence-bounded scope uses one dangerous-assumption vocabulary", async () => {

@@ -258,9 +258,8 @@ alternatives in the plan; do not guess answers or request blanket future authori
 > With opt-in, merge task PRs ONLY into that named feature branch after both
 > retained reviewers approve the exact head and focused/applicable required
 > checks pass, including any required external approvals. Then start the next
-> dependency-ready task. Pause at the
-> [human implementation review](#human-implementation-review) before final-test
-> work; Autopilot does not supply that acceptance. After acceptance, resume
+> dependency-ready task. Pause for explicit human implementation acceptance
+> before final-test work; Autopilot does not supply that acceptance. After acceptance, resume
 > authorized final-readiness work. Stop at final merge-back ready with the
 > normal human brief and wait for human
 > protected-target merge acceptance. A single-PR delivery has no intermediate
