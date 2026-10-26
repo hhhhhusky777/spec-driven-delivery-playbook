@@ -182,7 +182,8 @@ test("design owns architecture while the plan consumes it and preserves evidence
   for (const column of ["Consumed design", "Implementation work", "Outcome", "Boundaries", "Error handling", "Validation", "Assumptions", "Branch / PR / required target"]) {
     assert.ok(taskHeader?.includes(`| ${column} |`), `task table must expose ${column}`);
   }
-  assert.match(plan, /producing task IDs and required inputs/);
+  assert.match(plan, /`Depends on` contains only producing task IDs/);
+  assert.match(normalize(plan), /Describe required inputs in Implementation work or Consumed design/);
   assert.match(plan, /Future implementation outputs are never prerequisites/);
   assert.match(normalize(workflow), /At whiteboard human review.*MUST render.*design diagrams in the response/);
   assert.match(normalize(workflow), /At plan human review.*design key points beside the task table.*design-to-task mapping/);

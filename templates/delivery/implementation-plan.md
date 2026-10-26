@@ -155,9 +155,10 @@ owner and evidence. Keep unresolved gaps in Clarifications and gaps.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `T01` | `PLANNED` | `None` | `<design IDs and relevant text/diagram links>` | `<concrete engineering changes and existing mechanisms to reuse>` | `<one complete observable result>` | `<owned scope, exclusions and compatibility obligations>` | `<applicable accepted failure/recovery contract and how this task implements it, or None>` | `<acceptance condition; test/coverage links; actual code/flow evidence when available>` | `<material premise, evidence and handling, or None>` | `<owned branch; PR or None; exact target>` |
 
-`Depends on` names producing task IDs and required inputs, not an ordering
-inferred from task numbers. Use `None` for genuinely independent work. Keep
-cells concise but specific enough for engineering review; link accepted
+`Depends on` contains only producing task IDs, or `None` for independent work.
+Describe required inputs in Implementation work or Consumed design; do not
+infer dependencies from task numbering. Keep cells concise but specific enough
+for engineering review; link accepted
 contracts and detailed evidence instead of copying them. Error handling and
 assumptions must not introduce unapproved behavior or speculative cases.
 
