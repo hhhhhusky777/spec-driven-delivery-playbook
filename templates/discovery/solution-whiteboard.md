@@ -18,7 +18,8 @@ not retain a raw transcript.
 
 The sections below are a completeness menu, not mandatory ceremony. Use the
 smallest subset that makes the accepted design unambiguous and reviewable;
-required inventories, including KB coverage, remain required.
+required inventories, including KB coverage and canonical authority updates,
+remain required.
 
 ## Discussion draft
 
@@ -187,6 +188,19 @@ may fill a missing decision through inference.
 Use these fields only for applicable design decisions not already defined in
 linked contracts. Keep alternatives and rationale in the decision log above;
 the plan records how tasks deliver these accepted obligations.
+
+## Canonical authority updates
+
+Identify accepted decisions that future project work must follow and the live
+canonical policies, contracts or architecture documents that must carry them.
+Record the required change, or explain why an existing authority already covers
+it. Link the owner rather than copy policy text; unresolved ownership is a design
+gap. Exclude temporary implementation details. Use `None` when no durable update
+is needed. Task status and completion evidence belong in the implementation plan.
+
+| Design ID | Durable constraint or decision | Canonical source | Required update and rationale |
+| --- | --- | --- | --- |
+| `<ID>` | `<obligation for future work>` | `<owning document / section>` | `<change, or no change with reason>` |
 
 ## Draft-to-conclusion reconciliation
 

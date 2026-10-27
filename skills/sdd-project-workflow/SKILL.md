@@ -204,7 +204,10 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   authority.
 - Follow the project's canonical accepted-design authority. An authorized
   amendment changes only its named scope and repeats conclusion review and
-  human acceptance before dependent work resumes.
+  human acceptance before dependent work resumes. Whenever design content
+  changes, reassess the whiteboard's Canonical authority updates table and
+  update affected rows and plan mappings within the authorized scope. This
+  requirement grants no exception to the concluded-whiteboard freeze.
 - Keep material premises evidence-bounded. Check for unsupported,
   foreign-owned, incidental-state, single-case-generalization, hidden-dependency,
   and speculative assumptions. Verify the premise from authority, consume the
@@ -533,7 +536,12 @@ ordinary agent mistakes do not require a new issue.
 Before final human review, the candidate satisfies its implementation and task
 outcomes, has converged through required agent review and exact-head
 validation, and already contains its
-merge-resulting canonical state. After authorized merge, verify the complete
+merge-resulting canonical state. Before final review or archive/reset, incorporate
+accepted durable design obligations into their live canonical policy, contract
+or architecture owners and verify consistency with delivered behavior. For normal
+delivery, use the whiteboard's Canonical authority updates and plan completion
+evidence; an archive alone does not fulfill an authority update. After authorized
+merge, verify the complete
 delivery outcome on the exact target. The pull request records review, merge
 authority, merge, and target evidence. When the candidate closes a normal
 delivery, it creates one combined archive from the complete concluded
