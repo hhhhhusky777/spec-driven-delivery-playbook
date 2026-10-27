@@ -1,5 +1,10 @@
 # Efficiency and Concurrency
 
+Scope: Architecture, Engineering
+
+- Architecture: Organize design research and PoCs with useful independent work in parallel.
+- Engineering: Organize implementation, validation and recovery with useful independent work in parallel.
+
 Use this guidance when deciding whether and how to use concurrency throughout
 the delivery lifecycle, including but not limited to whiteboard research and
 PoCs.

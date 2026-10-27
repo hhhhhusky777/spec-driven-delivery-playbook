@@ -17,7 +17,8 @@ result. Keep this concise discussion record when the design is concluded; do
 not retain a raw transcript.
 
 The sections below are a completeness menu, not mandatory ceremony. Use the
-smallest subset that makes the accepted design unambiguous and reviewable.
+smallest subset that makes the accepted design unambiguous and reviewable;
+required inventories, including KB coverage, remain required.
 
 ## Discussion draft
 
@@ -30,6 +31,17 @@ conversation verbatim.
 | ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
 | `<DR01>` | `<material discussion point>` | `<open, accepted, changed, deferred, or rejected>` |
+
+## KB coverage
+
+One row per accepted KB topic whose Scope includes Architecture. Record concrete
+design decisions or work-method application with references, non-applicability
+reasons, and open gaps. A generic compliance claim is not coverage.
+The installed workflow skill owns reading, review and human-response requirements.
+
+| KB topic | Design decision or work-method application and reference / non-applicability reason | Coverage state / open gap |
+| --- | --- | --- |
+| `<topic>` | `<decision or work-method application and supporting reference, or specific non-applicability reason>` | `<Covered, Not applicable, or Open: gap>` |
 
 ## Current understanding
 

@@ -1,8 +1,12 @@
 # Testing and Reproduction
 
-Use this guidance when choosing test evidence, reviewing its value, or
-reproducing a failure. The project's testing and delivery authorities own
-required gates, execution timing and acceptance; this topic adds no suite or quota.
+Scope: Architecture, Engineering
+
+- Architecture: Identify observable acceptance outcomes and credible failure risks.
+- Engineering: Design grounded tests and faithful reproductions that establish those outcomes.
+
+The project's testing and delivery authorities own required gates, execution
+timing and acceptance; this topic adds no suite or quota.
 
 ## Core principles
 

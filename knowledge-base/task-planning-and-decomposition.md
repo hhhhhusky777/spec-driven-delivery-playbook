@@ -1,7 +1,10 @@
 # Task Planning and Decomposition
 
-Translate an accepted design into coherent, verifiable work with real
-dependencies. The whiteboard owns architecture and accepted behavior; the
+Scope: Engineering
+
+- Engineering: Translate accepted design into focused task outcomes, real dependencies and acceptance evidence.
+
+The whiteboard owns architecture and accepted behavior; the
 implementation plan owns delivery tasks and state. Decomposition does not
 authorize new design, scope or project policy.
 

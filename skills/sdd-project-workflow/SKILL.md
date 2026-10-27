@@ -31,6 +31,29 @@ Before designing a solution, read
 root when the accepted pin ships it. Apply its principles within project
 authority and approved scope; choose the simplest sufficient design.
 
+### KB coverage
+
+> [!IMPORTANT]
+> Check the Scope declared at the start of each topic in the manifest-linked,
+> accepted KB. Before solution discussion or whiteboard drafting, you MUST read
+> every topic whose Scope includes Architecture and apply its Architecture focus
+> as a design input. Before planning or implementation, you MUST read every topic
+> whose Scope includes Engineering and apply its Engineering focus to the work.
+> Unchanged topics already read in the current context need not be reread;
+> existing topic-specific read triggers still apply.
+> Maintain the whiteboard's KB coverage table throughout discussion for every
+> Architecture-scoped topic. Record its concrete design decision and reference,
+> a specific non-applicability reason, or an open gap. For work-method topics,
+> record how the method informed the design and its evidence, not invented
+> product behavior. Engineering-only topics belong to engineering work, not
+> whiteboard coverage; design review does not require implementation evidence.
+> Resolve design gaps in the solution before conclusion. Coverage MUST NOT
+> introduce unnecessary behavior or duplicate KB content.
+> Both retained reviewers MUST verify substantive coverage before the existing
+> design acceptance gate. After their approval, the human response MUST reproduce
+> the complete reviewed table, including decisions and non-applicability reasons;
+> links or design IDs alone are insufficient.
+
 ### Solution research
 
 > [!IMPORTANT]

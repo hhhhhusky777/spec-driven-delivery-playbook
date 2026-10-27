@@ -1,8 +1,12 @@
 # Solution Research
 
-Choose engineering solutions from relevant evidence and project constraints,
-not a familiar technique or unsupported guess. This guidance applies to design
-and implementation, including reviewer alternatives and triage methods/remedies.
+Scope: Architecture, Engineering
+
+- Architecture: Research and compare solutions against project requirements and boundaries.
+- Engineering: Research implementation choices and investigation methods against project evidence.
+
+Reviewer alternatives and triage methods/remedies follow the same research
+requirement.
 
 ## Research requirement
 

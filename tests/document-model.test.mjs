@@ -480,8 +480,8 @@ test("feature review cohorts retain context and produce useful change requests",
   assert.match(normalizedReviewer, /not the simplest clear-cut approach that protects the accepted outcome, or when it adds speculative complexity/);
   assert.match(readme, /feature review skill/);
   assert.match(policy, /\| Design conclusion \| Key design points/);
-  assert.match(readme, /R --> A\["Two-agent design review"\]/);
-  assert.match(readme, /A --> B\["Human brief: design text \+ diagrams<br\/>fail-close example \+ recovery"\]/);
+  assert.match(readme, /R --> A\["Two-agent design \+ KB coverage review"\]/);
+  assert.match(readme, /A --> B\["Human brief: design text \+ diagrams \+ KB coverage<br\/>fail-close example \+ recovery"\]/);
   assert.match(readme, /B --> H\["Human design acceptance"\]/);
   assert.match(readme, /H --> M\["Commit declared conclusion metadata"\]/);
   assert.match(readme, /M --> V\["Same reviewers verify no semantic change"\]/);

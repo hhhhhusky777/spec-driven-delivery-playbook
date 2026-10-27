@@ -258,7 +258,8 @@ than reconstructing practices from scattered references.
 
 Skills keep concise principles and mandatory topic-read triggers. When a
 trigger applies, the agent reads the topic directly from the manifest-linked
-KB; a summary or prior familiarity does not replace that reading. The KB README
+KB; design and engineering work use each topic's declared Scope as described below.
+A summary or prior familiarity does not replace that reading. The KB README
 is a human index, not a required intermediate hop.
 
 The agent finds a solution within both the project's accepted boundaries and
@@ -341,16 +342,30 @@ open decisions are settled, the same document retains a concise record of the
 material discussion, adds the authoritative concluded design, and reconciles
 every draft item so omissions or intentional changes are visible.
 
+Each KB topic declares Architecture, Engineering, or both names explicitly in
+its Scope, with the focus for each listed level. Before solution discussion,
+the author reads every topic whose Scope includes Architecture. The whiteboard's coverage
+table evolves with discussion: each of those topics maps to a concrete design
+decision and reference, a justified non-applicability conclusion, or an open gap.
+Work-method topics describe how they informed the design and its evidence.
+Before planning or implementation, the author reads every topic whose Scope
+includes Engineering.
+Reviewers use the same scope for the work under review; the human design reply
+includes the complete reviewed whiteboard table. At design review, Engineering-only topics require no whiteboard rows or
+implementation evidence; coverage must not invent product mechanisms.
+No additional review gate is introduced.
+
 ```mermaid
 flowchart LR
-    N["Need or problem"] --> D["Draft-first discussion"]
+    N["Need or problem"] --> K["Read Architecture-scoped KB topics"]
+    K --> D["Draft-first discussion + KB coverage"]
     D --> Q{"Owner decision needed?"}
     Q -->|"yes"| T["Concise decision table"]
     T --> D
     Q -->|"no"| C["Conclusion candidate"]
     C --> R["Reconcile every material draft item"]
-    R --> A["Two-agent design review"]
-    A --> B["Human brief: design text + diagrams<br/>fail-close example + recovery"]
+    R --> A["Two-agent design + KB coverage review"]
+    A --> B["Human brief: design text + diagrams + KB coverage<br/>fail-close example + recovery"]
     B --> H["Human design acceptance"]
     H --> M["Commit declared conclusion metadata"]
     M --> V["Same reviewers verify no semantic change"]

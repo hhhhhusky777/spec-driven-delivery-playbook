@@ -8,7 +8,7 @@ another framework, checklist, or source of project policy.
 
 The project manifest identifies canonical authorities and the installed KB
 root. Skills retain concise principles and tell agents which topic to read
-when relevant. Read that topic directly; this README is a human-facing index,
+when required. Read the topic directly; this README is a human-facing index,
 not a mandatory intermediate step.
 
 Apply the topic's core principles within the project's approved scope,
@@ -43,8 +43,14 @@ This is not another project gate or a mandatory technique checklist.
 
 ## Topic index
 
-All topics below are available. Read the topic relevant to the work; this index
-does not require reading the entire Knowledge Base.
+Each topic declares `Scope: Architecture`, `Scope: Engineering`, or
+`Scope: Architecture, Engineering` and explains its focus at each listed level.
+Architecture concerns solution responsibilities, behavior, contracts and
+trade-offs; Engineering concerns planning, implementation and verification.
+For work-method topics, these labels identify the work they support, not new
+product requirements. Skills own mandatory reading and coverage by scope;
+existing topic-specific triggers still apply. This index adds no separate
+reading requirement.
 
 | Topic | When it helps | Document |
 | --- | --- | --- |
