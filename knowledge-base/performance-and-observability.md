@@ -1,5 +1,10 @@
 # Performance and Observability
 
+Scope: Architecture, Engineering
+
+- Architecture: Define performance goals, measurable behavior and whole-system trade-offs.
+- Engineering: Collect representative measurements and interpret feedback against those goals.
+
 Use this guidance during solution and system design, when investigating
 bottlenecks, and when choosing feedback about runtime behavior or important
 design properties. Design observability so relevant behavior is measurable

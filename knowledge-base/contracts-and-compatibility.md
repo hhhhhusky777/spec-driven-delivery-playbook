@@ -1,7 +1,11 @@
 # Contracts and Compatibility
 
-Use this guidance when defining, consuming, or changing an interface. Preserve
-the behavior promised to supported consumers, not merely the shape of a message.
+Scope: Architecture, Engineering
+
+- Architecture: Define promised behavior, supported consumers and migration boundaries.
+- Engineering: Implement and test compatible behavior across affected interfaces and consumers.
+
+Preserve promised behavior, not merely the shape of a message.
 
 ## Core principles
 

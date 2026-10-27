@@ -1,8 +1,10 @@
 # Code Simplicity and Clarity
 
-Use this guidance when writing, refactoring or reviewing implementation code.
-Make intent and behavior easy to understand and change safely. This topic covers
-code-level simplicity and clarity; design-level decisions belong to
+Scope: Engineering
+
+- Engineering: Keep implementation intent and control/data flow understandable while preserving required behavior.
+
+Design-level decisions belong to
 [Simple Design and Reuse](simple-design-and-reuse.md).
 
 ## Core principles

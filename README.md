@@ -258,7 +258,7 @@ than reconstructing practices from scattered references.
 
 Skills keep concise principles and mandatory topic-read triggers. When a
 trigger applies, the agent reads the topic directly from the manifest-linked
-KB; whiteboard design and review require all topics as described below.
+KB; design and engineering work use each topic's declared Scope as described below.
 A summary or prior familiarity does not replace that reading. The KB README
 is a human index, not a required intermediate hop.
 
@@ -342,17 +342,21 @@ open decisions are settled, the same document retains a concise record of the
 material discussion, adds the authoritative concluded design, and reconciles
 every draft item so omissions or intentional changes are visible.
 
-Before solution discussion, the author reads every installed KB topic and uses
-it as a design input. The whiteboard's coverage table evolves with discussion:
-each topic maps to a concrete design decision and reference, a justified
-non-applicability conclusion, or an open gap. Reviewers check that coverage is
-substantive and design gaps are resolved; the human reply includes the same
-reviewed table. This does not require implementation details or new mechanisms
-for every topic, and adds no review gate.
+Each KB topic declares Architecture, Engineering, or both names explicitly in
+its Scope, with the focus for each listed level. Before solution discussion,
+the author reads every topic including Architecture. The whiteboard's coverage
+table evolves with discussion: each of those topics maps to a concrete design
+decision and reference, a justified non-applicability conclusion, or an open gap.
+Work-method topics describe how they informed the design and its evidence.
+Before planning or implementation, the author reads topics including Engineering.
+Reviewers use the same scope for the work under review; the human design reply
+includes the complete reviewed whiteboard table. Engineering-only topics do not
+require whiteboard rows, implementation evidence or new product mechanisms.
+No additional review gate is introduced.
 
 ```mermaid
 flowchart LR
-    N["Need or problem"] --> K["Read all installed KB topics"]
+    N["Need or problem"] --> K["Read Architecture-scoped KB topics"]
     K --> D["Draft-first discussion + KB coverage"]
     D --> Q{"Owner decision needed?"}
     Q -->|"yes"| T["Concise decision table"]

@@ -1,8 +1,12 @@
 # Error Handling and Diagnosability
 
-Use this guidance when designing failure behavior, deciding whether an operation
-can be retried, or making a failure diagnosable. The project's error-handling
-authority owns classification, recovery permission, issue tracking and escalation.
+Scope: Architecture, Engineering
+
+- Architecture: Define failure semantics, consistency guarantees and recovery boundaries.
+- Engineering: Implement failure handling, actionable diagnostics and tests of those guarantees.
+
+The project's error-handling authority owns classification, recovery permission,
+issue tracking and escalation.
 
 ## Core principles
 

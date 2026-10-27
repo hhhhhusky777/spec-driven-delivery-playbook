@@ -34,12 +34,13 @@ conversation verbatim.
 
 ## KB coverage
 
-One row per topic shipped by the accepted KB, maintained from discussion through
-conclusion. Reference the design rather than copy KB guidance. Record concrete
-decisions, not just “complies with KB”; explain non-applicability and expose open
-gaps. Implementation-oriented topics record design constraints, not future
-implementation evidence. Reading, review and human-response requirements belong
-to the installed workflow skill.
+One row per accepted KB topic whose Scope includes Architecture, maintained
+from discussion through conclusion. Reference concrete design decisions rather
+than copy KB guidance or claim “complies with KB”; explain non-applicability and
+expose open gaps. For work-method topics, identify their application and design
+evidence. Engineering-only topics and implementation evidence belong to later
+work. Reading, review and human-response requirements belong to the installed
+workflow skill.
 
 | KB topic | Concrete design decision and design reference / non-applicability reason | Coverage state / open gap |
 | --- | --- | --- |

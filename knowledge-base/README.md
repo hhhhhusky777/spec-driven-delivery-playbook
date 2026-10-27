@@ -43,9 +43,14 @@ This is not another project gate or a mandatory technique checklist.
 
 ## Topic index
 
-All topics below are available. Skills own reading triggers, including the
-workflow's all-topic read before whiteboard discussion and the reviewer's
-whiteboard coverage check. This index adds no separate reading requirement.
+Each topic declares `Scope: Architecture`, `Scope: Engineering`, or
+`Scope: Architecture, Engineering` and explains its focus at each listed level.
+Architecture concerns solution responsibilities, behavior, contracts and
+trade-offs; Engineering concerns planning, implementation and verification.
+For work-method topics, these labels identify the work they support, not new
+product requirements. Skills own mandatory reading and coverage by scope;
+existing topic-specific triggers still apply. This index adds no separate
+reading requirement.
 
 | Topic | When it helps | Document |
 | --- | --- | --- |

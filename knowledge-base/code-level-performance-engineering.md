@@ -1,5 +1,9 @@
 # Code-Level Performance Engineering
 
+Scope: Engineering
+
+- Engineering: Reduce demonstrated code-level overhead while preserving ownership, correctness and accepted behavior.
+
 Use this guidance when writing or reviewing performance-sensitive code, or
 choosing an implementation improvement for a demonstrated cost. Design-level
 goals, measurement and whole-system trade-offs belong to

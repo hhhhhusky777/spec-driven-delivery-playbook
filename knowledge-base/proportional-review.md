@@ -1,8 +1,12 @@
 # Proportional Review
 
-Use this guidance when evaluating findings, proposing corrections, or deciding
-an author's disposition. Project authorities own scope, acceptance, review
-gates and escalation; this topic does not change them.
+Scope: Architecture, Engineering
+
+- Architecture: Assess design findings by material impact, scope and correction value.
+- Engineering: Assess planning and implementation findings without pursuing perfection.
+
+Project authorities own scope, acceptance, review gates and escalation;
+this topic does not change them.
 
 ## Core principles
 
