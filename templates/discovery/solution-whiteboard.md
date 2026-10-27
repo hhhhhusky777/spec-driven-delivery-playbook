@@ -34,17 +34,14 @@ conversation verbatim.
 
 ## KB coverage
 
-One row per accepted KB topic whose Scope includes Architecture, maintained
-from discussion through conclusion. Reference concrete design decisions rather
-than copy KB guidance or claim “complies with KB”; explain non-applicability and
-expose open gaps. For work-method topics, identify their application and design
-evidence. Engineering-only topics and implementation evidence belong to later
-work. Reading, review and human-response requirements belong to the installed
-workflow skill.
+One row per accepted KB topic whose Scope includes Architecture. Record concrete
+design decisions or work-method application with references, non-applicability
+reasons, and open gaps. A generic compliance claim is not coverage.
+The installed workflow skill owns reading, review and human-response requirements.
 
-| KB topic | Concrete design decision and design reference / non-applicability reason | Coverage state / open gap |
+| KB topic | Design decision or work-method application and reference / non-applicability reason | Coverage state / open gap |
 | --- | --- | --- |
-| `<topic>` | `<decision and design ID/link, or specific reason it does not apply>` | `<Covered, Not applicable, or Open: gap>` |
+| `<topic>` | `<decision or work-method application and supporting reference, or specific non-applicability reason>` | `<Covered, Not applicable, or Open: gap>` |
 
 ## Current understanding
 

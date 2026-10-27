@@ -5,8 +5,7 @@ Scope: Architecture, Engineering
 - Architecture: Use verified lessons to inform design decisions and resolve unexpected situations.
 - Engineering: Reuse and refine actionable lessons during implementation, validation and recovery.
 
-Use this guidance when reusing or maintaining project lessons. Experience lets
-the next agent recognize a known situation and choose a verified response with
+Experience lets the next agent recognize a known situation and choose a verified response with
 less trial and error. Project authority owns permissions, recovery and changes;
 a past success does not establish the cause of a new failure.
 

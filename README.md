@@ -344,14 +344,15 @@ every draft item so omissions or intentional changes are visible.
 
 Each KB topic declares Architecture, Engineering, or both names explicitly in
 its Scope, with the focus for each listed level. Before solution discussion,
-the author reads every topic including Architecture. The whiteboard's coverage
+the author reads every topic whose Scope includes Architecture. The whiteboard's coverage
 table evolves with discussion: each of those topics maps to a concrete design
 decision and reference, a justified non-applicability conclusion, or an open gap.
 Work-method topics describe how they informed the design and its evidence.
-Before planning or implementation, the author reads topics including Engineering.
+Before planning or implementation, the author reads every topic whose Scope
+includes Engineering.
 Reviewers use the same scope for the work under review; the human design reply
-includes the complete reviewed whiteboard table. Engineering-only topics do not
-require whiteboard rows, implementation evidence or new product mechanisms.
+includes the complete reviewed whiteboard table. At design review, Engineering-only topics require no whiteboard rows or
+implementation evidence; coverage must not invent product mechanisms.
 No additional review gate is introduced.
 
 ```mermaid

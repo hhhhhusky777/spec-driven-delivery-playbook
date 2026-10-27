@@ -4,9 +4,7 @@ Scope: Engineering
 
 - Engineering: Reduce demonstrated code-level overhead while preserving ownership, correctness and accepted behavior.
 
-Use this guidance when writing or reviewing performance-sensitive code, or
-choosing an implementation improvement for a demonstrated cost. Design-level
-goals, measurement and whole-system trade-offs belong to
+Design-level goals, measurement and whole-system trade-offs belong to
 [Performance and Observability](performance-and-observability.md);
 implementation readability belongs to
 [Code Simplicity and Clarity](code-simplicity-and-clarity.md).

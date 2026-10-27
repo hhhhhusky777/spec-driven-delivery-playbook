@@ -82,15 +82,15 @@ are explicit in precise text and relevant diagrams, with consistent contracts
 and responsibilities. Diagrams do not substitute for missing decisions.
 
 > [!IMPORTANT]
-> Use each accepted KB topic's declared Scope: before whiteboard review, you
-> MUST read topics including Architecture; before plan or implementation review,
-> you MUST read topics including Engineering. Apply the corresponding focus;
+> Before whiteboard review, you MUST read every accepted KB topic whose Scope
+> includes Architecture; before plan or implementation review, you MUST read
+> every topic whose Scope includes Engineering. Apply the corresponding focus;
 > unchanged topics already read in context need not be reread. Existing
 > topic-specific read triggers still apply.
 > Check that whiteboard KB coverage accounts for every Architecture-scoped topic,
 > including work-method application where relevant, and that each decision,
-> design reference or non-applicability reason agrees with
-> the actual design and project boundaries. A generic compliance claim is not
+> design reference or non-applicability reason agrees with the actual design
+> and project boundaries. A generic compliance claim is not
 > coverage. Missing topics, unsupported coverage or unresolved design gaps MUST
 > block design approval. Do not require implementation evidence or invent new
 > mechanisms merely to populate a topic's row.
