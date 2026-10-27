@@ -17,7 +17,8 @@ result. Keep this concise discussion record when the design is concluded; do
 not retain a raw transcript.
 
 The sections below are a completeness menu, not mandatory ceremony. Use the
-smallest subset that makes the accepted design unambiguous and reviewable.
+smallest subset that makes the accepted design unambiguous and reviewable;
+required inventories, including KB coverage, remain required.
 
 ## Discussion draft
 
@@ -30,6 +31,19 @@ conversation verbatim.
 | ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
 | `<DR01>` | `<material discussion point>` | `<open, accepted, changed, deferred, or rejected>` |
+
+## KB coverage
+
+One row per topic shipped by the accepted KB, maintained from discussion through
+conclusion. Reference the design rather than copy KB guidance. Record concrete
+decisions, not just “complies with KB”; explain non-applicability and expose open
+gaps. Implementation-oriented topics record design constraints, not future
+implementation evidence. Reading, review and human-response requirements belong
+to the installed workflow skill.
+
+| KB topic | Concrete design decision and design reference / non-applicability reason | Coverage state / open gap |
+| --- | --- | --- |
+| `<topic>` | `<decision and design ID/link, or specific reason it does not apply>` | `<Covered, Not applicable, or Open: gap>` |
 
 ## Current understanding
 

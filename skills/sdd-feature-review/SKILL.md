@@ -81,6 +81,16 @@ When reviewing a whiteboard, check that the selected architecture and behavior
 are explicit in precise text and relevant diagrams, with consistent contracts
 and responsibilities. Diagrams do not substitute for missing decisions.
 
+> [!IMPORTANT]
+> For whiteboard review, you MUST read every topic shipped in the manifest-linked,
+> accepted KB; unchanged topics already read in context need not be reread.
+> Check that the whiteboard's KB coverage table accounts for every topic and
+> that each decision, design reference or non-applicability reason agrees with
+> the actual design and project boundaries. A generic compliance claim is not
+> coverage. Missing topics, unsupported coverage or unresolved design gaps MUST
+> block design approval. Do not require implementation evidence or invent new
+> mechanisms merely to populate a topic's row.
+
 Before assessing an implementation plan or task decomposition, you MUST read
 and apply `task-planning-and-decomposition.md` directly from the manifest-linked
 KB root when the accepted pin ships it. Judge outcome completeness, actual

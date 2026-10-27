@@ -258,7 +258,8 @@ than reconstructing practices from scattered references.
 
 Skills keep concise principles and mandatory topic-read triggers. When a
 trigger applies, the agent reads the topic directly from the manifest-linked
-KB; a summary or prior familiarity does not replace that reading. The KB README
+KB; whiteboard design and review require all topics as described below.
+A summary or prior familiarity does not replace that reading. The KB README
 is a human index, not a required intermediate hop.
 
 The agent finds a solution within both the project's accepted boundaries and
@@ -341,16 +342,25 @@ open decisions are settled, the same document retains a concise record of the
 material discussion, adds the authoritative concluded design, and reconciles
 every draft item so omissions or intentional changes are visible.
 
+Before solution discussion, the author reads every installed KB topic and uses
+it as a design input. The whiteboard's coverage table evolves with discussion:
+each topic maps to a concrete design decision and reference, a justified
+non-applicability conclusion, or an open gap. Reviewers check that coverage is
+substantive and design gaps are resolved; the human reply includes the same
+reviewed table. This does not require implementation details or new mechanisms
+for every topic, and adds no review gate.
+
 ```mermaid
 flowchart LR
-    N["Need or problem"] --> D["Draft-first discussion"]
+    N["Need or problem"] --> K["Read all installed KB topics"]
+    K --> D["Draft-first discussion + KB coverage"]
     D --> Q{"Owner decision needed?"}
     Q -->|"yes"| T["Concise decision table"]
     T --> D
     Q -->|"no"| C["Conclusion candidate"]
     C --> R["Reconcile every material draft item"]
-    R --> A["Two-agent design review"]
-    A --> B["Human brief: design text + diagrams<br/>fail-close example + recovery"]
+    R --> A["Two-agent design + KB coverage review"]
+    A --> B["Human brief: design text + diagrams + KB coverage<br/>fail-close example + recovery"]
     B --> H["Human design acceptance"]
     H --> M["Commit declared conclusion metadata"]
     M --> V["Same reviewers verify no semantic change"]

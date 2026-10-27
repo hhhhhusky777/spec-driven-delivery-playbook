@@ -31,6 +31,24 @@ Before designing a solution, read
 root when the accepted pin ships it. Apply its principles within project
 authority and approved scope; choose the simplest sufficient design.
 
+### Whiteboard KB coverage
+
+> [!IMPORTANT]
+> Before discussing a solution or drafting its whiteboard, you MUST read every
+> topic shipped in the manifest-linked, accepted KB. Use these topics as design
+> inputs; do not postpone reading until the design is complete. Unchanged topics
+> already read in the current context need not be reread.
+> Maintain the whiteboard's KB coverage table throughout discussion. For every
+> topic, record the concrete design decision and design reference, a specific
+> reason it does not apply, or an open gap. Implementation-oriented topics inform
+> design constraints; they do not require implementation or a completed plan.
+> Resolve design gaps in the solution before conclusion. Coverage MUST NOT
+> introduce unnecessary behavior or duplicate KB content.
+> Both retained reviewers MUST verify substantive coverage before the existing
+> design acceptance gate. After their approval, the human response MUST reproduce
+> the complete reviewed table, including decisions and non-applicability reasons;
+> links or design IDs alone are insufficient.
+
 ### Solution research
 
 > [!IMPORTANT]

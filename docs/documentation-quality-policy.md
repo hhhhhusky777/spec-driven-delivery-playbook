@@ -307,7 +307,7 @@ Phase-specific additions:
 | Gate | Additional summary |
 | --- | --- |
 | Adoption | Discovered authorities and contracts, reused or changed policies, gaps, pin/runtime state, and activation boundary |
-| Design conclusion | Key design points, rationale, boundaries, risks, rejected alternatives, unresolved gaps, and the exact owner decision |
+| Design conclusion | Key design points, rationale, boundaries, risks, rejected alternatives, unresolved gaps, the reviewed whiteboard KB coverage table, and the exact owner decision |
 | Planning | Whiteboard design points mapped to task outcomes, dependencies, validation, PR boundaries, gaps, and the [Autopilot choice and foreseeable decisions](../skills/sdd-project-workflow/SKILL.md#autopilot-mode) |
 | Implementation PR | Delivered behavior, deviations, compatibility/operational effects, validation, and merge target |
 | Pre-final-test implementation | Code-grounded decision table and flows under the [human implementation review contract](../skills/sdd-project-workflow/SKILL.md#human-implementation-review); decide changes versus starting final tests, not merge |
