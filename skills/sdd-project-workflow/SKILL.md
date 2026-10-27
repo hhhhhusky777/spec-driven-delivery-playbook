@@ -31,7 +31,7 @@ Before designing a solution, read
 root when the accepted pin ships it. Apply its principles within project
 authority and approved scope; choose the simplest sufficient design.
 
-### Whiteboard KB coverage
+### KB coverage
 
 > [!IMPORTANT]
 > Before discussing a solution or drafting its whiteboard, you MUST read every
