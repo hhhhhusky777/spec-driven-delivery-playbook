@@ -9,7 +9,7 @@
 | State | `VALIDATING` |
 | Active tasks | `None` |
 | Next ready task | `None` |
-| Active blocker | Final candidate review and source validation; final main merge and archive/reset require owner authority |
+| Active blocker | Owner authority for final main merge and archive/reset; PR #201 owns exact-candidate review and check evidence |
 | Implementation mode | Autopilot enabled by owner on 2026-10-28 |
 | Authorized scope / feature branch / protected target | Task PR authority completed for T03–T13 into `codex/playbook-eval-coverage`; owner accepted implementation and final-test work on 2026-10-28; protected target `main` remains unapproved |
 | Delivery branch / target | `codex/playbook-eval-coverage` / `main`; final PR #201 |
