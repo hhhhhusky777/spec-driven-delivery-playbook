@@ -1,0 +1,3 @@
+# Local artifact store
+
+Node.js 24, built-in fs/promises, local filesystem with same-volume hard-link support. publish(stagedPath, targetPath) accepts a complete regular staged file and a target in the same owned directory. Publication must never replace an existing target, including competing publishers. After success the target contains the staged bytes and the staged name is removed. For an existing target reject with code EEXIST, preserving both existing target and staged file. Other filesystem failures propagate; do not introduce recovery orchestration. Directories, remote filesystems and cross-volume publication are unsupported.

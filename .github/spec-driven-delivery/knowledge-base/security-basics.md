@@ -1,8 +1,12 @@
 # Security Basics
 
-Use this guidance when designing or reviewing a change that affects trust,
-access, sensitive data, or exposure. Project security and ownership authorities
-define the applicable requirements; this topic adds no policy suite or approval gate.
+Scope: Architecture, Engineering
+
+- Architecture: Identify assets, trust boundaries and required protections.
+- Engineering: Enforce and verify those protections using suitable existing mechanisms.
+
+Project security and ownership authorities define applicable requirements;
+this topic adds no policy suite or approval gate.
 
 ## Core principles
 

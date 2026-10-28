@@ -172,3 +172,8 @@ npm run docs:all
 
 External-link checks are advisory. Automated checks do not replace semantic
 review or the concise human brief required by the quality policy.
+
+Optional [agent behavior evaluations](evals/README.md) assess actual decisions
+and efficiency using versioned cases and independent evidence. Their guide owns
+case preparation, grading and result formats; they do not replace the required
+source checks or add a per-PR gate.
