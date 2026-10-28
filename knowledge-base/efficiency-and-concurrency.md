@@ -42,10 +42,19 @@ manufacture busywork merely to avoid waiting.
 ## Delegation and integration
 
 Delegate a bounded outcome that can be completed independently and verified
-on return. Supply canonical source entry points, relevant design or task
-outcomes, exact inputs or candidate, ownership and authority boundaries, and
-the expected result and evidence. Return useful conclusions and references
+on return. Supply exact inputs or candidate, ownership and authority boundaries,
+and the expected result and evidence. Return useful conclusions and references
 rather than a raw stream of intermediate output.
+
+> [!IMPORTANT]
+> Implementation workers MUST inherit the author's relevant working context:
+> the same accepted playbook revision, applicable skills including workflow,
+> project authorities, accepted decisions, and governing design/task inputs
+> (whiteboard and plan, or the Fast Fix issue). Use runtime context inheritance
+> when available; otherwise provide an equivalent handoff and require workers
+> to read the applicable skills and canonical sources before editing. The parent
+> MUST communicate subsequent changes affecting their work. This applies to
+> implementation workers, not independent reviewers.
 
 Keep global requirements, cross-task tradeoffs, coordination, integration and
 final verification with the parent. Continue the independent mainline while
@@ -57,7 +66,9 @@ reviewer creation requirements.
 Reassess the benefit when briefing becomes substantial, shared context changes
 rapidly, or worker outputs require expensive reconciliation. Prefer less
 coordination when it achieves the same accepted result. Judge efficiency by
-useful verified delivery, not agent count or activity alone.
+useful verified delivery, not agent count or activity alone. Rereading needed to
+recover context or verify constraints is useful work; repeated reads alone do
+not establish waste.
 
 ## Reference-backed examples
 

@@ -329,6 +329,15 @@ the accepted pin ships it. Make intent and control/data flow clear within
 project conventions and scope; simplification must preserve required behavior,
 not optimize line count.
 
+> [!IMPORTANT]
+> During implementation, after each meaningful editing unit, the author and
+> implementation workers MUST recheck their changes against relevant KB guidance
+> and accepted design/task inputs: the whiteboard and plan, or the Fast Fix issue.
+> Revisit the source passages needed to verify scope, behavior and boundaries;
+> correct deviations before continuing dependent work. This is continuous
+> author self-checking, not an additional review gate or a requirement to reread
+> the entire KB after every file edit.
+
 Reuse verified project experience rather than repeat avoidable trial and error.
 When an unexpected situation or failure arises, or before maintaining project
 lessons, read `experience-and-learning.md` directly from the manifest-linked KB
