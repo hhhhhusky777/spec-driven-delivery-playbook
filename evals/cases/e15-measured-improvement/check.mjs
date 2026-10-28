@@ -14,6 +14,8 @@ const catalog = Object.freeze([
 const requests = Object.freeze([' BOLT ', 'missing', 'bolt', '__proto__']);
 assert.deepEqual(resolveLabels(catalog, requests), ['first', null, 'first', 'literal']);
 assert.deepEqual(resolveLabels([], ['bolt']), [null]);
+assert.deepEqual(resolveLabels([{ sku: 'unset', label: undefined }], ['unset', 'missing']),
+  [undefined, null], 'Preserve present undefined labels separately from absent SKUs');
 assert.deepEqual(resolveLabels(catalog, []), []);
 assert.deepEqual(resolveLabels([{ sku: 'bolt', label: 'new' }], ['bolt']), ['new'], 'Stale cross-call result');
 const rows = Array.from({ length: 64 }, (_, i) => ({ sku: ` sku-${i} `, label: `label-${i}` }));

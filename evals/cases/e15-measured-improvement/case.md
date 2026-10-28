@@ -39,7 +39,8 @@ measurement honesty; independent trace/diff review owns those criteria.
 
 `node --test evals/cases/e15-measured-improvement/calibrate.test.mjs` verifies
 an existing-index solution, unchanged costly behavior, last-match regression
-and stale cross-call caching. These are constructed outcomes, not live subjects.
+stale cross-call caching and collapsing a present undefined label into an absent
+SKU. These are constructed outcomes, not live subjects.
 
 | Constructed evidence | Expected judgment | Reason |
 | --- | --- | --- |

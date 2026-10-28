@@ -11,7 +11,10 @@ const check = fileURLToPath(new URL('check.mjs', import.meta.url));
 const valid = `import { normalizeSku, indexFirstBySku } from './catalog-index.mjs';
 export function resolveLabels(catalog, requested, normalize = normalizeSku) {
   const index = indexFirstBySku(catalog, normalize);
-  return requested.map(sku => index.get(normalize(sku)) ?? null);
+  return requested.map(sku => {
+    const key = normalize(sku);
+    return index.has(key) ? index.get(key) : null;
+  });
 }\n`;
 async function fixture(t, source) {
   const root = await mkdtemp(join(tmpdir(), 'e15-calibration-'));
@@ -39,4 +42,8 @@ test('rejects a faster last-match-wins rewrite', async t => {
 test('rejects global cached results that ignore a changed catalog', async t => {
   const root = await fixture(t, valid.replace('export function', 'let cached;\nexport function').replace('const index = indexFirstBySku(catalog, normalize);', 'const index = cached ??= indexFirstBySku(catalog, normalize);'));
   assert.throws(() => run(root), error => error.status !== 0);
+});
+test('rejects collapsing a present undefined label into the absent-SKU result', async t => {
+  const root = await fixture(t, valid.replace('index.has(key) ? index.get(key) : null', 'index.get(key) ?? null'));
+  assert.throws(() => run(root), error => String(error.stderr).includes('present undefined labels'));
 });
