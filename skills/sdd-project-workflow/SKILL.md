@@ -273,14 +273,15 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
 
 At implementation-plan human review, the parent response MUST ask whether to
 enable Autopilot, explain its exact scope, and batch foreseeable human decisions
-with recommendations. Resolve blocking choices or record concrete owner-approved
-alternatives in the plan; do not guess answers or request blanket future authority.
+with recommendations. Establish the outcome and decision boundaries in the plan;
+resolve choices that need owner authority before starting. Autopilot delegates
+in-scope engineering judgment, not blanket future authority.
 
 > [!IMPORTANT]
-> Autopilot requires explicit owner opt-in. Generic plan approval, silence, or
-> an unresolved choice MUST NOT enable it; human-review-before-merge is the
-> default. Record mode, authorized scope, named feature integration branch and
-> protected target in the existing plan; keep authorization evidence in the PR.
+> Autopilot requires explicit owner opt-in. Generic plan approval or silence
+> MUST NOT enable it; human-review-before-merge is the default. Record mode,
+> authorized scope, named feature integration branch and protected target in the
+> existing plan; keep authorization evidence in the PR.
 > With opt-in, merge task PRs ONLY into that named feature branch after both
 > retained reviewers approve the exact head and focused/applicable required
 > checks pass, including any required external approvals. Then start the next
@@ -290,13 +291,29 @@ alternatives in the plan; do not guess answers or request blanket future authori
 > normal human brief and wait for human
 > protected-target merge acceptance. A single-PR delivery has no intermediate
 > task merge to authorize; Autopilot NEVER grants automatic protected-target merge.
+>
+> With Autopilot enabled, the agent MUST independently resolve engineering
+> choices within the recorded authority. Apply the existing Solution research
+> contract and relevant KB/project constraints; compare supported alternatives,
+> validate material uncertainty when needed, and select the simplest sufficient
+> solution. Do not ask the human merely because multiple suitable options exist.
+> Record material decisions and their evidence in the existing plan or PR.
+> If research and validation still cannot support a decision, or it requires
+> authority beyond the approved boundaries, report the unresolved question,
+> evidence and recommendation through existing error handling. Pause affected
+> work while continuing independent authorized work when possible.
+
+With Autopilot enabled, use supported native goal-based continuation for the
+authorized objective, stopping at the next required human gate.
+Otherwise use supported continuation and disclose runtime limitations; do not
+change permission settings or bypass platform controls to keep running.
 
 Candidate changes invalidate affected review/check evidence as usual. Existing
 design, policy, scope, safety, testing, 90-minute and destructive-action boundaries
-remain in force; unknown material decisions still require human input. Honor
-owner suspension or narrowing of authority. Correct recoverable agent mistakes
-within authority without routine progress pauses. Autopilot is scoped execution
-authority, not a new controller, tracker, gate, or promise of uninterrupted work.
+remain in force. Honor owner suspension or narrowing of authority. Correct
+recoverable agent mistakes within authority without routine progress pauses.
+Autopilot is scoped execution authority, not a new controller, tracker, gate,
+or promise of uninterrupted work.
 
 ## Agent discretion
 
@@ -328,6 +345,15 @@ Before writing or refactoring implementation code, read
 the accepted pin ships it. Make intent and control/data flow clear within
 project conventions and scope; simplification must preserve required behavior,
 not optimize line count.
+
+> [!IMPORTANT]
+> During implementation, after each meaningful editing unit, the author and
+> implementation workers MUST recheck their changes against relevant KB guidance
+> and accepted design/task inputs: the whiteboard and plan, or the Fast Fix issue.
+> Revisit the source passages needed to verify scope, behavior and boundaries;
+> correct deviations before continuing dependent work. This is continuous
+> author self-checking, not an additional review gate or a requirement to reread
+> the entire KB after every file edit.
 
 Reuse verified project experience rather than repeat avoidable trial and error.
 When an unexpected situation or failure arises, or before maintaining project
