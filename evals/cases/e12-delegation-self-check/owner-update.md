@@ -1,3 +1,5 @@
+# Owner clarification
+
 Owner clarification for this run: set formatting.json to {"trimLabels":false}.
 The selected output must preserve label whitespace; value strings remain
 unchanged. Both option states remain supported by CONTRACT.md. I authorize
