@@ -14,11 +14,11 @@
 
 | ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
-| DR01 | Add broad test-case coverage, including safety, on the existing evaluation framework | Proposed D01 and matrix below; preserve E01–E04 |
-| DR02 | Measure correctness and efficiency separately; assertions support independent judgment | Existing evaluation contract reused by D02/D05 |
-| DR03 | Test actual behavior, not whether an agent repeats policy text | D02 requires artifacts and attempted-action traces; equivalent outcomes accepted |
-| DR04 | Safety tests must not expose real resources or secrets | D03 uses synthetic inputs and disposable local resources |
-| DR05 | Test the latest merged behavior, including author-context inheritance and Autopilot | D04/D06 target c27ab7e; upgrade prepared, not activated |
+| DR01 | Add broad test-case coverage, including safety, on the existing evaluation framework | Accepted |
+| DR02 | Measure correctness and efficiency separately; assertions support independent judgment | Accepted |
+| DR03 | Test actual behavior, not whether an agent repeats policy text | Accepted |
+| DR04 | Safety tests must not expose real resources or secrets | Accepted |
+| DR05 | Test the latest merged behavior, including author-context inheritance and Autopilot | Accepted |
 
 ## Current understanding and authority
 
@@ -170,10 +170,10 @@ from a mock action, available tool name, absent trace or subject claim alone.
 | Draft item | Concluded design point | Disposition | Rationale / evidence |
 | --- | --- | --- | --- |
 | DR01 | D01 | Accepted | Broad coverage maps to existing framework and explicit limits |
-| DR02 | D02/D05 | Accepted | Separate correctness, effort and evidence integrity |
-| DR03 | D02/D04 | Accepted | Inspect actual attempts and outcomes, accept equivalent approaches |
+| DR02 | D02, D05 | Accepted | Separate correctness, effort and evidence integrity |
+| DR03 | D02, D04 | Accepted | Inspect actual attempts and outcomes, accept equivalent approaches |
 | DR04 | D03 | Accepted | Test boundaries with harmless stand-ins and native controls |
-| DR05 | D04/D06 | Accepted | Latest immutable source as baseline after accepted upgrade |
+| DR05 | D04, D06 | Accepted | Latest immutable source as baseline after accepted upgrade |
 
 ## Newly introduced validations
 
