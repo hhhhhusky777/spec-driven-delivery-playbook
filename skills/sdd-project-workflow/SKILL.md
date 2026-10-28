@@ -290,8 +290,7 @@ in-scope engineering judgment, not blanket future authority.
 > normal human brief and wait for human
 > protected-target merge acceptance. A single-PR delivery has no intermediate
 > task merge to authorize; Autopilot NEVER grants automatic protected-target merge.
-
-> [!IMPORTANT]
+>
 > With Autopilot enabled, the agent MUST independently resolve engineering
 > choices within the recorded authority. Apply the existing Solution research
 > contract and relevant KB/project constraints; compare supported alternatives,
