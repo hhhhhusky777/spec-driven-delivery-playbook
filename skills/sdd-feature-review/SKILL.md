@@ -80,6 +80,11 @@ validation sufficiency, proportionality, and merge-ready canonical state.
 When reviewing a whiteboard, check that the selected architecture and behavior
 are explicit in precise text and relevant diagrams, with consistent contracts
 and responsibilities. Diagrams do not substitute for missing decisions.
+Check that Canonical authority updates identifies the durable obligations and
+correct live owners, with justified no-change dispositions where applicable.
+Design amendments must keep affected rows and plan mappings consistent. At final
+review, verify required updates in the live sources against delivered behavior;
+a table entry or archived design alone is not completion evidence.
 
 > [!IMPORTANT]
 > Before whiteboard review, you MUST read every accepted KB topic whose Scope

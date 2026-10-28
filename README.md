@@ -397,6 +397,13 @@ then reconclusion, both retained reviewers, and human acceptance before
 dependent work resumes. Every planned or implemented addition must trace to the
 frozen design; useful but unauthorized scope remains out of scope.
 
+The whiteboard's **Canonical authority updates** table identifies durable design
+decisions that future work must follow and the live policies, contracts or
+architecture documents to update. Design amendments reassess this table; the
+plan owns delivery and evidence. These updates land with the delivery before
+archive/reset, so future agents can rely on current authorities rather than
+searching historical whiteboards.
+
 ### Plan and track delivery
 
 The implementation plan turns accepted design points into coherent tasks. It

@@ -136,7 +136,9 @@ The Tasks table is the design-to-task mapping; do not maintain a second task
 mapping. Reference accepted design IDs and relevant text/views, then explain
 what each task implements and how its result will be judged. Record accepted
 non-code obligations in Delivery Definition of Done with their design source,
-owner and evidence. Keep unresolved gaps in Clarifications and gaps.
+owner and evidence. Include the whiteboard's required canonical authority
+updates in these tasks or obligations; completion evidence links to the updated
+live sources. Keep unresolved gaps in Clarifications and gaps.
 
 > [!IMPORTANT]
 > **Hard rule.** Every design point MUST map to a task or non-code obligation.
