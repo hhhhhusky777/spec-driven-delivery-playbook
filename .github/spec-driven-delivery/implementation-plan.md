@@ -204,10 +204,10 @@ sequenceDiagram
     E->>E: Select case/variant and immutable inputs
     E->>E: Verify safety, isolation and required capabilities
     alt Required safety/capability unavailable
-        E->>E: Record setup blocked; do not launch
+        E->>E: Record setup blocked, do not launch
     else Authorized setup
         E->>R: Fresh attempt with declared limits
-        R->>S: Task plus project context; no rubric/answers
+        R->>S: Task plus project context, no rubric/answers
         S-->>E: Artifacts, reply and native trace
         E->>C: Inspect artifacts in authorized containment
         C-->>E: Deterministic assertion evidence
