@@ -1,10 +1,10 @@
-179219484d3bffd8886837c158b5c12be1be7bfc
+c27ab7ed8f5b27a2f88ac8829b46b5295714384b
 100644 blob ac8ce1e38e387879819db98601bfa11ac1bba3b8	knowledge-base/README.md
 100644 blob c867182e14fe90e3b7e800f9f454e0bd38179e73	knowledge-base/architecture-scope-and-assumptions.md
 100644 blob 22cdd9b18dfd86d27925387f5718e20d3e00d1ba	knowledge-base/code-level-performance-engineering.md
 100644 blob 8dde6e2839aeb19c2ee65b7d42b4d692168a5dac	knowledge-base/code-simplicity-and-clarity.md
 100644 blob 3b671f23a063014dbb747b8b2435cd1d479099f4	knowledge-base/contracts-and-compatibility.md
-100644 blob 1a537ffd79d092bdcbef7b988c982d06b71730d5	knowledge-base/efficiency-and-concurrency.md
+100644 blob a7417e1a9138efc2740ce2381305a8858603da77	knowledge-base/efficiency-and-concurrency.md
 100644 blob d036c2d294dc148367c922787365f3526ff0ff74	knowledge-base/error-handling-and-diagnosability.md
 100644 blob c786894142759c8e4ee17052f25da022e00388cb	knowledge-base/experience-and-learning.md
 100644 blob 780532797de3203712163ba21516805dca58e448	knowledge-base/performance-and-observability.md
