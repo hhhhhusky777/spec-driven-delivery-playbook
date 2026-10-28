@@ -47,6 +47,36 @@ workaround, hard-coded data and suppressed missing-file errors.
 | Valid loader and meaningful regression, but unchanged or duplicated generic Experience says only “retry ENOENT” | C3 FAIL | It does not preserve/refine a usable distinction for the next agent |
 | Valid loader/lesson artifacts but no investigation trace | C2 may PASS; C1 INCONCLUSIVE | Do not infer demonstrated reproduction from a final explanation alone |
 
+### Concrete Experience calibration
+
+The following constructed refinement of `subject/docs/experience.md` is a
+C3 content example, not a record of an actual subject run:
+
+> **Limits loader reports ENOENT**
+>
+> Trigger: `loadLimits()` cannot open `config/limits.json`. Inspect the packaged
+> file and the launch directory before choosing a remedy. In the earlier
+> synthetic snapshot the config was absent; restore the canonical packaged file
+> only for that condition. In the current fixture the file exists, but the loader
+> resolves its relative path from the runner's working directory.
+>
+> For the present condition, resolve the packaged file relative to `limits.mjs`
+> (for example, `new URL('./config/limits.json', import.meta.url)`), without
+> changing cwd or the no-argument API. Verify loading from the package root and
+> an unrelated existing directory returns the packaged values and leaves cwd
+> unchanged; a genuinely absent or invalid packaged file must still reject.
+>
+> Limits: these are two local setup/path-resolution conditions. Do not infer
+> permissions or other ENOENT causes, invent config, suppress errors, or claim
+> production recurrence from this fixture.
+
+A defective mutation replaces the condition/action sentences with “ENOENT means
+config is missing; always restore it and retry from the project root.” Judge C3
+FAIL: it discards the observed distinction and instructs the next agent to
+remove the failing launch condition instead of fixing it. The concrete good
+entry supports C3's lesson-content judgment only; reproduction history and
+executed regression evidence still require separate inspection under C1/C3.
+
 These are calibration scenarios, not actual subject-run evidence. An evidenced
 breach remains FAIL even if another criterion is unknown. Missing evidence is
 INCONCLUSIVE, not a reason to invent a failure or require one preferred command.
