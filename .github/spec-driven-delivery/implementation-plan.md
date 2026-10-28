@@ -10,10 +10,10 @@ owns review, execution evidence and merge authority.
 
 | Field | Value |
 | --- | --- |
-| State | `DRAFT` |
-| Active tasks | `None` |
+| State | `IMPLEMENTING` |
+| Active tasks | `T01` |
 | Next ready task | `None` |
-| Active blocker | Human plan acceptance and disposition of the separately prepared upgrade |
+| Active blocker | `None` |
 | Implementation mode | Human-review-before-merge; Autopilot not enabled |
 | Authorized scope / feature branch / protected target | No auto-merge authority; single delivery/task branch `codex/issue-196-agent-evals`; protected target `main` |
 | Delivery branch / target | `codex/issue-196-agent-evals` → `main` through PR #197 |
@@ -21,7 +21,7 @@ owns review, execution evidence and merge authority.
 | Primary issue / need | [#196](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/196) |
 | Concluded whiteboard | [Whiteboard](solution-whiteboard.md), accepted design `c82aa9e626c1c4bb9494e83e6bff87dd45885401`; frozen file at `e2488eb0e28df2d8230c7230e929372e6062d70e` |
 | Required reviewers | Retained `issue196_review1` and `issue196_review2` |
-| Last verified | 2026-10-28: both reviewers approved the exact conclusion transition; implementation has not started |
+| Last verified | 2026-10-28: owner accepted plan and upgrade; Autopilot remains off; installer CURRENT at 1792194; T01 started |
 
 ## Governing inputs and delivery boundaries
 
@@ -30,7 +30,7 @@ owns review, execution evidence and merge authority.
 | [Contributing](../../CONTRIBUTING.md) and [quality policy](../../docs/documentation-quality-policy.md) | Single-PR integration, independent review, focused/final validation and human authority |
 | [Concluded whiteboard](solution-whiteboard.md#concluded-design) | D01–D06, E01–E04, supported scope, grading, measurement and evidence limits |
 | [Error handling](../../docs/error-handling.md) | Preserve evidence and valid work; correct agent mistakes without inventing another gate |
-| [Manifest](project-adoption-manifest.md) and verified runtime | Accepted revision `c2f83cb8868477a11415a83ea991459546a9f4c3`; prepared upgrade `179219484d3bffd8886837c158b5c12be1be7bfc` remains unactivated |
+| [Manifest](project-adoption-manifest.md) and verified runtime | Accepted and activated revision `179219484d3bffd8886837c158b5c12be1be7bfc`; runtime validation CURRENT |
 | [Exploratory evidence](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/197#issuecomment-6463585443) | Useful fixture calibration and observed overhead; not a clean baseline or efficacy proof |
 
 The outcome is a reusable repository evaluation contract with runnable starter
@@ -47,7 +47,7 @@ translates it into delivery work rather than choosing another architecture.
 | Integration model | One coherent task and one PR to `main`, permitted by the canonical branch policy |
 | Increment boundary | Guide, reusable formats and starter cases must agree to provide a usable evaluation; one merge unit avoids incomplete interfaces |
 | Dependencies | No producing-task dependency. Readiness consumes accepted design, plan acceptance, existing Node tooling and native agent runtime |
-| Runtime disposition | Request acceptance of the prepared `1792194…` upgrade with this plan. Only then activate via the existing installer and validate; this is a non-code delivery obligation, not permission to alter feature design |
+| Runtime disposition | Owner accepted `1792194…`; activated through the existing installer and validated CURRENT. Incremental discovery found no new gaps; frozen design unchanged |
 | Parallel ownership | Independent disposable case runs may overlap only with separate inputs/artifacts and sufficient resources; author retains integration and review reconciliation |
 | Merge authority | Explicit human approval before `main` merge. A single-PR delivery has no intermediate task merge for Autopilot to automate |
 
@@ -62,7 +62,7 @@ from the whiteboard are included in T01 or the non-code obligations below.
 
 | ID | State | Depends on | Consumed design | Implementation work | Outcome | Boundaries | Consumed error handling | Consumed validations | Acceptance evidence | Consumed assumptions | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| T01 | PLANNED | None | D01–D06; E01–E04 and the responsibility diagram | Create `evals/README.md` with shared case/rubric/result formats; prepare four versioned subject fixtures and evaluator-only rubrics; reuse native execution and focused deterministic checks where useful; link evaluations from root README and CONTRIBUTING | Another maintainer can prepare, execute and independently assess a case, record separate correctness/efficiency evidence, and add a case without changing execution infrastructure | Repository-only; no new scheduler, wrapper, dependencies, mandatory CI, product policy or imposed universal efficiency threshold | D03–D06: keep failures, interruptions, disputes and insufficient evidence visible; no retry-to-green or scope expansion | None: no newly designed runtime rejection or acceptance gate | Changed-doc checks; calibrated valid/defective outcomes; one attempt for each final starter case with independent artifact/trace assessment; reusable format populated from actual evidence | Whiteboard isolation premise: verify runtime support; otherwise qualify exploratory observations and keep clean-evidence assessment inconclusive | `codex/issue-196-agent-evals`; [#197](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/197); `main` |
+| T01 | IN_PROGRESS | None | D01–D06; E01–E04 and the responsibility diagram | Create `evals/README.md` with shared case/rubric/result formats; prepare four versioned subject fixtures and evaluator-only rubrics; reuse native execution and focused deterministic checks where useful; link evaluations from root README and CONTRIBUTING | Another maintainer can prepare, execute and independently assess a case, record separate correctness/efficiency evidence, and add a case without changing execution infrastructure | Repository-only; no new scheduler, wrapper, dependencies, mandatory CI, product policy or imposed universal efficiency threshold | D03–D06: keep failures, interruptions, disputes and insufficient evidence visible; no retry-to-green or scope expansion | None: no newly designed runtime rejection or acceptance gate | Changed-doc checks; calibrated valid/defective outcomes; one attempt for each final starter case with independent artifact/trace assessment; reusable format populated from actual evidence | Whiteboard isolation premise: verify runtime support; otherwise qualify exploratory observations and keep clean-evidence assessment inconclusive | `codex/issue-196-agent-evals`; [#197](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/197); `main` |
 
 ### T01 — Engineering detail and context
 
@@ -101,8 +101,8 @@ checks do not establish semantic grading or efficiency by themselves.
 | Item | Classification / state | Handling |
 | --- | --- | --- |
 | Strict subject read isolation | Disclosed limitation, not an assumed capability | Use verified native isolation if available; otherwise preserve exploratory labeling and inconclusive clean-evidence status; no custom isolation platform |
-| Prepared upgrade | Owner decision pending | Keep current manifest and runtime authority until explicit acceptance; report installer evidence in the PR |
-| Plan / implementation | Design accepted; plan awaiting review and human acceptance | Do not begin T01 or treat the trial as implementation completion |
+| Upgrade | Accepted and completed | Pin, managed guidance and runtime synchronized to 1792194; evidence in PR |
+| Plan / implementation | Owner accepted plan; T01 active | Prior exploratory trial remains separate from final case-pack evidence |
 | Review disagreement or incomplete trace | Existing error-handling boundary | Preserve evidence, evaluate the affected criterion, and retain an inconclusive result where unresolved |
 
 ## Plan validation and completion
@@ -128,7 +128,7 @@ accept this plan.
 | --- | --- | --- |
 | Reusable evaluation contract and four starter packs; D01–D06 | T01; guide, case inputs, rubrics, completed result format and independent assessment | Pending |
 | Durable discoverability; D01 | T01; README and CONTRIBUTING point to the one evaluation contract | Pending |
-| Accepted reusable revision; whiteboard authority inventory | Author after owner acceptance; manifest and installer-managed state agree with accepted candidate, validation evidence in PR | Pending separate upgrade decision |
+| Accepted reusable revision; whiteboard authority inventory | Author after owner acceptance; manifest and installer-managed state agree with accepted candidate, validation evidence in PR | CURRENT at accepted 1792194; no new discovery gaps |
 | Source compatibility and required gates | Author/reviewers; focused checks, exact implementation audit, human implementation acceptance and final full validation | Pending |
 | Merge-ready canonical state | Author; complete whiteboard/plan combined archive linked to closing PR and approved working-whiteboard reset; GitHub owns pending approvals/merge facts | Pending; reset authorization not yet granted |
 | Delivery closure | Author after explicit merge approval; exact `main` verification and owned cleanup | Pending |
@@ -153,8 +153,8 @@ accept this plan.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Task and mapping | One coherent T01 implements D01–D06 and four starter cases; no intermediate task-merge sequence | HUMAN_DECISION |
-| Upgrade | Accept prepared immutable `1792194…` before activation; design approval alone did not activate it | HUMAN_DECISION |
-| Autopilot | Recommend remaining off: this single-PR delivery has no intermediate feature-branch merge to automate; final-test and final-merge human gates remain | HUMAN_DECISION |
+| Task and mapping | Accepted one coherent T01 implements D01–D06 and four starter cases | AGENT_ACTION |
+| Upgrade | Owner accepted and installer activated immutable `1792194…` | DISCLOSE |
+| Autopilot | Owner accepted keeping it off; final-test and final-merge human gates remain | DISCLOSE |
 | Evidence limits | Exploratory passes do not prove clean isolation, full lifecycle correctness or causal efficiency improvement | DISCLOSE |
-| Next boundary | Human plan acceptance and runtime disposition, then T01; implementation and final validation have not started | HUMAN_DECISION |
+| Next boundary | Complete T01 and independent implementation audit, then human acceptance before final tests | AGENT_ACTION |

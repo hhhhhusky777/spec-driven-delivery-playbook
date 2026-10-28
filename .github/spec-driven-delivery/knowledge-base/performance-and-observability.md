@@ -1,10 +1,13 @@
 # Performance and Observability
 
-Use this guidance during solution and system design, when investigating
-bottlenecks, and when choosing feedback about runtime behavior or important
-design properties. Design observability so relevant behavior is measurable
-and interpretable: evidence should support decisions and improvement, not just
-populate dashboards. This topic covers design-level choices and feedback, not
+Scope: Architecture, Engineering
+
+- Architecture: Define performance goals, measurable behavior and whole-system trade-offs.
+- Engineering: Collect representative measurements and interpret feedback against those goals.
+
+Observability makes relevant behavior measurable and interpretable: evidence
+should support decisions and improvement, not just populate dashboards.
+This topic covers system-level choices and feedback, not
 a catalog of code-level optimization techniques. Failure localization and recovery
 belong to [Error Handling and Diagnosability](error-handling-and-diagnosability.md).
 

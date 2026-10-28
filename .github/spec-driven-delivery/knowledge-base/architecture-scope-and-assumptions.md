@@ -1,8 +1,11 @@
 # Architecture, Scope, and Assumptions
 
-Use this guidance when defining or reviewing responsibilities, dependencies,
-and material design premises. Make the accepted outcome and supported domain
-explicit; choose an architecture that fits the project's existing boundaries.
+Scope: Architecture, Engineering
+
+- Architecture: Define responsibilities, dependencies and evidence-bounded design premises.
+- Engineering: Preserve ownership boundaries and verify material implementation assumptions.
+
+Make the accepted outcome and supported domain explicit within project boundaries.
 
 ## Core principles
 

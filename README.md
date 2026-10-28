@@ -1046,6 +1046,12 @@ placeholders, likely secrets, private paths, the three-document model, and
 focused installer/lifecycle behavior. Automated checks are necessary evidence,
 not a replacement for semantic review.
 
+[Agent behavior evaluations](evals/README.md) complement these source checks.
+They use versioned cases, independent artifact/trace assessment and separate
+correctness and efficiency results. Start with the four starter cases and add
+grounded cases as needs emerge; evaluations are optional repository work, not
+an installed project requirement or automatic CI gate.
+
 ## References
 
 - [Engineering Knowledge Base and topic references](knowledge-base/README.md)

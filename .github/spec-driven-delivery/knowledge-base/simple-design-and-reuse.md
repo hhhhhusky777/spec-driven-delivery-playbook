@@ -1,9 +1,10 @@
 # Simple Design and Reuse
 
-Use this guidance when designing or reviewing a solution: satisfy the current
-requirement by reusing existing capabilities and introducing the fewest new
-responsibilities and mechanisms necessary. This topic concerns design choices,
-not coding style or source-level refactoring.
+Scope: Architecture
+
+- Architecture: Reuse existing capabilities and minimize new responsibilities and mechanisms.
+
+This topic concerns design choices, not coding style or source-level refactoring.
 
 ## Core principles
 
