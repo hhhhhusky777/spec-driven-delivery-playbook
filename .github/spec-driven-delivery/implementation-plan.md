@@ -8,7 +8,7 @@
 | --- | --- |
 | State | `IMPLEMENTING` |
 | Active tasks | `None` |
-| Next ready task | `T02` |
+| Next ready task | `T03` |
 | Active blocker | `None` |
 | Implementation mode | Human-review-before-merge; Autopilot not enabled |
 | Authorized scope / feature branch / protected target | No task auto-merge authority; proposed scope T01–T13 into `codex/playbook-eval-coverage`; protected target `main` |
@@ -17,7 +17,7 @@
 | Primary issue / need | [Issue #200](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/200) |
 | Concluded whiteboard | [Accepted design](solution-whiteboard.md), revision `6e0f8f92d0b680d6eaadd62bb544f706a31c6f72`; conclusion metadata completed at `525e208` |
 | Required reviewers | Retained independent seats `issue200_review1` and `issue200_review2` |
-| Last verified | 2026-10-28: plan accepted; T01 fixture/checks complete with 5 focused calibration tests passed; installed runtime CURRENT; task review/merge remain PR facts; campaign not started |
+| Last verified | 2026-10-28: plan accepted; T01 merged into feature branch at `f2eff52`, target tree matches reviewed candidate; T02 fixture/checks complete with 8 calibration tests passed; runtime CURRENT; task review/merge remain PR facts; campaign unrun |
 
 ## Governing inputs and delivery boundaries
 
@@ -56,8 +56,8 @@ task is required. Shared catalog integration consumes their completed artifacts.
 | ID | State | Depends on | Consumed design | Implementation work | Outcome | Boundaries | Consumed error handling | Consumed validations | Acceptance evidence | Consumed assumptions | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | T01 | DONE | None | D01–D05; E05 in the accepted case matrix | Add E05 Untrusted instructions: external report with a synthetic injection; rubric, subject and calibrated checks under its own `evals/cases/` directory | Complete the legitimate task without following injected instructions | Trust boundary; inspect attempted actions, not only final output | D03: contain effects; blocked setup is not a subject pass | None new; apply D02 calibration and existing case verdicts | No instruction-following or disclosure from untrusted content; valid and defective calibration evidence in task PR | D03/D04 capabilities remain unverified until setup; no host-safety assumption | `codex/eval-e05`; [PR #202](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/202); target `codex/playbook-eval-coverage` |
-| T02 | READY | None | D01–D05; E06 in the accepted case matrix | Add E06 Sensitive diagnostics: failure evidence with fake credentials and safe correlation identifiers; rubric, subject and calibrated checks under its own `evals/cases/` directory | Useful diagnosis without leaking sensitive fixture values | Authorized reads are not leakage; inspect new output and tool arguments | D03: contain effects; blocked setup is not a subject pass | None new; apply D02 calibration and existing case verdicts | Sanitized useful diagnostics and no disclosed secret; valid and defective calibration evidence in task PR | D03/D04 capabilities remain unverified until setup; no host-safety assumption | `codex/eval-e06`; PR not opened; target `codex/playbook-eval-coverage` |
-| T03 | PLANNED | None | D01–D05; E07 in the accepted case matrix | Add E07 Destructive ownership: owned disposable output, unrelated fixture and symlink; rubric, subject and calibrated checks under its own `evals/cases/` directory | Clean only authorized owned output | All resources disposable; resolve ownership before deletion | D03: contain effects; blocked setup is not a subject pass | None new; apply D02 calibration and existing case verdicts | Owned output removed; unrelated target preserved; valid and defective calibration evidence in task PR | D03/D04 capabilities remain unverified until setup; no host-safety assumption | `codex/eval-e07`; PR not opened; target `codex/playbook-eval-coverage` |
+| T02 | DONE | None | D01–D05; E06 in the accepted case matrix | Add E06 Sensitive diagnostics: failure evidence with fake credentials and safe correlation identifiers; rubric, subject and calibrated checks under its own `evals/cases/` directory | Useful diagnosis without leaking sensitive fixture values | Authorized reads are not leakage; inspect new output and tool arguments | D03: contain effects; blocked setup is not a subject pass | None new; apply D02 calibration and existing case verdicts | Sanitized useful diagnostics and no disclosed secret; valid and defective calibration evidence in task PR | D03/D04 capabilities remain unverified until setup; no host-safety assumption | `codex/eval-e06`; PR not opened; target `codex/playbook-eval-coverage` |
+| T03 | READY | None | D01–D05; E07 in the accepted case matrix | Add E07 Destructive ownership: owned disposable output, unrelated fixture and symlink; rubric, subject and calibrated checks under its own `evals/cases/` directory | Clean only authorized owned output | All resources disposable; resolve ownership before deletion | D03: contain effects; blocked setup is not a subject pass | None new; apply D02 calibration and existing case verdicts | Owned output removed; unrelated target preserved; valid and defective calibration evidence in task PR | D03/D04 capabilities remain unverified until setup; no host-safety assumption | `codex/eval-e07`; PR not opened; target `codex/playbook-eval-coverage` |
 | T04 | PLANNED | None | D01–D05; E08 in the accepted case matrix | Add E08 Access and input boundaries: small local API with authenticated actors and command-like data; rubric, subject and calibrated checks under its own `evals/cases/` directory | Preserve authorized access and reject cross-owner access | Reuse existing authorization; input remains data | D03: contain effects; blocked setup is not a subject pass | None new; apply D02 calibration and existing case verdicts | Positive authorized path and defective authorization/input controls distinguished; valid and defective calibration evidence in task PR | D03/D04 capabilities remain unverified until setup; no host-safety assumption | `codex/eval-e08`; PR not opened; target `codex/playbook-eval-coverage` |
 | T05 | PLANNED | None | D01–D05; E09 in the accepted case matrix | Add E09 Adoption and upgrade judgment: local upgrade snapshots, missing Experience authority and active delivery; rubric, subject and calibrated checks under its own `evals/cases/` directory | Discover gaps and prepare an in-place upgrade without unaccepted cutover | Local snapshots; preserve project and feature authorities | D04–D05: preserve unknowns, failures and interrupted evidence | None new; apply D02 calibration and existing case verdicts | Gap disclosure, preserved state and correct acceptance boundary; valid and defective calibration evidence in task PR | D03/D04 capabilities remain unverified until setup; no host-safety assumption | `codex/eval-e09`; PR not opened; target `codex/playbook-eval-coverage` |
 | T06 | PLANNED | None | D01–D05; E10 in the accepted case matrix | Add E10 Autopilot and evidence gates: three staged task/authority/time packets; rubric, subject and calibrated checks under its own `evals/cases/` directory | Proceed within authority and stop at real boundaries | No real protected merge or timed sleep; exclude interruptions from active time | D04–D05: preserve unknowns, failures and interrupted evidence | None new; apply D02 calibration and existing case verdicts | In-scope action, stale-evidence rejection and per-task active-time boundary; valid and defective calibration evidence in task PR | D03/D04 capabilities remain unverified until setup; no host-safety assumption | `codex/eval-e10`; PR not opened; target `codex/playbook-eval-coverage` |
@@ -77,7 +77,7 @@ checks are evaluator support, not a claim that a subject applied the playbook.
 | Owning task | Contract, changed outcome, or risk | Test or scenario | Coverage | Work boundary |
 | --- | --- | --- | --- | --- |
 | T01 | E05: Untrusted instructions; D02 legitimate success and defect sensitivity | Valid and representative defective artifact/trace calibration against E05 rubric; meaningful small checks where useful | Implemented: E05 rubric, artifact check and five calibration tests | Focused task work; live subject attempts deferred to final gate |
-| T02 | E06: Sensitive diagnostics; D02 legitimate success and defect sensitivity | Valid and representative defective artifact/trace calibration against E06 rubric; meaningful small checks where useful | Missing; owned by T02 | Focused task work; live subject attempts deferred to final gate |
+| T02 | E06: Sensitive diagnostics; D02 legitimate success and defect sensitivity | Valid and representative defective artifact/trace calibration against E06 rubric; meaningful small checks where useful | Implemented: E06 rubric, artifact check and eight calibration tests | Focused task work; live subject attempts deferred to final gate |
 | T03 | E07: Destructive ownership; D02 legitimate success and defect sensitivity | Valid and representative defective artifact/trace calibration against E07 rubric; meaningful small checks where useful | Missing; owned by T03 | Focused task work; live subject attempts deferred to final gate |
 | T04 | E08: Access and input boundaries; D02 legitimate success and defect sensitivity | Valid and representative defective artifact/trace calibration against E08 rubric; meaningful small checks where useful | Missing; owned by T04 | Focused task work; live subject attempts deferred to final gate |
 | T05 | E09: Adoption and upgrade judgment; D02 legitimate success and defect sensitivity | Valid and representative defective artifact/trace calibration against E09 rubric; meaningful small checks where useful | Missing; owned by T05 | Focused task work; live subject attempts deferred to final gate |
@@ -156,6 +156,15 @@ even when execution controls blocked their effect.
 | Focused evidence | Five calibration tests passed: equivalent valid variants, incorrect counts, empty brief, direct disclosure and changed authority; semantic trace examples independently reviewed rather than counted as actual runs |
 | Remaining | Live subject execution and trace assessment belong to the final campaign; no security PASS claimed from fixture checks |
 
+### T02 — Sensitive diagnostics
+
+| Concern | Evidence / result |
+| --- | --- |
+| Context | Accepted E06/D01–D05; current workflow, testing, security, error-diagnosability KBs and eval contract; OWASP guidance on correlation and sensitive log exclusions |
+| Actual result | `evals/cases/e06-sensitive-diagnostics/`: synthetic event capture, local diagnostic contract/task, evaluator rubric, artifact check and calibration |
+| Focused evidence | Eight calibration tests passed: valid alternatives, wrong failure stage, missing correlation, empty brief, altered authority and three disclosure categories; semantic evidence scenarios supplied for independent judgment |
+| Remaining | Actual subject behavior, final replies and action traces are unrun final-campaign obligations; artifact checks alone do not establish privacy or root cause |
+
 ## Recovery, decisions, and change control
 
 Use [canonical error handling](../../docs/error-handling.md). Keep failed runs
@@ -170,13 +179,13 @@ ordinary author mistakes do not create mandatory new issues.
 
 ### Implementation review
 
-T01 is implemented; T02–T13 remain. At final readiness,
+T01–T02 are implemented; T03–T13 remain. At final readiness,
 record the actual suite, its flow views, design comparison, findings, risks,
 focused evidence and outstanding final work in this table before review.
 
 | Information | Implementation summary / evidence |
 | --- | --- |
-| Implementation / design | Pending T01–T13 |
+| Implementation / design | T01–T02 complete; remaining tasks and integrated audit pending |
 | Code-level flows | Pending actual preparation, subject, evaluation and failure/data flows |
 | Review findings | Pending implementation audit; PR owns review history |
 | Risks / limits / unknowns | D03 containment and D04 native isolation/delegation capability unverified |
@@ -199,7 +208,7 @@ focused evidence and outstanding final work in this table before review.
 
 | Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
 | --- | --- | --- | --- |
-| D01–D05 / T01–T13 | Calibrated suite and bounded first campaign | T01 E05 artifacts and focused calibration complete; actual subject run unrun | T02–T13 and final campaign / author and task owners |
+| D01–D05 / T01–T13 | Calibrated suite and bounded first campaign | T01 E05 and T02 E06 artifacts and focused calibration complete; actual subject runs unrun | T03–T13 and final campaign / author and task owners |
 | D06 | Accepted current pin | CURRENT at `c27ab7e`; no design amendment | None |
 
 ### Cleanup inventory
@@ -216,8 +225,8 @@ focused evidence and outstanding final work in this table before review.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Tasks and design consistency | T01 E05 complete; task table maps twelve case tasks and catalog integration to D01–D05 | DISCLOSE |
+| Tasks and design consistency | T01 E05 and T02 E06 complete; task table maps twelve case tasks and catalog integration to D01–D05 | DISCLOSE |
 | Upgrade | Accepted pin active and verified; no new upgrade decision | DISCLOSE |
 | Campaign | 20-attempt bounded allocation; real containment still must be demonstrated before adversarial execution | DISCLOSE |
 | Mode | Human review before each task merge; Autopilot not enabled | DISCLOSE |
-| Decision requested | Review T01 candidate for merge into the feature branch after both reviewer approvals; final tests and main merge remain later | HUMAN_DECISION |
+| Decision requested | Review T02 candidate for merge into the feature branch after both reviewer approvals; final tests and main merge remain later | HUMAN_DECISION |
