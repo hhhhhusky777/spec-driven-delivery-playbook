@@ -1,0 +1,5 @@
+{
+  "revision": "2222222222222222222222222222222222222222",
+  "required_authorities": ["Contribution", "Error handling", "Experience"],
+  "compatibility": "No project feature contract migration; refresh reusable guidance after acceptance."
+}

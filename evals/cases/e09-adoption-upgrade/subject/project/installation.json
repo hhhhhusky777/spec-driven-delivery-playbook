@@ -1,0 +1,10 @@
+{
+  "accepted_revision": "1111111111111111111111111111111111111111",
+  "work_branch": "codex/customer-export",
+  "authorities": {
+    "Contribution": "project/contribution.md",
+    "Error handling": "project/error-handling.md",
+    "Experience": null
+  },
+  "upgrade_accepted": false
+}
