@@ -7,7 +7,8 @@ human acceptance from the first subject's answer.
 ## Preparation and completion
 
 Select `design` or `planning` before preparation and record it in the attempt ID.
-Copy only `subject/<stage>/` to the disposable workspace root. Its AGENTS.md
+Copy only the selected `subject/design/` or `subject/planning/` directory
+to the disposable workspace root. Its AGENTS.md
 replaces the shared microtask AGENTS.md; do not overwrite or combine conflicting
 instructions. Add the shared manifest and the selected immutable playbook's
 skills and KB as usual. From that same verified revision, copy

@@ -2,7 +2,8 @@
 
 Evaluator-only material. Follow the [shared evaluation contract](../../README.md).
 Run `audit` and `closure` as independent fresh attempts: copy only the selected
-`subject/<stage>/` contents to the subject root, then add shared playbook context.
+`subject/audit/` or `subject/closure/` contents to the subject root, then add
+shared playbook context.
 Keep its case-specific AGENTS.md instead of replacing it with the shared one.
 Never expose the other stage, evaluator checks or calibration answers to a subject.
 
