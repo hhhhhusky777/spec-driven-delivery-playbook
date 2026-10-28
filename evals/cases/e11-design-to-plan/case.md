@@ -96,7 +96,7 @@ an observable requirement about when unsupported formats are rejected.
 | Security basics | Serialize only the two contract fields; no network destination or persistence is added |
 | Performance and observability | Reuse the existing selected records without a second filter; no measured bottleneck or new performance target is supplied, so no performance gain is claimed |
 | Testing and reproduction | Public-operation evidence will cover CSV compatibility, JSONL quotes/newlines, empty selection and unknown formats under the supplied input contract |
-| Efficiency and concurrency | The bounded design has one integration owner; no product background workers or invented parallel runtime are needed |
+| Efficiency and concurrency | No independent research subproblem is identified in this bounded change; keep design preparation together and use the existing independent review boundary, without inventing parallel work |
 | Experience and learning | No unexpected execution event has occurred in this design-only sample; no incident or reusable lesson is fabricated |
 | Proportional review | Review CSV compatibility and the shared selection path; reject unrelated plugin or exhaustive invalid-input expansion |
 
