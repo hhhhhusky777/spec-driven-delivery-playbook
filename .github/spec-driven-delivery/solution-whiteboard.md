@@ -4,11 +4,11 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [Issue #200](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/200) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
-| Open owner decisions | Accept D01–D06 and the prepared playbook pin update before conclusion and implementation planning |
+| Concluded design revision | `6e0f8f92d0b680d6eaadd62bb544f706a31c6f72` |
+| Open owner decisions | `None` |
 
 ## Discussion draft
 
@@ -80,9 +80,9 @@ and code-level performance → E15; Engineering aspects of the shared topics use
 the case mappings above. Coverage means a testable obligation is represented,
 not that reading a topic proves the agent applied it.
 
-## Concluded design candidate
+## Concluded design
 
-This is a review candidate, not a frozen or accepted conclusion.
+Owner accepted this design and the prepared pin on 2026-10-28; review and acceptance evidence belongs to PR #201.
 
 | Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
@@ -169,11 +169,11 @@ from a mock action, available tool name, absent trace or subject claim alone.
 
 | Draft item | Concluded design point | Disposition | Rationale / evidence |
 | --- | --- | --- | --- |
-| DR01 | D01 | Proposed | Broad coverage maps to existing framework and explicit limits |
-| DR02 | D02/D05 | Proposed | Separate correctness, effort and evidence integrity |
-| DR03 | D02/D04 | Proposed | Inspect actual attempts and outcomes, accept equivalent approaches |
-| DR04 | D03 | Proposed | Test boundaries with harmless stand-ins and native controls |
-| DR05 | D04/D06 | Proposed | Latest immutable source as baseline after accepted upgrade |
+| DR01 | D01 | Accepted | Broad coverage maps to existing framework and explicit limits |
+| DR02 | D02/D05 | Accepted | Separate correctness, effort and evidence integrity |
+| DR03 | D02/D04 | Accepted | Inspect actual attempts and outcomes, accept equivalent approaches |
+| DR04 | D03 | Accepted | Test boundaries with harmless stand-ins and native controls |
+| DR05 | D04/D06 | Accepted | Latest immutable source as baseline after accepted upgrade |
 
 ## Newly introduced validations
 
@@ -206,4 +206,4 @@ rejection, new automatic stop or change to agent permission policy.
 | Coverage | Retain four starter cases and add twelve bounded cases across delivery, engineering and safety | Design acceptance |
 | Evidence | Calibrate cases, then run bounded attempts; publish actual results and untested limits | Existing evaluation contract |
 | Upgrade | Prepared 1792194 → c27ab7e; unchanged project authorities and no new authority gaps | Pin acceptance before activation |
-| Remaining decision | Accept design/campaign boundary and prepared pin; planning follows conclusion | Human decision |
+| Remaining decision | Design and prepared pin accepted; planning follows verified conclusion | None |
