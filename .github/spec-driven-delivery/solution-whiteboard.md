@@ -27,7 +27,6 @@ it establishes local observed outcomes, not overall effectiveness.
 | DR04 | Start small and disclose variation and cost instead of promising a universal success probability | Accepted |
 | DR05 | Build the reusable framework around correctness and efficiency; extend it later by adding cases | Accepted |
 
-
 ## Current understanding
 
 | Concern | Current understanding |
