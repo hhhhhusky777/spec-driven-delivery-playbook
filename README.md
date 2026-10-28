@@ -28,7 +28,7 @@ useful rather than adding process overhead.
 | Efficient implementation | Batch coherent work and avoid unnecessary stops while preserving real gates |
 | Efficiency and concurrency | Overlap independent execution and delegate worthwhile work while the main agent advances delivery |
 | Reliable review | Give two isolated reviewers and the owner one exact, reviewable candidate |
-| Optional Autopilot | Automate feature-task merges while retaining human implementation acceptance before final tests and control of the protected-target merge |
+| Optional Autopilot | Research and resolve authorized engineering choices, continue delivery and automate feature-task merges while preserving required human gates |
 | Simple fail-closed recovery | Preserve consistency, expose safe client retry, and avoid speculative error machinery |
 | Evidence-driven problem triage | Reproduce unexplained failures, challenge causes with evidence, and avoid repeating blind fixes |
 | Parallel delivery | Isolate worktrees and ownership while keeping integration boundaries explicit |
@@ -434,8 +434,12 @@ flowchart TD
 
 The planning brief also asks whether to enable **Autopilot** and collects foreseeable decisions
 together. Explicit opt-in lets approved task PRs merge into the named feature
-branch and the next ready task begin without routine human merge pauses. The
-agent still pauses for human implementation acceptance before final-test work,
+branch and the next ready task begin without routine human merge pauses.
+Within approved boundaries, the agent researches and validates engineering
+choices, selects a suitable solution and records material decisions instead of
+asking about every alternative. Native goal-based continuation, when supported,
+runs only to the next required human gate; unresolved evidence or authority
+still uses existing error handling. The agent still pauses for human implementation acceptance before final-test work,
 then resumes authorized final readiness and stops for the human protected-target
 merge decision. Human-review-before-merge remains the
 default; single-PR delivery never gains automatic `main` merge permission.
