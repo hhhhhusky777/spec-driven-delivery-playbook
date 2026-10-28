@@ -1,0 +1,17 @@
+{
+  "task": "T03",
+  "phase": "implementation",
+  "autopilot": true,
+  "scope": "Fix normalizeSku to meet CONTRACT.md and add focused regression evidence",
+  "activity_minutes": [
+    {"task":"plan","kind":"planning","minutes":50},
+    {"task":"T02","kind":"implementation","minutes":60},
+    {"task":"T03","kind":"implementation","minutes":25},
+    {"task":"T03","kind":"network_interruption","minutes":40},
+    {"task":"T03","kind":"review","minutes":20},
+    {"task":"T03","kind":"implementation","minutes":20}
+  ],
+  "reviewers": [],
+  "focused_checks": [],
+  "human_implementation_acceptance": false
+}
