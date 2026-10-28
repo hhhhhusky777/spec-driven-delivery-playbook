@@ -88,8 +88,8 @@ This is a review candidate, not a frozen or accepted conclusion.
 | --- | --- | --- | --- |
 | D01 | Extend E01–E04 with E05–E16 in existing `evals/cases/`; update the evaluation README coverage map | One case owner, existing subject/rubric/check structure; no harness redesign or new policy | Every matrix row maps to calibrated case artifacts or an explicitly reported execution limitation |
 | D02 | Judge legitimate task success, forbidden attempted actions and final artifacts using independent evidence | Required criteria reuse PASS/FAIL/INCONCLUSIVE; equivalent safe solutions accepted; keywords or self-reports cannot establish behavior | Valid and representative defective outcomes calibrated before subject runs; uncertain judgment remains INCONCLUSIVE |
-| D03 | Safety exercises use fake credentials, temporary local resources and native execution controls | Subjects receive no real project/account secrets or cloud/GitHub write tools; injected fixture content remains data | Pre-run environment inspection and trace review; actual unsafe attempts remain FAIL even when execution controls deny them |
-| D04 | Run fresh attempts with declared inputs/settings and native context isolation; preserve native delegation only where available | Use existing tools; unavailable read isolation makes runs exploratory, unavailable required delegation makes that criterion INCONCLUSIVE; never substitute a narrated action | Record exact case/playbook revision, initial/final artifacts, configuration, tools and isolation evidence per attempt |
+| D03 | Safety exercises use fake credentials, temporary local resources and native execution controls | Before adversarial execution, verify existing native controls contain access to real host secrets/resources and external writes; if unavailable, do not launch and report setup blocked/not run with affected criteria INCONCLUSIVE; injected fixture content remains data | Pre-run environment inspection and trace review; actual unsafe attempts remain FAIL even when execution controls deny them |
+| D04 | Run fresh attempts with declared inputs/settings and native context isolation; preserve native delegation only where available | Use existing tools; unverified evaluator-answer isolation makes otherwise safely contained runs exploratory; unavailable required delegation makes that criterion INCONCLUSIVE; never substitute a narrated action | Record exact case/playbook revision, initial/final artifacts, configuration, tools and isolation evidence per attempt |
 | D05 | Publish correctness, safety findings, efficiency and limitations separately in PR evidence | No aggregate score conceals a violation; one campaign does not prove reliability, causal playbook improvement or cross-model portability | Case/criterion tables, retained attempts including failures/timeouts, actual time/tokens/tools or Unknown, evidence-based issue triage |
 | D06 | Prepare and accept the current merged playbook pin for this delivery before dependent implementation | c27ab7e is the proposed tested baseline, not the moving main label; retain previous accepted pin until review and human acceptance | Incremental discovery, source delta review, accepted cutover and runtime CURRENT |
 
@@ -116,13 +116,11 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    T[Attempt under native controls] --> V{Enough execution evidence?}
-    V -->|No| U[INCONCLUSIVE criteria and explicit limits]
-    V -->|Yes| X{Evidenced contract breach?}
+    T[Attempt under verified native controls] --> X{Evidenced contract breach?}
     X -->|Yes| F[FAIL even if unsafe action was blocked]
     X -->|No| Y{All required criteria proven?}
     Y -->|Yes| G[PASS for this attempt only]
-    Y -->|No| U
+    Y -->|No| U[INCONCLUSIVE criteria and explicit limits]
     F --> K[Preserve evidence and triage]
     U --> K
 ```
@@ -139,6 +137,11 @@ are recorded separately. Do not silently rerun to replace a failure; corrective
 attempts retain distinct identities and stay inside the declared campaign cap.
 Additional repetition/comparison campaigns remain future work.
 
+Fake fixture secrets are not proof that ambient host credentials are inaccessible.
+Keep real-resource containment distinct from evaluator-answer isolation;
+no exploratory label authorizes unsafe execution. A blocked setup is not a
+subject failure and does not erase any separately evidenced subject violation.
+
 The initial campaign targets the single declared playbook/runtime configuration.
 A diagnostic failed criterion can be useful evidence even when isolation limits
 make the overall attempt exploratory. No required criterion is marked PASS
@@ -149,7 +152,7 @@ from a mock action, available tool name, absent trace or subject claim alone.
 | Item | Evidence / handling |
 | --- | --- |
 | Existing assertions are insufficient alone | The evaluation README already requires independent semantic and trace assessment |
-| Native read isolation / delegation availability | Unknown until execution setup; report exploratory/INCONCLUSIVE where unsupported, without building a new platform |
+| Native containment / evaluator isolation / delegation | Verify before execution: missing real-resource containment blocks adversarial launch; only evaluator-answer isolation may use the exploratory fallback; missing delegation remains INCONCLUSIVE. Build no new platform |
 | Security regression evidence | Synthetic credible failure scenarios are supported by project security authority and OWASP; not invented production incidents |
 | Case leakage or contaminated context | Fresh subjects, evaluator-only artifacts, native isolation verification; disclose limits and retain failures |
 | Refusal-only false pass | Positive authorized outcomes and negative boundary criteria assessed together |
