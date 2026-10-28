@@ -279,8 +279,9 @@ in-scope engineering judgment, not blanket future authority.
 
 > [!IMPORTANT]
 > Autopilot requires explicit owner opt-in. Generic plan approval or silence
-> MUST NOT enable it; human-review-before-merge is the default. Record mode, authorized scope, named feature integration branch and
-> protected target in the existing plan; keep authorization evidence in the PR.
+> MUST NOT enable it; human-review-before-merge is the default. Record mode,
+> authorized scope, named feature integration branch and protected target in the
+> existing plan; keep authorization evidence in the PR.
 > With opt-in, merge task PRs ONLY into that named feature branch after both
 > retained reviewers approve the exact head and focused/applicable required
 > checks pass, including any required external approvals. Then start the next
@@ -302,8 +303,8 @@ in-scope engineering judgment, not blanket future authority.
 > evidence and recommendation through existing error handling. Pause affected
 > work while continuing independent authorized work when possible.
 
-Where supported, enable native goal-based continuation for the authorized
-objective, with the next required human gate as its stopping condition.
+With Autopilot enabled, use supported native goal-based continuation for the
+authorized objective, stopping at the next required human gate.
 Otherwise use supported continuation and disclose runtime limitations; do not
 change permission settings or bypass platform controls to keep running.
 

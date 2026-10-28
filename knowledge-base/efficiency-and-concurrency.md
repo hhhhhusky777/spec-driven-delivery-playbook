@@ -42,8 +42,9 @@ manufacture busywork merely to avoid waiting.
 ## Delegation and integration
 
 Delegate a bounded outcome that can be completed independently and verified
-on return. Supply exact inputs or candidate, ownership and authority boundaries,
-and the expected result and evidence. Return useful conclusions and references
+on return. Supply relevant canonical source entry points, design/task outcomes,
+exact inputs or candidate, ownership and authority boundaries, and the expected
+result and evidence. Return useful conclusions and references
 rather than a raw stream of intermediate output.
 
 > [!IMPORTANT]

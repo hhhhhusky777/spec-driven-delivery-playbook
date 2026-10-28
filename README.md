@@ -439,7 +439,8 @@ Within approved boundaries, the agent researches and validates engineering
 choices, selects a suitable solution and records material decisions instead of
 asking about every alternative. Native goal-based continuation, when supported,
 runs only to the next required human gate; unresolved evidence or authority
-still uses existing error handling. The agent still pauses for human implementation acceptance before final-test work,
+still uses existing error handling. The agent still pauses for human
+implementation acceptance before final-test work,
 then resumes authorized final readiness and stops for the human protected-target
 merge decision. Human-review-before-merge remains the
 default; single-PR delivery never gains automatic `main` merge permission.
