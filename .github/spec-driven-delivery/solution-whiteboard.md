@@ -21,11 +21,12 @@ it establishes local observed outcomes, not overall effectiveness.
 
 | ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
-| DR01 | The owner requested handling the previously deferred evaluation issue | Accepted: investigate and prepare a design; implementation remains subject to the existing design gate |
-| DR02 | Evaluate real agent outcomes rather than infer effectiveness from document checks | Accepted: D01–D04 |
-| DR03 | Reuse Codex capabilities; do not rebuild orchestration or add helper tools without need | Accepted: D01, D05 |
-| DR04 | Start small and disclose variation and cost instead of promising a universal success probability | D03–D04; one exploratory attempt per case completed, with limitations |
-| DR05 | Build the reusable framework around correctness and efficiency; extend it later by adding cases | Owner direction: D01–D04, D06; independent judgment uses actual evidence and suitable assertions, not subject self-approval |
+| DR01 | The owner requested handling the previously deferred evaluation issue | Accepted |
+| DR02 | Evaluate real agent outcomes rather than infer effectiveness from document checks | Accepted |
+| DR03 | Reuse Codex capabilities; do not rebuild orchestration or add helper tools without need | Accepted |
+| DR04 | Start small and disclose variation and cost instead of promising a universal success probability | Accepted |
+| DR05 | Build the reusable framework around correctness and efficiency; extend it later by adding cases | Accepted |
+
 
 ## Current understanding
 
@@ -214,7 +215,7 @@ clean baseline or proof of effectiveness.
 | DR02 | D02, D03 | Accepted | Check actual outcomes with an independent oracle |
 | DR03 | D01, D05 | Accepted | Reuse native runtime capabilities and avoid a new framework |
 | DR04 | D03, D04, D06 | Accepted | Preserve attempts, measured effort and inference limits; defer a larger campaign |
-| DR05 | D01–D04, D06 | Accepted | Reusable framework with two result dimensions; future coverage grows by cases |
+| DR05 | D01, D02, D03, D04, D06 | Accepted | Reusable framework with two result dimensions; future coverage grows by cases |
 
 ## Newly introduced validations
 
