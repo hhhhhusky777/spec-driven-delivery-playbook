@@ -38,7 +38,7 @@ The check does not prove research, clear code, complete regression coverage or
 measurement honesty; independent trace/diff review owns those criteria.
 
 `node --test evals/cases/e15-measured-improvement/calibrate.test.mjs` verifies
-an existing-index solution, unchanged costly behavior, last-match regression
+an existing-index solution, unchanged costly behavior, last-match regression,
 stale cross-call caching and collapsing a present undefined label into an absent
 SKU. These are constructed outcomes, not live subjects.
 
