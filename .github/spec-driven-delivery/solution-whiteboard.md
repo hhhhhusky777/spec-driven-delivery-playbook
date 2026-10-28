@@ -53,7 +53,7 @@ evaluation has run and no effectiveness claim is established.
 | R04 | Keep effort proportional and results honest | Four cases, three fresh attempts each; all attempts retained; no cherry-picking, generic harness or added release gate |
 | R05 | Make results useful for maintenance | Findings identify the violated outcome and actionable correction or a reason no change is justified; confirmed gaps use existing issue triage |
 
-## Proposed design
+## Concluded design
 
 The following D01–D06 rows are proposed conclusions. Human acceptance is pending.
 
@@ -174,6 +174,15 @@ error handling rather than a new helper framework.
 | D01–D06 | Scope, execution, grading and interpretation of repository behavior evaluations | New `evals/README.md` | Own the evaluation contract once; case packs own only their scenario and oracle |
 | D01 | Discoverability without adding a release gate or installed payload | Root README and CONTRIBUTING validation section | Add concise links and distinguish optional behavioral evidence from existing source checks |
 | D01 | Accepted reusable playbook revision | Adoption manifest and installer-managed guidance | Review prepared upgrade; activate only after human acceptance using the existing installer |
+
+## Draft-to-conclusion reconciliation
+
+| Draft item | Concluded design point | Disposition | Rationale / evidence |
+| --- | --- | --- | --- |
+| DR01 | D01 | Proposed | Resume #196 through its existing design gate; no implementation yet |
+| DR02 | D02, D03 | Proposed | Check actual outcomes with an independent oracle |
+| DR03 | D01, D05 | Proposed | Reuse native runtime capabilities and avoid a new framework |
+| DR04 | D03, D04, D06 | Proposed | Preserve all attempts, effort and inference limits |
 
 ## Newly introduced validations
 
