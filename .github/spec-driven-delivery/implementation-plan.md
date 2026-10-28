@@ -179,18 +179,18 @@ ordinary author mistakes do not create mandatory new issues.
 
 ### Implementation review
 
-T01–T02 are implemented; T03–T13 remain. At final readiness,
+Task and coverage tables above own current implementation status. At final readiness,
 record the actual suite, its flow views, design comparison, findings, risks,
 focused evidence and outstanding final work in this table before review.
 
 | Information | Implementation summary / evidence |
 | --- | --- |
-| Implementation / design | T01–T02 complete; remaining tasks and integrated audit pending |
+| Implementation / design | See task inventory; integrated implementation audit pending |
 | Code-level flows | Pending actual preparation, subject, evaluation and failure/data flows |
 | Review findings | Pending implementation audit; PR owns review history |
 | Risks / limits / unknowns | D03 containment and D04 native isolation/delegation capability unverified |
-| Validation | Focused case checks and full validation unrun; inventory above owns remaining work |
-| Recommendation / decision | Plan review now; implementation acceptance and final-test authorization are later gates |
+| Validation | Completed focused evidence is recorded by task and in PRs; the coverage inventory owns remaining work. Subject campaign and full validation unrun |
+| Recommendation / decision | Continue approved tasks under Autopilot; integrated implementation acceptance is the next required human gate before final-test work |
 
 ### Delivery Definition of Done
 
@@ -208,7 +208,7 @@ focused evidence and outstanding final work in this table before review.
 
 | Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
 | --- | --- | --- | --- |
-| D01–D05 / T01–T13 | Calibrated suite and bounded first campaign | T01 E05 and T02 E06 artifacts and focused calibration complete; actual subject runs unrun | T03–T13 and final campaign / author and task owners |
+| D01–D05 / T01–T13 | Calibrated suite and bounded first campaign | Task/coverage inventory owns completed artifacts and focused evidence; actual subject runs unrun | Nonterminal tasks in inventory and final campaign / author and task owners |
 | D06 | Accepted current pin | CURRENT at `c27ab7e`; no design amendment | None |
 
 ### Cleanup inventory
