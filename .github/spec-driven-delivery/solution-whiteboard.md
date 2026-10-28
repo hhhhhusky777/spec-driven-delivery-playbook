@@ -4,13 +4,14 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [#196](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/196) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
-| Open owner decisions | Accept the refined evaluation contract after reviewer assessment; prepared upgrade remains a separate pending decision |
+| Concluded design revision | `c82aa9e626c1c4bb9494e83e6bff87dd45885401` |
+| Open owner decisions | `None` |
 
-This is an updated conclusion candidate, not a frozen design. The owner accepted
+The owner accepted this design and both reviewers' APPROVE dispositions on
+2026-10-28. The design is concluded and frozen. The owner accepted
 building a reusable evaluation framework that tracks correctness and efficiency
 and grows through additional cases. The four-case exploratory trial is recorded
 in [PR evidence](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/197#issuecomment-6463585443);
@@ -21,8 +22,8 @@ it establishes local observed outcomes, not overall effectiveness.
 | ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
 | DR01 | The owner requested handling the previously deferred evaluation issue | Accepted: investigate and prepare a design; implementation remains subject to the existing design gate |
-| DR02 | Evaluate real agent outcomes rather than infer effectiveness from document checks | Proposed: D01–D04 |
-| DR03 | Reuse Codex capabilities; do not rebuild orchestration or add helper tools without need | Proposed: D01, D05 |
+| DR02 | Evaluate real agent outcomes rather than infer effectiveness from document checks | Accepted: D01–D04 |
+| DR03 | Reuse Codex capabilities; do not rebuild orchestration or add helper tools without need | Accepted: D01, D05 |
 | DR04 | Start small and disclose variation and cost instead of promising a universal success probability | D03–D04; one exploratory attempt per case completed, with limitations |
 | DR05 | Build the reusable framework around correctness and efficiency; extend it later by adding cases | Owner direction: D01–D04, D06; independent judgment uses actual evidence and suitable assertions, not subject self-approval |
 
@@ -43,7 +44,7 @@ it establishes local observed outcomes, not overall effectiveness.
 | [Contributing](../../CONTRIBUTING.md), [quality policy](../../docs/documentation-quality-policy.md), [error handling](../../docs/error-handling.md) | Existing scope, review, evidence and human authority | Unchanged |
 | [Manifest](project-adoption-manifest.md) | Accepted installation pin `c2f83cb8868477a11415a83ea991459546a9f4c3` | Preserved until upgrade acceptance |
 | Upgrade candidate | Source `main` resolved to `179219484d3bffd8886837c158b5c12be1be7bfc`; prepared in this delivery worktree | Pending reviews and human acceptance; no activation claimed |
-| [Issue #196](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/196) and current owner instruction | Build the reusable correctness/efficiency framework, initially using four grounded cases | Direction accepted; this refined contract is submitted for exact-candidate review |
+| [Issue #196](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/196) and current owner instruction | Build the reusable correctness/efficiency framework, initially using four grounded cases | Exact design and both reviewer dispositions accepted by the owner |
 | [OpenAI skill evaluations](https://developers.openai.com/blog/eval-skills) | Evaluate real runs and artifacts with explicit checks; reuse existing execution and trace capabilities | Read 2026-10-28; native execution, artifacts and usage capture exercised in exploratory trials |
 | [OpenAI evaluation practices](https://developers.openai.com/api/docs/guides/evaluation-best-practices) | Task-specific datasets, explicit criteria, human calibration and nondeterminism | Read 2026-10-28; no hosted platform dependency proposed |
 
@@ -59,7 +60,8 @@ it establishes local observed outcomes, not overall effectiveness.
 
 ## Concluded design
 
-The following D01–D06 rows are proposed conclusions. Human acceptance is pending.
+The following D01–D06 rows are accepted conclusions. The owner also accepted
+new validations `None` and new fail-closed behaviors `None`.
 
 | Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
@@ -208,11 +210,11 @@ clean baseline or proof of effectiveness.
 
 | Draft item | Concluded design point | Disposition | Rationale / evidence |
 | --- | --- | --- | --- |
-| DR01 | D01 | Proposed | Resume #196 through its existing design gate; no implementation yet |
-| DR02 | D02, D03 | Proposed | Check actual outcomes with an independent oracle |
-| DR03 | D01, D05 | Proposed | Reuse native runtime capabilities and avoid a new framework |
-| DR04 | D03, D04, D06 | Refined after trial | Preserve attempts, measured effort and inference limits; defer a larger campaign |
-| DR05 | D01–D04, D06 | Incorporated | Reusable framework with two result dimensions; future coverage grows by cases |
+| DR01 | D01 | Accepted | Resume #196 through its existing design gate; no implementation yet |
+| DR02 | D02, D03 | Accepted | Check actual outcomes with an independent oracle |
+| DR03 | D01, D05 | Accepted | Reuse native runtime capabilities and avoid a new framework |
+| DR04 | D03, D04, D06 | Accepted | Preserve attempts, measured effort and inference limits; defer a larger campaign |
+| DR05 | D01–D04, D06 | Accepted | Reusable framework with two result dimensions; future coverage grows by cases |
 
 ## Newly introduced validations
 
@@ -234,8 +236,8 @@ delivery. Existing review, testing and human gates remain authoritative.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Framework scope | Reusable case/rubric/result formats, four starter cases, native execution, separate correctness and efficiency; no custom orchestration or automatic gate | HUMAN_DECISION |
+| Framework scope | Reusable case/rubric/result formats, four starter cases, native execution, separate correctness and efficiency; no custom orchestration or automatic gate | ACCEPTED |
 | Inference limits | Baseline evidence only; no universal reliability or causal improvement claim | DISCLOSE |
 | Runtime evidence | Native execution/capture verified; strict read isolation unproven, so exploratory results cannot establish a clean baseline | DISCLOSE |
-| Upgrade | Prepared current main candidate; accepted pin and installed KB remain unchanged pending acceptance | HUMAN_DECISION |
-| Next boundary | Retained reviewers assess the refined contract; human acceptance precedes conclusion and planning. No implementation or upgrade activation is claimed | HUMAN_DECISION |
+| Upgrade | Separate pending decision; design acceptance does not activate the prepared upgrade | DISCLOSE |
+| Next boundary | Verify this conclusion transition with both retained reviewers, then prepare the implementation plan. No implementation or upgrade activation is claimed | AGENT_ACTION |
