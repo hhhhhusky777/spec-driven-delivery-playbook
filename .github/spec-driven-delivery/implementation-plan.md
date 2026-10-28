@@ -9,7 +9,7 @@
 | State | `IMPLEMENTING` |
 | Active tasks | `None` |
 | Next ready task | `None` |
-| Active blocker | `None` |
+| Active blocker | Human implementation acceptance required before final-test work |
 | Implementation mode | Autopilot enabled by owner on 2026-10-28 |
 | Authorized scope / feature branch / protected target | Task PR auto-merge after exact-head two-reviewer approval and required focused checks; remaining T03–T13 into `codex/playbook-eval-coverage`; protected target `main` |
 | Delivery branch / target | `codex/playbook-eval-coverage` / `main`; final PR #201 |
@@ -17,7 +17,7 @@
 | Primary issue / need | [Issue #200](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/200) |
 | Concluded whiteboard | [Accepted design](solution-whiteboard.md), revision `6e0f8f92d0b680d6eaadd62bb544f706a31c6f72`; conclusion metadata completed at `525e208` |
 | Required reviewers | Retained independent seats `issue200_review1` and `issue200_review2` |
-| Last verified | 2026-10-28: T12/E16 implemented; 9 focused calibration tests passed; task reviews/merges remain PR facts; actual subject campaign and full validation unrun |
+| Last verified | 2026-10-28: all thirteen tasks implemented; focused evidence recorded per task/PR; implementation audit and acceptance are PR facts. Live campaign and full validation unrun |
 
 ## Governing inputs and delivery boundaries
 
@@ -67,7 +67,7 @@ task is required. Shared catalog integration consumes their completed artifacts.
 | T10 | DONE | None | D01–D05; E14 in the accepted case matrix | Add E14 Compatibility and uncertain effects: supported callers, controlled interleaving and ambiguous write result; rubric, subject and calibrated checks under its own `evals/cases/` directory | Preserve consistency and safe retry at the existing owner | Deterministic controls; no exhaustive race catalog or recovery framework | D04–D05: preserve unknowns, failures and interrupted evidence | None new; apply D02 calibration and existing case verdicts | Caller compatibility, invariant preservation and no unsafe repeated effect; valid and defective calibration evidence in task PR | D03/D04 capabilities remain unverified until setup; no host-safety assumption | `codex/eval-e14`; [PR #211](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/211); target `codex/playbook-eval-coverage` |
 | T11 | DONE | None | D01–D05; E15 in the accepted case matrix | Add E15 Measured improvement and code refinement: redundant work with measurable local cost and an existing alternative; rubric, subject and calibrated checks under its own `evals/cases/` directory | Choose a supported improvement while preserving behavior | Research applicability; no production speed claim or arbitrary speed ratio | D04–D05: preserve unknowns, failures and interrupted evidence | None new; apply D02 calibration and existing case verdicts | Behavior regression evidence, comparable workload/cost and clear bounded change; valid and defective calibration evidence in task PR | D03/D04 capabilities remain unverified until setup; no host-safety assumption | `codex/eval-e15`; [PR #212](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/212); target `codex/playbook-eval-coverage` |
 | T12 | DONE | None | D01–D05; E16 in the accepted case matrix | Add E16 Final audit and closure: separate incomplete audit and authorized closing snapshots; rubric, subject and calibrated checks under its own `evals/cases/` directory | Detect mismatch before final tests and close only authorized artifacts | Local staged artifacts; no real hosted merge/deletion | D04–D05: preserve unknowns, failures and interrupted evidence | None new; apply D02 calibration and existing case verdicts | Design/code/view mismatch detected; archive, authority updates and owned cleanup verified; valid and defective calibration evidence in task PR | D03/D04 capabilities remain unverified until setup; no host-safety assumption | `codex/eval-e16`; [PR #213](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/213); target `codex/playbook-eval-coverage` |
-| T13 | PLANNED | T01, T02, T03, T04, T05, T06, T07, T08, T09, T10, T11, T12 | D01–D05; architecture/evidence flow | Update `evals/README.md` with coverage, case context assembly, campaign preparation and evidence interpretation using the existing format | Complete suite is discoverable and can be executed without ambiguous authority or leaked rubrics | Preserve E01–E04; no new harness or duplicated case criteria | D03/D04 setup and isolation dispositions; D05 gap triage | None new; existing focused documentation and fixture checks | All 16 cases resolve; per-case authority overrides are explicit; preparation excludes evaluator-only artifacts | Native capabilities are measured, not inferred from a separate directory | `codex/eval-catalog`; PR not opened; target `codex/playbook-eval-coverage` |
+| T13 | DONE | T01, T02, T03, T04, T05, T06, T07, T08, T09, T10, T11, T12 | D01–D05; architecture/evidence flow | Update `evals/README.md` with coverage, case context assembly, campaign preparation and evidence interpretation using the existing format | Complete suite is discoverable and can be executed without ambiguous authority or leaked rubrics | Preserve E01–E04; no new harness or duplicated case criteria | D03/D04 setup and isolation dispositions; D05 gap triage | None new; existing focused documentation and fixture checks | All 16 cases resolve; per-case authority overrides are explicit; preparation excludes evaluator-only artifacts | Native capabilities are measured, not inferred from a separate directory | `codex/eval-catalog`; [PR #214](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/214); target `codex/playbook-eval-coverage` |
 
 ## Test and acceptance contracts
 
@@ -88,7 +88,7 @@ checks are evaluator support, not a claim that a subject applied the playbook.
 | T10 | E14: Compatibility and uncertain effects; D02 legitimate success and defect sensitivity | Valid and representative defective artifact/trace calibration against E14 rubric; meaningful small checks where useful | Implemented: E14 rubric, focused check and 8 calibration tests | Focused task work; live subject attempts deferred to final gate |
 | T11 | E15: Measured improvement and code refinement; D02 legitimate success and defect sensitivity | Valid and representative defective artifact/trace calibration against E15 rubric; meaningful small checks where useful | Implemented: E15 rubric, focused check and 5 calibration tests | Focused task work; live subject attempts deferred to final gate |
 | T12 | E16: Final audit and closure; D02 legitimate success and defect sensitivity | Valid and representative defective artifact/trace calibration against E16 rubric; meaningful small checks where useful | Implemented: E16 rubric, focused check and 9 calibration tests | Focused task work; live subject attempts deferred to final gate |
-| T13 | D01/D04 coherent assembly and current catalog | Focused Markdown/link checks; inspect assembled case inputs, authority precedence and evaluator exclusion | Missing | Focused task work |
+| T13 | D01/D04 coherent assembly and current catalog | Focused Markdown/link checks; inspect assembled case inputs, authority precedence and evaluator exclusion | Implemented: catalog, variant assembly, safety/isolation and evidence guidance; focused links and documentation checks | Focused task work |
 | Author, final gate | D02–D05 actual subject behavior and evidence integrity | Bounded campaign below; independent criterion assessment and reviewed material disputes | Unrun | After implementation audit and human acceptance |
 | Author, final gate | Source compatibility and documentation integrity | `npm run docs:all`, applicable installer/runtime checks and whitespace on final candidate | Existing source suite; unrun for this delivery | Full validation after final candidate review |
 
@@ -179,27 +179,88 @@ ordinary author mistakes do not create mandatory new issues.
 
 ### Implementation review
 
-Task and coverage tables above own current implementation status. At final readiness,
-record the actual suite, its flow views, design comparison, findings, risks,
-focused evidence and outstanding final work in this table before review.
+The following views describe the implemented evaluator workflow and local checks,
+not a new automated runner or evidence that subjects have executed. The unchanged
+E01–E04 and twelve added case directories implement D01–D05; the catalog owns
+assembly and assessment guidance. Task/coverage tables own detailed evidence.
 
 | Information | Implementation summary / evidence |
 | --- | --- |
-| Implementation / design | See task inventory; integrated implementation audit pending |
-| Code-level flows | Pending actual preparation, subject, evaluation and failure/data flows |
-| Review findings | Pending implementation audit; PR owns review history |
-| Risks / limits / unknowns | D03 containment and D04 native isolation/delegation capability unverified |
-| Validation | Completed focused evidence is recorded by task and in PRs; the coverage inventory owns remaining work. Subject campaign and full validation unrun |
-| Recommendation / decision | Continue approved tasks under Autopilot; integrated implementation acceptance is the next required human gate before final-test work |
+| Implementation / design | D01: 16 cases, 20 starting scenarios. D02: per-case rubric/checks and 80 new focused calibration tests. D03–D05: catalog separates safety containment, answer isolation, real native capability, independent verdicts and efficiency. D06: accepted pin remains unchanged. No new runner, installed policy or source-CI gate |
+| Code-level flows | Actual evaluator/check behavior is shown below; executable oracles supplement independent semantic/trace judgment, never replace it |
+| Review findings | Task findings and dispositions are retained in their PRs; integrated audit conclusions belong to PR #201. No unresolved implementation finding is claimed closed by this table |
+| Risks / limits / unknowns | Real-resource containment, answer isolation and native E12 delegation/message capability remain unverified. Unsafe/unavailable setups must not launch; affected criteria remain INCONCLUSIVE. Calibration is not live agent correctness or security evidence |
+| Validation | Per-task calibration and focused checks passed as recorded in task PRs; T13 catalog checks cover links, assembly and authority precedence. Actual subject campaign, complete source suite and final evidence reconciliation remain unrun |
+| Recommendation / decision | After both retained reviewers approve this implementation audit, request human acceptance to begin final-test work. Final main merge and archive/reset remain separately authorized boundaries |
+
+#### Business flow — evaluator and check execution
+
+```mermaid
+sequenceDiagram
+    participant E as Evaluator
+    participant R as Native runtime
+    participant S as Subject and authorized workers
+    participant C as Case check
+    E->>E: Select case/variant and immutable inputs
+    E->>E: Verify safety, isolation and required capabilities
+    alt Required safety/capability unavailable
+        E->>E: Record setup blocked, do not launch
+    else Authorized setup
+        E->>R: Fresh attempt with declared limits
+        R->>S: Task plus project context, no rubric/answers
+        S-->>E: Artifacts, reply and native trace
+        E->>C: Inspect artifacts in authorized containment
+        C-->>E: Deterministic assertion evidence
+        E->>E: Independently assess semantics, actions and efficiency
+    end
+```
+
+#### Error handling flow
+
+```mermaid
+flowchart TD
+    A[Preflight before launch] --> B{Required safety and capability available?}
+    B -->|No| C[No launch: setup blocked / affected criteria INCONCLUSIVE]
+    B -->|Yes| R[Launch authorized attempt]
+    R --> D[Retain artifacts, traces, exit and timeout evidence]
+    X[Evidence from an already-launched attempt] --> D
+    D --> E{Observed required-contract breach?}
+    E -->|Yes| F[FAIL even if controls blocked the effect]
+    E -->|No| G{All required criteria supported?}
+    G -->|No| H[INCONCLUSIVE: preserve unknowns]
+    G -->|Yes| I[PASS for this attempt and declared limits]
+    D --> J{Case or evaluator defect?}
+    J -->|Yes| K[Correct and review; keep prior attempt; rerun uses new ID]
+    J -->|No| L[Retain subject outcome; triage evidenced gaps]
+```
+
+#### Data flow
+
+```mermaid
+flowchart LR
+    A[(Pinned subject packet and project context)] --> B[Fresh native subject]
+    B --> C[(Artifacts, reply and action trace)]
+    D[(Evaluator-only rubric and calibrated checks)] --> E[Independent assessment]
+    C --> E
+    E --> F[Criterion verdicts and separate effort measurements]
+    F --> G[(Sanitized PR evidence)]
+    C --> H[(Local raw evidence)]
+```
+
+The subject has no authorized access to rubric, calibration answers or other
+attempts. File assertions inspect exact outcomes; imports and child execution
+remain subject-code execution and need the same safety boundary. Raw traces
+stay local; published evidence is sanitized. Unverified answer isolation is an
+explicit exploratory limitation only for otherwise safely contained runs.
 
 ### Delivery Definition of Done
 
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
-| D01–D02 | T01–T13 deliver all new cases, preserve E01–E04 and calibrate meaningful criteria | Pending |
+| D01–D02 | T01–T13 deliver all new cases, preserve E01–E04 and calibrate meaningful criteria | Implemented; focused evidence in task PRs; integrated audit pending in PR #201 |
 | D03–D05 campaign obligation, author owned | Bounded actual attempts or explicit setup limits, independent verdicts, efficiency and retained failed/unknown evidence; genuine gaps tracked | Pending; no claim of comprehensive security certification |
 | D06 accepted upgrade, author owned | Owner acceptance, verified conclusion transition and CURRENT runtime | Completed at `525e208`; [PR #201](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/201) owns evidence |
-| Durable authority updates | Whiteboard's authority-update inventory consumed; evaluation catalog/contract update owned by T13 | Pending |
+| Durable authority updates | Whiteboard's authority-update inventory consumed; evaluation catalog/contract update owned by T13 | Catalog updated; accepted pin unchanged |
 | Applicable validation and canonical state | Exact-candidate full checks, honest final plan and consistent catalog | Pending |
 | Review and delivery | Both retained reviewers, human gates, final merge and target verification | PR #201; pending |
 | Feature cleanup | Complete combined archive, authorized live reset/removal and verified owned physical cleanup | Pending |
@@ -208,7 +269,7 @@ focused evidence and outstanding final work in this table before review.
 
 | Design / task | Planned result | Actual evidence or deviation | Remaining obligation / owner |
 | --- | --- | --- | --- |
-| D01–D05 / T01–T13 | Calibrated suite and bounded first campaign | Task/coverage inventory owns completed artifacts and focused evidence; actual subject runs unrun | Nonterminal tasks in inventory and final campaign / author and task owners |
+| D01–D05 / T01–T13 | Calibrated suite and bounded first campaign | Task/coverage inventory owns completed artifacts and focused evidence; actual subject runs unrun | Final campaign and validation / author |
 | D06 | Accepted current pin | CURRENT at `c27ab7e`; no design amendment | None |
 
 ### Cleanup inventory
@@ -218,15 +279,15 @@ focused evidence and outstanding final work in this table before review.
 | Manifest, installed KB/skills, reusable evaluation cases/catalog | Keep | Reusable project guidance/product | Pending final verification |
 | Working whiteboard and this plan | Combined archive, then authorized reset/removal | Complete sources and PR/issue links; named archive/reset authority required before changing frozen whiteboard | Pending |
 | Current feature worktree and `codex/playbook-eval-coverage` | Remove/retire after final target verification | Owned delivery; app-managed lifecycle and clean state verified before action | Pending |
-| Task worktrees/branches and disposable attempts | Remove when safe under verified ownership | Exact created paths/branches recorded in PR as created; preserve required local evidence and unrelated data | Not created |
+| Task worktrees/branches and disposable attempts | Remove when safe under verified ownership | Five owned worker worktrees and task branches recorded in PRs/app attachments; preserve required local evidence and unrelated data | Worker worktrees retained for corrections; no subject attempts created |
 | Installer-owned runtime | Installer cleanup after closing boundary | Existing installer ownership record | Pending |
 
 ## Human review brief
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Tasks and design consistency | Completed case rows and coverage inventory below reflect this candidate; remaining tasks continue under Autopilot | DISCLOSE |
+| Tasks and design consistency | All thirteen tasks implemented; detailed mapping and coverage remain above | DISCLOSE |
 | Upgrade | Accepted pin active and verified; no new upgrade decision | DISCLOSE |
 | Campaign | 20-attempt bounded allocation; real containment still must be demonstrated before adversarial execution | DISCLOSE |
 | Mode | Autopilot enabled for task PRs into the feature branch only | DISCLOSE |
-| Decision requested | Continue task reviews/merges under Autopilot; next required human gate is completed implementation before final-test work | HUMAN_DECISION |
+| Decision requested | Accept reviewed implementation and start final-test work; no main merge or archive/reset authority requested here | HUMAN_DECISION |
