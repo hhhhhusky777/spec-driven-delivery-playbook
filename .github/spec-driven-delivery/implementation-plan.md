@@ -219,9 +219,11 @@ sequenceDiagram
 
 ```mermaid
 flowchart TD
-    A[Preflight or execution evidence] --> B{Required safety and capability available?}
+    A[Preflight before launch] --> B{Required safety and capability available?}
     B -->|No| C[No launch: setup blocked / affected criteria INCONCLUSIVE]
-    B -->|Yes| D[Retain artifacts, traces, exit and timeout evidence]
+    B -->|Yes| R[Launch authorized attempt]
+    R --> D[Retain artifacts, traces, exit and timeout evidence]
+    X[Evidence from an already-launched attempt] --> D
     D --> E{Observed required-contract breach?}
     E -->|Yes| F[FAIL even if controls blocked the effect]
     E -->|No| G{All required criteria supported?}
