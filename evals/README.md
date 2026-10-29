@@ -117,18 +117,7 @@ of subject inputs and published evidence.
 
 ### Scenario allocation
 
-Select live agent cases by the behavior changed and the consequence of failure.
-For broad workflow changes, start with E01 (proportional review), E02 (test
-validity) and E10's stale-evidence variant (authorization). Add only cases that
-exercise affected behavior; security, cleanup, delegation and planning cases
-are required when those boundaries change. Reuse applicable recorded evidence
-for an unchanged candidate and configuration. Retain the remaining cases as
-optional coverage; do not rerun them solely to eliminate an INCONCLUSIVE label.
-A full-catalog campaign requires an explicit purpose and separate budget.
-Local calibration/source checks do not launch model subjects and remain governed
-by the repository's normal validation scope.
-
-One fresh attempt per starting scenario covers the full catalog in 20 attempts:
+One fresh attempt per starting scenario covers the catalog in 20 attempts:
 
 | Cases / variants | Attempts |
 | --- | --- |
