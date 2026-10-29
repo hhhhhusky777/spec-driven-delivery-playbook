@@ -9,7 +9,7 @@
 | State | `VALIDATING` |
 | Active tasks | `None` |
 | Next ready task | `None` |
-| Active blocker | Owner authorized three further attempts (24 total) for E04/E15/E12; final main merge and archive/reset remain unauthorized |
+| Active blocker | Owner reduced live evaluation scope to conserve credit. E04/E15 interrupted; E12 retry not launched. No further live attempt scheduled; final main merge and archive/reset remain unauthorized |
 | Implementation mode | Autopilot enabled by owner on 2026-10-28 |
 | Authorized scope / feature branch / protected target | Task PR authority completed for T03–T13 into `codex/playbook-eval-coverage`; owner accepted implementation and final-test work on 2026-10-28; protected target `main` remains unapproved |
 | Delivery branch / target | `codex/playbook-eval-coverage` / `main`; final PR #201 |
@@ -17,7 +17,7 @@
 | Primary issue / need | [Issue #200](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/200) |
 | Concluded whiteboard | [Accepted design](solution-whiteboard.md), revision `6e0f8f92d0b680d6eaadd62bb544f706a31c6f72`; conclusion metadata completed at `525e208` |
 | Required reviewers | Retained independent seats `issue200_review1` and `issue200_review2` |
-| Last verified | 2026-10-29: all thirteen tasks DONE; 21 launched attempts assessed: 17 PASS and four INCONCLUSIVE, all exploratory. E04 unrun; E15 retry unlaunched; E12 C2 evidence incomplete. Two pre-model configuration failures are retained separately. Detailed evidence belongs to PR #201 |
+| Last verified | 2026-10-29: all thirteen tasks DONE; 23 launches retained: 17 PASS and six INCONCLUSIVE, all exploratory, including owner-stopped E04/E15. E12 retry not launched. Two pre-model configuration failures are retained separately. Detailed evidence belongs to PR #201 |
 
 ## Governing inputs and delivery boundaries
 
@@ -89,7 +89,7 @@ checks are evaluator support, not a claim that a subject applied the playbook.
 | T11 | E15: Measured improvement and code refinement; D02 legitimate success and defect sensitivity | Valid and representative defective artifact/trace calibration against E15 rubric; meaningful small checks where useful | Implemented: E15 rubric, focused check and 5 calibration tests | Focused task work; live subject attempts deferred to final gate |
 | T12 | E16: Final audit and closure; D02 legitimate success and defect sensitivity | Valid and representative defective artifact/trace calibration against E16 rubric; meaningful small checks where useful | Implemented: E16 rubric, focused check and 9 calibration tests | Focused task work; live subject attempts deferred to final gate |
 | T13 | D01/D04 coherent assembly and current catalog | Focused Markdown/link checks; inspect assembled case inputs, authority precedence and evaluator exclusion | Implemented: catalog, variant assembly, safety/isolation and evidence guidance; focused links and documentation checks | Focused task work |
-| Author, final gate | D02–D05 actual subject behavior and evidence integrity | Bounded campaign below; independent criterion assessment and reviewed material disputes | 21 launched attempts assessed; E04 unrun, E15 retry unlaunched and E12 message evidence incomplete; criterion evidence and limits in PR #201 | Owner accepted final-test work after implementation audit |
+| Author, final gate | D02–D05 actual subject behavior and evidence integrity | Bounded campaign below; independent criterion assessment and reviewed material disputes | 23 launched attempts retained; E04/E15 interrupted by owner scope reduction and E12 message evidence incomplete; criterion evidence and limits in PR #201 | Owner accepted final-test work after implementation audit |
 | Author, final gate | Source compatibility and documentation integrity | `npm run docs:all`, applicable installer/runtime checks and whitespace on final candidate | Exact-head source results owned by PR #201; runtime CURRENT | Full validation after final candidate review |
 
 At task completion, record any missing non-focused tests here with an owner.
@@ -176,9 +176,10 @@ ordinary author mistakes do not create mandatory new issues.
 | ID | Observed versus expected | Classification / recovery | State |
 | --- | --- | --- | --- |
 | R01 | Conclusion metadata used prose dispositions and slash-separated IDs that failed lifecycle validation | Author formatting mistake; normalized already-approved metadata only at `525e208`; both reviewers verified unchanged design | Resolved |
-| R02 | Native environment could not establish every planned capability | Supplement established contained safety runs and actual native delegation. Command-based official-source access still returns proxy 403; cached official-domain search configuration is verified, retrieval untested. E12 CSV follow-up payload missing from retained native export | Open evidence limits in PR #201; no subject failure inferred |
+| R02 | Native environment could not establish every planned capability | Supplement established contained safety runs and actual native delegation. Command-based official-source access still returns proxy 403; cached official-domain search returned official Node/TC39 results in the later interrupted attempts; complete research and solution validation remain unproven. E12 CSV follow-up payload missing from retained native export | Open evidence limits in PR #201; no subject failure inferred |
 | R03 | Three native runs encountered service 429 backoff; local tools also lacked Git/OpenSSL setup access | Recoverable execution restrictions/delays, not demonstrated playbook defects; retain actual attempts and separate elapsed time from unmeasured active work | Original 14 attempts retained; supplemental execution uses the approved 21-attempt total cap |
-| R04 | Supplemental E05/E07 shell launches failed despite earlier explicit-shell preflight | Author setup gap: default Bash and resolved read-only dependencies were missing from the runtime profile; corrected and verified before retries. E05-A02/E07-A01 remain launched INCONCLUSIVE; two earlier config parse failures remain pre-model setup failures | Retries passed; they displaced unlaunched E04/E15 slots with disclosure. The 21-attempt cap is exhausted |
+| R04 | Supplemental E05/E07 shell launches failed despite earlier explicit-shell preflight | Author setup gap: default Bash and resolved read-only dependencies were missing from the runtime profile; corrected and verified before retries. E05-A02/E07-A01 remain launched INCONCLUSIVE; two earlier config parse failures remain pre-model setup failures | Retries passed; they displaced unlaunched E04/E15 slots with disclosure. The earlier 21-attempt cap was exhausted |
+| R05 | Owner requested retaining only important live tests because credit use was high | Scope reduction: stop E04-A01/E15-A02 and retain interrupted INCONCLUSIVE records; leave E12-A02 unlaunched. Keep existing successful evidence and all reusable cases; choose future attempts by changed risk rather than catalog completion | No further live attempts scheduled; 23 of the authorized maximum 24 launched |
 
 ## Plan validation and completion
 
@@ -194,8 +195,8 @@ assembly and assessment guidance. Task/coverage tables own detailed evidence.
 | Implementation / design | D01: 16 cases, 20 starting scenarios. D02: per-case rubric/checks and 80 new focused calibration tests. D03–D05: catalog separates safety containment, answer isolation, real native capability, independent verdicts and efficiency. D06: accepted pin remains unchanged. No new runner, installed policy or source-CI gate |
 | Code-level flows | Actual evaluator/check behavior is shown below; executable oracles supplement independent semantic/trace judgment, never replace it |
 | Review findings | Task findings and dispositions are retained in their PRs; integrated audit conclusions belong to PR #201. No unresolved implementation finding is claimed closed by this table |
-| Risks / limits / unknowns | Contained E05–E08 runs completed. E04 retrieval remains untested; original E15 research and E12 CSV context-update evidence remain incomplete. Answer-context isolation is unverified; all actual attempts are exploratory |
-| Validation | 80 calibration tests passed. Of 21 launched attempts, 19 artifact checks passed and two environment-blocked attempts failed their artifact checks; all retained. Independent criterion results, efficiency and final source-gate evidence belong to PR #201; assertions alone do not establish semantic success |
+| Risks / limits / unknowns | Contained E05–E08 runs completed. E04/E15 returned official cached-search results but were interrupted before completion; original E15 research and E12 CSV context-update evidence remain incomplete. Answer-context isolation is unverified; all actual attempts are exploratory |
+| Validation | 80 calibration tests passed. Of 23 launched attempts, 19 artifact checks passed and two environment-blocked attempts failed their artifact checks; two later owner-interrupted attempts have no completion check; all retained. Independent criterion results, efficiency and final source-gate evidence belong to PR #201; assertions alone do not establish semantic success |
 | Recommendation / decision | Human implementation acceptance received; final-test work executed within the declared limits. Final main merge and archive/reset remain separately authorized boundaries |
 
 #### Business flow — evaluator and check execution
@@ -263,7 +264,7 @@ explicit exploratory limitation only for otherwise safely contained runs.
 | Outcome | Required evidence | Result / link |
 | --- | --- | --- |
 | D01–D02 | T01–T13 deliver all new cases, preserve E01–E04 and calibrate meaningful criteria | Implemented; both retained seats approved the integrated implementation; 80 calibration tests passed; evidence in PR #201 |
-| D03–D05 campaign obligation, author owned | Bounded actual attempts or explicit setup limits, independent verdicts, efficiency and retained failed/unknown evidence; genuine gaps tracked | 17 exploratory PASS and four INCONCLUSIVE across 21 launches; E04 unrun and E15 retry unlaunched. PR #201 retains criteria and environment/evidence limitations; no comprehensive security or reliability claim |
+| D03–D05 campaign obligation, author owned | Bounded actual attempts or explicit setup limits, independent verdicts, efficiency and retained failed/unknown evidence; genuine gaps tracked | 17 exploratory PASS and six INCONCLUSIVE across 23 launches; E04/E15 interrupted to conserve credit, E12 retry not launched. PR #201 retains criteria and environment/evidence limitations; no comprehensive security or reliability claim |
 | D06 accepted upgrade, author owned | Owner acceptance, verified conclusion transition and CURRENT runtime | Completed at `525e208`; [PR #201](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/201) owns evidence |
 | Durable authority updates | Whiteboard's authority-update inventory consumed; evaluation catalog/contract update owned by T13 | Catalog updated; accepted pin unchanged |
 | Applicable validation and canonical state | Exact-candidate full checks, honest final plan and consistent catalog | Final candidate gate evidence owned by PR #201 |
@@ -284,7 +285,7 @@ explicit exploratory limitation only for otherwise safely contained runs.
 | Manifest, installed KB/skills, reusable evaluation cases/catalog | Keep | Reusable project guidance/product | Pending final verification |
 | Working whiteboard and this plan | Combined archive, then authorized reset/removal | Complete sources and PR/issue links; named archive/reset authority required before changing frozen whiteboard | Pending |
 | Current feature worktree and `codex/playbook-eval-coverage` | Remove/retire after final target verification | Owned delivery; app-managed lifecycle and clean state verified before action | Pending |
-| Task worktrees/branches and disposable attempts | Remove when safe under verified ownership | Five owned worker worktrees and task branches recorded in PRs/app attachments; preserve required local evidence and unrelated data | Worker worktrees, 21 launched attempts and two pre-model setup failures retained; raw evidence remains local until safe closing cleanup |
+| Task worktrees/branches and disposable attempts | Remove when safe under verified ownership | Five owned worker worktrees and task branches recorded in PRs/app attachments; preserve required local evidence and unrelated data | Worker worktrees, 23 launched attempts and two pre-model setup failures retained; raw evidence remains local until safe closing cleanup |
 | Installer-owned runtime | Installer cleanup after closing boundary | Existing installer ownership record | Pending |
 
 ## Human review brief
@@ -293,6 +294,6 @@ explicit exploratory limitation only for otherwise safely contained runs.
 | --- | --- | --- |
 | Tasks and design consistency | All thirteen tasks implemented; detailed mapping and coverage remain above | DISCLOSE |
 | Upgrade | Accepted pin active and verified; no new upgrade decision | DISCLOSE |
-| Campaign | 19 of 20 starting scenarios launched; 21 total attempts including retries. E04 unrun; E15 and E12 remain incomplete. All launched attempts completed within 900 seconds; evidence is exploratory | DISCLOSE |
+| Campaign | All 20 starting scenarios launched; 23 attempts including retries. E04/E15 were interrupted on owner scope reduction; E12 message evidence remains incomplete. No timeout; evidence is exploratory | DISCLOSE |
 | Mode | Autopilot enabled for task PRs into the feature branch only | DISCLOSE |
-| Decision requested | Three further attempts authorized for E04/E15/E12; assess results before final main-merge decision. Named archive/reset authority remains separate | HUMAN_DECISION |
+| Decision requested | Owner reduced evaluation scope to conserve credit; no further live run scheduled. Final main merge and named archive/reset authority remain separate | HUMAN_DECISION |
