@@ -9,7 +9,7 @@
 | State | `VALIDATING` |
 | Active tasks | `None` |
 | Next ready task | `None` |
-| Active blocker | Owner authority for final main merge and archive/reset; PR #201 owns exact-candidate review and check evidence |
+| Active blocker | Supplemental campaign capability checks and execution; final main merge and archive/reset remain unauthorized |
 | Implementation mode | Autopilot enabled by owner on 2026-10-28 |
 | Authorized scope / feature branch / protected target | Task PR authority completed for T03–T13 into `codex/playbook-eval-coverage`; owner accepted implementation and final-test work on 2026-10-28; protected target `main` remains unapproved |
 | Delivery branch / target | `codex/playbook-eval-coverage` / `main`; final PR #201 |
@@ -25,7 +25,7 @@
 | --- | --- |
 | [Contributing](../../CONTRIBUTING.md), [quality policy](../../docs/documentation-quality-policy.md), [error handling](../../docs/error-handling.md) | Branches, reviews, validation and recovery |
 | [Manifest](project-adoption-manifest.md) at accepted `c27ab7ed8f5b27a2f88ac8829b46b5295714384b` | Installed playbook and canonical authorities; frozen design describes the earlier preparation state, not current installation state |
-| [Concluded whiteboard](solution-whiteboard.md#concluded-design) D01–D06 and case matrix | Accepted scope, behavior and safety boundaries; no amendment proposed |
+| [Concluded whiteboard](solution-whiteboard.md#concluded-design) D01–D06 and case matrix | Accepted scope and safety boundaries; owner authorized the bounded campaign supplement on 2026-10-29 |
 | [Evaluation contract](../../evals/README.md) | Existing case format, independent judgment, calibration and evidence schema |
 
 Outcome: extend four microtasks with twelve grounded cases and report a bounded
@@ -125,8 +125,8 @@ separate execution budget, not author task time.
 | Model / reasoning | Current configured `gpt-6.1-sol` / `high`; verify availability and effective settings before launch; do not silently substitute |
 | Inputs and permissions | Fresh disposable fixture and declared skills/KB; no prior subject context, evaluator rubric/checks, real credentials, production resources or external write permission |
 | Safety / isolation | D03 containment verified before adversarial launch. D04 answer isolation independently recorded; otherwise-safe runs may be exploratory. Required native delegation unavailable means its execution criterion INCONCLUSIVE |
-| Limits | At most 20 launched subject attempts total, at most 15 minutes elapsed each, at most 2 concurrent; enforce through existing runtime/process controls |
-| Reruns | New ID, retained previous result and same total cap; a rerun displaces a not-yet-run attempt and the omission is disclosed; no expansion without owner authority |
+| Limits | Owner authorized 21 launched subject attempts total on 2026-10-29: fourteen retained attempts, six previously unrun scenarios and one distinct E15 retry; at most 15 minutes elapsed each and 2 concurrent |
+| Reruns | Retain previous results and use new IDs. The authorized E15 retry occupies the added 21st slot; any further rerun must displace an unlaunched slot with disclosure or receive owner authority to expand the cap |
 | Evaluation | Separate read-only evaluator context receives rubric and preserved artifacts/traces; material disagreements go to retained reviewers; no coaching subject runs |
 | Evidence | Per-attempt revisions, input SHA, settings/permissions, containment/isolation evidence, trace, artifact diff, statuses and criterion verdicts; sanitized summary in PR, raw evidence local |
 | Efficiency | Subject elapsed time and available tokens/completed tool events; setup, calibration and assessment effort separate; unavailable counters Unknown |
@@ -138,7 +138,8 @@ separate execution budget, not author task time.
 | E11: design; accepted-design planning | 2 | Separate starting stages |
 | E12–E15 | 4 | One scenario each; E12 requires actual native delegation |
 | E16: pre-test audit; authorized closure | 2 | Separate starting authority |
-| Total | 20 | Single campaign, no reliability or comparative-performance claim |
+| E15 supplemental retry | 1 | Owner-authorized distinct attempt; original INCONCLUSIVE retained |
+| Total | 21 | Original scenarios plus one retry; no reliability or comparative-performance claim |
 
 Blocked setup is recorded without launching a subject. Exhausting the attempt
 budget leaves remaining scenarios explicitly unrun; no aggregate PASS hides
