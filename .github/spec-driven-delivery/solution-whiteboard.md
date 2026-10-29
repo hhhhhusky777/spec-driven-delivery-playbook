@@ -128,7 +128,7 @@ flowchart TD
 ### Execution scope and measurement
 
 First campaign: one fresh attempt for every selected case/variant, with at most
-21 subject attempts total and 15 minutes elapsed per attempt; at most two subject
+24 subject attempts total and 15 minutes elapsed per attempt; at most two subject
 attempts run concurrently. Exact variants, model/settings, tool permissions and
 budget enforcement are declared in the implementation plan before execution.
 This is a campaign cap, not a universal pass threshold or a change to the
@@ -141,6 +141,11 @@ Owner authorized the 2026-10-29 supplement: complete the six unrun scenarios
 and retain a separate E15 retry, raising the original 20-attempt cap to 21.
 Verify bounded official-document access, effective tool containment and native
 worker/message control before the affected runs. All other boundaries remain.
+
+Owner subsequently authorized three additional attempts on 2026-10-29, raising
+the total cap from 21 to 24: E04, a distinct E15 retry and a distinct E12 retry.
+Use verified official-domain cached search for E04/E15 and retain native worker
+message content for E12. Previous attempts remain evidence; no merge authority.
 
 Fake fixture secrets are not proof that ambient host credentials are inaccessible.
 Keep real-resource containment distinct from evaluator-answer isolation;

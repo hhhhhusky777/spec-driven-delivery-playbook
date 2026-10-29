@@ -9,7 +9,7 @@
 | State | `VALIDATING` |
 | Active tasks | `None` |
 | Next ready task | `None` |
-| Active blocker | Authorized 21-attempt cap exhausted; E04 unrun, E15 research and E12 message evidence incomplete. Further attempts require owner authority; final main merge and archive/reset remain unauthorized |
+| Active blocker | Owner authorized three further attempts (24 total) for E04/E15/E12; final main merge and archive/reset remain unauthorized |
 | Implementation mode | Autopilot enabled by owner on 2026-10-28 |
 | Authorized scope / feature branch / protected target | Task PR authority completed for T03–T13 into `codex/playbook-eval-coverage`; owner accepted implementation and final-test work on 2026-10-28; protected target `main` remains unapproved |
 | Delivery branch / target | `codex/playbook-eval-coverage` / `main`; final PR #201 |
@@ -125,8 +125,8 @@ separate execution budget, not author task time.
 | Model / reasoning | Current configured `gpt-6.1-sol` / `high`; verify availability and effective settings before launch; do not silently substitute |
 | Inputs and permissions | Fresh disposable fixture and declared skills/KB; no prior subject context, evaluator rubric/checks, real credentials, production resources or external write permission |
 | Safety / isolation | D03 containment verified before adversarial launch. D04 answer isolation independently recorded; otherwise-safe runs may be exploratory. Required native delegation unavailable means its execution criterion INCONCLUSIVE |
-| Limits | Owner authorized 21 launched subject attempts total on 2026-10-29: fourteen retained attempts, six previously unrun scenarios and one distinct E15 retry; at most 15 minutes elapsed each and 2 concurrent |
-| Reruns | Retain previous results and use new IDs. The authorized E15 retry occupies the added 21st slot; any further rerun must displace an unlaunched slot with disclosure or receive owner authority to expand the cap |
+| Limits | Owner authorized 24 launched subject attempts total on 2026-10-29: 21 retained attempts plus E04, E15 retry and E12 retry; at most 15 minutes elapsed each and 2 concurrent |
+| Reruns | Retain previous results and use new IDs. Retain all 21 prior attempts. The final three slots are E04-A01, E15-A02 and E12-A02; no further rerun without owner authority to expand the cap |
 | Evaluation | Separate read-only evaluator context receives rubric and preserved artifacts/traces; material disagreements go to retained reviewers; no coaching subject runs |
 | Evidence | Per-attempt revisions, input SHA, settings/permissions, containment/isolation evidence, trace, artifact diff, statuses and criterion verdicts; sanitized summary in PR, raw evidence local |
 | Efficiency | Subject elapsed time and available tokens/completed tool events; setup, calibration and assessment effort separate; unavailable counters Unknown |
@@ -139,7 +139,8 @@ separate execution budget, not author task time.
 | E12–E15 | 4 | One scenario each; E12 requires actual native delegation |
 | E16: pre-test audit; authorized closure | 2 | Separate starting authority |
 | E15 supplemental retry | 1 | Owner-authorized distinct attempt; original INCONCLUSIVE retained |
-| Total | 21 | Original scenarios plus one retry; no reliability or comparative-performance claim |
+| Final evidence supplement | 3 | Owner authorized E04/E15/E12 after the 21-attempt cap was exhausted |
+| Total | 24 | Original allocation plus authorized supplements; no reliability or comparative-performance claim |
 
 Blocked setup is recorded without launching a subject. Exhausting the attempt
 budget leaves remaining scenarios explicitly unrun; no aggregate PASS hides
@@ -294,4 +295,4 @@ explicit exploratory limitation only for otherwise safely contained runs.
 | Upgrade | Accepted pin active and verified; no new upgrade decision | DISCLOSE |
 | Campaign | 19 of 20 starting scenarios launched; 21 total attempts including retries. E04 unrun; E15 and E12 remain incomplete. All launched attempts completed within 900 seconds; evidence is exploratory | DISCLOSE |
 | Mode | Autopilot enabled for task PRs into the feature branch only | DISCLOSE |
-| Decision requested | Decide whether to authorize three further attempts for E04/E15/E12. Final main merge and named archive/reset authority remain separate | HUMAN_DECISION |
+| Decision requested | Three further attempts authorized for E04/E15/E12; assess results before final main-merge decision. Named archive/reset authority remains separate | HUMAN_DECISION |
