@@ -10,6 +10,5 @@
 | Concluded design revision | `None` |
 | Open owner decisions | `None` |
 
-Ready for the next design discussion. Use the
-[whiteboard template](../../templates/discovery/solution-whiteboard.md)
-and the manifest-selected workflow guidance.
+No active design. Begin the next discussion using the whiteboard template from
+the accepted playbook revision recorded in the manifest.

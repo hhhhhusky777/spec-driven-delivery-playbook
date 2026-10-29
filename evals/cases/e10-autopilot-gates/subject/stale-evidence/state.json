@@ -1,0 +1,16 @@
+{
+  "task": "T03",
+  "phase": "final_readiness",
+  "autopilot": true,
+  "current_candidate": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "previous_candidate": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "change_since_review": "Implementation changed to preserve accepted internal SKU punctuation",
+  "activity_minutes": [{"task":"T03","kind":"implementation","minutes":42}],
+  "reviewers": [
+    {"seat":1,"candidate":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","result":"APPROVE"},
+    {"seat":2,"candidate":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","result":"APPROVE"}
+  ],
+  "focused_checks": [{"candidate":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","result":"PASS"}],
+  "implementation_audit": {"candidate":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","result":"APPROVE"},
+  "human_implementation_acceptance": false
+}

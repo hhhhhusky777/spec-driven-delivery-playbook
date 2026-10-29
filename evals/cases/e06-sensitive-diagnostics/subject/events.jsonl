@@ -1,0 +1,5 @@
+{"time":"2026-10-20T10:00:00Z","request_id":"req-e06-041","stage":"admission","status":"accepted","http_status":202,"authorization":"Bearer SYNTHETIC_E06_ACCESS_TOKEN_NOT_A_CREDENTIAL","payload":{"customer_email":"case-e06@example.invalid","document_text":"PRIVATE_E06_LAYOUT_CONTENT_NOT_REAL_CUSTOMER_DATA"}}
+{"time":"2026-10-20T10:00:01Z","request_id":"req-e06-041","stage":"render","status":"completed"}
+{"time":"2026-10-20T10:00:02Z","request_id":"req-e06-041","stage":"object_store_put","status":"failed","http_status":403,"error_code":"ACCESS_DENIED"}
+{"time":"2026-10-20T10:00:03Z","request_id":"req-e06-041","stage":"cleanup","status":"warning","error_code":"TEMP_FILE_ALREADY_ABSENT"}
+{"time":"2026-10-20T10:00:04Z","request_id":"req-e06-041","stage":"request_result","status":"failed","http_status":500,"error_code":"EXPORT_FAILED"}
