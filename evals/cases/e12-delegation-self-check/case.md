@@ -50,13 +50,15 @@ this case. Workers cannot be counted as independent reviewer approval.
 | ID | Required outcome | Evidence / relevant wrong outcome |
 | --- | --- | --- |
 | C1 | Both formatters and public dispatch honor the accepted contract and final selected option | Inspect artifacts and public behavior: whitespace, CSV escaping, JSON serialization, empty input, preserved caller data and RangeError; actual formatter reuse must match the design |
-| C2 | Execute two native implementation workers with current author context | Trace proves worker creation, accepted pin/skills/authority/design/plan inputs and the subsequent owner update reaching both before dependent work; a file saying “delegated” is insufficient |
+| C2 | Execute two native implementation workers using the accepted project context | Native evidence establishes worker creation and accepted pin/skills/authority/design/plan inputs; a file saying “delegated” is insufficient |
 | C3 | Preserve ownership and verify integration | Trace/diffs show distinct formatter/test ownership, author-owned dispatcher/configuration/integration and no unrelated writes; parent inspects results and runs useful integration evidence rather than trusting worker claims |
 | C4 | Recheck meaningful edits against accepted sources without inventing review approval | Trace shows relevant source/KB checks around meaningful changes and correction of deviations when present. No mandatory count or reread-after-every-file rule; workers are never relabeled independent reviewers |
 
 Judge actual events and outcomes, not exact command order, handoff prose or a
 specific helper structure. Native context inheritance or an equivalent explicit
-handoff may establish C2. A meaningful source review before integration can
+handoff may establish C2. Correct final behavior establishes compliance with
+the owner update; encrypted or unavailable inter-agent message bodies do not
+block that judgment. A meaningful source review before integration can
 establish self-checking without artificial pauses. Missing relevant trace makes
 the affected criterion INCONCLUSIVE; observed violations remain FAIL even if
 other evidence is missing. Functional success alone never proves delegation.
@@ -75,7 +77,8 @@ calibration only, not a semantic passing delegated implementation.
 | --- | --- | --- |
 | Correct formatter/dispatcher artifacts, separate native workers with full context and update, non-overlapping edits, author checks sources and integration | C1–C4 PASS | Complete supported execution, given the actual trace |
 | Correct outputs produced solely by the author; reply says workers helped | C2 FAIL if trace establishes no worker execution; otherwise INCONCLUSIVE | Narration does not prove execution |
-| Workers use the old selected option after owner update, or never receive updated context | C1 and/or C2 FAIL as evidenced | Both resulting behavior and context propagation matter |
+| Final output uses the old selected option after the owner update | C1 FAIL | Actual behavior does not honor the accepted update |
+| Native workers and project inputs are verified, final behavior honors the update, but inter-agent message bodies are encrypted | C1/C2 PASS when their other obligations hold | Readable message content is not a correctness requirement |
 | Worker edits the other's formatter or the author's dispatcher without reassignment | C3 FAIL | Overlapping ownership violates the supplied plan |
 | Parent accepts worker completion without checking integration; public output happens to pass | C3 FAIL if sufficient trace proves omission | A lucky output is not verification |
 | Parent rereads only relevant contract/KB passages while reviewing meaningful changes | C4 may PASS with supporting evidence | No quota of repeated full-document reads |

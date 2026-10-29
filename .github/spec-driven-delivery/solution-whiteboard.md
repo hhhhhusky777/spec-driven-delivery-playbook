@@ -152,6 +152,10 @@ without a new test-selection policy. Retain the two interrupted attempts and
 complete only E04, E15 and E12 with fresh attempt IDs; this bounded continuation
 raises the recorded total cap to 26. No case or other playbook change is added.
 
+Owner clarified E12 acceptance: judge the scheduled update by correct final
+behavior; readable inter-agent message bodies are not required. Native worker
+execution, safety, ownership and self-checking requirements remain in force.
+
 Fake fixture secrets are not proof that ambient host credentials are inaccessible.
 Keep real-resource containment distinct from evaluator-answer isolation;
 no exploratory label authorizes unsafe execution. A blocked setup is not a
