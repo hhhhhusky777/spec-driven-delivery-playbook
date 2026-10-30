@@ -5,15 +5,17 @@
 This is the only active-delivery state authority. GitHub PRs own live review,
 merge and execution evidence. The owner accepted this plan in conversation. Implementation follows its
 approved scope with human review before task merges; Autopilot is not enabled.
+Owner PR comments authorize drafting amendment A01; dependent corrections wait
+for its reviewed acceptance.
 
 ## Delivery status
 
 | Field | Value |
 | --- | --- |
-| State | `IMPLEMENTING` |
+| State | `BLOCKED` |
 | Active tasks | `None` |
-| Next ready task | `T02` |
-| Active blocker | `None` |
+| Next ready task | `None` |
+| Active blocker | Owner acceptance of reviewed design amendment A01 before dependent corrections |
 | Implementation mode | Human-review-before-merge; Autopilot not enabled |
 | Authorized scope / feature branch / protected target | D01-D05; `codex/error-origin-context`; `main` |
 | Delivery branch / target | `codex/error-origin-context` / `main`; final PR #216 |
@@ -21,7 +23,7 @@ approved scope with human review before task merges; Autopilot is not enabled.
 | Primary issue / need | [Issue #215](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/215) |
 | Concluded whiteboard | [Working whiteboard](solution-whiteboard.md), accepted design `b3e90bf2098c5476e10ff389ed25063102857789`; conclusion transition `e760248` |
 | Required reviewers | The same two retained independent Issue #215 reviewer sessions |
-| Last verified | 2026-10-30 Asia/Shanghai: T01 implemented and focused checks passed; T02 becomes ready when this candidate integrates; PRs own review and merge facts |
+| Last verified | 2026-10-30 Asia/Shanghai: original T01 candidate 84afb4f passed focused review; A01 now requires design acceptance before dependent corrections; PRs own review/merge facts |
 
 ## Governing inputs and delivery boundaries
 
@@ -47,7 +49,7 @@ approved scope with human review before task merges; Autopilot is not enabled.
 | Integration model | Feature integration branch `codex/error-origin-context`; only final PR #216 targets `main` |
 | Increment boundary | T01 establishes and links the shared owner atomically; T02 consumes its real filename/content to wire installed agent routing |
 | Parallel ownership | Coupled extraction/routing remains with the parent; independent retained reviews can run concurrently; no overlapping writers |
-| Compatibility | Keep existing error/performance filenames, narrow titles/scopes, preserve same-revision guards and older pins without the topic |
+| Compatibility | A01 proposes atomic topic/consumer renaming; preserve same-revision routing and older pinned trees; acceptance pending |
 | Merge authority | Human review before task merge by default; scoped Autopilot may authorize task merges into this feature branch only |
 | Starting readiness | Accepted plan, current source/design inputs and existing documentation environment; outputs/tests produced by a task are not its starting prerequisites |
 
@@ -55,8 +57,8 @@ approved scope with human review before task merges; Autopilot is not enabled.
 
 | ID | State | Depends on | Consumed design | Implementation work | Outcome | Boundaries | Consumed error handling | Consumed validations | Acceptance evidence | Consumed assumptions | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| T01 | DONE | None | D01-D03; whiteboard responsibility diagram and coverage | Add `observability-and-diagnosability.md`; move shared sections and their relevant references from the existing error/performance topics; narrow those titles/scopes; update KB index and affected active links, including the code-level performance topic | One canonical shared topic is reachable from both narrow consumers without duplicate mechanism ownership | Preserve approved diagnostic content, performance/recovery principles and existing filenames; no runtime change, platform mandate or removed export example reintroduction | D02 required/optional evidence, original cause/context, privacy and existing audit duties move intact; recovery authority remains unchanged | None; reuse existing documentation gates | Compare moved obligations against 5daaa69 and D01-D03; focused Markdown/local links; reviewer checks loss/duplication and text/diagram agreement | None | `codex/issue215-kb-extraction`; [PR #217](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217); target `codex/error-origin-context` |
-| T02 | READY | T01 | D04; D01 topic contract and installed-root boundary | Update workflow/review/triage direct topic-read triggers and narrow existing trigger descriptions; extend existing installed-content and cross-profile routing tests to cover the new same-revision topic | Authors, reviewers and triage agents discover the shipped topic directly and receive the correct installed content | Reuse complete-tree installer and revision guards; no new installer mode, extra tracker or generic rule duplication | Existing escalation for unresolved authority or missing evidence; no task-specific failure behavior | None; new assertions stay inside existing test gates | Focused installed-topic/routing tests verify actual content and availability across supported profiles and cleanup; skill validation and documentation checks | None | `codex/issue215-kb-routing`; PR not yet created; target `codex/error-origin-context` |
+| T01 | BLOCKED | None | D01-D03; whiteboard responsibility diagram and coverage | Add `observability-and-diagnosability.md`; move shared sections and their relevant references from the existing error/performance topics; narrow titles/scopes, rename topics to error-handling.md/performance.md and update every active consumer, including existing skill/test filename references; clarify shared capability, mature framework options and performance evidence under A01 | One canonical shared topic is reachable from both narrow consumers without duplicate mechanism ownership | Preserve approved diagnostic content, performance/recovery principles; A01 renames filenames and active consumers together; no runtime change, platform mandate or removed export example reintroduction | D02 required/optional evidence, original cause/context, privacy and existing audit duties move intact; recovery authority remains unchanged | None; reuse existing documentation gates | Compare moved obligations against 5daaa69 and D01-D03; focused Markdown/local links; reviewer checks loss/duplication and text/diagram agreement | None | `codex/issue215-kb-extraction`; [PR #217](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217); target `codex/error-origin-context` |
+| T02 | PLANNED | T01 | D04; D01 topic contract and installed-root boundary | Update workflow/review/triage direct topic-read triggers and narrow existing trigger descriptions; extend existing installed-content and cross-profile routing tests to cover the new same-revision topic | Authors, reviewers and triage agents discover the shipped topic directly and receive the correct installed content | Reuse complete-tree installer and revision guards; no new installer mode, extra tracker or generic rule duplication | Existing escalation for unresolved authority or missing evidence; no task-specific failure behavior | None; new assertions stay inside existing test gates | Focused installed-topic/routing tests verify actual content and availability across supported profiles and cleanup; skill validation and documentation checks | None | `codex/issue215-kb-routing`; PR not yet created; target `codex/error-origin-context` |
 
 D05 is an existing delivered correction, not a new implementation task. Preserve
 it as the explicit non-code obligation below. `Depends on` identifies the real
@@ -87,6 +89,7 @@ checks and task-focused validation remain applicable; no new acceptance gate.
 | Route promotion | Owner replaced Fast Fix with normal whiteboard/plan delivery; preserve existing branch, candidates and reviewer sessions |
 | Prior extraction edits | Earlier unpublished drafts were used as reference only; T01 candidate and current checks, not the draft files, establish delivered content |
 | Conclusion schema correction | Draft table enums/headings were aligned before acceptance; actual conclusion changed only three metadata fields and both reviewers verified it |
+| A01 owner comments | Topic rename/shared-capability/performance-evidence amendment is under design review; preserve completed work and repeat only affected downstream checks/review after acceptance |
 | New material design gap | Follow existing error handling and obtain the required owner amendment; never change the frozen whiteboard without named authorization |
 | Agent-correctable mistake | Correct within approved scope and repeat affected checks; no extra progress review gate |
 
@@ -99,10 +102,10 @@ must not require future code-level evidence.
 
 | Information | Implementation summary / evidence |
 | --- | --- |
-| Implementation / design | T01 delivers the shared topic and narrow consumers; T02 routing/install proof remains pending; D05 remains preserved |
+| Implementation / design | Original T01 candidate delivers extraction; A01 corrections and T02 routing/install proof remain pending; D05 remains preserved |
 | Code-level flows | Product business/error/data flows are N/A for the documentation-only design; actual reading/installation relationships must match the accepted whiteboard diagram |
 | Review findings | Both retained reviewers approved plan 5426001 without findings; task findings and live approvals remain GitHub facts |
-| Risks / limits / unknowns | Existing filename/title mismatch is an accepted compatibility trade-off; no runtime validation claim |
+| Risks / limits / unknowns | A01 changes the filename compatibility decision; installation/routing proof must cover renamed topics; no runtime validation claim |
 | Validation | Design focused/structure/lifecycle/Mermaid evidence exists in PR #216; task checks and full validation remain unrun |
 | Recommendation / decision | After both tasks and the author/two-reviewer implementation audit, obtain explicit human acceptance before final-test work, including under Autopilot |
 
