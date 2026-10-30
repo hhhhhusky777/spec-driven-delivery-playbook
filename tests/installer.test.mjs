@@ -188,7 +188,7 @@ test("knowledge base installs the actual index and available topics", async (t) 
   const revision = source.firstRevision;
   const project = await createInstalledProject(t, { ...source, firstRevision: revision });
   const root = path.join(project, ".github/spec-driven-delivery/knowledge-base");
-  assert.equal(await assertKnowledgeBaseRevision(root, source, revision), 15);
+  assert.equal(await assertKnowledgeBaseRevision(root, source, revision), 16);
   const guide = await readFile(path.join(project, ".sdd-runtime/agent-guide.md"), "utf8");
   assert.equal(guideValue(guide, "Resolved revision"), revision);
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
@@ -203,14 +203,14 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
     "simple-design-and-reuse.md",
     "architecture-scope-and-assumptions.md",
     "contracts-and-compatibility.md",
-    "error-handling-and-diagnosability.md",
+    "error-handling.md",
     "testing-and-reproduction.md",
     "security-basics.md",
     "proportional-review.md",
     "efficiency-and-concurrency.md",
     "experience-and-learning.md",
     "code-simplicity-and-clarity.md",
-    "performance-and-observability.md",
+    "performance.md",
     "code-level-performance-engineering.md",
     "solution-research.md",
   ];
@@ -226,7 +226,7 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
   for (const name of ["sdd-project-workflow", "sdd-feature-review", "sdd-problem-triage"]) {
     const skill = await readFile(path.join(project, ".agents/skills", name, "SKILL.md"), "utf8");
     const routedTopics = name === "sdd-problem-triage"
-      ? ["error-handling-and-diagnosability.md", "testing-and-reproduction.md", "experience-and-learning.md",
+      ? ["error-handling.md", "testing-and-reproduction.md", "experience-and-learning.md",
         "solution-research.md"] : topics;
     for (const topic of routedTopics) {
       assert.ok(skill.includes(`\`${topic}\``), `${name} must route to ${topic}`);
@@ -321,7 +321,7 @@ test("knowledge base accepted synchronization updates adds and removes only unch
   await assertKnowledgeBaseRevision(root, source, first);
   const accepted = await acceptKnowledgeBaseRevision(project, revision);
   assert.equal(accepted.status, 0, accepted.stderr);
-  assert.equal(await assertKnowledgeBaseRevision(root, source, revision), 15);
+  assert.equal(await assertKnowledgeBaseRevision(root, source, revision), 16);
   await assert.rejects(access(path.join(root, "obsolete.md")));
   assert.equal(await readFile(path.join(root, "project-note.md"), "utf8"), "Project lesson\n");
   assert.equal(await readFile(path.join(project, "docs/experience.md"), "utf8"), "# Project Experience\nKeep this lesson.\n");
@@ -425,7 +425,7 @@ exec /bin/mv "$@"
     });
     assert.notEqual(result.status, 0);
     assert.match(result.stderr, new RegExp(`Injected knowledge base ${mode} failure`));
-    assert.equal(await assertKnowledgeBaseRevision(root, source, first), 15);
+    assert.equal(await assertKnowledgeBaseRevision(root, source, first), 16);
     assert.equal(await readFile(path.join(root, "local.md"), "utf8"), "Local lesson\n");
     assert.equal(await readFile(path.join(root, ".sdd-playbook-managed"), "utf8"), marker);
   }
@@ -500,7 +500,7 @@ test("installed skill routing resolves same-revision KB topics across profiles a
   const source = await createPlaybookFixture(t);
   const legacyRevision = await commitKnowledgeBase(source, { "README.md": "# Accepted knowledge\n" });
   const concurrencyTopic = "efficiency-and-concurrency.md";
-  const topics = ["solution-research.md", "error-handling-and-diagnosability.md",
+  const topics = ["solution-research.md", "error-handling.md",
     "testing-and-reproduction.md", "experience-and-learning.md", concurrencyTopic];
   const acceptedTopics = Object.fromEntries(topics.map(topic => [topic, `# Previous ${topic}\nAccepted guidance.\n`]));
   const acceptedRevision = await commitKnowledgeBase(source, acceptedTopics);

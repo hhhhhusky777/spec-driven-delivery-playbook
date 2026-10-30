@@ -331,7 +331,7 @@ Independent reviewer creation still follows the Boundaries contract above.
 ### Execution judgment and evidence
 
 During solution and system design, and before making performance or feedback
-decisions, read `performance-and-observability.md` directly from the
+decisions, read `performance.md` directly from the
 manifest-linked KB root when the accepted pin ships it. Design measurable,
 interpretable feedback and proportionate improvements within project boundaries.
 
@@ -543,7 +543,7 @@ Follow the project's manifest-linked error-handling authority when present.
 Do not duplicate or override it.
 
 Before designing failure handling, retry behavior or failure diagnostics, read
-`error-handling-and-diagnosability.md` directly from the manifest-linked KB root
+`error-handling.md` directly from the manifest-linked KB root
 when the accepted pin ships it. Apply it within project authority.
 
 Within approved scope and authority, correct recoverable agent errors and
