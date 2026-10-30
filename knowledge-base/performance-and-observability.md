@@ -58,8 +58,19 @@ validation gate or permission to experiment on live users.
 Choose signals for the question being answered. Metrics describe aggregate
 behavior over time; logs record events and context; traces connect operations
 across a request's path. Correlation can explain where time goes, but not every
-project or question needs all three. Reuse the project's instrumentation and
-analysis tools before adding another mechanism.
+project or question needs all three.
+
+Use a suitable shared instrumentation framework and operation context for
+performance and failure diagnostics. Reuse current project mechanisms; when a
+framework is needed but none is suitable, evaluate mature implementations for
+the project's language, runtime and deployment before building custom
+infrastructure. Add only necessary business instrumentation.
+
+| Responsibility | Framework and existing integrations | Business code |
+| --- | --- | --- |
+| Context and lifecycle | Create and propagate trace/span context; record span lifetime; apply configured collection and export policies | Define meaningful operation boundaries and necessary business attributes |
+| Performance | Collect operation timing and configured metrics | Identify relevant operations, work units and performance goals |
+| Failure diagnostics | Correlate errors and logs with their operation context | Supply error-specific context under [Error Handling and Diagnosability](error-handling-and-diagnosability.md#useful-failure-evidence) |
 
 Connect collected evidence to an interpretation and useful action: assess a
 goal, locate expensive work, compare a change or detect meaningful degradation.
@@ -109,5 +120,7 @@ evidence; an external benchmark or example cannot establish them.
 - [Google SRE: Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/) — meaningful signals, latency distributions and proportionate, actionable monitoring.
 - [Microsoft: Performance testing](https://learn.microsoft.com/en-us/azure/well-architected/performance-efficiency/performance-test) — representative workloads, baselines and hypothesis-driven comparison; its test schedules do not replace project authority.
 - [OpenTelemetry: Observability primer](https://opentelemetry.io/docs/concepts/observability-primer/) — the different questions metrics, logs and traces help answer; no telemetry platform mandate.
+- [OpenTelemetry: Context propagation](https://opentelemetry.io/docs/concepts/context-propagation/) — shared context correlates signals across operation and service boundaries; reuse supported instrumentation and propagators.
+- [OpenTelemetry: Traces](https://opentelemetry.io/docs/concepts/signals/traces/) — spans describe operation boundaries, lifetime and attributes; select relevant business instrumentation rather than trace every function.
 - [Thoughtworks: Building Evolutionary Architectures, second-edition excerpt](https://www.thoughtworks.com/content/dam/thoughtworks/documents/books/bk_building_evolutionary_architectures_second_edition_free_chapter.pdf) — proportionate architecture effort and feedback on important design characteristics, especially printed pages 4–5.
 - [ArchUnit: User Guide](https://www.archunit.org/userguide/html/000_Index.html) — a concrete dependency-cycle example in sections 4.7 and 8.2; section 8.3 retains suitable existing module systems.

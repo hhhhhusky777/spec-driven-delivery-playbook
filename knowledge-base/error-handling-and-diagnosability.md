@@ -44,6 +44,9 @@ recovery framework follows from this guidance.
 
 ## Useful failure evidence
 
+Use the [shared instrumentation and context guidance](performance-and-observability.md#useful-signals-and-feedback)
+for performance and error diagnostics; preserve error-specific context below.
+
 Preserve diagnostic context before propagation or translation can lose it.
 Internal evidence MUST distinguish the actual failed operation, its stage or
 component, the error category, and the affected request or run, even when
@@ -59,8 +62,7 @@ These are context responsibilities, not three mandatory logging sites. One
 record at the handling boundary is sufficient when it retains the actual
 origin. Do not add catches or repeated logs solely to reproduce evidence that
 propagation already preserves, or label a successfully handled condition as
-an operation failure. Reuse existing instrumentation rather than log every
-branch or install a telemetry stack.
+an operation failure.
 
 Use structured logs, stable unambiguous error codes, exception causes or traces
 as appropriate. Human messages explain what happened; machine decisions use
