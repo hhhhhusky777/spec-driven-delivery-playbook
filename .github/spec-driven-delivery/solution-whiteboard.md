@@ -14,13 +14,13 @@
 
 | ID | Agreed item, alternative, constraint, or gap | State / resolution |
 | --- | --- | --- |
-| DR01 | Preserve the true failure origin through shared handlers without logging every branch | Accepted direction; D02 |
-| DR02 | Share suitable instrumentation and operation context for performance and error information | Accepted direction; D01, D02 |
-| DR03 | Distinguish required diagnostic evidence from optional detail and explain distributed traces | Accepted direction; D02 |
-| DR04 | Keep an authorized triage repair together through relevant verification before review | Accepted direction; D05 |
-| DR05 | Remove the standalone export example and performance discussion from the error KB | Accepted direction; D03 |
-| DR06 | Give observability and diagnosability a separate KB; error handling and performance link to it | Accepted direction; D01, D03 |
-| DR07 | Fast Fix is insufficient; write whiteboard and plan | Accepted route; normal delivery; plan follows design acceptance |
+| DR01 | Preserve the true failure origin through shared handlers without logging every branch | Accepted |
+| DR02 | Share suitable instrumentation and operation context for performance and error information | Accepted |
+| DR03 | Distinguish required diagnostic evidence from optional detail and explain distributed traces | Accepted |
+| DR04 | Keep an authorized triage repair together through relevant verification before review | Accepted |
+| DR05 | Remove the standalone export example and performance discussion from the error KB | Accepted |
+| DR06 | Give observability and diagnosability a separate KB; error handling and performance link to it | Accepted |
+| DR07 | Fast Fix is insufficient; write whiteboard and plan | Accepted |
 
 ## Current understanding
 
@@ -76,12 +76,13 @@ not assumed from Markdown links.
 | Add one shared KB and link from both | Selected candidate | One source for reusable mechanisms; one additional packaged topic |
 | Rename existing error/performance filenames | Deferred | Narrow titles and scopes now; retaining filenames avoids unnecessary installed-reference migration |
 
-## Design candidate
+## Concluded design
 
-The following is ready for design review, not an accepted or frozen conclusion.
-No new extraction implementation proceeds before design acceptance.
+While State is OPEN, this section is the conclusion candidate awaiting design
+review and owner acceptance. State CONCLUDED records the accepted, frozen
+conclusion. No new extraction implementation proceeds before design acceptance.
 
-| Design point | Proposed outcome | Boundary or rationale | Validation signal |
+| Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
 | D01 | Add `observability-and-diagnosability.md`, Scope Architecture, Engineering | Own shared signals, framework/context, correlation, failure localization and architectural fitness evidence; no runtime framework implementation | Single ownership and complete content migration |
 | D02 | Preserve required/optional evidence, cause preservation and tracing limits in D01 | Required for compromised data/business correctness or continuity, uncertain effects and existing audit duties; expected rejections or safely recovered transient detail remain optional unless required categories apply; no universal stack/span/alert requirement | Compare against current candidate, including original cause, operation/stage, correlation and privacy |
@@ -157,13 +158,13 @@ Architecture-scoped coverage topic when shipped; it is not yet installed.
 
 | Draft item | Concluded design point | Disposition | Rationale / evidence |
 | --- | --- | --- | --- |
-| DR01 | D02 | Accepted direction | True origin retained through propagation |
+| DR01 | D02 | Accepted | True origin retained through propagation |
 | DR02 | D01, D02 | Changed | Shared owner moves from Performance into the new KB |
-| DR03 | D02 | Accepted direction | Required evidence and optional detail remain distinct |
-| DR04 | D05 | Accepted direction | Relevant repair verification precedes review |
-| DR05 | D03 | Accepted direction | Owner comment corrections remain effective |
-| DR06 | D01, D03 | Accepted direction | Separate reusable topic with links from both consumers |
-| DR07 | D01, D02, D03, D04, D05 | Accepted direction | Normal delivery with design acceptance before the implementation plan |
+| DR03 | D02 | Accepted | Required evidence and optional detail remain distinct |
+| DR04 | D05 | Accepted | Relevant repair verification precedes review |
+| DR05 | D03 | Accepted | Owner comment corrections remain effective |
+| DR06 | D01, D03 | Accepted | Separate reusable topic with links from both consumers |
+| DR07 | D01, D02, D03, D04, D05 | Accepted | Normal delivery with design acceptance before the implementation plan |
 
 ## Newly introduced validations
 
