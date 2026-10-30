@@ -44,19 +44,34 @@ recovery framework follows from this guidance.
 
 ## Useful failure evidence
 
-At the appropriate failure boundary, preserve enough evidence to identify the
-failed operation, its stage or component, the error category, and the affected
-request or run. Reuse structured logs, stable unambiguous error codes,
-correlation identifiers, exception causes or traces as appropriate. Human
-messages explain what happened; machine decisions use the established typed
-error contract, not fragile parsing of prose.
+Preserve diagnostic context before propagation or translation can lose it.
+Internal evidence MUST distinguish the actual failed operation, its stage or
+component, the error category, and the affected request or run, even when
+multiple failure paths share one final handler.
 
-Separate client-safe information from internal diagnosis. Redact secrets and
-sensitive payloads; retain useful causal context in authorized diagnostics.
-Record an error where that context is available, avoiding duplicate reports of
-the same propagated exception or labeling a successfully handled condition as
-an operation failure. This is not a mandate to log every branch or install a
-telemetry stack. Reuse existing evidence before adding instrumentation.
+| Location | Responsibility |
+| --- | --- |
+| Nearest failure boundary with useful context | Capture the specific operation, stage and relevant identifiers before that context is lost. |
+| Propagation or wrapping | Preserve the original error and its available stack trace and cause chain; add meaningful context without replacing the origin with a generic message. |
+| Shared handling boundary | Record the retained origin and context using the existing request/run correlation or trace context, so the actual failure can be located. |
+
+These are context responsibilities, not three mandatory logging sites. One
+record at the handling boundary is sufficient when it retains the actual
+origin. Do not add catches or repeated logs solely to reproduce evidence that
+propagation already preserves, or label a successfully handled condition as
+an operation failure. Reuse existing instrumentation rather than log every
+branch or install a telemetry stack.
+
+Use structured logs, stable unambiguous error codes, exception causes or traces
+as appropriate. Human messages explain what happened; machine decisions use
+the established typed error contract, not fragile parsing of prose. Separate
+client-safe information from internal diagnosis; redact secrets and sensitive
+payloads while retaining useful causal context in authorized diagnostics.
+
+For example, an export can fail while loading metadata, rendering or uploading.
+A final `export_failed` record is insufficient if it loses which stage failed.
+Retaining `stage=upload`, the original storage exception and the existing
+request identifier can locate the failure without logging every branch.
 
 Review whether the failure can be located, its resulting state understood, and
 the smallest safe next action determined. Detailed causal investigation belongs
@@ -84,3 +99,5 @@ Use these sources within project authority, not as permission for new controls.
 - [AWS: Timeouts, retries, and backoff with jitter](https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/) — bounded retry, amplification and load-aware timing; choose measures from actual dependency behavior.
 - [RFC 9457: Problem Details for HTTP APIs](https://www.rfc-editor.org/rfc/rfc9457.html) — stable problem identity, occurrence context, actionable client detail and security limits. It specifies an HTTP format, not a required replacement for an existing error contract.
 - [OpenTelemetry: Recording errors](https://opentelemetry.io/docs/specs/semconv/general/recording-errors/) — contextual classification and useful, nonduplicated failure evidence. These conventions are marked Development; their evolving instrumentation details are not a universal logging mandate.
+- [Microsoft: Capture and rethrow exceptions properly](https://learn.microsoft.com/en-us/dotnet/standard/exceptions/best-practices-for-exceptions#capture-and-rethrow-exceptions-properly) — preserve the original stack and cause when propagating or wrapping errors; its .NET syntax is a language-specific example, not a cross-language recipe.
+- [OpenTelemetry: Exceptions in logs](https://opentelemetry.io/docs/specs/semconv/exceptions/exceptions-logs/) — retain exception type, message, stack and applicable span context in existing diagnostics; no requirement to adopt OpenTelemetry.
