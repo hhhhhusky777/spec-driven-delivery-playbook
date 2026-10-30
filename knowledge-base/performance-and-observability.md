@@ -60,6 +60,15 @@ behavior over time; logs record events and context; traces connect operations
 across a request's path. Correlation can explain where time goes, but not every
 project or question needs all three.
 
+A distributed trace connects a request's operations across services through a
+shared trace ID. Each span describes an operation's duration, outcome and
+relationship to other spans. It helps locate slow or failed stages; it does not
+replace error-specific causal context. Neither distributed tracing nor a span
+for every error is mandatory: structured logs with request/run correlation may
+already provide sufficient evidence. Apply the error KB's
+[required evidence and optional detail](error-handling-and-diagnosability.md#required-evidence-and-optional-detail)
+boundary when selecting diagnostic coverage.
+
 Use a suitable shared instrumentation framework and operation context for
 performance and failure diagnostics. Reuse current project mechanisms; when a
 framework is needed but none is suitable, evaluate mature implementations for

@@ -47,8 +47,37 @@ recovery framework follows from this guidance.
 Use the [shared instrumentation and context guidance](performance-and-observability.md#useful-signals-and-feedback)
 for performance and error diagnostics; preserve error-specific context below.
 
+### Required evidence and optional detail
+
+> [!IMPORTANT]
+> Errors that compromise data correctness, integrity or consistency, business
+> correctness or continuity, or leave an operation's effects uncertain MUST
+> retain sufficient diagnostic evidence to locate the failure, understand its
+> resulting state and determine the next safe action. Existing security, audit
+> and compliance recording requirements MUST also be satisfied. Reuse adequate
+> existing evidence; this does not require a full stack trace, distributed
+> trace or alert for every error.
+
+| Situation | Evidence boundary | Example |
+| --- | --- | --- |
+| Data correctness, integrity or consistency failure | Required: identify the failed operation and affected state | A partial write leaves related records inconsistent. |
+| Incorrect business result or uncertain effects | Required: distinguish known results from unresolved effects | Payment times out without confirming whether a charge occurred. |
+| Failed business operation or loss of continuity | Required: preserve enough context to locate the failure and its impact | An export ultimately fails, or a required dependency prevents service. |
+| Security, audit or compliance event | Required as defined by project authority; a client response does not replace required internal evidence | Returning `401` does not replace required authentication audit records. |
+| Expected ordinary validation or business rejection | Additional diagnostics are optional unless another required category applies | An invalid form field receives a clear response; no detailed stack is needed. |
+| Safely recovered transient condition with a correct business outcome | Detail is optional, chosen for diagnostic value, frequency and cost | An established safe retry succeeds; individual attempt details may be unnecessary. |
+
+Classify by actual effects and supported risk, not the exception name or HTTP
+status alone. Transient errors that cause final failure or uncertain effects
+remain required. For optional detail, choose existing counters, concise records,
+sampling or temporary debug output as useful; do not suppress required evidence.
+These are playbook boundaries synthesized from the references, not an identical
+company-wide logging checklist claimed for every source.
+
+### Context and placement
+
 Preserve diagnostic context before propagation or translation can lose it.
-Internal evidence MUST distinguish the actual failed operation, its stage or
+Required internal evidence MUST distinguish the actual failed operation, its stage or
 component, the error category, and the affected request or run, even when
 multiple failure paths share one final handler.
 
@@ -103,3 +132,7 @@ Use these sources within project authority, not as permission for new controls.
 - [OpenTelemetry: Recording errors](https://opentelemetry.io/docs/specs/semconv/general/recording-errors/) — contextual classification and useful, nonduplicated failure evidence. These conventions are marked Development; their evolving instrumentation details are not a universal logging mandate.
 - [Microsoft: Capture and rethrow exceptions properly](https://learn.microsoft.com/en-us/dotnet/standard/exceptions/best-practices-for-exceptions#capture-and-rethrow-exceptions-properly) — preserve the original stack and cause when propagating or wrapping errors; its .NET syntax is a language-specific example, not a cross-language recipe.
 - [OpenTelemetry: Exceptions in logs](https://opentelemetry.io/docs/specs/semconv/exceptions/exceptions-logs/) — retain exception type, message, stack and applicable span context in existing diagnostics; no requirement to adopt OpenTelemetry.
+- [Microsoft: Monitoring and diagnostics](https://learn.microsoft.com/en-us/azure/architecture/best-practices/monitoring#best-practices-for-instrumenting-applications) — log critical exceptions, preserve causal context and allow lower-level verbosity to be configured.
+- [Google SRE: Monitoring distributed systems](https://sre.google/sre-book/monitoring-distributed-systems/#the-four-golden-signals) — failures include incorrect content behind successful responses and violations of accepted service targets.
+- [AWS: Instrumenting distributed systems](https://aws.amazon.com/builders-library/instrumenting-distributed-systems-for-operational-visibility/) — useful request context, adjustable diagnostic detail and the loss of individual-failure evidence caused by sampling.
+- [Microsoft: Monitoring and threat detection](https://learn.microsoft.com/en-us/azure/well-architected/security/monitor-threats) — security-relevant failures and access violations need internal evidence, even when a request is rejected.
