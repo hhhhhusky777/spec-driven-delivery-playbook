@@ -90,6 +90,7 @@ checks and task-focused validation remain applicable; no new acceptance gate.
 | Route promotion | Owner replaced Fast Fix with normal whiteboard/plan delivery; preserve existing branch, candidates and reviewer sessions |
 | Prior extraction edits | Earlier unpublished drafts were used as reference only; T01 candidate and current checks, not the draft files, establish delivered content |
 | Conclusion schema correction | Draft table enums/headings were aligned before acceptance; actual conclusion changed only three metadata fields and both reviewers verified it |
+| T01 fixture count correction | The changed-file installer run exposed three stale expectations of 15 official files after the new topic made 16; update only the expected inventory count, retaining every per-file content and recovery assertion |
 | A01 owner comments | A01 accepted; reconclusion 47cc272 verified by both reviewers; repeat affected task checks/review on the corrected candidate |
 | New material design gap | Follow existing error handling and obtain the required owner amendment; never change the frozen whiteboard without named authorization |
 | Agent-correctable mistake | Correct within approved scope and repeat affected checks; no extra progress review gate |
