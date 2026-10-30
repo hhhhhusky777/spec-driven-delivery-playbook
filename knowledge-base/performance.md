@@ -3,12 +3,11 @@
 Scope: Architecture, Engineering
 
 - Architecture: Define performance goals, measurable behavior and whole-system trade-offs.
-- Engineering: Collect representative measurements and interpret feedback against those goals.
+- Engineering: Assess implementation performance against accepted goals using representative measurements.
 
 This topic covers system-level performance goals, representative measurements
 and whole-system trade-offs. Code-level techniques belong to
-[Code-level Performance Engineering](code-level-performance-engineering.md);
-failure recovery belongs to [Error Handling](error-handling-and-diagnosability.md).
+[Code-level Performance Engineering](code-level-performance-engineering.md).
 
 ## Core principles
 
@@ -55,8 +54,7 @@ validation gate or permission to experiment on live users.
 ## Instrumentation and feedback
 
 Read and apply [Observability and Diagnosability](observability-and-diagnosability.md)
-for shared signals, instrumentation, context and diagnostic evidence. This topic
-owns performance goals, measurements and trade-offs, not tracing mechanisms.
+for shared signals, instrumentation, context and diagnostic evidence.
 
 ## Reference-backed examples
 

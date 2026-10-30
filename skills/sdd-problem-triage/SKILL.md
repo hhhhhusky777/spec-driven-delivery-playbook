@@ -39,7 +39,7 @@ that are expected to improve overall delivery efficiency, following the
 KB's guidance.
 
 When investigation requires assessing failure diagnostics or retry safety, read
-`error-handling-and-diagnosability.md` directly from the resolved KB root
+`error-handling.md` directly from the resolved KB root
 when this skill's revision ships it. Apply it within the project's error contract and
 authority.
 

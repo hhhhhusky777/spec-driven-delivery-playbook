@@ -3,7 +3,7 @@
 Scope: Architecture, Engineering
 
 - Architecture: Define failure semantics, consistency guarantees and recovery boundaries.
-- Engineering: Implement safe recovery, retry and tests of failure guarantees.
+- Engineering: Implement failure handling, consistency guarantees and safe recovery/retry.
 
 The project's error-handling authority owns classification, recovery permission,
 issue tracking and escalation.
@@ -45,8 +45,7 @@ recovery framework follows from this guidance.
 
 Read and apply [Observability and Diagnosability](observability-and-diagnosability.md)
 for required versus optional evidence, shared instrumentation, context
-preservation and failure localization. This topic owns handling and recovery,
-not tracing mechanisms.
+preservation and failure localization.
 
 ## Reference-backed examples
 

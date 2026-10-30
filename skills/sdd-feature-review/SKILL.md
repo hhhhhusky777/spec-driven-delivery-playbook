@@ -106,7 +106,7 @@ KB root when the accepted pin ships it. Judge outcome completeness, actual
 dependencies and acceptance evidence against the approved design.
 
 When reviewing solution or system design, performance decisions or feedback,
-read `performance-and-observability.md` directly from the manifest-linked KB
+read `performance.md` directly from the manifest-linked KB
 root when the accepted pin ships it. Assess measurable, interpretable feedback
 and proportionate improvements within project authority.
 
@@ -223,7 +223,7 @@ within project authority.
 > approach that protects the accepted outcome, or when it adds speculative
 > complexity.
 > Before judging failure handling, retry safety or failure diagnostics, read
-> `error-handling-and-diagnosability.md` directly from the manifest-linked KB
+> `error-handling.md` directly from the manifest-linked KB
 > root when the accepted pin ships it. Apply it within project authority.
 > Before judging design simplicity or reuse, read
 > `simple-design-and-reuse.md` directly from the manifest-linked KB

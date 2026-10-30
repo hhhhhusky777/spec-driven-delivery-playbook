@@ -5,11 +5,6 @@ Scope: Architecture, Engineering
 - Architecture: Define measurable outcomes, diagnostic evidence and shared instrumentation boundaries.
 - Engineering: Implement correlated signals that locate failures and support evidence-based improvement.
 
-Use this topic for shared monitoring and diagnostic mechanisms.
-[Performance](performance-and-observability.md) owns performance goals and
-trade-offs; [Error Handling](error-handling-and-diagnosability.md) owns failure
-semantics, consistency, recovery and retry.
-
 ## Core principles
 
 > [!IMPORTANT]
@@ -31,18 +26,33 @@ relationship to other spans. It helps locate slow or failed stages; it does not
 replace error-specific causal context. Neither distributed tracing nor a span
 for every error is mandatory: structured logs with request/run correlation may
 already provide sufficient evidence. Apply the
-[required evidence and optional detail](#required-evidence-and-optional-detail)
+[failure evidence and optional detail](#failure-evidence-and-optional-detail)
 boundary when selecting diagnostic coverage.
 
-Use a suitable shared instrumentation framework and operation context for
-performance and failure diagnostics. Reuse current project mechanisms; when a
-framework is needed but none is suitable, evaluate mature implementations for
-the project's language, runtime and deployment before building custom
-infrastructure. Add only necessary business instrumentation.
+> [!IMPORTANT]
+> Performance and error diagnostics MUST use a coherent project-shared
+> instrumentation framework and operation context. Reuse suitable existing
+> mechanisms. If this capability is missing, establish it by integrating a
+> mature framework appropriate to the project's language, runtime and deployment;
+> add only necessary integration and business instrumentation, not a custom
+> telemetry platform. Shared context does not require one SDK across all
+> languages, every available signal or a span for every operation.
+
+Evaluate suitable existing options before creating new infrastructure:
+
+| Option | Fit and reuse boundary |
+| --- | --- |
+| [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) | Vendor-neutral APIs, SDKs and integrations for logs, metrics and traces; choose supported language/runtime components and retain a suitable existing backend |
+| [.NET diagnostics with OpenTelemetry](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-with-otel) | Reuse native logging, metrics and Activity APIs with OTel collection/export instead of parallel custom instrumentation |
+| [Micrometer Observation](https://docs.micrometer.io/micrometer/reference/observation/components.html) | For a JVM project, reuse its observation lifecycle and handlers for metrics/tracing; integrate existing logging and context rather than duplicate instrumentation |
+
+These are reference options, not required products. Select the smallest suitable
+mechanism within project authority; the shared capability does not itself grant
+permission to add dependencies or deploy a monitoring service.
 
 | Responsibility | Framework and existing integrations | Business code |
 | --- | --- | --- |
-| Context and lifecycle | Create and propagate trace/span context; record span lifetime; apply configured collection and export policies | Define meaningful operation boundaries and necessary business attributes |
+| Context and lifecycle | Maintain shared operation/request context and applicable trace/span lifetimes; apply configured collection and export policies | Define meaningful operation boundaries and necessary business attributes |
 | Performance | Collect operation timing and configured metrics | Identify relevant operations, work units and performance goals |
 | Failure diagnostics | Correlate errors and logs with their operation context | Supply error-specific context under [Context and placement](#context-and-placement) |
 
@@ -53,7 +63,21 @@ and the cost of observing the system. Avoid unused signals and noisy alerts;
 an alert should support an actionable response, not merely report that a metric
 changed. Preserve project privacy and security boundaries in telemetry.
 
-## Required evidence and optional detail
+## Performance evidence and optional detail
+
+Use the goals and representative-workload boundaries in
+[Performance](performance.md) to choose signals. The shared framework MUST
+provide evidence that can assess those accepted goals and locate relevant
+costs; counters without an interpretable operation or workload are insufficient.
+
+| Evidence | Required boundary / optional detail |
+| --- | --- |
+| Measurement meaning | Identify the operation, workload, environment, measurement interval and units; separate successful and failed work where mixing them misleads |
+| Goal-relevant signals | Provide the latency distribution, throughput, resource use or useful-work measures needed for the accepted goals; no universal metric set or threshold |
+| Interpretation | Retain enough context to compare representative observations and locate relevant processing or dependency costs using existing signals |
+| Additional detail | Per-request spans, fine-grained profiles and other high-volume detail are optional according to diagnostic value and cost; sampling must not be presented as complete per-request evidence |
+
+## Failure evidence and optional detail
 
 > [!IMPORTANT]
 > Errors that compromise data correctness, integrity or consistency, business
@@ -108,7 +132,7 @@ payloads while retaining useful causal context in authorized diagnostics.
 Review whether the failure can be located, its resulting state understood, and
 the smallest safe next action determined. Detailed causal investigation belongs
 to the project's triage guidance; performance goals and trade-offs belong to the
-[Performance topic](performance-and-observability.md). New failure behavior
+[Performance topic](performance.md). New failure behavior
 remains subject to accepted design and authority.
 
 ## Architectural fitness evidence
@@ -153,3 +177,7 @@ these sources within project authority; they do not mandate a telemetry platform
 - [OpenTelemetry: Traces](https://opentelemetry.io/docs/concepts/signals/traces/) — spans describe operation boundaries, lifetime and attributes; select relevant business instrumentation rather than trace every function.
 - [Thoughtworks: Building Evolutionary Architectures, second-edition excerpt](https://www.thoughtworks.com/content/dam/thoughtworks/documents/books/bk_building_evolutionary_architectures_second_edition_free_chapter.pdf) — proportionate architecture effort and feedback on important design characteristics, especially printed pages 4–5.
 - [ArchUnit: User Guide](https://www.archunit.org/userguide/html/000_Index.html) — a concrete dependency-cycle example in sections 4.7 and 8.2; section 8.3 retains suitable existing module systems.
+
+- [OpenTelemetry overview](https://opentelemetry.io/docs/what-is-opentelemetry/) — shared, vendor-neutral instrumentation and export interfaces; it is not a storage/visualization backend.
+- [Microsoft: .NET observability with OpenTelemetry](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-with-otel) — reuse native logging, metrics and Activity APIs with common collection/export.
+- [Micrometer: Observation components](https://docs.micrometer.io/micrometer/reference/observation/components.html) — one observation lifecycle can drive suitable metric/tracing handlers; integrate the project's actual context and logging mechanisms.

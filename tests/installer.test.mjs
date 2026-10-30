@@ -203,14 +203,14 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
     "simple-design-and-reuse.md",
     "architecture-scope-and-assumptions.md",
     "contracts-and-compatibility.md",
-    "error-handling-and-diagnosability.md",
+    "error-handling.md",
     "testing-and-reproduction.md",
     "security-basics.md",
     "proportional-review.md",
     "efficiency-and-concurrency.md",
     "experience-and-learning.md",
     "code-simplicity-and-clarity.md",
-    "performance-and-observability.md",
+    "performance.md",
     "code-level-performance-engineering.md",
     "solution-research.md",
   ];
@@ -226,7 +226,7 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
   for (const name of ["sdd-project-workflow", "sdd-feature-review", "sdd-problem-triage"]) {
     const skill = await readFile(path.join(project, ".agents/skills", name, "SKILL.md"), "utf8");
     const routedTopics = name === "sdd-problem-triage"
-      ? ["error-handling-and-diagnosability.md", "testing-and-reproduction.md", "experience-and-learning.md",
+      ? ["error-handling.md", "testing-and-reproduction.md", "experience-and-learning.md",
         "solution-research.md"] : topics;
     for (const topic of routedTopics) {
       assert.ok(skill.includes(`\`${topic}\``), `${name} must route to ${topic}`);
@@ -500,7 +500,7 @@ test("installed skill routing resolves same-revision KB topics across profiles a
   const source = await createPlaybookFixture(t);
   const legacyRevision = await commitKnowledgeBase(source, { "README.md": "# Accepted knowledge\n" });
   const concurrencyTopic = "efficiency-and-concurrency.md";
-  const topics = ["solution-research.md", "error-handling-and-diagnosability.md",
+  const topics = ["solution-research.md", "error-handling.md",
     "testing-and-reproduction.md", "experience-and-learning.md", concurrencyTopic];
   const acceptedTopics = Object.fromEntries(topics.map(topic => [topic, `# Previous ${topic}\nAccepted guidance.\n`]));
   const acceptedRevision = await commitKnowledgeBase(source, acceptedTopics);
