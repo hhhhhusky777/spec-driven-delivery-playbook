@@ -44,8 +44,8 @@ recovery framework follows from this guidance.
 
 ## Useful failure evidence
 
-Use the [shared instrumentation and context guidance](performance-and-observability.md#useful-signals-and-feedback)
-for performance and error diagnostics; preserve error-specific context below.
+Follow the [shared instrumentation and context guidance](performance-and-observability.md#useful-signals-and-feedback).
+Preserve error-specific context below.
 
 ### Required evidence and optional detail
 
@@ -98,11 +98,6 @@ as appropriate. Human messages explain what happened; machine decisions use
 the established typed error contract, not fragile parsing of prose. Separate
 client-safe information from internal diagnosis; redact secrets and sensitive
 payloads while retaining useful causal context in authorized diagnostics.
-
-For example, an export can fail while loading metadata, rendering or uploading.
-A final `export_failed` record is insufficient if it loses which stage failed.
-Retaining `stage=upload`, the original storage exception and the existing
-request identifier can locate the failure without logging every branch.
 
 Review whether the failure can be located, its resulting state understood, and
 the smallest safe next action determined. Detailed causal investigation belongs
