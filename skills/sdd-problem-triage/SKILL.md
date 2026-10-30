@@ -48,6 +48,19 @@ actions and scope expansion remain subject to existing authority. Authorized
 urgent mitigation need not wait for root-cause proof; preserve evidence and
 distinguish mitigation from a verified fix.
 
+## Completion and review boundary
+
+> [!IMPORTANT]
+> An authorized repair MUST remain one coherent work unit: investigate, locate
+> and confirm the cause, implement the fix, and rerun tests covering the original
+> failure and affected behavior. Submit the complete result for review only when
+> all checks required at that boundary pass. Intermediate diagnostic progress,
+> instrumentation or individual edits MUST NOT create separate review gates.
+> Continue within authority until that boundary or an existing escalation
+> condition is reached. A diagnosis-only request does not authorize a repair.
+> Existing human decisions, time limits and final-validation timing still apply;
+> do not run deferred full validation early merely to finish triage.
+
 ## Causal judgment
 
 Compare expected and actual behavior on the relevant revision, environment and
