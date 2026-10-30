@@ -54,7 +54,7 @@ permission to add dependencies or deploy a monitoring service.
 | --- | --- | --- |
 | Context and lifecycle | Maintain shared operation/request context and applicable trace/span lifetimes; apply configured collection and export policies | Define meaningful operation boundaries and necessary business attributes |
 | Performance measurement | Collect operation timing and configured metrics | Identify relevant operations, work units and accepted measurement goals |
-| Failure diagnostics | Correlate errors and logs with their operation context | Supply error-specific context under [Context and placement](#context-and-placement) |
+| Failure diagnostics | Correlate errors and logs with their operation context | Supply error-specific context under [Failure context and placement](#failure-context-and-placement) |
 
 Connect collected evidence to an interpretation and useful action: assess a
 goal, locate expensive work, compare a change or detect meaningful degradation.
@@ -104,7 +104,7 @@ sampling or temporary debug output as useful; do not suppress required evidence.
 These are playbook boundaries synthesized from the references, not an identical
 company-wide logging checklist claimed for every source.
 
-### Context and placement
+### Failure context and placement
 
 Preserve diagnostic context before propagation or translation can lose it.
 Required internal evidence MUST distinguish the actual failed operation, its stage or
