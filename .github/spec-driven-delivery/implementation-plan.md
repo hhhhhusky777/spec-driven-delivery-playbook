@@ -13,17 +13,17 @@ retained reviewers before dependent corrections resumed.
 | Field | Value |
 | --- | --- |
 | State | `IMPLEMENTING` |
-| Active tasks | `T01` |
-| Next ready task | `None` |
+| Active tasks | `None` |
+| Next ready task | `T02` |
 | Active blocker | `None` |
 | Implementation mode | Human-review-before-merge; Autopilot not enabled |
 | Authorized scope / feature branch / protected target | D01-D06; `codex/error-origin-context`; `main` |
 | Delivery branch / target | `codex/error-origin-context` / `main`; final PR #216 |
 | Owner | Repository owner |
 | Primary issue / need | [Issue #215](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/215) |
-| Concluded whiteboard | [Working whiteboard](solution-whiteboard.md), accepted amendment `e46d06e214ff2d9282c1055b4a63424616e1d57d`; reconclusion `47cc272` (original design b3e90bf / e760248 retained in Git) |
+| Concluded whiteboard | [Working whiteboard](solution-whiteboard.md), accepted amendment A02 `7bda566`; reconclusion `3a0799d` (original design and A01 retained in Git) |
 | Required reviewers | The same two retained independent Issue #215 reviewer sessions |
-| Last verified | 2026-10-30 Asia/Shanghai: A01 corrections implemented; focused installer tests 46/46 pass with no skips; T02 becomes ready on integration; PRs own review/merge facts |
+| Last verified | 2026-10-30 Asia/Shanghai: A02 relocation implemented; affected documentation checks and retained review belong in PR #217; prior installer tests 46/46 remain source-appropriate; T02 follows integration |
 
 ## Governing inputs and delivery boundaries
 
@@ -57,8 +57,8 @@ retained reviewers before dependent corrections resumed.
 
 | ID | State | Depends on | Consumed design | Implementation work | Outcome | Boundaries | Consumed error handling | Consumed validations | Acceptance evidence | Consumed assumptions | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| T01 | IN_PROGRESS | None | D01-D03, D06; whiteboard responsibility diagram and coverage | Add `observability-and-diagnosability.md`; relocate existing architectural conformance guidance/example/references into the architecture topic under owner-approved A02; move shared sections and their relevant references from the existing error/performance topics; narrow titles/scopes, rename topics to error-handling.md/performance.md and update every active consumer, including existing skill/test filename references; clarify shared capability, mature framework options and performance evidence under A01 | One canonical shared topic is reachable from both narrow consumers without duplicate mechanism ownership | Preserve approved diagnostic content, performance/recovery principles; A01 renames filenames and active consumers together; no runtime change, platform mandate or removed export example reintroduction | D02 required/optional evidence, original cause/context, privacy and existing audit duties move intact; recovery authority remains unchanged | None; reuse existing documentation gates | Compare moved obligations against 5daaa69 and D01-D03; focused Markdown/local links; reviewer checks loss/duplication and text/diagram agreement | None | `codex/issue215-kb-extraction`; [PR #217](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217); target `codex/error-origin-context` |
-| T02 | PLANNED | T01 | D04; D01 topic contract and installed-root boundary | Update workflow/review/triage direct topic-read triggers and narrow existing trigger descriptions; extend existing installed-content and cross-profile routing tests to cover the new same-revision topic | Authors, reviewers and triage agents discover the shipped topic directly and receive the correct installed content | Reuse complete-tree installer and revision guards; no new installer mode, extra tracker or generic rule duplication | Existing escalation for unresolved authority or missing evidence; no task-specific failure behavior | None; new assertions stay inside existing test gates | Focused installed-topic/routing tests verify actual content and availability across supported profiles and cleanup; skill validation and documentation checks | None | `codex/issue215-kb-routing`; PR not yet created; target `codex/error-origin-context` |
+| T01 | DONE | None | D01-D03, D06; whiteboard responsibility diagram and coverage | Add `observability-and-diagnosability.md`; relocate existing architectural conformance guidance/example/references into the architecture topic under owner-approved A02; move shared sections and their relevant references from the existing error/performance topics; narrow titles/scopes, rename topics to error-handling.md/performance.md and update every active consumer, including existing skill/test filename references; clarify shared capability, mature framework options and performance evidence under A01 | One canonical shared topic is reachable from both narrow consumers without duplicate mechanism ownership | Preserve approved diagnostic content, performance/recovery principles; A01 renames filenames and active consumers together; no runtime change, platform mandate or removed export example reintroduction | D02 required/optional evidence, original cause/context, privacy and existing audit duties move intact; recovery authority remains unchanged | None; reuse existing documentation gates | Compare moved obligations against 5daaa69 and D01-D03; focused Markdown/local links; reviewer checks loss/duplication and text/diagram agreement | None | `codex/issue215-kb-extraction`; [PR #217](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217); target `codex/error-origin-context` |
+| T02 | READY | T01 | D04; D01 topic contract and installed-root boundary | Update workflow/review/triage direct topic-read triggers and narrow existing trigger descriptions; extend existing installed-content and cross-profile routing tests to cover the new same-revision topic | Authors, reviewers and triage agents discover the shipped topic directly and receive the correct installed content | Reuse complete-tree installer and revision guards; no new installer mode, extra tracker or generic rule duplication | Existing escalation for unresolved authority or missing evidence; no task-specific failure behavior | None; new assertions stay inside existing test gates | Focused installed-topic/routing tests verify actual content and availability across supported profiles and cleanup; skill validation and documentation checks | None | `codex/issue215-kb-routing`; PR not yet created; target `codex/error-origin-context` |
 
 D05 is an existing delivered correction, not a new implementation task. Preserve
 it as the explicit non-code obligation below. `Depends on` identifies the real
@@ -105,7 +105,7 @@ that full validation or merge has completed.
 
 | Information | Implementation summary / evidence |
 | --- | --- |
-| Implementation / design | T01 delivers accepted A01 topic renames, shared-framework guidance and performance evidence; focused checks pass, task review stays in PR #217; T02 remains pending and D05 preserved |
+| Implementation / design | T01 delivers accepted A01 and A02 responsibilities, including the architecture-evidence relocation; focused checks pass, task review stays in PR #217; T02 remains pending and D05 preserved |
 | Code-level flows | Product business/error/data flows are N/A for the documentation-only design; actual reading/installation relationships must match the accepted whiteboard diagram |
 | Review findings | Both retained reviewers approved plan 5426001 without findings; task findings and live approvals remain GitHub facts |
 | Risks / limits / unknowns | A01 replaces filename retention with an atomic rename; focused routing evidence must cover the renamed topics; no full-validation claim |

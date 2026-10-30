@@ -134,19 +134,6 @@ the smallest safe next action determined. Detailed causal investigation belongs
 to the project's triage guidance. New failure behavior remains subject to
 accepted design and authority.
 
-## Architectural fitness evidence
-
-Architectural fitness means evidence that a change preserves an important,
-accepted design property. Where that property warrants it, use an existing
-metric, test or analysis to make degradation visible. For example, a dependency
-check can expose a cycle that violates an agreed module boundary.
-
-Assess only the property the evidence actually covers. A static dependency
-check does not prove runtime correctness or performance. Prefer a suitable
-existing mechanism; this is not a requirement to adopt evolutionary architecture,
-install an architecture-testing framework or create a test for every design
-preference. Design authority determines the boundary being evaluated.
-
 ## Reference-backed examples
 
 These paraphrase the named sources, not project incidents or mandatory designs.
@@ -155,7 +142,6 @@ These paraphrase the named sources, not project incidents or mandatory designs.
 | --- | --- | --- | --- |
 | A create-if-absent operation handles an already-existing resource | The handled condition is not an operation failure | Preserve relevant context without falsely reporting failure or duplicating a propagated exception | [OpenTelemetry: Recording exceptions](https://opentelemetry.io/docs/specs/semconv/general/recording-errors/#recording-exceptions) |
 | A webpage request crosses an API gateway, backend and database, with spans in one trace | The connected path supplies context that isolated events lack | Instrument only the relevant path within project authority; this does not require OpenTelemetry adoption | [OpenTelemetry: Observability primer](https://opentelemetry.io/docs/concepts/observability-primer/#distributed-traces) |
-| ArchUnit groups Java classes by package and checks those groups for dependency cycles | An executable check can reveal erosion of an accepted acyclic-module constraint | Covers the selected classes and dependencies, not overall architecture quality; keep an existing suitable module mechanism | [ArchUnit: Slices](https://www.archunit.org/userguide/html/000_Index.html#_slices) |
 
 ## References
 
@@ -174,8 +160,6 @@ these sources within project authority; they do not mandate a telemetry platform
 - [OpenTelemetry: Observability primer](https://opentelemetry.io/docs/concepts/observability-primer/) — the different questions metrics, logs and traces help answer; no telemetry platform mandate.
 - [OpenTelemetry: Context propagation](https://opentelemetry.io/docs/concepts/context-propagation/) — shared context correlates signals across operation and service boundaries; reuse supported instrumentation and propagators.
 - [OpenTelemetry: Traces](https://opentelemetry.io/docs/concepts/signals/traces/) — spans describe operation boundaries, lifetime and attributes; select relevant business instrumentation rather than trace every function.
-- [Thoughtworks: Building Evolutionary Architectures, second-edition excerpt](https://www.thoughtworks.com/content/dam/thoughtworks/documents/books/bk_building_evolutionary_architectures_second_edition_free_chapter.pdf) — proportionate architecture effort and feedback on important design characteristics, especially printed pages 4–5.
-- [ArchUnit: User Guide](https://www.archunit.org/userguide/html/000_Index.html) — a concrete dependency-cycle example in sections 4.7 and 8.2; section 8.3 retains suitable existing module systems.
 
 - [OpenTelemetry overview](https://opentelemetry.io/docs/what-is-opentelemetry/) — shared, vendor-neutral instrumentation and export interfaces; it is not a storage/visualization backend.
 - [Microsoft: .NET observability with OpenTelemetry](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/observability-with-otel) — reuse native logging, metrics and Activity APIs with common collection/export.
