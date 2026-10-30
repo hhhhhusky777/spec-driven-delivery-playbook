@@ -4,11 +4,11 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [Issue #215](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/215) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
-| Open owner decisions | Accept reviewed amendment A01 before dependent corrections |
+| Concluded design revision | `e46d06e214ff2d9282c1055b4a63424616e1d57d` |
+| Open owner decisions | `None` |
 
 ## Discussion draft
 
@@ -193,10 +193,10 @@ new acceptance checkpoint or runtime rejection is designed.
 | Compatibility | A01 renames the two topics and their active consumers; accepted installed revision and older pinned trees remain unchanged | Attention |
 | Existing work | D05 and previous PR #216 diagnostic changes are retained; unpublished extraction edits are saved as local drafts | Attention |
 | Plan | Create the implementation plan after design acceptance; it owns task decomposition and branch targets | Pending design acceptance |
-| Remaining gaps | Reviewed amendment A01 requires owner acceptance before the dependent T01 corrections | Human decision |
+| Remaining gaps | None; owner accepted reviewed amendment A01 | None |
 
 ## Design amendments
 
 | Amendment | Changed design points | Reason and impact | Owner decision |
 | --- | --- | --- | --- |
-| A01 | D01, D03 and affected D04 consumers/coverage | Supersede filename retention with atomic topic/consumer rename; clarify shared capability establishment, mature options and performance/error evidence; trim redundant scope text. Baseline design b3e90bf and metadata-only freeze e760248 remain in Git | Prior edit authorization: owner PR #217 comments [shared framework](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217#discussion_r4425483582), [performance filename](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217#discussion_r4425487509), [error filename](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217#discussion_r4425514292) and wording comments, followed by the request to address comments; reviewed amendment acceptance remains pending |
+| A01 | D01, D03 and affected D04 consumers/coverage | Supersede filename retention with atomic topic/consumer rename; clarify shared capability establishment, mature options and performance/error evidence; trim redundant scope text. Baseline design b3e90bf and metadata-only freeze e760248 remain in Git | Prior edit authorization: owner PR #217 comments [shared framework](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217#discussion_r4425483582), [performance filename](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217#discussion_r4425487509), [error filename](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217#discussion_r4425514292) and wording comments, followed by the request to address comments; reviewed amendment accepted by the owner in conversation |
