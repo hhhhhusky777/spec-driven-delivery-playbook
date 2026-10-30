@@ -1,15 +1,14 @@
-# Performance and Observability
+# Performance
 
 Scope: Architecture, Engineering
 
 - Architecture: Define performance goals, measurable behavior and whole-system trade-offs.
 - Engineering: Collect representative measurements and interpret feedback against those goals.
 
-Observability makes relevant behavior measurable and interpretable: evidence
-should support decisions and improvement, not just populate dashboards.
-This topic covers system-level choices and feedback, not
-a catalog of code-level optimization techniques. Failure localization and recovery
-belong to [Error Handling and Diagnosability](error-handling-and-diagnosability.md).
+This topic covers system-level performance goals, representative measurements
+and whole-system trade-offs. Code-level techniques belong to
+[Code-level Performance Engineering](code-level-performance-engineering.md);
+failure recovery belongs to [Error Handling](error-handling-and-diagnosability.md).
 
 ## Core principles
 
@@ -53,53 +52,11 @@ performance-reporting system. Project authority still controls
 test timing, production access and acceptable load; this topic creates no new
 validation gate or permission to experiment on live users.
 
-## Useful signals and feedback
+## Instrumentation and feedback
 
-Choose signals for the question being answered. Metrics describe aggregate
-behavior over time; logs record events and context; traces connect operations
-across a request's path. Correlation can explain where time goes, but not every
-project or question needs all three.
-
-A distributed trace connects a request's operations across services through a
-shared trace ID. Each span describes an operation's duration, outcome and
-relationship to other spans. It helps locate slow or failed stages; it does not
-replace error-specific causal context. Neither distributed tracing nor a span
-for every error is mandatory: structured logs with request/run correlation may
-already provide sufficient evidence. Apply the error KB's
-[required evidence and optional detail](error-handling-and-diagnosability.md#required-evidence-and-optional-detail)
-boundary when selecting diagnostic coverage.
-
-Use a suitable shared instrumentation framework and operation context for
-performance and failure diagnostics. Reuse current project mechanisms; when a
-framework is needed but none is suitable, evaluate mature implementations for
-the project's language, runtime and deployment before building custom
-infrastructure. Add only necessary business instrumentation.
-
-| Responsibility | Framework and existing integrations | Business code |
-| --- | --- | --- |
-| Context and lifecycle | Create and propagate trace/span context; record span lifetime; apply configured collection and export policies | Define meaningful operation boundaries and necessary business attributes |
-| Performance | Collect operation timing and configured metrics | Identify relevant operations, work units and performance goals |
-| Failure diagnostics | Correlate errors and logs with their operation context | Supply error-specific context under [Error Handling and Diagnosability](error-handling-and-diagnosability.md#useful-failure-evidence) |
-
-Connect collected evidence to an interpretation and useful action: assess a
-goal, locate expensive work, compare a change or detect meaningful degradation.
-Choose resolution, retention and collection volume proportionate to that need
-and the cost of observing the system. Avoid unused signals and noisy alerts;
-an alert should support an actionable response, not merely report that a metric
-changed. Preserve project privacy and security boundaries in telemetry.
-
-## Architectural fitness evidence
-
-Architectural fitness means evidence that a change preserves an important,
-accepted design property. Where that property warrants it, use an existing
-metric, test or analysis to make degradation visible. For example, a dependency
-check can expose a cycle that violates an agreed module boundary.
-
-Assess only the property the evidence actually covers. A static dependency
-check does not prove runtime correctness or performance. Prefer a suitable
-existing mechanism; this is not a requirement to adopt evolutionary architecture,
-install an architecture-testing framework or create a test for every design
-preference. Design authority determines the boundary being evaluated.
+Read and apply [Observability and Diagnosability](observability-and-diagnosability.md)
+for shared signals, instrumentation, context and diagnostic evidence. This topic
+owns performance goals, measurements and trade-offs, not tracing mechanisms.
 
 ## Reference-backed examples
 
@@ -111,8 +68,6 @@ interpretation, not universal tool choices or new project requirements.
 | A service uses more CPU while processing more videos | Work completed per CPU-second distinguishes higher demand from lower efficiency; CPU use alone cannot | Choose the useful-work unit for the actual service; a lower resource counter is not automatically a better outcome | [Google: Application productivity](https://abseil.io/fast/7) |
 | A service averages 100 ms at 1,000 requests per second, while 1% take 5 seconds | The average hides ten slow requests each second; the latency distribution reveals them | Choose a meaningful tail measure and target for the actual operation, not these illustrative numbers | [Google SRE: Latency distributions](https://sre.google/sre-book/monitoring-distributed-systems/#worrying-about-your-tail-or-instrumentation-and-performance-Yms9Ck) |
 | An orders-table index is evaluated against the original schema under the same load | Query latency, CPU and throughput test whether the proposed optimization helps | The stated improvement is a hypothesis, not a promised result for another database or workload | [Microsoft: Performance testing](https://learn.microsoft.com/en-us/azure/well-architected/performance-efficiency/performance-test) |
-| A webpage request crosses an API gateway, backend and database, with spans in one trace | The connected path supplies context that isolated events lack | Instrument only the relevant path within project authority; this does not require OpenTelemetry adoption | [OpenTelemetry: Observability primer](https://opentelemetry.io/docs/concepts/observability-primer/#distributed-traces) |
-| ArchUnit groups Java classes by package and checks those groups for dependency cycles | An executable check can reveal erosion of an accepted acyclic-module constraint | Covers the selected classes and dependencies, not overall architecture quality; keep an existing suitable module mechanism | [ArchUnit: Slices](https://www.archunit.org/userguide/html/000_Index.html#_slices) |
 
 ## References
 
@@ -126,10 +81,4 @@ evidence; an external benchmark or example cannot establish them.
 - [Google: Optimizing optimization](https://abseil.io/fast/72) — expected benefit, total engineering effort, reuse and measurement; its experimental shortcuts do not waive project correctness boundaries.
 - [Microsoft: Performance Efficiency design principles](https://learn.microsoft.com/en-us/azure/well-architected/performance-efficiency/principles) — performance from design onward, whole-system trade-offs and proportionate evidence; cloud-specific mechanisms and test gates are not additional project requirements.
 - [Google SRE: Service Level Objectives](https://sre.google/sre-book/service-level-objectives/) — user-relevant measures and targets rather than arbitrary numbers or every available metric.
-- [Google SRE: Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/) — meaningful signals, latency distributions and proportionate, actionable monitoring.
 - [Microsoft: Performance testing](https://learn.microsoft.com/en-us/azure/well-architected/performance-efficiency/performance-test) — representative workloads, baselines and hypothesis-driven comparison; its test schedules do not replace project authority.
-- [OpenTelemetry: Observability primer](https://opentelemetry.io/docs/concepts/observability-primer/) — the different questions metrics, logs and traces help answer; no telemetry platform mandate.
-- [OpenTelemetry: Context propagation](https://opentelemetry.io/docs/concepts/context-propagation/) — shared context correlates signals across operation and service boundaries; reuse supported instrumentation and propagators.
-- [OpenTelemetry: Traces](https://opentelemetry.io/docs/concepts/signals/traces/) — spans describe operation boundaries, lifetime and attributes; select relevant business instrumentation rather than trace every function.
-- [Thoughtworks: Building Evolutionary Architectures, second-edition excerpt](https://www.thoughtworks.com/content/dam/thoughtworks/documents/books/bk_building_evolutionary_architectures_second_edition_free_chapter.pdf) — proportionate architecture effort and feedback on important design characteristics, especially printed pages 4–5.
-- [ArchUnit: User Guide](https://www.archunit.org/userguide/html/000_Index.html) — a concrete dependency-cycle example in sections 4.7 and 8.2; section 8.3 retains suitable existing module systems.

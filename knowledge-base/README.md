@@ -59,14 +59,15 @@ reading requirement.
 | Simple design and reuse | Reuse existing capabilities; minimize new responsibilities and mechanisms | [Simple design and reuse](simple-design-and-reuse.md) |
 | Architecture, scope, and assumptions | Establish ownership and evidence-bounded design premises | [Architecture, scope, and assumptions](architecture-scope-and-assumptions.md) |
 | Contracts and compatibility | Change interfaces without accidental contract breakage | [Contracts and compatibility](contracts-and-compatibility.md) |
-| Error handling and diagnosability | Preserve invariants with simple failures and useful diagnosis | [Error handling and diagnosability](error-handling-and-diagnosability.md) |
+| Error handling | Preserve invariants with simple failure semantics, recovery and safe retry | [Error Handling](error-handling-and-diagnosability.md) |
+| Observability and diagnosability | Measure relevant behavior, correlate signals and locate failures through shared instrumentation | [Observability and Diagnosability](observability-and-diagnosability.md) |
 | Testing and reproduction | Prove changed behavior and reproduce material failure risks | [Testing and reproduction](testing-and-reproduction.md) |
 | Security basics | Protect actual trust boundaries proportionately | [Security basics](security-basics.md) |
 | Proportional review | Assess material problems, correction value, and reasonable dispositions | [Proportional review](proportional-review.md) |
 | Efficiency and concurrency | Overlap independent work without unnecessary coordination | [Efficiency and concurrency](efficiency-and-concurrency.md) |
 | Experience and learning | Turn verified lessons into actionable reuse and refinement | [Experience and learning](experience-and-learning.md) |
 | Code simplicity and clarity | Make implementation intent and behavior easy to understand without sacrificing correctness | [Code simplicity and clarity](code-simplicity-and-clarity.md) |
-| Performance and observability | Design measurable, interpretable feedback and improve useful outcomes within whole-system trade-offs | [Performance and observability](performance-and-observability.md) |
+| Performance | Set performance goals and assess representative measurements and whole-system trade-offs | [Performance](performance-and-observability.md) |
 | Code-level performance engineering | Locate avoidable implementation costs and choose bounded, source-backed improvements | [Code-level performance engineering](code-level-performance-engineering.md) |
 
 ## Installation and ownership

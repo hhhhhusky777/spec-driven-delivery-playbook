@@ -3,17 +3,17 @@
 <!-- sdd: implementation-plan -->
 
 This is the only active-delivery state authority. GitHub PRs own live review,
-merge and execution evidence. This plan is a review candidate, not authority to
-start its planned implementation tasks.
+merge and execution evidence. The owner accepted this plan in conversation. Implementation follows its
+approved scope with human review before task merges; Autopilot is not enabled.
 
 ## Delivery status
 
 | Field | Value |
 | --- | --- |
-| State | `DRAFT` |
-| Active tasks | `None` |
+| State | `IMPLEMENTING` |
+| Active tasks | `T01` |
 | Next ready task | `None` |
-| Active blocker | Owner plan acceptance and merge-mode decision |
+| Active blocker | `None` |
 | Implementation mode | Human-review-before-merge; Autopilot not enabled |
 | Authorized scope / feature branch / protected target | D01-D05; `codex/error-origin-context`; `main` |
 | Delivery branch / target | `codex/error-origin-context` / `main`; final PR #216 |
@@ -21,7 +21,7 @@ start its planned implementation tasks.
 | Primary issue / need | [Issue #215](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/215) |
 | Concluded whiteboard | [Working whiteboard](solution-whiteboard.md), accepted design `b3e90bf2098c5476e10ff389ed25063102857789`; conclusion transition `e760248` |
 | Required reviewers | The same two retained independent Issue #215 reviewer sessions |
-| Last verified | 2026-10-30 Asia/Shanghai: conclusion transition verified by both reviewers; planning candidate only |
+| Last verified | 2026-10-30 Asia/Shanghai: plan accepted, T01 started on its declared task branch; task results remain pending |
 
 ## Governing inputs and delivery boundaries
 
@@ -55,7 +55,7 @@ start its planned implementation tasks.
 
 | ID | State | Depends on | Consumed design | Implementation work | Outcome | Boundaries | Consumed error handling | Consumed validations | Acceptance evidence | Consumed assumptions | Branch / PR / required target |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| T01 | PLANNED | None | D01-D03; whiteboard responsibility diagram and coverage | Add `observability-and-diagnosability.md`; move shared sections and their relevant references from the existing error/performance topics; narrow those titles/scopes; update KB index and affected active links, including the code-level performance topic | One canonical shared topic is reachable from both narrow consumers without duplicate mechanism ownership | Preserve approved diagnostic content, performance/recovery principles and existing filenames; no runtime change, platform mandate or removed export example reintroduction | D02 required/optional evidence, original cause/context, privacy and existing audit duties move intact; recovery authority remains unchanged | None; reuse existing documentation gates | Compare moved obligations against 5daaa69 and D01-D03; focused Markdown/local links; reviewer checks loss/duplication and text/diagram agreement | None | `codex/issue215-kb-extraction`; PR not yet created; target `codex/error-origin-context` |
+| T01 | IN_PROGRESS | None | D01-D03; whiteboard responsibility diagram and coverage | Add `observability-and-diagnosability.md`; move shared sections and their relevant references from the existing error/performance topics; narrow those titles/scopes; update KB index and affected active links, including the code-level performance topic | One canonical shared topic is reachable from both narrow consumers without duplicate mechanism ownership | Preserve approved diagnostic content, performance/recovery principles and existing filenames; no runtime change, platform mandate or removed export example reintroduction | D02 required/optional evidence, original cause/context, privacy and existing audit duties move intact; recovery authority remains unchanged | None; reuse existing documentation gates | Compare moved obligations against 5daaa69 and D01-D03; focused Markdown/local links; reviewer checks loss/duplication and text/diagram agreement | None | `codex/issue215-kb-extraction`; PR not yet created; target `codex/error-origin-context` |
 | T02 | PLANNED | T01 | D04; D01 topic contract and installed-root boundary | Update workflow/review/triage direct topic-read triggers and narrow existing trigger descriptions; extend existing installed-content and cross-profile routing tests to cover the new same-revision topic | Authors, reviewers and triage agents discover the shipped topic directly and receive the correct installed content | Reuse complete-tree installer and revision guards; no new installer mode, extra tracker or generic rule duplication | Existing escalation for unresolved authority or missing evidence; no task-specific failure behavior | None; new assertions stay inside existing test gates | Focused installed-topic/routing tests verify actual content and availability across supported profiles and cleanup; skill validation and documentation checks | None | `codex/issue215-kb-routing`; PR not yet created; target `codex/error-origin-context` |
 
 D05 is an existing delivered correction, not a new implementation task. Preserve
@@ -101,7 +101,7 @@ must not require future code-level evidence.
 | --- | --- |
 | Implementation / design | Pending T01-T02; D05 already exists at 16b48f2 and is preserved at current baseline |
 | Code-level flows | Product business/error/data flows are N/A for the documentation-only design; actual reading/installation relationships must match the accepted whiteboard diagram |
-| Review findings | Current plan review pending; GitHub owns findings, dispositions and approvals |
+| Review findings | Both retained reviewers approved plan 5426001 without findings; task findings and live approvals remain GitHub facts |
 | Risks / limits / unknowns | Existing filename/title mismatch is an accepted compatibility trade-off; no runtime validation claim |
 | Validation | Design focused/structure/lifecycle/Mermaid evidence exists in PR #216; task checks and full validation remain unrun |
 | Recommendation / decision | After both tasks and the author/two-reviewer implementation audit, obtain explicit human acceptance before final-test work, including under Autopilot |
