@@ -30,7 +30,7 @@ already provide sufficient evidence. Apply the
 boundary when selecting diagnostic coverage.
 
 > [!IMPORTANT]
-> Performance and error diagnostics MUST use a coherent project-shared
+> Required measurement and diagnostic evidence MUST use a coherent project-shared
 > instrumentation framework and operation context. Reuse suitable existing
 > mechanisms. If this capability is missing, establish it by integrating a
 > mature framework appropriate to the project's language, runtime and deployment;
@@ -53,7 +53,7 @@ permission to add dependencies or deploy a monitoring service.
 | Responsibility | Framework and existing integrations | Business code |
 | --- | --- | --- |
 | Context and lifecycle | Maintain shared operation/request context and applicable trace/span lifetimes; apply configured collection and export policies | Define meaningful operation boundaries and necessary business attributes |
-| Performance | Collect operation timing and configured metrics | Identify relevant operations, work units and performance goals |
+| Performance measurement | Collect operation timing and configured metrics | Identify relevant operations, work units and accepted measurement goals |
 | Failure diagnostics | Correlate errors and logs with their operation context | Supply error-specific context under [Context and placement](#context-and-placement) |
 
 Connect collected evidence to an interpretation and useful action: assess a
@@ -65,8 +65,8 @@ changed. Preserve project privacy and security boundaries in telemetry.
 
 ## Performance evidence and optional detail
 
-Use the goals and representative-workload boundaries in
-[Performance](performance.md) to choose signals. The shared framework MUST
+Select signals from the project's accepted goals and representative workloads.
+The shared framework MUST
 provide evidence that can assess those accepted goals and locate relevant
 costs; counters without an interpretable operation or workload are insufficient.
 
@@ -131,9 +131,8 @@ payloads while retaining useful causal context in authorized diagnostics.
 
 Review whether the failure can be located, its resulting state understood, and
 the smallest safe next action determined. Detailed causal investigation belongs
-to the project's triage guidance; performance goals and trade-offs belong to the
-[Performance topic](performance.md). New failure behavior
-remains subject to accepted design and authority.
+to the project's triage guidance. New failure behavior remains subject to
+accepted design and authority.
 
 ## Architectural fitness evidence
 
