@@ -4,10 +4,10 @@
 
 | Field | Value |
 | --- | --- |
-| State | `CONCLUDED` |
+| State | `OPEN` |
 | Need / issue | [Issue #215](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/215) |
 | Owner | Repository owner |
-| Concluded design revision | `e46d06e214ff2d9282c1055b4a63424616e1d57d` |
+| Concluded design revision | `None` |
 | Open owner decisions | `None` |
 
 ## Discussion draft
@@ -23,6 +23,7 @@
 | DR07 | Fast Fix is insufficient; write whiteboard and plan | Accepted |
 | DR08 | PR #217 comments request a shared framework when absent, existing framework options and explicit performance evidence | Accepted |
 | DR09 | PR #217 comments request filenames that match the narrowed topics and removal of redundant scope introductions | Accepted |
+| DR10 | Owner approved moving architectural conformance guidance, its ArchUnit example and supporting references into the existing Architecture, Scope, and Assumptions KB | Accepted |
 
 ## Current understanding
 
@@ -86,11 +87,12 @@ conclusion. No new extraction implementation proceeds before design acceptance.
 
 | Design point | Accepted outcome | Boundary or rationale | Validation signal |
 | --- | --- | --- | --- |
-| D01 | Add `observability-and-diagnosability.md`, Scope Architecture, Engineering | Own shared signals, framework/context, correlation, failure localization and architectural fitness evidence. Require one project-shared instrumentation/context capability for necessary performance and error evidence; reuse a suitable existing mechanism, or establish the missing capability by integrating a mature framework with only necessary glue. Explain performance evidence as well as error evidence and provide applicable OpenTelemetry, .NET and Micrometer reference options. No framework is implemented in this repository; no platform/vendor, every-signal or every-span mandate | Single ownership, complete migration and usable guidance for both performance and error evidence |
+| D01 | Add `observability-and-diagnosability.md`, Scope Architecture, Engineering | Own shared signals, framework/context, correlation, failure localization. Architectural conformance evidence belongs to D06, not this shared topic. Require one project-shared instrumentation/context capability for necessary performance and error evidence; reuse a suitable existing mechanism, or establish the missing capability by integrating a mature framework with only necessary glue. Explain performance evidence as well as error evidence and provide applicable OpenTelemetry, .NET and Micrometer reference options. No framework is implemented in this repository; no platform/vendor, every-signal or every-span mandate | Single ownership, complete migration and usable guidance for both performance and error evidence |
 | D02 | Preserve required/optional evidence, cause preservation and tracing limits in D01 | Required for compromised data/business correctness or continuity, uncertain effects and existing audit duties; expected rejections or safely recovered transient detail remain optional unless required categories apply; no universal stack/span/alert requirement | Compare against current candidate, including original cause, operation/stage, correlation and privacy |
 | D03 | Narrow and rename existing topics to `error-handling.md` and `performance.md` | Error owns failure semantics/handling, consistency, recovery and retry; Performance owns goals, representative measurements and trade-offs. Keep concise relevant links to D01; remove redundant ownership exclusions and unrelated introductions. Rename all active references together, including existing skill/test filename references; T02 still owns new shared-topic read triggers | Retained core content, accurate scopes/names and no stale active references; no export-example reintroduction |
 | D04 | Route relevant author, reviewer and triage work directly to the new KB | Existing mandatory-read framework and same-revision guards apply; update the index and affected active links; installer continues complete-tree synchronization | Installation and skill-route tests prove shipped content resolves across supported profiles; old revisions without the topic stay valid |
 | D05 | Keep authorized triage diagnosis, repair and relevant verification together before review | Preserve diagnosis-only authority, human escalation/time limits and deferred full validation; no new review gate | Existing candidate triage rule retained without review at intermediate progress |
+| D06 | Move existing architectural conformance evidence into `architecture-scope-and-assumptions.md` | Reuse an existing metric, test or analysis only for an important accepted architecture property; move the ArchUnit example and its two references, without a new section, framework mandate, gate or stronger rule | Guidance and source support have one owner; shared observability topic retains only measurement, tracing and runtime failure diagnosis |
 
 ### Architecture and responsibility boundaries
 
@@ -99,6 +101,7 @@ flowchart TD
     W["Author / reviewer / triage skills"] --> O["Observability and Diagnosability"]
     W --> E["Error Handling"]
     W --> P["Performance"]
+    W --> A["Architecture, Scope, and Assumptions"]
     E -->|"diagnostic mechanisms"| O
     P -->|"signals and instrumentation"| O
     O --> C["Project contracts and existing telemetry mechanisms"]
@@ -116,6 +119,7 @@ through installed skills. No product business/data/error flow changes occur.
 | Shared KB, D01-D02 | Measurement/signals, shared instrumentation, required evidence, origin/correlation and tracing boundaries | Business recovery permission, performance targets or platform selection for a project |
 | Error topic, D03 | Failure semantics, invariants, safe recovery/retry | Duplicate trace or diagnostic framework rules |
 | Performance topic, D03 | Goals, workload/baseline measurements and whole-system trade-offs | Duplicate general logging/tracing rules |
+| Architecture topic, D06 | Evidence of important accepted architecture properties, including the existing dependency-cycle example | Runtime signal collection, error tracing or a mandatory architecture-test framework |
 | Skills and index, D04-D05 | Relevant read triggers, routing and concise contextual principles | A second copy of detailed KB guidance or a new gate |
 | Installer and existing tests, D04 | Version-matched official-tree installation and verifiable routing | New installer mode or dependency |
 
@@ -125,7 +129,7 @@ through installed skills. No product business/data/error flow changes occur.
 | --- | --- | --- |
 | Solution research | D01-D03 reuse primary Microsoft monitoring/security, Google SRE and AWS instrumentation research already read for PR #216; external guidance supports principles, not project facts | Covered |
 | Simple design and reuse | D01 extracts one shared owner rather than duplicate mechanisms or add a framework | Covered |
-| Architecture, scope, and assumptions | D01/D03 separate responsibilities; D04 verifies actual installed routing rather than infer it | Covered |
+| Architecture, scope, and assumptions | D01/D03 separate responsibilities; D06 places existing conformance evidence and source support with architecture boundaries; D04 verifies installed routing | Covered |
 | Contracts and compatibility | D03 atomically renames topics and active consumers; D04 retains version-matched routing and tests supported profiles. Older pins keep their own unchanged files and skills | Covered |
 | Error handling and diagnosability | D02 preserves origin, consistency and honest failure meaning; D03 separates recovery from evidence; canonical error authority unchanged | Covered |
 | Testing and reproduction | R04/D04 use existing installer fixtures to prove installed content and routes, with no live-subject campaign or wording-only assertions added | Covered |
@@ -146,6 +150,7 @@ Architecture-scoped coverage topic when shipped; it is not yet installed.
 | D01-D03 | One shared owner for observability/diagnosability | New shared KB; renamed error/performance KBs; KB README and active consumers | Extract content, narrow scopes, rename topics and synchronize active references; include shared capability and performance/error evidence guidance |
 | D04 | Relevant agents read the shared topic | Workflow, review and triage skills | Add direct version-matched read routing without duplicating the topic |
 | D05 | Complete triage repair units before review | Existing triage skill | Retain current candidate correction |
+| D06 | Architectural conformance evidence belongs with architecture boundaries | Existing Architecture, Scope, and Assumptions KB | Move existing guidance, ArchUnit example and references; no new rule or separate section |
 | D01-D05 | Project recovery, review, merge and installation authority remain unchanged | Manifest, CONTRIBUTING and project policies | No policy or manifest pin update; tests verify installation, not activation in this delivery |
 
 ## Risks and handling
@@ -169,6 +174,7 @@ Architecture-scoped coverage topic when shipped; it is not yet installed.
 | DR07 | D01, D02, D03, D04, D05 | Accepted | Normal delivery with design acceptance before the implementation plan |
 | DR08 | D01, D02 | Changed | Make shared-capability establishment and performance evidence explicit, retaining proportional tracing limits |
 | DR09 | D03, D04 | Changed | Rename files and active references together; remove redundant descriptions without removing handling responsibilities |
+| DR10 | D01, D06 | Changed | Owner approved the precise relocation; preserve substance and avoid broadening the runtime diagnostic KB |
 
 ## Newly introduced validations
 
@@ -200,3 +206,4 @@ new acceptance checkpoint or runtime rejection is designed.
 | Amendment | Changed design points | Reason and impact | Owner decision |
 | --- | --- | --- | --- |
 | A01 | D01, D03 and affected D04 consumers/coverage | Supersede filename retention with atomic topic/consumer rename; clarify shared capability establishment, mature options and performance/error evidence; trim redundant scope text. Baseline design b3e90bf and metadata-only freeze e760248 remain in Git | Prior edit authorization: owner PR #217 comments [shared framework](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217#discussion_r4425483582), [performance filename](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217#discussion_r4425487509), [error filename](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217#discussion_r4425514292) and wording comments, followed by the request to address comments; reviewed amendment accepted by the owner in conversation |
+| A02 | D01, D06 and affected coverage/diagram/plan mappings | Move architectural conformance guidance, its ArchUnit example and supporting references into the existing architecture topic; preserve meaning and add no section or rule | Owner explicitly approved the proposed destination and relocation in conversation after PR #217 comment r4426243796 |
