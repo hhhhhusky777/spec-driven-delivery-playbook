@@ -188,7 +188,7 @@ test("knowledge base installs the actual index and available topics", async (t) 
   const revision = source.firstRevision;
   const project = await createInstalledProject(t, { ...source, firstRevision: revision });
   const root = path.join(project, ".github/spec-driven-delivery/knowledge-base");
-  assert.equal(await assertKnowledgeBaseRevision(root, source, revision), 15);
+  assert.equal(await assertKnowledgeBaseRevision(root, source, revision), 16);
   const guide = await readFile(path.join(project, ".sdd-runtime/agent-guide.md"), "utf8");
   assert.equal(guideValue(guide, "Resolved revision"), revision);
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
@@ -203,14 +203,15 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
     "simple-design-and-reuse.md",
     "architecture-scope-and-assumptions.md",
     "contracts-and-compatibility.md",
-    "error-handling-and-diagnosability.md",
+    "error-handling-design.md",
+    "observability-and-diagnosability.md",
     "testing-and-reproduction.md",
     "security-basics.md",
     "proportional-review.md",
     "efficiency-and-concurrency.md",
     "experience-and-learning.md",
     "code-simplicity-and-clarity.md",
-    "performance-and-observability.md",
+    "performance-design.md",
     "code-level-performance-engineering.md",
     "solution-research.md",
   ];
@@ -226,7 +227,8 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
   for (const name of ["sdd-project-workflow", "sdd-feature-review", "sdd-problem-triage"]) {
     const skill = await readFile(path.join(project, ".agents/skills", name, "SKILL.md"), "utf8");
     const routedTopics = name === "sdd-problem-triage"
-      ? ["error-handling-and-diagnosability.md", "testing-and-reproduction.md", "experience-and-learning.md",
+      ? ["error-handling-design.md", "observability-and-diagnosability.md",
+        "testing-and-reproduction.md", "experience-and-learning.md",
         "solution-research.md"] : topics;
     for (const topic of routedTopics) {
       assert.ok(skill.includes(`\`${topic}\``), `${name} must route to ${topic}`);
@@ -321,7 +323,7 @@ test("knowledge base accepted synchronization updates adds and removes only unch
   await assertKnowledgeBaseRevision(root, source, first);
   const accepted = await acceptKnowledgeBaseRevision(project, revision);
   assert.equal(accepted.status, 0, accepted.stderr);
-  assert.equal(await assertKnowledgeBaseRevision(root, source, revision), 15);
+  assert.equal(await assertKnowledgeBaseRevision(root, source, revision), 16);
   await assert.rejects(access(path.join(root, "obsolete.md")));
   assert.equal(await readFile(path.join(root, "project-note.md"), "utf8"), "Project lesson\n");
   assert.equal(await readFile(path.join(project, "docs/experience.md"), "utf8"), "# Project Experience\nKeep this lesson.\n");
@@ -425,7 +427,7 @@ exec /bin/mv "$@"
     });
     assert.notEqual(result.status, 0);
     assert.match(result.stderr, new RegExp(`Injected knowledge base ${mode} failure`));
-    assert.equal(await assertKnowledgeBaseRevision(root, source, first), 15);
+    assert.equal(await assertKnowledgeBaseRevision(root, source, first), 16);
     assert.equal(await readFile(path.join(root, "local.md"), "utf8"), "Local lesson\n");
     assert.equal(await readFile(path.join(root, ".sdd-playbook-managed"), "utf8"), marker);
   }
@@ -500,7 +502,8 @@ test("installed skill routing resolves same-revision KB topics across profiles a
   const source = await createPlaybookFixture(t);
   const legacyRevision = await commitKnowledgeBase(source, { "README.md": "# Accepted knowledge\n" });
   const concurrencyTopic = "efficiency-and-concurrency.md";
-  const topics = ["solution-research.md", "error-handling-and-diagnosability.md",
+  const topics = ["solution-research.md", "error-handling-design.md",
+    "observability-and-diagnosability.md",
     "testing-and-reproduction.md", "experience-and-learning.md", concurrencyTopic];
   const acceptedTopics = Object.fromEntries(topics.map(topic => [topic, `# Previous ${topic}\nAccepted guidance.\n`]));
   const acceptedRevision = await commitKnowledgeBase(source, acceptedTopics);
@@ -594,6 +597,26 @@ test("installed skill routing resolves same-revision KB topics across profiles a
     assert.deepEqual(await checkLocalLinks(installedEntries, project), [],
       `${profile}: installed skill files and section links must resolve`);
     const resolved = await triageTopics(project, profile);
+    // Discovery reads the new domain contract from its own verified revision,
+    // including before a manifest exists and before an upgrade is accepted.
+    const discoveryName = profile === "adoption" ? "sdd-project-adoption"
+      : profile === "workflow" ? "sdd-project-workflow" : "sdd-playbook-upgrade";
+    const discoverySkill = await readFile(path.join(project, ".agents/skills", discoveryName, "SKILL.md"), "utf8");
+    const performanceTopic = "performance-design.md";
+    const performanceAnchor = "project-performance-goals-and-evidence-authority";
+    assert.ok(discoverySkill.includes(`\`${performanceTopic}\``), `${profile}: discovery must identify its domain topic`);
+    assert.ok(discoverySkill.includes(`\`#${performanceAnchor}\``), `${profile}: discovery must identify its domain contract`);
+    const performanceRoot = upgrade
+      ? path.join(guideValue(resolved.guide, "Playbook checkout"), "knowledge-base")
+      : path.join(project, profile === "adoption" ? guideValue(resolved.guide, "Knowledge Base root")
+        : guideValue(await readFile(manifestPath, "utf8"), "Knowledge Base root"));
+    assert.equal(await readFile(path.join(performanceRoot, performanceTopic), "utf8"),
+      run("git", ["show", `${revision}:knowledge-base/${performanceTopic}`], source.repository));
+    const routeProbe = path.join(project, "performance-discovery-route.md");
+    const relativeTopic = path.relative(project, path.join(performanceRoot, performanceTopic)).split(path.sep).join("/");
+    await writeFile(routeProbe, `[Project authority](${relativeTopic}#${performanceAnchor})\n`);
+    assert.deepEqual(await checkLocalLinks([routeProbe], project), [], `${profile}: domain contract must resolve`);
+    await rm(routeProbe);
     const workflowDirectory = path.join(project, ".agents", "skills", "sdd-project-workflow");
     if (profile === "adoption") {
       await assert.rejects(access(manifestPath));

@@ -105,10 +105,15 @@ and apply `task-planning-and-decomposition.md` directly from the manifest-linked
 KB root when the accepted pin ships it. Judge outcome completeness, actual
 dependencies and acceptance evidence against the approved design.
 
-When reviewing solution or system design, performance decisions or feedback,
-read `performance-and-observability.md` directly from the manifest-linked KB
-root when the accepted pin ships it. Assess measurable, interpretable feedback
-and proportionate improvements within project authority.
+When reviewing solution or system design or performance decisions, read
+`performance-design.md` directly from the manifest-linked KB root when the
+accepted pin ships it. Assess system structure and resource choices against the
+project's accepted workload, goals and constraints.
+
+Before judging measurement, instrumentation or failure diagnostics, read
+`observability-and-diagnosability.md` directly from the manifest-linked KB root
+when the accepted pin ships it. Assess shared instrumentation, evidence and
+correlation within project authority.
 
 Before judging performance-sensitive code or a code-level optimization, read
 `code-level-performance-engineering.md` directly from the manifest-linked KB
@@ -222,8 +227,8 @@ within project authority.
 > proportionally. Raise a finding when handling is not the simplest clear-cut
 > approach that protects the accepted outcome, or when it adds speculative
 > complexity.
-> Before judging failure handling, retry safety or failure diagnostics, read
-> `error-handling-and-diagnosability.md` directly from the manifest-linked KB
+> Before judging failure handling, recovery or retry safety, read
+> `error-handling-design.md` directly from the manifest-linked KB
 > root when the accepted pin ships it. Apply it within project authority.
 > Before judging design simplicity or reuse, read
 > `simple-design-and-reuse.md` directly from the manifest-linked KB

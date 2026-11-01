@@ -1,9 +1,9 @@
-# Error Handling and Diagnosability
+# Error Handling Design
 
 Scope: Architecture, Engineering
 
 - Architecture: Define failure semantics, consistency guarantees and recovery boundaries.
-- Engineering: Implement failure handling, actionable diagnostics and tests of those guarantees.
+- Engineering: Implement failure handling, consistency guarantees and safe recovery/retry.
 
 The project's error-handling authority owns classification, recovery permission,
 issue tracking and escalation.
@@ -14,8 +14,7 @@ issue tracking and escalation.
 > Keep handling simple and invariant-based, not an enumeration of every edge
 > case or interleaving. Preserve consistency; fail closed when continuing could
 > violate a required invariant. Permit client-controlled retry only when its
-> effects are safe. Make failures identifiable and locatable without exposing
-> secrets or hiding the original cause.
+> effects are safe. Report failures and uncertain effects honestly.
 
 Choose the smallest handling that protects the accepted outcome. Reuse existing
 transaction, idempotency, cleanup and error-reporting mechanisms before adding
@@ -42,26 +41,11 @@ retry ownership across layers; backoff and jitter help only when retry itself
 is safe and useful. No fixed retry count, timeout, circuit breaker or universal
 recovery framework follows from this guidance.
 
-## Useful failure evidence
+## Diagnostic evidence
 
-At the appropriate failure boundary, preserve enough evidence to identify the
-failed operation, its stage or component, the error category, and the affected
-request or run. Reuse structured logs, stable unambiguous error codes,
-correlation identifiers, exception causes or traces as appropriate. Human
-messages explain what happened; machine decisions use the established typed
-error contract, not fragile parsing of prose.
-
-Separate client-safe information from internal diagnosis. Redact secrets and
-sensitive payloads; retain useful causal context in authorized diagnostics.
-Record an error where that context is available, avoiding duplicate reports of
-the same propagated exception or labeling a successfully handled condition as
-an operation failure. This is not a mandate to log every branch or install a
-telemetry stack. Reuse existing evidence before adding instrumentation.
-
-Review whether the failure can be located, its resulting state understood, and
-the smallest safe next action determined. Detailed causal investigation belongs
-to the project's triage guidance; broader performance feedback is a separate
-concern. New failure behavior remains subject to accepted design and authority.
+Read and apply [Observability and Diagnosability](observability-and-diagnosability.md)
+for required versus optional evidence, shared instrumentation, context
+preservation and failure localization.
 
 ## Reference-backed examples
 
@@ -71,7 +55,6 @@ These paraphrase the named references, not project incidents or mandatory design
 | --- | --- | --- | --- |
 | An EC2 singleton launch receives no response | Retrying can create a second instance if the first request took effect | Use the API's established request-token guarantee or reconcile the original effect | [AWS: Retrying and side effects](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/#Retrying_and_side_effects) |
 | Five service layers each make three attempts on a failed downstream request | Attempts multiply to 243 at the database | Avoid independent retry multiplication; use the appropriate existing retry owner | [AWS: Timeouts, retries, and backoff with jitter](https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/) |
-| A create-if-absent operation handles an already-existing resource | The handled condition is not an operation failure | Preserve relevant context without falsely reporting failure or duplicating a propagated exception | [OpenTelemetry: Recording exceptions](https://opentelemetry.io/docs/specs/semconv/general/recording-errors/#recording-exceptions) |
 
 ## References
 
@@ -83,4 +66,3 @@ Use these sources within project authority, not as permission for new controls.
 - [AWS: Making retries safe with idempotent APIs](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/) — ambiguous effects, caller intent and established idempotency contracts; its service implementation is not a compulsory recipe.
 - [AWS: Timeouts, retries, and backoff with jitter](https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/) — bounded retry, amplification and load-aware timing; choose measures from actual dependency behavior.
 - [RFC 9457: Problem Details for HTTP APIs](https://www.rfc-editor.org/rfc/rfc9457.html) — stable problem identity, occurrence context, actionable client detail and security limits. It specifies an HTTP format, not a required replacement for an existing error contract.
-- [OpenTelemetry: Recording errors](https://opentelemetry.io/docs/specs/semconv/general/recording-errors/) — contextual classification and useful, nonduplicated failure evidence. These conventions are marked Development; their evolving instrumentation details are not a universal logging mandate.

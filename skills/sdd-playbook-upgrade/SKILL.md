@@ -63,6 +63,14 @@ guidance with concise instructions for using and refining verified, actionable
 lessons. Missing files alone do not require a new gate or automatic stop;
 material decisions follow the project's canonical error-handling authority.
 
+For Performance Goals and Evidence discovery, you MUST read and apply
+`performance-design.md`, section
+`#project-performance-goals-and-evidence-authority`, from `knowledge-base/`
+under `Playbook checkout` at `Resolved revision` in the verified
+`.sdd-runtime/playbook-upgrade-guide.md` when that candidate ships the topic.
+Use its project-authority contract to reconcile the manifest inventory and
+applicable gaps; reading candidate guidance does not activate the new pin.
+
 The discovery response MUST include a simple table of existing policies and
 reusable guidance, missing applicable sources, and gaps, with source evidence,
 impact, proposed handling, and any owner decision. Use `None` for empty

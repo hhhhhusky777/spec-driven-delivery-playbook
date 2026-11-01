@@ -38,15 +38,32 @@ revision ships it. Proactively identify and use concurrency opportunities
 that are expected to improve overall delivery efficiency, following the
 KB's guidance.
 
-When investigation requires assessing failure diagnostics or retry safety, read
-`error-handling-and-diagnosability.md` directly from the resolved KB root
-when this skill's revision ships it. Apply it within the project's error contract and
+Before assessing failure diagnostics or adding diagnostic instrumentation, read
+`observability-and-diagnosability.md` directly from the resolved KB root when
+this skill's revision ships it.
+
+Before assessing failure handling, recovery or retry safety, read
+`error-handling-design.md` directly from the resolved KB root when this skill's
+revision ships it. Apply both topics within the project's error contract and
 authority.
 
 Default to read-only investigation. Changes, restarts, rollback, destructive
 actions and scope expansion remain subject to existing authority. Authorized
 urgent mitigation need not wait for root-cause proof; preserve evidence and
 distinguish mitigation from a verified fix.
+
+## Completion and review boundary
+
+> [!IMPORTANT]
+> An authorized repair MUST remain one coherent work unit: investigate, locate
+> and confirm the cause, implement the fix, and rerun tests covering the original
+> failure and affected behavior. Submit the complete result for review only when
+> all checks required at that boundary pass. Intermediate diagnostic progress,
+> instrumentation or individual edits MUST NOT create separate review gates.
+> Continue within authority until that boundary or an existing escalation
+> condition is reached. A diagnosis-only request does not authorize a repair.
+> Existing human decisions, time limits and final-validation timing still apply;
+> do not run deferred full validation early merely to finish triage.
 
 ## Causal judgment
 

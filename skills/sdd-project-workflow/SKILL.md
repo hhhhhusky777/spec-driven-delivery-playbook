@@ -260,6 +260,11 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   hints, not proof of authority. Routine corrections stay with the agent;
   conflicts that change policy, authority, safety, or intended behavior require
   the applicable owner decision.
+  For Performance Goals and Evidence discovery, you MUST read and apply
+  `performance-design.md`, section
+  `#project-performance-goals-and-evidence-authority`, directly from the
+  manifest-linked KB root when the accepted pin ships it. Use its project-authority
+  contract to reconcile the manifest inventory and applicable gaps.
 - When candidate work changes canonical project policy, reconcile the manifest
   before final review. Link the canonical source instead of copying its text,
   and keep feature state out of the manifest.
@@ -330,10 +335,15 @@ Independent reviewer creation still follows the Boundaries contract above.
 
 ### Execution judgment and evidence
 
-During solution and system design, and before making performance or feedback
-decisions, read `performance-and-observability.md` directly from the
-manifest-linked KB root when the accepted pin ships it. Design measurable,
-interpretable feedback and proportionate improvements within project boundaries.
+During solution and system design, and before making performance decisions,
+read `performance-design.md` directly from the manifest-linked KB root when the
+accepted pin ships it. Select system structure and resources for the project's
+accepted workload, goals and constraints.
+
+Before designing or implementing measurement, instrumentation or failure
+diagnostics, read `observability-and-diagnosability.md` directly from the
+manifest-linked KB root when the accepted pin ships it. Apply its shared
+instrumentation, evidence and correlation boundaries within project authority.
 
 Before writing performance-sensitive code or choosing a code-level optimization,
 read `code-level-performance-engineering.md` directly from the manifest-linked
@@ -542,8 +552,8 @@ can be corrected directly; triage adds no gate or test waiver.
 Follow the project's manifest-linked error-handling authority when present.
 Do not duplicate or override it.
 
-Before designing failure handling, retry behavior or failure diagnostics, read
-`error-handling-and-diagnosability.md` directly from the manifest-linked KB root
+Before designing failure handling, recovery or retry behavior, read
+`error-handling-design.md` directly from the manifest-linked KB root
 when the accepted pin ships it. Apply it within project authority.
 
 Within approved scope and authority, correct recoverable agent errors and

@@ -2,10 +2,10 @@
 
 Scope: Engineering
 
-- Engineering: Reduce demonstrated code-level overhead while preserving ownership, correctness and accepted behavior.
+- Engineering: Realize the accepted performance design and reduce avoidable implementation overhead while preserving ownership, correctness and accepted behavior.
 
-Design-level goals, measurement and whole-system trade-offs belong to
-[Performance and Observability](performance-and-observability.md);
+System structure, resource choices and performance trade-offs belong to
+[Performance Design](performance-design.md);
 implementation readability belongs to
 [Code Simplicity and Clarity](code-simplicity-and-clarity.md).
 
