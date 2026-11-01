@@ -12,10 +12,10 @@ retained reviewers verified its metadata-only reconclusion before dependent work
 
 | Field | Value |
 | --- | --- |
-| State | `IMPLEMENTING` |
+| State | `VALIDATING` |
 | Active tasks | `None` |
 | Next ready task | `None` |
-| Active blocker | T03 awaits reviewed human task merge acceptance; final implementation audit/acceptance and validation remain |
+| Active blocker | Integrated implementation audit and explicit human implementation acceptance before final-test work |
 | Implementation mode | Human-review-before-merge; Autopilot not enabled |
 | Authorized scope / feature branch / protected target | D01-D07; `codex/error-origin-context`; `main` |
 | Delivery branch / target | `codex/error-origin-context` / `main`; final PR #216 |
@@ -23,7 +23,7 @@ retained reviewers verified its metadata-only reconclusion before dependent work
 | Primary issue / need | [Issue #215](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/215) |
 | Concluded whiteboard | [Working whiteboard](solution-whiteboard.md), accepted amendment A05 `883b173`; metadata-only reconclusion `b41ee7d`; owner approved the reviewed design and revised task mapping in conversation (earlier baselines retained in Git) |
 | Required reviewers | The same two retained independent Issue #215 reviewer sessions |
-| Last verified | 2026-11-01 Asia/Shanghai: T01/T02 integrated through PR #217/#220; T03 source d7b0068 passes focused documentation and 46/46 installer tests, zero skips; current review/merge evidence belongs in PR #221; installed c27ab7e runtime refreshed and verified for the T03 branch |
+| Last verified | 2026-11-01 Asia/Shanghai: all tasks integrated through PR #217/#220/#221 at b6f88d5, matching task candidate 0bad096; main remains 93b41fd with no required synchronization; author implementation audit complete; retained audit and human acceptance evidence belongs in PR #216; final tests UNRUN |
 
 ## Governing inputs and delivery boundaries
 
@@ -104,18 +104,98 @@ checks and task-focused validation remain applicable; no new acceptance gate.
 
 ### Implementation review
 
-Complete this table and the exact-content audit after T03 integration, before
-human implementation acceptance and final-test work. Task checks do not establish
-full-validation or merge completion.
+All task candidates are integrated. This table and the views below describe the
+implemented guidance and installation behavior; product business/runtime code
+is unchanged. Review conclusions and acceptance remain PR facts.
 
 | Information | Implementation summary / evidence |
 | --- | --- |
-| Implementation / design | T01-T03 implement D01-D04/D06-D07 content, routing and discovery; D05 preserved. Task-focused checks pass; T03 review/merge remains in PR #221; full implementation audit is pending |
-| Code-level flows | Product business/error/data flows are N/A for the documentation-only design; actual reading/installation relationships must match the accepted whiteboard diagram |
-| Review findings | Both retained reviewers approved plan 5426001 without findings; task findings and live approvals remain GitHub facts |
-| Risks / limits / unknowns | A03 atomically renames Performance Design and its active consumers; installed profile/topic tests pass; T02 direct routing and T03 discovery verified by focused checks; full integrated validation remains UNRUN |
-| Validation | T03 source d7b0068 focused documentation and 46/46 installer tests pass; final integrated validation remains UNRUN |
-| Recommendation / decision | After all three tasks and the author/two-reviewer implementation audit, obtain explicit human acceptance before final-test work, including under Autopilot |
+| Implementation / design | Author audit: D01-D02 shared evidence/framework/correlation guidance; D03 distinct error/performance design; D04 direct same-revision routing; D05 coherent authorized triage repair; D06 architecture conformance guidance; D07 project authority discovery and human-owned missing-input decisions all match the accepted whiteboard |
+| Code-level flows | Product runtime business/error/data flows are N/A. The [implemented guidance flow](#implemented-guidance-flow), [missing-input handling](#missing-input-handling) and [document-and-evidence data flow](#document-and-evidence-data-flow) show the actual changed skills/KB/template and reused installer behavior; compare these with the whiteboard responsibility diagram |
+| Review findings | Wording audit findings are resolved, including owner-authorized whiteboard reconciliation. Both retained reviewers' exact integrated audit conclusions and dispositions belong in PR #216 and are copied into the human brief |
+| Risks / limits / unknowns | Full integrated validation is UNRUN. Current project installation remains c27ab7e; profile fixtures prove candidate installation and routing, not activation in this project or production telemetry |
+| Validation | T03 source d7b0068 focused checks include 46/46 installer tests with zero skips; later documentation-only corrections passed affected checks. Main is still 93b41fd; integration introduces no source-content change requiring synchronization |
+| Recommendation / decision | After both retained reviewers approve the exact implementation, ask the human to request changes or accept implementation and authorize final-test work. This is not protected-target merge authority |
+
+### Implemented guidance flow
+
+The verified skill revision selects the KB root. These are discovery/read
+operations, not runtime service calls or an added lifecycle controller.
+
+```mermaid
+sequenceDiagram
+    participant A as Discovery agent
+    participant R as Verified source
+    participant K as Performance Design KB
+    participant P as Project authority
+    alt Adoption before manifest
+        A->>R: Read agent-guide KB root
+    else Accepted workflow
+        A->>R: Read manifest-linked KB root
+    else Candidate upgrade
+        A->>R: Read upgrade-guide checkout and revision
+        Note over A,R: Read candidate source KB; accepted pin stays active
+    end
+    R-->>A: Same-revision topic location
+    A->>K: Read project goals and evidence contract
+    A->>P: Discover existing authority and applicable gaps
+    A->>A: Apply domain contract within project boundaries
+```
+
+Workflow/reviewer/triage skills also route measurement and diagnostics directly
+to Observability and Diagnosability, and handling/recovery/retry safety to Error
+Handling Design. Performance choices consume Performance Design. The domain
+rules remain in their KB owners rather than being copied into each skill.
+
+### Missing-input handling
+
+This activity view applies the existing domain contract; it does not add a
+runtime rejection or permission to run deferred tests early.
+
+```mermaid
+flowchart TD
+    A[Read canonical project inputs] --> B{Material workload or requirements missing?}
+    B -->|Yes| C[Discuss and obtain human-accepted requirements, ranges or bounded assumptions]
+    B -->|No| D{Required evidence missing and no acquisition method defined?}
+    C --> D
+    D -->|Yes| E[Propose acquisition and assessment against accepted requirements]
+    E --> F[Obtain human agreement before dependent decisions]
+    D -->|No| G[Use defined evidence method within existing authority and test timing]
+    F --> G
+    G --> H[Continue dependent decisions when required inputs and evidence support them]
+```
+
+Pause only affected decisions; independent authorized work continues. Record an
+applicable authority gap or reasoned non-applicability in the manifest, and
+present material missing inputs in the domain contract's human-response table.
+
+### Document-and-evidence data flow
+
+The existing installer and profile tests implement/verify these paths. Candidate
+reading and accepted installation remain separate; this delivery leaves the
+current project's installed pin unchanged.
+
+```mermaid
+flowchart LR
+    S[(Versioned source KB and skills)] --> I[Existing installer]
+    I --> K[(Accepted installed KB and managed skills)]
+    I --> G[(Verified runtime guide)]
+    S --> C[(Verified candidate checkout)]
+    C --> U[Upgrade discovery agent]
+    G --> A[Adoption or workflow agent]
+    K --> A
+    M[(Manifest authority index)] --> A
+    P[(Project policies, SLOs or architecture contracts)] --> A
+    P --> U
+    A --> M
+    U --> M
+    A --> E[(Existing Issue or PR evidence)]
+    U --> E
+```
+
+Manifest updates preserve stable links and gap dispositions; it does not store
+run results or feature status. Tests compare installed topic bytes with the
+source revision and resolve the domain section for each supported profile.
 
 ### Delivery Definition of Done and non-code obligations
 
@@ -124,8 +204,8 @@ full-validation or merge completion.
 | Shared topic and narrow consumers | D01-D03, D06; T01 | Canonical owner, complete migrated content, index and links | [T01 / PR #217](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217) |
 | Project performance authority discovery | D07; T03 | Manifest indexing and applicable discovery routes consume the one domain contract, with explicit gaps and owner decisions | PASS: focused routes/profile checks and author semantic comparison; [PR #221](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/221) |
 | Installed direct agent routing | D04; T02 | Actual same-revision installed content and supported-profile proof | PASS: focused installer checks; [PR #220](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/220) |
-| Complete triage repair review boundary retained | D05; parent author | Existing triage skill at 16b48f2/5daaa69 retains diagnosis-only authority, escalation, time limits and deferred full-validation timing | Existing candidate; verify retained at final audit |
-| Canonical guidance updated | Whiteboard Canonical authority updates; T01-T03 | Live KB/index/skill/manifest-template owners carry accepted obligations; manifest pin and project policies unchanged | Implemented through T01-T03; final audit pending |
+| Complete triage repair review boundary retained | D05; parent author | Existing triage skill at 16b48f2/5daaa69 retains diagnosis-only authority, escalation, time limits and deferred full-validation timing | Retained and checked by author; exact retained-reviewer audit in PR #216 |
+| Canonical guidance updated | Whiteboard Canonical authority updates; T01-T03 | Live KB/index/skill/manifest-template owners carry accepted obligations; manifest pin and project policies unchanged | Implemented through T01-T03; author checked live ownership; retained audit in PR #216 |
 | Required validation and review | Project quality authority; parent | Honest focused/full results and retained reviewer evidence tied to exact candidates | PR #216 owns current state |
 | Merge-ready closure | Parent under named cleanup authorization | Complete concluded whiteboard and final plan preserved in one linked archive; live plan removed and whiteboard reset in closing candidate | Not authorized or performed yet |
 | Protected target verification and physical cleanup | Parent | Authorized final merge, verified target, ownership-safe cleanup | Pending; PR evidence |
@@ -136,7 +216,7 @@ full-validation or merge completion.
 | --- | --- | --- | --- |
 | Manifest, reusable KB and installed guidance | Keep | Project authorities; no pin activation in this scope | Retained |
 | Working whiteboard and final plan | Archive together, then reset whiteboard/remove live plan | Named owner permission required before closing-candidate construction; link archive and final PR both ways | Pending |
-| T01/T02/T03 task branches | Remove after verified task merges and no remaining use | Branch names are recorded in Tasks; all three tasks reuse the delivery worktree below, with no separate task worktrees | Branches exist; T01/T02 integrated, T03 merge and branch retirement pending |
+| T01/T02/T03 task branches | Remove after verified task merges and no remaining use | Branch names are recorded in Tasks; all three tasks reuse the delivery worktree below, with no separate task worktrees | Branches exist; all tasks integrated; branch retirement pending |
 | Feature branch `codex/error-origin-context` and current worktree | Remove only after final merge and verified ownership/no remaining use | Current checkout may be app-protected; preserve and report a guard rather than force-delete | Pending |
 | Local unpublished extraction drafts | Remove when no longer needed | Parent-created temporary files only; never commit them as delivery evidence | Retained for implementation reference |
 
@@ -148,7 +228,7 @@ candidate reconciles all canonical state before protected-target review.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Tasks | T01/T02 merged via PR #217/#220; T03 is DONE pending reviewed task merge; all implementation tasks now have candidate outcomes | Human task review |
+| Tasks | T01-T03 merged via PR #217/#220/#221; all implementation tasks DONE; current boundary is human implementation acceptance | Human implementation review |
 | Design consistency | D01-D04 and D06-D07 map to tasks; D05 maps to the retained triage obligation; no unmapped design point | Review mapping |
 | Autopilot | Not enabled. Opt-in permits task merges only into `codex/error-origin-context` after exact-head reviewer approval and required focused checks, then the next dependency-ready task; stop before final-test work for human implementation acceptance and before final `main` merge | Explicit owner decision |
 | Foreseeable decisions | A03 naming/domain/discovery and T03 task mapping accepted; no project-specific performance numbers will be invented | None |
