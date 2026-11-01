@@ -56,6 +56,10 @@ an empty policy merely to fill a manifest row.
 > If canonical authorities lack material workload or performance requirements,
 > discuss the missing inputs with the human and obtain accepted requirements,
 > ranges or bounded assumptions BEFORE making dependent performance decisions.
+> If required performance evidence is missing and no acquisition method is
+> defined, the agent MUST propose how to obtain and assess it against accepted
+> workload and performance requirements, discuss the proposal with the human,
+> and obtain agreement BEFORE making decisions that depend on that evidence.
 > An observation, estimate or external benchmark MUST NOT silently become a
 > requirement. Pause only the affected decisions; continue independent authorized
 > work. Use the existing authority and error-handling boundaries for unresolved
