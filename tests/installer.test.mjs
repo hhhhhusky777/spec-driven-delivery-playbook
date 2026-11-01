@@ -210,7 +210,7 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
     "efficiency-and-concurrency.md",
     "experience-and-learning.md",
     "code-simplicity-and-clarity.md",
-    "performance.md",
+    "performance-design.md",
     "code-level-performance-engineering.md",
     "solution-research.md",
   ];

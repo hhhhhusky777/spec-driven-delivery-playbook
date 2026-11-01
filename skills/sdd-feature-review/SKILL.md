@@ -106,7 +106,7 @@ KB root when the accepted pin ships it. Judge outcome completeness, actual
 dependencies and acceptance evidence against the approved design.
 
 When reviewing solution or system design, performance decisions or feedback,
-read `performance.md` directly from the manifest-linked KB
+read `performance-design.md` directly from the manifest-linked KB
 root when the accepted pin ships it. Assess measurable, interpretable feedback
 and proportionate improvements within project authority.
 

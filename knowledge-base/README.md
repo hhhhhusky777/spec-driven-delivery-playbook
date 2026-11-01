@@ -67,7 +67,7 @@ reading requirement.
 | Efficiency and concurrency | Overlap independent work without unnecessary coordination | [Efficiency and concurrency](efficiency-and-concurrency.md) |
 | Experience and learning | Turn verified lessons into actionable reuse and refinement | [Experience and learning](experience-and-learning.md) |
 | Code simplicity and clarity | Make implementation intent and behavior easy to understand without sacrificing correctness | [Code simplicity and clarity](code-simplicity-and-clarity.md) |
-| Performance | Set performance goals and assess representative measurements and whole-system trade-offs | [Performance](performance.md) |
+| Performance design | Design system structure for accepted workloads, goals and resource constraints; define the project goals/evidence contract | [Performance Design](performance-design.md) |
 | Code-level performance engineering | Locate avoidable implementation costs and choose bounded, source-backed improvements | [Code-level performance engineering](code-level-performance-engineering.md) |
 
 ## Installation and ownership

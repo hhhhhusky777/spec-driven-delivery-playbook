@@ -331,7 +331,7 @@ Independent reviewer creation still follows the Boundaries contract above.
 ### Execution judgment and evidence
 
 During solution and system design, and before making performance or feedback
-decisions, read `performance.md` directly from the
+decisions, read `performance-design.md` directly from the
 manifest-linked KB root when the accepted pin ships it. Design measurable,
 interpretable feedback and proportionate improvements within project boundaries.
 

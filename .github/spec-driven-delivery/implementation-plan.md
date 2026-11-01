@@ -104,7 +104,7 @@ checks and task-focused validation remain applicable; no new acceptance gate.
 
 ### Implementation review
 
-Fill after T01 and T02 finish, before the exact-content audit. The final implementation audit waits for T02 and T03; task evidence does not claim
+Fill after T01, T02 and T03 finish, before the exact-content audit. The final implementation audit waits for T02 and T03; task evidence does not claim
 that full validation or merge has completed.
 
 | Information | Implementation summary / evidence |
@@ -114,7 +114,7 @@ that full validation or merge has completed.
 | Review findings | Both retained reviewers approved plan 5426001 without findings; task findings and live approvals remain GitHub facts |
 | Risks / limits / unknowns | A01 replaces filename retention with an atomic rename; focused routing evidence must cover the renamed topics; no full-validation claim |
 | Validation | Design focused/structure/lifecycle/Mermaid evidence exists in PR #216; task checks and full validation remain unrun |
-| Recommendation / decision | After both tasks and the author/two-reviewer implementation audit, obtain explicit human acceptance before final-test work, including under Autopilot |
+| Recommendation / decision | After all three tasks and the author/two-reviewer implementation audit, obtain explicit human acceptance before final-test work, including under Autopilot |
 
 ### Delivery Definition of Done and non-code obligations
 
@@ -124,7 +124,7 @@ that full validation or merge has completed.
 | Project performance authority discovery | D07; T03 | Manifest indexing and applicable discovery routes consume the one domain contract, with explicit gaps and owner decisions | Pending |
 | Installed direct agent routing | D04; T02 | Actual same-revision installed content and supported-profile proof | Pending |
 | Complete triage repair review boundary retained | D05; parent author | Existing triage skill at 16b48f2/5daaa69 retains diagnosis-only authority, escalation, time limits and deferred full-validation timing | Existing candidate; verify retained at final audit |
-| Canonical guidance updated | Whiteboard Canonical authority updates; T01-T02 | Live KB/index/skill owners carry accepted obligations; manifest pin and project policies unchanged | Pending |
+| Canonical guidance updated | Whiteboard Canonical authority updates; T01-T03 | Live KB/index/skill/manifest-template owners carry accepted obligations; manifest pin and project policies unchanged | Pending |
 | Required validation and review | Project quality authority; parent | Honest focused/full results and retained reviewer evidence tied to exact candidates | PR #216 owns current state |
 | Merge-ready closure | Parent under named cleanup authorization | Complete concluded whiteboard and final plan preserved in one linked archive; live plan removed and whiteboard reset in closing candidate | Not authorized or performed yet |
 | Protected target verification and physical cleanup | Parent | Authorized final merge, verified target, ownership-safe cleanup | Pending; PR evidence |
@@ -135,7 +135,7 @@ that full validation or merge has completed.
 | --- | --- | --- | --- |
 | Manifest, reusable KB and installed guidance | Keep | Project authorities; no pin activation in this scope | Retained |
 | Working whiteboard and final plan | Archive together, then reset whiteboard/remove live plan | Named owner permission required before closing-candidate construction; link archive and final PR both ways | Pending |
-| T01/T02 task branches and owned task worktrees | Remove after verified task merges and no remaining use | Record actual created paths/ownership before removal; do not bypass app protection | Not yet created |
+| T01/T02/T03 task branches and owned task worktrees | Remove after verified task merges and no remaining use | Record actual created paths/ownership before removal; do not bypass app protection | Not yet created |
 | Feature branch `codex/error-origin-context` and current worktree | Remove only after final merge and verified ownership/no remaining use | Current checkout may be app-protected; preserve and report a guard rather than force-delete | Pending |
 | Local unpublished extraction drafts | Remove when no longer needed | Parent-created temporary files only; never commit them as delivery evidence | Retained for implementation reference |
 
