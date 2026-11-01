@@ -204,6 +204,7 @@ test("knowledge base topic routing resolves for installed author, reviewer and t
     "architecture-scope-and-assumptions.md",
     "contracts-and-compatibility.md",
     "error-handling-design.md",
+    "observability-and-diagnosability.md",
     "testing-and-reproduction.md",
     "security-basics.md",
     "proportional-review.md",

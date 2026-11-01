@@ -330,10 +330,15 @@ Independent reviewer creation still follows the Boundaries contract above.
 
 ### Execution judgment and evidence
 
-During solution and system design, and before making performance or feedback
-decisions, read `performance-design.md` directly from the
-manifest-linked KB root when the accepted pin ships it. Design measurable,
-interpretable feedback and proportionate improvements within project boundaries.
+During solution and system design, and before making performance decisions,
+read `performance-design.md` directly from the manifest-linked KB root when the
+accepted pin ships it. Select system structure and resources for the project's
+accepted workload, goals and constraints.
+
+Before designing or implementing measurement, instrumentation or failure
+diagnostics, read `observability-and-diagnosability.md` directly from the
+manifest-linked KB root when the accepted pin ships it. Apply its shared
+instrumentation, evidence and correlation boundaries within project authority.
 
 Before writing performance-sensitive code or choosing a code-level optimization,
 read `code-level-performance-engineering.md` directly from the manifest-linked
@@ -542,7 +547,7 @@ can be corrected directly; triage adds no gate or test waiver.
 Follow the project's manifest-linked error-handling authority when present.
 Do not duplicate or override it.
 
-Before designing failure handling, retry behavior or failure diagnostics, read
+Before designing failure handling, recovery or retry behavior, read
 `error-handling-design.md` directly from the manifest-linked KB root
 when the accepted pin ships it. Apply it within project authority.
 
