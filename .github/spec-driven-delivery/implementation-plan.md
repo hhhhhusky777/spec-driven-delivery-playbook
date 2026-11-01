@@ -134,7 +134,7 @@ sequenceDiagram
         A->>R: Read manifest-linked KB root
     else Candidate upgrade
         A->>R: Read upgrade-guide checkout and revision
-        Note over A,R: Read candidate source KB; accepted pin stays active
+        Note over A,R: Read candidate source KB, accepted pin stays active
     end
     R-->>A: Same-revision topic location
     A->>K: Read project goals and evidence contract
