@@ -260,6 +260,11 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   hints, not proof of authority. Routine corrections stay with the agent;
   conflicts that change policy, authority, safety, or intended behavior require
   the applicable owner decision.
+  For Performance Goals and Evidence discovery, you MUST read and apply
+  `performance-design.md`, section
+  `#project-performance-goals-and-evidence-authority`, directly from the
+  manifest-linked KB root when the accepted pin ships it. Use its project-authority
+  contract to reconcile the manifest inventory and applicable gaps.
 - When candidate work changes canonical project policy, reconcile the manifest
   before final review. Link the canonical source instead of copying its text,
   and keep feature state out of the manifest.

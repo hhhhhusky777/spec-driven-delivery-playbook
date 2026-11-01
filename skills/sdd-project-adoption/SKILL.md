@@ -27,6 +27,13 @@ deliveries without repeating adoption.
   document explaining how to use and refine verified, actionable lessons.
   Reuse an existing owner instead of creating a duplicate.
 
+For Performance Goals and Evidence discovery, you MUST read and apply
+`performance-design.md`, section
+`#project-performance-goals-and-evidence-authority`, from `Knowledge Base root`
+in the verified `.sdd-runtime/agent-guide.md` when that revision ships the topic.
+Use its project-authority contract to complete the manifest inventory and handle
+applicable gaps.
+
 Adoption is still one-time when project policy evolves. Future deliveries
 semantically reconcile current repository authority with the manifest before
 design work and update stable links or boundaries when a canonical source is
