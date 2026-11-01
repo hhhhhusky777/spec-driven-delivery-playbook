@@ -104,8 +104,9 @@ checks and task-focused validation remain applicable; no new acceptance gate.
 
 ### Implementation review
 
-Fill after T01, T02 and T03 finish, before the exact-content audit. The final implementation audit waits for T02 and T03; task evidence does not claim
-that full validation or merge has completed.
+Complete this table and the exact-content audit after T03 integration, before
+human implementation acceptance and final-test work. Task checks do not establish
+full-validation or merge completion.
 
 | Information | Implementation summary / evidence |
 | --- | --- |
@@ -135,7 +136,7 @@ that full validation or merge has completed.
 | --- | --- | --- | --- |
 | Manifest, reusable KB and installed guidance | Keep | Project authorities; no pin activation in this scope | Retained |
 | Working whiteboard and final plan | Archive together, then reset whiteboard/remove live plan | Named owner permission required before closing-candidate construction; link archive and final PR both ways | Pending |
-| T01/T02/T03 task branches and owned task worktrees | Remove after verified task merges and no remaining use | Record actual created paths/ownership before removal; do not bypass app protection | Not yet created |
+| T01/T02/T03 task branches | Remove after verified task merges and no remaining use | Branch names are recorded in Tasks; all three tasks reuse the delivery worktree below, with no separate task worktrees | Branches exist; T01/T02 integrated, T03 merge and branch retirement pending |
 | Feature branch `codex/error-origin-context` and current worktree | Remove only after final merge and verified ownership/no remaining use | Current checkout may be app-protected; preserve and report a guard rather than force-delete | Pending |
 | Local unpublished extraction drafts | Remove when no longer needed | Parent-created temporary files only; never commit them as delivery evidence | Retained for implementation reference |
 

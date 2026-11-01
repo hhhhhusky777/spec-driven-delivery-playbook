@@ -25,8 +25,9 @@ architecture or a requirement to optimize every feature.
 | Proportional complexity | Expected workload benefit must justify implementation, operation and maintenance cost. Avoid premature fine-tuning or a new platform when a bounded existing mechanism suffices | [Google: Optimizing optimization](https://abseil.io/fast/72), [Microsoft: Performance Efficiency principles](https://learn.microsoft.com/en-us/azure/well-architected/performance-efficiency/principles) |
 
 Apply these boundaries to the actual limiting work and constraints, rather than
-selecting a technique by name. Use research and a bounded experiment when a
-material design choice remains uncertain. Estimates can support an explicitly
+selecting a technique by name. Use [Solution Research](solution-research.md) to
+compare alternatives; a bounded experiment is appropriate when it can resolve
+decision-critical uncertainty at proportionate cost. Estimates can support an explicitly
 accepted range or assumption; they are not measured results or invented targets.
 
 ## Project Performance Goals and Evidence authority
