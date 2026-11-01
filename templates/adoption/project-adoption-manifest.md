@@ -61,7 +61,8 @@ rows in proportion to the project.
 | Documentation and API contracts | `<link or None>` | `<owner>` | `<result>` |
 | CI, release, and operations | `<link or None>` | `<owner>` | `<result>` |
 | Security, privacy, and compliance | `<link or None>` | `<owner>` | `<result>` |
-| Data, concurrency, and performance | `<link or None>` | `<owner>` | `<result>` |
+| Data and concurrency | `<link or None>` | `<owner>` | `<result>` |
+| Performance Goals and Evidence | `<canonical policy/SLO/architecture link or None>` | `<owner>` | `<applicable gaps or reasoned non-applicability>` |
 | Decisions and durable history | `<link or None>` | `<owner>` | `<result>` |
 | Project Experience or existing equivalent | `<Git-tracked guidance link or None>` | `<owner>` | `<result>` |
 

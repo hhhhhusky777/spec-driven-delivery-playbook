@@ -597,6 +597,26 @@ test("installed skill routing resolves same-revision KB topics across profiles a
     assert.deepEqual(await checkLocalLinks(installedEntries, project), [],
       `${profile}: installed skill files and section links must resolve`);
     const resolved = await triageTopics(project, profile);
+    // Discovery reads the new domain contract from its own verified revision,
+    // including before a manifest exists and before an upgrade is accepted.
+    const discoveryName = profile === "adoption" ? "sdd-project-adoption"
+      : profile === "workflow" ? "sdd-project-workflow" : "sdd-playbook-upgrade";
+    const discoverySkill = await readFile(path.join(project, ".agents/skills", discoveryName, "SKILL.md"), "utf8");
+    const performanceTopic = "performance-design.md";
+    const performanceAnchor = "project-performance-goals-and-evidence-authority";
+    assert.ok(discoverySkill.includes(`\`${performanceTopic}\``), `${profile}: discovery must identify its domain topic`);
+    assert.ok(discoverySkill.includes(`\`#${performanceAnchor}\``), `${profile}: discovery must identify its domain contract`);
+    const performanceRoot = upgrade
+      ? path.join(guideValue(resolved.guide, "Playbook checkout"), "knowledge-base")
+      : path.join(project, profile === "adoption" ? guideValue(resolved.guide, "Knowledge Base root")
+        : guideValue(await readFile(manifestPath, "utf8"), "Knowledge Base root"));
+    assert.equal(await readFile(path.join(performanceRoot, performanceTopic), "utf8"),
+      run("git", ["show", `${revision}:knowledge-base/${performanceTopic}`], source.repository));
+    const routeProbe = path.join(project, "performance-discovery-route.md");
+    const relativeTopic = path.relative(project, path.join(performanceRoot, performanceTopic)).split(path.sep).join("/");
+    await writeFile(routeProbe, `[Project authority](${relativeTopic}#${performanceAnchor})\n`);
+    assert.deepEqual(await checkLocalLinks([routeProbe], project), [], `${profile}: domain contract must resolve`);
+    await rm(routeProbe);
     const workflowDirectory = path.join(project, ".agents", "skills", "sdd-project-workflow");
     if (profile === "adoption") {
       await assert.rejects(access(manifestPath));

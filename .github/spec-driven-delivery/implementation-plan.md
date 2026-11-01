@@ -5,7 +5,7 @@
 This is the only active-delivery state authority. GitHub PRs own live review,
 merge and execution evidence. The owner accepted this plan in conversation. Implementation follows its
 approved scope with human review before task merges; Autopilot is not enabled.
-Owner accepted A03 and the three-task mapping, then authorized A04 naming/routing; both
+Owner accepted A03 and the three-task mapping, then authorized A04 naming/routing and A05 evidence-acquisition agreement; both
 retained reviewers verified its metadata-only reconclusion before dependent work.
 
 ## Delivery status
@@ -15,15 +15,15 @@ retained reviewers verified its metadata-only reconclusion before dependent work
 | State | `IMPLEMENTING` |
 | Active tasks | `None` |
 | Next ready task | `None` |
-| Active blocker | T02 awaits reviewed human task merge acceptance |
+| Active blocker | T03 awaits reviewed human task merge acceptance; final implementation audit/acceptance and validation remain |
 | Implementation mode | Human-review-before-merge; Autopilot not enabled |
 | Authorized scope / feature branch / protected target | D01-D07; `codex/error-origin-context`; `main` |
 | Delivery branch / target | `codex/error-origin-context` / `main`; final PR #216 |
 | Owner | Repository owner |
 | Primary issue / need | [Issue #215](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/215) |
-| Concluded whiteboard | [Working whiteboard](solution-whiteboard.md), accepted amendment A04 `6672be3`; metadata-only reconclusion `541eaee`; owner approved the reviewed design and revised task mapping in conversation (earlier baselines retained in Git) |
+| Concluded whiteboard | [Working whiteboard](solution-whiteboard.md), accepted amendment A05 `883b173`; metadata-only reconclusion `b41ee7d`; owner approved the reviewed design and revised task mapping in conversation (earlier baselines retained in Git) |
 | Required reviewers | The same two retained independent Issue #215 reviewer sessions |
-| Last verified | 2026-11-01 Asia/Shanghai: T01 integrated at 0bdc5c5; T02 source 29d3e6f passes focused documentation and 46/46 installer tests, zero skips; current review/merge evidence belongs in PR #220; installed c27ab7e runtime refreshed and verified for the T02 branch |
+| Last verified | 2026-11-01 Asia/Shanghai: T01/T02 integrated through PR #217/#220; T03 source d7b0068 passes focused documentation and 46/46 installer tests, zero skips; current review/merge evidence belongs in PR #221; installed c27ab7e runtime refreshed and verified for the T03 branch |
 
 ## Governing inputs and delivery boundaries
 
@@ -59,7 +59,7 @@ retained reviewers verified its metadata-only reconclusion before dependent work
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | T01 | DONE | None | D01-D03, D06-D07; whiteboard responsibility diagram and coverage | Add `observability-and-diagnosability.md`; relocate existing architectural conformance guidance/example/references into the architecture topic under owner-approved A02; move shared sections and their relevant references from the existing error/performance topics; narrow titles/scopes, rename topics to error-handling-design.md/performance-design.md and update every active consumer, including existing skill/test filename references; clarify shared capability and measurement evidence; revise Performance Design to consume project requirements and focus on high-performance structure, with code-level realization distinct under A03; apply owner-authorized A04 triage diagnostics/retry routing split; define D07's canonical project-authority content in Performance Design (workload/goals, concrete evidence acquisition, validity/acceptance, owner/update triggers and missing-input response) | Shared observability and Performance Design have distinct owners; one project goals/evidence contract is defined for discovery to consume | Preserve approved diagnostic content, performance/recovery principles; A01 renames filenames and active consumers together; no runtime change, platform mandate or removed export example reintroduction | D02 required/optional evidence, original cause/context, privacy and existing audit duties move intact; recovery authority remains unchanged | None; reuse existing documentation gates | Compare moved obligations against 5daaa69 and D01-D03; focused Markdown/local links; reviewer checks loss/duplication and text/diagram agreement; compare D07's complete domain contract and missing-input response against the KB before T03 consumes it | None | `codex/issue215-kb-extraction`; [PR #217](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217); target `codex/error-origin-context` |
 | T02 | DONE | T01 | D04; D01 topic contract and installed-root boundary | Update remaining workflow/review direct topic-read triggers and narrow existing trigger descriptions; preserve the A04 triage split delivered in T01; extend existing installed-content and cross-profile routing tests to cover the new same-revision topic | Authors, reviewers and triage agents discover the shipped topic directly and receive the correct installed content | Reuse complete-tree installer and revision guards; no new installer mode, extra tracker or generic rule duplication | Existing escalation for unresolved authority or missing evidence; no task-specific failure behavior | None; new assertions stay inside existing test gates | Focused installed-topic/routing tests verify actual content and availability across supported profiles and cleanup; skill validation and documentation checks | None | `codex/issue215-kb-routing`; [PR #220](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/220); target `codex/error-origin-context` |
-| T03 | PLANNED | T01 | D07; Performance Design project-authority contract | Add explicit Performance Goals and Evidence discovery/index entry to the manifest template; route adoption/upgrade/pre-feature reconciliation to the domain contract using verified same-revision source roots; reuse the existing gap response and owner-decision boundaries | Applicable projects have one discoverable project goals/evidence authority, or an explicit material gap/non-applicability disposition; no invented targets or duplicate policy | No new standalone policy template, runtime, numerical SLO, per-task full test, results tracker or automatic dependency/deployment permission; do not activate a new pin in this source delivery | Existing authority/gap framework; pause only decisions depending on material missing performance inputs; record the existing response table | None; uses existing discovery/owner acceptance and source validation gates | Semantic review of domain-to-manifest-to-skill routing; focused installer/profile checks for affected skills and source references; verify existing policy reuse, missing-input response and explicit non-applicability | None | `codex/issue215-performance-authority`; PR not yet created; target `codex/error-origin-context` |
+| T03 | DONE | T01 | D07; Performance Design project-authority contract | Add explicit Performance Goals and Evidence discovery/index entry to the manifest template; route adoption/upgrade/pre-feature reconciliation to the domain contract using verified same-revision source roots; reuse the existing gap response and owner-decision boundaries; apply owner-authorized A05 human agreement for missing evidence with no defined acquisition method | Applicable projects have one discoverable project goals/evidence authority, or an explicit material gap/non-applicability disposition; no invented targets or duplicate policy | No new standalone policy template, runtime, numerical SLO, per-task full test, results tracker or automatic dependency/deployment permission; do not activate a new pin in this source delivery | Existing authority/gap framework; pause only decisions depending on material missing performance inputs; record the existing response table | None; uses existing discovery/owner acceptance and source validation gates | Semantic review of domain-to-manifest-to-skill routing; focused installer/profile checks for affected skills and source references; verify existing policy reuse, missing-input response, A05 human agreement when evidence and acquisition methods are missing, and explicit non-applicability | None | `codex/issue215-performance-authority`; [PR #221](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/221); target `codex/error-origin-context` |
 
 D05 is an existing delivered correction, not a new implementation task. Preserve
 it as the explicit non-code obligation below. `Depends on` identifies the real
@@ -77,7 +77,7 @@ existing timing contract. Do not claim planned checks have run.
 | T01 | Both narrow topics and active links reach the new owner | Changed-file Markdown and existing structure/link checks | PASS: 6 changed Markdown files; structure/local-link and whitespace checks | Focused task checks |
 | T01 | D03 renamed topic files and active consumers remain usable together | Existing installer topic-routing and cross-profile tests with renamed filename references | PASS: renamed-topic routes and cross-profile cases within 46/46 focused installer tests | Focused T01 tests |
 | T01 | D07 canonical project-authority contract | Compare Performance Design content with workload/goals, concrete evidence sources/procedures, validity/acceptance, owner/update triggers, missing-input human-response table and explicit non-applicability handling | Author contract comparison complete; retained semantic review in PR #217; no new gate | Focused T01 acceptance |
-| T03 | D07 project authority discovery and source resolution | Existing installer profile/skill-content tests plus semantic review of existing/missing/non-applicable authority scenarios | Existing harness; case selection after scope acceptance | Focused T03 validation |
+| T03 | D07 project authority discovery and source resolution | Existing installer profile/skill-content tests plus semantic review of existing/missing/non-applicable authority scenarios | PASS: existing profile harness resolves the domain topic/section before manifest creation, from accepted workflow KB and from both candidate-upgrade profiles; semantic comparison confirms domain-to-manifest routes | Focused T03 validation |
 | T02 | D04 installed content matches the source revision and skill routing | `knowledge base topic routing resolves for installed author, reviewer and triage skills` in `tests/installer.test.mjs`; include new topic for all three skills | PASS: all three installed skills route to source-matching shared content | Focused task test |
 | T02 | D04 supported profiles, old revisions and cleanup preserve valid routing | `installed skill routing resolves same-revision KB topics across profiles and cleanup` in `tests/installer.test.mjs`; extend existing topic set | PASS: A04 shared-topic profile coverage retained and rerun with current skills | Focused task test |
 | T02 | Installation still synchronizes the complete official tree | Existing complete-tree installation/cleanup tests | Existing; retain without weakening assertions | Final-gate full suite; focused if packaging changes |
@@ -104,16 +104,17 @@ checks and task-focused validation remain applicable; no new acceptance gate.
 
 ### Implementation review
 
-Fill after T01, T02 and T03 finish, before the exact-content audit. The final implementation audit waits for T02 and T03; task evidence does not claim
-that full validation or merge has completed.
+Complete this table and the exact-content audit after T03 integration, before
+human implementation acceptance and final-test work. Task checks do not establish
+full-validation or merge completion.
 
 | Information | Implementation summary / evidence |
 | --- | --- |
-| Implementation / design | T01 includes A01/A02 and A03 Performance Design/domain contract; focused checks pass, current reviewer conclusions stay in PR #217; T02 routing complete; T03 discovery pending; D05 preserved |
+| Implementation / design | T01-T03 implement D01-D04/D06-D07 content, routing and discovery; D05 preserved. Task-focused checks pass; T03 review/merge remains in PR #221; full implementation audit is pending |
 | Code-level flows | Product business/error/data flows are N/A for the documentation-only design; actual reading/installation relationships must match the accepted whiteboard diagram |
 | Review findings | Both retained reviewers approved plan 5426001 without findings; task findings and live approvals remain GitHub facts |
-| Risks / limits / unknowns | A03 atomically renames Performance Design and its active consumers; installed profile/topic tests pass; T02 direct routing verified; T03 discovery and full validation remain outstanding |
-| Validation | T02 source 29d3e6f focused documentation and 46/46 installer tests pass; final integrated validation remains UNRUN |
+| Risks / limits / unknowns | A03 atomically renames Performance Design and its active consumers; installed profile/topic tests pass; T02 direct routing and T03 discovery verified by focused checks; full integrated validation remains UNRUN |
+| Validation | T03 source d7b0068 focused documentation and 46/46 installer tests pass; final integrated validation remains UNRUN |
 | Recommendation / decision | After all three tasks and the author/two-reviewer implementation audit, obtain explicit human acceptance before final-test work, including under Autopilot |
 
 ### Delivery Definition of Done and non-code obligations
@@ -121,10 +122,10 @@ that full validation or merge has completed.
 | Outcome | Design / owner | Required evidence | Result / link |
 | --- | --- | --- | --- |
 | Shared topic and narrow consumers | D01-D03, D06; T01 | Canonical owner, complete migrated content, index and links | [T01 / PR #217](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217) |
-| Project performance authority discovery | D07; T03 | Manifest indexing and applicable discovery routes consume the one domain contract, with explicit gaps and owner decisions | Pending |
+| Project performance authority discovery | D07; T03 | Manifest indexing and applicable discovery routes consume the one domain contract, with explicit gaps and owner decisions | PASS: focused routes/profile checks and author semantic comparison; [PR #221](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/221) |
 | Installed direct agent routing | D04; T02 | Actual same-revision installed content and supported-profile proof | PASS: focused installer checks; [PR #220](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/220) |
 | Complete triage repair review boundary retained | D05; parent author | Existing triage skill at 16b48f2/5daaa69 retains diagnosis-only authority, escalation, time limits and deferred full-validation timing | Existing candidate; verify retained at final audit |
-| Canonical guidance updated | Whiteboard Canonical authority updates; T01-T03 | Live KB/index/skill/manifest-template owners carry accepted obligations; manifest pin and project policies unchanged | Pending |
+| Canonical guidance updated | Whiteboard Canonical authority updates; T01-T03 | Live KB/index/skill/manifest-template owners carry accepted obligations; manifest pin and project policies unchanged | Implemented through T01-T03; final audit pending |
 | Required validation and review | Project quality authority; parent | Honest focused/full results and retained reviewer evidence tied to exact candidates | PR #216 owns current state |
 | Merge-ready closure | Parent under named cleanup authorization | Complete concluded whiteboard and final plan preserved in one linked archive; live plan removed and whiteboard reset in closing candidate | Not authorized or performed yet |
 | Protected target verification and physical cleanup | Parent | Authorized final merge, verified target, ownership-safe cleanup | Pending; PR evidence |
@@ -135,7 +136,7 @@ that full validation or merge has completed.
 | --- | --- | --- | --- |
 | Manifest, reusable KB and installed guidance | Keep | Project authorities; no pin activation in this scope | Retained |
 | Working whiteboard and final plan | Archive together, then reset whiteboard/remove live plan | Named owner permission required before closing-candidate construction; link archive and final PR both ways | Pending |
-| T01/T02/T03 task branches and owned task worktrees | Remove after verified task merges and no remaining use | Record actual created paths/ownership before removal; do not bypass app protection | Not yet created |
+| T01/T02/T03 task branches | Remove after verified task merges and no remaining use | Branch names are recorded in Tasks; all three tasks reuse the delivery worktree below, with no separate task worktrees | Branches exist; T01/T02 integrated, T03 merge and branch retirement pending |
 | Feature branch `codex/error-origin-context` and current worktree | Remove only after final merge and verified ownership/no remaining use | Current checkout may be app-protected; preserve and report a guard rather than force-delete | Pending |
 | Local unpublished extraction drafts | Remove when no longer needed | Parent-created temporary files only; never commit them as delivery evidence | Retained for implementation reference |
 
@@ -147,8 +148,8 @@ candidate reconciles all canonical state before protected-target review.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Tasks | T01 merged via PR #217; T02 is DONE pending reviewed task merge; T03 wires project performance-authority discovery | Human task review |
+| Tasks | T01/T02 merged via PR #217/#220; T03 is DONE pending reviewed task merge; all implementation tasks now have candidate outcomes | Human task review |
 | Design consistency | D01-D04 and D06-D07 map to tasks; D05 maps to the retained triage obligation; no unmapped design point | Review mapping |
 | Autopilot | Not enabled. Opt-in permits task merges only into `codex/error-origin-context` after exact-head reviewer approval and required focused checks, then the next dependency-ready task; stop before final-test work for human implementation acceptance and before final `main` merge | Explicit owner decision |
 | Foreseeable decisions | A03 naming/domain/discovery and T03 task mapping accepted; no project-specific performance numbers will be invented | None |
-| Validation | T01/T02 focused checks pass, including 46/46 installer tests without skips; full integrated validation remains UNRUN | Attention |
+| Validation | T01-T03 focused checks pass, including 46/46 installer tests without skips; full integrated validation remains UNRUN | Attention |
