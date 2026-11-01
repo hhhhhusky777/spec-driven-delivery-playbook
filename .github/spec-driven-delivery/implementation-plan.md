@@ -23,7 +23,7 @@ retained reviewers verified its metadata-only reconclusion before dependent work
 | Primary issue / need | [Issue #215](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/215) |
 | Concluded whiteboard | [Working whiteboard](solution-whiteboard.md), accepted amendment A04 `6672be3`; metadata-only reconclusion `541eaee`; owner approved the reviewed design and revised task mapping in conversation (earlier baselines retained in Git) |
 | Required reviewers | The same two retained independent Issue #215 reviewer sessions |
-| Last verified | 2026-11-01 Asia/Shanghai: A03 reconclusion 9ee4191 verified by both reviewers; T01 source f0f07bf passed focused documentation checks and 46/46 installer tests with zero skips; current task review/merge evidence belongs in PR #217; T02/T03 follow integration |
+| Last verified | 2026-11-01 Asia/Shanghai: A04 reconclusion 541eaee verified by both reviewers; T01 source 36bd8bd passed focused documentation checks and 46/46 installer tests with zero skips; current task review/merge evidence belongs in PR #217; T02/T03 follow integration |
 
 ## Governing inputs and delivery boundaries
 
@@ -113,7 +113,7 @@ that full validation or merge has completed.
 | Code-level flows | Product business/error/data flows are N/A for the documentation-only design; actual reading/installation relationships must match the accepted whiteboard diagram |
 | Review findings | Both retained reviewers approved plan 5426001 without findings; task findings and live approvals remain GitHub facts |
 | Risks / limits / unknowns | A03 atomically renames Performance Design and its active consumers; installed profile/topic tests pass; T02/T03 direct routing/discovery and full validation remain outstanding |
-| Validation | Prior T01 f0f07bf focused documentation and 46/46 installer tests passed; A04 focused rerun pending; final integrated validation remains UNRUN |
+| Validation | T01 A04 source 36bd8bd focused documentation and 46/46 installer tests pass; final integrated validation remains UNRUN |
 | Recommendation / decision | After all three tasks and the author/two-reviewer implementation audit, obtain explicit human acceptance before final-test work, including under Autopilot |
 
 ### Delivery Definition of Done and non-code obligations
