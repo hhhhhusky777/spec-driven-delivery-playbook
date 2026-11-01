@@ -68,7 +68,7 @@ not assumed from Markdown links.
 | --- | --- | --- |
 | R01 | A single shared KB owns observability/diagnosability | D01 responsibility boundaries match text, links and diagram |
 | R02 | Preserve all approved diagnostic safeguards without a telemetry platform mandate | D02 content survives extraction without duplicate rule owners |
-| R03 | Error handling and performance retain their distinct guidance | D03 retains recovery/retry and performance measurement/trade-offs respectively |
+| R03 | Error handling and performance retain their distinct guidance | D03 retains recovery/retry and workload-led performance design respectively |
 | R04 | All applicable agents can discover and read the new same-revision topic | D04 direct triggers and installed-content/routing tests |
 | R05 | Preserve complete triage repair review units | D05 retains the existing scoped rule and escalation limits |
 | R06 | Performance Design consumes explicit project goals and evidence authority | D03/D07 define design, code-level realization, measurement and project-authority boundaries; applicable discovery exposes gaps |
@@ -103,7 +103,7 @@ conclusion. No new extraction implementation proceeds before design acceptance.
 ```mermaid
 flowchart TD
     W["Author / reviewer / triage skills"] --> O["Observability and Diagnosability"]
-    W --> E["Error Handling"]
+    W --> E["Error Handling Design"]
     W --> P["Performance Design"]
     W --> A["Architecture, Scope, and Assumptions"]
     P --> G["Project Performance Goals and Evidence authority"]
@@ -206,11 +206,11 @@ new acceptance checkpoint or runtime rejection is designed.
 
 | Attention | Summary | Handling |
 | --- | --- | --- |
-| Design decision | A03 narrows Performance Design and adds a reusable project goals/evidence authority plus applicable discovery | Accept after reviewer approval |
-| Compatibility | A03 names the design-level topic performance-design.md and updates its active consumers atomically; accepted installed revision and older pinned trees remain unchanged | Attention |
+| Design decision | A03 Performance Design and project goals/evidence authority accepted; A04/A05 clarify naming/routing and missing-evidence acquisition agreement | Accepted owner decisions |
+| Compatibility | Design-level topics are performance-design.md and error-handling-design.md; active consumers change atomically while accepted installed revision and older pinned trees remain unchanged | Attention |
 | Existing work | D05 and previous PR #216 diagnostic changes are retained; unpublished extraction edits are saved as local drafts | Attention |
-| Plan | Revised T01/T02/T03 mapping records the A03 domain and discovery work; task targets remain the feature branch | Owner acceptance after review |
-| Remaining gaps | A03 design and revised task mapping require reviewed owner acceptance | Human decision |
+| Plan | Owner accepted the T01/T02/T03 mapping; task targets remain the feature branch | Accepted owner decision |
+| Remaining gaps | None in the accepted design; implementation and delivery gates are tracked by the plan and PRs | None |
 
 ## Design amendments
 
@@ -218,6 +218,6 @@ new acceptance checkpoint or runtime rejection is designed.
 | --- | --- | --- | --- |
 | A01 | D01, D03 and affected D04 consumers/coverage | Supersede filename retention with atomic topic/consumer rename; clarify shared capability establishment, mature options and performance/error evidence; trim redundant scope text. Baseline design b3e90bf and metadata-only freeze e760248 remain in Git | Prior edit authorization: owner PR #217 comments [shared framework](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217#discussion_r4425483582), [performance filename](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217#discussion_r4425487509), [error filename](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/pull/217#discussion_r4425514292) and wording comments, followed by the request to address comments; reviewed amendment accepted by the owner in conversation |
 | A02 | D01, D06 and affected coverage/diagram/plan mappings | Move architectural conformance guidance, its ArchUnit example and supporting references into the existing architecture topic; preserve meaning and add no section or rule | Owner explicitly approved the proposed destination and relocation in conversation after PR #217 comment r4426243796 |
-| A03 | D03, D07 and affected naming, discovery, coverage and task mapping | Performance Design and code-level realization are separate from measurement mechanisms; require discoverable project goals/evidence authority with human requirements analysis for material gaps. Reuse existing owner and test gates; no automatic standalone policy or numeric target | Owner approved the proposed project authority and evidence model in conversation; exact design/plan candidate acceptance remains pending review |
+| A03 | D03, D07 and affected naming, discovery, coverage and task mapping | Performance Design and code-level realization are separate from measurement mechanisms; require discoverable project goals/evidence authority with human requirements analysis for material gaps. Reuse existing owner and test gates; no automatic standalone policy or numeric target | Owner accepted exact reviewed design/plan 895f633 in conversation; metadata-only reconclusion 9ee4191 was verified by both retained reviewers |
 | A04 | D03 and bounded D04 triage routing | Rename the error topic to Error Handling Design / error-handling-design.md and synchronize active consumers; triage reads the shared topic directly for diagnostics and the error topic for failure handling/recovery/retry safety. Implement this triage correction with T01; T02 retains remaining author/reviewer routing and installation assertions | Owner explicitly requested “fix it with the rename” after PR #217 comment r4435876803 and the proposed routing split; no behavior or new gate |
 | A05 | D07 evidence acquisition gap | Explicitly require human agreement on evidence acquisition and assessment when required evidence is missing and no method is defined; base the proposal on accepted workload/performance requirements and pause only dependent decisions. T03 carries this bounded domain-contract correction | Owner requested the exact clarification and instructed “改一下”; no runtime control or new test gate |
