@@ -1,4 +1,4 @@
-# Error Handling
+# Error Handling Design
 
 Scope: Architecture, Engineering
 

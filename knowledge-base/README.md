@@ -59,7 +59,7 @@ reading requirement.
 | Simple design and reuse | Reuse existing capabilities; minimize new responsibilities and mechanisms | [Simple design and reuse](simple-design-and-reuse.md) |
 | Architecture, scope, and assumptions | Establish ownership and evidence-bounded design premises | [Architecture, scope, and assumptions](architecture-scope-and-assumptions.md) |
 | Contracts and compatibility | Change interfaces without accidental contract breakage | [Contracts and compatibility](contracts-and-compatibility.md) |
-| Error handling | Preserve invariants with simple failure semantics, recovery and safe retry | [Error Handling](error-handling.md) |
+| Error handling design | Preserve invariants with simple failure semantics, recovery and safe retry | [Error Handling Design](error-handling-design.md) |
 | Observability and diagnosability | Measure relevant behavior, correlate signals and locate failures through shared instrumentation | [Observability and Diagnosability](observability-and-diagnosability.md) |
 | Testing and reproduction | Prove changed behavior and reproduce material failure risks | [Testing and reproduction](testing-and-reproduction.md) |
 | Security basics | Protect actual trust boundaries proportionately | [Security basics](security-basics.md) |

@@ -543,7 +543,7 @@ Follow the project's manifest-linked error-handling authority when present.
 Do not duplicate or override it.
 
 Before designing failure handling, retry behavior or failure diagnostics, read
-`error-handling.md` directly from the manifest-linked KB root
+`error-handling-design.md` directly from the manifest-linked KB root
 when the accepted pin ships it. Apply it within project authority.
 
 Within approved scope and authority, correct recoverable agent errors and
