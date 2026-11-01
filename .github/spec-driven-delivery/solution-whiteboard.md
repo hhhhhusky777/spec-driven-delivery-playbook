@@ -4,11 +4,11 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` |
+| State | `CONCLUDED` |
 | Need / issue | [Issue #215](https://github.com/hhhhhusky777/spec-driven-delivery-playbook/issues/215) |
 | Owner | Repository owner |
-| Concluded design revision | `None` |
-| Open owner decisions | Accept A03 design and revised task mapping before dependent implementation |
+| Concluded design revision | `895f6339a1aec855004e66b57148f5bdc49e7d9e` |
+| Open owner decisions | None |
 
 ## Discussion draft
 
