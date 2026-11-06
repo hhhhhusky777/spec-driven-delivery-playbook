@@ -1113,6 +1113,29 @@ test("installer rejects a project runtime symlink that escapes the worktree", as
   assert.match(result.stderr, /project runtime boundary must not be a symbolic link/);
 });
 
+test("installer rejects a scratch symlink and can retry after it is removed", async (t) => {
+  const source = await createPlaybookFixture(t);
+  const project = await createTargetProject(t);
+  const external = await temporaryDirectory(t, "sdd external scratch ");
+  const sentinel = path.join(external, "evidence.txt");
+  const scratch = path.join(project, ".sdd-scratch");
+  await writeFile(sentinel, "Keep this evidence\n");
+  await symlink(external, scratch, "dir");
+
+  const args = ["--repository", source.repository];
+  const rejected = runInstaller(project, args);
+  assert.notEqual(rejected.status, 0);
+  assert.match(rejected.stderr, /scratch directory must not be a symbolic link/);
+  assert.equal(await readlink(scratch), external);
+  assert.equal(await readFile(sentinel, "utf8"), "Keep this evidence\n");
+  await assert.rejects(access(path.join(project, ".sdd-runtime")));
+
+  await rm(scratch);
+  const retried = runInstaller(project, args);
+  assert.equal(retried.status, 0, retried.stderr);
+  assert.ok((await lstat(scratch)).isDirectory());
+});
+
 test("validation rejects a resolved-revision directory symlink", async (t) => {
   const source = await createPlaybookFixture(t);
   const project = await createTargetProject(t);
