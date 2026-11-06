@@ -186,6 +186,9 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   `security-basics.md` directly from the manifest-linked KB root when the
   accepted pin ships it. Protect actual boundaries with the smallest sufficient
   controls within project security authority.
+- Create worktrees under a persistent workspace root that survives reboot.
+  Do not place worktrees in system temporary directories such as `/tmp`,
+  `/private/tmp`, or `$TMPDIR`, or under paths that resolve to them.
 - When creating a worktree, provision the required machine-local untracked
   inputs there, including files such as `.env` when the task depends on them.
   Copy or recreate only what is needed, preserve appropriate permissions, keep
