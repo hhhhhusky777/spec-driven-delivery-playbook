@@ -254,13 +254,8 @@ test("knowledge base installs the complete official tree and persists after runt
   assert.equal(guideValue(guide, "Knowledge Base root"), ".github/spec-driven-delivery/knowledge-base");
   run("git", ["add", ".github/spec-driven-delivery/knowledge-base"], project);
   assert.match(run("git", ["diff", "--cached", "--name-only"], project), /knowledge-base\/nested\/practice.md/);
-  const scratchArtifact = ".sdd-scratch/test-report.txt";
-  await writeFile(path.join(project, scratchArtifact), "Test evidence\n");
-  assert.match(run("git", ["check-ignore", "-v", "--", scratchArtifact], project),
-    /info\/exclude:\d+:\/\.sdd-scratch\/\t/);
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
   assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
-  assert.equal(await readFile(path.join(project, scratchArtifact), "utf8"), "Test evidence\n");
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
   await access(path.join(root, "README.md"));
 });
@@ -1111,29 +1106,6 @@ test("installer rejects a project runtime symlink that escapes the worktree", as
   const result = runInstaller(project, ["--repository", source.repository]);
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /project runtime boundary must not be a symbolic link/);
-});
-
-test("installer rejects a scratch symlink and can retry after it is removed", async (t) => {
-  const source = await createPlaybookFixture(t);
-  const project = await createTargetProject(t);
-  const external = await temporaryDirectory(t, "sdd external scratch ");
-  const sentinel = path.join(external, "evidence.txt");
-  const scratch = path.join(project, ".sdd-scratch");
-  await writeFile(sentinel, "Keep this evidence\n");
-  await symlink(external, scratch, "dir");
-
-  const args = ["--repository", source.repository];
-  const rejected = runInstaller(project, args);
-  assert.notEqual(rejected.status, 0);
-  assert.match(rejected.stderr, /scratch directory must not be a symbolic link/);
-  assert.equal(await readlink(scratch), external);
-  assert.equal(await readFile(sentinel, "utf8"), "Keep this evidence\n");
-  await assert.rejects(access(path.join(project, ".sdd-runtime")));
-
-  await rm(scratch);
-  const retried = runInstaller(project, args);
-  assert.equal(retried.status, 0, retried.stderr);
-  assert.ok((await lstat(scratch)).isDirectory());
 });
 
 test("validation rejects a resolved-revision directory symlink", async (t) => {

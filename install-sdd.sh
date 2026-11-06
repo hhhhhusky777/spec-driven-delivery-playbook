@@ -396,11 +396,8 @@ validate_runtime_boundary() {
 }
 
 prepare_runtime_storage() {
-  local scratch_directory="$PROJECT_ROOT/.sdd-scratch"
   validate_runtime_boundary
-  [[ ! -L "$scratch_directory" ]] || fail "scratch directory must not be a symbolic link: $scratch_directory"
   mkdir -p "$RUNTIME_DIRECTORY/checkouts"
-  mkdir -p "$scratch_directory"
   validate_runtime_boundary
 }
 
@@ -788,7 +785,6 @@ ensure_runtime_excludes() {
   touch "$git_exclude"
   for pattern in \
     "/$RUNTIME_ROOT/" \
-    "/.sdd-scratch/" \
     "/.agents/skills/sdd-project-adoption/" \
     "/.agents/skills/sdd-project-workflow/" \
     "/.agents/skills/sdd-feature-review/" \
