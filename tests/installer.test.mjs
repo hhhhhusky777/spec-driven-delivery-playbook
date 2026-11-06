@@ -254,8 +254,14 @@ test("knowledge base installs the complete official tree and persists after runt
   assert.equal(guideValue(guide, "Knowledge Base root"), ".github/spec-driven-delivery/knowledge-base");
   run("git", ["add", ".github/spec-driven-delivery/knowledge-base"], project);
   assert.match(run("git", ["diff", "--cached", "--name-only"], project), /knowledge-base\/nested\/practice.md/);
+  const scratchArtifact = ".sdd-scratch/test-report.txt";
+  await mkdir(path.join(project, ".sdd-scratch"));
+  await writeFile(path.join(project, scratchArtifact), "Test evidence\n");
+  assert.match(run("git", ["check-ignore", "-v", "--", scratchArtifact], project),
+    /info\/exclude:\d+:\/\.sdd-scratch\/\t/);
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
   assert.equal(runInstaller(project, ["--cleanup"]).status, 0);
+  assert.equal(await readFile(path.join(project, scratchArtifact), "utf8"), "Test evidence\n");
   assert.equal(runInstaller(project, ["--validate"]).status, 0);
   await access(path.join(root, "README.md"));
 });

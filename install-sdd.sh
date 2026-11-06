@@ -785,6 +785,7 @@ ensure_runtime_excludes() {
   touch "$git_exclude"
   for pattern in \
     "/$RUNTIME_ROOT/" \
+    "/.sdd-scratch/" \
     "/.agents/skills/sdd-project-adoption/" \
     "/.agents/skills/sdd-project-workflow/" \
     "/.agents/skills/sdd-feature-review/" \
