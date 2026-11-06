@@ -197,15 +197,9 @@ Cross-reference overlapping fail-close and test evidence; do not duplicate it.
   affected check until the worktree is operational or error handling requires
   escalation. Never make the worktree depend on mutable files or runtime owned
   by another checkout; shared support must have stable project-level ownership.
-- Keep development artifacts that later commands or sessions need in a
-  Git-ignored worktree directory that survives reboot, such as `.sdd-scratch/`.
-  Use system temporary directories only for disposable files that can be
-  recreated within the current operation. If another worktree needs the
-  artifacts or they must survive worktree removal, use a project-approved
-  persistent directory scoped to the delivery. Keep scratch files separate from
-  installer-managed runtime files. Use existing persistent caches for reusable
-  downloads. Record required delivery evidence in the PR before cleanup.
-  Remove only owned scratch files that are no longer needed.
+- Store all temporary development artifacts in `.sdd-scratch/` at the root of
+  the current worktree. Ensure the directory is Git-ignored before use. Record
+  required evidence in the PR, then remove the directory during delivery cleanup.
 - Before defining, consuming, or changing an interface contract, read
   `contracts-and-compatibility.md` directly from the manifest-linked KB root
   when the accepted pin ships it. Preserve promised behavior for supported
