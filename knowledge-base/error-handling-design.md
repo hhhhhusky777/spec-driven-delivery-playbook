@@ -14,12 +14,20 @@ issue tracking and escalation.
 > Keep handling simple and invariant-based, not an enumeration of every edge
 > case or interleaving. Preserve consistency; fail closed when continuing could
 > violate a required invariant. Permit client-controlled retry only when its
-> effects are safe. Report failures and uncertain effects honestly.
+> effects are safe.
+>
+> **Hard rule.** Preserve original errors when propagating or reporting
+> failures. Errors MUST NOT be silently replaced, discarded or misclassified.
+> Translation is permitted ONLY at the owning boundary under an explicit
+> canonical error contract. Any translation or context wrapping MUST preserve
+> the original cause and truthful failure semantics, following the diagnostic
+> evidence requirements below.
 
 Choose the smallest handling that protects the accepted outcome. Reuse existing
 transaction, idempotency, cleanup and error-reporting mechanisms before adding
 recovery state or orchestration. A failure must not be reported as success;
 partial effects and uncertain outcomes need honest contract meaning.
+For example, reporting a database timeout as a missing user violates the rule.
 
 ## Safe recovery and retry
 
@@ -66,3 +74,5 @@ Use these sources within project authority, not as permission for new controls.
 - [AWS: Making retries safe with idempotent APIs](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/) — ambiguous effects, caller intent and established idempotency contracts; its service implementation is not a compulsory recipe.
 - [AWS: Timeouts, retries, and backoff with jitter](https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/) — bounded retry, amplification and load-aware timing; choose measures from actual dependency behavior.
 - [RFC 9457: Problem Details for HTTP APIs](https://www.rfc-editor.org/rfc/rfc9457.html) — stable problem identity, occurrence context, actionable client detail and security limits. It specifies an HTTP format, not a required replacement for an existing error contract.
+- [Go: Whether to wrap errors](https://go.dev/blog/go1.13-errors#whether-to-wrap) — choose public error representations according to the API contract; exposing an underlying error can make implementation details part of that contract.
+- [Microsoft: Capture and rethrow exceptions properly](https://learn.microsoft.com/en-us/dotnet/standard/exceptions/best-practices-for-exceptions#capture-and-rethrow-exceptions-properly) — preserve original exceptions and their cause when rethrowing or wrapping; use the equivalent mechanism for the project's language and runtime.
