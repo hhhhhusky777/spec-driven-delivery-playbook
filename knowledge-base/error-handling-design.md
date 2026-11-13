@@ -27,7 +27,9 @@ Choose the smallest handling that protects the accepted outcome. Reuse existing
 transaction, idempotency, cleanup and error-reporting mechanisms before adding
 recovery state or orchestration. A failure must not be reported as success;
 partial effects and uncertain outcomes need honest contract meaning.
-For example, reporting a database timeout as a missing user violates the rule.
+For example, a payment-service timeout leaves the payment outcome unknown;
+reporting it as a failed payment can cause a client to pay again even though
+the first payment succeeded.
 
 ## Safe recovery and retry
 
