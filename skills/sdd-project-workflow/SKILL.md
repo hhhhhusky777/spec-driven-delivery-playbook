@@ -384,6 +384,13 @@ at each real decision boundary. Human briefs use a compact table covering the
 decision, important changes, risks or gaps, validation, and recommended action.
 Follow the manifest-linked human-brief policy.
 
+> [!IMPORTANT]
+> **Hard rule.** Human-facing tables presenting designs, tasks, solutions or
+> fixes MUST state the selected implementation approach and its material
+> choices, as required by the Solution research contract above. A general
+> direction or document link alone is insufficient. Keep wording concise
+> without omitting information needed to approve the approach.
+
 At whiteboard human review, the author MUST copy the reviewed design diagrams
 and their explanatory text and design IDs from the whiteboard into the reply;
 file links alone are insufficient. At plan human

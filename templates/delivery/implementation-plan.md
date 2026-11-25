@@ -154,9 +154,12 @@ live sources. Keep unresolved gaps in Clarifications and gaps.
 
 `Depends on` contains only producing task IDs, or `None` for independent work.
 Describe required inputs in Implementation work or Consumed design; do not
-infer dependencies from task numbering. Keep cells concise but specific enough
-for engineering review; link accepted
-contracts and detailed evidence instead of copying them. Consumed columns map
+infer dependencies from task numbering. Implementation work MUST explain how
+the task realizes its consumed design: identify affected components, concrete
+changes and suitable existing mechanisms to reuse. Record task-specific
+interactions, data/state effects and failure handling in the applicable cells;
+design IDs or a general direction alone are insufficient. Keep cells concise;
+reference canonical contracts rather than duplicate the full design. Consumed columns map
 approved design or its referenced contracts to this task; use `None` where
 inapplicable. Newly discovered assumptions or behavior changes require the
 existing gap/amendment process, not silent inclusion as accepted inputs.
