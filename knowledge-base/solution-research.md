@@ -27,6 +27,19 @@ External practice cannot establish project facts or prove a bottleneck: verify
 those premises against canonical contracts, code or direct evidence. Research
 supports a triage method or remedy, not proof of a project-specific cause.
 
+## Concrete solution choices
+
+> [!IMPORTANT]
+> **Hard rule.** Every design, solution or fix MUST specify the selected
+> implementation approach, not merely a goal or general direction. Resolve
+> material choices explicitly, including applicable ownership, mechanisms,
+> interactions, data/state effects and failure handling. Another agent MUST be
+> able to implement the solution without choosing between materially different
+> approaches or inferring missing decisions.
+> Implementation MUST follow those choices. Only contract-equivalent coding
+> details may remain open. Changing an approved design choice requires prior
+> human authorization under the existing amendment process.
+
 ## PoCs and comparative experiments
 
 Use a small proof of concept (PoC) or comparative experiment when research and
